@@ -1,0 +1,22 @@
+{
+  "name": "rust-manager",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@arkenbot/addon-sdk": "workspace:*",
+    "ws": "^8.18.0"
+  },
+  "peerDependencies": {
+    "discord.js": "^14.0.0"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.5.13",
+    "discord.js": "^14.18.0",
+    "typescript": "^5.7.0"
+  }
+}

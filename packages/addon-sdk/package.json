@@ -1,0 +1,29 @@
+{
+  "name": "@arkenbot/addon-sdk",
+  "version": "1.0.0",
+  "description": "SDK for building Discord bot addons",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@arkenbot/shared": "workspace:*"
+  },
+  "peerDependencies": {
+    "discord.js": "^14.0.0"
+  },
+  "devDependencies": {
+    "discord.js": "^14.18.0",
+    "typescript": "^5.7.0"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "name": "arkenbot-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Production-ready multi-purpose Discord bot system",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "scripts": {
+    "build:deps": "pnpm --filter @arkenbot/shared build && pnpm --filter @arkenbot/addon-sdk build",
+    "dev": "pnpm build:deps && concurrently \"pnpm --filter @arkenbot/api dev\" \"pnpm --filter @arkenbot/bot dev\" \"pnpm --filter @arkenbot/web dev\"",
+    "build": "pnpm --filter @arkenbot/shared build && pnpm --filter @arkenbot/addon-sdk build && pnpm --filter tickets build && pnpm --filter @arkenbot/api build && pnpm --filter @arkenbot/bot build && pnpm --filter @arkenbot/web build",
+    "start": "concurrently \"pnpm --filter @arkenbot/api start\" \"pnpm --filter @arkenbot/bot start\" \"pnpm --filter @arkenbot/web start\"",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck",
+    "db:generate": "prisma generate --schema=./prisma/schema.prisma",
+    "db:migrate": "prisma migrate deploy --schema=./prisma/schema.prisma",
+    "db:push": "prisma db push --schema=./prisma/schema.prisma",
+    "db:studio": "prisma studio --schema=./prisma/schema.prisma",
+    "db:seed": "tsx prisma/seed.ts",
+    "deploy:commands": "pnpm db:generate && pnpm --filter @arkenbot/bot deploy:commands",
+    "grant-staff": "tsx scripts/grant-staff.ts",
+    "docs:dev": "pnpm --filter @arkenbot/docs dev",
+    "docs:build": "pnpm --filter @arkenbot/docs build"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0",
+    "typescript": "^5.7.0",
+    "tsx": "^4.19.0",
+    "prisma": "^5.22.0",
+    "@prisma/client": "^5.22.0"
+  }
+}

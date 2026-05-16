@@ -1,0 +1,23 @@
+{
+  "name": "tickets",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@arkenbot/addon-sdk": "workspace:*",
+    "@arkenbot/shared": "workspace:*",
+    "ioredis": "^5.3.2"
+  },
+  "peerDependencies": {
+    "discord.js": "^14.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "discord.js": "^14.18.0",
+    "typescript": "^5.7.0"
+  }
+}

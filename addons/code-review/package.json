@@ -1,0 +1,24 @@
+{
+  "name": "code-review",
+  "version": "2.0.0",
+  "description": "Code review addon: analyze code snippets via modal, detect issues, and return formatted output.",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@lezer/common": "^1.5.1",
+    "@lezer/python": "^1.1.18",
+    "acorn": "^8.11.3",
+    "prettier": "^3.2.5"
+  },
+  "peerDependencies": {
+    "@arkenbot/addon-sdk": "*"
+  },
+  "devDependencies": {
+    "@arkenbot/addon-sdk": "workspace:*",
+    "@types/acorn": "^4.0.6",
+    "discord.js": "^14.25.1"
+  }
+}

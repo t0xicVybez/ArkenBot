@@ -1,0 +1,387 @@
+import Link from 'next/link';
+import {
+  Puzzle, ArrowRight, ChevronRight, ExternalLink,
+  Check, Zap, Code2, Shield, Gamepad2, Ticket,
+  Terminal, Package, BookOpen, Star,
+} from 'lucide-react';
+import { LandingNav } from '@/components/LandingNav';
+
+const CLIENT_ID = process.env.DISCORD_CLIENT_ID ?? process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID ?? '';
+
+const SITE = {
+  inviteUrl: CLIENT_ID
+    ? `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&permissions=8824675416665207&integration_type=0&scope=bot+applications.commands`
+    : 'https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=8824675416665207&integration_type=0&scope=bot+applications.commands',
+  docsUrl: 'https://github.com/t0xicVybez1/arkenbot-resources/tree/main/docs',
+  supportUrl: 'https://discord.gg/fXJnYPdHRX',
+};
+
+const FIRST_PARTY_ADDONS = [
+  {
+    id: 'tickets',
+    icon: Ticket,
+    color: 'text-cyan-400',
+    bg: 'bg-cyan-500/10',
+    border: 'border-cyan-500/20',
+    accentBorder: 'border-cyan-500/40',
+    badge: 'Official',
+    badgeColor: 'bg-cyan-500/15 text-cyan-400 border-cyan-500/30',
+    title: 'Ticket System',
+    tagline: 'Full-featured support desk with SLA, transcripts & staff portal.',
+    description:
+      'A complete customer-support experience inside Discord. Multi-panel routing, custom intake forms, round-robin staff assignment, SLA escalation, canned responses, and a web staff portal — all included.',
+    bullets: [
+      'Multi-button panels routing to different ticket categories',
+      'Private channel or thread per ticket',
+      'Custom form fields collected on ticket open',
+      'Staff claim, transfer, and priority controls',
+      'Multi-level SLA escalation with configurable ping roles',
+      'Round-robin auto-assignment for staff',
+      'Canned responses with Discord autocomplete',
+      'HTML transcript posted to log channel on close',
+      'User 1–5 star rating on ticket close',
+      'Webhook notifications for third-party integrations',
+      'Full staff portal: filters, notes, bulk close, stats',
+    ],
+  },
+  {
+    id: 'fivem',
+    icon: Gamepad2,
+    color: 'text-orange-400',
+    bg: 'bg-orange-500/10',
+    border: 'border-orange-500/20',
+    accentBorder: 'border-orange-500/40',
+    badge: 'Official',
+    badgeColor: 'bg-orange-500/15 text-orange-400 border-orange-500/30',
+    title: 'FiveM Manager',
+    tagline: 'Manage your QBCore or ESX FiveM server from Discord.',
+    description:
+      'Connect your FiveM server and control it without touching the console. Kick and ban players, give money and items, change jobs, teleport, and run admin commands — all via slash commands.',
+    bullets: [
+      'Kick and ban players',
+      'Give cash, bank money, and inventory items',
+      'Set and change player jobs',
+      'Teleport players between coordinates',
+      'Run arbitrary server console commands',
+      'Compatible with QBCore and ESX frameworks',
+      'Role-based staff and admin permission tiers',
+      'Configure server connection from the dashboard',
+    ],
+  },
+  {
+    id: 'minecraft',
+    icon: Terminal,
+    color: 'text-green-400',
+    bg: 'bg-green-500/10',
+    border: 'border-green-500/20',
+    accentBorder: 'border-green-500/40',
+    badge: 'Official',
+    badgeColor: 'bg-green-500/15 text-green-400 border-green-500/30',
+    title: 'Minecraft Manager',
+    tagline: 'Full RCON control over your Minecraft server.',
+    description:
+      'Connect to any vanilla, Paper, or Spigot server via RCON and manage it without opening a console window. Kick, ban, give items, send broadcasts, and execute any console command.',
+    bullets: [
+      'Kick and ban players',
+      'Give items and enchanted gear',
+      'Broadcast messages to all online players',
+      'Run any Minecraft console command via RCON',
+      'Works with vanilla, Paper, Spigot, and most forks',
+      'Role-based staff and admin permission tiers',
+      'Configure RCON credentials from the dashboard',
+    ],
+  },
+  {
+    id: 'rust',
+    icon: Shield,
+    color: 'text-red-400',
+    bg: 'bg-red-500/10',
+    border: 'border-red-500/20',
+    accentBorder: 'border-red-500/40',
+    badge: 'Official',
+    badgeColor: 'bg-red-500/15 text-red-400 border-red-500/30',
+    title: 'Rust Manager',
+    tagline: 'WebSocket RCON control for your Rust server.',
+    description:
+      'Manage your Rust server via WebSocket RCON. Kick and ban players, give items, broadcast in-game messages, and run any admin command — straight from Discord.',
+    bullets: [
+      'Kick and ban players with reason',
+      'Give items directly to online players',
+      'Broadcast server-wide messages',
+      'Run any Rust RCON console command',
+      'WebSocket RCON connection (no plugin required)',
+      'Role-based staff and admin permission tiers',
+      'Configure RCON from the dashboard',
+    ],
+  },
+  {
+    id: 'ark',
+    icon: Gamepad2,
+    color: 'text-yellow-400',
+    bg: 'bg-yellow-500/10',
+    border: 'border-yellow-500/20',
+    accentBorder: 'border-yellow-500/40',
+    badge: 'Official',
+    badgeColor: 'bg-yellow-500/15 text-yellow-400 border-yellow-500/30',
+    title: 'ARK Manager',
+    tagline: 'RCON management for ARK: Survival Evolved.',
+    description:
+      'Connect to your ARK server via RCON and manage it directly from Discord. Kick and ban players, send broadcasts, and run any admin command without leaving the app.',
+    bullets: [
+      'Kick and ban players',
+      'Broadcast messages to all players in-game',
+      'Run any ARK admin command via RCON',
+      'Works with official and unofficial servers',
+      'Role-based staff and admin permission tiers',
+      'Configure RCON credentials from the dashboard',
+    ],
+  },
+  {
+    id: 'palworld',
+    icon: Star,
+    color: 'text-violet-400',
+    bg: 'bg-violet-500/10',
+    border: 'border-violet-500/20',
+    accentBorder: 'border-violet-500/40',
+    badge: 'Official',
+    badgeColor: 'bg-violet-500/15 text-violet-400 border-violet-500/30',
+    title: 'Palworld Manager',
+    tagline: 'REST API management for your Palworld server.',
+    description:
+      'Manage your Palworld dedicated server via the REST API. Kick and ban players, send server-wide broadcasts, and run admin commands — all from Discord slash commands.',
+    bullets: [
+      'Kick and ban players from the server',
+      'Broadcast messages to all online players',
+      'Run admin commands via Palworld REST API',
+      'Works with official dedicated server builds',
+      'Role-based staff and admin permission tiers',
+      'Configure API credentials from the dashboard',
+    ],
+  },
+  {
+    id: 'code-review',
+    icon: Code2,
+    color: 'text-fuchsia-400',
+    bg: 'bg-fuchsia-500/10',
+    border: 'border-fuchsia-500/20',
+    accentBorder: 'border-fuchsia-500/40',
+    badge: 'Official',
+    badgeColor: 'bg-fuchsia-500/15 text-fuchsia-400 border-fuchsia-500/30',
+    title: 'Code Review',
+    tagline: 'AI-assisted code review threads right inside Discord.',
+    description:
+      'Post code snippets and get structured review feedback in a dedicated thread. Great for developer communities, bootcamps, and study servers.',
+    bullets: [
+      'Submit code for review via slash command',
+      'Review thread created automatically per submission',
+      'Staff can approve, request changes, or reject',
+      'Supports multiple languages with syntax highlighting in embeds',
+      'Tracks open and resolved reviews in the dashboard',
+      'Role-based reviewer permissions',
+    ],
+  },
+];
+
+const SDK_FEATURES = [
+  { icon: Package, text: 'TypeScript-first SDK with full type definitions' },
+  { icon: Terminal, text: 'Register custom slash commands from within your addon' },
+  { icon: BookOpen, text: 'Hook into bot events: messages, reactions, member joins, and more' },
+  { icon: Shield, text: 'Per-guild isolated storage — no cross-server data leakage' },
+  { icon: Zap, text: 'Addons hot-reload without restarting the bot process' },
+  { icon: Code2, text: 'Publish to the addon registry for community installs' },
+];
+
+export const metadata = {
+  title: 'Addons — Arken Bot',
+  description:
+    'Explore Arken Bot first-party addons: Ticket System, FiveM, Minecraft, Rust, ARK, Palworld, and Code Review. Or build your own with the Arken Addon SDK.',
+};
+
+export default function AddonsPage() {
+  return (
+    <div className="min-h-screen bg-discord-darkest-bg text-gray-200 flex flex-col">
+      <LandingNav docsUrl={SITE.docsUrl} supportUrl={SITE.supportUrl} inviteUrl={SITE.inviteUrl} />
+
+      {/* ── Hero ── */}
+      <section className="relative overflow-hidden px-6 pt-20 pb-16 text-center">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-fuchsia-500/[0.05] rounded-full blur-3xl" />
+        </div>
+        <div className="relative z-10 max-w-3xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-fuchsia-500/10 border border-fuchsia-500/20 text-fuchsia-400 text-xs font-medium mb-6">
+            <Puzzle className="w-3 h-3" />
+            First-party &amp; community addons
+          </div>
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
+            Extend Arken Bot{' '}
+            <span className="bg-gradient-to-r from-fuchsia-400 via-purple-400 to-blue-400 bg-clip-text text-transparent">
+              with Addons
+            </span>
+          </h1>
+          <p className="text-gray-400 text-lg mb-8 leading-relaxed max-w-xl mx-auto">
+            Arken ships 7 official first-party addons covering game server management, advanced tickets, and developer tools. Install any addon from the dashboard — or build your own with the TypeScript SDK.
+          </p>
+
+          {/* Jump links */}
+          <div className="flex flex-wrap justify-center gap-2">
+            {FIRST_PARTY_ADDONS.map((a) => (
+              <a
+                key={a.id}
+                href={`#${a.id}`}
+                className="px-3 py-1 rounded-full bg-white/[0.05] border border-white/[0.08] text-xs text-gray-400 hover:text-white hover:bg-white/[0.08] transition-colors"
+              >
+                {a.title}
+              </a>
+            ))}
+            <a
+              href="#sdk"
+              className="px-3 py-1 rounded-full bg-white/[0.05] border border-white/[0.08] text-xs text-gray-400 hover:text-white hover:bg-white/[0.08] transition-colors"
+            >
+              Build Your Own
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Addon cards ── */}
+      <div className="max-w-5xl mx-auto px-6 pb-16 space-y-6">
+        {FIRST_PARTY_ADDONS.map((a, idx) => {
+          const Icon = a.icon;
+          return (
+            <section
+              key={a.id}
+              id={a.id}
+              className={`rounded-2xl border border-white/[0.08] overflow-hidden scroll-mt-20 ${
+                idx % 2 === 0 ? 'bg-discord-darker-bg' : 'bg-discord-darker-bg/60'
+              }`}
+            >
+              {/* Header */}
+              <div className={`flex items-start gap-4 p-6 border-b border-white/[0.06] ${a.bg}`}>
+                <div className={`w-11 h-11 rounded-xl ${a.bg} border ${a.accentBorder} flex items-center justify-center flex-shrink-0`}>
+                  <Icon className={`w-5 h-5 ${a.color}`} />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h2 className="text-white font-bold text-xl">{a.title}</h2>
+                    <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${a.badgeColor}`}>
+                      {a.badge}
+                    </span>
+                  </div>
+                  <p className={`text-sm font-medium mt-0.5 ${a.color}`}>{a.tagline}</p>
+                </div>
+              </div>
+
+              {/* Body */}
+              <div className="p-6">
+                <p className="text-gray-400 text-sm leading-relaxed mb-5">{a.description}</p>
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
+                  {a.bullets.map((b) => (
+                    <li key={b} className="flex items-start gap-2.5 text-sm text-gray-300">
+                      <span className={`w-4 h-4 rounded-full ${a.bg} border ${a.border} flex items-center justify-center flex-shrink-0 mt-0.5`}>
+                        <Check className={`w-2.5 h-2.5 ${a.color}`} />
+                      </span>
+                      {b}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </section>
+          );
+        })}
+      </div>
+
+      {/* ── SDK section ── */}
+      <section id="sdk" className="scroll-mt-20 border-t border-white/[0.06] bg-discord-darker-bg/30 py-20 px-6">
+        <div className="max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-fuchsia-500/10 border border-fuchsia-500/20 text-fuchsia-400 text-xs font-medium mb-5">
+                <Code2 className="w-3 h-3" />
+                Addon SDK
+              </div>
+              <h2 className="text-3xl font-bold text-white mb-4 tracking-tight">
+                Build your own addon
+              </h2>
+              <p className="text-gray-400 text-sm leading-relaxed mb-6">
+                The Arken Addon SDK gives you everything you need to extend the bot with custom slash commands, event listeners, and per-guild storage — all in TypeScript. Verified addons can be published to the addon registry so other servers can install them in one click from the dashboard.
+              </p>
+              <a
+                href={SITE.docsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-secondary inline-flex items-center gap-2 text-sm"
+              >
+                Read the SDK docs <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
+
+            <div className="space-y-3">
+              {SDK_FEATURES.map(({ icon: SIcon, text }) => (
+                <div
+                  key={text}
+                  className="flex items-start gap-3 p-4 rounded-xl bg-discord-darker-bg border border-white/[0.06]"
+                >
+                  <div className="w-8 h-8 rounded-lg bg-fuchsia-500/10 border border-fuchsia-500/20 flex items-center justify-center flex-shrink-0">
+                    <SIcon className="w-4 h-4 text-fuchsia-400" />
+                  </div>
+                  <p className="text-sm text-gray-300 leading-snug">{text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA ── */}
+      <section className="py-20 px-6 text-center border-t border-white/[0.04] bg-discord-darker-bg/30">
+        <div className="max-w-2xl mx-auto">
+          <h2 className="text-3xl font-bold text-white mb-3 tracking-tight">
+            Ready to supercharge your server?
+          </h2>
+          <p className="text-gray-500 text-sm mb-8">
+            Add Arken Bot and enable any addon from the dashboard — free, forever.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <a
+              href={SITE.inviteUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary text-[15px] px-10 py-3 shadow-lg shadow-discord-blurple/20 inline-flex items-center gap-2 justify-center"
+            >
+              Add to Server — It&apos;s Free <ArrowRight className="w-4 h-4" />
+            </a>
+            <Link href="/features" className="btn-secondary text-[15px] px-10 py-3 inline-flex items-center gap-2 justify-center">
+              View All Features <ChevronRight className="w-4 h-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Footer ── */}
+      <footer className="border-t border-white/[0.06] py-8 px-6">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 bg-discord-blurple rounded-md flex items-center justify-center">
+              <svg className="w-3.5 h-3.5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.030z" />
+              </svg>
+            </div>
+            <span className="font-semibold text-white text-sm">Arken Bot</span>
+            <span className="text-gray-700 text-xs ml-1">© {new Date().getFullYear()}</span>
+          </div>
+
+          <div className="flex items-center gap-5 text-xs text-gray-500">
+            <Link href="/" className="hover:text-gray-300 transition-colors">Home</Link>
+            <Link href="/features" className="hover:text-gray-300 transition-colors">Features</Link>
+            <Link href="/addons" className="hover:text-gray-300 transition-colors text-gray-300">Addons</Link>
+            <Link href="/auth" className="hover:text-gray-300 transition-colors">Dashboard</Link>
+            <a href={SITE.docsUrl} target="_blank" rel="noopener noreferrer" className="hover:text-gray-300 transition-colors flex items-center gap-1">
+              Docs <ExternalLink className="w-2.5 h-2.5" />
+            </a>
+            <a href={SITE.supportUrl} target="_blank" rel="noopener noreferrer" className="hover:text-gray-300 transition-colors">Support</a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}

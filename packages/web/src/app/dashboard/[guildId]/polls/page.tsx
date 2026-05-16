@@ -1,0 +1,131 @@
+'use client';
+
+import { useParams } from 'next/navigation';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { pollsApi } from '@/lib/api';
+import { BarChart, Trash2, XCircle, Info } from 'lucide-react';
+import toast from 'react-hot-toast';
+
+type Poll = {
+  id: string;
+  question: string;
+  options: string[];
+  votes: { id: string; optionIndex: number; userId: string }[];
+  closed: boolean;
+  createdAt: string;
+};
+
+export default function PollsPage() {
+  const { guildId } = useParams() as { guildId: string };
+  const queryClient = useQueryClient();
+
+  const { data: pollsRes, isLoading } = useQuery({
+    queryKey: ['polls', guildId],
+    queryFn: () => pollsApi.list(guildId),
+  });
+
+  const polls: Poll[] = (pollsRes?.data as { data?: Poll[] })?.data ?? [];
+
+  const closeMutation = useMutation({
+    mutationFn: (pollId: string) => pollsApi.close(guildId, pollId),
+    onSuccess: () => {
+      toast.success('Poll closed');
+      queryClient.invalidateQueries({ queryKey: ['polls', guildId] });
+    },
+    onError: () => toast.error('Failed to close poll'),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (pollId: string) => pollsApi.delete(guildId, pollId),
+    onSuccess: () => {
+      toast.success('Poll deleted');
+      queryClient.invalidateQueries({ queryKey: ['polls', guildId] });
+    },
+    onError: () => toast.error('Failed to delete poll'),
+  });
+
+  const getTotalVotes = (poll: Poll) => poll.votes?.length ?? 0;
+
+  return (
+    <div className="p-3 sm:p-6 max-w-4xl">
+      <div className="mb-6 flex items-center gap-3">
+        <BarChart className="w-6 h-6 text-discord-blurple" />
+        <div>
+          <h1 className="text-2xl font-bold text-white">Polls</h1>
+          <p className="text-sm text-gray-400">View and manage polls created in your server.</p>
+        </div>
+      </div>
+
+      {/* Info notice */}
+      <div className="flex items-start gap-3 px-4 py-3 rounded-lg bg-discord-blurple/10 border border-discord-blurple/30 mb-6">
+        <Info className="w-4 h-4 text-discord-blurple mt-0.5 flex-shrink-0" />
+        <p className="text-sm text-gray-300">
+          Polls are created in Discord using the <span className="font-mono text-discord-blurple">/poll</span> slash command.
+        </p>
+      </div>
+
+      {isLoading ? (
+        <div className="space-y-4">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="card animate-pulse">
+              <div className="h-5 bg-gray-700 rounded w-3/4 mb-3" />
+              <div className="h-4 bg-gray-700 rounded w-1/2" />
+            </div>
+          ))}
+        </div>
+      ) : polls.length === 0 ? (
+        <div className="card text-center py-12">
+          <BarChart className="w-10 h-10 mx-auto mb-3 text-gray-600" />
+          <p className="text-gray-500">No polls found for this server.</p>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {polls.map((poll) => {
+            const totalVotes = getTotalVotes(poll);
+            return (
+              <div key={poll.id} className="card">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span
+                        className={`badge ${poll.closed ? 'badge-danger' : 'badge-success'}`}
+                      >
+                        {poll.closed ? 'Closed' : 'Open'}
+                      </span>
+                    </div>
+                    <p className="text-base font-semibold text-white truncate">{poll.question}</p>
+                    <div className="flex items-center gap-4 mt-2 text-sm text-gray-400">
+                      <span>{poll.options.length} option{poll.options.length !== 1 ? 's' : ''}</span>
+                      <span>{totalVotes} vote{totalVotes !== 1 ? 's' : ''}</span>
+                      <span>Created {new Date(poll.createdAt).toLocaleDateString()}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <button
+                      onClick={() => closeMutation.mutate(poll.id)}
+                      disabled={poll.closed || closeMutation.isPending}
+                      className="btn-primary text-sm py-1.5 px-3 flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
+                      title={poll.closed ? 'Poll already closed' : 'Close poll'}
+                    >
+                      <XCircle className="w-3.5 h-3.5" />
+                      Close Poll
+                    </button>
+                    <button
+                      onClick={() => deleteMutation.mutate(poll.id)}
+                      disabled={deleteMutation.isPending}
+                      className="btn-danger text-sm py-1.5 px-3 flex items-center gap-1.5"
+                      title="Delete poll"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
