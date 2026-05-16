@@ -37,7 +37,7 @@ function axiosErrorMessage(err: unknown): string {
 }
 
 const data = new SlashCommandBuilder()
-  .setName('server')
+  .setName('rsm')
   .setDescription('Manage game servers via Ronin Server Manager')
   .addSubcommand(sub => sub
     .setName('list')
@@ -138,7 +138,7 @@ const serverCommand: AddonCommandDefinition = {
 
     const config = await getConfig(ctx, guildId);
     if (!config) {
-      await interaction.reply({ content: '⚠️ RSM is not configured yet. Ask an admin to run `/server setup` first.', ephemeral: true });
+      await interaction.reply({ content: '⚠️ RSM is not configured yet. Ask an admin to run `/rsm setup` first.', ephemeral: true });
       return;
     }
 

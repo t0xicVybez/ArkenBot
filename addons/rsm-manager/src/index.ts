@@ -10,7 +10,7 @@ export default defineAddon({
     version: '1.0.0',
     description: 'Control game servers managed by Ronin Server Manager directly from Discord.',
     author: 't0xicVybez',
-    commands: ['server'],
+    commands: ['rsm'],
     settings: [],
   },
 
@@ -21,7 +21,7 @@ export default defineAddon({
       event: 'interactionCreate',
       handler: async (ctx: AddonContext, ...args: unknown[]): Promise<void> => {
         const interaction = args[0] as Interaction;
-        if (interaction.isAutocomplete() && interaction.commandName === 'server') {
+        if (interaction.isAutocomplete() && interaction.commandName === 'rsm') {
           await serverCommand.autocomplete!(interaction as AutocompleteInteraction, ctx);
         }
       },
