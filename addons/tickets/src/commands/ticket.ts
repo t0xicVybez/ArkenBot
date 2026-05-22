@@ -352,6 +352,7 @@ const command: AddonCommandDefinition = {
         ticket.priority = level;
         ticket.lastActivity = new Date().toISOString();
         await saveTicket(ctx.storage, interaction.guildId, ticket);
+        await updateControlsMessage(ctx, ticket, !!ticket.claimedBy);
         const emoji = { low: '🟢', medium: '🟡', high: '🟠', urgent: '🔴' }[level];
         await interaction.reply(`${emoji} Priority set to **${level}**.`);
         break;

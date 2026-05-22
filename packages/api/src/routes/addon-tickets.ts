@@ -482,6 +482,7 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     if (!ticket) return reply.code(404).send({ success: false, error: 'Ticket not found' });
     tickets[idx] = { ...ticket, priority, lastActivity: new Date().toISOString() };
     await writeData(guildId, 'tickets', tickets);
+    pub.publish('ticket:priority:updated', JSON.stringify({ guildId, channelId: ticket.channelId, ticketId, priority })).catch(() => null);
     return reply.send({ success: true, data: tickets[idx] });
   });
 

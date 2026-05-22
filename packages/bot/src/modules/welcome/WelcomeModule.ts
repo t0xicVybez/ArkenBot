@@ -9,7 +9,7 @@ export class WelcomeModule {
     if (!config?.welcomeEnabled) return;
 
     const variables = {
-      user: `<@${member.id}>`,
+      user: `@${member.displayName}`,
       username: member.user.username,
       server: guild.name,
       memberCount: guild.memberCount,
@@ -46,7 +46,7 @@ export class WelcomeModule {
             .setFooter({ text: `ID: ${member.id}`, iconURL: guild.iconURL() ?? undefined })
             .setTimestamp();
 
-          await textChannel.send({ embeds: [embed] }).catch(() => null);
+          await textChannel.send({ content: `<@${member.id}>`, embeds: [embed] }).catch(() => null);
         } else {
           await textChannel.send({ content: message }).catch(() => null);
         }

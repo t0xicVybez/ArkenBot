@@ -22,7 +22,6 @@ import {
   saveTicket,
   getTicketByChannel,
   getMessages,
-  deleteMessages,
 } from '../utils/storage.js';
 import {
   buildTicketEmbed,
@@ -397,7 +396,6 @@ async function finalizeTicketClose(
         await archiveTicketChannel(channel, freshTicket);
       } else {
         await channel.delete(`Ticket #${freshTicket.number} closed by ${freshTicket.closedByTag}`);
-        await deleteMessages(ctx.storage, channelId);
       }
     } catch (err) {
       ctx.logger.error('Failed to delete/archive ticket channel', String(err));
@@ -641,7 +639,15 @@ export async function updateControlsMessage(ctx: AddonContext, ticket: Ticket, c
   if (!msg) return;
   const waiting = ticket.status === 'waiting';
   const components = claimed ? buildClaimedControls(ticket.channelId, waiting) : buildTicketControls(ticket.channelId, waiting);
-  await msg.edit({ components }).catch(() => null);
+  const panel = await getPanel(ctx.storage, channel.guildId, ticket.panelId);
+  const member = channel.guild.members.cache.get(ticket.userId)
+    ?? await channel.guild.members.fetch(ticket.userId).catch(() => null);
+  if (panel && member) {
+    const embed = buildTicketEmbed(ticket, panel, member);
+    await msg.edit({ embeds: [embed], components }).catch(() => null);
+  } else {
+    await msg.edit({ components }).catch(() => null);
+  }
 }
 
 // ─── Transcript Button ────────────────────────────────────────────────────────

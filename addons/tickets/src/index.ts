@@ -10,7 +10,6 @@ import { handleTicketMessage } from './events/message.js';
 import { getTickets, getPanels, getConfig, getPanel, getTicketByChannel, appendMessage, saveTicket } from './utils/storage.js';
 import { buildPanelEmbed, buildPanelButtons } from './utils/embeds.js';
 import type { TicketNote } from './types.js';
-import { EmbedBuilder } from 'discord.js';
 
 // Auto-close / SLA check interval (every 30 minutes)
 const AUTO_CLOSE_INTERVAL_MS = 30 * 60 * 1000;
@@ -88,7 +87,7 @@ async function startPanelSyncListener(ctx: AddonContext): Promise<void> {
       maxRetriesPerRequest: 3,
     });
     await redisSub.connect();
-    await redisSub.subscribe('ticket:panel:updated', 'ticket:note:added', 'ticket:reply');
+    await redisSub.subscribe('ticket:panel:updated', 'ticket:note:added', 'ticket:reply', 'ticket:priority:updated');
 
     redisSub.on('message', async (channel, message) => {
       try {
@@ -113,6 +112,12 @@ async function startPanelSyncListener(ctx: AddonContext): Promise<void> {
             authorTag: string;
           };
           await handlePortalReply(ctx, guildId, channelId, content, authorTag);
+        } else if (channel === 'ticket:priority:updated') {
+          const { guildId, channelId } = JSON.parse(message) as { guildId: string; channelId: string };
+          const ticket = await getTicketByChannel(ctx.storage, guildId, channelId);
+          if (ticket && ticket.status !== 'closed') {
+            await updateControlsMessage(ctx, ticket, !!ticket.claimedBy);
+          }
         }
       } catch (err) {
         ctx.logger.error('Failed to handle Redis event', String(err));
@@ -138,13 +143,7 @@ async function handlePortalReply(
   const discordChannel = ctx.client.channels.cache.get(channelId) as TextChannel | undefined;
   if (!discordChannel?.isTextBased()) return;
 
-  const embed = new EmbedBuilder()
-    .setColor(0x5865f2)
-    .setDescription(content)
-    .setFooter({ text: `Staff Portal · ${authorTag}` })
-    .setTimestamp();
-
-  await discordChannel.send({ embeds: [embed] });
+  await discordChannel.send({ content: `**[Staff Portal · ${authorTag}]** ${content}` });
 
   const now = new Date().toISOString();
 
