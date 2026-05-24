@@ -242,39 +242,38 @@ const serverCommand: AddonCommandDefinition = {
       const apiKey = interaction.options.getString('apikey', true);
       await interaction.deferReply({ ephemeral: true });
 
-      let fingerprint: string | undefined;
+      try {
+        let serverCount: number;
+        let fingerprint: string | undefined;
 
-      // TOFU: for HTTPS connections, connect once with cert validation disabled
-      // to capture the server's cert fingerprint, then pin it for all future requests.
-      if (url.startsWith('https://')) {
-        let captured: string | undefined;
-        const setupAgent = new https.Agent({
-          rejectUnauthorized: false,
-          checkServerIdentity: (_host: string, cert: { fingerprint256?: string }) => {
-            captured = cert.fingerprint256;
-            return undefined;
-          },
-        });
-        try {
-          await axios.get(`${url}/api/servers`, {
+        if (url.startsWith('https://')) {
+          // TOFU: single request with rejectUnauthorized:false to capture the cert fingerprint
+          // and verify the connection in one shot. Avoids a second request that would reject
+          // the self-signed cert under default TLS validation.
+          let captured: string | undefined;
+          const setupAgent = new https.Agent({
+            rejectUnauthorized: false,
+            checkServerIdentity: (_host: string, cert: { fingerprint256?: string }) => {
+              captured = cert.fingerprint256;
+              return undefined;
+            },
+          });
+          const res = await axios.get(`${url}/api/servers`, {
             headers: { 'x-api-key': apiKey },
             httpsAgent: setupAgent,
             timeout: 5000,
           });
+          serverCount = (res.data as { servers: RsmServer[] }).servers.length;
           fingerprint = captured;
-        } catch {
-          await interaction.editReply('❌ Could not connect to RSM. Check the URL and API key.');
-          return;
+        } else {
+          const servers = await fetchServers({ url, apiKey });
+          serverCount = servers.length;
         }
-      }
 
-      try {
         const config: RsmConfig = { url, apiKey, ...(fingerprint ? { fingerprint } : {}) };
-        // For HTTPS we already verified above; for HTTP this is the first connection test.
-        const servers = await fetchServers(config);
         await ctx.storage.set(CONFIG_KEY, config, guildId);
         const certNote = fingerprint ? `\n🔒 TLS certificate pinned (\`${fingerprint.slice(0, 23)}…\`)` : '';
-        await interaction.editReply(`✅ Connected to RSM — found **${servers.length}** server(s).${certNote}`);
+        await interaction.editReply(`✅ Connected to RSM — found **${serverCount}** server(s).${certNote}`);
       } catch {
         await interaction.editReply('❌ Could not connect to RSM. Check the URL and API key.');
       }
