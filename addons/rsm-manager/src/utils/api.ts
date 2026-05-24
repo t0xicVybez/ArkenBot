@@ -45,3 +45,15 @@ export async function sendCommand(config: RsmConfig, id: string, command: string
   const res = await client.post(`${config.url}/api/servers/${id}/command`, { command }, { headers: headers(config) });
   return res.data as { success: boolean; output: string };
 }
+
+export interface RsmPlayerList {
+  online: number | null;
+  max: number | null;
+  players: string[];
+  note?: string;
+}
+
+export async function fetchPlayers(config: RsmConfig, id: string): Promise<RsmPlayerList> {
+  const res = await client.get(`${config.url}/api/servers/${id}/players`, { headers: headers(config) });
+  return res.data as RsmPlayerList;
+}
