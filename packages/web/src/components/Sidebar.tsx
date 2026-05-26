@@ -42,6 +42,9 @@ import {
   Hash,
   Layout,
   UserCheck,
+  AtSign,
+  Globe,
+  Rss,
   type LucideIcon,
 } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
@@ -110,6 +113,9 @@ const buildNavSections = (guildId: string, installedAddons: string[]): NavSectio
         { href: `/dashboard/${guildId}/embeds`, label: 'Embed Builder', icon: Layout },
         { href: `/dashboard/${guildId}/scheduled-messages`, label: 'Scheduled Messages', icon: Clock },
         { href: `/dashboard/${guildId}/stream-alerts`, label: 'Stream Alerts', icon: Radio },
+        { href: `/dashboard/${guildId}/twitter-feeds`, label: 'X / Twitter Feeds', icon: AtSign },
+        { href: `/dashboard/${guildId}/reddit-feeds`, label: 'Reddit Feeds', icon: Globe },
+        { href: `/dashboard/${guildId}/rss-feeds`, label: 'RSS Feeds', icon: Rss },
         { href: `/dashboard/${guildId}/commands`, label: 'Commands', icon: Terminal },
         { href: `/dashboard/${guildId}/game-resources`, label: 'Game Resources', icon: Gamepad2 },
       ],

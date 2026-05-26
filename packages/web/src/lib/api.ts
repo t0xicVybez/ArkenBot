@@ -276,9 +276,10 @@ export const giveawaysApi = {
     api.get(`/guilds/${guildId}/giveaways`, { params: ended !== undefined ? { ended } : {} }),
 };
 
-// ─── Stream Alerts ────────────────────────────────────────────────
+// ─── Stream / Feed Alerts ─────────────────────────────────────────
 export const streamAlertsApi = {
-  list: (guildId: string) => api.get(`/guilds/${guildId}/stream-alerts`),
+  list: (guildId: string, platforms?: string[]) =>
+    api.get(`/guilds/${guildId}/stream-alerts`, { params: platforms?.length ? { platform: platforms.join(',') } : {} }),
   create: (guildId: string, data: object) => api.post(`/guilds/${guildId}/stream-alerts`, data),
   update: (guildId: string, id: string, data: object) => api.patch(`/guilds/${guildId}/stream-alerts/${id}`, data),
   delete: (guildId: string, id: string) => api.delete(`/guilds/${guildId}/stream-alerts/${id}`),
