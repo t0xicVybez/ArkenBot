@@ -60,6 +60,7 @@ export class BackgroundJobs {
     void this.runGiveaways();
     setTimeout(() => this.timers.push(setInterval(() => void this.runGiveaways(), 60 * 1000)), jitter());
 
+    void this.runStreamAlerts();
     setTimeout(() => this.timers.push(setInterval(() => void this.runStreamAlerts(), 5 * 60 * 1000)), jitter());
 
     setTimeout(() => this.timers.push(setInterval(() => void XPDecayModule.runDecay(), 24 * 60 * 60 * 1000)), jitter());
@@ -450,6 +451,8 @@ export class BackgroundJobs {
     const twitchClientId = process.env.TWITCH_CLIENT_ID;
     const twitchClientSecret = process.env.TWITCH_CLIENT_SECRET;
     const twitterBearerToken = process.env.TWITTER_BEARER_TOKEN;
+    const redditClientId = process.env.REDDIT_CLIENT_ID;
+    const redditClientSecret = process.env.REDDIT_CLIENT_SECRET;
 
     try {
       const alerts = await prisma.streamAlert.findMany({ where: { enabled: true } });
@@ -469,6 +472,28 @@ export class BackgroundJobs {
         }
       }
 
+      // Obtain a Reddit OAuth token. Reddit blocks datacenter IPs from the
+      // public JSON API and RSS feeds; the OAuth endpoint works from any IP.
+      let redditToken: string | null = null;
+      if (redditClientId && redditClientSecret && alerts.some((a) => a.platform === 'reddit')) {
+        const creds = Buffer.from(`${redditClientId}:${redditClientSecret}`).toString('base64');
+        const tokenRes = await fetch('https://www.reddit.com/api/v1/access_token', {
+          method: 'POST',
+          headers: {
+            Authorization: `Basic ${creds}`,
+            'User-Agent': 'linux:arkenbot:v1.0 (by /u/ArkenBot)',
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: 'grant_type=client_credentials',
+        }).catch(() => null);
+        if (tokenRes?.ok) {
+          const tokenData = await tokenRes.json() as { access_token: string };
+          redditToken = tokenData.access_token;
+        } else {
+          logger.warn('Failed to obtain Reddit OAuth token — Reddit alerts will be skipped');
+        }
+      }
+
       const rssParser = new RSSParser();
 
       // Process alerts in parallel batches of 5 so we don't hammer external APIs
@@ -477,7 +502,7 @@ export class BackgroundJobs {
       for (let i = 0; i < alerts.length; i += BATCH) {
         await Promise.allSettled(
           alerts.slice(i, i + BATCH).map((alert) =>
-            this.processStreamAlert(alert, twitchClientId ?? null, twitchClientSecret ?? null, twitchToken, twitterBearerToken ?? null, rssParser),
+            this.processStreamAlert(alert, twitchClientId ?? null, twitchClientSecret ?? null, twitchToken, twitterBearerToken ?? null, redditToken, rssParser),
           ),
         );
       }
@@ -492,6 +517,7 @@ export class BackgroundJobs {
     twitchClientSecret: string | null,
     twitchToken: string | null,
     twitterBearerToken: string | null,
+    redditToken: string | null,
     rssParser: RSSParser,
   ): Promise<void> {
     if (!alert) return;
@@ -632,34 +658,40 @@ export class BackgroundJobs {
         logger.info({ guildId: alert.guildId, streamer: alert.channelUsername }, 'Twitter/X alert sent');
 
       } else if (alert.platform === 'reddit') {
-        // Reddit's unauthenticated JSON API blocks server IPs. Use the public
-        // RSS feed instead — no credentials required and same data.
+        // Reddit blocks unauthenticated requests from datacenter IPs.
+        // Requires REDDIT_CLIENT_ID + REDDIT_CLIENT_SECRET in .env.
+        if (!redditToken) {
+          logger.warn({ alertId: alert.id }, 'Reddit alert skipped — no OAuth token (set REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET)');
+          return;
+        }
         const subreddit = alert.channelUsername.replace(/^r\//, '');
-        const feed = await rssParser.parseURL(
-          `https://www.reddit.com/r/${encodeURIComponent(subreddit)}/new/.rss`,
-        ).catch(() => null);
-        if (!feed) return;
+        const res = await fetch(
+          `https://oauth.reddit.com/r/${encodeURIComponent(subreddit)}/new?limit=5`,
+          {
+            headers: {
+              Authorization: `Bearer ${redditToken}`,
+              'User-Agent': 'linux:arkenbot:v1.0 (by /u/ArkenBot)',
+            },
+          },
+        );
+        if (!res.ok) return;
+        const data = await res.json() as { data?: { children?: Array<{ data: { id: string; title: string; permalink: string; author: string } }> } };
+        const latestPost = data.data?.children?.[0]?.data;
+        if (!latestPost || latestPost.id === alert.lastStreamId) return;
 
-        const latestItem = feed.items?.[0];
-        if (!latestItem) return;
+        await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastStreamId: latestPost.id } });
 
-        const itemId = latestItem.id ?? latestItem.guid ?? latestItem.link ?? '';
-        if (!itemId || itemId === alert.lastStreamId) return;
-
-        await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastStreamId: itemId } });
-
-        const postUrl = latestItem.link ?? `https://reddit.com/r/${subreddit}`;
-        const author = (latestItem as Record<string, string>)['dc:creator'] ?? latestItem.creator ?? 'unknown';
+        const postUrl = `https://reddit.com${latestPost.permalink}`;
         const message = alert.message
           .replace(/\{streamer\}/g, `r/${subreddit}`)
           .replace(/\{url\}/g, postUrl)
-          .replace(/\{title\}/g, latestItem.title ?? 'New post')
-          .replace(/\{author\}/g, author);
+          .replace(/\{title\}/g, latestPost.title)
+          .replace(/\{author\}/g, latestPost.author);
 
         const embed = new EmbedBuilder()
-          .setTitle(latestItem.title ?? 'New post')
+          .setTitle(latestPost.title)
           .setURL(postUrl)
-          .setDescription(`Posted by u/${author} in r/${subreddit}`)
+          .setDescription(`Posted by u/${latestPost.author} in r/${subreddit}`)
           .setColor(alertColor ?? 0xff4500)
           .setTimestamp();
 

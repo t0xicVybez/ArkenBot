@@ -23,6 +23,7 @@ export default function RedditFeedsPage() {
       icon={Globe}
       iconColor="text-orange-400"
       platforms={PLATFORMS}
+      notice="Reddit requires REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET in the bot's .env file. Reddit blocks unauthenticated requests from server IPs even for public subreddits. Create a free script app at reddit.com/prefs/apps to get credentials."
     />
   );
 }
