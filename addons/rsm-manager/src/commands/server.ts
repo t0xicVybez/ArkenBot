@@ -13,7 +13,7 @@ import {
 import axios from 'axios';
 import * as https from 'https';
 import type { AddonContext, AddonCommandDefinition } from '@arkenbot/addon-sdk';
-import { fetchServers, fetchServer, startServer, stopServer, sendCommand, fetchPlayers } from '../utils/api.js';
+import { fetchServers, fetchServer, startServer, stopServer, sendCommand, fetchPlayers, restartServer, killServer, fetchLogs } from '../utils/api.js';
 import type { RsmConfig, RsmServer } from '../utils/api.js';
 
 // ── Storage keys ──────────────────────────────────────────────────────────────
@@ -118,6 +118,18 @@ function statusColor(status: string): number {
   return 0xED4245;
 }
 
+function formatUptime(seconds: number | null): string {
+  if (seconds === null) return '—';
+  const d = Math.floor(seconds / 86400);
+  const h = Math.floor((seconds % 86400) / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = seconds % 60;
+  if (d > 0) return `${d}d ${h}h ${m}m`;
+  if (h > 0) return `${h}h ${m}m`;
+  if (m > 0) return `${m}m ${s}s`;
+  return `${s}s`;
+}
+
 function axiosErrorMessage(err: unknown): string {
   const e = err as { response?: { status: number; data?: { error?: string } }; message?: string };
   if (e.response?.data?.error)    return e.response.data.error;
@@ -196,7 +208,22 @@ const data = new SlashCommandBuilder()
       .setRequired(false)))
   .addSubcommand(sub => sub
     .setName('unmonitor')
-    .setDescription('Stop the auto-updating server status channel (Admin only)'));
+    .setDescription('Stop the auto-updating server status channel (Admin only)'))
+  .addSubcommand(sub => sub
+    .setName('restart')
+    .setDescription('Restart a game server (stop then start)')
+    .addStringOption(opt => opt
+      .setName('server').setDescription('Server to restart').setRequired(true).setAutocomplete(true)))
+  .addSubcommand(sub => sub
+    .setName('logs')
+    .setDescription('Show the last lines of a server\'s console log')
+    .addStringOption(opt => opt
+      .setName('server').setDescription('Server to fetch logs for').setRequired(true).setAutocomplete(true)))
+  .addSubcommand(sub => sub
+    .setName('kill')
+    .setDescription('Force-kill a server process immediately (use with caution)')
+    .addStringOption(opt => opt
+      .setName('server').setDescription('Server to kill').setRequired(true).setAutocomplete(true)));
 
 // ── Handler ───────────────────────────────────────────────────────────────────
 const serverCommand: AddonCommandDefinition = {
@@ -331,7 +358,7 @@ const serverCommand: AddonCommandDefinition = {
     }
 
     // ── Operator-only subcommands ──────────────────────────────────────────
-    if (['start', 'stop', 'command'].includes(sub)) {
+    if (['start', 'stop', 'restart', 'command', 'logs', 'kill'].includes(sub)) {
       if (!await hasOperatorPermission(interaction, ctx)) {
         const roleId = await ctx.storage.get<string>(OPERATOR_KEY, guildId);
         const hint   = roleId ? ` You need the <@&${roleId}> role.` : ' No operator role has been configured — ask an admin to run `/rsm setrole`.';
@@ -390,11 +417,12 @@ const serverCommand: AddonCommandDefinition = {
           .setTitle(`${statusEmoji(srv.status)} ${srv.name}`)
           .setColor(statusColor(srv.status))
           .addFields(
-            { name: 'Status', value: srv.status,              inline: true },
-            { name: 'Type',   value: srv.type,                inline: true },
-            { name: 'PID',    value: srv.pid?.toString() ?? '—', inline: true },
+            { name: 'Status', value: srv.status,                          inline: true },
+            { name: 'Type',   value: srv.type,                            inline: true },
+            { name: 'PID',    value: srv.pid?.toString() ?? '—',          inline: true },
             { name: 'CPU',    value: srv.cpu !== null ? `${srv.cpu}%` : '—', inline: true },
-            { name: 'RAM',    value: ramDisplay,              inline: true },
+            { name: 'RAM',    value: ramDisplay,                          inline: true },
+            { name: 'Uptime', value: formatUptime(srv.uptimeSeconds),     inline: true },
           )
           .setTimestamp();
         await interaction.editReply({ embeds: [embed] });
@@ -437,6 +465,37 @@ const serverCommand: AddonCommandDefinition = {
         await interaction.editReply(
           result.success ? `\`\`\`\n${output}\n\`\`\`` : `❌ ${output}`
         );
+        return;
+      }
+
+      // restart ──────────────────────────────────────────────────────────────
+      if (sub === 'restart') {
+        const id     = interaction.options.getString('server', true);
+        const result = await restartServer(config, id);
+        await interaction.editReply(`🔄 ${result.message}`);
+        return;
+      }
+
+      // logs ─────────────────────────────────────────────────────────────────
+      if (sub === 'logs') {
+        const id   = interaction.options.getString('server', true);
+        const data = await fetchLogs(config, id);
+        const trimmed = data.log.length > 1800 ? '…' + data.log.slice(-1800) : data.log;
+        const embed = new EmbedBuilder()
+          .setTitle(`📋 Console Log — ${id}`)
+          .setColor(0x5865F2)
+          .setDescription(`\`\`\`\n${trimmed || '(empty)'}\n\`\`\``)
+          .setFooter({ text: `${data.totalLines} total lines` })
+          .setTimestamp();
+        await interaction.editReply({ embeds: [embed] });
+        return;
+      }
+
+      // kill ─────────────────────────────────────────────────────────────────
+      if (sub === 'kill') {
+        const id     = interaction.options.getString('server', true);
+        const result = await killServer(config, id);
+        await interaction.editReply(`⚠️ ${result.message}\nUse \`/rsm start\` to restart it.`);
         return;
       }
 

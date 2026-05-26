@@ -16,6 +16,7 @@ export interface RsmServer {
   pid: number | null;
   cpu: number | null;
   ramMB: number | null;
+  uptimeSeconds: number | null;
 }
 
 export interface RsmPlayerList {
@@ -23,6 +24,13 @@ export interface RsmPlayerList {
   max: number | null;
   players: string[];
   note?: string;
+  rawOutput?: string;
+}
+
+export interface RsmLogs {
+  id: string;
+  totalLines: number;
+  log: string;
 }
 
 const client = axios.create({ timeout: 5000 });
@@ -99,4 +107,31 @@ export async function fetchPlayers(config: RsmConfig, id: string): Promise<RsmPl
     ...(agent ? { httpsAgent: agent } : {}),
   });
   return res.data as RsmPlayerList;
+}
+
+export async function restartServer(config: RsmConfig, id: string): Promise<{ message: string }> {
+  const agent = agentFor(config);
+  const res = await client.post(`${config.url}/api/servers/${id}/restart`, {}, {
+    headers: headers(config),
+    ...(agent ? { httpsAgent: agent } : {}),
+  });
+  return res.data as { message: string };
+}
+
+export async function killServer(config: RsmConfig, id: string): Promise<{ message: string }> {
+  const agent = agentFor(config);
+  const res = await client.post(`${config.url}/api/servers/${id}/kill`, {}, {
+    headers: headers(config),
+    ...(agent ? { httpsAgent: agent } : {}),
+  });
+  return res.data as { message: string };
+}
+
+export async function fetchLogs(config: RsmConfig, id: string): Promise<RsmLogs> {
+  const agent = agentFor(config);
+  const res = await client.get(`${config.url}/api/servers/${id}/logs`, {
+    headers: headers(config),
+    ...(agent ? { httpsAgent: agent } : {}),
+  });
+  return res.data as RsmLogs;
 }
