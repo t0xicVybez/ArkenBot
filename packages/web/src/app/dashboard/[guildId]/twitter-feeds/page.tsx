@@ -11,6 +11,7 @@ const PLATFORMS = [
     usernameLabel: 'Username',
     usernamePlaceholder: 'e.g. @shroud or shroud',
     variables: '{streamer} = @handle · {title} = tweet text · {url} = tweet link',
+    messagePlaceholder: 'e.g. New tweet from {streamer}: {url}',
   },
 ];
 
