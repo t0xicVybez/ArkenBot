@@ -10,7 +10,7 @@ const PLATFORMS = [
     badgeClass: 'bg-yellow-500/15 text-yellow-400',
     usernameLabel: 'Feed URL',
     usernamePlaceholder: 'https://example.com/feed.xml',
-    variables: '{streamer}, {title}, {url}',
+    variables: '{streamer} = feed title · {title} = item title · {url} = item link',
   },
 ];
 
@@ -18,7 +18,7 @@ export default function RssFeedsPage() {
   return (
     <FeedAlertsPage
       title="RSS Feeds"
-      description="Post a Discord notification whenever an RSS or podcast feed publishes a new item."
+      description="Post a Discord notification whenever an RSS or podcast feed publishes a new item. Checks every 5 minutes. No API key required."
       icon={Rss}
       iconColor="text-yellow-400"
       platforms={PLATFORMS}
