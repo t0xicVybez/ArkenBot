@@ -10,7 +10,7 @@ const PLATFORMS = [
     badgeClass: 'bg-purple-500/15 text-purple-300',
     usernameLabel: 'Channel Username',
     usernamePlaceholder: 'e.g. shroud',
-    variables: '{streamer}, {title}, {url}, {game}',
+    variables: '{streamer} = channel name · {title} = stream title · {game} = game name · {url} = channel URL',
   },
   {
     value: 'kick',
@@ -18,7 +18,7 @@ const PLATFORMS = [
     badgeClass: 'bg-green-500/15 text-green-400',
     usernameLabel: 'Channel Username',
     usernamePlaceholder: 'e.g. shroud',
-    variables: '{streamer}, {title}, {url}',
+    variables: '{streamer} = channel name · {title} = stream title · {url} = channel URL',
   },
 ];
 
@@ -26,11 +26,11 @@ export default function StreamAlertsPage() {
   return (
     <FeedAlertsPage
       title="Stream Alerts"
-      description="Get notified in Discord the moment a streamer goes live on Twitch or Kick."
+      description="Get notified in Discord the moment a streamer goes live on Twitch or Kick. Checks every 5 minutes."
       icon={Radio}
       iconColor="text-purple-400"
       platforms={PLATFORMS}
-      notice="Twitch alerts require a Twitch Client ID and Secret configured on the server. Kick needs no platform credentials. Contact your bot administrator if alerts are not firing."
+      notice="Twitch alerts require TWITCH_CLIENT_ID and TWITCH_CLIENT_SECRET in the bot's .env file. Kick needs no credentials — it works out of the box."
     />
   );
 }
