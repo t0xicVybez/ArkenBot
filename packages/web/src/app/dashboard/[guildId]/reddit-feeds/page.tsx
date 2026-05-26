@@ -11,6 +11,7 @@ const PLATFORMS = [
     usernameLabel: 'Subreddit name',
     usernamePlaceholder: 'e.g. gaming  (no r/ prefix needed)',
     variables: '{streamer} = r/subreddit · {title} = post title · {author} = username · {url} = post link',
+    messagePlaceholder: 'e.g. New post in {streamer}: {title} — {url}',
   },
 ];
 

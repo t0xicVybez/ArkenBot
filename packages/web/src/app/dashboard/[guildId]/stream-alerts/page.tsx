@@ -11,6 +11,7 @@ const PLATFORMS = [
     usernameLabel: 'Channel Username',
     usernamePlaceholder: 'e.g. shroud',
     variables: '{streamer} = channel name · {title} = stream title · {game} = game name · {url} = channel URL',
+    messagePlaceholder: 'e.g. @everyone {streamer} is live! Playing {game} — {url}',
   },
   {
     value: 'kick',
@@ -19,6 +20,7 @@ const PLATFORMS = [
     usernameLabel: 'Channel Username',
     usernamePlaceholder: 'e.g. shroud',
     variables: '{streamer} = channel name · {title} = stream title · {url} = channel URL',
+    messagePlaceholder: 'e.g. @everyone {streamer} is live on Kick! {url}',
   },
 ];
 

@@ -17,6 +17,7 @@ export interface PlatformConfig {
   usernameLabel: string;
   usernamePlaceholder: string;
   variables: string;
+  messagePlaceholder?: string;
 }
 
 interface FeedAlertsPageProps {
@@ -215,7 +216,7 @@ export function FeedAlertsPage({ title, description, icon: Icon, iconColor, plat
               <input
                 type="text"
                 className="input"
-                placeholder="e.g. New post from {streamer}: {url}"
+                placeholder={currentPlatformConfig.messagePlaceholder ?? 'e.g. {title} — {url}'}
                 value={form.message}
                 onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))}
               />
