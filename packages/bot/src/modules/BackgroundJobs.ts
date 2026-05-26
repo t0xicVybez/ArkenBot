@@ -632,29 +632,34 @@ export class BackgroundJobs {
         logger.info({ guildId: alert.guildId, streamer: alert.channelUsername }, 'Twitter/X alert sent');
 
       } else if (alert.platform === 'reddit') {
+        // Reddit's unauthenticated JSON API blocks server IPs. Use the public
+        // RSS feed instead — no credentials required and same data.
         const subreddit = alert.channelUsername.replace(/^r\//, '');
-        const res = await fetch(
-          `https://www.reddit.com/r/${encodeURIComponent(subreddit)}/new.json?limit=5`,
-          { headers: { 'User-Agent': 'ArkenBot/1.0' } },
-        );
-        if (!res.ok) return;
-        const data = await res.json() as { data?: { children?: Array<{ data: { id: string; title: string; permalink: string; author: string } }> } };
-        const latestPost = data.data?.children?.[0]?.data;
-        if (!latestPost || latestPost.id === alert.lastStreamId) return;
+        const feed = await rssParser.parseURL(
+          `https://www.reddit.com/r/${encodeURIComponent(subreddit)}/new/.rss`,
+        ).catch(() => null);
+        if (!feed) return;
 
-        await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastStreamId: latestPost.id } });
+        const latestItem = feed.items?.[0];
+        if (!latestItem) return;
 
-        const postUrl = `https://reddit.com${latestPost.permalink}`;
+        const itemId = latestItem.id ?? latestItem.guid ?? latestItem.link ?? '';
+        if (!itemId || itemId === alert.lastStreamId) return;
+
+        await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastStreamId: itemId } });
+
+        const postUrl = latestItem.link ?? `https://reddit.com/r/${subreddit}`;
+        const author = (latestItem as Record<string, string>)['dc:creator'] ?? latestItem.creator ?? 'unknown';
         const message = alert.message
           .replace(/\{streamer\}/g, `r/${subreddit}`)
           .replace(/\{url\}/g, postUrl)
-          .replace(/\{title\}/g, latestPost.title)
-          .replace(/\{author\}/g, latestPost.author);
+          .replace(/\{title\}/g, latestItem.title ?? 'New post')
+          .replace(/\{author\}/g, author);
 
         const embed = new EmbedBuilder()
-          .setTitle(latestPost.title)
+          .setTitle(latestItem.title ?? 'New post')
           .setURL(postUrl)
-          .setDescription(`Posted by u/${latestPost.author} in r/${subreddit}`)
+          .setDescription(`Posted by u/${author} in r/${subreddit}`)
           .setColor(alertColor ?? 0xff4500)
           .setTimestamp();
 
