@@ -10,10 +10,15 @@ export async function streamAlertRoutes(server: FastifyInstance): Promise<void> 
   // STREAM ALERTS
   // ══════════════════════════════════════════════════════════════════
 
-  // GET /guilds/:guildId/stream-alerts
+  // GET /guilds/:guildId/stream-alerts?platform=twitch,kick
   server.get('/guilds/:guildId/stream-alerts', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
-    const alerts = await prisma.streamAlert.findMany({ where: { guildId }, orderBy: { createdAt: 'desc' } });
+    const { platform } = request.query as { platform?: string };
+    const platformFilter = platform ? platform.split(',').map((p) => p.trim()).filter(Boolean) : undefined;
+    const alerts = await prisma.streamAlert.findMany({
+      where: { guildId, ...(platformFilter?.length ? { platform: { in: platformFilter } } : {}) },
+      orderBy: { createdAt: 'desc' },
+    });
     return reply.send({ success: true, data: alerts });
   });
 
