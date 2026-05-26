@@ -47,11 +47,13 @@ model Guild {
   giveaways         Giveaway[]
   streamAlerts      StreamAlert[]
   tempBans          TempBan[]
+  tempRoles         TempRole[]
   reminders         Reminder[]
   countingState     CountingState?
   inviteCounts      InviteCount[]
   inviteJoins       InviteJoin[]
   guildEmbeds       GuildEmbed[]
+  autoResponses     AutoResponse[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -720,6 +722,26 @@ model TempBan {
 }
 
 // ─────────────────────────────────────────────
+// Temp Roles
+// ─────────────────────────────────────────────
+model TempRole {
+  id          String   @id @default(cuid())
+  guildId     String
+  guild       Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  userId      String
+  roleId      String
+  moderatorId String
+  reason      String   @default("No reason provided")
+  expiresAt   DateTime
+  removed     Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@unique([guildId, userId, roleId])
+  @@index([guildId, removed, expiresAt])
+  @@map("temp_roles")
+}
+
+// ─────────────────────────────────────────────
 // Reminders
 // ─────────────────────────────────────────────
 model Reminder {
@@ -1022,4 +1044,31 @@ model StreamAlert {
   @@unique([guildId, platform, channelUsername])
   @@index([guildId, platform, enabled])
   @@map("stream_alerts")
+}
+
+// ─────────────────────────────────────────────
+// Auto-Responses (regex-triggered replies)
+// ─────────────────────────────────────────────
+model AutoResponse {
+  id             String   @id @default(cuid())
+  guildId        String
+  guild          Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  pattern        String   // regex pattern string (no delimiters, flags stored separately)
+  flags          String   @default("i") // regex flags, e.g. "i", "gi"
+  response       String
+  embed          Boolean  @default(false)
+  embedColor     String?
+  deleteMessage  Boolean  @default(false) // delete the triggering message
+  enabled        Boolean  @default(true)
+  ignoreBots     Boolean  @default(true)
+  requiredRoles  String[] @default([]) // empty = everyone
+  ignoredRoles   String[] @default([]) // roles exempt from triggering
+  createdById    String
+  uses           Int      @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([guildId, enabled])
+  @@map("auto_responses")
 }

@@ -308,6 +308,15 @@ export const customCommandsApi = {
   delete: (guildId: string, id: string) => api.delete(`/guilds/${guildId}/custom-commands/${id}`),
 };
 
+// ─── Auto-Responses ───────────────────────────────────────────────
+export const autoResponsesApi = {
+  list:   (guildId: string) => api.get(`/guilds/${guildId}/auto-responses`),
+  create: (guildId: string, data: object) => api.post(`/guilds/${guildId}/auto-responses`, data),
+  toggle: (guildId: string, id: string, enabled: boolean) =>
+    api.patch(`/guilds/${guildId}/auto-responses/${id}`, { enabled }),
+  delete: (guildId: string, id: string) => api.delete(`/guilds/${guildId}/auto-responses/${id}`),
+};
+
 // ─── Bot Personalization ──────────────────────────────────────────
 export const personalizationApi = {
   get: (guildId: string) => api.get(`/guilds/${guildId}/personalization`),

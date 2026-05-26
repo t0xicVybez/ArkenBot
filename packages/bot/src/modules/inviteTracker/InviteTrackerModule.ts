@@ -144,4 +144,13 @@ export class InviteTrackerModule {
       where: { guildId_userId: { guildId, userId } },
     });
   }
+
+  /**
+   * Removes a guild's invite snapshot from the in-process cache.
+   * Call on `guildDelete` so that guilds the bot has left don't accumulate
+   * indefinitely — the cache has no other eviction mechanism.
+   */
+  static clearGuild(guildId: string): void {
+    inviteCache.delete(guildId);
+  }
 }

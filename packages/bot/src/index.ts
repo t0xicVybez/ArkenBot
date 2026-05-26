@@ -14,7 +14,13 @@ import { connectDatabase } from './database.js';
 import { connectRedis } from './redis.js';
 import { logger } from './logger.js';
 
-const INSTANCE_LOCK_KEY = 'bot:instance:lock';
+// When the ShardingManager spawns shard processes it sets SHARDS to a JSON
+// array of shard IDs (e.g. "[0]"). Each shard gets its own lock key so they
+// don't incorrectly block each other at startup.
+const shardIds = process.env.SHARDS ? (JSON.parse(process.env.SHARDS) as number[]) : null;
+const INSTANCE_LOCK_KEY = shardIds !== null
+  ? `bot:instance:lock:shard:${shardIds[0]}`
+  : 'bot:instance:lock';
 const LOCK_TTL_SECONDS = 30;
 
 async function main() {

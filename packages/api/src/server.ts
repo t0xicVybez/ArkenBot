@@ -27,6 +27,7 @@ import { suggestionRoutes } from './routes/suggestions.js';
 import { starboardRoutes } from './routes/starboard.js';
 import { levelRoleRoutes } from './routes/levelRoles.js';
 import { customCommandRoutes } from './routes/customCommands.js';
+import { autoResponseRoutes } from './routes/autoResponses.js';
 import { achievementRoutes } from './routes/achievements.js';
 import { reputationRoutes } from './routes/reputation.js';
 import { personalizationRoutes } from './routes/personalization.js';
@@ -110,6 +111,7 @@ export async function createServer() {
   await server.register(starboardRoutes);
   await server.register(levelRoleRoutes);
   await server.register(customCommandRoutes);
+  await server.register(autoResponseRoutes);
   await server.register(achievementRoutes);
   await server.register(reputationRoutes);
   await server.register(personalizationRoutes);

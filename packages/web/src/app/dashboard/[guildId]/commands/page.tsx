@@ -2,8 +2,8 @@
 
 import { useParams } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { commandsApi, commandPermissionsApi, guildsApi } from '@/lib/api';
-import { Terminal, Plus, Trash2, ShieldCheck } from 'lucide-react';
+import { commandsApi, commandPermissionsApi, guildsApi, autoResponsesApi } from '@/lib/api';
+import { Terminal, Plus, Trash2, ShieldCheck, Regex } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useState, useEffect, useRef } from 'react';
 import api from '@/lib/api';
@@ -26,6 +26,19 @@ type CustomCommand = {
   uses: number;
 };
 
+
+type AutoResponse = {
+  id: string;
+  pattern: string;
+  flags: string;
+  response: string;
+  embed: boolean;
+  embedColor?: string;
+  deleteMessage: boolean;
+  enabled: boolean;
+  uses: number;
+};
+
 const customCommandsApi = {
   list: (guildId: string) => api.get(`/guilds/${guildId}/custom-commands`),
   create: (guildId: string, data: object) => api.post(`/guilds/${guildId}/custom-commands`, data),
@@ -38,6 +51,7 @@ export default function CommandsPage() {
   const { guildId } = useParams() as { guildId: string };
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
+  const [showArForm, setShowArForm] = useState(false);
   const [permForm, setPermForm] = useState({ commandName: '', roleIds: [] as string[], allow: true });
   const [roleDropdownOpen, setRoleDropdownOpen] = useState(false);
   const roleDropdownRef = useRef<HTMLDivElement>(null);
@@ -56,6 +70,7 @@ export default function CommandsPage() {
     embed: false, embedTitle: '', embedColor: '#5865F2',
     deleteInvoking: false, dmResponse: false, cooldown: 0,
   });
+  const [arForm, setArForm] = useState({ pattern: '', flags: 'i', response: '', embed: false, embedColor: '#5865F2', deleteMessage: false });
 
   // All commands visible to this guild, including any addon-registered commands.
   const { data: availableRes } = useQuery({
@@ -73,6 +88,11 @@ export default function CommandsPage() {
     queryFn: () => customCommandsApi.list(guildId),
   });
 
+  const { data: autoResRes, isLoading: arLoading } = useQuery({
+    queryKey: ['auto-responses', guildId],
+    queryFn: () => autoResponsesApi.list(guildId),
+  });
+
   const { data: rolesRes } = useQuery({
     queryKey: ['roles', guildId],
     queryFn: () => guildsApi.roles(guildId),
@@ -87,6 +107,7 @@ export default function CommandsPage() {
   const CATEGORIES = Array.from(new Set(COMMANDS.map((c) => c.category)));
   const disabledCommands: string[] = disabledRes?.data?.data ?? [];
   const customCommands: CustomCommand[] = (customRes?.data as { data?: CustomCommand[] })?.data ?? [];
+  const autoResponses: AutoResponse[] = (autoResRes?.data as { data?: AutoResponse[] })?.data ?? [];
   const roles = (rolesRes?.data?.data ?? []) as Array<{ id: string; name: string }>;
   const cmdPerms = (cmdPermsRes?.data?.data ?? []) as Array<{ id: string; commandName: string; roleId: string; allow: boolean }>;
 
@@ -135,6 +156,34 @@ export default function CommandsPage() {
     onError: () => toast.error('Failed to delete custom command'),
   });
 
+
+  const createArMutation = useMutation({
+    mutationFn: (data: object) => autoResponsesApi.create(guildId, data),
+    onSuccess: () => {
+      toast.success('Auto-response created!');
+      queryClient.invalidateQueries({ queryKey: ['auto-responses', guildId] });
+      setShowArForm(false);
+      setArForm({ pattern: '', flags: 'i', response: '', embed: false, embedColor: '#5865F2', deleteMessage: false });
+    },
+    onError: () => toast.error('Failed to create auto-response'),
+  });
+
+  const toggleArMutation = useMutation({
+    mutationFn: ({ id, enabled }: { id: string; enabled: boolean }) =>
+      autoResponsesApi.toggle(guildId, id, enabled),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['auto-responses', guildId] }),
+    onError: () => toast.error('Failed to toggle auto-response'),
+  });
+
+  const deleteArMutation = useMutation({
+    mutationFn: (id: string) => autoResponsesApi.delete(guildId, id),
+    onSuccess: () => {
+      toast.success('Auto-response deleted');
+      queryClient.invalidateQueries({ queryKey: ['auto-responses', guildId] });
+    },
+    onError: () => toast.error('Failed to delete auto-response'),
+  });
+
   const addPermMutation = useMutation({
     mutationFn: async ({ commandName, roleIds, allow }: { commandName: string; roleIds: string[]; allow: boolean }) => {
       await Promise.all(roleIds.map((roleId) => commandPermissionsApi.set(guildId, { commandName, roleId, allow })));
@@ -156,6 +205,22 @@ export default function CommandsPage() {
     },
     onError: () => toast.error('Failed to remove permission'),
   });
+
+  const handleArSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!arForm.pattern.trim() || !arForm.response.trim()) {
+      toast.error('Pattern and response are required');
+      return;
+    }
+    createArMutation.mutate({
+      pattern: arForm.pattern.trim(),
+      flags: arForm.flags.trim() || 'i',
+      response: arForm.response.trim(),
+      embed: arForm.embed,
+      embedColor: arForm.embed ? arForm.embedColor : undefined,
+      deleteMessage: arForm.deleteMessage,
+    });
+  };
 
   const handleBuiltinToggle = (commandName: string, currentlyEnabled: boolean) => {
     if (currentlyEnabled) disableMutation.mutate(commandName);
@@ -182,7 +247,7 @@ export default function CommandsPage() {
     });
   };
 
-  const isLoading = builtinLoading || customLoading;
+  const isLoading = builtinLoading || customLoading || arLoading;
 
   if (isLoading) {
     return (
@@ -436,6 +501,190 @@ export default function CommandsPage() {
                 ))}
               </tbody>
             </table>
+            </div>
+          </div>
+        )}
+      </div>
+
+
+
+      <div className="card mb-8">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <Regex className="w-5 h-5 text-discord-blurple" />
+            <div>
+              <h2 className="text-lg font-semibold text-white">Auto-Responses</h2>
+              <p className="text-sm text-gray-400 mt-0.5">Trigger replies using regex patterns matched against message content.</p>
+            </div>
+          </div>
+          <button
+            onClick={() => setShowArForm((v) => !v)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-discord-blurple hover:bg-discord-blurple/80 text-white text-sm font-medium transition-colors"
+          >
+            <Plus className="w-4 h-4" />
+            New Rule
+          </button>
+        </div>
+
+        {showArForm && (
+          <form onSubmit={handleArSubmit} className="mb-5 p-4 rounded-lg bg-discord-darkest-bg border border-gray-700/50 space-y-4">
+            <h3 className="text-sm font-semibold text-white">Create Auto-Response</h3>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="sm:col-span-2">
+                <label className="label">Regex Pattern</label>
+                <input
+                  type="text"
+                  className="input font-mono"
+                  placeholder="\bhello\b"
+                  value={arForm.pattern}
+                  onChange={(e) => setArForm((f) => ({ ...f, pattern: e.target.value }))}
+                />
+              </div>
+              <div>
+                <label className="label">Flags</label>
+                <input
+                  type="text"
+                  className="input font-mono"
+                  placeholder="i"
+                  value={arForm.flags}
+                  onChange={(e) => setArForm((f) => ({ ...f, flags: e.target.value }))}
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="label">Response</label>
+              <textarea
+                className="input min-h-[70px] resize-y"
+                placeholder="Hey there!"
+                value={arForm.response}
+                onChange={(e) => setArForm((f) => ({ ...f, response: e.target.value }))}
+              />
+            </div>
+
+            <div className="flex flex-wrap gap-5 items-center">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={arForm.embed}
+                  onClick={() => setArForm((f) => ({ ...f, embed: !f.embed }))}
+                  className={`toggle flex-shrink-0 ${arForm.embed ? 'bg-discord-blurple' : 'bg-gray-600'}`}
+                >
+                  <span className={`toggle-thumb ${arForm.embed ? 'translate-x-6' : 'translate-x-1'}`} />
+                </button>
+                <span className="text-sm text-gray-300">Send as embed</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  className="w-4 h-4 rounded accent-discord-blurple"
+                  checked={arForm.deleteMessage}
+                  onChange={(e) => setArForm((f) => ({ ...f, deleteMessage: e.target.checked }))}
+                />
+                <span className="text-sm text-gray-300">Delete triggering message</span>
+              </label>
+            </div>
+
+            {arForm.embed && (
+              <div className="pl-2 border-l-2 border-discord-blurple/40">
+                <label className="label">Embed Color</label>
+                <div className="flex items-center gap-2 max-w-[220px]">
+                  <input
+                    type="color"
+                    className="w-10 h-9 rounded cursor-pointer bg-transparent border border-gray-600"
+                    value={arForm.embedColor}
+                    onChange={(e) => setArForm((f) => ({ ...f, embedColor: e.target.value }))}
+                  />
+                  <input
+                    type="text"
+                    className="input flex-1 font-mono"
+                    value={arForm.embedColor}
+                    onChange={(e) => setArForm((f) => ({ ...f, embedColor: e.target.value }))}
+                  />
+                </div>
+              </div>
+            )}
+
+            <div className="flex gap-2 pt-1">
+              <button
+                type="submit"
+                disabled={createArMutation.isPending}
+                className="px-4 py-1.5 rounded-md bg-discord-blurple hover:bg-discord-blurple/80 text-white text-sm font-medium transition-colors disabled:opacity-50"
+              >
+                {createArMutation.isPending ? 'Creating…' : 'Create Rule'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowArForm(false)}
+                className="px-4 py-1.5 rounded-md bg-gray-700 hover:bg-gray-600 text-gray-200 text-sm font-medium transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        )}
+
+        {autoResponses.length === 0 ? (
+          <p className="text-gray-500 text-sm text-center py-8">
+            No auto-responses yet. Create one above!
+          </p>
+        ) : (
+          <div className="overflow-hidden rounded-lg border border-gray-700/50">
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[540px]">
+                <thead className="bg-discord-darkest-bg">
+                  <tr>
+                    <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Pattern</th>
+                    <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Response</th>
+                    <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Options</th>
+                    <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Uses</th>
+                    <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Enabled</th>
+                    <th className="px-4 py-3" />
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-700/50">
+                  {autoResponses.map((ar) => (
+                    <tr key={ar.id} className="hover:bg-discord-dark-bg/30 transition-colors">
+                      <td className="px-4 py-3">
+                        <span className="text-sm font-mono text-gray-200">{ar.pattern}</span>
+                        <span className="ml-1.5 text-xs text-gray-600 font-mono">/{ar.flags}</span>
+                      </td>
+                      <td className="px-4 py-3 text-sm text-gray-400 max-w-[180px] truncate">{ar.response}</td>
+                      <td className="px-4 py-3">
+                        <div className="flex flex-wrap gap-1">
+                          {ar.embed && <span className="text-xs bg-indigo-500/20 text-indigo-300 px-1.5 py-0.5 rounded">embed</span>}
+                          {ar.deleteMessage && <span className="text-xs bg-red-500/20 text-red-300 px-1.5 py-0.5 rounded">del msg</span>}
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 text-sm text-gray-500">{ar.uses.toLocaleString()}</td>
+                      <td className="px-4 py-3">
+                        <button
+                          type="button"
+                          role="switch"
+                          aria-checked={ar.enabled}
+                          disabled={toggleArMutation.isPending}
+                          onClick={() => toggleArMutation.mutate({ id: ar.id, enabled: !ar.enabled })}
+                          className={`toggle flex-shrink-0 ${ar.enabled ? 'bg-discord-blurple' : 'bg-gray-600'} ${toggleArMutation.isPending ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        >
+                          <span className={`toggle-thumb ${ar.enabled ? 'translate-x-6' : 'translate-x-1'}`} />
+                        </button>
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <button
+                          onClick={() => deleteArMutation.mutate(ar.id)}
+                          disabled={deleteArMutation.isPending}
+                          className="text-gray-500 hover:text-red-400 transition-colors"
+                          title="Delete rule"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         )}

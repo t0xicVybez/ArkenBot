@@ -8,11 +8,16 @@ import type { BotEvent } from '../types.js';
 import { prisma } from '../database.js';
 import { logger } from '../logger.js';
 import { pub } from '../redis.js';
+import { InviteTrackerModule } from '../modules/inviteTracker/InviteTrackerModule.js';
 
 const event: BotEvent = {
   name: 'guildDelete',
   async execute(_client: unknown, guild: Guild) {
     logger.info(`Left guild: ${guild.name} (${guild.id})`);
+
+    // Evict from the in-process invite cache immediately so the Map doesn't
+    // retain stale data for guilds the bot has permanently left.
+    InviteTrackerModule.clearGuild(guild.id);
 
     await Promise.allSettled([
       prisma.guild.update({
