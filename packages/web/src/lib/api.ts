@@ -317,6 +317,13 @@ export const autoResponsesApi = {
   delete: (guildId: string, id: string) => api.delete(`/guilds/${guildId}/auto-responses/${id}`),
 };
 
+// ─── Self-Assignable Roles ────────────────────────────────────────
+export const selfRolesApi = {
+  list:   (guildId: string) => api.get(`/guilds/${guildId}/self-roles`),
+  create: (guildId: string, data: { roleId: string; name: string }) => api.post(`/guilds/${guildId}/self-roles`, data),
+  delete: (guildId: string, id: string) => api.delete(`/guilds/${guildId}/self-roles/${id}`),
+};
+
 // ─── Bot Personalization ──────────────────────────────────────────
 export const personalizationApi = {
   get: (guildId: string) => api.get(`/guilds/${guildId}/personalization`),

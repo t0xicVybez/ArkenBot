@@ -3,7 +3,7 @@ import {
   Shield, Bot, TrendingUp, Music, Smile,
   Megaphone, ArrowRight, Check, ExternalLink,
   Star, Gift, Radio, Lightbulb, Calendar,
-  BarChart2, Clock, Command, Zap, ChevronRight, Trophy, ThumbsUp, LineChart, Palette, Hash, UserPlus,
+  BarChart2, Clock, Command, Zap, ChevronRight, Trophy, ThumbsUp, LineChart, Palette, Hash, UserPlus, MessageSquare, UserCheck,
 } from 'lucide-react';
 import { LandingNav } from '@/components/LandingNav';
 
@@ -16,7 +16,7 @@ const SITE = {
   inviteUrl: CLIENT_ID
     ? `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&permissions=8824675416665207&integration_type=0&scope=bot+applications.commands`
     : 'https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=8824675416665207&integration_type=0&scope=bot+applications.commands',
-  docsUrl: 'https://github.com/t0xicVybez1/arkenbot-resources/tree/main/docs',
+  docsUrl: 'https://docs.arkenbot.app/',
   supportUrl: 'https://discord.gg/fXJnYPdHRX',
 };
 
@@ -41,6 +41,8 @@ const FEATURE_SECTIONS = [
       'Review and manage all cases from the web dashboard',
       'Audit log integration for server transparency',
       'Role-based permission controls for who can moderate',
+      'Temp roles: assign a Discord role for a fixed duration, removed automatically on expiry',
+      'Bulk case close: close all open cases for a user in a single action',
     ],
   },
   {
@@ -259,6 +261,30 @@ const FEATURE_SECTIONS = [
     ],
   },
   {
+    id: 'auto-responses',
+    icon: MessageSquare,
+    color: 'text-teal-400',
+    bg: 'bg-teal-500/10',
+    border: 'border-teal-500/20',
+    accentBorder: 'border-teal-500/40',
+    title: 'Auto-Responses',
+    tagline: 'Automatically reply to messages matching a regex pattern.',
+    description:
+      'Create rules that trigger an automatic reply whenever a message matches a pattern. Rules support regex with configurable flags, plain text or embed responses, optional message deletion, and role-based restrictions. Manage everything from the dashboard or via the /autoresponse command.',
+    bullets: [
+      'Regex pattern matching on every incoming message',
+      'Configurable regex flags (case-insensitive by default)',
+      'Plain text or rich embed response per rule',
+      'Custom hex colour for embed responses',
+      'Optionally delete the triggering message on match',
+      'Enable or disable individual rules without deleting them',
+      'Full rule list with per-rule use counters in the dashboard',
+      'Redis-cached rule list for near-zero latency',
+      'Manage rules via /autoresponse or the dashboard Commands page',
+      'Unlimited rules per server',
+    ],
+  },
+  {
     id: 'reaction-roles',
     icon: Smile,
     color: 'text-orange-400',
@@ -276,6 +302,28 @@ const FEATURE_SECTIONS = [
       'Remove-only mode: members can only remove the role',
       'Multiple panels per server with different configurations',
       'Dashboard editor with real-time Discord preview updates',
+    ],
+  },
+  {
+    id: 'self-roles',
+    icon: UserCheck,
+    color: 'text-violet-400',
+    bg: 'bg-violet-500/10',
+    border: 'border-violet-500/20',
+    accentBorder: 'border-violet-500/40',
+    title: 'Self-Assignable Roles',
+    tagline: 'Members pick their own roles with a simple slash command.',
+    description:
+      'Admins define a list of self-assignable roles and give each a short name. Members can then run /selfassignrole or /selfremoverole at any time — no reaction panels needed. Autocomplete makes discovery effortless. Manage the list from the dashboard or with /selfrole.',
+    bullets: [
+      '/selfassignrole <name> — claim a role instantly',
+      '/selfremoverole <name> — drop a role instantly',
+      'Autocomplete shows only roles the member can add or remove',
+      'Admins manage the list with /selfrole add / remove / list',
+      'Full dashboard editor — add or remove entries without a command',
+      'Bot role-hierarchy check prevents assigning unmanageable roles',
+      'Redis-cached role list for near-zero latency',
+      'Unlimited self-assignable roles per server',
     ],
   },
   {

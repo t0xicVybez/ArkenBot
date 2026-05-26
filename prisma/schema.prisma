@@ -54,6 +54,7 @@ model Guild {
   inviteJoins       InviteJoin[]
   guildEmbeds       GuildEmbed[]
   autoResponses     AutoResponse[]
+  selfRoles         SelfRole[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1071,4 +1072,22 @@ model AutoResponse {
 
   @@index([guildId, enabled])
   @@map("auto_responses")
+}
+
+// ─────────────────────────────────────────────
+// Self-Assignable Roles
+// ─────────────────────────────────────────────
+model SelfRole {
+  id        String   @id @default(cuid())
+  guildId   String
+  guild     Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  roleId    String
+  name      String   // lowercase alias users type (e.g. "fighter")
+
+  createdAt DateTime @default(now())
+
+  @@unique([guildId, name])
+  @@unique([guildId, roleId])
+  @@index([guildId])
+  @@map("self_roles")
 }

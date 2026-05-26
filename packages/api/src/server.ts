@@ -35,6 +35,7 @@ import { countingRoutes } from './routes/counting.js';
 import { inviteTrackerRoutes } from './routes/inviteTracker.js';
 import { embedRoutes } from './routes/embeds.js';
 import { commandPermissionRoutes } from './routes/commandPermissions.js';
+import { selfRoleRoutes } from './routes/selfRoles.js';
 import { setupWebSocket } from './websocket/gateway.js';
 import { AuthService } from './services/AuthService.js';
 import { collectDefaultMetrics } from 'prom-client';
@@ -119,6 +120,7 @@ export async function createServer() {
   await server.register(inviteTrackerRoutes);
   await server.register(embedRoutes);
   await server.register(commandPermissionRoutes);
+  await server.register(selfRoleRoutes);
 
   // ─── WebSocket Gateway ────────────────────────────────────────────
   await setupWebSocket(server);

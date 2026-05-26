@@ -41,6 +41,7 @@ import {
   UserPlus,
   Hash,
   Layout,
+  UserCheck,
   type LucideIcon,
 } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
@@ -90,6 +91,7 @@ const buildNavSections = (guildId: string, installedAddons: string[]): NavSectio
         { href: `/dashboard/${guildId}/leaderboard`, label: 'Leaderboard', icon: BarChart },
         { href: `/dashboard/${guildId}/welcome`, label: 'Welcome', icon: MessageSquare },
         { href: `/dashboard/${guildId}/reaction-roles`, label: 'Reaction Roles', icon: Smile },
+        { href: `/dashboard/${guildId}/self-roles`, label: 'Self-Roles', icon: UserCheck },
         { href: `/dashboard/${guildId}/birthdays`, label: 'Birthdays', icon: Cake },
         { href: `/dashboard/${guildId}/polls`, label: 'Polls', icon: BarChart },
         { href: `/dashboard/${guildId}/suggestions`, label: 'Suggestions', icon: MessageSquarePlus },

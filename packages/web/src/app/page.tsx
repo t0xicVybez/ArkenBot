@@ -8,6 +8,26 @@ import {
 } from 'lucide-react';
 import { LandingNav } from '@/components/LandingNav';
 
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Arken Bot — Free Discord Bot with Web Dashboard',
+  description:
+    'Arken Bot is a completely free Discord bot with 20+ features: moderation, leveling, tickets, auto-responses, game server management for FiveM, Minecraft, Rust, ARK, and Palworld, plus a real-time web dashboard. No paywalls, ever.',
+  openGraph: {
+    title: 'Arken Bot — Free Discord Bot with Web Dashboard',
+    description:
+      '20+ features including moderation, leveling, game server management, and a real-time dashboard. Completely free — no paywalls, no premium tiers.',
+    url: 'https://arkenbot.app',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Arken Bot — Free Discord Bot with Web Dashboard',
+    description:
+      '20+ features including moderation, leveling, game server management, and a real-time dashboard. Completely free — no paywalls, no premium tiers.',
+  },
+};
+
 // ─── Easy-to-edit content ────────────────────────────────────────────────────
 
 const CLIENT_ID = process.env.DISCORD_CLIENT_ID ?? process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID ?? '';
@@ -16,11 +36,11 @@ const SITE = {
   name: 'Arken Bot',
   tagline: 'One Bot.\nEvery Feature.',
   description:
-    'Moderation, leveling, tickets, custom commands, music, auto-mod, giveaways, stream alerts, and a real-time web dashboard — fully free, no paywalls.',
+    'Moderation, leveling, tickets, custom commands, auto-responses, temp roles, music, auto-mod, giveaways, stream alerts, and a real-time web dashboard — fully free, no paywalls.',
   inviteUrl: CLIENT_ID
     ? `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&permissions=8824675416665207&integration_type=0&scope=bot+applications.commands`
     : 'https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=8824675416665207&integration_type=0&scope=bot+applications.commands',
-  docsUrl: 'https://github.com/t0xicVybez1/arkenbot-resources/tree/main/docs',
+  docsUrl: 'https://docs.arkenbot.app/',
   supportUrl: 'https://discord.gg/fXJnYPdHRX',
 };
 
@@ -186,6 +206,8 @@ const COMPARISON = [
   { feature: 'XP Leveling + Leaderboards',    arken: true,  note: '' },
   { feature: 'Music Playback',                arken: true,  note: '' },
   { feature: 'Custom Commands',               arken: true,  note: '' },
+  { feature: 'Auto-Responses (regex)',          arken: true,  note: '' },
+  { feature: 'Temp Roles',                      arken: true,  note: '' },
   { feature: 'Reaction Roles',                arken: true,  note: '' },
   { feature: 'Support Ticket System',         arken: true,  note: '' },
   { feature: 'Ticket Form Fields',            arken: true,  note: 'Unique to Arken' },

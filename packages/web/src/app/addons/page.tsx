@@ -2,7 +2,7 @@ import Link from 'next/link';
 import {
   Puzzle, ArrowRight, ChevronRight, ExternalLink,
   Check, Zap, Code2, Shield, Gamepad2, Ticket,
-  Terminal, Package, BookOpen, Star,
+  Terminal, Package, BookOpen, Star, Globe, Cpu,
 } from 'lucide-react';
 import { LandingNav } from '@/components/LandingNav';
 
@@ -12,7 +12,7 @@ const SITE = {
   inviteUrl: CLIENT_ID
     ? `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&permissions=8824675416665207&integration_type=0&scope=bot+applications.commands`
     : 'https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=8824675416665207&integration_type=0&scope=bot+applications.commands',
-  docsUrl: 'https://github.com/t0xicVybez1/arkenbot-resources/tree/main/docs',
+  docsUrl: 'https://docs.arkenbot.app/',
   supportUrl: 'https://discord.gg/fXJnYPdHRX',
 };
 
@@ -159,6 +159,52 @@ const FIRST_PARTY_ADDONS = [
     ],
   },
   {
+    id: 'gameservers',
+    icon: Globe,
+    color: 'text-sky-400',
+    bg: 'bg-sky-500/10',
+    border: 'border-sky-500/20',
+    accentBorder: 'border-sky-500/40',
+    badge: 'Official',
+    badgeColor: 'bg-sky-500/15 text-sky-400 border-sky-500/30',
+    title: 'Game Server Status',
+    tagline: 'Check and monitor the status of any game server from Discord.',
+    description:
+      'Query live player counts, map names, ping, and server info for 40+ game types directly from Discord. Save servers per-guild for quick lookups with autocomplete. No admin access to the server required — read-only status queries only.',
+    bullets: [
+      'Query any game server by IP and port with /server status',
+      'Supports 40+ game types: Minecraft (Java + Bedrock), Rust, ARK, Valheim, CS2, DayZ, FiveM, and more',
+      'Displays player count, map, ping, and server name',
+      'Save named servers per-guild for quick autocomplete lookups',
+      'Remove or list saved servers with /server remove and /server list',
+      'No admin credentials required — status queries only',
+      'Minecraft Java uses native SLP; all others use Gamedig',
+    ],
+  },
+  {
+    id: 'rsm',
+    icon: Cpu,
+    color: 'text-lime-400',
+    bg: 'bg-lime-500/10',
+    border: 'border-lime-500/20',
+    accentBorder: 'border-lime-500/40',
+    badge: 'Official',
+    badgeColor: 'bg-lime-500/15 text-lime-400 border-lime-500/30',
+    title: 'RSM Server Manager',
+    tagline: 'Control game servers managed by Ronin Server Manager from Discord.',
+    description:
+      'Connect to your Ronin Server Manager instance and control all your game servers without leaving Discord. Start and stop servers, send console commands, view online players, and set up an auto-updating status channel that refreshes on a configurable interval.',
+    bullets: [
+      'List all servers managed by your RSM instance',
+      'Start and stop servers with a slash command',
+      'Send console commands to any server',
+      'View online players per server',
+      'Auto-updating status channel: posts and refreshes a server list embed on a configurable interval',
+      'Operator role restriction for sensitive commands',
+      'Configure RSM API credentials from the dashboard',
+    ],
+  },
+  {
     id: 'code-review',
     icon: Code2,
     color: 'text-fuchsia-400',
@@ -168,27 +214,29 @@ const FIRST_PARTY_ADDONS = [
     badge: 'Official',
     badgeColor: 'bg-fuchsia-500/15 text-fuchsia-400 border-fuchsia-500/30',
     title: 'Code Review',
-    tagline: 'AI-assisted code review threads right inside Discord.',
+    tagline: 'Instant static analysis and AI-powered code review inside Discord.',
     description:
-      'Post code snippets and get structured review feedback in a dedicated thread. Great for developer communities, bootcamps, and study servers.',
+      'Run /reviewcode, paste your snippet into a modal, and get instant feedback — error and warning counts, a list of specific issues, and a formatted/corrected version of the code. Results are ephemeral so only the submitter sees them. Optionally configure a Groq API key for smarter AI-powered analysis.',
     bullets: [
-      'Submit code for review via slash command',
-      'Review thread created automatically per submission',
-      'Staff can approve, request changes, or reject',
-      'Supports multiple languages with syntax highlighting in embeds',
-      'Tracks open and resolved reviews in the dashboard',
-      'Role-based reviewer permissions',
+      'Run /reviewcode and paste code into a Discord modal',
+      'Results are ephemeral — only the submitter sees the feedback',
+      'Error, warning, and info issue counts with per-issue descriptions',
+      'Formatted/corrected code sent as a follow-up code block',
+      'AI-powered mode via Groq API key for smarter analysis and summaries',
+      'Static analysis fallback: JavaScript, TypeScript, Python, JSON, CSS, and HTML',
+      'Auto-detect language or specify it manually with the language option',
+      'Configurable max code length per server (500–4000 characters)',
     ],
   },
 ];
 
 const SDK_FEATURES = [
-  { icon: Package, text: 'TypeScript-first SDK with full type definitions' },
-  { icon: Terminal, text: 'Register custom slash commands from within your addon' },
-  { icon: BookOpen, text: 'Hook into bot events: messages, reactions, member joins, and more' },
-  { icon: Shield, text: 'Per-guild isolated storage — no cross-server data leakage' },
-  { icon: Zap, text: 'Addons hot-reload without restarting the bot process' },
-  { icon: Code2, text: 'Publish to the addon registry for community installs' },
+  { icon: Package, text: 'defineAddon() — TypeScript-first entry point with full type inference; no class boilerplate required' },
+  { icon: Terminal, text: 'Slash and context-menu commands with optional autocomplete handler built in' },
+  { icon: BookOpen, text: 'Discord gateway event listeners with once support; ctx.client exposes the full discord.js Client' },
+  { icon: Shield, text: 'Per-guild isolated key-value storage backed by PostgreSQL — data is always scoped per server' },
+  { icon: Zap, text: 'Structured logger tagged with your addon name plus a typed inter-addon event bus for cross-addon messaging' },
+  { icon: Code2, text: 'Lifecycle hooks: onLoad, onUnload, onSettingsUpdate, onGuildInstall, and onGuildUninstall' },
 ];
 
 export const metadata = {
@@ -219,7 +267,7 @@ export default function AddonsPage() {
             </span>
           </h1>
           <p className="text-gray-400 text-lg mb-8 leading-relaxed max-w-xl mx-auto">
-            Arken ships 7 official first-party addons covering game server management, advanced tickets, and developer tools. Install any addon from the dashboard — or build your own with the TypeScript SDK.
+            Arken ships 9 official first-party addons covering game server management, advanced tickets, and developer tools. Install any addon from the dashboard — or build your own with the TypeScript SDK.
           </p>
 
           {/* Jump links */}
@@ -303,7 +351,7 @@ export default function AddonsPage() {
                 Build your own addon
               </h2>
               <p className="text-gray-400 text-sm leading-relaxed mb-6">
-                The Arken Addon SDK gives you everything you need to extend the bot with custom slash commands, event listeners, and per-guild storage — all in TypeScript. Verified addons can be published to the addon registry so other servers can install them in one click from the dashboard.
+                The Arken Addon SDK gives you everything you need to extend the bot with slash commands, event listeners, per-guild persistent storage, typed settings, and lifecycle hooks — all in TypeScript. Build your addon, drop the compiled dist/ into the addons folder, restart the bot, and the runtime auto-registers it so it appears in the dashboard immediately.
               </p>
               <a
                 href={SITE.docsUrl}
