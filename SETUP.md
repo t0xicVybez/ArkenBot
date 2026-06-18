@@ -362,6 +362,7 @@ Addons are self-contained feature packages located in the `addons/` directory. T
 | **Minecraft Manager** | `addons/minecraft-manager` | Minecraft server control via RCON |
 | **FiveM Manager** | `addons/fivem-manager` | FiveM server status via the built-in HTTP API |
 | **Palworld Manager** | `addons/palworld-manager` | Palworld server management |
+| **RSM Manager** | `addons/rsm-manager` | Manage game servers via Ronin Server Manager |
 
 ### Building addons
 
@@ -487,3 +488,4 @@ pm2 logs
 # Grant staff access in the dashboard to a Discord user
 pnpm grant-staff <discord-user-id>
 ```
+
