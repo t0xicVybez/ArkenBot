@@ -11,6 +11,7 @@
     "start:sharded": "node --env-file ../../.env dist/shard.js",
     "typecheck": "tsc --noEmit",
     "deploy:commands": "tsx --env-file ../../.env src/scripts/deployCommands.ts",
+    "cleanup:commands": "tsx --env-file ../../.env src/scripts/cleanupCommands.ts",
     "lint": "eslint src --ext .ts"
   },
   "dependencies": {
