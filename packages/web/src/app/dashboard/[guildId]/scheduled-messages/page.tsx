@@ -15,6 +15,7 @@ type ScheduledMessage = {
   scheduledAt: string;
   repeat: 'none' | 'hourly' | 'daily' | 'weekly';
   enabled: boolean;
+  roleMentionId?: string | null;
 };
 
 const REPEAT_OPTIONS = [
@@ -32,6 +33,7 @@ export default function ScheduledMessagesPage() {
   const [newContent, setNewContent] = useState('');
   const [newScheduledAt, setNewScheduledAt] = useState('');
   const [newRepeat, setNewRepeat] = useState<'none' | 'hourly' | 'daily' | 'weekly'>('none');
+  const [newRoleMentionId, setNewRoleMentionId] = useState('');
 
   const { data: msgsRes, isLoading } = useQuery({
     queryKey: ['scheduled-messages', guildId],
@@ -43,9 +45,15 @@ export default function ScheduledMessagesPage() {
     queryFn: () => guildsApi.channels(guildId),
   });
 
+  const { data: rolesRes } = useQuery({
+    queryKey: ['roles', guildId],
+    queryFn: () => guildsApi.roles(guildId),
+  });
+
   const messages: ScheduledMessage[] = (msgsRes?.data as { data?: ScheduledMessage[] })?.data ?? [];
   const allChannels = (channelsRes?.data as { data?: Array<{ id: string; name: string; type: number }> })?.data ?? [];
   const textChannels = allChannels.filter((c) => c.type === 0);
+  const roles = (rolesRes?.data as { data?: Array<{ id: string; name: string }> })?.data ?? [];
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => scheduledMessagesApi.delete(guildId, id),
@@ -74,6 +82,7 @@ export default function ScheduledMessagesPage() {
       setNewContent('');
       setNewScheduledAt('');
       setNewRepeat('none');
+      setNewRoleMentionId('');
     },
     onError: () => toast.error('Failed to create scheduled message'),
   });
@@ -88,6 +97,7 @@ export default function ScheduledMessagesPage() {
       content: newContent,
       scheduledAt: new Date(newScheduledAt).toISOString(),
       repeat: newRepeat,
+      ...(newRoleMentionId ? { roleMentionId: newRoleMentionId } : {}),
     });
   };
 
@@ -220,6 +230,20 @@ export default function ScheduledMessagesPage() {
                 ))}
               </select>
             </div>
+          </div>
+          <div>
+            <label className="label">Ping Role (optional)</label>
+            <select
+              className="input"
+              value={newRoleMentionId}
+              onChange={(e) => setNewRoleMentionId(e.target.value)}
+            >
+              <option value="">No role ping</option>
+              {roles.filter((r) => r.name !== '@everyone').map((r) => (
+                <option key={r.id} value={r.id}>@{r.name}</option>
+              ))}
+            </select>
+            <p className="text-xs text-gray-500 mt-1">The selected role will be mentioned when this message is sent.</p>
           </div>
           <button
             type="submit"

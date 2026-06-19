@@ -3,12 +3,16 @@
 import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { Trophy, Medal, Star, TrendingUp, MessageSquare, ExternalLink, Search } from 'lucide-react';
+import { Trophy, Medal, Star, TrendingUp, MessageSquare, ExternalLink, Search, RotateCcw } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import type { ReactNode } from 'react';
+import toast from 'react-hot-toast';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { leaderboardApi } from '@/lib/api';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
+type Period = 'all' | 'weekly' | 'monthly';
 
 interface LeaderboardEntry {
   rank: number;
@@ -29,10 +33,10 @@ interface LeaderboardData {
   hasMore: boolean;
 }
 
-function fetchLeaderboard(guildId: string, page: number) {
+function fetchLeaderboard(guildId: string, page: number, period: Period) {
   return axios
     .get<{ success: boolean; data: LeaderboardData }>(
-      `${API_URL}/public/leaderboard/${guildId}?page=${page}&limit=25`,
+      `${API_URL}/public/leaderboard/${guildId}?page=${page}&limit=25&period=${period}`,
     )
     .then((r) => r.data.data);
 }
@@ -57,14 +61,28 @@ const TOP3_STYLES: Record<number, { icon: ReactNode; ring: string; bg: string }>
 
 export default function LeaderboardDashboardPage() {
   const { guildId } = useParams() as { guildId: string };
+  const queryClient = useQueryClient();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
+  const [period, setPeriod] = useState<Period>('all');
+  const [confirmReset, setConfirmReset] = useState(false);
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['dashboard-leaderboard', guildId, page],
-    queryFn: () => fetchLeaderboard(guildId, page),
+    queryKey: ['dashboard-leaderboard', guildId, page, period],
+    queryFn: () => fetchLeaderboard(guildId, page, period),
     retry: false,
     refetchInterval: 60000,
+  });
+
+  const resetMutation = useMutation({
+    mutationFn: () => leaderboardApi.resetInactive(guildId),
+    onSuccess: (res) => {
+      const count = (res.data as { data?: { reset?: number } })?.data?.reset ?? 0;
+      toast.success(`Reset XP for ${count} inactive member${count !== 1 ? 's' : ''}.`);
+      queryClient.invalidateQueries({ queryKey: ['dashboard-leaderboard', guildId] });
+      setConfirmReset(false);
+    },
+    onError: () => { toast.error('Failed to reset inactive members.'); setConfirmReset(false); },
   });
 
   const allEntries = data?.entries ?? [];
@@ -97,6 +115,42 @@ export default function LeaderboardDashboardPage() {
         <p className="text-gray-400 text-sm">
           {total > 0 ? `${total.toLocaleString()} ranked members` : 'Member XP rankings'}
         </p>
+      </div>
+
+      {/* Period selector + Reset */}
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <div className="flex gap-1.5 bg-discord-darkest-bg rounded-lg p-1">
+          {(['all', 'weekly', 'monthly'] as Period[]).map((p) => (
+            <button
+              key={p}
+              onClick={() => { setPeriod(p); setPage(1); }}
+              className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${period === p ? 'bg-discord-blurple text-white' : 'text-gray-400 hover:text-white'}`}
+            >
+              {p === 'all' ? 'All Time' : p === 'weekly' ? 'This Week' : 'This Month'}
+            </button>
+          ))}
+        </div>
+        {confirmReset ? (
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-red-400">Reset XP for 90+ day inactive members?</span>
+            <button
+              onClick={() => resetMutation.mutate()}
+              disabled={resetMutation.isPending}
+              className="px-3 py-1.5 text-xs bg-red-500/20 border border-red-500/30 text-red-400 hover:bg-red-500/30 rounded-lg transition-colors"
+            >
+              {resetMutation.isPending ? 'Resetting…' : 'Confirm'}
+            </button>
+            <button onClick={() => setConfirmReset(false)} className="px-3 py-1.5 text-xs btn-secondary">Cancel</button>
+          </div>
+        ) : (
+          <button
+            onClick={() => setConfirmReset(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs bg-white/[0.06] text-gray-400 hover:text-red-400 rounded-lg transition-colors"
+          >
+            <RotateCcw className="w-3 h-3" />
+            Reset Inactive (90+ days)
+          </button>
+        )}
       </div>
 
       {/* Search */}

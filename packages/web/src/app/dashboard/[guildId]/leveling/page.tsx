@@ -17,11 +17,24 @@ type LevelRole = {
   roleId: string;
 };
 
+type XpMultiplier = {
+  id: string;
+  roleId: string;
+  multiplier: number;
+};
+
 const levelRolesApi = {
   list: (guildId: string) => api.get(`/guilds/${guildId}/level-roles`),
   create: (guildId: string, data: { level: number; roleId: string }) =>
     api.post(`/guilds/${guildId}/level-roles`, data),
   delete: (guildId: string, id: string) => api.delete(`/guilds/${guildId}/level-roles/${id}`),
+};
+
+const xpMultipliersApi = {
+  list: (guildId: string) => api.get(`/guilds/${guildId}/xp-multipliers`),
+  create: (guildId: string, data: { roleId: string; multiplier: number }) =>
+    api.post(`/guilds/${guildId}/xp-multipliers`, data),
+  delete: (guildId: string, roleId: string) => api.delete(`/guilds/${guildId}/xp-multipliers/${roleId}`),
 };
 
 const leaderboardApi = {
@@ -36,6 +49,8 @@ export default function LevelingPage() {
   const [newLevel, setNewLevel] = useState('');
   const [newRoleId, setNewRoleId] = useState('');
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [newMultiplierRoleId, setNewMultiplierRoleId] = useState('');
+  const [newMultiplierValue, setNewMultiplierValue] = useState('1.5');
 
   const { data: settingsRes, isLoading } = useQuery({
     queryKey: ['settings', guildId],
@@ -55,6 +70,11 @@ export default function LevelingPage() {
   const { data: levelRolesRes, isLoading: levelRolesLoading } = useQuery({
     queryKey: ['level-roles', guildId],
     queryFn: () => levelRolesApi.list(guildId),
+  });
+
+  const { data: xpMultipliersRes } = useQuery({
+    queryKey: ['xp-multipliers', guildId],
+    queryFn: () => xpMultipliersApi.list(guildId),
   });
 
   useEffect(() => {
@@ -90,6 +110,26 @@ export default function LevelingPage() {
     onError: () => toast.error('Failed to remove level role'),
   });
 
+  const createMultiplierMutation = useMutation({
+    mutationFn: (data: { roleId: string; multiplier: number }) => xpMultipliersApi.create(guildId, data),
+    onSuccess: () => {
+      toast.success('XP multiplier added!');
+      queryClient.invalidateQueries({ queryKey: ['xp-multipliers', guildId] });
+      setNewMultiplierRoleId('');
+      setNewMultiplierValue('1.5');
+    },
+    onError: () => toast.error('Failed to add XP multiplier'),
+  });
+
+  const deleteMultiplierMutation = useMutation({
+    mutationFn: (roleId: string) => xpMultipliersApi.delete(guildId, roleId),
+    onSuccess: () => {
+      toast.success('Multiplier removed');
+      queryClient.invalidateQueries({ queryKey: ['xp-multipliers', guildId] });
+    },
+    onError: () => toast.error('Failed to remove multiplier'),
+  });
+
   const resetXpMutation = useMutation({
     mutationFn: () => leaderboardApi.reset(guildId),
     onSuccess: () => {
@@ -107,6 +147,7 @@ export default function LevelingPage() {
   const roles = (rolesRes?.data as { data?: Array<{ id: string; name: string }> })?.data ?? [];
   const levelRoles: LevelRole[] = (levelRolesRes?.data as { data?: LevelRole[] })?.data ?? [];
   const sortedLevelRoles = [...levelRoles].sort((a, b) => a.level - b.level);
+  const xpMultipliers: XpMultiplier[] = (xpMultipliersRes?.data as { data?: XpMultiplier[] })?.data ?? [];
 
   const handleAddLevelRole = (e: React.FormEvent) => {
     e.preventDefault();
@@ -308,6 +349,72 @@ export default function LevelingPage() {
             </div>
           </div>
         )}
+      </div>
+
+      {/* XP Role Multipliers */}
+      <div className="card">
+        <h3 className="text-lg font-semibold text-white mb-1">XP Role Multipliers</h3>
+        <p className="text-sm text-gray-400 mb-4">Give members with specific roles a bonus XP multiplier. The highest matching multiplier applies.</p>
+        {xpMultipliers.length > 0 ? (
+          <div className="space-y-2 mb-4">
+            {xpMultipliers.map((m) => {
+              const role = roles.find((r) => r.id === m.roleId);
+              return (
+                <div key={m.id} className="flex items-center justify-between bg-white/[0.04] rounded-lg px-3 py-2">
+                  <span className="text-sm text-gray-200">@{role?.name ?? m.roleId}</span>
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm font-semibold text-discord-blurple">{m.multiplier}×</span>
+                    <button
+                      onClick={() => deleteMultiplierMutation.mutate(m.roleId)}
+                      className="text-gray-500 hover:text-red-400 transition-colors"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <p className="text-sm text-gray-500 mb-4">No XP multipliers configured.</p>
+        )}
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (!newMultiplierRoleId) return toast.error('Select a role');
+            const val = parseFloat(newMultiplierValue);
+            if (isNaN(val) || val <= 0) return toast.error('Enter a valid multiplier');
+            createMultiplierMutation.mutate({ roleId: newMultiplierRoleId, multiplier: val });
+          }}
+          className="flex flex-wrap items-end gap-3"
+        >
+          <div>
+            <label className="label">Role</label>
+            <select className="input" value={newMultiplierRoleId} onChange={(e) => setNewMultiplierRoleId(e.target.value)} required>
+              <option value="">Select role…</option>
+              {roles.filter((r) => r.name !== '@everyone' && !xpMultipliers.some((m) => m.roleId === r.id)).map((r) => (
+                <option key={r.id} value={r.id}>@{r.name}</option>
+              ))}
+            </select>
+          </div>
+          <div className="w-28">
+            <label className="label">Multiplier</label>
+            <input
+              type="number"
+              step="0.1"
+              min="0.1"
+              max="10"
+              className="input"
+              value={newMultiplierValue}
+              onChange={(e) => setNewMultiplierValue(e.target.value)}
+              required
+            />
+          </div>
+          <button type="submit" disabled={createMultiplierMutation.isPending} className="btn-primary flex items-center gap-1.5">
+            <Plus className="w-4 h-4" />
+            Add
+          </button>
+        </form>
       </div>
 
       {/* XP Decay */}

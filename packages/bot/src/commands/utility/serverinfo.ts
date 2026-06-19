@@ -11,6 +11,7 @@ import {
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { COLORS } from '@arkenbot/shared';
+import { prisma } from '../../database.js';
 
 const command: BotCommand = {
   data: new SlashCommandBuilder()
@@ -26,6 +27,8 @@ const command: BotCommand = {
 
     const guild = interaction.guild;
     await guild.fetch();
+
+    const guildSettings = await prisma.guildSettings.findUnique({ where: { guildId: guild.id } });
 
     const channels = guild.channels.cache;
     const textChannels = channels.filter((c) => c.isTextBased()).size;
@@ -64,6 +67,24 @@ const command: BotCommand = {
       )
       .setFooter({ text: `Server ID: ${guild.id}` })
       .setTimestamp();
+
+    if (guildSettings) {
+      const featureMap: [keyof typeof guildSettings, string][] = [
+        ['moderationEnabled', 'Moderation'],
+        ['autoModEnabled', 'Auto-Mod'],
+        ['levelingEnabled', 'Leveling'],
+        ['welcomeEnabled', 'Welcome'],
+        ['loggingEnabled', 'Logging'],
+        ['musicEnabled', 'Music'],
+        ['reactionRolesEnabled', 'Reaction Roles'],
+      ];
+      const enabled = featureMap.filter(([key]) => guildSettings[key] === true).map(([, label]) => `✅ ${label}`);
+      const disabled = featureMap.filter(([key]) => guildSettings[key] !== true).map(([, label]) => `❌ ${label}`);
+      embed.addFields({
+        name: '⚙️ Features Enabled',
+        value: [...enabled, ...disabled].join('\n') || 'None configured',
+      });
+    }
 
     if (guild.banner) {
       embed.setImage(guild.bannerURL({ size: 1024 }) ?? null);

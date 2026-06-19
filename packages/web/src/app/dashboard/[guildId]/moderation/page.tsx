@@ -2,15 +2,16 @@
 
 import { useParams } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { moderationApi, settingsApi } from '@/lib/api';
+import { moderationApi, settingsApi, warningEscalationApi } from '@/lib/api';
 import { useState, useEffect } from 'react';
-import { Shield, Search, AlertTriangle, Trash2 } from 'lucide-react';
+import { Shield, Search, AlertTriangle, Trash2, Plus } from 'lucide-react';
 import { Toggle } from '@/components/Toggle';
 import { SettingsSection } from '@/components/SettingsSection';
 import toast from 'react-hot-toast';
 import type { GuildSettings } from '@arkenbot/shared';
 
-type Tab = 'cases' | 'warnings';
+type Tab = 'cases' | 'warnings' | 'escalation';
+type EscalationRule = { count: number; action: string; duration?: number };
 
 export default function ModerationPage() {
   const { guildId } = useParams() as { guildId: string };
@@ -52,6 +53,31 @@ export default function ModerationPage() {
 
   const [warningUserId, setWarningUserId] = useState('');
   const [warningSearch, setWarningSearch] = useState('');
+
+  // Warning escalation state
+  const [escalations, setEscalations] = useState<EscalationRule[]>([]);
+  const [newEscCount, setNewEscCount] = useState('3');
+  const [newEscAction, setNewEscAction] = useState('mute');
+  const [newEscDuration, setNewEscDuration] = useState('3600');
+
+  const { data: escalationRes } = useQuery({
+    queryKey: ['warn-escalation', guildId],
+    queryFn: () => warningEscalationApi.get(guildId),
+    enabled: tab === 'escalation',
+  });
+
+  useEffect(() => {
+    if (escalationRes?.data?.data) setEscalations(escalationRes.data.data as EscalationRule[]);
+  }, [escalationRes]);
+
+  const saveEscalationMutation = useMutation({
+    mutationFn: (rules: EscalationRule[]) => warningEscalationApi.update(guildId, rules),
+    onSuccess: () => {
+      toast.success('Escalation rules saved!');
+      queryClient.invalidateQueries({ queryKey: ['warn-escalation', guildId] });
+    },
+    onError: () => toast.error('Failed to save escalation rules'),
+  });
 
   const { data: warningsRes, isLoading: warningsLoading } = useQuery({
     queryKey: ['warnings', guildId, warningSearch],
@@ -151,6 +177,16 @@ export default function ModerationPage() {
         >
           Active Warnings
           {warnings.length > 0 && <span className="ml-2 text-xs text-red-400">({warnings.length})</span>}
+        </button>
+        <button
+          onClick={() => setTab('escalation')}
+          className={`px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px ${
+            tab === 'escalation'
+              ? 'border-discord-blurple text-discord-blurple'
+              : 'border-transparent text-gray-400 hover:text-white'
+          }`}
+        >
+          Auto-Actions
         </button>
       </div>
 
@@ -344,6 +380,85 @@ export default function ModerationPage() {
             </div>
           )}
         </>
+      )}
+
+      {/* ── Escalation Tab ── */}
+      {tab === 'escalation' && (
+        <div className="space-y-4">
+          <div className="card">
+            <h3 className="text-base font-semibold text-white mb-1">Warning Auto-Actions</h3>
+            <p className="text-sm text-gray-400 mb-4">
+              Automatically mute, timeout, kick, or ban members when they reach a warning threshold.
+              Rules are checked each time a warning is issued.
+            </p>
+
+            {escalations.length > 0 ? (
+              <div className="space-y-2 mb-4">
+                {[...escalations].sort((a, b) => a.count - b.count).map((rule, i) => (
+                  <div key={i} className="flex items-center justify-between bg-white/[0.04] rounded-lg px-3 py-2">
+                    <span className="text-sm text-gray-200">
+                      At <strong className="text-white">{rule.count}</strong> warnings → <strong className="text-discord-blurple capitalize">{rule.action}</strong>
+                      {rule.duration ? <span className="text-gray-400"> ({rule.duration}s)</span> : null}
+                    </span>
+                    <button
+                      onClick={() => {
+                        const updated = escalations.filter((_, j) => j !== i);
+                        setEscalations(updated);
+                        saveEscalationMutation.mutate(updated);
+                      }}
+                      className="text-gray-500 hover:text-red-400 transition-colors"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-gray-500 mb-4">No auto-action rules configured.</p>
+            )}
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const count = parseInt(newEscCount);
+                if (!count || count < 1) return toast.error('Enter a valid warning count');
+                const rule: EscalationRule = {
+                  count,
+                  action: newEscAction,
+                  ...((['mute', 'timeout'].includes(newEscAction) && newEscDuration) ? { duration: parseInt(newEscDuration) } : {}),
+                };
+                const updated = [...escalations.filter((r) => r.count !== count), rule].sort((a, b) => a.count - b.count);
+                setEscalations(updated);
+                saveEscalationMutation.mutate(updated);
+              }}
+              className="flex flex-wrap items-end gap-3 border-t border-gray-700/50 pt-4"
+            >
+              <div className="w-24">
+                <label className="label">At # warnings</label>
+                <input type="number" min="1" className="input" value={newEscCount} onChange={(e) => setNewEscCount(e.target.value)} required />
+              </div>
+              <div>
+                <label className="label">Action</label>
+                <select className="input" value={newEscAction} onChange={(e) => setNewEscAction(e.target.value)}>
+                  <option value="mute">Mute (via mute role)</option>
+                  <option value="timeout">Timeout</option>
+                  <option value="kick">Kick</option>
+                  <option value="ban">Ban</option>
+                </select>
+              </div>
+              {['mute', 'timeout'].includes(newEscAction) && (
+                <div className="w-36">
+                  <label className="label">Duration (seconds)</label>
+                  <input type="number" min="60" className="input" value={newEscDuration} onChange={(e) => setNewEscDuration(e.target.value)} />
+                </div>
+              )}
+              <button type="submit" disabled={saveEscalationMutation.isPending} className="btn-primary flex items-center gap-1.5">
+                <Plus className="w-4 h-4" />
+                Add Rule
+              </button>
+            </form>
+          </div>
+        </div>
       )}
     </div>
   );

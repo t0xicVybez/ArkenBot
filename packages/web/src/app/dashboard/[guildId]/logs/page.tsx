@@ -46,6 +46,9 @@ export default function LogsPage() {
   const queryClient = useQueryClient();
   const [settings, setSettings] = useState<Partial<GuildSettings>>({});
   const [typeFilter, setTypeFilter] = useState<string>('');
+  const [userIdFilter, setUserIdFilter] = useState<string>('');
+  const [dateFrom, setDateFrom] = useState<string>('');
+  const [dateTo, setDateTo] = useState<string>('');
 
   const { data: settingsRes } = useQuery({
     queryKey: ['settings', guildId],
@@ -58,8 +61,13 @@ export default function LogsPage() {
   });
 
   const { data: logsRes, isLoading } = useQuery({
-    queryKey: ['logs', guildId, typeFilter],
-    queryFn: () => moderationApi.getLogs(guildId, typeFilter ? { type: typeFilter } : undefined),
+    queryKey: ['logs', guildId, typeFilter, userIdFilter, dateFrom, dateTo],
+    queryFn: () => moderationApi.getLogs(guildId, {
+      ...(typeFilter ? { type: typeFilter } : {}),
+      ...(userIdFilter.trim() ? { userId: userIdFilter.trim() } : {}),
+      ...(dateFrom ? { dateFrom } : {}),
+      ...(dateTo ? { dateTo } : {}),
+    }),
     refetchInterval: 15000,
   });
 
@@ -140,6 +148,46 @@ export default function LogsPage() {
           </div>
         </div>
       </SettingsSection>
+
+      {/* User ID + Date range filters */}
+      <div className="flex flex-wrap gap-3 mb-4 items-end">
+        <div className="flex flex-col gap-1">
+          <label className="text-xs text-gray-400 font-medium">User ID</label>
+          <input
+            type="text"
+            className="input h-8 text-sm w-44"
+            placeholder="Filter by user ID…"
+            value={userIdFilter}
+            onChange={(e) => setUserIdFilter(e.target.value)}
+          />
+        </div>
+        <div className="flex flex-col gap-1">
+          <label className="text-xs text-gray-400 font-medium">From</label>
+          <input
+            type="date"
+            className="input h-8 text-sm"
+            value={dateFrom}
+            onChange={(e) => setDateFrom(e.target.value)}
+          />
+        </div>
+        <div className="flex flex-col gap-1">
+          <label className="text-xs text-gray-400 font-medium">To</label>
+          <input
+            type="date"
+            className="input h-8 text-sm"
+            value={dateTo}
+            onChange={(e) => setDateTo(e.target.value)}
+          />
+        </div>
+        {(userIdFilter || dateFrom || dateTo) && (
+          <button
+            className="px-3 py-1.5 text-xs bg-white/[0.06] text-gray-400 hover:text-white rounded-lg transition-colors h-8"
+            onClick={() => { setUserIdFilter(''); setDateFrom(''); setDateTo(''); }}
+          >
+            Clear
+          </button>
+        )}
+      </div>
 
       {/* Filter chips */}
       <div className="flex flex-wrap gap-2 mb-4">

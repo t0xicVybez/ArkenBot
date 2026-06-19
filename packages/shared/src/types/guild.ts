@@ -96,6 +96,8 @@ export interface AutoModConfig {
   raidThreshold: number;
   raidInterval: number;
   raidAction: string;
+  antiPhishingEnabled: boolean;
+  antiPhishingAction: string;
   exemptRoles: string[];
   exemptChannels: string[];
 }

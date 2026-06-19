@@ -31,9 +31,24 @@ export class LevelingModule {
 
     await redis.setex(cooldownKey, settings.xpCooldown, '1');
 
-    // Randomise XP within ±25% of the configured base, then apply the guild multiplier.
+    // Resolve the effective XP multiplier: guild-wide base × highest matching role multiplier
     const base = Math.floor(settings.xpPerMessage * (0.75 + Math.random() * 0.5));
-    const xpGain = Math.max(1, Math.round(base * (settings.xpMultiplier ?? 1.0)));
+    let effectiveMultiplier = settings.xpMultiplier ?? 1.0;
+    try {
+      const member = message?.guild?.members.cache.get(user.id);
+      if (member) {
+        const roleMultipliers = await prisma.xpRoleMultiplier.findMany({ where: { guildId: guild.id } });
+        if (roleMultipliers.length > 0) {
+          const memberRoleIds = new Set(member.roles.cache.keys());
+          const matching = roleMultipliers.filter((rm) => memberRoleIds.has(rm.roleId));
+          if (matching.length > 0) {
+            const highest = Math.max(...matching.map((rm) => rm.multiplier));
+            effectiveMultiplier = effectiveMultiplier * highest;
+          }
+        }
+      }
+    } catch { /* non-critical; fall back to guild multiplier */ }
+    const xpGain = Math.max(1, Math.round(base * effectiveMultiplier));
 
     const existing = await prisma.userLevel.findUnique({
       where: { guildId_userId: { guildId: guild.id, userId: user.id } },
