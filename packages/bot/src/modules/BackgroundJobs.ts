@@ -7,6 +7,7 @@
  */
 
 import { EmbedBuilder, type TextChannel, type VoiceChannel } from 'discord.js';
+import { postAnalytics } from '../commands/utility/analytics.js';
 import { prisma } from '../database.js';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = prisma as any;
@@ -67,7 +68,11 @@ export class BackgroundJobs {
 
     setTimeout(() => this.timers.push(setInterval(() => void AnalyticsModule.flushDailyStats(this.client), 24 * 60 * 60 * 1000)), jitter());
 
-    logger.info('Background jobs started (birthdays, scheduled messages, stats channels, temp bans, temp roles, reminders, giveaways, stream alerts, xp decay, analytics)');
+    // Weekly analytics reports — fire every 7 days, but only actually post on
+    // Mondays (UTC) so restarts mid-week don't double-post.
+    setTimeout(() => this.timers.push(setInterval(() => void this.runWeeklyAnalytics(), 7 * 24 * 60 * 60 * 1000)), jitter());
+
+    logger.info('Background jobs started (birthdays, scheduled messages, stats channels, temp bans, temp roles, reminders, giveaways, stream alerts, xp decay, analytics, weekly analytics)');
   }
 
   /** Clears all active intervals. Call during graceful shutdown. */
@@ -733,6 +738,28 @@ export class BackgroundJobs {
       }
     } catch (err) {
       logger.error({ err, alertId: alert.id }, 'Failed to process stream alert');
+    }
+  }
+
+  // ── Weekly Analytics Reports ─────────────────────────────────────────────
+
+  private async runWeeklyAnalytics(): Promise<void> {
+    // Only post on Mondays (UTC day 1) so mid-week restarts don't double-post.
+    if (new Date().getUTCDay() !== 1) return;
+
+    const configs = await prisma.guildSettings.findMany({
+      where: { analyticsChannelId: { not: null } },
+      select: { guildId: true, analyticsChannelId: true },
+    });
+
+    for (const cfg of configs) {
+      try {
+        const channel = await this.client.channels.fetch(cfg.analyticsChannelId!);
+        if (!channel?.isTextBased()) continue;
+        await postAnalytics(cfg.guildId, channel as TextChannel);
+      } catch (err) {
+        logger.error({ err, guildId: cfg.guildId }, 'Failed to send weekly analytics report');
+      }
     }
   }
 }
