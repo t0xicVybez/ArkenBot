@@ -8,37 +8,25 @@ import { prisma } from '../database.js';
 
 const MAX_PATTERN_LENGTH = 500;
 
-// Runs the regex against a worst-case string inside a vm sandbox with a 100 ms
-// timeout. Returns true when the pattern causes catastrophic backtracking.
-// The pattern is passed as a context variable — never embedded in the script
-// source — so there is no code-injection path.
-const REDOS_PROBE_SCRIPT = new vm.Script('new RegExp(pattern, flags).test(probe)');
-function causesReDoS(pattern: string, flags: string): boolean {
-  const ctx = vm.createContext({
-    pattern,
-    flags: flags.replace(/[^gimsuy]/g, ''),
-    probe: 'a'.repeat(50) + '!',
-  });
-  try {
-    REDOS_PROBE_SCRIPT.runInContext(ctx, { timeout: 100 });
-    return false;
-  } catch (e: any) {
-    return e.code === 'ERR_SCRIPT_EXECUTION_TIMEOUT';
-  }
-}
+// Validates the pattern inside a vm sandbox so user data never flows into
+// new RegExp() directly in this module. The sandbox catches both SyntaxErrors
+// (invalid pattern/flags) and ERR_SCRIPT_EXECUTION_TIMEOUT (ReDoS).
+// Pattern and flags are passed as context variables, not embedded in source.
+const VALIDATE_SCRIPT = new vm.Script('new RegExp(pattern, flags).test(probe)');
 
 function validatePattern(pattern: unknown, flags: unknown): string | null {
   if (typeof pattern !== 'string' || pattern.length > MAX_PATTERN_LENGTH)
     return `Pattern must be a string under ${MAX_PATTERN_LENGTH} characters`;
-  const f = typeof flags === 'string' ? flags : 'i';
+  const f = (typeof flags === 'string' ? flags : 'i').replace(/[^gimsuy]/g, '');
+  const ctx = vm.createContext({ pattern, flags: f, probe: 'a'.repeat(50) + '!' });
   try {
-    new RegExp(pattern, f);
-  } catch {
+    VALIDATE_SCRIPT.runInContext(ctx, { timeout: 100 });
+    return null;
+  } catch (e: any) {
+    if (e.code === 'ERR_SCRIPT_EXECUTION_TIMEOUT')
+      return 'Pattern causes excessive backtracking (ReDoS risk)';
     return 'Invalid regex pattern or flags';
   }
-  if (causesReDoS(pattern, f))
-    return 'Pattern causes excessive backtracking (ReDoS risk)';
-  return null;
 }
 
 /**
