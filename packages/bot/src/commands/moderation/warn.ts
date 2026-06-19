@@ -109,11 +109,48 @@ const command: BotCommand = {
       })
       .catch(() => null);
 
+    // Check warning escalation thresholds stored in GuildSettings.extended
+    let escalationNote = '';
+    if (settings) {
+      const extended = (settings.extended ?? {}) as Record<string, unknown>;
+      const escalations = (extended.warnEscalation ?? []) as Array<{ count: number; action: string; duration?: number }>;
+      const matched = escalations
+        .filter((e) => e.count === warningCount)
+        .sort((a, b) => b.count - a.count)[0];
+
+      if (matched) {
+        try {
+          const muteRoleId = settings.muteRoleId;
+          if (matched.action === 'mute' && muteRoleId) {
+            const role = interaction.guild.roles.cache.get(muteRoleId);
+            if (role) {
+              await targetMember.roles.add(role, `Auto-mute: ${warningCount} warnings`).catch(() => null);
+              escalationNote = `\nAuto-muted (${warningCount} warnings reached threshold).`;
+            }
+          } else if (matched.action === 'timeout' && matched.duration) {
+            await targetMember.disableCommunicationUntil(
+              Date.now() + matched.duration * 1000,
+              `Auto-timeout: ${warningCount} warnings`,
+            ).catch(() => null);
+            escalationNote = `\nAuto-timed out for ${matched.duration}s (${warningCount} warnings reached threshold).`;
+          } else if (matched.action === 'ban') {
+            await interaction.guild.members.ban(targetUser, {
+              reason: `Auto-ban: ${warningCount} warnings reached threshold`,
+            }).catch(() => null);
+            escalationNote = `\nAuto-banned (${warningCount} warnings reached threshold).`;
+          } else if (matched.action === 'kick') {
+            await targetMember.kick(`Auto-kick: ${warningCount} warnings`).catch(() => null);
+            escalationNote = `\nAuto-kicked (${warningCount} warnings reached threshold).`;
+          }
+        } catch { /* escalation errors are non-fatal */ }
+      }
+    }
+
     const warnEmbed = moderationEmbed({
       action: 'Warning',
       user: `${targetUser.tag} (${targetUser.id})`,
       moderator: interaction.user.tag,
-      reason,
+      reason: escalationNote ? `${reason}${escalationNote}` : reason,
       caseNumber,
     }, settings?.moderationColor).addFields({ name: 'Total Warnings', value: `${warningCount}`, inline: true });
 

@@ -65,6 +65,8 @@ const AutoModPatchSchema = z.object({
   raidThreshold:           z.number().int().min(2).max(100).optional(),
   raidInterval:            z.number().int().min(1000).max(30000).optional(),
   raidAction:              z.enum(['kick', 'lockdown']).optional(),
+  antiPhishingEnabled:     z.boolean().optional(),
+  antiPhishingAction:      z.enum(['delete', 'delete_mute']).optional(),
   exemptRoles:             z.array(z.string()).max(25).optional(),
   exemptChannels:          z.array(z.string()).max(50).optional(),
 }).strict();
@@ -335,5 +337,68 @@ export async function settingsRoutes(server: FastifyInstance): Promise<void> {
     await prisma.reactionRole.delete({ where: { id: roleId } });
     await pub.publish('api:events', JSON.stringify({ type: 'reaction-role:panel-upsert', data: { panelId } }));
     return reply.send({ success: true, message: 'Deleted' });
+  });
+
+  // ── Warning Escalation ──────────────────────────────────────────────────────
+
+  // GET /guilds/:guildId/warning-escalation
+  server.get('/guilds/:guildId/warning-escalation', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
+    const { guildId } = request.params as { guildId: string };
+    const settings = await prisma.guildSettings.findUnique({ where: { guildId }, select: { extended: true } });
+    const extended = (settings?.extended ?? {}) as Record<string, unknown>;
+    return reply.send({ success: true, data: extended.warnEscalation ?? [] });
+  });
+
+  // PUT /guilds/:guildId/warning-escalation
+  server.put('/guilds/:guildId/warning-escalation', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
+    const { guildId } = request.params as { guildId: string };
+    const { escalations } = request.body as { escalations: Array<{ count: number; action: string; duration?: number }> };
+
+    if (!Array.isArray(escalations)) {
+      return reply.code(400).send({ success: false, error: 'escalations must be an array' });
+    }
+
+    const settings = await prisma.guildSettings.findUnique({ where: { guildId }, select: { extended: true } });
+    const extended = { ...((settings?.extended ?? {}) as Record<string, unknown>), warnEscalation: escalations };
+
+    await prisma.guildSettings.upsert({
+      where: { guildId },
+      update: { extended: extended as import('@prisma/client').Prisma.InputJsonValue },
+      create: { guildId, extended: extended as import('@prisma/client').Prisma.InputJsonValue },
+    });
+
+    return reply.send({ success: true, data: escalations });
+  });
+
+  // ── Temp Voice Channel Config ───────────────────────────────────────────────
+
+  // GET /guilds/:guildId/temp-voice/config
+  server.get('/guilds/:guildId/temp-voice/config', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
+    const { guildId } = request.params as { guildId: string };
+    const settings = await prisma.guildSettings.findUnique({ where: { guildId }, select: { extended: true } });
+    const extended = (settings?.extended ?? {}) as Record<string, unknown>;
+    return reply.send({ success: true, data: { joinToCreateChannelId: extended.joinToCreateChannelId ?? null } });
+  });
+
+  // PATCH /guilds/:guildId/temp-voice/config
+  server.patch('/guilds/:guildId/temp-voice/config', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
+    const { guildId } = request.params as { guildId: string };
+    const { channelId } = request.body as { channelId: string | null };
+
+    const settings = await prisma.guildSettings.findUnique({ where: { guildId }, select: { extended: true } });
+    const prev = { ...((settings?.extended ?? {}) as Record<string, unknown>) };
+    if (channelId) {
+      prev.joinToCreateChannelId = channelId;
+    } else {
+      delete prev.joinToCreateChannelId;
+    }
+
+    await prisma.guildSettings.upsert({
+      where: { guildId },
+      update: { extended: prev as import('@prisma/client').Prisma.InputJsonValue },
+      create: { guildId, extended: prev as import('@prisma/client').Prisma.InputJsonValue },
+    });
+
+    return reply.send({ success: true, data: { joinToCreateChannelId: channelId ?? null } });
   });
 }

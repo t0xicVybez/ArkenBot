@@ -458,6 +458,34 @@ export default function AutoModPage() {
       </SettingsSection>
 
       <SettingsSection
+        title="Anti-Phishing"
+        description="Detect and remove known phishing and scam links. Domain blocklist is refreshed hourly from a public feed."
+      >
+        <Toggle
+          label="Enable Anti-Phishing"
+          description="Automatically delete messages containing known phishing links"
+          enabled={config.antiPhishingEnabled ?? false}
+          onChange={(v) => handleToggle('antiPhishingEnabled', v)}
+        />
+        {config.antiPhishingEnabled && (
+          <div className="mt-3">
+            <label className="label">Action</label>
+            <select
+              className="input w-auto"
+              value={config.antiPhishingAction ?? 'delete_mute'}
+              onChange={(e) => {
+                setConfig((c) => ({ ...c, antiPhishingAction: e.target.value }));
+                handleSave({ antiPhishingAction: e.target.value });
+              }}
+            >
+              <option value="delete">Delete message only</option>
+              <option value="delete_mute">Delete message + timeout user (10 min)</option>
+            </select>
+          </div>
+        )}
+      </SettingsSection>
+
+      <SettingsSection
         title="Exempt Roles"
         description="Members with any of these roles are never moderated by Auto-Mod. Administrators are always exempt."
       >

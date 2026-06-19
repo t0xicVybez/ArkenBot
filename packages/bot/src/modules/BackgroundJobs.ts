@@ -224,12 +224,16 @@ export class BackgroundJobs {
       const channel = guild?.channels.cache.get(msg.channelId) as TextChannel | undefined;
 
       if (channel?.isTextBased()) {
+        const roleMention = (msg as unknown as { roleMentionId?: string | null }).roleMentionId
+          ? `<@&${(msg as unknown as { roleMentionId: string }).roleMentionId}> `
+          : '';
         if (msg.embed) {
           const schedSettings = await getGuildSettings(msg.guildId);
           const schedColor = schedSettings?.scheduledMessageColor
             ? parseInt(schedSettings.scheduledMessageColor.replace('#', ''), 16)
             : 0x5865f2;
           await channel.send({
+            content: roleMention || undefined,
             embeds: [
               new EmbedBuilder()
                 .setDescription(msg.content)
@@ -238,7 +242,7 @@ export class BackgroundJobs {
             ],
           });
         } else {
-          await channel.send({ content: msg.content });
+          await channel.send({ content: `${roleMention}${msg.content}` });
         }
       }
 

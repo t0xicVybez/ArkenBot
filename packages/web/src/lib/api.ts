@@ -373,6 +373,33 @@ export const commandPermissionsApi = {
   delete: (guildId: string, id: string) => api.delete(`/guilds/${guildId}/command-permissions/${id}`),
 };
 
+// ─── Leaderboard Management ───────────────────────────────────────
+export const leaderboardApi = {
+  resetInactive: (guildId: string) => api.post(`/guilds/${guildId}/leaderboard/reset-inactive`),
+};
+
+// ─── XP Role Multipliers ──────────────────────────────────────────
+export const xpMultipliersApi = {
+  list: (guildId: string) => api.get(`/guilds/${guildId}/xp-multipliers`),
+  create: (guildId: string, data: { roleId: string; multiplier: number }) =>
+    api.post(`/guilds/${guildId}/xp-multipliers`, data),
+  delete: (guildId: string, roleId: string) => api.delete(`/guilds/${guildId}/xp-multipliers/${roleId}`),
+};
+
+// ─── Warning Escalation (stored in GuildSettings.extended) ────────
+export const warningEscalationApi = {
+  get: (guildId: string) => api.get(`/guilds/${guildId}/warning-escalation`),
+  update: (guildId: string, escalations: Array<{ count: number; action: string; duration?: number }>) =>
+    api.put(`/guilds/${guildId}/warning-escalation`, { escalations }),
+};
+
+// ─── Temp Voice Channels ──────────────────────────────────────────
+export const tempVoiceApi = {
+  getConfig: (guildId: string) => api.get(`/guilds/${guildId}/temp-voice/config`),
+  setTriggerChannel: (guildId: string, channelId: string | null) =>
+    api.patch(`/guilds/${guildId}/temp-voice/config`, { channelId }),
+};
+
 // ─── Admin ────────────────────────────────────────────────────────
 export const adminApi = {
   getGuilds: (params?: object) => api.get('/admin/guilds', { params }),

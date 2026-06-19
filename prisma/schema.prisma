@@ -55,6 +55,8 @@ model Guild {
   guildEmbeds       GuildEmbed[]
   autoResponses     AutoResponse[]
   selfRoles         SelfRole[]
+  xpRoleMultipliers XpRoleMultiplier[]
+  tempVoiceChannels TempVoiceChannel[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -178,6 +180,10 @@ model AutoModConfig {
   raidThreshold      Int      @default(10)
   raidInterval       Int      @default(10000)
   raidAction         String   @default("lockdown")
+
+  // Anti-phishing
+  antiPhishingEnabled Boolean @default(false)
+  antiPhishingAction  String  @default("delete_mute") // delete | delete_mute
 
   // Exempt roles/channels
   exemptRoles        String[] @default([])
@@ -642,13 +648,14 @@ model ScheduledMessage {
   id          String    @id @default(cuid())
   guildId     String
   guild       Guild     @relation(fields: [guildId], references: [id], onDelete: Cascade)
-  channelId   String
-  content     String
-  embed       Boolean   @default(false)
-  scheduledAt DateTime
-  repeat      String?   // null | hourly | daily | weekly
-  lastSentAt  DateTime?
-  enabled     Boolean   @default(true)
+  channelId      String
+  content        String
+  embed          Boolean   @default(false)
+  scheduledAt    DateTime
+  repeat         String?   // null | hourly | daily | weekly
+  lastSentAt     DateTime?
+  enabled        Boolean   @default(true)
+  roleMentionId  String?   // role to ping when message is sent
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1091,4 +1098,37 @@ model SelfRole {
   @@unique([guildId, roleId])
   @@index([guildId])
   @@map("self_roles")
+}
+
+// ─────────────────────────────────────────────
+// XP Role Multipliers (per-role XP bonuses)
+// ─────────────────────────────────────────────
+model XpRoleMultiplier {
+  id         String @id @default(cuid())
+  guildId    String
+  guild      Guild  @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  roleId     String
+  multiplier Float  @default(1.5)
+
+  createdAt DateTime @default(now())
+
+  @@unique([guildId, roleId])
+  @@index([guildId])
+  @@map("xp_role_multipliers")
+}
+
+// ─────────────────────────────────────────────
+// Temporary Voice Channels (Create-to-Join)
+// ─────────────────────────────────────────────
+model TempVoiceChannel {
+  id        String   @id @default(cuid())
+  guildId   String
+  guild     Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  channelId String   // The created temporary VC ID
+  ownerId   String   // The user who triggered channel creation
+  createdAt DateTime @default(now())
+
+  @@unique([guildId, channelId])
+  @@index([guildId])
+  @@map("temp_voice_channels")
 }

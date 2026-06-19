@@ -146,15 +146,23 @@ export async function moderationRoutes(server: FastifyInstance): Promise<void> {
   // GET /guilds/:guildId/logs
   server.get('/guilds/:guildId/logs', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
-    const query = request.query as { page?: string; pageSize?: string; type?: string };
+    const query = request.query as { page?: string; pageSize?: string; type?: string; userId?: string; dateFrom?: string; dateTo?: string };
 
     const page = Math.max(1, parseInt(query.page ?? '1')) - 1;
     const pageSize = Math.min(100, parseInt(query.pageSize ?? '50'));
 
-    const where = {
+    const where: Record<string, unknown> = {
       guildId,
       ...(query.type ? { type: query.type } : {}),
+      ...(query.userId ? { userId: query.userId } : {}),
     };
+
+    if (query.dateFrom || query.dateTo) {
+      where.createdAt = {
+        ...(query.dateFrom ? { gte: new Date(query.dateFrom) } : {}),
+        ...(query.dateTo ? { lte: new Date(new Date(query.dateTo).setHours(23, 59, 59, 999)) } : {}),
+      };
+    }
 
     const [entries, total] = await Promise.all([
       prisma.logEntry.findMany({

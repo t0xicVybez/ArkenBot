@@ -9,6 +9,7 @@ import { EmbedBuilder } from 'discord.js';
 import type { BotEvent } from '../types.js';
 import type { BotClient } from '../client.js';
 import { AutoModModule } from '../modules/automod/AutoModModule.js';
+import { AntiPhishingModule } from '../modules/automod/AntiPhishingModule.js';
 import { LevelingModule } from '../modules/leveling/LevelingModule.js';
 import { AnalyticsModule } from '../modules/AnalyticsModule.js';
 import { CountingModule } from '../modules/counting/CountingModule.js';
@@ -199,6 +200,7 @@ const event: BotEvent = {
 
     await Promise.allSettled([
       AutoModModule.analyze(message),
+      AntiPhishingModule.analyze(message),
       LevelingModule.processMessage(message.guild, message.author, message),
       trackActivity(message.guild.id),
       AnalyticsModule.trackMessage(message.guild.id),
