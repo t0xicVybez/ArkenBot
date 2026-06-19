@@ -91,6 +91,7 @@ model GuildSettings {
   leaveChannelId        String?
   levelUpChannelId      String?
   announcementChannelId String?
+  analyticsChannelId    String?
 
   // Announcement opt-in
   announcementsEnabled  Boolean @default(false)
