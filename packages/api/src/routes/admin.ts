@@ -181,7 +181,10 @@ export async function adminRoutes(server: FastifyInstance): Promise<void> {
   // Reads recent git commits and transforms them into a human-readable announcement draft.
   // process.cwd() resolves to the repo root when the server is started via PM2
   // with the cwd option set in ecosystem.config.cjs.
-  server.post('/admin/announcements/generate', { preHandler: [requireStaff] }, async (request, reply) => {
+  server.post('/admin/announcements/generate', {
+    preHandler: [requireStaff],
+    config: { rateLimit: { max: 3, timeWindow: '1 minute' } },
+  }, async (request, reply) => {
     const { count = 50 } = request.body as { count?: number };
 
     // Only include commits made after the last announcement was sent.

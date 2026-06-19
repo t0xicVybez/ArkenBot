@@ -1,9 +1,40 @@
 /**
  * Routes for managing guild-specific regex auto-responses.
  */
+import { Script } from 'node:vm';
 import type { FastifyInstance } from 'fastify';
 import { requireGuildAdmin } from '../middleware/auth.js';
 import { prisma } from '../database.js';
+
+const MAX_PATTERN_LENGTH = 500;
+
+// Runs the regex against a worst-case string inside a vm sandbox with a 100 ms
+// timeout. Returns true when the pattern causes catastrophic backtracking.
+function causesReDoS(pattern: string, flags: string): boolean {
+  const safe = flags.replace(/[^gimsuy]/g, '');
+  const probe = 'a'.repeat(50) + '!';
+  const src = `new RegExp(${JSON.stringify(pattern)}, ${JSON.stringify(safe)}).test(${JSON.stringify(probe)})`;
+  try {
+    new Script(src).runInNewContext({}, { timeout: 100 });
+    return false;
+  } catch (e: any) {
+    return e.code === 'ERR_SCRIPT_EXECUTION_TIMEOUT';
+  }
+}
+
+function validatePattern(pattern: unknown, flags: unknown): string | null {
+  if (typeof pattern !== 'string' || pattern.length > MAX_PATTERN_LENGTH)
+    return `Pattern must be a string under ${MAX_PATTERN_LENGTH} characters`;
+  const f = typeof flags === 'string' ? flags : 'i';
+  try {
+    new RegExp(pattern, f);
+  } catch {
+    return 'Invalid regex pattern or flags';
+  }
+  if (causesReDoS(pattern, f))
+    return 'Pattern causes excessive backtracking (ReDoS risk)';
+  return null;
+}
 
 /**
  * GET    /guilds/:guildId/auto-responses      — list all auto-responses
@@ -27,12 +58,8 @@ export async function autoResponseRoutes(server: FastifyInstance): Promise<void>
       return reply.code(400).send({ success: false, error: 'pattern and response are required' });
     }
 
-    // Validate regex server-side before persisting.
-    try {
-      new RegExp(pattern, flags ?? 'i');
-    } catch {
-      return reply.code(400).send({ success: false, error: 'Invalid regex pattern or flags' });
-    }
+    const patternError = validatePattern(pattern, flags);
+    if (patternError) return reply.code(400).send({ success: false, error: patternError });
 
     const row = await prisma.autoResponse.create({
       data: {
@@ -57,11 +84,8 @@ export async function autoResponseRoutes(server: FastifyInstance): Promise<void>
     const body = request.body as any;
 
     if (body.pattern !== undefined || body.flags !== undefined) {
-      try {
-        new RegExp(body.pattern ?? '', body.flags ?? 'i');
-      } catch {
-        return reply.code(400).send({ success: false, error: 'Invalid regex pattern or flags' });
-      }
+      const patternError = validatePattern(body.pattern ?? '', body.flags);
+      if (patternError) return reply.code(400).send({ success: false, error: patternError });
     }
 
     const result = await prisma.autoResponse.updateMany({
