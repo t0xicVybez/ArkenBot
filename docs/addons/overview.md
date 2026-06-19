@@ -16,11 +16,7 @@ Go to **Addon Manager** in the sidebar to see all available addons and their sta
 |---|---|
 | [Ticket System](tickets.md) | Full-featured support ticket system with panels, transcripts, SLA, and a portal |
 | [Game Server Status](gameservers.md) | Check and monitor 40+ game server types |
-| [FiveM Manager](fivem-manager.md) | Manage a FiveM server from Discord |
-| [Minecraft Manager](minecraft-manager.md) | Manage a Minecraft server via RCON |
-| [Rust Manager](rust-manager.md) | Manage a Rust server via WebSocket RCON |
-| [ARK Manager](ark-manager.md) | Manage an ARK: Survival Evolved server via RCON |
-| [Palworld Manager](palworld-manager.md) | Manage a Palworld server via REST API |
+| [RSM Manager](rsm-manager.md) | Manage game servers via Ronin Server Manager with live status monitoring |
 | [Code Review](code-review.md) | AI-powered code analysis and formatting |
 
 ## How Addons Work

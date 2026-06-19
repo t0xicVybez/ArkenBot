@@ -515,7 +515,7 @@ export default function FeaturesPage() {
             </span>
           </h1>
           <p className="text-gray-400 text-lg mb-8 leading-relaxed max-w-xl mx-auto">
-            Arken Bot ships with 20 built-in feature modules and growing. Need more? The addon system adds tickets, game server management, and more. Everything is free — no tiers, no paywalls.
+            Arken Bot ships with 20 built-in feature modules and growing. Need more? The addon system adds tickets, server monitoring, code review, and more — all installable from the dashboard. Everything is free — no tiers, no paywalls.
           </p>
 
           {/* Quick jump links */}
@@ -584,7 +584,7 @@ export default function FeaturesPage() {
             <p className="text-xs font-semibold text-fuchsia-400 uppercase tracking-widest mb-2">Want even more?</p>
             <h3 className="text-white font-bold text-xl mb-2">Extend Arken with Addons</h3>
             <p className="text-gray-400 text-sm leading-relaxed">
-              The addon system adds Tickets, FiveM, Minecraft, Rust, ARK, Palworld, and Code Review — all installable from the dashboard. Or build your own with the TypeScript SDK.
+              The addon system adds Tickets, Game Server Status, RSM Server Manager, and Code Review — all installable from the dashboard. Or build your own with the TypeScript SDK.
             </p>
           </div>
           <Link

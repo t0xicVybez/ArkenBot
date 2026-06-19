@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import {
   Puzzle, ArrowRight, ChevronRight, ExternalLink,
-  Check, Zap, Code2, Shield, Gamepad2, Ticket,
-  Terminal, Package, BookOpen, Star, Globe, Cpu,
+  Check, Zap, Code2, Shield, Ticket,
+  Terminal, Package, BookOpen, Globe, Cpu,
 } from 'lucide-react';
 import { LandingNav } from '@/components/LandingNav';
 
@@ -42,120 +42,6 @@ const FIRST_PARTY_ADDONS = [
       'User 1–5 star rating on ticket close',
       'Webhook notifications for third-party integrations',
       'Full staff portal: filters, notes, bulk close, stats',
-    ],
-  },
-  {
-    id: 'fivem',
-    icon: Gamepad2,
-    color: 'text-orange-400',
-    bg: 'bg-orange-500/10',
-    border: 'border-orange-500/20',
-    accentBorder: 'border-orange-500/40',
-    badge: 'Official',
-    badgeColor: 'bg-orange-500/15 text-orange-400 border-orange-500/30',
-    title: 'FiveM Manager',
-    tagline: 'Manage your QBCore or ESX FiveM server from Discord.',
-    description:
-      'Connect your FiveM server and control it without touching the console. Kick and ban players, give money and items, change jobs, teleport, and run admin commands — all via slash commands.',
-    bullets: [
-      'Kick and ban players',
-      'Give cash, bank money, and inventory items',
-      'Set and change player jobs',
-      'Teleport players between coordinates',
-      'Run arbitrary server console commands',
-      'Compatible with QBCore and ESX frameworks',
-      'Role-based staff and admin permission tiers',
-      'Configure server connection from the dashboard',
-    ],
-  },
-  {
-    id: 'minecraft',
-    icon: Terminal,
-    color: 'text-green-400',
-    bg: 'bg-green-500/10',
-    border: 'border-green-500/20',
-    accentBorder: 'border-green-500/40',
-    badge: 'Official',
-    badgeColor: 'bg-green-500/15 text-green-400 border-green-500/30',
-    title: 'Minecraft Manager',
-    tagline: 'Full RCON control over your Minecraft server.',
-    description:
-      'Connect to any vanilla, Paper, or Spigot server via RCON and manage it without opening a console window. Kick, ban, give items, send broadcasts, and execute any console command.',
-    bullets: [
-      'Kick and ban players',
-      'Give items and enchanted gear',
-      'Broadcast messages to all online players',
-      'Run any Minecraft console command via RCON',
-      'Works with vanilla, Paper, Spigot, and most forks',
-      'Role-based staff and admin permission tiers',
-      'Configure RCON credentials from the dashboard',
-    ],
-  },
-  {
-    id: 'rust',
-    icon: Shield,
-    color: 'text-red-400',
-    bg: 'bg-red-500/10',
-    border: 'border-red-500/20',
-    accentBorder: 'border-red-500/40',
-    badge: 'Official',
-    badgeColor: 'bg-red-500/15 text-red-400 border-red-500/30',
-    title: 'Rust Manager',
-    tagline: 'WebSocket RCON control for your Rust server.',
-    description:
-      'Manage your Rust server via WebSocket RCON. Kick and ban players, give items, broadcast in-game messages, and run any admin command — straight from Discord.',
-    bullets: [
-      'Kick and ban players with reason',
-      'Give items directly to online players',
-      'Broadcast server-wide messages',
-      'Run any Rust RCON console command',
-      'WebSocket RCON connection (no plugin required)',
-      'Role-based staff and admin permission tiers',
-      'Configure RCON from the dashboard',
-    ],
-  },
-  {
-    id: 'ark',
-    icon: Gamepad2,
-    color: 'text-yellow-400',
-    bg: 'bg-yellow-500/10',
-    border: 'border-yellow-500/20',
-    accentBorder: 'border-yellow-500/40',
-    badge: 'Official',
-    badgeColor: 'bg-yellow-500/15 text-yellow-400 border-yellow-500/30',
-    title: 'ARK Manager',
-    tagline: 'RCON management for ARK: Survival Evolved.',
-    description:
-      'Connect to your ARK server via RCON and manage it directly from Discord. Kick and ban players, send broadcasts, and run any admin command without leaving the app.',
-    bullets: [
-      'Kick and ban players',
-      'Broadcast messages to all players in-game',
-      'Run any ARK admin command via RCON',
-      'Works with official and unofficial servers',
-      'Role-based staff and admin permission tiers',
-      'Configure RCON credentials from the dashboard',
-    ],
-  },
-  {
-    id: 'palworld',
-    icon: Star,
-    color: 'text-violet-400',
-    bg: 'bg-violet-500/10',
-    border: 'border-violet-500/20',
-    accentBorder: 'border-violet-500/40',
-    badge: 'Official',
-    badgeColor: 'bg-violet-500/15 text-violet-400 border-violet-500/30',
-    title: 'Palworld Manager',
-    tagline: 'REST API management for your Palworld server.',
-    description:
-      'Manage your Palworld dedicated server via the REST API. Kick and ban players, send server-wide broadcasts, and run admin commands — all from Discord slash commands.',
-    bullets: [
-      'Kick and ban players from the server',
-      'Broadcast messages to all online players',
-      'Run admin commands via Palworld REST API',
-      'Works with official dedicated server builds',
-      'Role-based staff and admin permission tiers',
-      'Configure API credentials from the dashboard',
     ],
   },
   {
@@ -242,7 +128,7 @@ const SDK_FEATURES = [
 export const metadata = {
   title: 'Addons — Arken Bot',
   description:
-    'Explore Arken Bot first-party addons: Ticket System, FiveM, Minecraft, Rust, ARK, Palworld, and Code Review. Or build your own with the Arken Addon SDK.',
+    'Explore Arken Bot first-party addons: Ticket System, Game Server Status, RSM Server Manager, and Code Review. Or build your own with the Arken Addon SDK.',
 };
 
 export default function AddonsPage() {
@@ -267,7 +153,7 @@ export default function AddonsPage() {
             </span>
           </h1>
           <p className="text-gray-400 text-lg mb-8 leading-relaxed max-w-xl mx-auto">
-            Arken ships 9 official first-party addons covering game server management, advanced tickets, and developer tools. Install any addon from the dashboard — or build your own with the TypeScript SDK.
+            Arken ships 4 official first-party addons covering game server management, advanced tickets, and developer tools. Install any addon from the dashboard — or build your own with the TypeScript SDK.
           </p>
 
           {/* Jump links */}
