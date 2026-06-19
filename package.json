@@ -30,5 +30,17 @@
     "tsx": "^4.19.0",
     "prisma": "^5.22.0",
     "@prisma/client": "^5.22.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@prisma/client",
+      "@prisma/engines",
+      "core-js",
+      "esbuild",
+      "msgpackr-extract",
+      "prisma",
+      "sharp",
+      "unrs-resolver"
+    ]
   }
 }
