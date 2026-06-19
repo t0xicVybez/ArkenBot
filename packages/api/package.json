@@ -23,7 +23,7 @@
     "@fastify/cookie": "^11.0.0",
     "ioredis": "^5.4.1",
     "bullmq": "^5.13.0",
-    "axios": "^1.7.0",
+    "axios": "^1.16.0",
     "pino": "^9.5.0",
     "pino-pretty": "^13.0.0",
     "dotenv": "^16.4.0",
