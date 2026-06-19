@@ -1,7 +1,7 @@
 /**
  * Routes for managing guild-specific regex auto-responses.
  */
-import { Script } from 'node:vm';
+import vm from 'node:vm';
 import type { FastifyInstance } from 'fastify';
 import { requireGuildAdmin } from '../middleware/auth.js';
 import { prisma } from '../database.js';
@@ -10,12 +10,17 @@ const MAX_PATTERN_LENGTH = 500;
 
 // Runs the regex against a worst-case string inside a vm sandbox with a 100 ms
 // timeout. Returns true when the pattern causes catastrophic backtracking.
+// The pattern is passed as a context variable — never embedded in the script
+// source — so there is no code-injection path.
+const REDOS_PROBE_SCRIPT = new vm.Script('new RegExp(pattern, flags).test(probe)');
 function causesReDoS(pattern: string, flags: string): boolean {
-  const safe = flags.replace(/[^gimsuy]/g, '');
-  const probe = 'a'.repeat(50) + '!';
-  const src = `new RegExp(${JSON.stringify(pattern)}, ${JSON.stringify(safe)}).test(${JSON.stringify(probe)})`;
+  const ctx = vm.createContext({
+    pattern,
+    flags: flags.replace(/[^gimsuy]/g, ''),
+    probe: 'a'.repeat(50) + '!',
+  });
   try {
-    new Script(src).runInNewContext({}, { timeout: 100 });
+    REDOS_PROBE_SCRIPT.runInContext(ctx, { timeout: 100 });
     return false;
   } catch (e: any) {
     return e.code === 'ERR_SCRIPT_EXECUTION_TIMEOUT';
