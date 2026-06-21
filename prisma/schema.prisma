@@ -55,8 +55,11 @@ model Guild {
   guildEmbeds       GuildEmbed[]
   autoResponses     AutoResponse[]
   selfRoles         SelfRole[]
-  xpRoleMultipliers XpRoleMultiplier[]
-  tempVoiceChannels TempVoiceChannel[]
+  xpRoleMultipliers    XpRoleMultiplier[]
+  tempVoiceChannels    TempVoiceChannel[]
+  xpChannelMultipliers XpChannelMultiplier[]
+  userNotes            UserNote[]
+  reports              Report[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -910,8 +913,10 @@ model Giveaway {
   winnersCount Int      @default(1)
   endsAt       DateTime
   ended        Boolean  @default(false)
-  winnerIds    String[]
-  createdAt    DateTime @default(now())
+  winnerIds        String[]
+  requiredRoleId   String?
+  bonusRoleEntries Json?
+  createdAt        DateTime @default(now())
 
   @@index([guildId, ended, endsAt])
   @@map("giveaways")
@@ -1131,4 +1136,62 @@ model TempVoiceChannel {
   @@unique([guildId, channelId])
   @@index([guildId])
   @@map("temp_voice_channels")
+}
+
+// ─────────────────────────────────────────────
+// Per-Channel XP Multipliers
+// ─────────────────────────────────────────────
+model XpChannelMultiplier {
+  id         String @id @default(cuid())
+  guildId    String
+  guild      Guild  @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  channelId  String
+  multiplier Float  @default(1.5)
+  createdAt  DateTime @default(now())
+
+  @@unique([guildId, channelId])
+  @@index([guildId])
+  @@map("xp_channel_multipliers")
+}
+
+// ─────────────────────────────────────────────
+// User Notes (staff-only per-user notes)
+// ─────────────────────────────────────────────
+model UserNote {
+  id        String   @id @default(cuid())
+  guildId   String
+  guild     Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  userId    String
+  staffId   String
+  staffTag  String
+  content   String
+  createdAt DateTime @default(now())
+
+  @@index([guildId, userId])
+  @@map("user_notes")
+}
+
+// ─────────────────────────────────────────────
+// Report System
+// ─────────────────────────────────────────────
+model Report {
+  id           String   @id @default(cuid())
+  guildId      String
+  guild        Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  reporterId   String
+  reporterTag  String
+  targetId     String
+  targetTag    String
+  reason       String
+  status       String   @default("pending")
+  reviewerId   String?
+  reviewerTag  String?
+  staffNote    String?
+  messageId    String?
+  reviewChannelId String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([guildId, status])
+  @@map("reports")
 }
