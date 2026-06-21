@@ -22,6 +22,7 @@
 - [Music](setup/music.md)
 - [Counting Game](setup/counting.md)
 - [Scheduled Messages](setup/scheduled-messages.md)
+- [Temp Voice Channels](setup/temp-voice.md)
 - [Auto-Slowmode](setup/slowmode.md)
 - [Stats Channels](setup/stats-channels.md)
 - [Embed Builder](setup/embeds.md)
@@ -40,3 +41,4 @@
 - [Game Server Status](addons/gameservers.md)
 - [RSM Manager](addons/rsm-manager.md)
 - [Code Review](addons/code-review.md)
+- [Application System](addons/applications.md)

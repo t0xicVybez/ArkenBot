@@ -94,6 +94,19 @@ When triggered, new accounts that joined during the raid window are actioned aut
 
 ---
 
+## Anti-Phishing
+
+Scans every message for known phishing and scam domains using a live blocklist updated hourly.
+
+| Setting | Description |
+|---|---|
+| **Enable Anti-Phishing** | Toggle to enable/disable |
+| **Action** | `Delete only` — deletes the message silently. `Delete & Mute` — deletes the message and mutes the sender for 10 minutes. |
+
+> Administrators and members with exempt roles are never affected.
+
+---
+
 ## Tips
 
 - Start with **delete** actions to test that rules trigger correctly before escalating to kicks/bans
