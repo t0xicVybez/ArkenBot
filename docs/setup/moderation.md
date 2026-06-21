@@ -40,3 +40,31 @@ When you ban, kick, mute, or warn a member, the bot sends them a DM explaining w
 ## Auto-Mod Integration
 
 The [Auto-Mod](automod.md) system creates moderation cases automatically for automated actions, keeping everything in one unified case history.
+
+## Warning Escalation (Auto-Actions)
+
+Automatically escalate punishments as warnings accumulate. Go to **Moderation → Auto-Actions** tab.
+
+### Adding a Rule
+
+| Field | Description |
+|---|---|
+| **Warning count** | The total warning count that triggers this rule |
+| **Action** | `Mute` (requires a mute role configured), `Timeout` (Discord native), `Kick`, or `Ban` |
+| **Duration** | For Timeout: how long (e.g. `1h`, `30m`). Not used for kick/ban. |
+
+You can add multiple rules. Example setup:
+- 3 warnings → Timeout 1 hour
+- 5 warnings → Timeout 24 hours
+- 7 warnings → Ban
+
+When a `/warn` brings a member to a matching threshold, the action is applied automatically and noted in the case reason.
+
+## Audit Log Filtering
+
+The **Logs** dashboard page supports filtering:
+
+- **User ID** — Filter to show only actions involving a specific user (enter their Discord ID)
+- **Date From / Date To** — Show only actions within a date range
+
+Click **Clear** to reset all filters.

@@ -41,6 +41,9 @@
       "prisma",
       "sharp",
       "unrs-resolver"
-    ]
+    ],
+    "overrides": {
+      "gray-matter>js-yaml": "3.14.1"
+    }
   }
 }

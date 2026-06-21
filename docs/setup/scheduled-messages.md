@@ -16,6 +16,7 @@ Fill in the **Create Scheduled Message** form at the bottom of the page:
 | **Message Content** | The message text to send |
 | **Schedule Date & Time** | When to send the message |
 | **Repeat** | How often to repeat after the initial send |
+| **Ping Role** | Optional — mention a role when the message is sent |
 
 ### Repeat Options
 
@@ -34,6 +35,12 @@ The table at the top of the page lists all scheduled messages:
 
 - **Enable/Disable** — Toggle to pause a scheduled message without deleting it
 - **Delete** — Click the trash icon to permanently remove it
+
+## Role Pings
+
+Select a role in the **Ping Role** dropdown to have the bot mention that role alongside the message. The role mention is prepended to the message content (or sent as the message content on embeds).
+
+Useful for announcements targeted at specific groups (e.g. ping @Updates subscribers when a changelog drops).
 
 ## Notes
 
