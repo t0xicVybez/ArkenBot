@@ -43,3 +43,27 @@ The **Giveaways** page shows:
 **Active Giveaways** — Currently running giveaways with prize name, host, end time, and winner count.
 
 **Ended Giveaways** — Completed giveaways with the prize and winner names displayed as tags.
+
+## Required Role & Bonus Entries
+
+### Required Role
+
+Set a role that members must have to be eligible to win:
+
+```
+/giveaway start prize:Steam Gift Card channel:#giveaways duration:7d winners:1 required-role:@Verified
+```
+
+Members who react but don't have the required role are silently excluded when drawing winners.
+
+### Bonus Entries
+
+Give a specific role extra chances to win:
+
+```
+/giveaway start prize:Nitro channel:#giveaways duration:3d winners:1 bonus-role:@Booster bonus-entries:3
+```
+
+Boosters get 3 additional entries (4 total). Bonus entries stack with required-role filtering — a member must still meet the required role to be eligible.
+
+Both options are also available when creating giveaways from the **Dashboard → Giveaways** page.

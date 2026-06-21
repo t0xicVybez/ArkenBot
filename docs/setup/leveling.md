@@ -126,3 +126,19 @@ When a member qualifies for multiple role multipliers, the **highest** one appli
 **Example:** Server multiplier is `1.5×`. A member has the Booster role (2×). Their effective multiplier is `1.5 × 2 = 3×`.
 
 To remove a multiplier, click the trash icon next to the rule.
+
+### Per-Channel XP Multipliers
+
+Assign XP bonuses (or penalties) to specific channels from the **Leveling** dashboard under **Channel XP Multipliers**.
+
+1. Select a channel from the dropdown
+2. Enter a multiplier (e.g. `2` for double XP, `0.5` for half XP)
+3. Click **Add**
+
+Channel multipliers stack **on top of** server-wide and role multipliers:
+
+**Example:** Server multiplier `1.5×`, member has Booster role `2×`, message sent in a boosted channel `1.5×` → effective XP = base × 1.5 × 2 × 1.5 = **4.5×**
+
+The **highest** role multiplier applies; the channel multiplier always applies on top.
+
+To remove a channel multiplier, click the trash icon next to the rule.
