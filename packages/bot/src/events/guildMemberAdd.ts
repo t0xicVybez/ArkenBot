@@ -1,7 +1,7 @@
 /**
  * guildMemberAdd event — runs when a member joins a guild. Triggers welcome
  * messages, join logging, auto-mod account-age checks, analytics tracking,
- * and invite attribution in parallel.
+ * invite attribution, and verification gate in parallel.
  */
 import type { GuildMember } from 'discord.js';
 import type { BotEvent } from '../types.js';
@@ -11,6 +11,7 @@ import { AutoModModule } from '../modules/automod/AutoModModule.js';
 import { ensureGuildExists } from '../utils/settings.js';
 import { AnalyticsModule } from '../modules/AnalyticsModule.js';
 import { InviteTrackerModule } from '../modules/inviteTracker/InviteTrackerModule.js';
+import { VerificationModule } from '../modules/verification/VerificationModule.js';
 
 const event: BotEvent = {
   name: 'guildMemberAdd',
@@ -28,6 +29,7 @@ const event: BotEvent = {
       AutoModModule.handleMemberJoin(member),
       AnalyticsModule.trackJoin(member.guild.id),
       InviteTrackerModule.handleJoin(member),
+      VerificationModule.handleJoin(member),
     ]);
   },
 };

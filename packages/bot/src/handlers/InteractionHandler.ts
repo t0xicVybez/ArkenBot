@@ -21,6 +21,7 @@ import { isAddonEnabledForGuild } from '../utils/settings.js';
 import { ADDON_CATEGORY_PREFIX } from '@arkenbot/shared';
 import { prisma } from '../database.js';
 import { redis } from '../redis.js';
+import { VerificationModule } from '../modules/verification/VerificationModule.js';
 
 /** Routes and pre-validates all incoming Discord interactions before command execution. */
 export class InteractionHandler {
@@ -182,8 +183,21 @@ export class InteractionHandler {
   /**
    * Routes button interactions using a `commandName:...` customId convention
    * so each command owns its own button handling logic.
+   *
+   * Special cases:
+   *   - `verify:*`  → VerificationModule.handleVerifyButton
    */
   private async handleButton(interaction: ButtonInteraction): Promise<void> {
+    // Verification gate buttons
+    if (interaction.customId.startsWith('verify:')) {
+      try {
+        await VerificationModule.handleVerifyButton(interaction);
+      } catch (err) {
+        logger.error({ err }, 'Verification button error');
+      }
+      return;
+    }
+
     const [commandName] = interaction.customId.split(':');
     const command = this.client.commands.get(commandName);
 

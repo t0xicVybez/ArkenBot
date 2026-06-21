@@ -420,16 +420,34 @@ export class BackgroundJobs {
       const msg = await channel.messages.fetch(giveaway.messageId).catch(() => null);
       const reaction = msg?.reactions.cache.get('🎉');
       const users = reaction ? await reaction.users.fetch().catch(() => null) : null;
-      const eligible = users?.filter(u => !u.bot && u.id !== giveaway.hostId) ?? new Map();
-      const entries = [...eligible.values()];
+      const eligibleBase = users?.filter(u => !u.bot && u.id !== giveaway.hostId);
+
+      // Filter by required role if set
+      const requiredRoleId = (giveaway as Record<string, unknown>).requiredRoleId as string | null | undefined;
+      const eligible = requiredRoleId && eligibleBase
+        ? eligibleBase.filter((_u: import('discord.js').User, id: string) => guild.members.cache.get(id)?.roles.cache.has(requiredRoleId) ?? false)
+        : eligibleBase;
+
+      // Build entries with bonus role duplicates
+      let entries = eligible ? [...eligible.values()] : [];
+      const bonusRoleEntries = (giveaway as Record<string, unknown>).bonusRoleEntries as Array<{ roleId: string; bonusEntries: number }> | null;
+      if (bonusRoleEntries && bonusRoleEntries.length > 0 && eligible) {
+        for (const bonus of bonusRoleEntries) {
+          for (const user of eligible.values()) {
+            if (guild.members.cache.get(user.id)?.roles.cache.has(bonus.roleId)) {
+              for (let i = 0; i < bonus.bonusEntries; i++) entries.push(user);
+            }
+          }
+        }
+      }
 
       let winnerIds: string[] = [];
       let winnerMentions = 'No eligible entrants';
 
       if (entries.length > 0) {
         const winners = entries.sort(() => Math.random() - 0.5).slice(0, giveaway.winnersCount);
-        winnerIds = winners.map(w => w.id);
-        winnerMentions = winners.map(w => `<@${w.id}>`).join(', ');
+        winnerIds = [...new Set(winners.map(w => w.id))];
+        winnerMentions = winnerIds.map(id => `<@${id}>`).join(', ');
       }
 
       await prisma.giveaway.update({ where: { id: giveaway.id }, data: { ended: true, winnerIds } });
