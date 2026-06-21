@@ -69,3 +69,22 @@ Once reviewed, the Accept/Deny buttons are disabled so the same application cann
 - Create separate forms for different purposes (staff applications, event sign-ups, giveaway entries)
 - Use the `accept-role` to automatically onboard accepted staff without any manual role assignment
 - Set the review channel to a staff-only channel so applicants cannot see decisions before their DM arrives
+
+## Dashboard Management
+
+The Application System has a full dashboard UI at **Dashboard → Applications**.
+
+### Forms Tab
+
+- **Create Form** — Set name, description, review channel, and optional accept role
+- **Add Fields** — Add up to 5 fields per form (short text or paragraph, required toggle, placeholder)
+- **Toggle** — Enable or disable a form without deleting it
+- **Delete** — Remove a form and all its submissions
+
+### Submissions Tab
+
+Filter submissions by **form** and **status** (pending / accepted / denied).
+
+Click any submission row to expand and read the full answers. Use the **Accept** or **Deny** buttons inline — you'll be prompted for an optional note before confirming.
+
+Accepted applicants automatically receive the configured **Accept Role** and are notified via DM.
