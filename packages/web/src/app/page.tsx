@@ -5,6 +5,7 @@ import {
   ChevronRight, Star, Terminal, Users, MessageSquare,
   Gift, Radio, Lightbulb, Calendar, Gamepad2,
   BarChart2, Clock, Settings, Command, Globe, X,
+  Mic, ShieldAlert, ShieldCheck, MessagesSquare, Flag, BarChart,
 } from 'lucide-react';
 import { LandingNav } from '@/components/LandingNav';
 
@@ -36,7 +37,7 @@ const SITE = {
   name: 'Arken Bot',
   tagline: 'One Bot.\nEvery Feature.',
   description:
-    'Moderation, leveling, tickets, custom commands, auto-responses, temp roles, music, auto-mod, giveaways, stream alerts, and a real-time web dashboard — fully free, no paywalls.',
+    'Moderation, leveling, tickets, custom commands, auto-responses, temp voice channels, anti-nuke, verification gate, forum management, polls, music, giveaways, stream alerts, and a real-time web dashboard — fully free, no paywalls.',
   inviteUrl: CLIENT_ID
     ? `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&permissions=8824675416665207&integration_type=0&scope=bot+applications.commands`
     : 'https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=8824675416665207&integration_type=0&scope=bot+applications.commands',
@@ -174,6 +175,54 @@ const FEATURES = [
     desc: 'Manage FiveM, Minecraft, Rust, ARK, and Palworld servers directly from Discord. Kick, ban, give items, broadcast, and run commands.',
   },
   {
+    icon: Mic,
+    color: 'text-sky-400',
+    bg: 'bg-sky-500/10',
+    border: 'border-sky-500/20',
+    title: 'Temp Voice Channels',
+    desc: 'Members join a trigger channel to instantly get their own private voice channel, which is deleted automatically when empty. Supports multiple triggers across different categories.',
+  },
+  {
+    icon: ShieldAlert,
+    color: 'text-red-400',
+    bg: 'bg-red-500/10',
+    border: 'border-red-500/20',
+    title: 'Anti-Nuke',
+    desc: 'Detect and respond to mass channel deletions, role deletions, and mass bans in real time. Automatically de-ops, kicks, or bans the offending user before the damage spreads.',
+  },
+  {
+    icon: ShieldCheck,
+    color: 'text-emerald-400',
+    bg: 'bg-emerald-500/10',
+    border: 'border-emerald-500/20',
+    title: 'Verification Gate',
+    desc: 'Require new members to click a verify button before accessing the server. Assign a pending role on join and a member role after verification — keep bots and lurkers out.',
+  },
+  {
+    icon: MessagesSquare,
+    color: 'text-violet-400',
+    bg: 'bg-violet-500/10',
+    border: 'border-violet-500/20',
+    title: 'Forum Management',
+    desc: 'Auto-post a template message in every new forum thread and automatically apply a tag on creation. Configure independently per forum channel from the dashboard.',
+  },
+  {
+    icon: BarChart,
+    color: 'text-blue-400',
+    bg: 'bg-blue-500/10',
+    border: 'border-blue-500/20',
+    title: 'Polls',
+    desc: 'Create multi-option polls with the /poll command. Members vote via buttons and staff can close or delete polls from the dashboard.',
+  },
+  {
+    icon: Flag,
+    color: 'text-orange-400',
+    bg: 'bg-orange-500/10',
+    border: 'border-orange-500/20',
+    title: 'Member Reports',
+    desc: 'Members submit reports via /report. Staff review pending reports in the dashboard, add notes, and mark them reviewed or dismissed.',
+  },
+  {
     icon: Puzzle,
     color: 'text-fuchsia-400',
     bg: 'bg-fuchsia-500/10',
@@ -217,6 +266,11 @@ const COMPARISON = [
   { feature: 'Starboard',                     arken: true,  note: '' },
   { feature: 'Scheduled Messages',            arken: true,  note: '' },
   { feature: 'Stats Channels',               arken: true,  note: '' },
+  { feature: 'Temp Voice Channels',           arken: true,  note: '' },
+  { feature: 'Anti-Nuke Protection',          arken: true,  note: '' },
+  { feature: 'Verification Gate',             arken: true,  note: '' },
+  { feature: 'Forum Management',             arken: true,  note: '' },
+  { feature: 'Polls & Member Reports',        arken: true,  note: '' },
   { feature: 'Real-time Web Dashboard',       arken: true,  note: '' },
   { feature: 'Addon Marketplace',             arken: true,  note: 'Unique to Arken' },
   { feature: 'Price',                         arken: true,  note: 'Free, always' },
@@ -367,7 +421,7 @@ export default async function LandingPage() {
                 {[
                   { value: stats ? fmt(stats.servers) : '0+', label: 'Servers' },
                   { value: stats ? fmt(stats.users) : '0+', label: 'Users Tracked' },
-                  { value: '20+', label: 'Features' },
+                  { value: '30+', label: 'Features' },
                   { value: '99.9%', label: 'Uptime' },
                 ].map((s) => (
                   <div key={s.label} className="flex flex-col items-center px-4 py-2.5 rounded-xl border border-[var(--border-strong)] bg-[var(--bg-card)]">
