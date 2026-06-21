@@ -386,36 +386,41 @@ export async function settingsRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: escalations });
   });
 
-  // ── Temp Voice Channel Config ───────────────────────────────────────────────
+  // ── Temp Voice Triggers (Join-to-Create, multi-channel) ────────────────────
 
-  // GET /guilds/:guildId/temp-voice/config
-  server.get('/guilds/:guildId/temp-voice/config', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
+  // GET /guilds/:guildId/temp-voice/triggers
+  server.get('/guilds/:guildId/temp-voice/triggers', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
-    const settings = await prisma.guildSettings.findUnique({ where: { guildId }, select: { extended: true } });
-    const extended = (settings?.extended ?? {}) as Record<string, unknown>;
-    return reply.send({ success: true, data: { joinToCreateChannelId: extended.joinToCreateChannelId ?? null } });
+    const triggers = await prisma.tempVoiceTrigger.findMany({
+      where: { guildId },
+      orderBy: { createdAt: 'asc' },
+      select: { channelId: true, categoryId: true },
+    });
+    return reply.send({ success: true, data: triggers });
   });
 
-  // PATCH /guilds/:guildId/temp-voice/config
-  server.patch('/guilds/:guildId/temp-voice/config', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
+  // POST /guilds/:guildId/temp-voice/triggers
+  server.post('/guilds/:guildId/temp-voice/triggers', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
-    const { channelId } = request.body as { channelId: string | null };
+    const { channelId, categoryId } = request.body as { channelId: string; categoryId?: string | null };
+    if (!channelId) return reply.status(400).send({ success: false, error: 'channelId is required' });
 
-    const settings = await prisma.guildSettings.findUnique({ where: { guildId }, select: { extended: true } });
-    const prev = { ...((settings?.extended ?? {}) as Record<string, unknown>) };
-    if (channelId) {
-      prev.joinToCreateChannelId = channelId;
-    } else {
-      delete prev.joinToCreateChannelId;
-    }
-
-    await prisma.guildSettings.upsert({
-      where: { guildId },
-      update: { extended: prev as import('@prisma/client').Prisma.InputJsonValue },
-      create: { guildId, extended: prev as import('@prisma/client').Prisma.InputJsonValue },
+    const trigger = await prisma.tempVoiceTrigger.upsert({
+      where: { guildId_channelId: { guildId, channelId } },
+      update: { categoryId: categoryId ?? null },
+      create: { guildId, channelId, categoryId: categoryId ?? null },
+      select: { channelId: true, categoryId: true },
     });
+    return reply.send({ success: true, data: trigger });
+  });
 
-    return reply.send({ success: true, data: { joinToCreateChannelId: channelId ?? null } });
+  // DELETE /guilds/:guildId/temp-voice/triggers/:channelId
+  server.delete('/guilds/:guildId/temp-voice/triggers/:channelId', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
+    const { guildId, channelId } = request.params as { guildId: string; channelId: string };
+    await prisma.tempVoiceTrigger.delete({
+      where: { guildId_channelId: { guildId, channelId } },
+    }).catch(() => null);
+    return reply.send({ success: true });
   });
 
   // ── Anti-Nuke Config ────────────────────────────────────────────────────────

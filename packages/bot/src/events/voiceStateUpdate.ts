@@ -1,17 +1,17 @@
 /**
- * voiceStateUpdate event — manages "Create-to-Join" temporary voice channels.
+ * voiceStateUpdate event — manages "Join-to-Create" temporary voice channels.
  *
- * When a member joins the designated trigger channel (configured in
- * GuildSettings.extended.joinToCreateChannelId) the bot creates a new private
- * voice channel named after the member, moves them in, and records it.
- * When that temporary channel becomes empty the bot deletes it.
+ * When a member joins any configured trigger channel (TempVoiceTrigger rows for
+ * the guild) the bot creates a new voice channel named after the member, moves
+ * them in, and records it. Each trigger can optionally specify a target category;
+ * if omitted the new channel inherits the trigger channel's own category.
+ * When the temporary channel becomes empty the bot deletes it.
  */
 
 import { ChannelType, PermissionFlagsBits, type VoiceState } from 'discord.js';
 import type { BotEvent } from '../types.js';
 import type { BotClient } from '../client.js';
 import { prisma } from '../database.js';
-import { getGuildSettings } from '../utils/settings.js';
 import { logger } from '../logger.js';
 
 const event: BotEvent = {
@@ -20,46 +20,51 @@ const event: BotEvent = {
     const guild = newState.guild ?? oldState.guild;
     if (!guild) return;
 
-    const settings = await getGuildSettings(guild.id);
-    const extended = (settings?.extended ?? {}) as Record<string, unknown>;
-    const triggerChannelId = extended.joinToCreateChannelId as string | undefined;
+    // ── Member joined a channel — check if it's a trigger ─────────────────────
+    if (newState.channelId && newState.channelId !== oldState.channelId && newState.member) {
+      const trigger = await prisma.tempVoiceTrigger.findUnique({
+        where: { guildId_channelId: { guildId: guild.id, channelId: newState.channelId } },
+      }).catch(() => null);
 
-    // ── Member joined the trigger channel ──────────────────────────────────────
-    if (triggerChannelId && newState.channelId === triggerChannelId && newState.member) {
-      const member = newState.member;
-      try {
-        const category = guild.channels.cache.get(triggerChannelId)?.parentId ?? null;
+      if (trigger) {
+        const member = newState.member;
+        try {
+          const category =
+            trigger.categoryId ??
+            guild.channels.cache.get(trigger.channelId)?.parentId ??
+            null;
 
-        const tempChannel = await guild.channels.create({
-          name: `${member.displayName}'s Channel`,
-          type: ChannelType.GuildVoice,
-          parent: category ?? undefined,
-          permissionOverwrites: [
-            {
-              id: guild.roles.everyone.id,
-              allow: [PermissionFlagsBits.Connect, PermissionFlagsBits.ViewChannel],
-            },
-            {
-              id: member.id,
-              allow: [
-                PermissionFlagsBits.Connect,
-                PermissionFlagsBits.ViewChannel,
-                PermissionFlagsBits.ManageChannels,
-                PermissionFlagsBits.MoveMembers,
-              ],
-            },
-          ],
-          reason: `Temp VC created for ${member.user.tag}`,
-        });
+          const tempChannel = await guild.channels.create({
+            name: `${member.displayName}'s Channel`,
+            type: ChannelType.GuildVoice,
+            parent: category ?? undefined,
+            permissionOverwrites: [
+              {
+                id: guild.roles.everyone.id,
+                allow: [PermissionFlagsBits.Connect, PermissionFlagsBits.ViewChannel],
+              },
+              {
+                id: member.id,
+                allow: [
+                  PermissionFlagsBits.Connect,
+                  PermissionFlagsBits.ViewChannel,
+                  PermissionFlagsBits.ManageChannels,
+                  PermissionFlagsBits.MoveMembers,
+                ],
+              },
+            ],
+            reason: `Temp VC created for ${member.user.tag}`,
+          });
 
-        await prisma.tempVoiceChannel.create({
-          data: { guildId: guild.id, channelId: tempChannel.id, ownerId: member.id },
-        });
+          await prisma.tempVoiceChannel.create({
+            data: { guildId: guild.id, channelId: tempChannel.id, ownerId: member.id },
+          });
 
-        await member.voice.setChannel(tempChannel, 'Moved to temp VC').catch(() => null);
-        logger.info({ guildId: guild.id, channelId: tempChannel.id, ownerId: member.id }, 'Temp voice channel created');
-      } catch (err) {
-        logger.error({ err, guildId: guild.id }, 'Failed to create temp voice channel');
+          await member.voice.setChannel(tempChannel, 'Moved to temp VC').catch(() => null);
+          logger.info({ guildId: guild.id, channelId: tempChannel.id, ownerId: member.id }, 'Temp voice channel created');
+        } catch (err) {
+          logger.error({ err, guildId: guild.id }, 'Failed to create temp voice channel');
+        }
       }
     }
 
@@ -73,7 +78,6 @@ const event: BotEvent = {
       if (record) {
         const voiceChannel = guild.channels.cache.get(leftChannelId);
         if (!voiceChannel || voiceChannel.type !== ChannelType.GuildVoice) {
-          // Channel already gone — clean up the DB record
           await prisma.tempVoiceChannel.delete({
             where: { guildId_channelId: { guildId: guild.id, channelId: leftChannelId } },
           }).catch(() => null);

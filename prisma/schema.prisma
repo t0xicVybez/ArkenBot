@@ -57,6 +57,7 @@ model Guild {
   selfRoles         SelfRole[]
   xpRoleMultipliers    XpRoleMultiplier[]
   tempVoiceChannels    TempVoiceChannel[]
+  tempVoiceTriggers    TempVoiceTrigger[]
   xpChannelMultipliers XpChannelMultiplier[]
   userNotes            UserNote[]
   reports              Report[]
@@ -1120,6 +1121,22 @@ model XpRoleMultiplier {
   @@unique([guildId, roleId])
   @@index([guildId])
   @@map("xp_role_multipliers")
+}
+
+// ─────────────────────────────────────────────
+// Temp Voice Triggers (Join-to-Create config)
+// ─────────────────────────────────────────────
+model TempVoiceTrigger {
+  id         String   @id @default(cuid())
+  guildId    String
+  guild      Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  channelId  String   // The trigger voice channel ID
+  categoryId String?  // Optional: category to place created channels in (overrides trigger channel's category)
+  createdAt  DateTime @default(now())
+
+  @@unique([guildId, channelId])
+  @@index([guildId])
+  @@map("temp_voice_triggers")
 }
 
 // ─────────────────────────────────────────────
