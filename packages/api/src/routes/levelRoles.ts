@@ -67,6 +67,37 @@ export async function levelRoleRoutes(server: FastifyInstance): Promise<void> {
   });
 
   // ══════════════════════════════════════════════════════════════════
+  // XP CHANNEL MULTIPLIERS
+  // ══════════════════════════════════════════════════════════════════
+
+  // GET /guilds/:guildId/xp-channel-multipliers
+  server.get('/guilds/:guildId/xp-channel-multipliers', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
+    const { guildId } = request.params as { guildId: string };
+    const multipliers = await prisma.xpChannelMultiplier.findMany({ where: { guildId }, orderBy: { multiplier: 'desc' } });
+    return reply.send({ success: true, data: multipliers });
+  });
+
+  // POST /guilds/:guildId/xp-channel-multipliers
+  server.post('/guilds/:guildId/xp-channel-multipliers', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
+    const { guildId } = request.params as { guildId: string };
+    const { channelId, multiplier } = request.body as { channelId: string; multiplier: number };
+    if (!channelId || !multiplier) return reply.code(400).send({ success: false, error: 'channelId and multiplier are required' });
+    const record = await prisma.xpChannelMultiplier.upsert({
+      where: { guildId_channelId: { guildId, channelId } },
+      update: { multiplier: Number(multiplier) },
+      create: { guildId, channelId, multiplier: Number(multiplier) },
+    });
+    return reply.code(201).send({ success: true, data: record });
+  });
+
+  // DELETE /guilds/:guildId/xp-channel-multipliers/:channelId
+  server.delete('/guilds/:guildId/xp-channel-multipliers/:channelId', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
+    const { guildId, channelId } = request.params as { guildId: string; channelId: string };
+    await prisma.xpChannelMultiplier.deleteMany({ where: { guildId, channelId } });
+    return reply.code(204).send();
+  });
+
+  // ══════════════════════════════════════════════════════════════════
   // LEADERBOARD MANAGEMENT
   // ══════════════════════════════════════════════════════════════════
 

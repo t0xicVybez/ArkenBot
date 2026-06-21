@@ -95,9 +95,25 @@ function normalizeEmoji(raw: string): string {
   // Strip all Unicode variation selectors (U+FE00–U+FE0F, U+E0100–U+E01EF)
   // and keycap combining enclosing mark (U+20E3)
   return raw
-    .replace(/[\uFE00-\uFE0F\u20E3]/g, '')
+    .replace(/[︀-️⃣]/g, '')
     .replace(/\uDB40[\uDC00-\uDCFF]/g, '') // U+E0100–U+E01EF (surrogate pair range)
     .trim();
+}
+
+/** Helper: read guild extended JSON, merge a key, and upsert. Invalidates Redis cache. */
+async function patchExtended(guildId: string, key: string, value: unknown): Promise<Record<string, unknown>> {
+  const settings = await prisma.guildSettings.findUnique({ where: { guildId }, select: { extended: true } });
+  const extended = { ...((settings?.extended ?? {}) as Record<string, unknown>), [key]: value };
+
+  await prisma.guildSettings.upsert({
+    where: { guildId },
+    update: { extended: extended as import('@prisma/client').Prisma.InputJsonValue },
+    create: { guildId, extended: extended as import('@prisma/client').Prisma.InputJsonValue },
+  });
+
+  await pub.publish('cache:invalidate:settings', guildId);
+
+  return extended;
 }
 
 export async function settingsRoutes(server: FastifyInstance): Promise<void> {
@@ -400,5 +416,115 @@ export async function settingsRoutes(server: FastifyInstance): Promise<void> {
     });
 
     return reply.send({ success: true, data: { joinToCreateChannelId: channelId ?? null } });
+  });
+
+  // ── Anti-Nuke Config ────────────────────────────────────────────────────────
+
+  // GET /guilds/:guildId/anti-nuke/config
+  server.get('/guilds/:guildId/anti-nuke/config', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
+    const { guildId } = request.params as { guildId: string };
+    const settings = await prisma.guildSettings.findUnique({ where: { guildId }, select: { extended: true } });
+    const extended = (settings?.extended ?? {}) as Record<string, unknown>;
+    return reply.send({ success: true, data: extended.antiNuke ?? {} });
+  });
+
+  // PATCH /guilds/:guildId/anti-nuke/config
+  server.patch('/guilds/:guildId/anti-nuke/config', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
+    const { guildId } = request.params as { guildId: string };
+    const body = request.body as {
+      enabled?: boolean;
+      channelDeleteThreshold?: number;
+      roleDeleteThreshold?: number;
+      banThreshold?: number;
+      action?: string;
+      alertChannelId?: string | null;
+    };
+
+    const settings = await prisma.guildSettings.findUnique({ where: { guildId }, select: { extended: true } });
+    const extended = (settings?.extended ?? {}) as Record<string, unknown>;
+    const prev = (extended.antiNuke ?? {}) as Record<string, unknown>;
+    const merged = { ...prev, ...body };
+
+    const updatedExtended = { ...extended, antiNuke: merged };
+    await prisma.guildSettings.upsert({
+      where: { guildId },
+      update: { extended: updatedExtended as import('@prisma/client').Prisma.InputJsonValue },
+      create: { guildId, extended: updatedExtended as import('@prisma/client').Prisma.InputJsonValue },
+    });
+
+    await pub.publish('cache:invalidate:settings', guildId);
+
+    return reply.send({ success: true, data: merged });
+  });
+
+  // ── Verification Config ─────────────────────────────────────────────────────
+
+  // GET /guilds/:guildId/verification/config
+  server.get('/guilds/:guildId/verification/config', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
+    const { guildId } = request.params as { guildId: string };
+    const settings = await prisma.guildSettings.findUnique({ where: { guildId }, select: { extended: true } });
+    const extended = (settings?.extended ?? {}) as Record<string, unknown>;
+    return reply.send({ success: true, data: extended.verification ?? {} });
+  });
+
+  // PATCH /guilds/:guildId/verification/config
+  server.patch('/guilds/:guildId/verification/config', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
+    const { guildId } = request.params as { guildId: string };
+    const body = request.body as {
+      enabled?: boolean;
+      pendingRoleId?: string | null;
+      memberRoleId?: string | null;
+      verifyChannelId?: string | null;
+    };
+
+    const settings = await prisma.guildSettings.findUnique({ where: { guildId }, select: { extended: true } });
+    const extended = (settings?.extended ?? {}) as Record<string, unknown>;
+    const prev = (extended.verification ?? {}) as Record<string, unknown>;
+    const merged = { ...prev, ...body };
+
+    const updatedExtended = { ...extended, verification: merged };
+    await prisma.guildSettings.upsert({
+      where: { guildId },
+      update: { extended: updatedExtended as import('@prisma/client').Prisma.InputJsonValue },
+      create: { guildId, extended: updatedExtended as import('@prisma/client').Prisma.InputJsonValue },
+    });
+
+    await pub.publish('cache:invalidate:settings', guildId);
+
+    return reply.send({ success: true, data: merged });
+  });
+
+  // ── Forum Management Config ─────────────────────────────────────────────────
+
+  // GET /guilds/:guildId/forum-management/config
+  server.get('/guilds/:guildId/forum-management/config', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
+    const { guildId } = request.params as { guildId: string };
+    const settings = await prisma.guildSettings.findUnique({ where: { guildId }, select: { extended: true } });
+    const extended = (settings?.extended ?? {}) as Record<string, unknown>;
+    return reply.send({ success: true, data: extended.forumManagement ?? {} });
+  });
+
+  // PATCH /guilds/:guildId/forum-management/config
+  server.patch('/guilds/:guildId/forum-management/config', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
+    const { guildId } = request.params as { guildId: string };
+    const body = request.body as {
+      channels?: Record<string, { templateMessage?: string; autoTagId?: string; requireTag?: boolean }>;
+    };
+
+    const settings = await prisma.guildSettings.findUnique({ where: { guildId }, select: { extended: true } });
+    const extended = (settings?.extended ?? {}) as Record<string, unknown>;
+    const prev = (extended.forumManagement ?? {}) as Record<string, unknown>;
+    const merged = { ...prev, ...(body.channels !== undefined && { channels: body.channels }) };
+
+    const updatedExtended = { ...extended, forumManagement: merged };
+    await prisma.guildSettings.upsert({
+      where: { guildId },
+      update: { extended: updatedExtended as import('@prisma/client').Prisma.InputJsonValue },
+      create: { guildId, extended: updatedExtended as import('@prisma/client').Prisma.InputJsonValue },
+    });
+
+    await pub.publish('cache:invalidate:settings', guildId);
+
+    return reply.send({ success: true, data: merged });
   });
 }
