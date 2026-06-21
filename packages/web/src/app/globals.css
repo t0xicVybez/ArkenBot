@@ -6,17 +6,17 @@
 
 @layer base {
   :root {
-    --bg-base: #050709;
-    --bg-surface: #0c0e12;
-    --bg-card: #111318;
-    --bg-elevated: #181b22;
-    --bg-hover: #1e2130;
-    --border: rgba(255,255,255,0.07);
-    --border-subtle: rgba(255,255,255,0.04);
-    --border-strong: rgba(255,255,255,0.12);
-    --text-primary: #e8eaf0;
-    --text-secondary: #8b91a8;
-    --text-muted: #4a5068;
+    --bg-base: #13141a;
+    --bg-surface: #17181f;
+    --bg-card: #1e2029;
+    --bg-elevated: #23263a;
+    --bg-hover: #2a2d40;
+    --border: rgba(255,255,255,0.10);
+    --border-subtle: rgba(255,255,255,0.06);
+    --border-strong: rgba(255,255,255,0.18);
+    --text-primary: #f0f2f8;
+    --text-secondary: #9ea3bc;
+    --text-muted: #5c6480;
     --accent: #5865F2;
     --accent-hover: #4752c4;
     --accent-glow: rgba(88,101,242,0.15);
