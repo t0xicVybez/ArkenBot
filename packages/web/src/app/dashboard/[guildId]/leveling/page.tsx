@@ -23,6 +23,12 @@ type XpMultiplier = {
   multiplier: number;
 };
 
+type XpChannelMultiplier = {
+  id: string;
+  channelId: string;
+  multiplier: number;
+};
+
 const levelRolesApi = {
   list: (guildId: string) => api.get(`/guilds/${guildId}/level-roles`),
   create: (guildId: string, data: { level: number; roleId: string }) =>
@@ -41,6 +47,14 @@ const leaderboardApi = {
   reset: (guildId: string) => api.delete(`/guilds/${guildId}/leaderboard`),
 };
 
+const xpChannelMultipliersApi = {
+  list: (guildId: string) => api.get(`/guilds/${guildId}/xp-channel-multipliers`),
+  create: (guildId: string, data: { channelId: string; multiplier: number }) =>
+    api.post(`/guilds/${guildId}/xp-channel-multipliers`, data),
+  delete: (guildId: string, channelId: string) =>
+    api.delete(`/guilds/${guildId}/xp-channel-multipliers/${channelId}`),
+};
+
 
 export default function LevelingPage() {
   const { guildId } = useParams() as { guildId: string };
@@ -51,6 +65,8 @@ export default function LevelingPage() {
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [newMultiplierRoleId, setNewMultiplierRoleId] = useState('');
   const [newMultiplierValue, setNewMultiplierValue] = useState('1.5');
+  const [newChannelMultiplierChannelId, setNewChannelMultiplierChannelId] = useState('');
+  const [newChannelMultiplierValue, setNewChannelMultiplierValue] = useState('1.5');
 
   const { data: settingsRes, isLoading } = useQuery({
     queryKey: ['settings', guildId],
@@ -75,6 +91,11 @@ export default function LevelingPage() {
   const { data: xpMultipliersRes } = useQuery({
     queryKey: ['xp-multipliers', guildId],
     queryFn: () => xpMultipliersApi.list(guildId),
+  });
+
+  const { data: xpChannelMultipliersRes } = useQuery({
+    queryKey: ['xp-channel-multipliers', guildId],
+    queryFn: () => xpChannelMultipliersApi.list(guildId),
   });
 
   useEffect(() => {
@@ -130,6 +151,27 @@ export default function LevelingPage() {
     onError: () => toast.error('Failed to remove multiplier'),
   });
 
+  const createChannelMultiplierMutation = useMutation({
+    mutationFn: (data: { channelId: string; multiplier: number }) =>
+      xpChannelMultipliersApi.create(guildId, data),
+    onSuccess: () => {
+      toast.success('Channel XP multiplier added!');
+      queryClient.invalidateQueries({ queryKey: ['xp-channel-multipliers', guildId] });
+      setNewChannelMultiplierChannelId('');
+      setNewChannelMultiplierValue('1.5');
+    },
+    onError: () => toast.error('Failed to add channel XP multiplier'),
+  });
+
+  const deleteChannelMultiplierMutation = useMutation({
+    mutationFn: (channelId: string) => xpChannelMultipliersApi.delete(guildId, channelId),
+    onSuccess: () => {
+      toast.success('Channel multiplier removed');
+      queryClient.invalidateQueries({ queryKey: ['xp-channel-multipliers', guildId] });
+    },
+    onError: () => toast.error('Failed to remove channel multiplier'),
+  });
+
   const resetXpMutation = useMutation({
     mutationFn: () => leaderboardApi.reset(guildId),
     onSuccess: () => {
@@ -148,6 +190,8 @@ export default function LevelingPage() {
   const levelRoles: LevelRole[] = (levelRolesRes?.data as { data?: LevelRole[] })?.data ?? [];
   const sortedLevelRoles = [...levelRoles].sort((a, b) => a.level - b.level);
   const xpMultipliers: XpMultiplier[] = (xpMultipliersRes?.data as { data?: XpMultiplier[] })?.data ?? [];
+  const xpChannelMultipliers: XpChannelMultiplier[] =
+    (xpChannelMultipliersRes?.data as { data?: XpChannelMultiplier[] })?.data ?? [];
 
   const handleAddLevelRole = (e: React.FormEvent) => {
     e.preventDefault();
@@ -411,6 +455,83 @@ export default function LevelingPage() {
             />
           </div>
           <button type="submit" disabled={createMultiplierMutation.isPending} className="btn-primary flex items-center gap-1.5">
+            <Plus className="w-4 h-4" />
+            Add
+          </button>
+        </form>
+      </div>
+
+      {/* XP Channel Multipliers */}
+      <div className="card">
+        <h3 className="text-lg font-semibold text-white mb-1">XP Channel Multipliers</h3>
+        <p className="text-sm text-gray-400 mb-4">Give bonus XP for messages sent in specific channels. The highest matching multiplier applies.</p>
+        {xpChannelMultipliers.length > 0 ? (
+          <div className="space-y-2 mb-4">
+            {xpChannelMultipliers.map((m) => {
+              const ch = textChannels.find((c) => c.id === m.channelId);
+              return (
+                <div key={m.id} className="flex items-center justify-between bg-white/[0.04] rounded-lg px-3 py-2">
+                  <span className="text-sm text-gray-200">#{ch?.name ?? m.channelId}</span>
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm font-semibold text-discord-blurple">{m.multiplier}×</span>
+                    <button
+                      onClick={() => deleteChannelMultiplierMutation.mutate(m.channelId)}
+                      className="text-gray-500 hover:text-red-400 transition-colors"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <p className="text-sm text-gray-500 mb-4">No channel XP multipliers configured.</p>
+        )}
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (!newChannelMultiplierChannelId) return toast.error('Select a channel');
+            const val = parseFloat(newChannelMultiplierValue);
+            if (isNaN(val) || val <= 0) return toast.error('Enter a valid multiplier');
+            createChannelMultiplierMutation.mutate({ channelId: newChannelMultiplierChannelId, multiplier: val });
+          }}
+          className="flex flex-wrap items-end gap-3"
+        >
+          <div>
+            <label className="label">Channel</label>
+            <select
+              className="input"
+              value={newChannelMultiplierChannelId}
+              onChange={(e) => setNewChannelMultiplierChannelId(e.target.value)}
+              required
+            >
+              <option value="">Select channel…</option>
+              {textChannels
+                .filter((c) => !xpChannelMultipliers.some((m) => m.channelId === c.id))
+                .map((c) => (
+                  <option key={c.id} value={c.id}>#{c.name}</option>
+                ))}
+            </select>
+          </div>
+          <div className="w-28">
+            <label className="label">Multiplier</label>
+            <input
+              type="number"
+              step="0.1"
+              min="0.1"
+              max="10"
+              className="input"
+              value={newChannelMultiplierValue}
+              onChange={(e) => setNewChannelMultiplierValue(e.target.value)}
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={createChannelMultiplierMutation.isPending}
+            className="btn-primary flex items-center gap-1.5"
+          >
             <Plus className="w-4 h-4" />
             Add
           </button>

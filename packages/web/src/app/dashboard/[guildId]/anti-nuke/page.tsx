@@ -1,0 +1,191 @@
+'use client';
+
+import { useParams } from 'next/navigation';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { guildsApi } from '@/lib/api';
+import api from '@/lib/api';
+import { Toggle } from '@/components/Toggle';
+import { SettingsSection } from '@/components/SettingsSection';
+import toast from 'react-hot-toast';
+import { useState, useEffect } from 'react';
+import { ShieldAlert, Info } from 'lucide-react';
+
+type AntiNukeConfig = {
+  enabled: boolean;
+  channelDeleteThreshold: number;
+  roleDeleteThreshold: number;
+  banThreshold: number;
+  action: 'deop' | 'kick' | 'ban';
+  alertChannelId?: string | null;
+};
+
+const antiNukeApi = {
+  get: (guildId: string) => api.get(`/guilds/${guildId}/anti-nuke/config`),
+  update: (guildId: string, data: Partial<AntiNukeConfig>) =>
+    api.patch(`/guilds/${guildId}/anti-nuke/config`, data),
+};
+
+const DEFAULT_CONFIG: AntiNukeConfig = {
+  enabled: false,
+  channelDeleteThreshold: 3,
+  roleDeleteThreshold: 3,
+  banThreshold: 5,
+  action: 'deop',
+  alertChannelId: null,
+};
+
+export default function AntiNukePage() {
+  const { guildId } = useParams() as { guildId: string };
+  const queryClient = useQueryClient();
+  const [config, setConfig] = useState<AntiNukeConfig>(DEFAULT_CONFIG);
+
+  const { data: configRes, isLoading } = useQuery({
+    queryKey: ['anti-nuke-config', guildId],
+    queryFn: () => antiNukeApi.get(guildId),
+  });
+
+  const { data: channelsRes } = useQuery({
+    queryKey: ['channels', guildId],
+    queryFn: () => guildsApi.channels(guildId),
+  });
+
+  useEffect(() => {
+    const cfg = (configRes?.data as { data?: AntiNukeConfig })?.data;
+    if (cfg) setConfig({ ...DEFAULT_CONFIG, ...cfg });
+  }, [configRes]);
+
+  const saveMutation = useMutation({
+    mutationFn: (data: Partial<AntiNukeConfig>) => antiNukeApi.update(guildId, data),
+    onSuccess: () => {
+      toast.success('Anti-Nuke config saved!');
+      queryClient.invalidateQueries({ queryKey: ['anti-nuke-config', guildId] });
+    },
+    onError: () => toast.error('Failed to save config'),
+  });
+
+  const allChannels = (channelsRes?.data as { data?: Array<{ id: string; name: string; type: number }> })?.data ?? [];
+  const textChannels = allChannels.filter((c) => c.type === 0);
+
+  if (isLoading) {
+    return (
+      <div className="p-3 sm:p-6 space-y-4">
+        {[...Array(3)].map((_, i) => (
+          <div key={i} className="card h-24 animate-pulse bg-gray-700" />
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-3 sm:p-6 max-w-2xl">
+      <div className="mb-6 flex items-center gap-3">
+        <ShieldAlert className="w-6 h-6 text-discord-blurple" />
+        <div>
+          <h1 className="text-2xl font-bold text-white">Anti-Nuke</h1>
+          <p className="text-sm text-gray-400">Protect your server from rapid destructive actions.</p>
+        </div>
+      </div>
+
+      {/* Info card */}
+      <div className="card mb-6 border border-blue-500/20 bg-blue-500/5 flex items-start gap-3">
+        <Info className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
+        <p className="text-sm text-blue-300">
+          Anti-Nuke monitors for rapid destructive actions (mass channel/role deletions, mass bans) and
+          automatically removes roles from or bans the offending user.
+        </p>
+      </div>
+
+      <SettingsSection title="Anti-Nuke" description="Enable detection and response to nuke-style attacks.">
+        <Toggle
+          label="Enable Anti-Nuke"
+          description="Monitor for and respond to rapid destructive actions"
+          enabled={config.enabled}
+          onChange={(v) => setConfig((c) => ({ ...c, enabled: v }))}
+        />
+      </SettingsSection>
+
+      <SettingsSection title="Thresholds" description="Number of actions within a short window to trigger a response.">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label className="label">Channel Delete Threshold</label>
+            <input
+              type="number"
+              className="input"
+              min={1}
+              max={20}
+              value={config.channelDeleteThreshold}
+              onChange={(e) => setConfig((c) => ({ ...c, channelDeleteThreshold: parseInt(e.target.value) || 3 }))}
+            />
+            <p className="text-xs text-gray-500 mt-1">Channels deleted (1–20)</p>
+          </div>
+          <div>
+            <label className="label">Role Delete Threshold</label>
+            <input
+              type="number"
+              className="input"
+              min={1}
+              max={20}
+              value={config.roleDeleteThreshold}
+              onChange={(e) => setConfig((c) => ({ ...c, roleDeleteThreshold: parseInt(e.target.value) || 3 }))}
+            />
+            <p className="text-xs text-gray-500 mt-1">Roles deleted (1–20)</p>
+          </div>
+          <div>
+            <label className="label">Mass Ban Threshold</label>
+            <input
+              type="number"
+              className="input"
+              min={1}
+              max={20}
+              value={config.banThreshold}
+              onChange={(e) => setConfig((c) => ({ ...c, banThreshold: parseInt(e.target.value) || 5 }))}
+            />
+            <p className="text-xs text-gray-500 mt-1">Bans issued (1–20)</p>
+          </div>
+        </div>
+      </SettingsSection>
+
+      <SettingsSection title="Response" description="What to do when a nuke is detected.">
+        <div className="space-y-3">
+          <div>
+            <label className="label">Action on Trigger</label>
+            <select
+              className="input"
+              value={config.action}
+              onChange={(e) => setConfig((c) => ({ ...c, action: e.target.value as AntiNukeConfig['action'] }))}
+            >
+              <option value="deop">De-op (remove all roles)</option>
+              <option value="kick">Kick</option>
+              <option value="ban">Ban</option>
+            </select>
+            <p className="text-xs text-gray-500 mt-1">Action taken against the offending user.</p>
+          </div>
+          <div>
+            <label className="label">Alert Channel (optional)</label>
+            <select
+              className="input"
+              value={config.alertChannelId ?? ''}
+              onChange={(e) => setConfig((c) => ({ ...c, alertChannelId: e.target.value || null }))}
+            >
+              <option value="">None</option>
+              {textChannels.map((ch) => (
+                <option key={ch.id} value={ch.id}>#{ch.name}</option>
+              ))}
+            </select>
+            <p className="text-xs text-gray-500 mt-1">Channel to send nuke alerts to.</p>
+          </div>
+        </div>
+      </SettingsSection>
+
+      <div className="mt-4">
+        <button
+          onClick={() => saveMutation.mutate(config)}
+          disabled={saveMutation.isPending}
+          className="btn-primary"
+        >
+          {saveMutation.isPending ? 'Saving…' : 'Save Changes'}
+        </button>
+      </div>
+    </div>
+  );
+}
