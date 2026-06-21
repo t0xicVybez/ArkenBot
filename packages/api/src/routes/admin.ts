@@ -209,7 +209,11 @@ export async function adminRoutes(server: FastifyInstance): Promise<void> {
         throw new Error(`GitHub API ${ghRes.status}`);
       }
     } catch {
-      // Fallback: read from local git history.
+      // no-op — fall through to local git below
+    }
+
+    // Fallback (or supplement): read from local git when GitHub returned nothing.
+    if (!rawLog) {
       try {
         const afterFlag = since ? `--after="${since.toISOString()}"` : `-${Math.min(count, 50)}`;
         rawLog = execSync(
