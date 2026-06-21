@@ -29,7 +29,10 @@ const command: BotCommand = {
       .setDescription('Start a giveaway')
       .addStringOption(o => o.setName('prize').setDescription('What are you giving away?').setRequired(true))
       .addStringOption(o => o.setName('duration').setDescription('How long (e.g. 1h, 1d, 7d)').setRequired(true))
-      .addIntegerOption(o => o.setName('winners').setDescription('Number of winners').setRequired(false).setMinValue(1).setMaxValue(20)))
+      .addIntegerOption(o => o.setName('winners').setDescription('Number of winners').setRequired(false).setMinValue(1).setMaxValue(20))
+      .addRoleOption(o => o.setName('required-role').setDescription('Role required to enter').setRequired(false))
+      .addRoleOption(o => o.setName('bonus-role').setDescription('Role that gets bonus entries').setRequired(false))
+      .addIntegerOption(o => o.setName('bonus-entries').setDescription('Extra entries for bonus-role holders').setMinValue(1).setMaxValue(10).setRequired(false)))
     .addSubcommand(s => s.setName('end')
       .setDescription('End a giveaway early')
       .addStringOption(o => o.setName('id').setDescription('Giveaway ID').setRequired(true)))
@@ -54,13 +57,23 @@ const command: BotCommand = {
       }
 
       const endsAt = new Date(Date.now() + ms);
+      const requiredRole = interaction.options.getRole('required-role');
+      const bonusRole = interaction.options.getRole('bonus-role');
+      const bonusEntries = interaction.options.getInteger('bonus-entries') ?? 1;
+
       const guildSettings = await getGuildSettings(interaction.guildId!);
       const giveawayColor = guildSettings?.giveawayColor
         ? (parseInt(guildSettings.giveawayColor.replace('#', ''), 16) as number)
         : 0xf1c40f;
+
+      let description = `**Prize:** ${prize}\n**Winners:** ${winnersCount}\n**Ends:** <t:${Math.floor(endsAt.getTime() / 1000)}:R>`;
+      if (requiredRole) description += `\n**Required Role:** <@&${requiredRole.id}>`;
+      if (bonusRole) description += `\n**Bonus Entries:** <@&${bonusRole.id}> gets +${bonusEntries} entries`;
+      description += '\n\nReact with 🎉 to enter!';
+
       const embed = new EmbedBuilder()
         .setTitle('🎉 Giveaway!')
-        .setDescription(`**Prize:** ${prize}\n**Winners:** ${winnersCount}\n**Ends:** <t:${Math.floor(endsAt.getTime() / 1000)}:R>\n\nReact with 🎉 to enter!`)
+        .setDescription(description)
         .setColor(giveawayColor)
         .setFooter({ text: `${winnersCount} winner${winnersCount > 1 ? 's' : ''}` })
         .setTimestamp(endsAt);
@@ -68,6 +81,8 @@ const command: BotCommand = {
       if (!interaction.channel?.isTextBased()) return;
       const msg = await (interaction.channel as import('discord.js').TextChannel).send({ embeds: [embed] });
       await msg.react('🎉');
+
+      const bonusRoleEntries = bonusRole ? [{ roleId: bonusRole.id, bonusEntries }] : null;
 
       const giveaway = await prisma.giveaway.create({
         data: {
@@ -78,6 +93,8 @@ const command: BotCommand = {
           prize,
           winnersCount,
           endsAt,
+          requiredRoleId: requiredRole?.id ?? null,
+          bonusRoleEntries: bonusRoleEntries ?? undefined,
         },
       });
 
@@ -127,13 +144,31 @@ const command: BotCommand = {
       }
 
       const users = await reaction.users.fetch();
-      const eligible = users.filter(u => !u.bot && u.id !== giveaway.hostId);
+      let eligible = users.filter(u => !u.bot && u.id !== giveaway.hostId);
+
+      // Filter by required role if set
+      if (giveaway.requiredRoleId) {
+        eligible = eligible.filter(u => interaction.guild!.members.cache.get(u.id)?.roles.cache.has(giveaway.requiredRoleId!) ?? false);
+      }
+
       if (eligible.size === 0) {
         await interaction.reply({ content: 'No eligible entrants.', flags: 64 });
         return;
       }
 
-      const entries = [...eligible.values()];
+      // Build entries array with bonus role duplicates
+      let entries = [...eligible.values()];
+      const bonusRoleEntries = giveaway.bonusRoleEntries as Array<{ roleId: string; bonusEntries: number }> | null;
+      if (bonusRoleEntries && bonusRoleEntries.length > 0) {
+        for (const bonus of bonusRoleEntries) {
+          for (const user of eligible.values()) {
+            if (interaction.guild!.members.cache.get(user.id)?.roles.cache.has(bonus.roleId)) {
+              for (let i = 0; i < bonus.bonusEntries; i++) entries.push(user);
+            }
+          }
+        }
+      }
+
       const winners = entries.sort(() => Math.random() - 0.5).slice(0, giveaway.winnersCount);
       const winnerMentions = winners.map(w => `<@${w.id}>`).join(', ');
 

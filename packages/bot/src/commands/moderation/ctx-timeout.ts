@@ -1,0 +1,164 @@
+/**
+ * "⏱ Timeout Member" user context-menu command.
+ * Shows a modal for duration + reason, then applies a Discord timeout.
+ */
+import {
+  ContextMenuCommandBuilder,
+  ApplicationCommandType,
+  ModalBuilder,
+  TextInputBuilder,
+  TextInputStyle,
+  ActionRowBuilder,
+  PermissionFlagsBits,
+  MessageFlags,
+  type UserContextMenuCommandInteraction,
+  type ModalSubmitInteraction,
+  type ChatInputCommandInteraction,
+} from 'discord.js';
+import type { BotCommand } from '../../types.js';
+import type { BotClient } from '../../client.js';
+import { moderationEmbed, errorEmbed } from '../../utils/embed.js';
+import { canModerate } from '../../utils/permissions.js';
+import { getNextCaseNumber, getGuildSettings } from '../../utils/settings.js';
+import { prisma } from '../../database.js';
+import { LoggingModule } from '../../modules/logging/LoggingModule.js';
+
+function parseDuration(str: string): number | null {
+  const match = str.trim().match(/^(\d+)(s|m|h|d)$/i);
+  if (!match) return null;
+  const n = parseInt(match[1]);
+  const unit: Record<string, number> = { s: 1000, m: 60000, h: 3600000, d: 86400000 };
+  return n * (unit[match[2].toLowerCase()] ?? 0);
+}
+
+const command: BotCommand = {
+  data: new ContextMenuCommandBuilder()
+    .setName('⏱ Timeout Member')
+    .setType(ApplicationCommandType.User)
+    .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers),
+  category: 'moderation',
+  userPermissions: [PermissionFlagsBits.ModerateMembers],
+
+  async execute(interaction: ChatInputCommandInteraction, _client: BotClient) {
+    const ctxInteraction = interaction as unknown as UserContextMenuCommandInteraction;
+    const targetUser = ctxInteraction.targetUser;
+
+    if (!ctxInteraction.guild) {
+      await ctxInteraction.reply({ content: 'This command must be used in a server.', flags: MessageFlags.Ephemeral });
+      return;
+    }
+
+    const modal = new ModalBuilder()
+      .setCustomId(`ctx-timeout:${targetUser.id}`)
+      .setTitle(`Timeout ${targetUser.username}`);
+
+    const durationInput = new TextInputBuilder()
+      .setCustomId('duration')
+      .setLabel('Duration (e.g. 10m, 1h, 1d)')
+      .setStyle(TextInputStyle.Short)
+      .setRequired(true)
+      .setPlaceholder('1h');
+
+    const reasonInput = new TextInputBuilder()
+      .setCustomId('reason')
+      .setLabel('Reason')
+      .setStyle(TextInputStyle.Paragraph)
+      .setRequired(true)
+      .setMaxLength(500);
+
+    modal.addComponents(
+      new ActionRowBuilder<TextInputBuilder>().addComponents(durationInput),
+      new ActionRowBuilder<TextInputBuilder>().addComponents(reasonInput),
+    );
+    await ctxInteraction.showModal(modal);
+  },
+
+  async handleModal(interaction: ModalSubmitInteraction, _client: BotClient) {
+    if (!interaction.customId.startsWith('ctx-timeout:')) return;
+    const targetUserId = interaction.customId.split(':')[1];
+    if (!targetUserId || !interaction.guild) return;
+
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+
+    const durationStr = interaction.fields.getTextInputValue('duration');
+    const reason = interaction.fields.getTextInputValue('reason');
+    const ms = parseDuration(durationStr);
+
+    if (!ms || ms < 5000 || ms > 28 * 24 * 60 * 60 * 1000) {
+      await interaction.editReply({ embeds: [errorEmbed('Invalid Duration', 'Duration must be between 5s and 28d (e.g. 10m, 1h, 7d).')] });
+      return;
+    }
+
+    const guild = interaction.guild;
+    const targetUser = await interaction.client.users.fetch(targetUserId).catch(() => null);
+    if (!targetUser) {
+      await interaction.editReply({ embeds: [errorEmbed('Not Found', 'Could not find that user.')] });
+      return;
+    }
+
+    const moderator = await guild.members.fetch(interaction.user.id).catch(() => null);
+    const targetMember = await guild.members.fetch(targetUserId).catch(() => null);
+
+    if (!targetMember) {
+      await interaction.editReply({ embeds: [errorEmbed('Not Found', 'That user is not in this server.')] });
+      return;
+    }
+
+    if (moderator && !canModerate(moderator, targetMember)) {
+      await interaction.editReply({ embeds: [errorEmbed('Hierarchy Error', 'You cannot timeout a member with a higher or equal role.')] });
+      return;
+    }
+
+    await targetMember.disableCommunicationUntil(Date.now() + ms, reason).catch(() => null);
+
+    const settings = await getGuildSettings(guild.id);
+    const caseNumber = await getNextCaseNumber(guild.id);
+    await prisma.moderationCase.create({
+      data: {
+        caseNumber,
+        guildId: guild.id,
+        type: 'mute',
+        userId: targetUser.id,
+        userTag: targetUser.tag,
+        moderatorId: interaction.user.id,
+        moderatorTag: interaction.user.tag,
+        reason,
+        active: true,
+      },
+    });
+
+    const durationLabel = durationStr.toLowerCase();
+    await targetUser.send({
+      embeds: [moderationEmbed({
+        action: `Timeout in ${guild.name}`,
+        user: targetUser.tag,
+        moderator: interaction.user.tag,
+        reason,
+        duration: durationLabel,
+      }, settings?.moderationColor)],
+    }).catch(() => null);
+
+    await LoggingModule.logModerationAction(guild, {
+      type: 'mute',
+      userId: targetUser.id,
+      userTag: targetUser.tag,
+      moderatorId: interaction.user.id,
+      moderatorTag: interaction.user.tag,
+      reason,
+      guildId: guild.id,
+    });
+
+    await interaction.editReply({
+      embeds: [moderationEmbed({
+        action: 'Timeout',
+        user: `${targetUser.tag} (${targetUser.id})`,
+        moderator: interaction.user.tag,
+        reason,
+        duration: durationLabel,
+        caseNumber,
+      }, settings?.moderationColor)],
+    });
+  },
+};
+
+export default command;

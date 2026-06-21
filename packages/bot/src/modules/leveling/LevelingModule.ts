@@ -47,6 +47,14 @@ export class LevelingModule {
           }
         }
       }
+      // Also apply per-channel multiplier
+      if (message?.channelId) {
+        const channelMultiplierRecord = await prisma.xpChannelMultiplier.findUnique({
+          where: { guildId_channelId: { guildId: guild.id, channelId: message.channelId } },
+        }).catch(() => null);
+        const channelMultiplier = channelMultiplierRecord?.multiplier ?? 1.0;
+        effectiveMultiplier = effectiveMultiplier * channelMultiplier;
+      }
     } catch { /* non-critical; fall back to guild multiplier */ }
     const xpGain = Math.max(1, Math.round(base * effectiveMultiplier));
 
