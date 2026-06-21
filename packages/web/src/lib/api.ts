@@ -453,9 +453,11 @@ export const warningEscalationApi = {
 
 // ─── Temp Voice Channels ──────────────────────────────────────────
 export const tempVoiceApi = {
-  getConfig: (guildId: string) => api.get(`/guilds/${guildId}/temp-voice/config`),
-  setTriggerChannel: (guildId: string, channelId: string | null) =>
-    api.patch(`/guilds/${guildId}/temp-voice/config`, { channelId }),
+  getTriggers: (guildId: string) => api.get(`/guilds/${guildId}/temp-voice/triggers`),
+  addTrigger: (guildId: string, channelId: string, categoryId?: string | null) =>
+    api.post(`/guilds/${guildId}/temp-voice/triggers`, { channelId, categoryId: categoryId ?? null }),
+  removeTrigger: (guildId: string, channelId: string) =>
+    api.delete(`/guilds/${guildId}/temp-voice/triggers/${channelId}`),
 };
 
 // ─── Admin ────────────────────────────────────────────────────────

@@ -4,18 +4,31 @@ import { useParams } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { tempVoiceApi, guildsApi } from '@/lib/api';
 import toast from 'react-hot-toast';
-import { useState, useEffect } from 'react';
-import { Mic } from 'lucide-react';
+import { useState } from 'react';
+import { Mic, Plus, Trash2 } from 'lucide-react';
 import { SettingsSection } from '@/components/SettingsSection';
+
+interface Trigger {
+  channelId: string;
+  categoryId: string | null;
+}
+
+interface Channel {
+  id: string;
+  name: string;
+  type: number;
+}
 
 export default function TempVoicePage() {
   const { guildId } = useParams() as { guildId: string };
   const queryClient = useQueryClient();
-  const [triggerChannelId, setTriggerChannelId] = useState<string>('');
 
-  const { data: configRes } = useQuery({
-    queryKey: ['temp-voice-config', guildId],
-    queryFn: () => tempVoiceApi.getConfig(guildId),
+  const [newChannelId, setNewChannelId] = useState('');
+  const [newCategoryId, setNewCategoryId] = useState('');
+
+  const { data: triggersRes } = useQuery({
+    queryKey: ['temp-voice-triggers', guildId],
+    queryFn: () => tempVoiceApi.getTriggers(guildId),
   });
 
   const { data: channelsRes } = useQuery({
@@ -23,22 +36,39 @@ export default function TempVoicePage() {
     queryFn: () => guildsApi.channels(guildId),
   });
 
-  useEffect(() => {
-    const cfg = (configRes?.data as { data?: { joinToCreateChannelId?: string | null } })?.data;
-    if (cfg) setTriggerChannelId(cfg.joinToCreateChannelId ?? '');
-  }, [configRes]);
+  const triggers: Trigger[] =
+    (triggersRes?.data as { data?: Trigger[] })?.data ?? [];
+  const allChannels: Channel[] =
+    (channelsRes?.data as { data?: Channel[] })?.data ?? [];
 
-  const saveMutation = useMutation({
-    mutationFn: (channelId: string | null) => tempVoiceApi.setTriggerChannel(guildId, channelId),
+  const voiceChannels = allChannels.filter((c) => c.type === 2);
+  const categories = allChannels.filter((c) => c.type === 4);
+
+  const usedChannelIds = new Set(triggers.map((t) => t.channelId));
+
+  const addMutation = useMutation({
+    mutationFn: () =>
+      tempVoiceApi.addTrigger(guildId, newChannelId, newCategoryId || null),
     onSuccess: () => {
-      toast.success('Temp voice config saved!');
-      queryClient.invalidateQueries({ queryKey: ['temp-voice-config', guildId] });
+      toast.success('Trigger channel added!');
+      setNewChannelId('');
+      setNewCategoryId('');
+      queryClient.invalidateQueries({ queryKey: ['temp-voice-triggers', guildId] });
     },
-    onError: () => toast.error('Failed to save config'),
+    onError: () => toast.error('Failed to add trigger channel'),
   });
 
-  const allChannels = (channelsRes?.data as { data?: Array<{ id: string; name: string; type: number }> })?.data ?? [];
-  const voiceChannels = allChannels.filter((c) => c.type === 2);
+  const removeMutation = useMutation({
+    mutationFn: (channelId: string) => tempVoiceApi.removeTrigger(guildId, channelId),
+    onSuccess: () => {
+      toast.success('Trigger removed');
+      queryClient.invalidateQueries({ queryKey: ['temp-voice-triggers', guildId] });
+    },
+    onError: () => toast.error('Failed to remove trigger'),
+  });
+
+  const channelName = (id: string) =>
+    allChannels.find((c) => c.id === id)?.name ?? id;
 
   return (
     <div className="p-3 sm:p-6 max-w-2xl">
@@ -46,49 +76,95 @@ export default function TempVoicePage() {
         <Mic className="w-6 h-6 text-discord-blurple" />
         <div>
           <h1 className="text-2xl font-bold text-white">Temporary Voice Channels</h1>
-          <p className="text-sm text-gray-400">Create-to-Join: members get their own VC automatically.</p>
+          <p className="text-sm text-gray-400">
+            Join-to-Create: members get their own VC when they join a trigger channel.
+          </p>
         </div>
       </div>
 
       <SettingsSection
-        title="Join-to-Create Channel"
-        description="When a member joins this voice channel, a new private channel is created for them. The channel is automatically deleted when it becomes empty."
+        title="Trigger Channels"
+        description="Each trigger is a voice channel members can join to automatically get a private channel. You can add multiple triggers in different categories."
       >
         <div className="space-y-4">
-          <div>
-            <label className="label">Trigger Voice Channel</label>
-            <select
-              className="input"
-              value={triggerChannelId}
-              onChange={(e) => setTriggerChannelId(e.target.value)}
-            >
-              <option value="">Disabled — no trigger channel</option>
-              {voiceChannels.map((ch) => (
-                <option key={ch.id} value={ch.id}>🔊 {ch.name}</option>
+          {triggers.length === 0 ? (
+            <p className="text-sm text-gray-500">No trigger channels configured yet.</p>
+          ) : (
+            <ul className="space-y-2">
+              {triggers.map((t) => (
+                <li
+                  key={t.channelId}
+                  className="flex items-center justify-between rounded-lg bg-white/5 px-3 py-2"
+                >
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-sm font-medium text-white truncate">
+                      🔊 {channelName(t.channelId)}
+                    </span>
+                    <span className="text-xs text-gray-400">
+                      {t.categoryId
+                        ? `Creates in: 📁 ${channelName(t.categoryId)}`
+                        : 'Creates in same category as trigger'}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => removeMutation.mutate(t.channelId)}
+                    disabled={removeMutation.isPending}
+                    className="ml-3 p-1.5 rounded text-gray-400 hover:text-red-400 hover:bg-red-400/10 transition-colors"
+                    aria-label="Remove trigger"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </li>
               ))}
-            </select>
-            <p className="text-xs text-gray-500 mt-1">
-              Create a voice channel named something like &quot;➕ Join to Create&quot; and select it here.
-            </p>
-          </div>
+            </ul>
+          )}
 
-          <div className="flex gap-3">
+          <div className="border-t border-white/10 pt-4">
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">
+              Add Trigger Channel
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="label">Trigger Voice Channel</label>
+                <select
+                  className="input"
+                  value={newChannelId}
+                  onChange={(e) => setNewChannelId(e.target.value)}
+                >
+                  <option value="">Select a voice channel…</option>
+                  {voiceChannels
+                    .filter((c) => !usedChannelIds.has(c.id))
+                    .map((ch) => (
+                      <option key={ch.id} value={ch.id}>
+                        🔊 {ch.name}
+                      </option>
+                    ))}
+                </select>
+              </div>
+              <div>
+                <label className="label">Target Category (optional)</label>
+                <select
+                  className="input"
+                  value={newCategoryId}
+                  onChange={(e) => setNewCategoryId(e.target.value)}
+                >
+                  <option value="">Same category as trigger</option>
+                  {categories.map((cat) => (
+                    <option key={cat.id} value={cat.id}>
+                      📁 {cat.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
             <button
-              onClick={() => saveMutation.mutate(triggerChannelId || null)}
-              disabled={saveMutation.isPending}
-              className="btn-primary"
+              onClick={() => addMutation.mutate()}
+              disabled={!newChannelId || addMutation.isPending}
+              className="btn-primary mt-3 flex items-center gap-2"
             >
-              {saveMutation.isPending ? 'Saving…' : 'Save'}
+              <Plus className="w-4 h-4" />
+              {addMutation.isPending ? 'Adding…' : 'Add Trigger'}
             </button>
-            {triggerChannelId && (
-              <button
-                onClick={() => { setTriggerChannelId(''); saveMutation.mutate(null); }}
-                disabled={saveMutation.isPending}
-                className="btn-secondary"
-              >
-                Disable
-              </button>
-            )}
           </div>
         </div>
       </SettingsSection>
@@ -96,9 +172,10 @@ export default function TempVoicePage() {
       <div className="card mt-4 bg-discord-blurple/5 border border-discord-blurple/20">
         <h3 className="text-sm font-semibold text-discord-blurple mb-2">How it works</h3>
         <ul className="text-sm text-gray-400 space-y-1 list-disc list-inside">
-          <li>Select a voice channel as the trigger (e.g. &quot;➕ Join to Create&quot;)</li>
-          <li>When a member joins the trigger channel, the bot creates a new VC named after them</li>
-          <li>The member is moved to their new private channel automatically</li>
+          <li>Create one or more voice channels (e.g. &quot;➕ Join to Create&quot;) and add them as triggers</li>
+          <li>When a member joins a trigger, the bot creates a new VC named after them</li>
+          <li>The member is moved to their new channel automatically</li>
+          <li>Set a &quot;Target Category&quot; to place created channels in a specific category</li>
           <li>The channel is deleted when it becomes empty</li>
           <li>The channel owner can rename or manage it via Discord</li>
         </ul>
