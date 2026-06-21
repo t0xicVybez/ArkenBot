@@ -45,6 +45,10 @@ import {
   Globe,
   Rss,
   Mic,
+  ShieldAlert,
+  Flag,
+  MessagesSquare,
+  ClipboardList,
   type LucideIcon,
 } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
@@ -71,6 +75,7 @@ const buildNavSections = (guildId: string, installedAddons: string[]): NavSectio
   const addonItems = [
     { href: `/dashboard/${guildId}/tickets`, label: 'Tickets', icon: Ticket, addon: 'tickets' },
     { href: `/dashboard/${guildId}/counting`, label: 'Counting', icon: Hash, addon: 'counting' },
+    { href: `/dashboard/${guildId}/applications`, label: 'Applications', icon: ClipboardList, addon: 'applications' },
   ].filter((item) => installedAddons.includes(item.addon));
 
   return [
@@ -85,6 +90,9 @@ const buildNavSections = (guildId: string, installedAddons: string[]): NavSectio
         { href: `/dashboard/${guildId}/moderation`, label: 'Moderation', icon: Shield },
         { href: `/dashboard/${guildId}/automod`, label: 'Auto-Mod', icon: Bot },
         { href: `/dashboard/${guildId}/slowmode`, label: 'Auto-Slowmode', icon: Timer },
+        { href: `/dashboard/${guildId}/anti-nuke`, label: 'Anti-Nuke', icon: ShieldAlert },
+        { href: `/dashboard/${guildId}/verification`, label: 'Verification Gate', icon: ShieldCheck },
+        { href: `/dashboard/${guildId}/reports`, label: 'Reports', icon: Flag },
       ],
     },
     {
@@ -118,6 +126,7 @@ const buildNavSections = (guildId: string, installedAddons: string[]): NavSectio
         { href: `/dashboard/${guildId}/reddit-feeds`, label: 'Reddit Feeds', icon: Globe },
         { href: `/dashboard/${guildId}/rss-feeds`, label: 'RSS Feeds', icon: Rss },
         { href: `/dashboard/${guildId}/commands`, label: 'Commands', icon: Terminal },
+        { href: `/dashboard/${guildId}/forum-management`, label: 'Forum Management', icon: MessagesSquare },
       ],
     },
     ...(addonItems.length > 0 ? [{ label: 'Addons', items: addonItems }] : []),

@@ -386,6 +386,64 @@ export const xpMultipliersApi = {
   delete: (guildId: string, roleId: string) => api.delete(`/guilds/${guildId}/xp-multipliers/${roleId}`),
 };
 
+// ─── XP Channel Multipliers ───────────────────────────────────────
+export const xpChannelMultipliersApi = {
+  list: (guildId: string) => api.get(`/guilds/${guildId}/xp-channel-multipliers`),
+  create: (guildId: string, data: { channelId: string; multiplier: number }) =>
+    api.post(`/guilds/${guildId}/xp-channel-multipliers`, data),
+  delete: (guildId: string, channelId: string) =>
+    api.delete(`/guilds/${guildId}/xp-channel-multipliers/${channelId}`),
+};
+
+// ─── Applications ─────────────────────────────────────────────────
+export const applicationsApi = {
+  listForms: (guildId: string) => api.get(`/guilds/${guildId}/applications/forms`),
+  createForm: (guildId: string, data: object) => api.post(`/guilds/${guildId}/applications/forms`, data),
+  updateForm: (guildId: string, formId: string, data: object) =>
+    api.patch(`/guilds/${guildId}/applications/forms/${formId}`, data),
+  deleteForm: (guildId: string, formId: string) =>
+    api.delete(`/guilds/${guildId}/applications/forms/${formId}`),
+  addField: (guildId: string, formId: string, data: object) =>
+    api.post(`/guilds/${guildId}/applications/forms/${formId}/fields`, data),
+  deleteField: (guildId: string, formId: string, fieldId: string) =>
+    api.delete(`/guilds/${guildId}/applications/forms/${formId}/fields/${fieldId}`),
+  listSubmissions: (guildId: string, params?: object) =>
+    api.get(`/guilds/${guildId}/applications/submissions`, { params }),
+  reviewSubmission: (
+    guildId: string,
+    submissionId: string,
+    data: { action: 'accept' | 'deny'; note?: string },
+  ) => api.post(`/guilds/${guildId}/applications/submissions/${submissionId}/review`, data),
+};
+
+// ─── Anti-Nuke ────────────────────────────────────────────────────
+export const antiNukeApi = {
+  get: (guildId: string) => api.get(`/guilds/${guildId}/anti-nuke/config`),
+  update: (guildId: string, data: object) => api.patch(`/guilds/${guildId}/anti-nuke/config`, data),
+};
+
+// ─── Verification ─────────────────────────────────────────────────
+export const verificationApi = {
+  get: (guildId: string) => api.get(`/guilds/${guildId}/verification/config`),
+  update: (guildId: string, data: object) => api.patch(`/guilds/${guildId}/verification/config`, data),
+};
+
+// ─── Forum Management ─────────────────────────────────────────────
+export const forumManagementApi = {
+  get: (guildId: string) => api.get(`/guilds/${guildId}/forum-management/config`),
+  update: (guildId: string, data: object) => api.patch(`/guilds/${guildId}/forum-management/config`, data),
+};
+
+// ─── Reports ──────────────────────────────────────────────────────
+export const reportsApi = {
+  list: (guildId: string, status?: string) =>
+    api.get(`/guilds/${guildId}/reports`, { params: status ? { status } : {} }),
+  update: (guildId: string, reportId: string, data: object) =>
+    api.patch(`/guilds/${guildId}/reports/${reportId}`, data),
+  getConfig: (guildId: string) => api.get(`/guilds/${guildId}/report-config`),
+  updateConfig: (guildId: string, data: object) => api.patch(`/guilds/${guildId}/report-config`, data),
+};
+
 // ─── Warning Escalation (stored in GuildSettings.extended) ────────
 export const warningEscalationApi = {
   get: (guildId: string) => api.get(`/guilds/${guildId}/warning-escalation`),
