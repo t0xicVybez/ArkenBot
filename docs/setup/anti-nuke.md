@@ -1,40 +1,52 @@
-# Anti-Nuke Protection
+---
+sidebar_label: Anti-Nuke
+---
 
-Anti-Nuke monitors for rapid destructive actions — mass channel deletions, mass role deletions, and mass bans — and automatically neutralises the offending account before significant damage occurs.
+# Anti-Nuke
+
+Anti-Nuke protects your server from rapid destructive actions — mass channel deletions, mass role deletions, and mass bans — by automatically detecting and responding to the offending user.
 
 ## Setup
 
-Go to **Anti-Nuke** in the sidebar (under Moderation).
+1. Go to **Dashboard → Anti-Nuke** (under Moderation in the sidebar)
+2. Enable **Anti-Nuke** with the toggle
+3. Configure the **thresholds** for each action type
+4. Choose the **response action** to take when a nuke is detected
+5. Optionally select an **Alert Channel** for notifications
+6. Click **Save Changes**
 
-## Configuration
+> The bot needs **Administrator** or **Manage Guild** permission to take action against offending users.
 
-| Setting | Default | Description |
+## Thresholds
+
+Thresholds define how many destructive actions need to happen within a short window (around 10 seconds) to trigger a response.
+
+| Threshold | Default | Description |
 |---|---|---|
-| **Enable Anti-Nuke** | Off | Master toggle |
-| **Channel Delete Threshold** | 3 | Deletions within 60 s that trigger action |
-| **Role Delete Threshold** | 3 | Role deletions within 60 s that trigger action |
-| **Mass Ban Threshold** | 5 | Bans within 60 s that trigger action |
-| **Action on Trigger** | De-op | What happens to the offender |
-| **Alert Channel** | None | Channel to receive an alert embed when action is taken |
+| **Channel Delete Threshold** | 3 | Channels deleted in the detection window |
+| **Role Delete Threshold** | 3 | Roles deleted in the detection window |
+| **Mass Ban Threshold** | 5 | Bans issued in the detection window |
 
-### Actions
+Set lower values for tighter protection, higher values to reduce false positives on active admin teams.
+
+## Response Actions
+
+When a threshold is exceeded, the bot takes one of the following actions on the offending user:
 
 | Action | What it does |
 |---|---|
-| **De-op** | Removes all roles from the offender immediately |
-| **Kick** | Removes all roles then kicks the offender |
-| **Ban** | Removes all roles then bans the offender |
+| **De-op** | Removes all roles from the user immediately |
+| **Kick** | Kicks the user from the server |
+| **Ban** | Permanently bans the user |
 
-The bot checks Discord audit logs to identify who performed each action.
+**De-op** is recommended as a starting point — it stops the attack without permanently removing the user in case of a false positive.
 
-## How It Works
+## Alert Channel
 
-1. Every channel delete, role delete, or ban is recorded in a 60-second rolling window per user
-2. When a user's count hits the configured threshold, the selected action is taken immediately
-3. An embed is posted to the alert channel (if configured) listing what triggered the response
+Select a text channel to receive a notification whenever Anti-Nuke triggers. The alert includes the user, the action taken, and what triggered it.
 
-## Notes
+## Tips
 
-- The bot must have **Administrator** or the explicit **Manage Channels / Manage Roles / Ban Members** permissions
-- The bot's role must be **higher** than the offender's highest role for De-op or Kick to succeed
-- Admins are notified via DM when action is taken (members with Administrator permission in the server)
+- Keep your bot's role high in the role hierarchy so it can remove roles from or ban admins
+- Review your alert channel regularly so you can follow up on triggered events
+- If you have trusted co-owners or admins who frequently bulk-delete channels during cleanup, consider raising the threshold slightly

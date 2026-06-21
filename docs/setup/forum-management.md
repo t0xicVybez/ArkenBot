@@ -1,41 +1,46 @@
-# Forum Post Management
+---
+sidebar_label: Forum Management
+---
 
-Forum Post Management automatically applies tags and sends a template message when a new thread is created in a configured forum channel.
+# Forum Management
+
+ArkenBot can automate actions in Discord forum channels — posting a template message whenever a new thread is created and automatically applying a tag to it.
 
 ## Setup
 
-Go to **Forum Management** in the sidebar (under Tools).
+1. Go to **Dashboard → Forum Management** (under Tools in the sidebar)
+2. Click **Add Forum Channel** and select a forum channel from the dropdown
+3. Optionally enter a **Template Message** — this is posted by the bot as the first reply in every new thread
+4. Optionally enter an **Auto-Tag ID** to automatically apply a forum tag to every new thread
+5. Click **Add Channel**
 
-## Adding a Forum Channel
+You can configure multiple forum channels independently.
 
-1. Click **Add Forum Channel**
-2. Select the forum channel from the dropdown
-3. (Optional) Set a **Template Message** — sent as the first bot reply in every new thread
-4. (Optional) Set an **Auto-Tag ID** — the tag is applied to new threads automatically
-5. Click **Save**
+> The bot needs **Send Messages** and **Manage Threads** permissions in each forum channel.
 
-## Finding Tag IDs
+## Template Messages
 
-Discord doesn't display tag IDs in the UI. To find a tag ID:
-1. Enable Developer Mode in Discord → Settings → Advanced
-2. Right-click a tag in the forum channel → **Copy Tag ID**
+The template message is posted by the bot as a reply whenever a new thread is created. Use it to:
+- Remind posters of rules or formatting requirements
+- Provide a checklist (e.g. "Please include your platform, version, and steps to reproduce")
+- Welcome the thread author with useful links
 
-## Configuration Per Channel
+## Auto-Tag
 
-Each configured forum channel can have:
-- **Template Message** — a welcome/instructions post sent to every new thread
-- **Auto-Tag ID** — automatically applies one tag on thread creation
+The Auto-Tag automatically applies a forum tag to every new post. To find a tag's ID:
+1. Enable Developer Mode in Discord (User Settings → App Settings → Advanced)
+2. Right-click the tag in the forum channel and select **Copy Tag ID**
 
-## Slash Commands
+Paste the ID into the Auto-Tag field on the dashboard.
 
-| Command | Description |
-|---|---|
-| `/forum-setup set-template channel:#forum message:text` | Sets the template message |
-| `/forum-setup set-auto-tag channel:#forum tag-id:123456` | Sets the auto-apply tag |
-| `/forum-setup clear channel:#forum` | Removes all config for a channel |
+## Managing Configured Channels
 
-## Notes
+Each configured channel is listed on the dashboard. You can:
+- Edit the template message or auto-tag ID and click **Save**
+- Click the trash icon to remove a channel from management
 
-- Template messages are sent by the bot account — make sure the bot has **Send Messages in Threads** permission in the forum channel
-- Only **Forum Channel** types are supported — regular text channels are ignored
-- Removing a config does not affect existing threads
+## Tips
+
+- Leave the template message blank if you only want auto-tagging, and vice versa
+- You can use Discord markdown in the template message (bold, bullet lists, links)
+- Changes apply to new threads only — existing threads are not affected
