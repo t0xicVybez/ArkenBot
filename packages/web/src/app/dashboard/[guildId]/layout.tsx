@@ -47,7 +47,7 @@ export default function GuildLayout({ children }: { children: React.ReactNode })
   if (!hydrated || !isAuthenticated) return null;
 
   return (
-    <div className="flex min-h-screen bg-discord-darkest-bg">
+    <div className="flex min-h-screen bg-discord-surface">
       <Sidebar
         guildId={guildId}
         guildName={guild?.name}
@@ -57,19 +57,21 @@ export default function GuildLayout({ children }: { children: React.ReactNode })
         onClose={() => setSidebarOpen(false)}
       />
       <main className="flex-1 overflow-auto flex flex-col min-w-0">
-        <div className="md:hidden flex items-center gap-3 px-4 py-3 border-b border-gray-700/50 bg-discord-darker-bg">
+        <div className="md:hidden flex items-center gap-3 px-4 py-3 border-b bg-discord-elevated border-[var(--border-subtle)]">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="text-gray-400 hover:text-white transition-colors"
+            className="p-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-white/[0.06] transition-colors"
             aria-label="Open menu"
           >
-            <Menu className="w-6 h-6" />
+            <Menu className="w-5 h-5" />
           </button>
-          <p className="text-white font-semibold text-sm truncate">{guild?.name ?? 'Dashboard'}</p>
+          <p className="text-[var(--text-primary)] font-semibold text-sm truncate tracking-tight">
+            {guild?.name ?? 'Dashboard'}
+          </p>
         </div>
         <div className="flex-1">{children}</div>
-        <footer className="px-6 py-3 border-t border-gray-700/40 text-center text-xs text-gray-500">
-          Powered by <span className="text-gray-400 font-medium">Arken Bot</span>
+        <footer className="px-6 py-3 border-t border-[var(--border-subtle)] text-center text-xs text-[var(--text-muted)]">
+          Powered by <span className="text-[var(--text-secondary)] font-medium">Arken Bot</span>
         </footer>
       </main>
     </div>

@@ -300,19 +300,28 @@ export default async function LandingPage() {
   const fmt = (n: number) => n >= 1000 ? `${(n / 1000).toFixed(1)}k+` : `${n}+`;
 
   return (
-    <div className="min-h-screen bg-discord-darkest-bg text-gray-200 flex flex-col">
+    <div className="min-h-screen bg-[var(--bg-surface)] text-[var(--text-primary)] flex flex-col">
 
       <LandingNav docsUrl={SITE.docsUrl} supportUrl={SITE.supportUrl} inviteUrl={SITE.inviteUrl} />
 
       {/* ── Hero ── */}
       <section className="relative overflow-hidden px-6 pt-24 pb-20">
+        {/* Background glows */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1100px] h-[650px] bg-discord-blurple/[0.07] rounded-full blur-3xl" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1100px] h-[650px] bg-discord-blurple/[0.08] rounded-full blur-3xl" />
           <div className="absolute top-32 left-1/4 w-[400px] h-[300px] bg-purple-500/[0.04] rounded-full blur-3xl" />
           <div className="absolute top-32 right-1/4 w-[400px] h-[300px] bg-blue-500/[0.04] rounded-full blur-3xl" />
+          {/* Subtle CSS grid pattern */}
+          <div
+            className="absolute inset-0 opacity-[0.03]"
+            style={{
+              backgroundImage: 'linear-gradient(var(--border-strong) 1px, transparent 1px), linear-gradient(90deg, var(--border-strong) 1px, transparent 1px)',
+              backgroundSize: '60px 60px',
+            }}
+          />
         </div>
 
-        <div className="relative z-10 max-w-6xl mx-auto">
+        <div className="relative z-10 max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
             {/* Left: text */}
@@ -322,15 +331,20 @@ export default async function LandingPage() {
                 Free forever · No paywalls · No premium tiers
               </div>
 
-              <h1 className="text-5xl md:text-[4.25rem] font-bold text-white leading-[1.08] tracking-tight mb-6">
+              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.06] tracking-tight mb-6">
                 {SITE.tagline.split('\n').map((line, i) => (
-                  <span key={i} className={i === 1 ? 'bg-gradient-to-r from-discord-blurple via-purple-400 to-blue-400 bg-clip-text text-transparent block' : 'block'}>
+                  <span
+                    key={i}
+                    className={i === 1
+                      ? 'bg-gradient-to-r from-discord-blurple via-purple-400 to-blue-400 bg-clip-text text-transparent block'
+                      : 'block text-white'}
+                  >
                     {line}
                   </span>
                 ))}
               </h1>
 
-              <p className="text-lg text-gray-400 mb-10 max-w-xl leading-relaxed">
+              <p className="text-lg text-[var(--text-secondary)] mb-10 max-w-xl leading-relaxed">
                 {SITE.description}
               </p>
 
@@ -356,9 +370,9 @@ export default async function LandingPage() {
                   { value: '20+', label: 'Features' },
                   { value: '99.9%', label: 'Uptime' },
                 ].map((s) => (
-                  <div key={s.label} className="flex flex-col items-center px-4 py-2.5 bg-white/[0.04] rounded-xl border border-white/[0.08]">
+                  <div key={s.label} className="flex flex-col items-center px-4 py-2.5 rounded-xl border border-[var(--border-strong)] bg-[var(--bg-card)]">
                     <span className="text-lg font-bold text-white leading-tight">{s.value}</span>
-                    <span className="text-[11px] text-gray-500 mt-0.5">{s.label}</span>
+                    <span className="text-[11px] text-[var(--text-muted)] mt-0.5">{s.label}</span>
                   </div>
                 ))}
               </div>
@@ -366,32 +380,32 @@ export default async function LandingPage() {
 
             {/* Right: command preview cards */}
             <div className="hidden lg:flex flex-col gap-3 relative">
-              <div className="absolute -top-4 -right-2 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-500/15 border border-green-500/20 text-green-400 text-xs font-medium">
-                <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+              <div className="absolute -top-4 -right-2 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-discord-green/15 border border-discord-green/20 text-discord-green text-xs font-medium">
+                <span className="w-1.5 h-1.5 rounded-full bg-discord-green animate-pulse" />
                 Bot online
               </div>
 
               {/* Activity summary card */}
-              <div className="bg-discord-darker-bg border border-white/[0.08] rounded-xl p-4 shadow-xl shadow-black/20">
+              <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-4 shadow-xl shadow-black/20">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="w-6 h-6 bg-discord-blurple rounded-full flex items-center justify-center">
                     <span className="w-3.5 h-3.5 text-white">{DISCORD_ICON}</span>
                   </div>
                   <span className="text-xs font-semibold text-white">Arken Bot</span>
-                  <span className="ml-auto text-[10px] text-gray-600">Today</span>
+                  <span className="ml-auto text-[10px] text-[var(--text-muted)]">Today</span>
                 </div>
                 <div className="grid grid-cols-3 gap-2">
                   {[
                     { icon: Shield, value: '12', label: 'Mod actions', color: 'text-red-400 bg-red-500/10' },
-                    { icon: Users, value: '34', label: 'New members', color: 'text-green-400 bg-green-500/10' },
+                    { icon: Users, value: '34', label: 'New members', color: 'text-discord-green bg-discord-green/10' },
                     { icon: MessageSquare, value: '847', label: 'Messages', color: 'text-blue-400 bg-blue-500/10' },
                   ].map((item) => (
-                    <div key={item.label} className="bg-discord-darkest-bg rounded-lg p-2.5 border border-white/[0.04] text-center">
+                    <div key={item.label} className="bg-[var(--bg-base)] rounded-lg p-2.5 border border-[var(--border-subtle)] text-center">
                       <div className={`w-6 h-6 rounded-md ${item.color} flex items-center justify-center mx-auto mb-1.5`}>
                         <item.icon className="w-3 h-3" />
                       </div>
                       <p className="text-sm font-bold text-white">{item.value}</p>
-                      <p className="text-[9px] text-gray-600 mt-0.5">{item.label}</p>
+                      <p className="text-[9px] text-[var(--text-muted)] mt-0.5">{item.label}</p>
                     </div>
                   ))}
                 </div>
@@ -401,14 +415,14 @@ export default async function LandingPage() {
               {HERO_COMMANDS.map((item, i) => (
                 <div
                   key={i}
-                  className="bg-discord-darker-bg border border-white/[0.06] rounded-xl p-3.5 shadow-lg shadow-black/20"
+                  className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-3.5 shadow-lg shadow-black/20"
                   style={{ marginLeft: i % 2 === 1 ? '1rem' : '0' }}
                 >
                   <div className="flex items-center gap-2 mb-2">
                     <div className={`w-5 h-5 rounded-md ${item.bg} flex items-center justify-center flex-shrink-0`}>
                       <item.icon className={`w-2.5 h-2.5 ${item.color}`} />
                     </div>
-                    <code className="text-xs text-gray-300 font-mono">{item.cmd}</code>
+                    <code className="text-xs text-[var(--text-secondary)] font-mono">{item.cmd}</code>
                   </div>
                   <div className="flex items-center gap-2 pl-7">
                     <span className={`text-xs ${item.responseColor}`}>{item.response}</span>
@@ -416,9 +430,9 @@ export default async function LandingPage() {
                 </div>
               ))}
 
-              <div className="flex items-center gap-2 px-3.5 py-2.5 bg-discord-darker-bg border border-white/[0.06] rounded-xl shadow-lg shadow-black/20">
-                <Terminal className="w-3.5 h-3.5 text-gray-500 flex-shrink-0" />
-                <span className="text-xs text-gray-500">30+ commands · unlimited custom commands</span>
+              <div className="flex items-center gap-2 px-3.5 py-2.5 bg-[var(--bg-card)] border border-[var(--border)] rounded-xl shadow-lg shadow-black/20">
+                <Terminal className="w-3.5 h-3.5 text-[var(--text-muted)] flex-shrink-0" />
+                <span className="text-xs text-[var(--text-muted)]">30+ commands · unlimited custom commands</span>
                 <span className="ml-auto text-[10px] text-discord-blurple font-medium">View all →</span>
               </div>
             </div>
@@ -427,15 +441,16 @@ export default async function LandingPage() {
       </section>
 
       {/* ── Trust bar ── */}
-      <div className="border-y border-white/[0.04] bg-discord-darker-bg/20 py-4 px-6">
-        <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-center gap-x-10 gap-y-2">
+      <div className="border-y border-[var(--border-subtle)] bg-[var(--bg-card)]/30 py-4 px-6">
+        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
           {[
             { icon: Check, text: 'No premium tier — everything is free' },
             { icon: Zap, text: 'Settings apply instantly — no bot restart' },
             { icon: Shield, text: 'Full moderation suite included' },
             { icon: Globe, text: 'Real-time web dashboard' },
-          ].map(({ icon: Icon, text }) => (
-            <div key={text} className="flex items-center gap-2 text-xs text-gray-400">
+          ].map(({ icon: Icon, text }, i) => (
+            <div key={text} className="flex items-center gap-2 text-xs text-[var(--text-secondary)]">
+              {i > 0 && <span className="hidden sm:block w-1 h-1 rounded-full bg-[var(--text-muted)] mr-6" />}
               <Icon className="w-3.5 h-3.5 text-discord-blurple flex-shrink-0" />
               {text}
             </div>
@@ -444,14 +459,16 @@ export default async function LandingPage() {
       </div>
 
       {/* ── Features ── */}
-      <section id="features" className="py-24 px-6">
-        <div className="max-w-6xl mx-auto">
+      <section id="features" className="py-24 px-6 bg-[var(--bg-surface)]">
+        <div className="max-w-7xl mx-auto">
           <div className="text-center mb-14">
-            <p className="text-discord-blurple text-xs font-semibold uppercase tracking-widest mb-4">Features</p>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-discord-blurple/10 border border-discord-blurple/20 text-discord-blurple text-xs font-semibold uppercase tracking-widest mb-4">
+              Features
+            </div>
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight">
               Replace 5 bots with one
             </h2>
-            <p className="text-gray-500 max-w-lg mx-auto">
+            <p className="text-[var(--text-secondary)] max-w-lg mx-auto">
               Moderation, leveling, music, tickets, custom commands, stream alerts, giveaways — and more. All in a single bot, all free.
             </p>
           </div>
@@ -462,13 +479,13 @@ export default async function LandingPage() {
               return (
                 <div
                   key={f.title}
-                  className="bg-discord-darker-bg rounded-xl border border-white/[0.06] p-5 hover:border-white/[0.12] transition-colors"
+                  className="bg-[var(--bg-card)] rounded-xl border border-[var(--border)] p-5 hover:border-[var(--border-strong)] hover:-translate-y-0.5 transition-all duration-200 shadow-sm"
                 >
-                  <div className={`w-9 h-9 rounded-lg ${f.bg} border ${f.border} flex items-center justify-center mb-4`}>
-                    <Icon className={`w-4 h-4 ${f.color}`} />
+                  <div className={`w-10 h-10 rounded-xl ${f.bg} border ${f.border} flex items-center justify-center mb-4`}>
+                    <Icon className={`w-4.5 h-4.5 ${f.color}`} />
                   </div>
-                  <h3 className="text-white font-semibold text-sm mb-1.5">{f.title}</h3>
-                  <p className="text-gray-500 text-xs leading-relaxed">{f.desc}</p>
+                  <h3 className="text-white font-semibold text-sm mb-1.5 tracking-tight">{f.title}</h3>
+                  <p className="text-[var(--text-muted)] text-xs leading-relaxed">{f.desc}</p>
                 </div>
               );
             })}
@@ -477,19 +494,21 @@ export default async function LandingPage() {
       </section>
 
       {/* ── Ticket System spotlight ── */}
-      <section className="py-24 px-6 border-y border-white/[0.04] bg-discord-darker-bg/30">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+      <section className="py-24 px-6 border-y border-[var(--border-subtle)] bg-[var(--bg-card)]/20">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
           <div>
-            <p className="text-cyan-400 text-xs font-semibold uppercase tracking-widest mb-4">Ticket System</p>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-semibold uppercase tracking-widest mb-4">
+              Ticket System
+            </div>
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-5 tracking-tight">
               Professional support tickets, built in
             </h2>
-            <p className="text-gray-400 mb-8 leading-relaxed text-sm">
+            <p className="text-[var(--text-secondary)] mb-8 leading-relaxed text-sm">
               Most bots charge for a decent ticket system. Arken&apos;s is fully featured out of the box — from multi-button panels and custom intake forms, to SLA escalation and a full portal for your staff team.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2.5 mb-8">
               {TICKET_HIGHLIGHTS.map((item) => (
-                <div key={item} className="flex items-start gap-2.5 text-sm text-gray-300">
+                <div key={item} className="flex items-start gap-2.5 text-sm text-[var(--text-secondary)]">
                   <span className="w-4 h-4 rounded-full bg-cyan-500/15 border border-cyan-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
                     <Check className="w-2.5 h-2.5 text-cyan-400" />
                   </span>
@@ -505,15 +524,15 @@ export default async function LandingPage() {
           {/* Ticket mock UI */}
           <div className="space-y-3">
             {/* Panel embed mock */}
-            <div className="bg-[#313338] rounded-xl border border-white/[0.06] overflow-hidden shadow-xl shadow-black/30 p-4">
-              <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-3 font-semibold">Panel embed preview</p>
+            <div className="bg-[#1e1f22] rounded-xl border border-white/[0.06] overflow-hidden shadow-xl shadow-black/30 p-4">
+              <p className="text-[10px] text-[var(--text-muted)] uppercase tracking-wider mb-3 font-semibold">Panel embed preview</p>
               <div className="bg-[#2b2d31] rounded-lg overflow-hidden" style={{ borderLeft: '4px solid #00b0f4' }}>
                 <div className="p-3">
                   <p className="text-white text-sm font-semibold mb-1">🎫 Support Center</p>
-                  <p className="text-gray-400 text-xs leading-relaxed">Need help? Click a button below to open a ticket. Our team will be with you shortly.</p>
+                  <p className="text-[var(--text-secondary)] text-xs leading-relaxed">Need help? Click a button below to open a ticket. Our team will be with you shortly.</p>
                   <div className="flex gap-2 mt-3">
                     <span className="bg-[#5865f2] text-white text-[11px] font-medium px-3 py-1.5 rounded">🛠️ Technical</span>
-                    <span className="bg-[#57f287] text-[#111] text-[11px] font-medium px-3 py-1.5 rounded">💳 Billing</span>
+                    <span className="bg-[#3ecf8e] text-[#111] text-[11px] font-medium px-3 py-1.5 rounded">💳 Billing</span>
                     <span className="bg-[#4f545c] text-white text-[11px] font-medium px-3 py-1.5 rounded">📋 Report</span>
                   </div>
                 </div>
@@ -521,8 +540,8 @@ export default async function LandingPage() {
             </div>
 
             {/* SLA levels mock */}
-            <div className="bg-discord-darker-bg rounded-xl border border-white/[0.06] p-4 shadow-lg shadow-black/20">
-              <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-3 font-semibold">SLA escalation levels</p>
+            <div className="bg-[var(--bg-card)] rounded-xl border border-[var(--border)] p-4 shadow-lg shadow-black/20">
+              <p className="text-[10px] text-[var(--text-muted)] uppercase tracking-wider mb-3 font-semibold">SLA escalation levels</p>
               <div className="space-y-2">
                 {[
                   { hours: '2h', role: '@Support', msg: 'Ticket needs attention', color: 'text-yellow-400 bg-yellow-500/10' },
@@ -532,7 +551,7 @@ export default async function LandingPage() {
                   <div key={l.hours} className="flex items-center gap-3 text-xs">
                     <span className={`font-mono font-bold px-1.5 py-0.5 rounded ${l.color}`}>{l.hours}</span>
                     <span className="text-discord-blurple">{l.role}</span>
-                    <span className="text-gray-500 truncate">{l.msg}</span>
+                    <span className="text-[var(--text-muted)] truncate">{l.msg}</span>
                   </div>
                 ))}
               </div>
@@ -541,13 +560,13 @@ export default async function LandingPage() {
             {/* Ticket stats mock */}
             <div className="grid grid-cols-3 gap-2">
               {[
-                { label: 'Open', value: '8', color: 'text-green-400' },
+                { label: 'Open', value: '8', color: 'text-discord-green' },
                 { label: 'Avg Reply', value: '14m', color: 'text-blue-400' },
                 { label: 'Rating', value: '4.8★', color: 'text-yellow-400' },
               ].map((s) => (
-                <div key={s.label} className="bg-discord-darker-bg rounded-lg p-3 border border-white/[0.06] text-center">
+                <div key={s.label} className="bg-[var(--bg-card)] rounded-lg p-3 border border-[var(--border)] text-center">
                   <p className={`text-base font-bold ${s.color}`}>{s.value}</p>
-                  <p className="text-[10px] text-gray-600 mt-0.5">{s.label}</p>
+                  <p className="text-[10px] text-[var(--text-muted)] mt-0.5">{s.label}</p>
                 </div>
               ))}
             </div>
@@ -556,32 +575,34 @@ export default async function LandingPage() {
       </section>
 
       {/* ── Feature comparison ── */}
-      <section id="compare" className="py-24 px-6">
+      <section id="compare" className="py-24 px-6 bg-[var(--bg-surface)]">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-14">
-            <p className="text-discord-blurple text-xs font-semibold uppercase tracking-widest mb-4">Why Arken</p>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-discord-blurple/10 border border-discord-blurple/20 text-discord-blurple text-xs font-semibold uppercase tracking-widest mb-4">
+              Why Arken
+            </div>
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight">
               Everything. Free. In one bot.
             </h2>
-            <p className="text-gray-500 max-w-md mx-auto">
+            <p className="text-[var(--text-secondary)] max-w-md mx-auto">
               Stop paying per-server subscriptions or running five different bots. Arken has it all — no tiers, no limits.
             </p>
           </div>
 
-          <div className="bg-discord-darker-bg rounded-2xl border border-white/[0.08] overflow-hidden shadow-xl shadow-black/20">
+          <div className="bg-[var(--bg-card)] rounded-2xl border border-[var(--border)] overflow-hidden shadow-xl shadow-black/20">
             {/* Header */}
-            <div className="grid grid-cols-[1fr_auto] px-5 py-3 border-b border-white/[0.06] bg-black/10">
-              <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Feature</span>
+            <div className="grid grid-cols-[1fr_auto] px-5 py-3 border-b border-[var(--border-subtle)] bg-black/10">
+              <span className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider">Feature</span>
               <span className="text-xs font-semibold text-discord-blurple uppercase tracking-wider text-center w-28">Arken Bot</span>
             </div>
             {/* Rows */}
             {COMPARISON.map((row, i) => (
               <div
                 key={row.feature}
-                className={`grid grid-cols-[1fr_auto] items-center px-5 py-3 ${i % 2 === 0 ? 'bg-white/[0.01]' : ''} border-b border-white/[0.04] last:border-0`}
+                className={`grid grid-cols-[1fr_auto] items-center px-5 py-3 ${i % 2 === 0 ? 'bg-white/[0.01]' : ''} border-b border-[var(--border-subtle)] last:border-0`}
               >
                 <div className="flex items-center gap-2">
-                  <span className="text-sm text-gray-300">{row.feature}</span>
+                  <span className="text-sm text-[var(--text-secondary)]">{row.feature}</span>
                   {row.note && (
                     <span className="text-[10px] text-discord-blurple bg-discord-blurple/10 border border-discord-blurple/20 px-1.5 py-0.5 rounded-full">
                       {row.note}
@@ -590,12 +611,12 @@ export default async function LandingPage() {
                 </div>
                 <div className="w-28 flex justify-center">
                   {row.arken ? (
-                    <span className="w-5 h-5 rounded-full bg-green-500/15 border border-green-500/30 flex items-center justify-center">
-                      <Check className="w-3 h-3 text-green-400" />
+                    <span className="w-5 h-5 rounded-full bg-discord-green/15 border border-discord-green/30 flex items-center justify-center">
+                      <Check className="w-3 h-3 text-discord-green" />
                     </span>
                   ) : (
-                    <span className="w-5 h-5 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center">
-                      <X className="w-3 h-3 text-red-500" />
+                    <span className="w-5 h-5 rounded-full bg-discord-red/10 border border-discord-red/20 flex items-center justify-center">
+                      <X className="w-3 h-3 text-discord-red" />
                     </span>
                   )}
                 </div>
@@ -606,14 +627,16 @@ export default async function LandingPage() {
       </section>
 
       {/* ── Dashboard spotlight ── */}
-      <section className="py-24 px-6 border-y border-white/[0.04] bg-discord-darker-bg/30">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <section className="py-24 px-6 border-y border-[var(--border-subtle)] bg-[var(--bg-card)]/20">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div>
-            <p className="text-discord-blurple text-xs font-semibold uppercase tracking-widest mb-4">Web Dashboard</p>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-discord-blurple/10 border border-discord-blurple/20 text-discord-blurple text-xs font-semibold uppercase tracking-widest mb-4">
+              Web Dashboard
+            </div>
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-5 tracking-tight">
               Manage everything from your browser
             </h2>
-            <p className="text-gray-400 mb-8 leading-relaxed text-sm">
+            <p className="text-[var(--text-secondary)] mb-8 leading-relaxed text-sm">
               No more typing commands to configure your bot. Every setting is in the dashboard — changes apply to the bot the moment you hit Save, with no restart required.
             </p>
             <ul className="space-y-2.5 mb-8">
@@ -625,9 +648,9 @@ export default async function LandingPage() {
                 'Custom command builder with embed previews',
                 'Addon marketplace — install, configure, and manage plugins',
               ].map((item) => (
-                <li key={item} className="flex items-center gap-3 text-sm text-gray-300">
-                  <span className="w-4 h-4 rounded-full bg-green-500/15 border border-green-500/20 flex items-center justify-center flex-shrink-0">
-                    <Check className="w-2.5 h-2.5 text-green-400" />
+                <li key={item} className="flex items-center gap-3 text-sm text-[var(--text-secondary)]">
+                  <span className="w-4 h-4 rounded-full bg-discord-green/15 border border-discord-green/20 flex items-center justify-center flex-shrink-0">
+                    <Check className="w-2.5 h-2.5 text-discord-green" />
                   </span>
                   {item}
                 </li>
@@ -639,21 +662,21 @@ export default async function LandingPage() {
           </div>
 
           {/* Mock dashboard preview */}
-          <div className="bg-discord-darker-bg rounded-xl border border-white/[0.08] overflow-hidden shadow-2xl shadow-black/40">
-            <div className="flex items-center gap-1.5 px-4 py-3 border-b border-white/[0.06] bg-black/20">
-              <div className="w-2.5 h-2.5 rounded-full bg-red-500/60" />
-              <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/60" />
-              <div className="w-2.5 h-2.5 rounded-full bg-green-500/60" />
-              <span className="ml-2 text-[11px] text-gray-600">arkenbot.app/dashboard</span>
+          <div className="bg-[var(--bg-card)] rounded-xl border border-[var(--border)] overflow-hidden shadow-2xl shadow-black/40">
+            <div className="flex items-center gap-1.5 px-4 py-3 border-b border-[var(--border-subtle)] bg-black/20">
+              <div className="w-2.5 h-2.5 rounded-full bg-discord-red/60" />
+              <div className="w-2.5 h-2.5 rounded-full bg-discord-yellow/60" />
+              <div className="w-2.5 h-2.5 rounded-full bg-discord-green/60" />
+              <span className="ml-2 text-[11px] text-[var(--text-muted)]">arkenbot.app/dashboard</span>
             </div>
             <div className="flex">
               {/* Mini sidebar */}
-              <div className="w-36 border-r border-white/[0.05] p-2 space-y-0.5 bg-discord-darkest-bg/30">
+              <div className="w-36 border-r border-[var(--border-subtle)] p-2 space-y-0.5 bg-[var(--bg-elevated)]">
                 <div className="flex items-center gap-2 px-2 py-1.5 mb-2">
-                  <div className="w-5 h-5 rounded-full bg-discord-blurple/80" />
+                  <div className="w-5 h-5 rounded-lg bg-discord-blurple/80" />
                   <div className="flex-1 space-y-1">
-                    <div className="h-1.5 bg-gray-600 rounded w-3/4" />
-                    <div className="h-1 bg-gray-700 rounded w-1/2" />
+                    <div className="h-1.5 bg-[var(--bg-hover)] rounded w-3/4" />
+                    <div className="h-1 bg-[var(--bg-hover)] rounded w-1/2" />
                   </div>
                 </div>
                 {[
@@ -668,25 +691,25 @@ export default async function LandingPage() {
                   { label: 'Addons', section: 'ADDONS' },
                 ].map((item, idx) => (
                   <div key={idx}>
-                    {item.section && <p className="px-2 text-[8px] text-gray-600 font-semibold uppercase tracking-widest mt-2 mb-0.5">{item.section}</p>}
-                    <div className={`px-2 py-1 rounded text-[10px] ${item.active ? 'bg-discord-blurple/20 text-blue-300' : 'text-gray-500'}`}>
+                    {item.section && <p className="px-2 text-[8px] text-[var(--text-muted)] font-semibold uppercase tracking-widest mt-2 mb-0.5">{item.section}</p>}
+                    <div className={`px-2 py-1 rounded text-[10px] ${item.active ? 'bg-discord-blurple/15 text-discord-blurple border-l-2 border-discord-blurple' : 'text-[var(--text-muted)]'}`}>
                       {item.label}
                     </div>
                   </div>
                 ))}
               </div>
               {/* Content */}
-              <div className="flex-1 p-3 space-y-2">
+              <div className="flex-1 p-3 space-y-2 bg-[var(--bg-surface)]">
                 <div className="grid grid-cols-2 gap-1.5">
                   {['Mod Actions', 'New Members', 'Open Tickets', 'Log Events'].map((label) => (
-                    <div key={label} className="bg-discord-darkest-bg rounded-lg px-2.5 py-2 border border-white/[0.04]">
-                      <p className="text-[9px] text-gray-600">{label}</p>
+                    <div key={label} className="bg-[var(--bg-card)] rounded-lg px-2.5 py-2 border border-[var(--border-subtle)]">
+                      <p className="text-[9px] text-[var(--text-muted)]">{label}</p>
                       <p className="text-base font-bold text-white">—</p>
                     </div>
                   ))}
                 </div>
-                <div className="bg-discord-darkest-bg rounded-lg p-2.5 border border-white/[0.04]">
-                  <p className="text-[9px] text-gray-500 mb-2">Message Activity (7d)</p>
+                <div className="bg-[var(--bg-card)] rounded-lg p-2.5 border border-[var(--border-subtle)]">
+                  <p className="text-[9px] text-[var(--text-muted)] mb-2">Message Activity (7d)</p>
                   <div className="flex items-end gap-0.5 h-10">
                     {[3, 6, 4, 8, 5, 9, 7, 12, 6, 10, 8, 11, 9, 14].map((h, i) => (
                       <div key={i} className="flex-1 bg-discord-blurple/40 rounded-sm" style={{ height: `${h * 6}%` }} />
@@ -694,8 +717,8 @@ export default async function LandingPage() {
                   </div>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <Settings className="w-3 h-3 text-gray-600" />
-                  <span className="text-[10px] text-gray-600">Settings update instantly · no restart required</span>
+                  <Settings className="w-3 h-3 text-[var(--text-muted)]" />
+                  <span className="text-[10px] text-[var(--text-muted)]">Settings update instantly · no restart required</span>
                 </div>
               </div>
             </div>
@@ -704,21 +727,23 @@ export default async function LandingPage() {
       </section>
 
       {/* ── Addons ── */}
-      <section id="addons" className="py-24 px-6">
-        <div className="max-w-6xl mx-auto">
+      <section id="addons" className="py-24 px-6 bg-[var(--bg-surface)]">
+        <div className="max-w-7xl mx-auto">
           <div className="text-center mb-14">
-            <p className="text-pink-400 text-xs font-semibold uppercase tracking-widest mb-4">Addon System</p>
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-pink-500/10 border border-pink-500/20 text-pink-400 text-xs font-semibold uppercase tracking-widest mb-4">
+              Addon System
+            </div>
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight">
               Extend with addons
             </h2>
-            <p className="text-gray-500 max-w-md mx-auto">
+            <p className="text-[var(--text-secondary)] max-w-md mx-auto">
               Install community addons directly from the dashboard, or build your own with the Arken Addon SDK.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
             {ADDONS.map((addon) => (
-              <div key={addon.name} className="bg-discord-darker-bg rounded-xl border border-white/[0.06] p-5 hover:border-white/[0.12] transition-colors">
+              <div key={addon.name} className="bg-[var(--bg-card)] rounded-xl border border-[var(--border)] p-5 hover:border-[var(--border-strong)] hover:-translate-y-0.5 transition-all duration-200">
                 <div className="flex items-start justify-between mb-4">
                   <span className="text-3xl">{addon.icon}</span>
                   {addon.verified && (
@@ -727,9 +752,9 @@ export default async function LandingPage() {
                     </div>
                   )}
                 </div>
-                <h3 className="text-white font-semibold mb-1">{addon.name}</h3>
-                <p className="text-gray-600 text-xs mb-3 font-mono">v{addon.version}</p>
-                <p className="text-gray-400 text-sm leading-relaxed">{addon.desc}</p>
+                <h3 className="text-white font-semibold mb-1 tracking-tight">{addon.name}</h3>
+                <p className="text-[var(--text-muted)] text-xs mb-3 font-mono">v{addon.version}</p>
+                <p className="text-[var(--text-secondary)] text-sm leading-relaxed">{addon.desc}</p>
               </div>
             ))}
           </div>
@@ -743,24 +768,24 @@ export default async function LandingPage() {
       </section>
 
       {/* ── How it works ── */}
-      <section className="py-24 px-6 border-y border-white/[0.04] bg-discord-darker-bg/30">
+      <section className="py-24 px-6 border-y border-[var(--border-subtle)] bg-[var(--bg-card)]/20">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-14">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight">Get started in minutes</h2>
-            <p className="text-gray-500">No technical knowledge required.</p>
+            <p className="text-[var(--text-secondary)]">No technical knowledge required.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {HOW_IT_WORKS.map((step, i) => (
               <div key={step.step} className="relative flex flex-col items-center text-center">
                 {i < HOW_IT_WORKS.length - 1 && (
-                  <div className="hidden md:block absolute top-5 left-[calc(50%+2.5rem)] w-[calc(100%-5rem)] h-px bg-gradient-to-r from-gray-700 to-transparent" />
+                  <div className="hidden md:block absolute top-5 left-[calc(50%+2.5rem)] w-[calc(100%-5rem)] h-px bg-gradient-to-r from-[var(--text-muted)] to-transparent" />
                 )}
                 <div className="w-10 h-10 rounded-xl bg-discord-blurple/15 border border-discord-blurple/30 flex items-center justify-center text-discord-blurple font-bold text-xs mb-4">
                   {step.step}
                 </div>
-                <h3 className="text-white font-semibold text-sm mb-2">{step.title}</h3>
-                <p className="text-gray-500 text-sm leading-relaxed">{step.desc}</p>
+                <h3 className="text-white font-semibold text-sm mb-2 tracking-tight">{step.title}</h3>
+                <p className="text-[var(--text-secondary)] text-sm leading-relaxed">{step.desc}</p>
               </div>
             ))}
           </div>
@@ -768,24 +793,27 @@ export default async function LandingPage() {
       </section>
 
       {/* ── CTA ── */}
-      <section className="py-28 px-6 text-center">
-        <div className="max-w-2xl mx-auto">
+      <section className="py-28 px-6 text-center relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, transparent 0%, var(--accent-glow) 50%, transparent 100%)' }} />
+        </div>
+        <div className="max-w-2xl mx-auto relative z-10">
           <div className="w-14 h-14 bg-discord-blurple rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-discord-blurple/25">
             <span className="w-8 h-8 text-white">{DISCORD_ICON}</span>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight">
+          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight">
             Ready to upgrade your server?
           </h2>
-          <p className="text-gray-500 mb-3 text-sm max-w-lg mx-auto">
+          <p className="text-[var(--text-secondary)] mb-3 text-sm max-w-lg mx-auto">
             Join the servers already running on Arken Bot. Free forever — no subscriptions, no per-server fees, no feature gates.
           </p>
-          <p className="text-gray-600 text-xs mb-8">Works alongside your existing bots, or replace them entirely.</p>
+          <p className="text-[var(--text-muted)] text-xs mb-10">Works alongside your existing bots, or replace them entirely.</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <a
               href={SITE.inviteUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-primary text-[15px] px-10 py-3 shadow-lg shadow-discord-blurple/20"
+              className="btn-primary text-[15px] px-10 py-3.5 shadow-lg shadow-discord-blurple/25"
             >
               Add Arken Bot — Free <ArrowRight className="w-4 h-4" />
             </a>
@@ -793,7 +821,7 @@ export default async function LandingPage() {
               href={SITE.supportUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-secondary text-[15px] px-10 py-3"
+              className="btn-secondary text-[15px] px-10 py-3.5"
             >
               Join Support Server
             </a>
@@ -802,21 +830,46 @@ export default async function LandingPage() {
       </section>
 
       {/* ── Footer ── */}
-      <footer className="border-t border-white/[0.06] py-8 px-6">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 bg-discord-blurple rounded-md flex items-center justify-center">
-              <span className="w-3.5 h-3.5 text-white">{DISCORD_ICON}</span>
+      <footer className="border-t border-[var(--border)] py-10 px-6 bg-[var(--bg-base)]">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+            {/* Brand column */}
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-6 h-6 bg-discord-blurple rounded-md flex items-center justify-center">
+                  <span className="w-3.5 h-3.5 text-white">{DISCORD_ICON}</span>
+                </div>
+                <span className="font-semibold text-white text-sm tracking-tight">{SITE.name}</span>
+              </div>
+              <p className="text-[var(--text-muted)] text-xs leading-relaxed max-w-xs">
+                A completely free Discord bot with 20+ features and a real-time web dashboard. No paywalls, ever.
+              </p>
             </div>
-            <span className="font-semibold text-white text-sm">{SITE.name}</span>
-            <span className="text-gray-700 text-xs ml-1">© {new Date().getFullYear()}</span>
+
+            {/* Links column */}
+            <div>
+              <p className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-widest mb-3">Links</p>
+              <div className="space-y-2">
+                <Link href="/features" className="block text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">Features</Link>
+                <Link href="/addons" className="block text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">Addons</Link>
+                <Link href="/auth" className="block text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">Dashboard</Link>
+                <a href={SITE.docsUrl} target="_blank" rel="noopener noreferrer" className="block text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">Docs</a>
+              </div>
+            </div>
+
+            {/* Community column */}
+            <div>
+              <p className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-widest mb-3">Community</p>
+              <div className="space-y-2">
+                <a href={SITE.supportUrl} target="_blank" rel="noopener noreferrer" className="block text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">Support Server</a>
+                <a href={SITE.inviteUrl} target="_blank" rel="noopener noreferrer" className="block text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">Add to Server</a>
+              </div>
+            </div>
           </div>
 
-          <div className="flex items-center gap-5 text-xs text-gray-500">
-            <Link href="/features" className="hover:text-gray-300 transition-colors">Features</Link>
-            <Link href="/auth" className="hover:text-gray-300 transition-colors">Dashboard</Link>
-            <a href={SITE.docsUrl} target="_blank" rel="noopener noreferrer" className="hover:text-gray-300 transition-colors">Docs</a>
-            <a href={SITE.supportUrl} target="_blank" rel="noopener noreferrer" className="hover:text-gray-300 transition-colors">Support</a>
+          <div className="border-t border-[var(--border-subtle)] pt-6 flex flex-col sm:flex-row items-center justify-between gap-2">
+            <span className="text-[var(--text-muted)] text-xs">© {new Date().getFullYear()} {SITE.name}. All rights reserved.</span>
+            <span className="text-[var(--text-muted)] text-xs">Made with care for Discord communities.</span>
           </div>
         </div>
       </footer>
