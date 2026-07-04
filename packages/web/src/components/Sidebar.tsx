@@ -49,6 +49,7 @@ import {
   Flag,
   MessagesSquare,
   ClipboardList,
+  Trello,
   type LucideIcon,
 } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
@@ -126,6 +127,7 @@ const buildNavSections = (guildId: string, installedAddons: string[]): NavSectio
         { href: `/dashboard/${guildId}/reddit-feeds`, label: 'Reddit Feeds', icon: Globe },
         { href: `/dashboard/${guildId}/rss-feeds`, label: 'RSS Feeds', icon: Rss },
         { href: `/dashboard/${guildId}/monday`, label: 'monday.com', icon: ClipboardList },
+        { href: `/dashboard/${guildId}/trello`, label: 'Trello', icon: Trello },
         { href: `/dashboard/${guildId}/commands`, label: 'Commands', icon: Terminal },
         { href: `/dashboard/${guildId}/forum-management`, label: 'Forum Management', icon: MessagesSquare },
       ],

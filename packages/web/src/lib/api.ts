@@ -468,6 +468,14 @@ export const mondayApi = {
   delete: (guildId: string, id: string) => api.delete(`/guilds/${guildId}/monday-alerts/${id}`),
 };
 
+// ─── Trello ───────────────────────────────────────────────────────
+export const trelloApi = {
+  list: (guildId: string) => api.get(`/guilds/${guildId}/trello-alerts`),
+  create: (guildId: string, data: object) => api.post(`/guilds/${guildId}/trello-alerts`, data),
+  update: (guildId: string, id: string, data: object) => api.patch(`/guilds/${guildId}/trello-alerts/${id}`, data),
+  delete: (guildId: string, id: string) => api.delete(`/guilds/${guildId}/trello-alerts/${id}`),
+};
+
 // ─── Admin ────────────────────────────────────────────────────────
 export const adminApi = {
   getGuilds: (params?: object) => api.get('/admin/guilds', { params }),
