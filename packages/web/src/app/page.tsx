@@ -923,7 +923,11 @@ export default async function LandingPage() {
 
           <div className="border-t border-[var(--border-subtle)] pt-6 flex flex-col sm:flex-row items-center justify-between gap-2">
             <span className="text-[var(--text-muted)] text-xs">© {new Date().getFullYear()} {SITE.name}. All rights reserved.</span>
-            <span className="text-[var(--text-muted)] text-xs">Made with care for Discord communities.</span>
+            <div className="flex items-center gap-4">
+              <Link href="/privacy" className="text-[var(--text-muted)] text-xs hover:text-[var(--text-secondary)] transition-colors">Privacy Policy</Link>
+              <Link href="/terms" className="text-[var(--text-muted)] text-xs hover:text-[var(--text-secondary)] transition-colors">Terms of Service</Link>
+              <span className="text-[var(--text-muted)] text-xs">Made with care for Discord communities.</span>
+            </div>
           </div>
         </div>
       </footer>
