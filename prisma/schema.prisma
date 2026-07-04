@@ -61,6 +61,7 @@ model Guild {
   xpChannelMultipliers XpChannelMultiplier[]
   userNotes            UserNote[]
   reports              Report[]
+  mondayAlerts         MondayAlert[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1045,7 +1046,7 @@ model StreamAlert {
   id               String   @id @default(cuid())
   guildId          String
   guild            Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
-  platform         String   // "twitch" | "kick" | "twitter" | "reddit" | "rss"
+  platform         String   // "twitch" | "kick" | "twitter" | "reddit" | "rss" | "youtube"
   channelUsername  String
   channelId        String?  // resolved platform ID (e.g. Twitter numeric user ID)
   discordChannelId String
@@ -1055,6 +1056,7 @@ model StreamAlert {
   lastMessageId    String?
   lastMessageChannelId String?
   createdAt        DateTime @default(now())
+  updatedAt        DateTime @default(now()) @updatedAt
 
   @@unique([guildId, platform, channelUsername])
   @@index([guildId, platform, enabled])
@@ -1211,4 +1213,24 @@ model Report {
 
   @@index([guildId, status])
   @@map("reports")
+}
+
+// ─────────────────────────────────────────────
+// Monday.com Webhook Alerts
+// ─────────────────────────────────────────────
+model MondayAlert {
+  id               String   @id @default(cuid())
+  guildId          String
+  guild            Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  discordChannelId String
+  webhookToken     String   @unique @default(cuid())
+  boardName        String?  // optional display label for the board
+  events           String[] @default([]) // empty = all events; otherwise filter to these types
+  mondayApiToken   String?  // Monday.com personal API token for resolving user display names
+  enabled          Boolean  @default(true)
+  createdAt        DateTime @default(now())
+
+  @@index([guildId])
+  @@index([webhookToken])
+  @@map("monday_alerts")
 }

@@ -39,6 +39,7 @@ import { selfRoleRoutes } from './routes/selfRoles.js';
 import { applicationRoutes } from './routes/applications.js';
 import { userNoteRoutes } from './routes/userNotes.js';
 import { reportRoutes } from './routes/reports.js';
+import { mondayRoutes } from './routes/monday.js';
 import { setupWebSocket } from './websocket/gateway.js';
 import { AuthService } from './services/AuthService.js';
 import { collectDefaultMetrics } from 'prom-client';
@@ -127,6 +128,7 @@ export async function createServer() {
   await server.register(applicationRoutes);
   await server.register(userNoteRoutes);
   await server.register(reportRoutes);
+  await server.register(mondayRoutes);
 
   // ─── WebSocket Gateway ────────────────────────────────────────────
   await setupWebSocket(server);

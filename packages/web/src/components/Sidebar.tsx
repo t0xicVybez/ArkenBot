@@ -125,6 +125,7 @@ const buildNavSections = (guildId: string, installedAddons: string[]): NavSectio
         { href: `/dashboard/${guildId}/twitter-feeds`, label: 'X / Twitter Feeds', icon: AtSign },
         { href: `/dashboard/${guildId}/reddit-feeds`, label: 'Reddit Feeds', icon: Globe },
         { href: `/dashboard/${guildId}/rss-feeds`, label: 'RSS Feeds', icon: Rss },
+        { href: `/dashboard/${guildId}/monday`, label: 'monday.com', icon: ClipboardList },
         { href: `/dashboard/${guildId}/commands`, label: 'Commands', icon: Terminal },
         { href: `/dashboard/${guildId}/forum-management`, label: 'Forum Management', icon: MessagesSquare },
       ],
