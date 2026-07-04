@@ -5,7 +5,7 @@
  * verify channel. When the member clicks "Verify", the pending role is swapped
  * for the member role.
  */
-import { type GuildMember, type ButtonInteraction, type TextChannel, type Guild, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, MessageFlags } from 'discord.js';
+import { type GuildMember, type ButtonInteraction, type TextChannel, type Guild, type Message, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, MessageFlags } from 'discord.js';
 import { getGuildSettings } from '../../utils/settings.js';
 import { logger } from '../../logger.js';
 
@@ -78,7 +78,7 @@ export class VerificationModule {
     }
   }
 
-  static async sendVerifyPanel(channel: TextChannel, guild: Guild): Promise<void> {
+  static async sendVerifyPanel(channel: TextChannel, guild: Guild): Promise<Message> {
     const embed = new EmbedBuilder()
       .setColor(0x5865f2)
       .setTitle('✅ Verify Your Account')
@@ -94,6 +94,6 @@ export class VerificationModule {
         .setEmoji('✅'),
     );
 
-    await channel.send({ embeds: [embed], components: [row] });
+    return channel.send({ embeds: [embed], components: [row] });
   }
 }

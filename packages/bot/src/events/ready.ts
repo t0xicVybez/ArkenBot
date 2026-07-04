@@ -123,6 +123,60 @@ const event: BotEvent = {
     sub.removeAllListeners('message');
     sub.on('message', async (_channel: string, message: string) => {
       try {
+        // Some channels (like 'api:events') publish JSON event objects, while
+        // others (like 'cache:invalidate:settings') publish a plain guildId.
+        if (_channel === 'cache:invalidate:settings') {
+          const guildId = message;
+          // Invalidate cache and, if verification is enabled, ensure the
+          // verify panel is posted to the configured channel.
+          invalidateSettingsCache(guildId);
+          logger.debug(`Settings cache invalidated for guild ${guildId}`);
+
+          try {
+            const settings = await getGuildSettings(guildId);
+            const extended = (settings?.extended ?? {}) as Record<string, unknown>;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const verification = (extended.verification ?? {}) as Record<string, any> | undefined;
+            if (verification?.enabled && verification.verifyChannelId) {
+              const guild = client.guilds.cache.get(guildId);
+              const channel = guild
+                ? guild.channels.cache.get(verification.verifyChannelId) as TextChannel | undefined
+                : undefined;
+              if (guild && channel?.isTextBased()) {
+                // Skip if the previously posted panel still exists in this channel.
+                const existingId = verification.panelMessageId as string | undefined;
+                const existing = existingId
+                  ? await channel.messages.fetch(existingId).catch(() => null)
+                  : null;
+                if (!existing) {
+                  const me = guild.members.me;
+                  const perms = me ? channel.permissionsFor(me) : null;
+                  if (!perms?.has(['ViewChannel', 'SendMessages', 'EmbedLinks'])) {
+                    logger.warn(
+                      { guildId, channelId: verification.verifyChannelId },
+                      'Cannot post verify panel — bot is missing ViewChannel/SendMessages/EmbedLinks in the verify channel',
+                    );
+                  } else {
+                    const { VerificationModule } = await import('../modules/verification/VerificationModule.js');
+                    const panelMsg = await VerificationModule.sendVerifyPanel(channel, guild);
+                    // Remember the panel message so future settings saves don't repost it.
+                    await prisma.guildSettings.update({
+                      where: { guildId },
+                      data: { extended: { ...extended, verification: { ...verification, panelMessageId: panelMsg.id } } },
+                    }).catch(() => null);
+                    invalidateSettingsCache(guildId);
+                    logger.info({ guildId, channelId: verification.verifyChannelId, messageId: panelMsg.id }, 'Posted verify panel after dashboard update');
+                  }
+                }
+              }
+            }
+          } catch (err) {
+            logger.warn({ err, guildId: message }, 'Failed to post verify panel after settings update');
+          }
+
+          return;
+        }
+
         const event = JSON.parse(message);
         if (event.type === 'settings:reload') {
           // Bust the Redis cache so the next command invocation fetches fresh settings.
@@ -252,6 +306,7 @@ const event: BotEvent = {
     });
 
     await sub.subscribe('api:events');
+    await sub.subscribe('cache:invalidate:settings');
 
 
     logger.info('Bot ready! Serving ' + client.guilds.cache.size + ' guilds');
