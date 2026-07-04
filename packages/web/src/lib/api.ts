@@ -460,6 +460,14 @@ export const tempVoiceApi = {
     api.delete(`/guilds/${guildId}/temp-voice/triggers/${channelId}`),
 };
 
+// ─── Monday.com Alerts ────────────────────────────────────────────
+export const mondayApi = {
+  list: (guildId: string) => api.get(`/guilds/${guildId}/monday-alerts`),
+  create: (guildId: string, data: object) => api.post(`/guilds/${guildId}/monday-alerts`, data),
+  update: (guildId: string, id: string, data: object) => api.patch(`/guilds/${guildId}/monday-alerts/${id}`, data),
+  delete: (guildId: string, id: string) => api.delete(`/guilds/${guildId}/monday-alerts/${id}`),
+};
+
 // ─── Admin ────────────────────────────────────────────────────────
 export const adminApi = {
   getGuilds: (params?: object) => api.get('/admin/guilds', { params }),
