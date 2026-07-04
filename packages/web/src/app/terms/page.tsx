@@ -127,7 +127,33 @@ export default function TermsPage() {
           </p>
         </Section>
 
-        <Section id="content" title="5. User Content and Responsibility">
+        <Section id="integrations" title="5. Monday.com and Trello Integrations">
+          <p>
+            Arken Bot can receive webhook notifications from{' '}
+            <a href="https://monday.com" target="_blank" rel="noopener noreferrer" className="text-discord-blurple hover:underline">monday.com</a>{' '}
+            and{' '}
+            <a href="https://trello.com" target="_blank" rel="noopener noreferrer" className="text-discord-blurple hover:underline">Trello</a>{' '}
+            boards connected by server administrators, and relay them as Discord notifications. By enabling these
+            features you acknowledge that your use of the underlying platforms remains subject to the{' '}
+            <a href="https://monday.com/l/legal/tos/" target="_blank" rel="noopener noreferrer" className="text-discord-blurple hover:underline">
+              monday.com Terms of Service
+            </a>{' '}
+            and the{' '}
+            <a href="https://www.atlassian.com/legal/cloud-terms-of-service" target="_blank" rel="noopener noreferrer" className="text-discord-blurple hover:underline">
+              Atlassian Cloud Terms of Service
+            </a>{' '}
+            respectively.
+          </p>
+          <p>
+            You are responsible for ensuring you have the right to connect a given board and to share its activity
+            with the members of your Discord server. Webhook payloads are processed transiently to build
+            notifications and are not stored; see our{' '}
+            <Link href="/privacy" className="text-discord-blurple hover:underline">Privacy Policy</Link>{' '}
+            for details on what configuration data we retain.
+          </p>
+        </Section>
+
+        <Section id="content" title="6. User Content and Responsibility">
           <p>
             You are solely responsible for all content configured through the Service, including custom bot messages,
             moderation actions, and alert configurations. We do not review or endorse user-generated configurations.
@@ -139,7 +165,7 @@ export default function TermsPage() {
           </p>
         </Section>
 
-        <Section id="availability" title="6. Service Availability">
+        <Section id="availability" title="7. Service Availability">
           <p>
             Arken Bot is provided on an &ldquo;as is&rdquo; and &ldquo;as available&rdquo; basis. We do not guarantee
             uninterrupted, error-free operation. We may suspend or discontinue the Service at any time without notice
@@ -151,7 +177,7 @@ export default function TermsPage() {
           </p>
         </Section>
 
-        <Section id="termination" title="7. Termination">
+        <Section id="termination" title="8. Termination">
           <p>
             We reserve the right to remove Arken Bot from any Discord server, or suspend access for any user or server,
             at our sole discretion if we determine these Terms have been violated. You may remove the Bot from your
@@ -163,7 +189,7 @@ export default function TermsPage() {
           </p>
         </Section>
 
-        <Section id="disclaimer" title="8. Disclaimer of Warranties">
+        <Section id="disclaimer" title="9. Disclaimer of Warranties">
           <p>
             The Service is provided without warranties of any kind, express or implied, including but not limited to
             warranties of merchantability, fitness for a particular purpose, or non-infringement. We do not warrant
@@ -171,7 +197,7 @@ export default function TermsPage() {
           </p>
         </Section>
 
-        <Section id="liability" title="9. Limitation of Liability">
+        <Section id="liability" title="10. Limitation of Liability">
           <p>
             To the maximum extent permitted by applicable law, Arken Bot and its operators shall not be liable for any
             indirect, incidental, special, consequential, or punitive damages arising out of your use of or inability
@@ -179,7 +205,7 @@ export default function TermsPage() {
           </p>
         </Section>
 
-        <Section id="changes" title="10. Changes to These Terms">
+        <Section id="changes" title="11. Changes to These Terms">
           <p>
             We may update these Terms at any time. The &ldquo;Last updated&rdquo; date at the top of this page reflects
             when changes were most recently made. Continued use of the Service after changes are posted constitutes
@@ -187,7 +213,7 @@ export default function TermsPage() {
           </p>
         </Section>
 
-        <Section id="contact" title="11. Contact">
+        <Section id="contact" title="12. Contact">
           <p>
             If you have questions about these Terms, contact us at{' '}
             <a href={`mailto:${CONTACT_EMAIL}`} className="text-discord-blurple hover:underline">{CONTACT_EMAIL}</a>{' '}

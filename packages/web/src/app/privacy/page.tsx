@@ -123,7 +123,35 @@ export default function PrivacyPage() {
           <p><span className="text-white font-medium">No redistribution:</span> Reddit data is used only to trigger a Discord notification containing the post title, a link back to Reddit, and the author&apos;s public username. We do not store, archive, or redistribute Reddit content.</p>
         </Section>
 
-        <Section id="how-we-use" title="5. How We Use Your Data">
+        <Section id="monday" title="5. Monday.com Data">
+          <p>
+            Arken Bot can receive webhook notifications from{' '}
+            <a href="https://monday.com" target="_blank" rel="noopener noreferrer" className="text-discord-blurple hover:underline">monday.com</a>{' '}
+            when server administrators connect a board. Use of this feature is subject to the{' '}
+            <a href="https://monday.com/l/legal/tos/" target="_blank" rel="noopener noreferrer" className="text-discord-blurple hover:underline">monday.com Terms of Service</a>{' '}
+            and{' '}
+            <a href="https://monday.com/l/privacy/privacy-policy/" target="_blank" rel="noopener noreferrer" className="text-discord-blurple hover:underline">Privacy Policy</a>.
+          </p>
+          <p><span className="text-white font-medium">What we receive:</span> Board event payloads that monday.com pushes to a unique webhook URL configured by a server administrator — item names, board and group identifiers, column changes, and the numeric ID of the user who made the change. Payloads are processed transiently to build a Discord notification and are <strong>not stored</strong>.</p>
+          <p><span className="text-white font-medium">Optional API token:</span> Administrators may provide a monday.com API token to display user names instead of numeric IDs. The token is stored server-side, is never exposed through our API or dashboard, is used exclusively to look up display names, and is deleted when the administrator removes it or deletes the alert.</p>
+          <p><span className="text-white font-medium">Data stored:</span> Alert configuration only — the Discord channel, an optional board label, the event filter, and the optional API token. Resolved display names are cached in memory for up to one hour and never written to disk.</p>
+        </Section>
+
+        <Section id="trello" title="6. Trello Data">
+          <p>
+            Arken Bot can receive webhook notifications from{' '}
+            <a href="https://trello.com" target="_blank" rel="noopener noreferrer" className="text-discord-blurple hover:underline">Trello</a>{' '}
+            when server administrators connect a board. Use of this feature is subject to the{' '}
+            <a href="https://www.atlassian.com/legal/cloud-terms-of-service" target="_blank" rel="noopener noreferrer" className="text-discord-blurple hover:underline">Atlassian Cloud Terms of Service</a>{' '}
+            and the{' '}
+            <a href="https://www.atlassian.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-discord-blurple hover:underline">Atlassian Privacy Policy</a>.
+          </p>
+          <p><span className="text-white font-medium">What we receive:</span> Board action payloads that Trello pushes to a unique webhook URL — card and list names, comments, attachments metadata, and the display name of the member who performed the action. Payloads are processed transiently to build a Discord notification and are <strong>not stored</strong>.</p>
+          <p><span className="text-white font-medium">API credentials:</span> The Trello API key and token an administrator provides during setup are used <strong>once</strong> to register the webhook with Trello and to read the board&apos;s name. They are never written to our database and never stored.</p>
+          <p><span className="text-white font-medium">Data stored:</span> Alert configuration only — the Discord channel, the board ID and name, and the event filter. When an alert is deleted, the corresponding Trello webhook is deactivated automatically.</p>
+        </Section>
+
+        <Section id="how-we-use" title="7. How We Use Your Data">
           <ul className="list-disc list-inside space-y-1.5 pl-2">
             <li>To operate bot features configured by server administrators (moderation, leveling, alerts, etc.)</li>
             <li>To display your server&apos;s dashboard and settings on the web interface</li>
@@ -133,17 +161,19 @@ export default function PrivacyPage() {
           <p>We do not sell, share, or license your data to third parties for advertising or marketing purposes.</p>
         </Section>
 
-        <Section id="data-sharing" title="6. Data Sharing">
+        <Section id="data-sharing" title="8. Data Sharing">
           <p>We share data only with the following service providers necessary to operate the bot:</p>
           <ul className="list-disc list-inside space-y-1.5 pl-2">
             <li><span className="text-white font-medium">Discord</span> — to operate the bot and authenticate dashboard users via OAuth.</li>
             <li><span className="text-white font-medium">Google / YouTube</span> — public video metadata API calls for stream alert notifications. See <a href="#youtube" className="text-discord-blurple hover:underline">Section 3</a>.</li>
             <li><span className="text-white font-medium">Reddit</span> — public post metadata API calls for feed notifications. See <a href="#reddit" className="text-discord-blurple hover:underline">Section 4</a>.</li>
+            <li><span className="text-white font-medium">Monday.com</span> — inbound board event webhooks and optional display-name lookups. See <a href="#monday" className="text-discord-blurple hover:underline">Section 5</a>.</li>
+            <li><span className="text-white font-medium">Trello / Atlassian</span> — inbound board action webhooks; credentials used once at setup. See <a href="#trello" className="text-discord-blurple hover:underline">Section 6</a>.</li>
             <li><span className="text-white font-medium">Infrastructure providers</span> — hosting, database, and CDN providers bound by their own privacy policies and data processing agreements.</li>
           </ul>
         </Section>
 
-        <Section id="retention" title="7. Data Retention and Deletion">
+        <Section id="retention" title="9. Data Retention and Deletion">
           <p>
             Server configuration and moderation data is retained for as long as the bot remains in your Discord server. When the bot is removed from a server, data associated with that server is eligible for deletion upon request.
           </p>
@@ -157,25 +187,25 @@ export default function PrivacyPage() {
           </p>
         </Section>
 
-        <Section id="security" title="8. Security">
+        <Section id="security" title="10. Security">
           <p>
             We use industry-standard security measures including encrypted connections (HTTPS/TLS), access-controlled databases, and server-side API key storage to protect your data. No internet transmission is 100% secure, and we cannot guarantee absolute security.
           </p>
         </Section>
 
-        <Section id="childrens" title="9. Children's Privacy">
+        <Section id="childrens" title="11. Children's Privacy">
           <p>
             Arken Bot is not directed at children under the age of 13. We do not knowingly collect personal information from children under 13. If you believe we have inadvertently collected such information, please contact us immediately.
           </p>
         </Section>
 
-        <Section id="changes" title="10. Changes to This Policy">
+        <Section id="changes" title="12. Changes to This Policy">
           <p>
             We may update this Privacy Policy from time to time. The &ldquo;Last updated&rdquo; date at the top of this page reflects when the most recent changes were made. Continued use of Arken Bot after changes are posted constitutes acceptance of the updated policy.
           </p>
         </Section>
 
-        <Section id="contact" title="11. Contact">
+        <Section id="contact" title="13. Contact">
           <p>
             If you have questions about this Privacy Policy or want to request data deletion, contact us at{' '}
             <a href={`mailto:${CONTACT_EMAIL}`} className="text-discord-blurple hover:underline">{CONTACT_EMAIL}</a>{' '}
