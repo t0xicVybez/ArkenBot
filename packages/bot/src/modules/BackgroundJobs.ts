@@ -480,15 +480,25 @@ export class BackgroundJobs {
     const twitterBearerToken = process.env.TWITTER_BEARER_TOKEN;
     const redditClientId = process.env.REDDIT_CLIENT_ID;
     const redditClientSecret = process.env.REDDIT_CLIENT_SECRET;
+    const youtubeApiKey = process.env.YOUTUBE_API_KEY;
 
     try {
       const alerts = await prisma.streamAlert.findMany({ where: { enabled: true } });
       if (!alerts.length) return;
 
+      // YouTube alerts are deduplicated by channel — one pair of API calls per
+      // unique channel serves every server watching that creator.
+      const youtubeAlerts = alerts.filter((a) => a.platform === 'youtube');
+      const otherAlerts = alerts.filter((a) => a.platform !== 'youtube');
+
+      if (youtubeAlerts.length > 0 && youtubeApiKey) {
+        await this.runYouTubeAlerts(youtubeAlerts, youtubeApiKey);
+      }
+
       // Obtain a Twitch app token once up-front so every Twitch alert in this
       // cycle can reuse it rather than each alert hitting the token endpoint.
       let twitchToken: string | null = null;
-      if (twitchClientId && twitchClientSecret && alerts.some((a) => a.platform === 'twitch')) {
+      if (twitchClientId && twitchClientSecret && otherAlerts.some((a) => a.platform === 'twitch')) {
         const tokenRes = await fetch(
           `https://id.twitch.tv/oauth2/token?client_id=${twitchClientId}&client_secret=${twitchClientSecret}&grant_type=client_credentials`,
           { method: 'POST' },
@@ -502,7 +512,7 @@ export class BackgroundJobs {
       // Obtain a Reddit OAuth token. Reddit blocks datacenter IPs from the
       // public JSON API and RSS feeds; the OAuth endpoint works from any IP.
       let redditToken: string | null = null;
-      if (redditClientId && redditClientSecret && alerts.some((a) => a.platform === 'reddit')) {
+      if (redditClientId && redditClientSecret && otherAlerts.some((a) => a.platform === 'reddit')) {
         const creds = Buffer.from(`${redditClientId}:${redditClientSecret}`).toString('base64');
         const tokenRes = await fetch('https://www.reddit.com/api/v1/access_token', {
           method: 'POST',
@@ -526,15 +536,177 @@ export class BackgroundJobs {
       // Process alerts in parallel batches of 5 so we don't hammer external APIs
       // with all requests at once while still being much faster than sequential.
       const BATCH = 5;
-      for (let i = 0; i < alerts.length; i += BATCH) {
+      for (let i = 0; i < otherAlerts.length; i += BATCH) {
         await Promise.allSettled(
-          alerts.slice(i, i + BATCH).map((alert) =>
+          otherAlerts.slice(i, i + BATCH).map((alert) =>
             this.processStreamAlert(alert, twitchClientId ?? null, twitchClientSecret ?? null, twitchToken, twitterBearerToken ?? null, redditToken, rssParser),
           ),
         );
       }
     } catch (err) {
       logger.error({ err }, 'Stream alerts check failed');
+    }
+  }
+
+  // ── YouTube Live Alerts ─────────────────────────────────────────────────────
+
+  private async runYouTubeAlerts(
+    alerts: Awaited<ReturnType<typeof prisma.streamAlert.findMany>>,
+    apiKey: string,
+  ): Promise<void> {
+    // Resolve channel IDs lazily for any alert that hasn't been resolved yet.
+    for (const alert of alerts) {
+      if (alert.channelId) continue;
+      try {
+        const handle = alert.channelUsername.replace(/^@/, '');
+        const res = await fetch(
+          `https://www.googleapis.com/youtube/v3/channels?part=id&forHandle=${encodeURIComponent(handle)}&key=${apiKey}`,
+        ).catch(() => null);
+        if (!res?.ok) continue;
+        const data = await res.json() as { items?: Array<{ id: string }> };
+        const channelId = data.items?.[0]?.id;
+        if (!channelId) continue;
+        await prisma.streamAlert.update({ where: { id: alert.id }, data: { channelId } });
+        alert.channelId = channelId;
+        logger.info({ alertId: alert.id, channelId }, 'Resolved YouTube channel ID');
+      } catch (err) {
+        logger.error({ err, alertId: alert.id }, 'Failed to resolve YouTube channel ID');
+      }
+    }
+
+    // Group resolved alerts by unique channelId — one API call pair per channel.
+    const byChannel = new Map<string, typeof alerts>();
+    for (const alert of alerts) {
+      if (!alert.channelId) continue;
+      const group = byChannel.get(alert.channelId) ?? [];
+      group.push(alert);
+      byChannel.set(alert.channelId, group);
+    }
+
+    for (const [channelId, channelAlerts] of byChannel) {
+      try {
+        // The uploads playlist ID is always derived from the channel ID (UC→UU).
+        const uploadsPlaylistId = `UU${channelId.slice(2)}`;
+
+        const playlistRes = await fetch(
+          `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${uploadsPlaylistId}&maxResults=5&key=${apiKey}`,
+        ).catch(() => null);
+        if (!playlistRes?.ok) continue;
+
+        const playlistData = await playlistRes.json() as {
+          items?: Array<{ snippet: { resourceId: { videoId: string } } }>;
+        };
+        const videoIds = (playlistData.items ?? [])
+          .map((i) => i.snippet?.resourceId?.videoId)
+          .filter(Boolean) as string[];
+        if (!videoIds.length) continue;
+
+        const videosRes = await fetch(
+          `https://www.googleapis.com/youtube/v3/videos?part=snippet,liveStreamingDetails&id=${videoIds.join(',')}&key=${apiKey}`,
+        ).catch(() => null);
+        if (!videosRes?.ok) continue;
+
+        const videosData = await videosRes.json() as {
+          items?: Array<{
+            id: string;
+            snippet: {
+              title: string;
+              channelTitle: string;
+              liveBroadcastContent: string;
+              thumbnails: { maxres?: { url: string }; high?: { url: string }; medium?: { url: string } };
+            };
+          }>;
+        };
+
+        const liveVideo = videosData.items?.find(
+          (v) => v.snippet.liveBroadcastContent === 'live',
+        ) ?? null;
+
+        for (const alert of channelAlerts) {
+          await this.processYouTubeAlert(alert, liveVideo);
+        }
+      } catch (err) {
+        logger.error({ err, channelId }, 'YouTube channel live check failed');
+      }
+    }
+
+    // YouTube ToS compliance: purge any lastStreamId that has been stored for >30 days.
+    // Under normal operation, lastStreamId is cleared within minutes of a stream ending;
+    // this is a safety net for edge cases (bot outage, etc.).
+    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    await prisma.streamAlert.updateMany({
+      where: { platform: 'youtube', lastStreamId: { not: null }, createdAt: { lt: thirtyDaysAgo } },
+      data: { lastStreamId: null },
+    }).catch((err: unknown) => logger.warn({ err }, 'YouTube 30-day lastStreamId cleanup failed'));
+  }
+
+  private async processYouTubeAlert(
+    alert: Awaited<ReturnType<typeof prisma.streamAlert.findFirst>> & object,
+    liveVideo: {
+      id: string;
+      snippet: {
+        title: string;
+        channelTitle: string;
+        thumbnails: { maxres?: { url: string }; high?: { url: string }; medium?: { url: string } };
+      };
+    } | null,
+  ): Promise<void> {
+    try {
+      if (!liveVideo) {
+        if (alert.lastStreamId) {
+          await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastStreamId: null } });
+        }
+        return;
+      }
+
+      if (liveVideo.id === alert.lastStreamId) return;
+      await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastStreamId: liveVideo.id } });
+
+      const guild = this.client.guilds.cache.get(alert.guildId);
+      if (!guild) return;
+      const channel = guild.channels.cache.get(alert.discordChannelId) as TextChannel | undefined;
+      if (!channel?.isTextBased()) return;
+
+      const alertSettings = await getGuildSettings(alert.guildId);
+      const alertColor = alertSettings?.streamAlertColor
+        ? parseInt(alertSettings.streamAlertColor.replace('#', ''), 16)
+        : null;
+
+      const videoUrl = `https://www.youtube.com/watch?v=${liveVideo.id}`;
+      const channelName = liveVideo.snippet.channelTitle;
+      const streamTitle = liveVideo.snippet.title;
+      const thumbnail =
+        liveVideo.snippet.thumbnails.maxres?.url ??
+        liveVideo.snippet.thumbnails.high?.url ??
+        liveVideo.snippet.thumbnails.medium?.url ??
+        null;
+
+      const message = alert.message
+        .replace(/\{streamer\}/g, channelName)
+        .replace(/\{url\}/g, videoUrl)
+        .replace(/\{title\}/g, streamTitle)
+        .replace(/\{game\}/g, '')
+        .replace(/\s{2,}/g, ' ')
+        .trim();
+
+      const embed = new EmbedBuilder()
+        .setTitle(`${channelName} is live on YouTube!`)
+        .setDescription(streamTitle)
+        .setURL(videoUrl)
+        .setColor(alertColor ?? 0xff0000)
+        .setFooter({ text: 'YouTube' })
+        .setTimestamp();
+
+      if (thumbnail) embed.setImage(thumbnail);
+
+      const alertMsg = await channel.send({ content: message, embeds: [embed] });
+      await prisma.streamAlert.update({
+        where: { id: alert.id },
+        data: { lastMessageId: alertMsg.id, lastMessageChannelId: alertMsg.channelId },
+      }).catch(() => null);
+      logger.info({ guildId: alert.guildId, channelId: alert.channelId }, 'YouTube live alert sent');
+    } catch (err) {
+      logger.error({ err, alertId: alert.id }, 'Failed to process YouTube alert');
     }
   }
 

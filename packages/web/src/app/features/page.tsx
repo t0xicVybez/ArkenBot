@@ -774,6 +774,8 @@ export default function FeaturesPage() {
               Docs <ExternalLink className="w-2.5 h-2.5" />
             </a>
             <a href={SITE.supportUrl} target="_blank" rel="noopener noreferrer" className="hover:text-gray-300 transition-colors">Support</a>
+            <Link href="/privacy" className="hover:text-gray-300 transition-colors">Privacy</Link>
+            <Link href="/terms" className="hover:text-gray-300 transition-colors">Terms</Link>
           </div>
         </div>
       </footer>

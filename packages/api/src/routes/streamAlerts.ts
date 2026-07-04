@@ -30,12 +30,24 @@ export async function streamAlertRoutes(server: FastifyInstance): Promise<void> 
     if (!platform || !discordChannelId) {
       return reply.code(400).send({ success: false, error: 'platform and discordChannelId are required' });
     }
-    if (!['twitch', 'kick', 'twitter', 'reddit', 'rss'].includes(platform as string)) {
-      return reply.code(400).send({ success: false, error: 'platform must be twitch, kick, twitter, reddit, or rss' });
+    if (!['twitch', 'kick', 'twitter', 'reddit', 'rss', 'youtube'].includes(platform as string)) {
+      return reply.code(400).send({ success: false, error: 'platform must be twitch, kick, twitter, reddit, rss, or youtube' });
     }
 
     if (!channelUsername) {
       return reply.code(400).send({ success: false, error: 'platform, channelUsername and discordChannelId are required' });
+    }
+
+    // Normalise YouTube handles — strip URL prefix, ensure leading @
+    let normalizedUsername = (channelUsername as string).trim();
+    if (platform === 'youtube') {
+      normalizedUsername = normalizedUsername
+        .replace(/^https?:\/\/(www\.)?youtube\.com\//i, '')
+        .replace(/^@/, '')
+        .trim();
+      normalizedUsername = `@${normalizedUsername}`;
+    } else {
+      normalizedUsername = normalizedUsername.toLowerCase();
     }
 
     const resolvedMessage = await resolveRoleMentions(guildId, typeof message === 'string' ? message : undefined);
@@ -43,7 +55,7 @@ export async function streamAlertRoutes(server: FastifyInstance): Promise<void> 
       data: {
         guildId,
         platform: platform as string,
-        channelUsername: (channelUsername as string).toLowerCase(),
+        channelUsername: normalizedUsername,
         discordChannelId: discordChannelId as string,
         message: resolvedMessage ?? undefined,
       },
@@ -72,7 +84,19 @@ export async function streamAlertRoutes(server: FastifyInstance): Promise<void> 
     if (body.discordChannelId) data.discordChannelId = body.discordChannelId;
 
     if (body.channelUsername) {
-      data.channelUsername = (body.channelUsername as string).toLowerCase();
+      let newUsername = (body.channelUsername as string).trim();
+      if (existing.platform === 'youtube') {
+        newUsername = newUsername
+          .replace(/^https?:\/\/(www\.)?youtube\.com\//i, '')
+          .replace(/^@/, '')
+          .trim();
+        newUsername = `@${newUsername}`;
+        // Clear resolved channelId so the bot re-resolves on next poll
+        data.channelId = null;
+      } else {
+        newUsername = newUsername.toLowerCase();
+      }
+      data.channelUsername = newUsername;
     }
 
     if (body.message !== undefined) {
