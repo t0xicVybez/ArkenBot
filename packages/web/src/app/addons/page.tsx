@@ -2,7 +2,7 @@ import Link from 'next/link';
 import {
   Puzzle, ArrowRight, ChevronRight, ExternalLink,
   Check, Zap, Code2, Shield, Ticket,
-  Terminal, Package, BookOpen, Globe, Cpu,
+  Terminal, Package, BookOpen, Globe,
 } from 'lucide-react';
 import { LandingNav } from '@/components/LandingNav';
 
@@ -68,29 +68,6 @@ const FIRST_PARTY_ADDONS = [
     ],
   },
   {
-    id: 'rsm',
-    icon: Cpu,
-    color: 'text-lime-400',
-    bg: 'bg-lime-500/10',
-    border: 'border-lime-500/20',
-    accentBorder: 'border-lime-500/40',
-    badge: 'Official',
-    badgeColor: 'bg-lime-500/15 text-lime-400 border-lime-500/30',
-    title: 'RSM Server Manager',
-    tagline: 'Control game servers managed by Ronin Server Manager from Discord.',
-    description:
-      'Connect to your Ronin Server Manager instance and control all your game servers without leaving Discord. Start and stop servers, send console commands, view online players, and set up an auto-updating status channel that refreshes on a configurable interval.',
-    bullets: [
-      'List all servers managed by your RSM instance',
-      'Start and stop servers with a slash command',
-      'Send console commands to any server',
-      'View online players per server',
-      'Auto-updating status channel: posts and refreshes a server list embed on a configurable interval',
-      'Operator role restriction for sensitive commands',
-      'Configure RSM API credentials from the dashboard',
-    ],
-  },
-  {
     id: 'code-review',
     icon: Code2,
     color: 'text-fuchsia-400',
@@ -128,7 +105,7 @@ const SDK_FEATURES = [
 export const metadata = {
   title: 'Addons — Arken Bot',
   description:
-    'Explore Arken Bot first-party addons: Ticket System, Game Server Status, RSM Server Manager, and Code Review. Or build your own with the Arken Addon SDK.',
+    'Explore Arken Bot first-party addons: Ticket System, Game Server Status, and Code Review. Or build your own with the Arken Addon SDK.',
 };
 
 export default function AddonsPage() {
