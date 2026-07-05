@@ -41,7 +41,9 @@ import { userNoteRoutes } from './routes/userNotes.js';
 import { reportRoutes } from './routes/reports.js';
 import { mondayRoutes } from './routes/monday.js';
 import { trelloRoutes } from './routes/trello.js';
+import { auditLogRoutes } from './routes/auditLog.js';
 import { setupWebSocket } from './websocket/gateway.js';
+import { prisma } from './database.js';
 import { AuthService } from './services/AuthService.js';
 import { collectDefaultMetrics } from 'prom-client';
 
@@ -101,6 +103,37 @@ export async function createServer() {
 
   await server.register(fastifyWebSocket);
 
+
+  // ─── Dashboard Audit Trail ────────────────────────────────────────
+  // Records every successful mutating dashboard request against a guild
+  // (who changed what, when). Bodies are never stored — they can contain
+  // tokens and secrets. Root scope so it observes all route plugins.
+  const AUDIT_MUTATING = new Set(['POST', 'PATCH', 'DELETE']);
+  const AUDIT_GUILD_PATH = /^\/guilds\/(\d+)\/([^/?]+)/;
+  server.addHook('onResponse', async (request, reply) => {
+    try {
+      if (!AUDIT_MUTATING.has(request.method)) return;
+      if (reply.statusCode >= 400) return;
+      const match = AUDIT_GUILD_PATH.exec(request.url.split('?')[0]);
+      if (!match) return;
+      const [, guildId, section] = match;
+      if (section === 'audit-log') return;
+      const user = request.user as { id?: string; username?: string } | undefined;
+      if (!user?.id) return;
+      void prisma.dashboardAuditLog.create({
+        data: {
+          guildId,
+          userId: user.id,
+          username: user.username ?? null,
+          method: request.method,
+          path: request.url.split('?')[0].slice(0, 512),
+          section,
+          statusCode: reply.statusCode,
+        },
+      }).catch(() => undefined);
+    } catch { /* auditing must never break request handling */ }
+  });
+
   // ─── Routes ───────────────────────────────────────────────────────
   await server.register(authRoutes);
   await server.register(guildRoutes);
@@ -131,6 +164,7 @@ export async function createServer() {
   await server.register(reportRoutes);
   await server.register(mondayRoutes);
   await server.register(trelloRoutes);
+  await server.register(auditLogRoutes);
 
   // ─── WebSocket Gateway ────────────────────────────────────────────
   await setupWebSocket(server);

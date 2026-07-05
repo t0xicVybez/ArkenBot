@@ -1,9 +1,8 @@
 /**
  * guildDelete event — runs when the bot leaves or is removed from a guild.
- * Purges ALL data associated with the guild: deleting the Guild row cascades
- * to every FK-linked model (settings, levels, warnings, cases, alerts,
- * integrations, …); the handful of models that store guildId without a
- * foreign key are cleared explicitly.
+ * Marks the guild inactive and records leftAt; the actual data purge happens
+ * PURGE_GRACE_HOURS later via the BackgroundJobs sweep, so an accidental kick
+ * can be undone by re-inviting the bot within the grace window.
  */
 import type { Guild } from 'discord.js';
 import type { BotEvent } from '../types.js';
@@ -11,37 +10,23 @@ import { prisma } from '../database.js';
 import { logger } from '../logger.js';
 import { pub } from '../redis.js';
 import { invalidateSettingsCache } from '../utils/settings.js';
+import { PURGE_GRACE_HOURS } from '../utils/guildPurge.js';
 import { InviteTrackerModule } from '../modules/inviteTracker/InviteTrackerModule.js';
 
 const event: BotEvent = {
   name: 'guildDelete',
   async execute(_client: unknown, guild: Guild) {
-    logger.info(`Left guild: ${guild.name} (${guild.id})`);
+    logger.info(`Left guild: ${guild.name} (${guild.id}) — data purge scheduled in ${PURGE_GRACE_HOURS}h unless re-added`);
 
     // Evict from the in-process invite cache immediately so the Map doesn't
     // retain stale data for guilds the bot has permanently left.
     InviteTrackerModule.clearGuild(guild.id);
     await invalidateSettingsCache(guild.id).catch(() => undefined);
 
-    const results = await Promise.allSettled([
-      // Cascades to every model with a Guild foreign key.
-      prisma.guild.deleteMany({ where: { id: guild.id } }),
-      // These models store guildId as a plain column (no FK), so the
-      // cascade above cannot reach them.
-      prisma.addonData.deleteMany({ where: { guildId: guild.id } }),
-      prisma.userAchievement.deleteMany({ where: { guildId: guild.id } }),
-      prisma.serverDailyStats.deleteMany({ where: { guildId: guild.id } }),
-      prisma.reputation.deleteMany({ where: { guildId: guild.id } }),
-      prisma.starboardEntry.deleteMany({ where: { guildId: guild.id } }),
-      prisma.suggestion.deleteMany({ where: { guildId: guild.id } }),
-    ]);
-
-    const failed = results.filter((r) => r.status === 'rejected');
-    if (failed.length) {
-      logger.error({ guildId: guild.id, failures: failed.map((f) => String((f as PromiseRejectedResult).reason)) }, 'Guild purge completed with errors');
-    } else {
-      logger.info(`Purged all data for guild ${guild.id}`);
-    }
+    await prisma.guild.updateMany({
+      where: { id: guild.id },
+      data: { isActive: false, leftAt: new Date() },
+    }).catch((err) => logger.error({ err, guildId: guild.id }, 'Failed to mark guild as left'));
 
     await pub.publish('bot:events', JSON.stringify({
       type: 'guild:left',

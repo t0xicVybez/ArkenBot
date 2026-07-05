@@ -50,6 +50,7 @@ import {
   MessagesSquare,
   ClipboardList,
   Trello,
+  History,
   type LucideIcon,
 } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
@@ -137,6 +138,7 @@ const buildNavSections = (guildId: string, installedAddons: string[]): NavSectio
       label: 'System',
       items: [
         { href: `/dashboard/${guildId}/logs`, label: 'Logs', icon: FileText },
+        { href: `/dashboard/${guildId}/audit-log`, label: 'Audit Log', icon: History },
         { href: `/dashboard/${guildId}/announcements`, label: 'Announcements', icon: Megaphone },
         { href: `/dashboard/${guildId}/addons`, label: 'Addon Manager', icon: Puzzle },
         { href: `/dashboard/${guildId}/settings`, label: 'Settings', icon: Settings },

@@ -178,7 +178,7 @@ export default function PrivacyPage() {
             Server data is retained only for as long as the bot remains in your Discord server.
           </p>
           <p>
-            <span className="text-white font-medium">Automatic deletion on removal:</span> When Arken Bot is removed from a server, <strong>all</strong> data associated with that server is deleted automatically and immediately — configuration and settings, moderation records and warnings, XP and leveling data, birthdays, alert and feed configurations, integration settings, starboard and suggestion history, and analytics. No request is needed. If the bot is later re-added, the server starts with a clean slate.
+            <span className="text-white font-medium">Automatic deletion on removal:</span> When Arken Bot is removed from a server, <strong>all</strong> data associated with that server is deleted automatically within 72 hours — configuration and settings, moderation records and warnings, XP and leveling data, birthdays, alert and feed configurations, integration settings, starboard and suggestion history, and analytics. No request is needed. The 72-hour window exists solely as an accidental-removal safety net: re-adding the bot within that window restores the server exactly as it was; after the window, deletion is permanent and the server starts with a clean slate if re-added.
           </p>
           <p>
             To request deletion of data associated with your individual user account (for example, your data in servers you no longer share with the bot), contact us at{' '}

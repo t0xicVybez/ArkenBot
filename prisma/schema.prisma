@@ -63,6 +63,7 @@ model Guild {
   reports              Report[]
   mondayAlerts         MondayAlert[]
   trelloAlerts         TrelloAlert[]
+  dashboardAuditLogs   DashboardAuditLog[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1252,4 +1253,23 @@ model TrelloAlert {
   @@index([guildId])
   @@index([webhookToken])
   @@map("trello_alerts")
+}
+
+// ─────────────────────────────────────────────
+// Dashboard Audit Log (who changed what via the web dashboard)
+// ─────────────────────────────────────────────
+model DashboardAuditLog {
+  id         String   @id @default(cuid())
+  guildId    String
+  guild      Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  userId     String
+  username   String?
+  method     String   // POST | PATCH | DELETE
+  path       String   // request path, e.g. /guilds/123/automod
+  section    String   // dashboard area, e.g. "automod", "settings", "trello-alerts"
+  statusCode Int
+  createdAt  DateTime @default(now())
+
+  @@index([guildId, createdAt])
+  @@map("dashboard_audit_logs")
 }
