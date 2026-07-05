@@ -72,7 +72,49 @@ export class BackgroundJobs {
     // Mondays (UTC) so restarts mid-week don't double-post.
     setTimeout(() => this.timers.push(setInterval(() => void this.runWeeklyAnalytics(), 7 * 24 * 60 * 60 * 1000)), jitter());
 
-    logger.info('Background jobs started (birthdays, scheduled messages, stats channels, temp bans, temp roles, reminders, giveaways, stream alerts, xp decay, analytics, weekly analytics)');
+    // Purge data for guilds that left longer than the grace period ago.
+    void this.runGuildPurgeSweep();
+    setTimeout(() => this.timers.push(setInterval(() => void this.runGuildPurgeSweep(), 60 * 60 * 1000)), jitter());
+
+    // Heartbeat for the public status page — the API reads this key.
+    void this.beatHeartbeat();
+    this.timers.push(setInterval(() => void this.beatHeartbeat(), 30 * 1000));
+
+    logger.info('Background jobs started (birthdays, scheduled messages, stats channels, temp bans, temp roles, reminders, giveaways, stream alerts, xp decay, analytics, weekly analytics, guild purge sweep, heartbeat)');
+  }
+
+  /** Writes a short-lived Redis key so the API can report bot liveness. */
+  private async beatHeartbeat(): Promise<void> {
+    try {
+      const { pub } = await import('../redis.js');
+      await pub.set('bot:heartbeat', JSON.stringify({
+        at: Date.now(),
+        guilds: this.client.guilds.cache.size,
+        ws: this.client.ws.ping,
+      }), 'EX', 120);
+    } catch { /* redis hiccup — next beat will recover */ }
+  }
+
+  /**
+   * Permanently deletes all data for guilds whose grace period has elapsed.
+   * Guilds that re-added the bot in the meantime have isActive=true again
+   * (ensureGuildExists resets it) and are never selected here.
+   */
+  private async runGuildPurgeSweep(): Promise<void> {
+    try {
+      const { purgeGuildData, PURGE_GRACE_HOURS } = await import('../utils/guildPurge.js');
+      const cutoff = new Date(Date.now() - PURGE_GRACE_HOURS * 60 * 60 * 1000);
+      const expired = await prisma.guild.findMany({
+        where: { isActive: false, leftAt: { not: null, lt: cutoff } },
+        select: { id: true, name: true },
+      });
+      for (const guild of expired) {
+        logger.info({ guildId: guild.id, name: guild.name }, 'Grace period elapsed — purging guild data');
+        await purgeGuildData(guild.id);
+      }
+    } catch (err) {
+      logger.error({ err }, 'Guild purge sweep failed');
+    }
   }
 
   /** Clears all active intervals. Call during graceful shutdown. */

@@ -476,6 +476,11 @@ export const trelloApi = {
   delete: (guildId: string, id: string) => api.delete(`/guilds/${guildId}/trello-alerts/${id}`),
 };
 
+// ─── Dashboard Audit Log ──────────────────────────────────────────
+export const auditLogApi = {
+  list: (guildId: string, page = 1) => api.get(`/guilds/${guildId}/audit-log`, { params: { page } }),
+};
+
 // ─── Admin ────────────────────────────────────────────────────────
 export const adminApi = {
   getGuilds: (params?: object) => api.get('/admin/guilds', { params }),

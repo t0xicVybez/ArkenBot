@@ -1,8 +1,58 @@
 import type { FastifyInstance } from 'fastify';
 import { prisma } from '../database.js';
+import { redis } from '../redis.js';
 import { levelFromXp, xpForLevel } from '@arkenbot/shared';
 
 export async function publicRoutes(server: FastifyInstance): Promise<void> {
+  // GET /public/status — component health for the public status page.
+  // Reports only live, measured facts: no synthetic uptime percentages.
+  server.get('/public/status', async (_request, reply) => {
+    const now = Date.now();
+
+    // Database
+    let database = false;
+    let dbLatencyMs: number | null = null;
+    try {
+      const t = Date.now();
+      await prisma.$queryRaw`SELECT 1`;
+      dbLatencyMs = Date.now() - t;
+      database = true;
+    } catch { /* down */ }
+
+    // Redis
+    let cache = false;
+    try {
+      cache = (await redis.ping()) === 'PONG';
+    } catch { /* down */ }
+
+    // Bot — heartbeat key written every 30s by the bot process (EX 120)
+    let bot: { online: boolean; guilds: number | null; wsPingMs: number | null; lastSeen: string | null } =
+      { online: false, guilds: null, wsPingMs: null, lastSeen: null };
+    try {
+      const raw = await redis.get('bot:heartbeat');
+      if (raw) {
+        const hb = JSON.parse(raw) as { at: number; guilds: number; ws: number };
+        bot = {
+          online: now - hb.at < 90_000,
+          guilds: hb.guilds,
+          wsPingMs: hb.ws >= 0 ? hb.ws : null,
+          lastSeen: new Date(hb.at).toISOString(),
+        };
+      }
+    } catch { /* leave defaults */ }
+
+    return reply.send({
+      success: true,
+      data: {
+        api: { online: true, uptimeSeconds: Math.floor(process.uptime()) },
+        database: { online: database, latencyMs: dbLatencyMs },
+        cache: { online: cache },
+        bot,
+        checkedAt: new Date(now).toISOString(),
+      },
+    });
+  });
+
   // GET /public/stats — live stats for the landing page
   server.get('/public/stats', async (_request, reply) => {
     const [servers, users] = await Promise.all([
