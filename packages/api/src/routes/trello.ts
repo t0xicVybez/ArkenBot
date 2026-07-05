@@ -19,6 +19,8 @@ const EVENT_META: Record<string, { label: string; emoji: string; color: number }
   add_member:      { label: 'Member Added to Card',  emoji: '➕', color: 0x0ea5e9 },
   remove_member:   { label: 'Member Removed',        emoji: '➖', color: 0xef4444 },
   add_attachment:  { label: 'Attachment Added',      emoji: '📎', color: 0x7c3aed },
+  add_label:       { label: 'Label Added',           emoji: '🏷️', color: 0x22c55e },
+  remove_label:    { label: 'Label Removed',         emoji: '🏷️', color: 0xf97316 },
   create_list:     { label: 'List Created',          emoji: '📂', color: 0x3b82f6 },
   rename_list:     { label: 'List Renamed',          emoji: '🏷️', color: 0x6366f1 },
   checkitem_state: { label: 'Checklist Item Toggled', emoji: '☑️', color: 0x14b8a6 },
@@ -37,6 +39,8 @@ function normalizeAction(action: Record<string, any>): string {
     case 'addMemberToCard':           return 'add_member';
     case 'removeMemberFromCard':      return 'remove_member';
     case 'addAttachmentToCard':       return 'add_attachment';
+    case 'addLabelToCard':            return 'add_label';
+    case 'removeLabelFromCard':       return 'remove_label';
     case 'createList':                return 'create_list';
     case 'updateCheckItemStateOnCard': return 'checkitem_state';
     case 'updateList':
@@ -74,6 +78,10 @@ function buildEmbed(normalizedType: string, action: Record<string, any>, boardLa
   const cardField = () => addField('Card', cardUrl ? `[${card.name ?? 'View card'}](${cardUrl})` : (card.name ?? '—'));
   const boardField = () => addField('Board', boardUrl ? `[${boardName}](${boardUrl})` : boardName);
 
+  // Discord-native timestamp, or *none* when the value was cleared.
+  const fmtDate = (v: unknown) =>
+    typeof v === 'string' && v ? `<t:${Math.floor(Date.parse(v) / 1000)}:f>` : '*none*';
+
   switch (normalizedType) {
     case 'create_card':
       cardField(); boardField();
@@ -109,10 +117,40 @@ function buildEmbed(normalizedType: string, action: Record<string, any>, boardLa
       if (target) addField('Member', `**${target}**`);
       break;
     }
+    case 'update_card': {
+      cardField(); boardField();
+      // Trello's `data.old` holds the previous value of every field that
+      // changed — enumerate them so the embed says exactly what happened.
+      const old = data.old ?? {};
+      const changes: string[] = [];
+      if ('desc' in old) {
+        const newDesc = String(card.desc ?? '').trim();
+        changes.push(newDesc
+          ? `**Description** updated:\n> ${newDesc.slice(0, 300).replace(/\n/g, '\n> ')}`
+          : '**Description** removed');
+      }
+      if ('due' in old) changes.push(`**Due date:** ${fmtDate(old.due)} → ${fmtDate(card.due)}`);
+      if ('start' in old) changes.push(`**Start date:** ${fmtDate(old.start)} → ${fmtDate(card.start)}`);
+      if ('dueComplete' in old) changes.push(card.dueComplete ? '**Due date** marked complete ✅' : '**Due date** marked incomplete');
+      if ('dueReminder' in old) changes.push('**Due date reminder** changed');
+      if ('pos' in old) changes.push('**Position** changed within list');
+      if (changes.length) addField('Changes', changes.join('\n').slice(0, 1024), false);
+      break;
+    }
+
     case 'add_attachment': {
       cardField(); boardField();
       const att = data.attachment ?? {};
       addField('Attachment', att.url ? `[${att.name ?? 'View attachment'}](${att.url})` : (att.name ?? '—'), false);
+      break;
+    }
+
+    case 'add_label':
+    case 'remove_label': {
+      cardField(); boardField();
+      const label = data.label ?? {};
+      const labelText = [label.name, label.color ? `(${label.color})` : null].filter(Boolean).join(' ');
+      addField('Label', labelText || '—');
       break;
     }
     case 'create_list':

@@ -21,6 +21,8 @@ const ALL_EVENTS = [
   { value: 'add_member',      label: 'Member Added' },
   { value: 'remove_member',   label: 'Member Removed' },
   { value: 'add_attachment',  label: 'Attachment Added' },
+  { value: 'add_label',       label: 'Label Added' },
+  { value: 'remove_label',    label: 'Label Removed' },
   { value: 'create_list',     label: 'List Created' },
   { value: 'rename_list',     label: 'List Renamed' },
   { value: 'checkitem_state', label: 'Checklist Toggled' },
