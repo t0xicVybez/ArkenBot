@@ -4,7 +4,7 @@ import {
   Megaphone, ArrowRight, Check, ExternalLink,
   Star, Gift, Radio, Lightbulb, Calendar,
   BarChart2, Clock, Command, Zap, ChevronRight, Trophy, ThumbsUp, LineChart, Palette, Hash, UserPlus, MessageSquare, UserCheck,
-  Mic, ShieldAlert, ShieldCheck, MessagesSquare, Flag, BarChart,
+  Mic, ShieldAlert, ShieldCheck, MessagesSquare, Flag, BarChart, Trello,
 } from 'lucide-react';
 import { LandingNav } from '@/components/LandingNav';
 
@@ -377,15 +377,36 @@ const FEATURE_SECTIONS = [
     title: 'Stream Alerts',
     tagline: 'Notify your community the moment anything goes live or gets posted.',
     description:
-      'Monitor Twitch, Kick, X (Twitter), Reddit, and RSS/Podcast feeds and automatically post a notification embed in any Discord channel when there is new content. Keep your community engaged without manual announcements.',
+      'Monitor Twitch, Kick, YouTube, X (Twitter), Reddit, and RSS/Podcast feeds and automatically post a notification embed in any Discord channel when there is new content. Keep your community engaged without manual announcements.',
     bullets: [
       'Twitch: alerts when a channel goes live',
       'Kick: alerts when a Kick.com channel goes live',
+      'YouTube: alerts when a channel starts a live stream',
       'X (Twitter): alerts when a user posts a new tweet',
       'Reddit: alerts when a subreddit gets a new post',
       'RSS / Podcast: alerts when a feed publishes a new episode or post',
       'Configurable alert channel and custom message per alert',
       'Multiple alerts tracked simultaneously across platforms',
+    ],
+  },
+  {
+    id: 'board-alerts',
+    icon: Trello,
+    color: 'text-sky-400',
+    bg: 'bg-sky-500/10',
+    border: 'border-sky-500/20',
+    accentBorder: 'border-sky-500/40',
+    title: 'monday.com & Trello Alerts',
+    tagline: 'Bring your project boards into Discord.',
+    description:
+      'Connect monday.com boards and Trello boards to Discord and get a detailed embed the moment anything changes — cards and items created, moved, renamed, commented on, and more. Perfect for teams that coordinate in Discord.',
+    bullets: [
+      'monday.com: item created/renamed/moved, column changes, comments, archives, and more via webhooks',
+      'Trello: card created/moved/renamed/updated, comments, labels, attachments, members, and checklist changes',
+      'Trello webhooks are registered automatically — no manual API calls needed',
+      'Optional monday.com API token resolves user IDs to real display names in embeds',
+      'Per-alert event filters — subscribe to exactly the events you want',
+      'Embeds link directly to the card, item, and board',
     ],
   },
   {

@@ -6,7 +6,7 @@ import {
   Gift, Radio, Lightbulb, Calendar, Gamepad2,
   BarChart2, Clock, Settings, Command, Globe, X,
   Mic, ShieldAlert, ShieldCheck, MessagesSquare, Flag, BarChart,
-} from 'lucide-react';
+  Trello } from 'lucide-react';
 import { LandingNav } from '@/components/LandingNav';
 
 import type { Metadata } from 'next';
@@ -124,7 +124,15 @@ const FEATURES = [
     bg: 'bg-rose-500/10',
     border: 'border-rose-500/20',
     title: 'Stream Alerts',
-    desc: 'Get notified when Twitch or Kick channels go live, or when Twitter, Reddit, or RSS feeds update. Posts a notification embed automatically.',
+    desc: 'Get notified when Twitch, Kick, or YouTube channels go live, or when Twitter, Reddit, or RSS feeds update. Posts a notification embed automatically.',
+  },
+  {
+    icon: Trello,
+    color: 'text-sky-400',
+    bg: 'bg-sky-500/10',
+    border: 'border-sky-500/20',
+    title: 'monday.com & Trello Alerts',
+    desc: 'Connect your project boards to Discord. Detailed embeds when cards and items are created, moved, renamed, commented on, and more.',
   },
   {
     icon: Star,
@@ -924,6 +932,7 @@ export default async function LandingPage() {
           <div className="border-t border-[var(--border-subtle)] pt-6 flex flex-col sm:flex-row items-center justify-between gap-2">
             <span className="text-[var(--text-muted)] text-xs">© {new Date().getFullYear()} {SITE.name}. All rights reserved.</span>
             <div className="flex items-center gap-4">
+              <Link href="/changelog" className="text-[var(--text-muted)] text-xs hover:text-[var(--text-secondary)] transition-colors">Changelog</Link>
               <Link href="/privacy" className="text-[var(--text-muted)] text-xs hover:text-[var(--text-secondary)] transition-colors">Privacy Policy</Link>
               <Link href="/terms" className="text-[var(--text-muted)] text-xs hover:text-[var(--text-secondary)] transition-colors">Terms of Service</Link>
               <span className="text-[var(--text-muted)] text-xs">Made with care for Discord communities.</span>

@@ -12,6 +12,26 @@ export async function publicRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: { servers, users } });
   });
 
+  // GET /public/changelog — staff announcements, newest first, for the public changelog page
+  server.get('/public/changelog', async (request, reply) => {
+    const query = request.query as { page?: string; limit?: string };
+    const page = Math.max(1, parseInt(query.page ?? '1', 10));
+    const limit = Math.min(50, Math.max(1, parseInt(query.limit ?? '20', 10)));
+
+    const [entries, total] = await Promise.all([
+      prisma.botAnnouncement.findMany({
+        orderBy: { sentAt: 'desc' },
+        skip: (page - 1) * limit,
+        take: limit,
+        // authorId and guildCount are internal — expose only public fields
+        select: { id: true, title: true, body: true, type: true, sentAt: true },
+      }),
+      prisma.botAnnouncement.count(),
+    ]);
+
+    return reply.send({ success: true, data: { entries, total, page, pages: Math.ceil(total / limit) } });
+  });
+
   // GET /public/leaderboard/:guildId — no auth required
   server.get('/public/leaderboard/:guildId', async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
