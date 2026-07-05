@@ -737,7 +737,7 @@ export default function FeaturesPage() {
             <p className="text-xs font-semibold text-fuchsia-400 uppercase tracking-widest mb-2">Want even more?</p>
             <h3 className="text-white font-bold text-xl mb-2">Extend Arken with Addons</h3>
             <p className="text-gray-400 text-sm leading-relaxed">
-              The addon system adds Tickets, Game Server Status, RSM Server Manager, and Code Review — all installable from the dashboard. Or build your own with the TypeScript SDK.
+              The addon system adds Tickets, Game Server Status, and Code Review — all installable from the dashboard. Or build your own with the TypeScript SDK.
             </p>
           </div>
           <Link
