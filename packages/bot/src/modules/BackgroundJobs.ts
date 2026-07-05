@@ -265,47 +265,76 @@ export class BackgroundJobs {
       const guild = this.client.guilds.cache.get(msg.guildId);
       const channel = guild?.channels.cache.get(msg.channelId) as TextChannel | undefined;
 
-      if (channel?.isTextBased()) {
-        const roleMention = (msg as unknown as { roleMentionId?: string | null }).roleMentionId
-          ? `<@&${(msg as unknown as { roleMentionId: string }).roleMentionId}> `
-          : '';
-        if (msg.embed) {
-          const schedSettings = await getGuildSettings(msg.guildId);
-          const schedColor = schedSettings?.scheduledMessageColor
-            ? parseInt(schedSettings.scheduledMessageColor.replace('#', ''), 16)
-            : 0x5865f2;
-          await channel.send({
-            content: roleMention || undefined,
-            embeds: [
-              new EmbedBuilder()
-                .setDescription(msg.content)
-                .setColor(schedColor)
-                .setTimestamp(),
-            ],
-          });
-        } else {
-          await channel.send({ content: `${roleMention}${msg.content}` });
-        }
+      if (!channel?.isTextBased()) {
+        await this.recordScheduledFailure(msg.id, 'Channel not found — deleted or the bot lost access');
+        return;
       }
 
-      // Advance to the next occurrence; disable the record if it has no repeat interval.
-      const nextAt = getNextOccurrence(msg.scheduledAt, msg.repeat ?? null);
-      if (nextAt) {
-        await prisma.scheduledMessage.update({
-          where: { id: msg.id },
-          data: { scheduledAt: nextAt },
+      const roleMention = (msg as unknown as { roleMentionId?: string | null }).roleMentionId
+        ? `<@&${(msg as unknown as { roleMentionId: string }).roleMentionId}> `
+        : '';
+      if (msg.embed) {
+        const schedSettings = await getGuildSettings(msg.guildId);
+        const schedColor = schedSettings?.scheduledMessageColor
+          ? parseInt(schedSettings.scheduledMessageColor.replace('#', ''), 16)
+          : 0x5865f2;
+        await channel.send({
+          content: roleMention || undefined,
+          embeds: [
+            new EmbedBuilder()
+              .setDescription(msg.content)
+              .setColor(schedColor)
+              .setTimestamp(),
+          ],
         });
       } else {
-        await prisma.scheduledMessage.update({
-          where: { id: msg.id },
-          data: { enabled: false },
-        });
+        await channel.send({ content: `${roleMention}${msg.content}` });
       }
+
+      // Advance to the next occurrence; disable the record if it has no repeat
+      // interval. A successful send also resets the consecutive-failure counter.
+      const nextAt = getNextOccurrence(msg.scheduledAt, msg.repeat ?? null);
+      await prisma.scheduledMessage.update({
+        where: { id: msg.id },
+        data: nextAt
+          ? { scheduledAt: nextAt, failureCount: 0, lastError: null }
+          : { enabled: false, failureCount: 0, lastError: null },
+      });
 
       logger.info({ id: msg.id, guildId: msg.guildId }, 'Scheduled message sent');
     } catch (err) {
       logger.error({ err, id: msg.id }, 'Failed to send scheduled message');
+      // Permission-type failures repeat forever until someone fixes the
+      // channel — count them and auto-disable instead of retrying every minute.
+      const code = (err as { code?: number }).code;
+      if (code === 50001 || code === 50013 || code === 10003) {
+        const reason = `Discord error ${code}: ${(err as Error).message ?? 'permission denied'}`;
+        await this.recordScheduledFailure(msg.id, reason);
+      }
     }
+  }
+
+  /**
+   * Increments a scheduled message's consecutive-failure counter and disables
+   * it once the threshold is reached, so broken configurations stop retrying
+   * every minute. The counter resets on any successful delivery.
+   */
+  private async recordScheduledFailure(id: string, reason: string): Promise<void> {
+    const MAX_FAILURES = 5;
+    try {
+      const updated = await prisma.scheduledMessage.update({
+        where: { id },
+        data: { failureCount: { increment: 1 }, lastError: reason.slice(0, 300) },
+        select: { failureCount: true, guildId: true },
+      });
+      if (updated.failureCount >= MAX_FAILURES) {
+        await prisma.scheduledMessage.update({ where: { id }, data: { enabled: false } });
+        logger.warn(
+          { id, guildId: updated.guildId, failures: updated.failureCount, reason },
+          `Scheduled message auto-disabled after ${MAX_FAILURES} consecutive failures`,
+        );
+      }
+    } catch { /* row deleted mid-flight — nothing to record */ }
   }
 
   // ── Stats Channels ──────────────────────────────────────────────────────────
