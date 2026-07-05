@@ -16,6 +16,8 @@ type ScheduledMessage = {
   repeat: 'none' | 'hourly' | 'daily' | 'weekly';
   enabled: boolean;
   roleMentionId?: string | null;
+  failureCount?: number;
+  lastError?: string | null;
 };
 
 const REPEAT_OPTIONS = [
@@ -161,6 +163,11 @@ export default function ScheduledMessagesPage() {
                       onChange={(v) => toggleMutation.mutate({ id: msg.id, enabled: v })}
                       disabled={toggleMutation.isPending}
                     />
+                    {!msg.enabled && msg.lastError && (
+                      <p className="text-[11px] text-red-400/90 mt-1 max-w-[200px]" title={msg.lastError}>
+                        Auto-disabled: {msg.lastError}
+                      </p>
+                    )}
                   </td>
                   <td className="px-4 py-3 text-right">
                     <button

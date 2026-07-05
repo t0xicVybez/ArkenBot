@@ -663,6 +663,8 @@ model ScheduledMessage {
   lastSentAt     DateTime?
   enabled        Boolean   @default(true)
   roleMentionId  String?   // role to ping when message is sent
+  failureCount   Int       @default(0)  // consecutive delivery failures; auto-disabled at 5
+  lastError      String?   // most recent delivery failure reason
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
