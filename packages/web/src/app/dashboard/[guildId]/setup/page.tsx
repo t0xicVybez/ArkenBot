@@ -2,11 +2,11 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { settingsApi, guildsApi } from '@/lib/api';
+import { settingsApi, guildsApi, configTransferApi } from '@/lib/api';
 import { Toggle } from '@/components/Toggle';
 import toast from 'react-hot-toast';
 import { useState } from 'react';
-import { Check, ChevronRight, ChevronLeft, Sparkles, MessageSquare, Shield, Bot, TrendingUp, PartyPopper } from 'lucide-react';
+import { Check, ChevronRight, ChevronLeft, Sparkles, MessageSquare, Shield, Bot, TrendingUp, PartyPopper, Upload } from 'lucide-react';
 import Link from 'next/link';
 
 interface GuildChannel { id: string; name: string; type: number }
@@ -70,6 +70,41 @@ export default function SetupWizardPage() {
           <p className="text-gray-500 text-sm">Configure the essentials in a few steps</p>
         </div>
       </div>
+
+      {/* Restore from a backup instead of configuring from scratch */}
+      {step === 0 && (
+        <div className="mb-6 rounded-xl border border-discord-blurple/25 bg-discord-blurple/5 p-4 flex flex-col sm:flex-row sm:items-center gap-3">
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-white">Have a backup file?</p>
+            <p className="text-xs text-gray-400 mt-0.5">
+              Restore a previously downloaded server config and skip the wizard entirely.
+            </p>
+          </div>
+          <label className="btn-secondary flex items-center gap-2 cursor-pointer whitespace-nowrap">
+            <Upload className="w-4 h-4" /> Restore from backup
+            <input
+              type="file"
+              accept="application/json,.json"
+              className="hidden"
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                e.target.value = '';
+                if (!file) return;
+                try {
+                  const parsed = JSON.parse(await file.text());
+                  const res = await configTransferApi.import(guildId, parsed);
+                  const counts = (res.data as { data?: { imported?: Record<string, number> } })?.data?.imported ?? {};
+                  toast.success(`Backup restored (${Object.keys(counts).length} sections) — you're all set!`);
+                  router.push(`/dashboard/${guildId}`);
+                } catch (err) {
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  toast.error((err as any)?.response?.data?.error ?? 'Import failed — is this an ArkenBot config file?');
+                }
+              }}
+            />
+          </label>
+        </div>
+      )}
 
       {/* Step progress */}
       <div className="flex items-center gap-1 mb-8 overflow-x-auto pb-1">
