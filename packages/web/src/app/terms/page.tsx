@@ -17,7 +17,7 @@ const SITE = {
   supportUrl: 'https://discord.gg/fXJnYPdHRX',
 };
 
-const LAST_UPDATED = 'July 4, 2025';
+const LAST_UPDATED = 'July 5, 2026';
 const CONTACT_EMAIL = 'support@arkenbot.app';
 
 function Section({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {

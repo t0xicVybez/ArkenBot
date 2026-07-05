@@ -17,7 +17,7 @@ const SITE = {
   supportUrl: 'https://discord.gg/fXJnYPdHRX',
 };
 
-const LAST_UPDATED = 'July 4, 2025';
+const LAST_UPDATED = 'July 5, 2026';
 const CONTACT_EMAIL = 'support@arkenbot.app';
 
 function Section({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
@@ -175,10 +175,13 @@ export default function PrivacyPage() {
 
         <Section id="retention" title="9. Data Retention and Deletion">
           <p>
-            Server configuration and moderation data is retained for as long as the bot remains in your Discord server. When the bot is removed from a server, data associated with that server is eligible for deletion upon request.
+            Server data is retained only for as long as the bot remains in your Discord server.
           </p>
           <p>
-            To request deletion of all data associated with your Discord server or user account, please contact us at{' '}
+            <span className="text-white font-medium">Automatic deletion on removal:</span> When Arken Bot is removed from a server, <strong>all</strong> data associated with that server is deleted automatically and immediately — configuration and settings, moderation records and warnings, XP and leveling data, birthdays, alert and feed configurations, integration settings, starboard and suggestion history, and analytics. No request is needed. If the bot is later re-added, the server starts with a clean slate.
+          </p>
+          <p>
+            To request deletion of data associated with your individual user account (for example, your data in servers you no longer share with the bot), contact us at{' '}
             <a href={`mailto:${CONTACT_EMAIL}`} className="text-discord-blurple hover:underline">{CONTACT_EMAIL}</a>.
             We will process deletion requests within 30 days.
           </p>
