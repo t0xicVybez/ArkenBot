@@ -42,6 +42,7 @@ import { reportRoutes } from './routes/reports.js';
 import { mondayRoutes } from './routes/monday.js';
 import { trelloRoutes } from './routes/trello.js';
 import { auditLogRoutes } from './routes/auditLog.js';
+import { configTransferRoutes } from './routes/configTransfer.js';
 import { setupWebSocket } from './websocket/gateway.js';
 import { prisma } from './database.js';
 import { AuthService } from './services/AuthService.js';
@@ -165,6 +166,7 @@ export async function createServer() {
   await server.register(mondayRoutes);
   await server.register(trelloRoutes);
   await server.register(auditLogRoutes);
+  await server.register(configTransferRoutes);
 
   // ─── WebSocket Gateway ────────────────────────────────────────────
   await setupWebSocket(server);

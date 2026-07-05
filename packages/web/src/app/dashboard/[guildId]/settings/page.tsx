@@ -2,12 +2,12 @@
 
 import { useParams } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { settingsApi, guildsApi, personalizationApi } from '@/lib/api';
+import { settingsApi, guildsApi, personalizationApi, configTransferApi } from '@/lib/api';
 import { SettingsSection } from '@/components/SettingsSection';
 import toast from 'react-hot-toast';
 import { useState, useEffect, useRef } from 'react';
 import type { GuildSettings } from '@arkenbot/shared';
-import { Settings } from 'lucide-react';
+import { Settings, Download, Upload } from 'lucide-react';
 
 export default function SettingsPage() {
   const { guildId } = useParams() as { guildId: string };
@@ -245,6 +245,65 @@ export default function SettingsPage() {
             </div>
           );
         })}
+      </SettingsSection>
+
+      <SettingsSection
+        title="Backup & Restore"
+        description="Download this server's full configuration as a JSON file, or restore a previous backup. User data (levels, warnings, cases) and secrets are never included."
+      >
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            onClick={async () => {
+              try {
+                const res = await configTransferApi.export(guildId);
+                const blob = new Blob([JSON.stringify(res.data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `arkenbot-config-${guildId}-${new Date().toISOString().slice(0, 10)}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+                toast.success('Configuration downloaded');
+              } catch {
+                toast.error('Export failed');
+              }
+            }}
+            className="btn-primary flex items-center gap-2"
+          >
+            <Download className="w-4 h-4" /> Download server config
+          </button>
+
+          <label className="btn-secondary flex items-center gap-2 cursor-pointer">
+            <Upload className="w-4 h-4" /> Restore from backup
+            <input
+              type="file"
+              accept="application/json,.json"
+              className="hidden"
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                e.target.value = '';
+                if (!file) return;
+                if (!confirm('Restoring a backup REPLACES the settings sections contained in the file. Continue?')) return;
+                try {
+                  const text = await file.text();
+                  const parsed = JSON.parse(text);
+                  const res = await configTransferApi.import(guildId, parsed);
+                  const counts = (res.data as { data?: { imported?: Record<string, number> } })?.data?.imported ?? {};
+                  const total = Object.values(counts).reduce((a, b) => a + b, 0);
+                  toast.success(`Backup restored — ${total} item${total === 1 ? '' : 's'} across ${Object.keys(counts).length} sections`);
+                  queryClient.invalidateQueries();
+                } catch (err) {
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  toast.error((err as any)?.response?.data?.error ?? 'Import failed — is this an ArkenBot config file?');
+                }
+              }}
+            />
+          </label>
+        </div>
+        <p className="text-xs text-gray-500 mt-3">
+          Tip: download a backup before removing the bot — server data is permanently deleted 72 hours after removal.
+          Monday.com alerts are restored with fresh webhook URLs that must be re-pasted into monday.com.
+        </p>
       </SettingsSection>
     </div>
   );
