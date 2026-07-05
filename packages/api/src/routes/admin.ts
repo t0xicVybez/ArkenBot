@@ -232,46 +232,98 @@ export async function adminRoutes(server: FastifyInstance): Promise<void> {
     // Parse conventional commit subjects (feat/fix/chore/perf/refactor/docs/ci/…).
     const CONV = /^(feat|fix|hotfix|perf|refactor|chore|docs|style|test|ci|build|revert)(?:\(([^)]+)\))?!?:\s*(.+)$/i;
 
+    // Commits that mean nothing to server owners — never announce these.
+    const NOISE = /submodule|tsbuildinfo|merge (branch|pull)|bump version|version bump|lockfile|\.gitignore|typo|lint|eslint|prettier|dependabot/i;
+
     const features: string[] = [];
     const fixes: string[] = [];
     const improvements: string[] = [];
-    const other: string[] = [];
 
     for (const line of rawLog.split('\n')) {
-      if (!line.trim()) continue;
-      const m = line.match(CONV);
-      if (!m) {
-        // Non-conventional commit — include as-is, capitalised.
-        other.push(line.trim().replace(/^./, (c) => c.toUpperCase()));
-        continue;
-      }
+      const trimmed = line.trim();
+      if (!trimmed || NOISE.test(trimmed)) continue;
+      const m = trimmed.match(CONV);
+      // Non-conventional commits are usually internal chatter — skip them.
+      if (!m) continue;
       const [, commitType, , subject] = m;
       // Capitalise first letter and strip trailing PR numbers for readability.
       const clean = subject.charAt(0).toUpperCase() + subject.slice(1).replace(/\s*\(#\d+\)$/, '');
       const t = commitType.toLowerCase();
       if (t === 'feat') features.push(clean);
-      else if (t === 'fix' || t === 'hotfix') fixes.push(clean);
-      else improvements.push(clean);
+      else if (t === 'fix' || t === 'hotfix' || t === 'revert') fixes.push(clean);
+      else if (t === 'perf' || t === 'docs') improvements.push(clean);
+      // chore/style/test/ci/build/refactor are internal-only — skipped
+    }
+
+    if (!features.length && !fixes.length && !improvements.length) {
+      return reply.code(400).send({ success: false, error: 'No user-facing changes found in recent commits.' });
     }
 
     let type = 'update';
-    if (features.length > 0 && fixes.length === 0 && other.length === 0) type = 'feature';
-    else if (fixes.length > 0 && features.length === 0 && other.length === 0) type = 'hotfix';
+    if (features.length > 0 && fixes.length === 0) type = 'feature';
+    else if (fixes.length > 0 && features.length === 0) type = 'hotfix';
 
+    // Readable deterministic draft: one bullet per line under clear headings.
+    // Used as-is when no Groq key is configured, and as the fallback otherwise.
     const sections: string[] = [];
-    if (features.length) sections.push(`✨ **New:** ${features.join(' • ')}`);
-    if (fixes.length) sections.push(`🐛 **Fixed:** ${fixes.join(' • ')}`);
-    if (improvements.length) sections.push(`⚡ **Improved:** ${improvements.join(' • ')}`);
-    if (other.length) sections.push(`📋 **Other:** ${other.join(' • ')}`);
+    if (features.length) sections.push(`✨ **What's New**\n${features.map((f) => `• ${f}`).join('\n')}`);
+    if (improvements.length) sections.push(`⚡ **Improvements**\n${improvements.map((f) => `• ${f}`).join('\n')}`);
+    if (fixes.length) sections.push(`🐛 **Bug Fixes**\n${fixes.map((f) => `• ${f}`).join('\n')}`);
 
-    let title = 'Arken Bot — Update';
-    if (type === 'feature') title = `Arken Bot — New Feature${features.length > 1 ? 's' : ''} Available`;
-    else if (type === 'hotfix') title = `Arken Bot — Bug Fix${fixes.length > 1 ? 'es' : ''}`;
-    else if (features.length && fixes.length) title = 'Arken Bot — Improvements & Bug Fixes';
+    let title = 'ArkenBot Update';
+    if (type === 'feature') title = features.length > 1 ? 'New Features Just Landed' : 'A New Feature Just Landed';
+    else if (type === 'hotfix') title = 'Bug Fixes Deployed';
+    else if (features.length && fixes.length) title = 'New Features & Fixes';
+
+    let body = sections.join('\n\n');
+
+    // Groq pass — rewrite the developer commit notes into friendly, non-technical
+    // language for the community. Falls back to the draft above on any failure.
+    const groqKey = process.env.GROQ_API_KEY;
+    if (groqKey) {
+      try {
+        const prompt = [
+          'You write short, friendly Discord announcements for ArkenBot, a free Discord bot.',
+          'Rewrite the developer changelog below for server owners and members with no technical background.',
+          'Rules:',
+          '- Plain, upbeat language. No jargon: never say API, webhook, endpoint, schema, refactor, submodule, repo, backend, or route.',
+          '- Describe what each change means for the user, not how it was built.',
+          '- Group into sections with these exact headers when relevant: "✨ **What\'s New**", "⚡ **Improvements**", "🐛 **Bug Fixes**".',
+          '- One bullet per change starting with "• ". Merge closely related changes into one bullet. Maximum 8 bullets total.',
+          '- Discord markdown only. Keep the whole body under 1500 characters.',
+          'Respond with ONLY a JSON object: {"title": "...", "body": "..."} — a catchy title under 60 characters and the announcement body.',
+          '',
+          'Developer changelog:',
+          body,
+        ].join('\n');
+
+        const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${groqKey}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model: 'llama-3.3-70b-versatile',
+            messages: [{ role: 'user', content: prompt }],
+            temperature: 0.4,
+            max_tokens: 900,
+            response_format: { type: 'json_object' },
+          }),
+        });
+        if (groqRes.ok) {
+          const json = await groqRes.json() as { choices?: Array<{ message?: { content?: string } }> };
+          const parsed = JSON.parse(json.choices?.[0]?.message?.content ?? '{}') as { title?: string; body?: string };
+          if (parsed.title && parsed.body) {
+            title = parsed.title.slice(0, 100);
+            body = parsed.body.slice(0, 1900);
+          }
+        }
+      } catch (err) {
+        request.log.warn({ err }, 'Groq announcement rewrite failed — using deterministic draft');
+      }
+    }
 
     return reply.send({
       success: true,
-      data: { title, body: sections.join('\n'), type },
+      data: { title, body, type },
     });
   });
 
