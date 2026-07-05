@@ -5,7 +5,7 @@
  * real-time commands from the web dashboard (settings reloads, presence updates,
  * reaction-role deployments, embed sends, and announcements).
  */
-import { ActivityType, AttachmentBuilder, EmbedBuilder, type PresenceStatusData, type TextChannel } from 'discord.js';
+import { ActivityType, ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, type PresenceStatusData, type TextChannel } from 'discord.js';
 import type { BotEvent } from '../types.js';
 import { logger } from '../logger.js';
 import { pub } from '../redis.js';
@@ -27,12 +27,25 @@ const TYPE_COLOR: Record<string, number> = {
  * announcement channel. Per-guild colour overrides are applied when set.
  * Failures for individual guilds are logged and do not abort delivery to others.
  */
+const TYPE_LABEL: Record<string, { emoji: string; label: string }> = {
+  update:      { emoji: '📢', label: 'Update' },
+  feature:     { emoji: '✨', label: 'New Feature' },
+  maintenance: { emoji: '🛠️', label: 'Maintenance' },
+  hotfix:      { emoji: '🚑', label: 'Hotfix' },
+};
+
 async function sendAnnouncement(
   client: import('../client.js').BotClient,
   data: { id: string; title: string; body: string; type: string; targets: Array<{ guildId: string; announcementChannelId: string }> },
 ): Promise<void> {
   const defaultColor = TYPE_COLOR[data.type] ?? TYPE_COLOR.update;
-  const footer = `Arken Bot — ${data.type.charAt(0).toUpperCase() + data.type.slice(1)}`;
+  const meta = TYPE_LABEL[data.type] ?? TYPE_LABEL.update;
+  const botAvatar = client.user?.displayAvatarURL() ?? undefined;
+
+  const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+    new ButtonBuilder().setStyle(ButtonStyle.Link).setLabel('Full Changelog').setURL('https://arkenbot.app/changelog'),
+    new ButtonBuilder().setStyle(ButtonStyle.Link).setLabel('Dashboard').setURL('https://arkenbot.app/dashboard'),
+  );
 
   let sent = 0;
   for (const target of data.targets) {
@@ -45,11 +58,12 @@ async function sendAnnouncement(
           : defaultColor;
         const embed = new EmbedBuilder()
           .setColor(color)
-          .setTitle(data.title)
+          .setAuthor({ name: 'ArkenBot Announcements', iconURL: botAvatar })
+          .setTitle(`${meta.emoji} ${data.title}`)
           .setDescription(data.body)
-          .setFooter({ text: footer })
+          .setFooter({ text: `ArkenBot • ${meta.label}`, iconURL: botAvatar })
           .setTimestamp();
-        await channel.send({ embeds: [embed] });
+        await channel.send({ embeds: [embed], components: [row] });
         sent++;
       }
     } catch (err) {
