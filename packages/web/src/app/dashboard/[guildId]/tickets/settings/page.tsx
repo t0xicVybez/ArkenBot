@@ -78,10 +78,10 @@ function SlaLevelsEditor({ levels, roles, onChange }: { levels: SlaLevel[]; role
   return (
     <div className="space-y-3">
       {levels.length > 0 && (
-        <div className="overflow-hidden rounded-lg border border-gray-700/50">
+        <div className="overflow-hidden rounded-lg border border-[var(--border-subtle)]">
           <div className="overflow-x-auto">
           <table className="w-full min-w-[500px] text-sm">
-            <thead className="bg-discord-darkest-bg">
+            <thead className="bg-[var(--bg-base)]">
               <tr>
                 <th className="text-left px-3 py-2 text-xs text-gray-400 uppercase">Hours</th>
                 <th className="text-left px-3 py-2 text-xs text-gray-400 uppercase">Ping Role</th>
@@ -89,9 +89,9 @@ function SlaLevelsEditor({ levels, roles, onChange }: { levels: SlaLevel[]; role
                 <th className="px-3 py-2" />
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-700/50">
+            <tbody className="divide-y divide-[var(--border-subtle)]">
               {levels.map((lvl) => (
-                <tr key={lvl.hours} className="hover:bg-discord-dark-bg/30">
+                <tr key={lvl.hours} className="hover:bg-white/[0.02]">
                   <td className="px-3 py-2 font-mono text-yellow-400">{lvl.hours}h</td>
                   <td className="px-3 py-2 text-gray-300">{roles.find((r) => r.id === lvl.pingRoleId)?.name ?? lvl.pingRoleId ?? '—'}</td>
                   <td className="px-3 py-2 text-gray-400 max-w-[200px] truncate">{lvl.message ?? '—'}</td>
@@ -190,17 +190,20 @@ export default function TicketSettingsPage() {
 
   return (
     <div className="p-3 sm:p-6 max-w-2xl space-y-6">
-      <div className="flex items-center gap-3">
+      <div className="page-head">
         <Link href={`/dashboard/${guildId}/tickets`} className="text-gray-400 hover:text-white transition-colors">
           <ArrowLeft className="w-5 h-5" />
         </Link>
-        <Settings className="w-6 h-6 text-discord-blurple" />
-        <h1 className="text-2xl font-bold text-white">Ticket Settings</h1>
+        <div className="page-head-icon"><Settings className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>Ticket Settings</h1>
+          <div className="page-head-desc">Panels, categories, and behaviour for support tickets.</div>
+        </div>
       </div>
 
       {/* General */}
       <div className="card space-y-5">
-        <h2 className="text-white font-semibold border-b border-gray-700/50 pb-2">General</h2>
+        <h2 className="text-white font-semibold border-b border-[var(--border-subtle)] pb-2">General</h2>
         <Row label="Transcript Channel" hint="Ticket transcripts are posted here when a ticket closes.">
           <select className="input" value={draft.transcriptChannelId ?? ''} onChange={(e) => set('transcriptChannelId', e.target.value)}>
             <option value="">— Disabled —</option>
@@ -217,7 +220,7 @@ export default function TicketSettingsPage() {
 
       {/* Staff Notifications */}
       <div className="card space-y-5">
-        <h2 className="text-white font-semibold border-b border-gray-700/50 pb-2">Staff Notifications</h2>
+        <h2 className="text-white font-semibold border-b border-[var(--border-subtle)] pb-2">Staff Notifications</h2>
         <p className="text-gray-400 text-sm">When a new ticket is opened, the bot will ping staff in this channel.</p>
         <Row label="Notification Channel">
           <select className="input" value={draft.staffNotifyChannelId ?? ''} onChange={(e) => set('staffNotifyChannelId', e.target.value)}>
@@ -240,7 +243,7 @@ export default function TicketSettingsPage() {
 
       {/* SLA */}
       <div className="card space-y-5">
-        <h2 className="text-white font-semibold border-b border-gray-700/50 pb-2">SLA Escalation</h2>
+        <h2 className="text-white font-semibold border-b border-[var(--border-subtle)] pb-2">SLA Escalation</h2>
         <p className="text-gray-400 text-sm">Set multiple warning thresholds. Each level fires once if a ticket has no staff response after the specified hours.</p>
         <Row label="Legacy Single SLA (hours)" hint="Simple single-level SLA. Set to 0 to use the multi-level system above instead.">
           <input type="number" min={0} max={720} className="input w-28" value={draft.slaHours ?? 0} onChange={(e) => set('slaHours', Number(e.target.value))} />
@@ -253,7 +256,7 @@ export default function TicketSettingsPage() {
 
       {/* Blacklist */}
       <div className="card space-y-5">
-        <h2 className="text-white font-semibold border-b border-gray-700/50 pb-2">Blacklisted Users</h2>
+        <h2 className="text-white font-semibold border-b border-[var(--border-subtle)] pb-2">Blacklisted Users</h2>
         <p className="text-gray-400 text-sm">These users cannot open tickets in any panel on this server.</p>
         <BlacklistInput users={draft.blacklistedUsers} onChange={(u) => set('blacklistedUsers', u)} />
       </div>

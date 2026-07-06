@@ -79,11 +79,11 @@ export default function StatsChannelsPage() {
 
   return (
     <div className="p-3 sm:p-6 max-w-4xl">
-      <div className="mb-6 flex items-center gap-3">
-        <BarChart2 className="w-6 h-6 text-discord-blurple" />
-        <div>
-          <h1 className="text-2xl font-bold text-white">Stats Channels</h1>
-          <p className="text-sm text-gray-400">Display live server statistics in voice channel names.</p>
+      <div className="page-head">
+        <div className="page-head-icon"><BarChart2 className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>Stats Channels</h1>
+          <div className="page-head-desc">Display live server statistics in voice channel names.</div>
         </div>
       </div>
 
@@ -104,7 +104,7 @@ export default function StatsChannelsPage() {
               return (
                 <div
                   key={sc.id}
-                  className="flex items-center justify-between px-4 py-3 rounded-lg bg-discord-darkest-bg border border-gray-700/50"
+                  className="flex items-center justify-between px-4 py-3 rounded-lg bg-[var(--bg-base)] border border-[var(--border-subtle)]"
                 >
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-gray-200">

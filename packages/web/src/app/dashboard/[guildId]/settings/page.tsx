@@ -101,9 +101,12 @@ export default function SettingsPage() {
 
   return (
     <div className="p-3 sm:p-6 max-w-3xl">
-      <div className="mb-6 flex items-center gap-3">
-        <Settings className="w-6 h-6 text-discord-blurple" />
-        <h1 className="text-2xl font-bold text-white">General Settings</h1>
+      <div className="page-head">
+        <div className="page-head-icon"><Settings className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>Server Settings</h1>
+          <div className="page-head-desc">Identity, appearance, and data controls for this server.</div>
+        </div>
       </div>
 
       <SettingsSection title="Bot Appearance" description="Customise how the bot appears in this server.">
@@ -248,8 +251,9 @@ export default function SettingsPage() {
       </SettingsSection>
 
       <SettingsSection
-        title="Backup & Restore"
-        description="Download this server's full configuration as a JSON file, or restore a previous backup. User data (levels, warnings, cases) and secrets are never included."
+        danger
+        title="Data & danger zone"
+        description="Backups, retention, and destructive actions — all in one clearly-marked place. User data (levels, warnings, cases) and secrets are never included in backups."
       >
         <div className="flex flex-wrap items-center gap-3">
           <button

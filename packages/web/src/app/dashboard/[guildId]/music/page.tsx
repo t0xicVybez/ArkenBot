@@ -45,9 +45,12 @@ export default function MusicPage() {
 
   return (
     <div className="p-3 sm:p-6 max-w-3xl">
-      <div className="mb-6 flex items-center gap-3">
-        <Music className="w-6 h-6 text-discord-blurple" />
-        <h1 className="text-2xl font-bold text-white">Music</h1>
+      <div className="page-head">
+        <div className="page-head-icon"><Music className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>Music</h1>
+          <div className="page-head-desc">High-quality playback with a persistent queue.</div>
+        </div>
       </div>
 
       <SettingsSection title="Music Player" description="Control music playback settings for this server.">

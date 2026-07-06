@@ -110,11 +110,11 @@ export default function SuggestionsPage() {
 
   return (
     <div className="p-3 sm:p-6 max-w-4xl">
-      <div className="mb-6 flex items-center gap-3">
-        <MessageSquarePlus className="w-6 h-6 text-discord-blurple" />
-        <div>
-          <h1 className="text-2xl font-bold text-white">Suggestions</h1>
-          <p className="text-sm text-gray-400">Let members submit ideas and vote on them.</p>
+      <div className="page-head">
+        <div className="page-head-icon"><MessageSquarePlus className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>Suggestions</h1>
+          <div className="page-head-desc">Let members submit ideas and vote on them.</div>
         </div>
       </div>
 
@@ -158,7 +158,7 @@ export default function SuggestionsPage() {
                 className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${
                   activeTab === tab.key
                     ? 'bg-discord-blurple text-white'
-                    : 'bg-discord-darkest-bg text-gray-400 hover:text-gray-200'
+                    : 'bg-[var(--bg-base)] text-gray-400 hover:text-gray-200'
                 }`}
               >
                 {tab.label}
@@ -180,7 +180,7 @@ export default function SuggestionsPage() {
         ) : (
           <div className="space-y-3">
             {suggestions.map((s) => (
-              <div key={s.id} className="p-4 rounded-lg bg-discord-darkest-bg border border-gray-700/50">
+              <div key={s.id} className="p-4 rounded-lg bg-[var(--bg-base)] border border-[var(--border-subtle)]">
                 <div className="flex items-start gap-3">
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-gray-100 leading-relaxed">{s.content}</p>

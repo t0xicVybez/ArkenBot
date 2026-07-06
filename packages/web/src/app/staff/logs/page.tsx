@@ -35,11 +35,11 @@ export default function StaffLogsPage() {
 
   return (
     <div className="p-3 sm:p-6">
-      <div className="mb-6 flex items-center gap-3">
-        <FileText className="w-6 h-6 text-discord-blurple" />
-        <div>
-          <h1 className="text-2xl font-bold text-white">System Logs</h1>
-          <p className="text-gray-400 text-sm">Total: {total} entries</p>
+      <div className="page-head">
+        <div className="page-head-icon"><FileText className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>System Logs</h1>
+          <div className="page-head-desc">Total: {total} entries</div>
         </div>
       </div>
 
@@ -69,7 +69,7 @@ export default function StaffLogsPage() {
       </div>
 
       <div className="card overflow-hidden p-0">
-        <div className="divide-y divide-gray-700/50 font-mono text-sm">
+        <div className="divide-y divide-[var(--border-subtle)] font-mono text-sm">
           {isLoading ? (
             [...Array(20)].map((_, i) => (
               <div key={i} className="px-4 py-2 animate-pulse">
@@ -80,7 +80,7 @@ export default function StaffLogsPage() {
             <div className="px-4 py-8 text-center text-gray-500">No logs found</div>
           ) : (
             logs.map((log) => (
-              <div key={log.id} className="px-4 py-2.5 hover:bg-discord-dark-bg/30 flex items-center gap-3">
+              <div key={log.id} className="px-4 py-2.5 hover:bg-white/[0.02] flex items-center gap-3">
                 <span className="text-gray-600 text-xs w-20 flex-shrink-0">
                   {new Date(log.createdAt).toLocaleTimeString()}
                 </span>
@@ -99,7 +99,7 @@ export default function StaffLogsPage() {
         </div>
 
         {total > 100 && (
-          <div className="px-4 py-3 border-t border-gray-700/50 flex items-center justify-between">
+          <div className="px-4 py-3 border-t border-[var(--border-subtle)] flex items-center justify-between">
             <p className="text-xs text-gray-400">Page {page} of {Math.ceil(total / 100)}</p>
             <div className="flex gap-2">
               <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page <= 1} className="btn-secondary text-xs py-1 px-3">

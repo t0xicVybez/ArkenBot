@@ -72,13 +72,11 @@ export default function TempVoicePage() {
 
   return (
     <div className="p-3 sm:p-6 max-w-2xl">
-      <div className="mb-6 flex items-center gap-3">
-        <Mic className="w-6 h-6 text-discord-blurple" />
-        <div>
-          <h1 className="text-2xl font-bold text-white">Temporary Voice Channels</h1>
-          <p className="text-sm text-gray-400">
-            Join-to-Create: members get their own VC when they join a trigger channel.
-          </p>
+      <div className="page-head">
+        <div className="page-head-icon"><Mic className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>Temporary Voice Channels</h1>
+          <div className="page-head-desc">Join-to-Create: members get their own VC when they join a trigger channel.</div>
         </div>
       </div>
 

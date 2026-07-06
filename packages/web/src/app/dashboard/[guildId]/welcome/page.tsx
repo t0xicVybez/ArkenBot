@@ -53,9 +53,12 @@ export default function WelcomePage() {
 
   return (
     <div className="p-3 sm:p-6 max-w-3xl">
-      <div className="mb-6 flex items-center gap-3">
-        <MessageSquare className="w-6 h-6 text-discord-blurple" />
-        <h1 className="text-2xl font-bold text-white">Welcome Messages</h1>
+      <div className="page-head">
+        <div className="page-head-icon"><MessageSquare className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>Welcome & Leave</h1>
+          <div className="page-head-desc">First impressions, automated.</div>
+        </div>
       </div>
 
       <SettingsSection title="Welcome" description="Send a message when a member joins the server.">

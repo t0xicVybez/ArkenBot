@@ -127,9 +127,12 @@ export default function InviteTrackerPage() {
 
   return (
     <div className="p-3 sm:p-6 max-w-3xl">
-      <div className="mb-6 flex items-center gap-3">
-        <UserPlus className="w-6 h-6 text-discord-blurple" />
-        <h1 className="text-2xl font-bold text-white">Invite Tracker</h1>
+      <div className="page-head">
+        <div className="page-head-icon"><UserPlus className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>Invite Tracker</h1>
+          <div className="page-head-desc">Know exactly who invited whom.</div>
+        </div>
       </div>
 
       <SettingsSection title="Settings" description="Track how many members each user has invited to the server.">

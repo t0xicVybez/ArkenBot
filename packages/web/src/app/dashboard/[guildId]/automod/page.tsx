@@ -40,7 +40,7 @@ function AutoModStats({ guildId }: { guildId: string }) {
 
   if (isLoading) {
     return (
-      <div className="bg-discord-darker-bg border border-white/[0.06] rounded-xl p-5 mb-6 animate-pulse h-48" />
+      <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl p-5 mb-6 animate-pulse h-48" />
     );
   }
 
@@ -53,7 +53,7 @@ function AutoModStats({ guildId }: { guildId: string }) {
   }));
 
   return (
-    <div className="bg-discord-darker-bg border border-white/[0.06] rounded-xl p-5 mb-6 space-y-4">
+    <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl p-5 mb-6 space-y-4">
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-2">
           <BarChart2 className="w-4 h-4 text-discord-blurple" />
@@ -102,7 +102,7 @@ function AutoModStats({ guildId }: { guildId: string }) {
                 return (
                   <div key={reason} className="flex items-center gap-2">
                     <span className="text-gray-300 text-xs w-28 truncate flex-shrink-0">{label}</span>
-                    <div className="flex-1 bg-discord-darkest-bg rounded-full h-1.5 overflow-hidden">
+                    <div className="flex-1 bg-[var(--bg-base)] rounded-full h-1.5 overflow-hidden">
                       <div
                         className="h-full bg-discord-blurple rounded-full"
                         style={{ width: `${pct}%` }}
@@ -207,9 +207,12 @@ export default function AutoModPage() {
 
   return (
     <div className="p-3 sm:p-6 max-w-3xl">
-      <div className="mb-6 flex items-center gap-3">
-        <Bot className="w-6 h-6 text-discord-blurple" />
-        <h1 className="text-2xl font-bold text-white">Auto-Mod</h1>
+      <div className="page-head">
+        <div className="page-head-icon"><Bot className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>Auto-Mod</h1>
+          <div className="page-head-desc">Filters that act before your mods have to.</div>
+        </div>
       </div>
 
       <AutoModStats guildId={guildId} />
@@ -292,7 +295,7 @@ export default function AutoModPage() {
             </div>
 
             {/* Escalation thresholds */}
-            <div className="border-t border-gray-700/50 pt-4">
+            <div className="border-t border-[var(--border-subtle)] pt-4">
               <p className="text-sm font-medium text-white mb-3">Escalation</p>
               <p className="text-xs text-gray-500 mb-3">
                 Violations are tracked per-user over 24 hours. Each offense creates a warning.
@@ -347,7 +350,7 @@ export default function AutoModPage() {
               </div>
 
               {/* Summary */}
-              <div className="mt-3 p-3 rounded bg-discord-darker-bg text-xs text-gray-400 space-y-1">
+              <div className="mt-3 p-3 rounded bg-[var(--bg-card)] text-xs text-gray-400 space-y-1">
                 <p>① 1–{(config.filterWarnBeforeTimeout ?? 3) - 1} violations → <span className="text-yellow-400">delete + warn</span></p>
                 <p>② {config.filterWarnBeforeTimeout ?? 3}–{(config.filterWarnBeforeKick ?? 5) - 1} violations → <span className="text-orange-400">timeout ({Math.ceil((config.filterTimeoutDuration ?? 300) / 60)} min)</span></p>
                 <p>③ {config.filterWarnBeforeKick ?? 5}+ violations → <span className="text-red-400">kick</span></p>
@@ -355,7 +358,7 @@ export default function AutoModPage() {
             </div>
 
             {/* Custom messages */}
-            <div className="border-t border-gray-700/50 pt-4 space-y-4">
+            <div className="border-t border-[var(--border-subtle)] pt-4 space-y-4">
               <p className="text-sm font-medium text-white">Messages</p>
               <p className="text-xs text-gray-500 -mt-2">
                 Variables: <code className="text-gray-400">{'{user}'}</code> <code className="text-gray-400">{'{count}'}</code> <code className="text-gray-400">{'{server}'}</code>

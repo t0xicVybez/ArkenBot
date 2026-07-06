@@ -258,7 +258,7 @@ export default function TicketDetailPage() {
         </Link>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-3 flex-wrap">
-            <h1 className="text-2xl font-bold text-white">
+            <h1 className="text-[21px] font-bold tracking-tight text-white">
               {panel ? `${panel.emoji} ` : ''}Ticket #{ticket.number}
             </h1>
             <span className={`badge ${STATUS_BADGE[ticket.status] ?? 'badge-secondary'} text-xs`}>
@@ -353,7 +353,7 @@ export default function TicketDetailPage() {
       {/* Actions (only for open/claimed tickets) */}
       {ticket.status !== 'closed' && (
         <div className="card space-y-4">
-          <h2 className="text-white font-semibold border-b border-gray-700/50 pb-2">Staff Actions</h2>
+          <h2 className="text-white font-semibold border-b border-[var(--border-subtle)] pb-2">Staff Actions</h2>
 
           {/* Claim / Unclaim */}
           <div className="flex items-center gap-3 flex-wrap">

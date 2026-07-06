@@ -86,7 +86,7 @@ export default function TicketsPage() {
         <div className="flex items-center gap-3 flex-wrap">
           <Ticket className="w-6 h-6 text-discord-blurple" />
           <div>
-            <h1 className="text-2xl font-bold text-white">Tickets</h1>
+            <h1 className="text-[21px] font-bold tracking-tight text-white">Tickets</h1>
             <p className="text-gray-400 text-sm">{stats?.total ?? 0} total tickets</p>
           </div>
           {stats && stats.slaBreaches > 0 && (
@@ -251,7 +251,7 @@ export default function TicketsPage() {
           ) : (
             <div className="overflow-x-auto">
             <table className="w-full min-w-[500px]">
-              <thead className="border-b border-gray-700/50 text-left text-xs text-gray-500 uppercase tracking-wider">
+              <thead className="border-b border-[var(--border-subtle)] text-left text-xs text-gray-500 uppercase tracking-wider">
                 <tr>
                   <th className="px-4 py-3">#</th>
                   <th className="px-4 py-3">Username</th>

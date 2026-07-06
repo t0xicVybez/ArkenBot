@@ -135,12 +135,12 @@ export default function ModerationPage() {
 
   return (
     <div className="p-3 sm:p-6">
-      <div className="mb-6">
-        <div className="flex items-center gap-3 mb-1">
-          <Shield className="w-6 h-6 text-discord-blurple" />
-          <h1 className="text-2xl font-bold text-white">Moderation</h1>
+      <div className="page-head">
+        <div className="page-head-icon"><Shield className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>Moderation</h1>
+          <div className="page-head-desc">View and manage moderation cases and warnings.</div>
         </div>
-        <p className="text-gray-400 text-sm">View and manage moderation cases and warnings.</p>
       </div>
 
       <SettingsSection title="Moderation Commands" description="Enable or disable all moderation commands (ban, kick, mute, warn, etc.).">
@@ -220,7 +220,7 @@ export default function ModerationPage() {
           <div className="card overflow-hidden p-0">
             <div className="overflow-x-auto">
             <table className="w-full min-w-[600px]">
-              <thead className="bg-discord-darkest-bg">
+              <thead className="bg-[var(--bg-base)]">
                 <tr>
                   <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">#</th>
                   <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Type</th>
@@ -230,7 +230,7 @@ export default function ModerationPage() {
                   <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Date</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-700/50">
+              <tbody className="divide-y divide-[var(--border-subtle)]">
                 {casesLoading ? (
                   [...Array(10)].map((_, i) => (
                     <tr key={i} className="animate-pulse">
@@ -256,7 +256,7 @@ export default function ModerationPage() {
                     reason: string;
                     createdAt: string;
                   }) => (
-                    <tr key={c.id} className="hover:bg-discord-dark-bg/30 transition-colors">
+                    <tr key={c.id} className="hover:bg-white/[0.02] transition-colors">
                       <td className="px-4 py-3 text-sm text-gray-400">#{c.caseNumber}</td>
                       <td className="px-4 py-3">
                         <span className={`badge ${typeColors[c.type] ?? 'badge-info'}`}>
@@ -277,7 +277,7 @@ export default function ModerationPage() {
             </div>
 
             {total > 20 && (
-              <div className="px-4 py-3 border-t border-gray-700/50 flex items-center justify-between">
+              <div className="px-4 py-3 border-t border-[var(--border-subtle)] flex items-center justify-between">
                 <p className="text-xs text-gray-400">
                   Showing {Math.min((page - 1) * 20 + 1, total)}–{Math.min(page * 20, total)} of {total}
                 </p>
@@ -338,7 +338,7 @@ export default function ModerationPage() {
             <div className="space-y-4">
               {Object.entries(warningsByUser).map(([userId, userWarnings]) => (
                 <div key={userId} className="card p-0 overflow-hidden">
-                  <div className="px-4 py-3 bg-discord-darkest-bg flex items-center justify-between">
+                  <div className="px-4 py-3 bg-[var(--bg-base)] flex items-center justify-between">
                     <div>
                       <p className="text-sm font-medium text-white">
                         {userWarnings[0].userTag || userId}
@@ -354,7 +354,7 @@ export default function ModerationPage() {
                       Clear All
                     </button>
                   </div>
-                  <div className="divide-y divide-gray-700/50">
+                  <div className="divide-y divide-[var(--border-subtle)]">
                     {userWarnings.map((w) => (
                       <div key={w.id} className="px-4 py-3 flex items-start justify-between gap-4">
                         <div className="flex-1 min-w-0">
@@ -431,7 +431,7 @@ export default function ModerationPage() {
                 setEscalations(updated);
                 saveEscalationMutation.mutate(updated);
               }}
-              className="flex flex-wrap items-end gap-3 border-t border-gray-700/50 pt-4"
+              className="flex flex-wrap items-end gap-3 border-t border-[var(--border-subtle)] pt-4"
             >
               <div className="w-24">
                 <label className="label">At # warnings</label>

@@ -47,10 +47,13 @@ export default function CountingPage() {
   if (!data?.installed) {
     return (
       <div className="p-3 sm:p-6 max-w-3xl">
-        <div className="mb-6 flex items-center gap-3">
-          <Hash className="w-6 h-6 text-discord-blurple" />
-          <h1 className="text-2xl font-bold text-white">Counting</h1>
+        <div className="page-head">
+        <div className="page-head-icon"><Hash className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>Counting</h1>
+          <div className="page-head-desc">One number at a time — keep the chain alive.</div>
         </div>
+      </div>
         <div className="card text-center py-12">
           <Hash className="w-12 h-12 text-gray-600 mx-auto mb-3" />
           <p className="text-gray-400 mb-1">The Counting addon is not installed.</p>
@@ -64,9 +67,12 @@ export default function CountingPage() {
 
   return (
     <div className="p-3 sm:p-6 max-w-3xl">
-      <div className="mb-6 flex items-center gap-3">
-        <Hash className="w-6 h-6 text-discord-blurple" />
-        <h1 className="text-2xl font-bold text-white">Counting</h1>
+      <div className="page-head">
+        <div className="page-head-icon"><Hash className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>Counting</h1>
+          <div className="page-head-desc">One number at a time — keep the chain alive.</div>
+        </div>
       </div>
 
       <SettingsSection title="Live Stats" description="Current state of the counting game in this server.">

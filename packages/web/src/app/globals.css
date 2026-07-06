@@ -4,23 +4,32 @@
 
 @layer base {
   :root {
-    --bg-base: #13141a;
-    --bg-surface: #17181f;
-    --bg-card: #1e2029;
-    --bg-elevated: #23263a;
-    --bg-hover: #2a2d40;
-    --border: rgba(255,255,255,0.10);
-    --border-subtle: rgba(255,255,255,0.06);
-    --border-strong: rgba(255,255,255,0.18);
-    --text-primary: #f0f2f8;
-    --text-secondary: #9ea3bc;
-    --text-muted: #5c6480;
-    --accent: #5865F2;
-    --accent-hover: #4752c4;
-    --accent-glow: rgba(88,101,242,0.15);
-    --success: #3ecf8e;
-    --warning: #f5c542;
-    --danger: #f0574c;
+    --bg-base: #0c0e13;
+    --bg-surface: #10131a;
+    --bg-card: #161a23;
+    --bg-elevated: #1c2130;
+    --bg-hover: #212737;
+    --border: rgba(255,255,255,0.08);
+    --border-subtle: rgba(255,255,255,0.055);
+    --border-strong: rgba(255,255,255,0.14);
+    --text-primary: #eef1f8;
+    --text-secondary: #a7aec1;
+    --text-muted: #666e84;
+    --accent: #7C8AFF;
+    --accent-2: #a78bfa;
+    --accent-hover: #5d6cf5;
+    --accent-glow: rgba(124,138,255,0.14);
+    --success: #43cf8c;
+    --warning: #f2c14b;
+    --danger: #f26d5f;
+  }
+
+  /* Staff portal keeps the system but shifts the accent to violet */
+  .staff-theme {
+    --accent: #a78bfa;
+    --accent-2: #c4b5fd;
+    --accent-hover: #8b6cf7;
+    --accent-glow: rgba(167,139,250,0.14);
   }
 
   * { @apply box-border; }
@@ -42,7 +51,7 @@
   ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 99px; }
   ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18); }
 
-  ::selection { background: rgba(88,101,242,0.35); color: #fff; }
+  ::selection { background: rgba(124,138,255,0.35); color: #fff; }
 }
 
 @layer components {
@@ -56,11 +65,12 @@
 
   .btn-primary {
     @apply btn text-white shadow-sm;
-    background: linear-gradient(135deg, #5865F2, #4f57e8);
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    box-shadow: 0 2px 12px var(--accent-glow);
   }
   .btn-primary:hover:not(:disabled) {
-    background: linear-gradient(135deg, #6470f3, #5865F2);
-    box-shadow: 0 0 0 1px rgba(88,101,242,0.4), 0 4px 12px rgba(88,101,242,0.25);
+    filter: brightness(1.08);
+    box-shadow: 0 0 0 1px var(--accent-glow), 0 4px 16px var(--accent-glow);
   }
 
   .btn-secondary {
@@ -124,8 +134,8 @@
     border: 1px solid var(--border);
   }
   .input:focus {
-    border-color: rgba(88,101,242,0.6);
-    box-shadow: 0 0 0 3px rgba(88,101,242,0.12);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
   }
 
   .select {
@@ -168,20 +178,29 @@
     background: rgba(255,255,255,0.04);
   }
   .nav-item-active {
-    @apply flex items-center gap-2.5 rounded-lg text-[13px] font-medium transition-all duration-100 relative;
-    color: #fff;
-    background: rgba(88,101,242,0.12);
-    border-left: 2px solid #5865F2;
-    padding: 0.5rem 0.75rem 0.5rem calc(0.75rem - 2px);
+    @apply flex items-center gap-2.5 rounded-lg text-[13px] font-semibold transition-all duration-100 relative;
+    color: var(--accent);
+    background: var(--accent-glow);
+    padding: 0.5rem 0.75rem;
+  }
+  .nav-item-active::before {
+    content: "";
+    position: absolute;
+    left: -8px;
+    top: 22%;
+    bottom: 22%;
+    width: 3px;
+    border-radius: 0 3px 3px 0;
+    background: var(--accent);
   }
   .nav-item-active svg {
-    color: #5865F2;
+    color: var(--accent);
   }
 
   /* ── Toggle ── */
   .toggle {
     @apply relative inline-flex h-5 w-9 items-center rounded-full transition-colors duration-200
-           focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5865F2] focus-visible:ring-offset-1
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-1
            focus-visible:ring-offset-[var(--bg-card)] cursor-pointer flex-shrink-0;
   }
   .toggle-thumb {
@@ -224,9 +243,9 @@
   /* ── Info / alert banners ── */
   .alert-info {
     @apply rounded-lg px-4 py-3 text-sm flex items-start gap-3;
-    background: rgba(88,101,242,0.08);
-    border: 1px solid rgba(88,101,242,0.2);
-    color: #a5b0ff;
+    background: var(--accent-glow);
+    border: 1px solid rgba(124,138,255,0.25);
+    color: #b9c2ff;
   }
   .alert-warning {
     @apply rounded-lg px-4 py-3 text-sm flex items-start gap-3;
@@ -262,10 +281,68 @@
 
   /* ── Gradient text ── */
   .gradient-text {
-    background: linear-gradient(135deg, #818cf8, #5865F2, #a78bfa);
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+
+
+  /* ── Page head (icon + title + purpose + actions) ── */
+  .page-head {
+    @apply flex items-start gap-4 mb-6;
+  }
+  .page-head-icon {
+    @apply w-11 h-11 rounded-xl grid place-items-center flex-shrink-0;
+    background: var(--accent-glow);
+    color: var(--accent);
+  }
+  .page-head h1 {
+    @apply text-[21px] font-bold tracking-tight leading-tight;
+    color: var(--text-primary);
+  }
+  .page-head-desc {
+    @apply text-[13px] mt-0.5 max-w-2xl;
+    color: var(--text-secondary);
+  }
+  .page-head-actions {
+    @apply ml-auto flex items-center gap-2 flex-shrink-0;
+  }
+
+  /* ── Designed empty state ── */
+  .empty-state {
+    @apply py-12 px-6 text-center;
+  }
+  .empty-state-icon {
+    @apply w-14 h-14 mx-auto mb-3 rounded-2xl grid place-items-center;
+    background: var(--accent-glow);
+    color: var(--accent);
+  }
+  .empty-state h4 {
+    @apply text-[15px] font-bold;
+    color: var(--text-primary);
+  }
+  .empty-state p {
+    @apply text-[12.5px] mx-auto mt-1 mb-4 max-w-sm;
+    color: var(--text-muted);
+  }
+
+  /* ── Stat tiles ── */
+  .stat-delta-up { @apply text-[11.5px] font-semibold ml-1.5; color: var(--success); }
+  .stat-delta-down { @apply text-[11.5px] font-semibold ml-1.5; color: var(--danger); }
+  .tabular { font-variant-numeric: tabular-nums; }
+
+  /* ── Command palette ── */
+  .cmdk-overlay {
+    @apply fixed inset-0 z-[200] flex items-start justify-center pt-[14vh] px-4;
+    background: rgba(5,6,10,0.65);
+    backdrop-filter: blur(3px);
+  }
+  .cmdk {
+    @apply w-full max-w-lg rounded-2xl overflow-hidden;
+    background: var(--bg-card);
+    border: 1px solid var(--border-strong);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.5);
   }
 
   /* ── Legacy sidebar aliases (keep backward compat) ── */

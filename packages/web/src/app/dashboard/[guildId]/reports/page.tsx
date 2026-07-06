@@ -105,11 +105,11 @@ export default function ReportsPage() {
 
   return (
     <div className="p-3 sm:p-6 max-w-3xl">
-      <div className="mb-6 flex items-center gap-3">
-        <Flag className="w-6 h-6 text-discord-blurple" />
-        <div>
-          <h1 className="text-2xl font-bold text-white">Reports</h1>
-          <p className="text-sm text-gray-400">Review member reports submitted in this server.</p>
+      <div className="page-head">
+        <div className="page-head-icon"><Flag className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>Reports</h1>
+          <div className="page-head-desc">Review member reports submitted in this server.</div>
         </div>
       </div>
 
@@ -199,7 +199,7 @@ export default function ReportsPage() {
                     {new Date(report.createdAt).toLocaleString()}
                   </p>
                   {report.staffNote && (
-                    <p className="text-xs text-gray-400 mt-1 border-t border-gray-700/50 pt-1">
+                    <p className="text-xs text-gray-400 mt-1 border-t border-[var(--border-subtle)] pt-1">
                       Staff note: {report.staffNote}
                     </p>
                   )}
@@ -215,7 +215,7 @@ export default function ReportsPage() {
               </div>
 
               {expandedNote === report.id && (
-                <div className="mt-3 border-t border-gray-700/50 pt-3 space-y-2">
+                <div className="mt-3 border-t border-[var(--border-subtle)] pt-3 space-y-2">
                   <textarea
                     className="input min-h-[60px] resize-none"
                     placeholder="Optional staff note..."

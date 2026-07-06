@@ -11,6 +11,8 @@ import { useAuth } from '@/lib/auth';
 import { guildsApi } from '@/lib/api';
 import { wsClient } from '@/lib/socket';
 import { Sidebar } from '@/components/Sidebar';
+import { CommandPalette } from '@/components/CommandPalette';
+import { Topbar } from '@/components/Topbar';
 import { Menu } from 'lucide-react';
 
 export default function GuildLayout({ children }: { children: React.ReactNode }) {
@@ -48,10 +50,12 @@ export default function GuildLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="flex min-h-screen bg-discord-surface">
+      <CommandPalette guildId={guildId} />
       <Sidebar
         guildId={guildId}
         guildName={guild?.name}
         guildIcon={guild?.iconUrl}
+        memberCount={guild?.memberCount}
         installedAddons={guild?.guildAddons?.map((ga: { addon: { name: string } }) => ga.addon.name) ?? []}
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
@@ -69,10 +73,10 @@ export default function GuildLayout({ children }: { children: React.ReactNode })
             {guild?.name ?? 'Dashboard'}
           </p>
         </div>
-        <div className="flex-1">{children}</div>
-        <footer className="px-6 py-3 border-t border-[var(--border-subtle)] text-center text-xs text-[var(--text-muted)]">
-          Powered by <span className="text-[var(--text-secondary)] font-medium">Arken Bot</span>
-        </footer>
+        <Topbar variant="guild" guildName={guild?.name} guildId={guildId} />
+        <div className="flex-1">
+          <div className="max-w-[1120px]">{children}</div>
+        </div>
       </main>
     </div>
   );

@@ -100,11 +100,11 @@ export default function BirthdaysPage() {
 
   return (
     <div className="p-3 sm:p-6 max-w-4xl">
-      <div className="mb-6 flex items-center gap-3">
-        <Cake className="w-6 h-6 text-discord-blurple" />
-        <div>
-          <h1 className="text-2xl font-bold text-white">Birthday Tracker</h1>
-          <p className="text-sm text-gray-400">Celebrate server members&apos; birthdays automatically.</p>
+      <div className="page-head">
+        <div className="page-head-icon"><Cake className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>Birthday Tracker</h1>
+          <div className="page-head-desc">Celebrate server members&apos; birthdays automatically.</div>
         </div>
       </div>
 
@@ -157,10 +157,10 @@ export default function BirthdaysPage() {
             No birthdays recorded yet. Members can set their birthday using the /birthday command.
           </p>
         ) : (
-          <div className="overflow-hidden rounded-lg border border-gray-700/50">
+          <div className="overflow-hidden rounded-lg border border-[var(--border-subtle)]">
             <div className="overflow-x-auto">
             <table className="w-full min-w-[500px]">
-              <thead className="bg-discord-darkest-bg">
+              <thead className="bg-[var(--bg-base)]">
                 <tr>
                   <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">User</th>
                   <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Month</th>
@@ -168,9 +168,9 @@ export default function BirthdaysPage() {
                   <th className="px-4 py-3" />
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-700/50">
+              <tbody className="divide-y divide-[var(--border-subtle)]">
                 {birthdays.map((b) => (
-                  <tr key={b.userId} className="hover:bg-discord-dark-bg/30 transition-colors">
+                  <tr key={b.userId} className="hover:bg-white/[0.02] transition-colors">
                     <td className="px-4 py-3 text-sm text-gray-300">{b.username}</td>
                     <td className="px-4 py-3 text-sm text-gray-200">{MONTHS[b.month - 1] ?? b.month}</td>
                     <td className="px-4 py-3 text-sm text-gray-200">{b.day}</td>

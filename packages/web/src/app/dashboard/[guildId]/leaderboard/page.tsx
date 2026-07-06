@@ -97,12 +97,13 @@ export default function LeaderboardDashboardPage() {
   return (
     <div className="p-3 sm:p-6">
       {/* Header */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3 mb-1">
-            <TrendingUp className="w-6 h-6 text-discord-blurple" />
-            <h1 className="text-2xl font-bold text-white">Leaderboard</h1>
-          </div>
+      <div className="page-head">
+        <div className="page-head-icon"><TrendingUp className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>Leaderboard</h1>
+          <div className="page-head-desc">{total > 0 ? `${total.toLocaleString()} ranked members` : 'Member XP rankings'}</div>
+        </div>
+        <div className="page-head-actions">
           <Link
             href={`/leaderboard/${guildId}`}
             target="_blank"
@@ -112,14 +113,11 @@ export default function LeaderboardDashboardPage() {
             Public View
           </Link>
         </div>
-        <p className="text-gray-400 text-sm">
-          {total > 0 ? `${total.toLocaleString()} ranked members` : 'Member XP rankings'}
-        </p>
       </div>
 
       {/* Period selector + Reset */}
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-        <div className="flex gap-1.5 bg-discord-darkest-bg rounded-lg p-1">
+        <div className="flex gap-1.5 bg-[var(--bg-base)] rounded-lg p-1">
           {(['all', 'weekly', 'monthly'] as Period[]).map((p) => (
             <button
               key={p}
@@ -169,7 +167,7 @@ export default function LeaderboardDashboardPage() {
 
       {/* Loading */}
       {isLoading && (
-        <div className="bg-discord-darker-bg border border-white/[0.06] rounded-xl overflow-hidden">
+        <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl overflow-hidden">
           {[...Array(10)].map((_, i) => (
             <div key={i} className="px-4 py-3 border-b border-white/[0.04] last:border-0 animate-pulse">
               <div className="h-4 bg-gray-700/50 rounded w-1/2" />
@@ -180,7 +178,7 @@ export default function LeaderboardDashboardPage() {
 
       {/* Error */}
       {isError && (
-        <div className="bg-discord-darker-bg border border-white/[0.06] rounded-xl text-center py-12">
+        <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl text-center py-12">
           <Trophy className="w-10 h-10 text-gray-600 mx-auto mb-3" />
           <p className="text-gray-400">Leaderboard unavailable.</p>
           <p className="text-gray-600 text-sm mt-1">Leveling may be disabled for this server.</p>
@@ -189,7 +187,7 @@ export default function LeaderboardDashboardPage() {
 
       {/* Empty */}
       {!isLoading && !isError && allEntries.length === 0 && (
-        <div className="bg-discord-darker-bg border border-white/[0.06] rounded-xl text-center py-12">
+        <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl text-center py-12">
           <Star className="w-10 h-10 text-gray-600 mx-auto mb-3" />
           <p className="text-gray-400">No ranked members yet.</p>
           <p className="text-gray-600 text-sm mt-1">Members earn XP by chatting in the server.</p>
@@ -198,10 +196,10 @@ export default function LeaderboardDashboardPage() {
 
       {/* Entries */}
       {!isLoading && !isError && entries.length > 0 && (
-        <div className="bg-discord-darker-bg border border-white/[0.06] rounded-xl overflow-hidden">
+        <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl overflow-hidden">
           <div className="overflow-x-auto">
           {/* Table header */}
-          <div className="grid grid-cols-[2rem_1fr_6rem_5rem] gap-4 px-4 py-2.5 bg-discord-darkest-bg border-b border-white/[0.06] min-w-[340px]">
+          <div className="grid grid-cols-[2rem_1fr_6rem_5rem] gap-4 px-4 py-2.5 bg-[var(--bg-base)] border-b border-white/[0.06] min-w-[340px]">
             <span className="text-xs font-medium text-gray-400 uppercase">#</span>
             <span className="text-xs font-medium text-gray-400 uppercase">Member</span>
             <span className="text-xs font-medium text-gray-400 uppercase text-right">Level</span>
@@ -294,7 +292,7 @@ export default function LeaderboardDashboardPage() {
 
       {/* Search no results */}
       {!isLoading && !isError && allEntries.length > 0 && entries.length === 0 && (
-        <div className="bg-discord-darker-bg border border-white/[0.06] rounded-xl text-center py-12">
+        <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl text-center py-12">
           <Search className="w-8 h-8 text-gray-600 mx-auto mb-2" />
           <p className="text-gray-400">No members match &ldquo;{search}&rdquo;</p>
         </div>

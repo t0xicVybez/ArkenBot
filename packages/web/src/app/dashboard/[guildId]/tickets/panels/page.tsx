@@ -353,7 +353,7 @@ function PanelForm({
       {/* Left: form */}
       <div className="flex-1 min-w-0 space-y-4 overflow-y-auto pr-1">
         {/* Tab bar */}
-        <div className="flex gap-1 border-b border-gray-700/50 pb-0">
+        <div className="flex gap-1 border-b border-[var(--border-subtle)] pb-0">
           {tabs.map((t) => (
             <button
               key={t}
@@ -435,7 +435,7 @@ function PanelForm({
             </p>
 
             {(draft.buttons ?? []).length === 0 && (
-              <div className="space-y-3 border border-gray-700/50 rounded-lg p-3">
+              <div className="space-y-3 border border-[var(--border-subtle)] rounded-lg p-3">
                 <p className="text-gray-500 text-xs uppercase tracking-wider">Default Button</p>
                 <div className="grid grid-cols-2 gap-3">
                   <Row label="Button Label">
@@ -561,7 +561,7 @@ function PanelForm({
                 <span className="text-gray-300 text-sm">{draft.enabled ? 'Enabled' : 'Disabled'}</span>
               </label>
             </Row>
-            <div className="pt-2 border-t border-gray-700/50">
+            <div className="pt-2 border-t border-[var(--border-subtle)]">
               <p className="text-gray-500 text-xs mb-2">Discord IDs — leave blank if managing via slash commands</p>
               <div className="grid grid-cols-1 gap-2">
                 {[
@@ -583,7 +583,7 @@ function PanelForm({
         )}
 
         {/* Save / Cancel */}
-        <div className="flex gap-3 pt-2 border-t border-gray-700/50 sticky bottom-0 bg-discord-dark-bg py-3">
+        <div className="flex gap-3 pt-2 border-t border-[var(--border-subtle)] sticky bottom-0 bg-discord-dark-bg py-3">
           <button
             onClick={() => saveMutation.mutate()}
             disabled={saveMutation.isPending || !draft.name.trim() || !draft.description.trim()}
@@ -668,13 +668,13 @@ export default function PanelsPage() {
   return (
     <div className="p-3 sm:p-6 space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-3">
-        <div className="flex items-center gap-3">
-          <LayoutTemplate className="w-6 h-6 text-discord-blurple" />
-          <div>
-            <h1 className="text-2xl font-bold text-white">Ticket Panels</h1>
-            <p className="text-gray-400 text-sm">{panels.length} panel{panels.length !== 1 ? 's' : ''}</p>
-          </div>
+        <div className="page-head">
+        <div className="page-head-icon"><LayoutTemplate className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>Ticket Panels</h1>
+          <div className="page-head-desc">{panels.length} panel{panels.length !== 1 ? 's' : ''}</div>
         </div>
+      </div>
         <button onClick={() => setEditing('new')} className="btn-primary flex items-center gap-2 text-sm">
           <Plus className="w-4 h-4" /> New Panel
         </button>
@@ -759,7 +759,7 @@ function PanelCard({ panel, onEdit, onDelete }: { panel: TicketPanel; onEdit: ()
       )}
 
       {/* Actions */}
-      <div className="flex gap-2 pt-1 border-t border-gray-700/50">
+      <div className="flex gap-2 pt-1 border-t border-[var(--border-subtle)]">
         <button onClick={onEdit} className="btn-secondary flex-1 text-xs py-1.5 flex items-center justify-center gap-1.5">
           <Edit className="w-3 h-3" /> Edit
         </button>

@@ -112,11 +112,11 @@ export default function ForumManagementPage() {
 
   return (
     <div className="p-3 sm:p-6 max-w-3xl">
-      <div className="mb-6 flex items-center gap-3">
-        <MessagesSquare className="w-6 h-6 text-discord-blurple" />
-        <div>
-          <h1 className="text-2xl font-bold text-white">Forum Management</h1>
-          <p className="text-sm text-gray-400">Configure auto-templates and tags for forum channels.</p>
+      <div className="page-head">
+        <div className="page-head-icon"><MessagesSquare className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>Forum Management</h1>
+          <div className="page-head-desc">Configure auto-templates and tags for forum channels.</div>
         </div>
       </div>
 

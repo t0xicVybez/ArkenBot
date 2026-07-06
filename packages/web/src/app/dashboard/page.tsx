@@ -54,8 +54,8 @@ export default function DashboardPage() {
   );
 
   return (
-    <div className="min-h-screen bg-discord-darkest-bg">
-      <header className="bg-discord-darker-bg border-b border-gray-700/50 px-6 py-4">
+    <div className="min-h-screen bg-[var(--bg-base)]">
+      <header className="bg-[var(--bg-card)] border-b border-[var(--border-subtle)] px-6 py-4">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div>
             <h1 className="text-xl font-bold text-white">Select a Server</h1>

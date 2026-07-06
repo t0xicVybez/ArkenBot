@@ -268,11 +268,11 @@ export default function CommandsPage() {
 
   return (
     <div className="p-3 sm:p-6 max-w-4xl">
-      <div className="mb-6 flex items-center gap-3">
-        <Terminal className="w-6 h-6 text-discord-blurple" />
-        <div>
-          <h1 className="text-2xl font-bold text-white">Commands</h1>
-          <p className="text-sm text-gray-400">Enable or disable built-in commands and manage custom commands.</p>
+      <div className="page-head">
+        <div className="page-head-icon"><Terminal className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>Commands</h1>
+          <div className="page-head-desc">Enable or disable built-in commands and manage custom commands.</div>
         </div>
       </div>
 
@@ -284,7 +284,7 @@ export default function CommandsPage() {
           </div>
           <button
             onClick={() => setShowForm((v) => !v)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-discord-blurple hover:bg-discord-blurple/80 text-white text-sm font-medium transition-colors"
+            className="btn-primary"
           >
             <Plus className="w-4 h-4" />
             New Command
@@ -292,7 +292,7 @@ export default function CommandsPage() {
         </div>
 
         {showForm && (
-          <form onSubmit={handleCreateSubmit} className="mb-5 p-4 rounded-lg bg-discord-darkest-bg border border-gray-700/50 space-y-4">
+          <form onSubmit={handleCreateSubmit} className="mb-5 p-4 rounded-lg bg-[var(--bg-base)] border border-[var(--border-subtle)] space-y-4">
             <h3 className="text-sm font-semibold text-white">Create Custom Command</h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -439,10 +439,10 @@ export default function CommandsPage() {
             No custom commands yet. Create one above!
           </p>
         ) : (
-          <div className="overflow-hidden rounded-lg border border-gray-700/50">
+          <div className="overflow-hidden rounded-lg border border-[var(--border-subtle)]">
             <div className="overflow-x-auto">
             <table className="w-full min-w-[600px]">
-              <thead className="bg-discord-darkest-bg">
+              <thead className="bg-[var(--bg-base)]">
                 <tr>
                   <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Command</th>
                   <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Response</th>
@@ -452,9 +452,9 @@ export default function CommandsPage() {
                   <th className="px-4 py-3" />
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-700/50">
+              <tbody className="divide-y divide-[var(--border-subtle)]">
                 {customCommands.map((cmd) => (
-                  <tr key={cmd.id} className="hover:bg-discord-dark-bg/30 transition-colors">
+                  <tr key={cmd.id} className="hover:bg-white/[0.02] transition-colors">
                     <td className="px-4 py-3">
                       <span className="text-sm font-mono text-gray-200">!{cmd.name}</span>
                       {cmd.aliases.length > 0 && (
@@ -519,7 +519,7 @@ export default function CommandsPage() {
           </div>
           <button
             onClick={() => setShowArForm((v) => !v)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-discord-blurple hover:bg-discord-blurple/80 text-white text-sm font-medium transition-colors"
+            className="btn-primary"
           >
             <Plus className="w-4 h-4" />
             New Rule
@@ -527,7 +527,7 @@ export default function CommandsPage() {
         </div>
 
         {showArForm && (
-          <form onSubmit={handleArSubmit} className="mb-5 p-4 rounded-lg bg-discord-darkest-bg border border-gray-700/50 space-y-4">
+          <form onSubmit={handleArSubmit} className="mb-5 p-4 rounded-lg bg-[var(--bg-base)] border border-[var(--border-subtle)] space-y-4">
             <h3 className="text-sm font-semibold text-white">Create Auto-Response</h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -631,10 +631,10 @@ export default function CommandsPage() {
             No auto-responses yet. Create one above!
           </p>
         ) : (
-          <div className="overflow-hidden rounded-lg border border-gray-700/50">
+          <div className="overflow-hidden rounded-lg border border-[var(--border-subtle)]">
             <div className="overflow-x-auto">
               <table className="w-full min-w-[540px]">
-                <thead className="bg-discord-darkest-bg">
+                <thead className="bg-[var(--bg-base)]">
                   <tr>
                     <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Pattern</th>
                     <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Response</th>
@@ -644,9 +644,9 @@ export default function CommandsPage() {
                     <th className="px-4 py-3" />
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-700/50">
+                <tbody className="divide-y divide-[var(--border-subtle)]">
                   {autoResponses.map((ar) => (
-                    <tr key={ar.id} className="hover:bg-discord-dark-bg/30 transition-colors">
+                    <tr key={ar.id} className="hover:bg-white/[0.02] transition-colors">
                       <td className="px-4 py-3">
                         <span className="text-sm font-mono text-gray-200">{ar.pattern}</span>
                         <span className="ml-1.5 text-xs text-gray-600 font-mono">/{ar.flags}</span>
@@ -704,7 +704,7 @@ export default function CommandsPage() {
                   return (
                     <div
                       key={cmd.name}
-                      className="flex items-center justify-between px-3 py-2 rounded-lg bg-discord-darkest-bg border border-gray-700/50"
+                      className="flex items-center justify-between px-3 py-2 rounded-lg bg-[var(--bg-base)] border border-[var(--border-subtle)]"
                     >
                       <span className="text-sm font-mono text-gray-200">/{cmd.name}</span>
                       <button
@@ -763,7 +763,7 @@ export default function CommandsPage() {
               <svg className={`w-3.5 h-3.5 text-gray-500 transition-transform ${roleDropdownOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
             </button>
             {roleDropdownOpen && (
-              <div className="absolute z-20 top-full left-0 right-0 mt-1 bg-discord-darkest-bg border border-white/[0.08] rounded-lg shadow-xl max-h-52 overflow-y-auto">
+              <div className="absolute z-20 top-full left-0 right-0 mt-1 bg-[var(--bg-base)] border border-white/[0.08] rounded-lg shadow-xl max-h-52 overflow-y-auto">
                 {roles.map((r) => {
                   const checked = permForm.roleIds.includes(r.id);
                   return (
@@ -824,7 +824,7 @@ export default function CommandsPage() {
             ).map((group) => (
               <div
                 key={group.key}
-                className="flex items-center gap-3 px-3 py-2 rounded-lg bg-discord-darkest-bg border border-white/[0.04]"
+                className="flex items-center gap-3 px-3 py-2 rounded-lg bg-[var(--bg-base)] border border-white/[0.04]"
               >
                 <span className="text-xs font-mono text-gray-300 w-32 flex-shrink-0 truncate">/{group.commandName}</span>
                 <div className="flex flex-wrap gap-1 flex-1">

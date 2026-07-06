@@ -208,11 +208,11 @@ export default function ApplicationsPage() {
 
   return (
     <div className="p-3 sm:p-6 max-w-4xl">
-      <div className="mb-6 flex items-center gap-3">
-        <ClipboardList className="w-6 h-6 text-discord-blurple" />
-        <div>
-          <h1 className="text-2xl font-bold text-white">Applications</h1>
-          <p className="text-sm text-gray-400">Create application forms and review member submissions.</p>
+      <div className="page-head">
+        <div className="page-head-icon"><ClipboardList className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>Applications</h1>
+          <div className="page-head-desc">Create application forms and review member submissions.</div>
         </div>
       </div>
 
@@ -363,7 +363,7 @@ export default function ApplicationsPage() {
                   </div>
 
                   {expanded && (
-                    <div className="border-t border-gray-700/50 px-4 py-3 space-y-3">
+                    <div className="border-t border-[var(--border-subtle)] px-4 py-3 space-y-3">
                       {form.fields.length === 0 ? (
                         <p className="text-sm text-gray-500">No fields yet.</p>
                       ) : (
@@ -389,7 +389,7 @@ export default function ApplicationsPage() {
                       )}
 
                       {addFieldFormId === form.id ? (
-                        <div className="border border-gray-700/50 rounded-lg p-3 space-y-2">
+                        <div className="border border-[var(--border-subtle)] rounded-lg p-3 space-y-2">
                           <p className="text-xs font-semibold text-gray-400 uppercase">Add Field</p>
                           <input
                             type="text"
@@ -522,7 +522,7 @@ export default function ApplicationsPage() {
             <div className="card p-0 overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[500px]">
-                  <thead className="bg-discord-darkest-bg">
+                  <thead className="bg-[var(--bg-base)]">
                     <tr>
                       <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Submitted By</th>
                       <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Form</th>
@@ -531,7 +531,7 @@ export default function ApplicationsPage() {
                       <th className="px-4 py-3" />
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-700/50">
+                  <tbody className="divide-y divide-[var(--border-subtle)]">
                     {submissions.map((sub) => {
                       const form = forms.find((f) => f.id === sub.formId);
                       const isExpanded = expandedSubmissions.has(sub.id);
@@ -540,7 +540,7 @@ export default function ApplicationsPage() {
                         <>
                           <tr
                             key={sub.id}
-                            className="hover:bg-discord-dark-bg/30 transition-colors cursor-pointer"
+                            className="hover:bg-white/[0.02] transition-colors cursor-pointer"
                             onClick={() => toggleSubmission(sub.id)}
                           >
                             <td className="px-4 py-3 text-sm text-gray-200">{sub.userTag}</td>
@@ -572,7 +572,7 @@ export default function ApplicationsPage() {
                                     </div>
                                   ))}
                                   {sub.reviewNote && (
-                                    <div className="border-t border-gray-700/50 pt-2">
+                                    <div className="border-t border-[var(--border-subtle)] pt-2">
                                       <p className="text-xs text-gray-500">
                                         Reviewed by <span className="text-gray-400">{sub.reviewerTag}</span>: {sub.reviewNote}
                                       </p>
@@ -597,7 +597,7 @@ export default function ApplicationsPage() {
                                     </div>
                                   )}
                                   {isPendingReview && (
-                                    <div className="border border-gray-700/50 rounded-lg p-3 space-y-2" onClick={(e) => e.stopPropagation()}>
+                                    <div className="border border-[var(--border-subtle)] rounded-lg p-3 space-y-2" onClick={(e) => e.stopPropagation()}>
                                       <p className="text-xs font-semibold text-gray-400 uppercase">
                                         {pendingReview.action === 'accept' ? 'Accept' : 'Deny'} — Add a note (optional)
                                       </p>

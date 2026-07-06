@@ -3,33 +3,18 @@
 import Link from 'next/link';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { adminApi } from '@/lib/api';
-import { Server, Users, Shield, Puzzle, TrendingUp, Clock, type LucideIcon } from 'lucide-react';
+import { Server, Users, Puzzle, Shield, LayoutGrid, ArrowRight } from 'lucide-react';
 import type { SystemStats } from '@arkenbot/shared';
 import { useWebSocket } from '@/lib/socket';
 
-const statColors = {
-  blue:   { ring: 'ring-blue-500/20',   bg: 'bg-blue-500/10',   text: 'text-blue-400' },
-  green:  { ring: 'ring-green-500/20',  bg: 'bg-green-500/10',  text: 'text-green-400' },
-  purple: { ring: 'ring-purple-500/20', bg: 'bg-purple-500/10', text: 'text-purple-400' },
-  red:    { ring: 'ring-red-500/20',    bg: 'bg-red-500/10',    text: 'text-red-400' },
-  yellow: { ring: 'ring-yellow-500/20', bg: 'bg-yellow-500/10', text: 'text-yellow-400' },
-};
-
-function StatCard({ title, value, icon: Icon, color = 'blue' }: {
-  title: string; value: string | number; icon: LucideIcon; color?: keyof typeof statColors;
-}) {
-  const c = statColors[color];
+/** Mock-pattern stat tile: uppercase label, big tabular value. */
+function StatTile({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className="bg-discord-darker-bg border border-white/[0.06] rounded-xl p-4 flex items-center gap-4">
-      <div className={`w-10 h-10 rounded-lg ${c.bg} ring-1 ${c.ring} flex items-center justify-center flex-shrink-0`}>
-        <Icon className={`w-5 h-5 ${c.text}`} />
-      </div>
-      <div>
-        <p className="text-xs text-gray-500 font-medium">{title}</p>
-        <p className="text-2xl font-bold text-white leading-tight">
-          {typeof value === 'number' ? value.toLocaleString() : value}
-        </p>
-      </div>
+    <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl px-4 pt-[15px] pb-3">
+      <p className="text-[11px] uppercase tracking-[0.05em] text-[var(--text-muted)] font-semibold">{label}</p>
+      <p className="text-2xl font-bold text-white leading-tight tracking-tight tabular mt-[3px]">
+        {typeof value === 'number' ? value.toLocaleString() : value}
+      </p>
     </div>
   );
 }
@@ -52,86 +37,91 @@ export default function StaffDashboard() {
     const d = Math.floor(seconds / 86400);
     const h = Math.floor((seconds % 86400) / 3600);
     const m = Math.floor((seconds % 3600) / 60);
-    return `${d}d ${h}h ${m}m`;
+    return d > 0 ? `${d}d ${h}h` : `${h}h ${m}m`;
   };
 
   return (
     <div className="p-3 sm:p-6 max-w-6xl mx-auto">
-      <div className="mb-6">
-        <h1 className="text-xl font-bold text-white">Staff Dashboard</h1>
-        <p className="text-gray-500 text-sm mt-0.5">System-wide overview and management</p>
+      <div className="page-head">
+        <div className="page-head-icon"><LayoutGrid className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>Fleet overview</h1>
+          <div className="page-head-desc">Every server, user, and moving part of ArkenBot.</div>
+        </div>
       </div>
 
-      {/* Stat Cards */}
+      {/* Stat tiles */}
       {isLoading ? (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 mb-6">
           {[...Array(8)].map((_, i) => (
-            <div key={i} className="bg-discord-darker-bg border border-white/[0.06] rounded-xl h-20 animate-pulse" />
+            <div key={i} className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl h-[76px] animate-pulse" />
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-          <StatCard title="Total Guilds" value={stats?.totalGuilds ?? 0} icon={Server} color="blue" />
-          <StatCard title="Active Guilds" value={stats?.activeGuilds ?? 0} icon={Server} color="green" />
-          <StatCard title="Total Users" value={stats?.totalUsers ?? 0} icon={Users} color="purple" />
-          <StatCard title="Mod Cases" value={stats?.totalCases ?? 0} icon={Shield} color="red" />
-          <StatCard title="Active Warnings" value={stats?.totalWarnings ?? 0} icon={Shield} color="yellow" />
-          <StatCard title="Addons" value={stats?.totalAddons ?? 0} icon={Puzzle} color="blue" />
-          <StatCard title="Uptime" value={stats?.uptime ? formatUptime(stats.uptime) : '—'} icon={Clock} color="green" />
-          <StatCard title="Memory Usage" value={stats?.memoryUsage ? `${stats.memoryUsage} MB` : '—'} icon={TrendingUp} color="yellow" />
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 mb-6">
+          <StatTile label="Servers" value={stats?.totalGuilds ?? 0} />
+          <StatTile label="Active Servers" value={stats?.activeGuilds ?? 0} />
+          <StatTile label="Total Users" value={stats?.totalUsers ?? 0} />
+          <StatTile label="Mod Cases" value={stats?.totalCases ?? 0} />
+          <StatTile label="Active Warnings" value={stats?.totalWarnings ?? 0} />
+          <StatTile label="Addons" value={stats?.totalAddons ?? 0} />
+          <StatTile label="Uptime" value={stats?.uptime ? formatUptime(stats.uptime) : '—'} />
+          <StatTile label="Memory" value={stats?.memoryUsage ? `${stats.memoryUsage} MB` : '—'} />
         </div>
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Quick Actions */}
-        <div className="bg-discord-darker-bg border border-white/[0.06] rounded-xl p-5">
-          <h2 className="text-sm font-semibold text-white mb-4">Quick Actions</h2>
-          <div className="grid grid-cols-2 gap-2">
+        {/* Quick actions */}
+        <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl p-0 overflow-hidden">
+          <div className="px-[18px] py-[13px] border-b border-[var(--border-subtle)]">
+            <h2 className="text-[13.5px] font-bold text-white">Quick actions</h2>
+          </div>
+          <div>
             {[
-              { href: '/staff/guilds', icon: Server, label: 'Browse Guilds', color: 'text-blue-400 bg-blue-500/10' },
-              { href: '/staff/users', icon: Users, label: 'Manage Users', color: 'text-green-400 bg-green-500/10' },
-              { href: '/staff/addons', icon: Puzzle, label: 'Addon Registry', color: 'text-pink-400 bg-pink-500/10' },
-              { href: '/staff/logs', icon: Shield, label: 'System Logs', color: 'text-yellow-400 bg-yellow-500/10' },
+              { href: '/staff/guilds', icon: Server, label: 'Browse guilds', sub: 'Every server ArkenBot is in' },
+              { href: '/staff/users', icon: Users, label: 'Manage users', sub: 'Staff roles and dashboard access' },
+              { href: '/staff/addons', icon: Puzzle, label: 'Addon registry', sub: 'Publish and maintain addons' },
+              { href: '/staff/logs', icon: Shield, label: 'System logs', sub: 'Bot and API level events' },
             ].map((action) => (
               <Link
                 key={action.href}
                 href={action.href}
-                className="flex items-center gap-3 px-3 py-3 rounded-lg bg-discord-darkest-bg border border-white/[0.04] hover:border-white/[0.10] transition-colors group"
+                className="flex items-center gap-3 px-[18px] py-3 border-b border-[var(--border-subtle)] last:border-0 hover:bg-white/[0.02] transition-colors group"
               >
-                <div className={`w-7 h-7 rounded-md ${action.color} flex items-center justify-center flex-shrink-0`}>
-                  <action.icon className="w-3.5 h-3.5" />
-                </div>
-                <span className="text-xs text-gray-300 font-medium group-hover:text-white transition-colors">{action.label}</span>
+                <span className="w-[34px] h-[34px] rounded-[9px] bg-[var(--bg-elevated)] grid place-items-center flex-shrink-0">
+                  <action.icon className="w-4 h-4 text-[var(--accent)]" />
+                </span>
+                <span className="flex-1 min-w-0">
+                  <span className="block text-[13.5px] font-semibold text-gray-200 group-hover:text-white transition-colors">{action.label}</span>
+                  <span className="block text-[12px] text-[var(--text-muted)] truncate">{action.sub}</span>
+                </span>
+                <ArrowRight className="w-3.5 h-3.5 text-[var(--text-muted)] opacity-0 group-hover:opacity-100 transition-opacity" />
               </Link>
             ))}
           </div>
         </div>
 
-        {/* System Info */}
-        <div className="bg-discord-darker-bg border border-white/[0.06] rounded-xl p-5">
-          <h2 className="text-sm font-semibold text-white mb-4">System Info</h2>
-          <div className="space-y-2.5">
+        {/* System health */}
+        <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl p-0 overflow-hidden">
+          <div className="flex items-center px-[18px] py-[13px] border-b border-[var(--border-subtle)]">
+            <h2 className="text-[13.5px] font-bold text-white">System health</h2>
+            <span className="ml-auto inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-0.5 rounded-full text-[var(--success)] bg-[var(--success)]/10 border border-[var(--success)]/30">
+              <span className="w-[7px] h-[7px] rounded-full bg-[var(--success)]" />
+              Operational
+            </span>
+          </div>
+          <div className="px-[18px]">
             {[
+              { label: 'Discord Bot', value: `${stats?.totalGuilds ?? '—'} servers` },
+              { label: 'API', value: stats?.uptime ? `up ${formatUptime(stats.uptime)}` : '—' },
               { label: 'Version', value: stats?.version ?? '1.0.0', mono: true },
-              { label: 'Environment', value: process.env.NODE_ENV ?? 'development', badge: true },
-              { label: 'Memory', value: stats?.memoryUsage ? `${stats.memoryUsage} MB heap used` : '—', mono: false },
+              { label: 'Memory', value: stats?.memoryUsage ? `${stats.memoryUsage} MB heap` : '—' },
+              { label: 'Environment', value: process.env.NODE_ENV ?? 'development' },
             ].map((row) => (
-              <div
-                key={row.label}
-                className="flex items-center justify-between px-3 py-2.5 rounded-lg bg-discord-darkest-bg border border-white/[0.04]"
-              >
-                <span className="text-xs text-gray-500">{row.label}</span>
-                {row.badge ? (
-                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                    row.value === 'production'
-                      ? 'bg-green-500/15 text-green-400'
-                      : 'bg-yellow-500/15 text-yellow-400'
-                  }`}>
-                    {row.value}
-                  </span>
-                ) : (
-                  <span className={`text-xs text-white ${row.mono ? 'font-mono' : ''}`}>{row.value}</span>
-                )}
+              <div key={row.label} className="flex items-center gap-2.5 py-3 border-b border-[var(--border-subtle)] last:border-0">
+                <span className="w-[7px] h-[7px] rounded-full bg-[var(--success)] flex-shrink-0" />
+                <span className="text-[13px] font-semibold text-gray-200">{row.label}</span>
+                <span className={`ml-auto text-[12px] text-[var(--text-muted)] ${row.mono ? 'font-mono' : ''}`}>{row.value}</span>
               </div>
             ))}
           </div>

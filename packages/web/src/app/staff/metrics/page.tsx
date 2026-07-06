@@ -42,9 +42,12 @@ export default function StaffMetricsPage() {
 
   return (
     <div className="p-3 sm:p-6">
-      <div className="mb-6 flex items-center gap-3">
-        <BarChart3 className="w-6 h-6 text-discord-blurple" />
-        <h1 className="text-2xl font-bold text-white">System Metrics</h1>
+      <div className="page-head">
+        <div className="page-head-icon"><BarChart3 className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>System Metrics</h1>
+          <div className="page-head-desc">Usage and performance across the fleet.</div>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -89,7 +92,7 @@ export default function StaffMetricsPage() {
               { label: 'Memory Usage', value: stats?.memoryUsage ? `${stats.memoryUsage} MB` : '—' },
               { label: 'Uptime', value: stats?.uptime ? `${Math.floor(stats.uptime / 3600)}h ${Math.floor((stats.uptime % 3600) / 60)}m` : '—' },
             ].map((item) => (
-              <div key={item.label} className="flex justify-between items-center py-1 border-b border-gray-700/50">
+              <div key={item.label} className="flex justify-between items-center py-1 border-b border-[var(--border-subtle)]">
                 <dt className="text-gray-400 text-sm">{item.label}</dt>
                 <dd className="text-white font-mono text-sm">{String(item.value)}</dd>
               </div>

@@ -59,9 +59,12 @@ export default function AnalyticsPage() {
 
   return (
     <div className="p-3 sm:p-6 max-w-4xl space-y-6">
-      <div className="flex items-center gap-3 mb-6">
-        <LineChartIcon className="w-6 h-6 text-discord-blurple" />
-        <h1 className="text-2xl font-bold text-white">Server Analytics</h1>
+      <div className="page-head">
+        <div className="page-head-icon"><LineChartIcon className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>Analytics</h1>
+          <div className="page-head-desc">Growth, activity, and engagement for your server.</div>
+        </div>
       </div>
 
       {/* 24h stat cards */}
