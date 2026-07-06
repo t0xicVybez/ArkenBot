@@ -80,7 +80,33 @@ export class BackgroundJobs {
     void this.beatHeartbeat();
     this.timers.push(setInterval(() => void this.beatHeartbeat(), 30 * 1000));
 
-    logger.info('Background jobs started (birthdays, scheduled messages, stats channels, temp bans, temp roles, reminders, giveaways, stream alerts, xp decay, analytics, weekly analytics, guild purge sweep, heartbeat)');
+    // Server count on the top.gg listing — only when a token is configured.
+    if (process.env.TOPGG_TOKEN) {
+      void this.postTopggStats();
+      setTimeout(() => this.timers.push(setInterval(() => void this.postTopggStats(), 30 * 60 * 1000)), jitter());
+    } else {
+      logger.info('TOPGG_TOKEN not set — skipping top.gg stats posting');
+    }
+
+    logger.info('Background jobs started (birthdays, scheduled messages, stats channels, temp bans, temp roles, reminders, giveaways, stream alerts, xp decay, analytics, weekly analytics, guild purge sweep, heartbeat, top.gg stats)');
+  }
+
+  /** Posts the current guild count to top.gg so the listing shows real numbers. */
+  private async postTopggStats(): Promise<void> {
+    const token = process.env.TOPGG_TOKEN;
+    if (!token || !this.client.user) return;
+    try {
+      const res = await fetch(`https://top.gg/api/bots/${this.client.user.id}/stats`, {
+        method: 'POST',
+        headers: { 'Authorization': token, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ server_count: this.client.guilds.cache.size }),
+      });
+      if (!res.ok) {
+        logger.warn(`top.gg stats post failed: HTTP ${res.status} ${await res.text().catch(() => '')}`);
+      }
+    } catch (err) {
+      logger.warn(`top.gg stats post failed: ${err instanceof Error ? err.message : String(err)}`);
+    }
   }
 
   /** Writes a short-lived Redis key so the API can report bot liveness. */
