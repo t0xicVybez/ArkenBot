@@ -93,16 +93,16 @@ export default function SlowmodePage() {
 
   return (
     <div className="p-3 sm:p-6 max-w-4xl">
-      <div className="mb-6 flex items-center gap-3">
-        <Timer className="w-6 h-6 text-discord-blurple" />
-        <div>
-          <h1 className="text-2xl font-bold text-white">Auto-Slowmode</h1>
-          <p className="text-sm text-gray-400">Automatically apply slowmode when channels get busy.</p>
+      <div className="page-head">
+        <div className="page-head-icon"><Timer className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>Auto-Slowmode</h1>
+          <div className="page-head-desc">Automatically apply slowmode when channels get busy.</div>
         </div>
       </div>
 
       <div className="card mb-6 p-0 overflow-hidden">
-        <div className="px-4 py-3 border-b border-gray-700/50">
+        <div className="px-4 py-3 border-b border-[var(--border-subtle)]">
           <h2 className="text-lg font-semibold text-white">Slowmode Configs</h2>
         </div>
         {isLoading ? (
@@ -119,7 +119,7 @@ export default function SlowmodePage() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-discord-darkest-bg">
+              <thead className="bg-[var(--bg-base)]">
                 <tr>
                   <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Channel</th>
                   <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Threshold</th>
@@ -130,9 +130,9 @@ export default function SlowmodePage() {
                   <th className="px-4 py-3" />
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-700/50">
+              <tbody className="divide-y divide-[var(--border-subtle)]">
                 {configs.map((cfg) => (
-                  <tr key={cfg.id} className="hover:bg-discord-dark-bg/30 transition-colors">
+                  <tr key={cfg.id} className="hover:bg-white/[0.02] transition-colors">
                     <td className="px-4 py-3 text-sm text-gray-200">{getChannelName(cfg.channelId)}</td>
                     <td className="px-4 py-3 text-sm text-gray-400">{cfg.threshold} msgs</td>
                     <td className="px-4 py-3 text-sm text-gray-400">{cfg.window}s</td>

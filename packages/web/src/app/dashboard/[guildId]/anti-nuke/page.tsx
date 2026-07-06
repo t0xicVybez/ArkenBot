@@ -78,11 +78,11 @@ export default function AntiNukePage() {
 
   return (
     <div className="p-3 sm:p-6 max-w-2xl">
-      <div className="mb-6 flex items-center gap-3">
-        <ShieldAlert className="w-6 h-6 text-discord-blurple" />
-        <div>
-          <h1 className="text-2xl font-bold text-white">Anti-Nuke</h1>
-          <p className="text-sm text-gray-400">Protect your server from rapid destructive actions.</p>
+      <div className="page-head">
+        <div className="page-head-icon"><ShieldAlert className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>Anti-Nuke</h1>
+          <div className="page-head-desc">Protect your server from rapid destructive actions.</div>
         </div>
       </div>
 

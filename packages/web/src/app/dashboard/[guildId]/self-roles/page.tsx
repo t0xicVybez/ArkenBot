@@ -69,14 +69,12 @@ export default function SelfRolesPage() {
 
   return (
     <div className="p-3 sm:p-6 max-w-3xl space-y-6">
-      <div className="flex items-center gap-3">
-        <UserCheck className="w-6 h-6 text-discord-blurple" />
-        <div>
-          <h1 className="text-2xl font-bold text-white">Self-Assignable Roles</h1>
-          <p className="text-gray-400 text-sm mt-0.5">
-            Members can claim roles themselves with <code className="bg-gray-700 px-1 rounded text-xs">/selfassignrole</code> and drop them with{' '}
-            <code className="bg-gray-700 px-1 rounded text-xs">/selfremoverole</code>.
-          </p>
+      <div className="page-head">
+        <div className="page-head-icon"><UserCheck className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>Self-Assignable Roles</h1>
+          <div className="page-head-desc">Members can claim roles themselves with <code className="bg-gray-700 px-1 rounded text-xs">/selfassignrole</code> and drop them with{' '}
+            <code className="bg-gray-700 px-1 rounded text-xs">/selfremoverole</code>.</div>
         </div>
       </div>
 
@@ -129,7 +127,7 @@ export default function SelfRolesPage() {
               return (
                 <div
                   key={sr.id}
-                  className="flex items-center justify-between bg-discord-darkest-bg rounded-lg px-4 py-3"
+                  className="flex items-center justify-between bg-[var(--bg-base)] rounded-lg px-4 py-3"
                 >
                   <div>
                     <p className="text-white text-sm font-medium">

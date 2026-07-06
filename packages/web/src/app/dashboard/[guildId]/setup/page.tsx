@@ -63,11 +63,11 @@ export default function SetupWizardPage() {
   return (
     <div className="p-3 sm:p-6 max-w-2xl mx-auto">
       {/* Header */}
-      <div className="mb-8 flex items-center gap-3">
-        <Sparkles className="w-6 h-6 text-discord-blurple" />
-        <div>
-          <h1 className="text-2xl font-bold text-white">Setup Wizard</h1>
-          <p className="text-gray-500 text-sm">Configure the essentials in a few steps</p>
+      <div className="page-head">
+        <div className="page-head-icon"><Sparkles className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>Setup Wizard</h1>
+          <div className="page-head-desc">Configure the essentials in a few steps</div>
         </div>
       </div>
 
@@ -121,7 +121,7 @@ export default function SetupWizardPage() {
                     ? 'bg-discord-blurple text-white'
                     : done
                     ? 'bg-green-500/20 text-green-400'
-                    : 'bg-discord-darker-bg text-gray-500'
+                    : 'bg-[var(--bg-card)] text-gray-500'
                 }`}
               >
                 {done && !active ? <Check className="w-3 h-3" /> : <Icon className="w-3 h-3" />}
@@ -134,7 +134,7 @@ export default function SetupWizardPage() {
       </div>
 
       {/* Step panels */}
-      <div className="bg-discord-darker-bg border border-white/[0.06] rounded-xl p-6">
+      <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl p-6">
         {step === 0 && (
           <WelcomeStep
             guildId={guildId}
@@ -435,7 +435,7 @@ function DoneStep({ guildId, completed }: { guildId: string; completed: Set<numb
           <Link
             key={l.href}
             href={l.href}
-            className="flex items-center justify-between px-4 py-2.5 rounded-lg bg-discord-darkest-bg border border-white/[0.04] hover:border-discord-blurple/40 transition-colors group"
+            className="flex items-center justify-between px-4 py-2.5 rounded-lg bg-[var(--bg-base)] border border-white/[0.04] hover:border-discord-blurple/40 transition-colors group"
           >
             <span className="text-gray-300 text-sm group-hover:text-white transition-colors">{l.label}</span>
             <ChevronRight className="w-4 h-4 text-gray-600 group-hover:text-discord-blurple transition-colors" />

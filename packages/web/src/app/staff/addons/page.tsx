@@ -48,15 +48,18 @@ export default function StaffAddonsPage() {
 
   return (
     <div className="p-3 sm:p-6">
-      <div className="mb-6 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Puzzle className="w-6 h-6 text-discord-blurple" />
-          <h1 className="text-2xl font-bold text-white">Addons Registry</h1>
+      <div className="page-head">
+        <div className="page-head-icon"><Puzzle className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>Addons Registry</h1>
+          <div className="page-head-desc">Publish and maintain addon packages.</div>
         </div>
-        <button onClick={() => setShowForm(!showForm)} className="btn-primary">
+        <div className="page-head-actions">
+          <button onClick={() => setShowForm(!showForm)} className="btn-primary">
           <Plus className="w-4 h-4" />
           Register Addon
         </button>
+        </div>
       </div>
 
       {showForm && (

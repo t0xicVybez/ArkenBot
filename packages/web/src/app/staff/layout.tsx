@@ -23,6 +23,7 @@ import {
   LayoutGrid,
   Megaphone,
 } from 'lucide-react';
+import { Topbar } from '@/components/Topbar';
 
 const staffNav = [
   { href: '/staff', label: 'Dashboard', icon: LayoutDashboard },
@@ -68,25 +69,25 @@ export default function StaffLayout({ children }: { children: React.ReactNode })
   };
 
   return (
-    <div className="flex min-h-screen bg-discord-darkest-bg">
+    <div className="staff-theme flex min-h-screen bg-[var(--bg-base)]">
       {sidebarOpen && (
         <div className="fixed inset-0 bg-black/60 z-30 md:hidden" onClick={() => setSidebarOpen(false)} />
       )}
 
       <aside className={clsx(
-        'fixed inset-y-0 left-0 z-40 w-56 bg-discord-darker-bg flex flex-col border-r border-white/[0.06] transition-transform duration-200',
+        'fixed inset-y-0 left-0 z-40 w-56 bg-[var(--bg-card)] flex flex-col border-r border-white/[0.06] transition-transform duration-200',
         'md:relative md:translate-x-0',
         sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0',
       )}>
         {/* Header */}
-        <div className="px-3 py-3 border-b border-white/[0.06]">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-purple-600/80 flex items-center justify-center flex-shrink-0">
+        <div className="px-2.5 pt-3 pb-2">
+          <div className="flex items-center gap-2.5 p-2.5 rounded-[10px] bg-[var(--bg-elevated)] border border-[var(--border-subtle)]">
+            <div className="w-[34px] h-[34px] rounded-[10px] bg-gradient-to-br from-[var(--accent)] to-[var(--accent-2)] flex items-center justify-center flex-shrink-0">
               <Shield className="w-4 h-4 text-white" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-white font-semibold text-sm leading-tight">Staff Portal</p>
-              <p className="text-gray-500 text-xs truncate">{user?.username}</p>
+              <p className="text-white font-bold text-[13px] leading-tight">ArkenBot HQ</p>
+              <p className="text-[var(--text-muted)] text-[11px] truncate">staff portal · {user?.username}</p>
             </div>
             <button onClick={() => setSidebarOpen(false)} className="md:hidden text-gray-500 hover:text-white p-1">
               <X className="w-4 h-4" />
@@ -140,7 +141,7 @@ export default function StaffLayout({ children }: { children: React.ReactNode })
 
       <main className="flex-1 overflow-auto flex flex-col min-w-0">
         {/* Mobile top bar */}
-        <div className="md:hidden flex items-center gap-3 px-4 py-3 border-b border-white/[0.06] bg-discord-darker-bg">
+        <div className="md:hidden flex items-center gap-3 px-4 py-3 border-b border-white/[0.06] bg-[var(--bg-card)]">
           <button onClick={() => setSidebarOpen(true)} className="text-gray-400 hover:text-white transition-colors" aria-label="Open menu">
             <Menu className="w-5 h-5" />
           </button>
@@ -149,10 +150,10 @@ export default function StaffLayout({ children }: { children: React.ReactNode })
             <p className="text-white font-semibold text-sm">Staff Portal</p>
           </div>
         </div>
-        <div className="flex-1">{children}</div>
-        <footer className="px-6 py-3 border-t border-white/[0.04] text-center text-xs text-gray-600">
-          Powered by <span className="text-gray-500 font-medium">Arken Bot</span>
-        </footer>
+        <Topbar variant="staff" />
+        <div className="flex-1">
+          <div className="max-w-[1120px]">{children}</div>
+        </div>
       </main>
     </div>
   );

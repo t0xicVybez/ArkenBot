@@ -36,7 +36,6 @@ import {
   Star,
   Radio,
   LineChart,
-  ArrowLeft,
   UserPlus,
   Hash,
   Layout,
@@ -51,6 +50,7 @@ import {
   ClipboardList,
   Trello,
   History,
+  Search,
   type LucideIcon,
 } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
@@ -61,6 +61,7 @@ interface SidebarProps {
   guildId?: string;
   guildName?: string;
   guildIcon?: string | null;
+  memberCount?: number;
   installedAddons?: string[];
   open?: boolean;
   onClose?: () => void;
@@ -84,6 +85,8 @@ const buildNavSections = (guildId: string, installedAddons: string[]): NavSectio
     {
       items: [
         { href: `/dashboard/${guildId}`, label: 'Overview', icon: LayoutDashboard },
+        { href: `/dashboard/${guildId}/setup`, label: 'Setup Wizard', icon: ShieldCheck },
+        { href: `/dashboard/${guildId}/analytics`, label: 'Analytics', icon: LineChart },
       ],
     },
     {
@@ -111,26 +114,30 @@ const buildNavSections = (guildId: string, installedAddons: string[]): NavSectio
         { href: `/dashboard/${guildId}/giveaways`, label: 'Giveaways', icon: Gift },
         { href: `/dashboard/${guildId}/starboard`, label: 'Starboard', icon: Star },
         { href: `/dashboard/${guildId}/members`, label: 'Members', icon: Users },
-        { href: `/dashboard/${guildId}/analytics`, label: 'Analytics', icon: LineChart },
         { href: `/dashboard/${guildId}/invite-tracker`, label: 'Invite Tracker', icon: UserPlus },
       ],
     },
     {
-      label: 'Tools',
+      label: 'Content & Tools',
       items: [
         { href: `/dashboard/${guildId}/music`, label: 'Music', icon: Music },
         { href: `/dashboard/${guildId}/stats-channels`, label: 'Stats Channels', icon: BarChart2 },
         { href: `/dashboard/${guildId}/embeds`, label: 'Embed Builder', icon: Layout },
         { href: `/dashboard/${guildId}/scheduled-messages`, label: 'Scheduled Messages', icon: Clock },
-        { href: `/dashboard/${guildId}/stream-alerts`, label: 'Stream Alerts', icon: Radio },
         { href: `/dashboard/${guildId}/temp-voice`, label: 'Temp Voice', icon: Mic },
+        { href: `/dashboard/${guildId}/commands`, label: 'Commands', icon: Terminal },
+        { href: `/dashboard/${guildId}/forum-management`, label: 'Forum Management', icon: MessagesSquare },
+      ],
+    },
+    {
+      label: 'Integrations',
+      items: [
+        { href: `/dashboard/${guildId}/stream-alerts`, label: 'Stream Alerts', icon: Radio },
         { href: `/dashboard/${guildId}/twitter-feeds`, label: 'X / Twitter Feeds', icon: AtSign },
         { href: `/dashboard/${guildId}/reddit-feeds`, label: 'Reddit Feeds', icon: Globe },
         { href: `/dashboard/${guildId}/rss-feeds`, label: 'RSS Feeds', icon: Rss },
-        { href: `/dashboard/${guildId}/monday`, label: 'monday.com', icon: ClipboardList },
+        { href: `/dashboard/${guildId}/monday`, label: 'Monday.com', icon: ClipboardList },
         { href: `/dashboard/${guildId}/trello`, label: 'Trello', icon: Trello },
-        { href: `/dashboard/${guildId}/commands`, label: 'Commands', icon: Terminal },
-        { href: `/dashboard/${guildId}/forum-management`, label: 'Forum Management', icon: MessagesSquare },
       ],
     },
     ...(addonItems.length > 0 ? [{ label: 'Addons', items: addonItems }] : []),
@@ -147,8 +154,9 @@ const buildNavSections = (guildId: string, installedAddons: string[]): NavSectio
   ];
 };
 
-/** localStorage key used to persist which nav sections are collapsed. */
 const STORAGE_KEY = 'sidebar_collapsed';
+/** localStorage key for pinned favorite pages. */
+const PINS_KEY = 'sidebar_pins';
 
 /**
  * Reads persisted section-collapse state from localStorage.
@@ -163,13 +171,25 @@ function loadCollapsed(): Record<string, boolean> {
  * Full-width sidebar for the per-guild dashboard.
  * On mobile, renders as an off-canvas drawer controlled by `open`/`onClose`.
  */
-export function Sidebar({ guildId, guildName, guildIcon, installedAddons = [], open = false, onClose }: SidebarProps) {
+export function Sidebar({ guildId, guildName, guildIcon, memberCount, installedAddons = [], open = false, onClose }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const { user, logout } = useAuth();
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
+  const [pins, setPins] = useState<string[]>([]);
 
-  useEffect(() => { setCollapsed(loadCollapsed()); }, []);
+  useEffect(() => {
+    setCollapsed(loadCollapsed());
+    try { setPins(JSON.parse(localStorage.getItem(PINS_KEY) ?? '[]')); } catch { /* ignore */ }
+  }, []);
+
+  const togglePin = (href: string) => {
+    setPins((prev) => {
+      const next = prev.includes(href) ? prev.filter((p) => p !== href) : [...prev, href];
+      localStorage.setItem(PINS_KEY, JSON.stringify(next));
+      return next;
+    });
+  };
 
   const toggleSection = (label: string) => {
     setCollapsed((prev) => {
@@ -204,33 +224,41 @@ export function Sidebar({ guildId, guildName, guildIcon, installedAddons = [], o
       )}
 
       <aside className={clsx(
-        'fixed inset-y-0 left-0 z-40 w-60 bg-discord-elevated flex flex-col border-r transition-transform duration-200',
+        'fixed inset-y-0 left-0 z-40 w-[250px] bg-discord-surface flex flex-col border-r transition-transform duration-200',
         'border-[var(--border-subtle)]',
         'md:relative md:translate-x-0 md:flex',
         open ? 'translate-x-0' : '-translate-x-full md:translate-x-0',
       )}>
-        {/* Guild header */}
-        <div className="px-3 py-3 border-b border-[var(--border-subtle)]">
+        {/* Guild switcher card */}
+        <div className="px-2.5 pt-3 pb-1">
           <div className="flex items-center gap-2.5">
-            <div className="flex items-center gap-2.5 flex-1 min-w-0">
+            <Link
+              href="/dashboard"
+              onClick={handleNavClick}
+              title="Switch server"
+              className="flex items-center gap-2.5 flex-1 min-w-0 p-2.5 rounded-[10px] bg-[var(--bg-card)] border border-[var(--border-subtle)] hover:border-[var(--border)] transition-colors"
+            >
               {guildIcon ? (
                 <img
                   src={guildIcon}
                   alt={guildName}
-                  className="w-8 h-8 rounded-lg flex-shrink-0 object-cover"
+                  className="w-[34px] h-[34px] rounded-[10px] flex-shrink-0 object-cover"
                 />
               ) : (
-                <div className="w-8 h-8 rounded-lg bg-discord-blurple flex items-center justify-center text-white font-bold text-xs flex-shrink-0">
+                <div className="w-[34px] h-[34px] rounded-[10px] bg-gradient-to-br from-[var(--accent)] to-[var(--accent-2)] grid place-items-center text-white font-extrabold text-sm flex-shrink-0">
                   {guildName?.[0] ?? 'D'}
                 </div>
               )}
               <div className="flex-1 min-w-0">
-                <p className="text-white font-semibold text-sm truncate leading-tight tracking-tight">
+                <p className="text-white font-bold text-[13px] truncate leading-tight tracking-tight">
                   {guildName ?? 'Dashboard'}
                 </p>
-                <p className="text-[var(--text-muted)] text-xs">Server Settings</p>
+                <p className="text-[var(--text-muted)] text-[11px] truncate">
+                  {memberCount ? `${memberCount.toLocaleString()} members` : 'Server settings'}
+                </p>
               </div>
-            </div>
+              <ChevronDown className="w-3 h-3 text-[var(--text-muted)] flex-shrink-0" />
+            </Link>
             <button
               onClick={onClose}
               className="md:hidden p-1 rounded-md text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-white/[0.06] transition-colors"
@@ -239,18 +267,42 @@ export function Sidebar({ guildId, guildName, guildIcon, installedAddons = [], o
             </button>
           </div>
 
-          <Link
-            href="/dashboard"
-            onClick={handleNavClick}
-            className="mt-2.5 flex items-center gap-1.5 text-[11px] text-[var(--text-muted)] hover:text-[var(--text-secondary)] transition-colors"
+          <button
+            onClick={() => window.dispatchEvent(new Event('cmdk:open'))}
+            className="mt-2 mb-1.5 w-full flex items-center gap-2 px-2.5 py-[7px] rounded-[9px] border border-[var(--border-subtle)] bg-white/[0.02] text-[12.5px] text-[var(--text-muted)] hover:border-[var(--accent)]/40 hover:text-[var(--text-secondary)] transition-colors"
           >
-            <ArrowLeft className="w-3 h-3" />
-            All Servers
-          </Link>
+            <Search className="w-3 h-3" />
+            Search…
+            <kbd className="ml-auto text-[10px] font-mono border border-[var(--border)] rounded-[5px] px-1.5 py-px">Ctrl K</kbd>
+          </button>
         </div>
 
         {/* Navigation */}
         <nav className="flex-1 px-2 py-2 overflow-y-auto space-y-0.5">
+          {pins.length > 0 && (
+            <div className="mb-3">
+              <p className="section-title px-2 mb-1 select-none">★ Pinned</p>
+              {sections.flatMap((s) => s.items).filter((i) => pins.includes(i.href)).map((item) => {
+                const Icon = item.icon;
+                const isActive = pathname === item.href;
+                return (
+                  <div key={`pin-${item.href}`} className="group/nav relative">
+                    <Link href={item.href} onClick={handleNavClick} className={isActive ? 'nav-item-active' : 'nav-item'}>
+                      <Icon className="w-3.5 h-3.5 flex-shrink-0" />
+                      <span className="flex-1 truncate">{item.label}</span>
+                    </Link>
+                    <button
+                      onClick={() => togglePin(item.href)}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--warning)] opacity-0 group-hover/nav:opacity-100 transition-opacity"
+                      title="Unpin"
+                    >
+                      <Star className="w-3 h-3 fill-current" />
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          )}
           {sections.map((section, si) => {
             const isCollapsed = section.label ? (collapsed[section.label] ?? false) : false;
             return (
@@ -272,16 +324,27 @@ export function Sidebar({ guildId, guildName, guildIcon, installedAddons = [], o
                 {!isCollapsed && section.items.map((item) => {
                   const Icon = item.icon;
                   const isActive = pathname === item.href;
+                  const isPinned = pins.includes(item.href);
                   return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      onClick={handleNavClick}
-                      className={isActive ? 'nav-item-active' : 'nav-item'}
-                    >
-                      <Icon className="w-3.5 h-3.5 flex-shrink-0" />
-                      <span>{item.label}</span>
-                    </Link>
+                    <div key={item.href} className="group/nav relative">
+                      <Link
+                        href={item.href}
+                        onClick={handleNavClick}
+                        className={isActive ? 'nav-item-active' : 'nav-item'}
+                      >
+                        <Icon className="w-3.5 h-3.5 flex-shrink-0" />
+                        <span className="flex-1 truncate">{item.label}</span>
+                      </Link>
+                      <button
+                        onClick={() => togglePin(item.href)}
+                        className={`absolute right-2 top-1/2 -translate-y-1/2 transition-opacity ${
+                          isPinned ? 'text-[var(--warning)] opacity-100' : 'text-[var(--text-muted)] opacity-0 group-hover/nav:opacity-100'
+                        }`}
+                        title={isPinned ? 'Unpin' : 'Pin to top'}
+                      >
+                        <Star className={`w-3 h-3 ${isPinned ? 'fill-current' : ''}`} />
+                      </button>
+                    </div>
                   );
                 })}
               </div>

@@ -110,16 +110,16 @@ export default function ScheduledMessagesPage() {
 
   return (
     <div className="p-3 sm:p-6 max-w-4xl">
-      <div className="mb-6 flex items-center gap-3">
-        <Clock className="w-6 h-6 text-discord-blurple" />
-        <div>
-          <h1 className="text-2xl font-bold text-white">Scheduled Messages</h1>
-          <p className="text-sm text-gray-400">Automatically send messages at specified times.</p>
+      <div className="page-head">
+        <div className="page-head-icon"><Clock className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>Scheduled Messages</h1>
+          <div className="page-head-desc">Automatically send messages at specified times.</div>
         </div>
       </div>
 
       <div className="card mb-6 p-0 overflow-hidden">
-        <div className="px-4 py-3 border-b border-gray-700/50">
+        <div className="px-4 py-3 border-b border-[var(--border-subtle)]">
           <h2 className="text-lg font-semibold text-white">Scheduled Messages</h2>
         </div>
         {isLoading ? (
@@ -136,7 +136,7 @@ export default function ScheduledMessagesPage() {
         ) : (
           <div className="overflow-x-auto">
           <table className="w-full min-w-[600px]">
-            <thead className="bg-discord-darkest-bg">
+            <thead className="bg-[var(--bg-base)]">
               <tr>
                 <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Channel</th>
                 <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Content</th>
@@ -146,9 +146,9 @@ export default function ScheduledMessagesPage() {
                 <th className="px-4 py-3" />
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-700/50">
+            <tbody className="divide-y divide-[var(--border-subtle)]">
               {messages.map((msg) => (
-                <tr key={msg.id} className="hover:bg-discord-dark-bg/30 transition-colors">
+                <tr key={msg.id} className="hover:bg-white/[0.02] transition-colors">
                   <td className="px-4 py-3 text-sm text-gray-200">{getChannelName(msg.channelId)}</td>
                   <td className="px-4 py-3 text-sm text-gray-400 max-w-[200px] truncate">
                     {msg.content.length > 50 ? `${msg.content.slice(0, 50)}…` : msg.content}

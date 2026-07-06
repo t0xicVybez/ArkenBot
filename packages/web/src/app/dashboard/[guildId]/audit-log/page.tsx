@@ -59,56 +59,63 @@ export default function AuditLogPage() {
 
   return (
     <div className="p-3 sm:p-6 max-w-4xl space-y-6">
-      <div className="flex items-center gap-3">
-        <History className="w-6 h-6 text-discord-blurple" />
-        <div>
-          <h1 className="text-2xl font-bold text-white">Dashboard Audit Log</h1>
-          <p className="text-sm text-gray-400 mt-0.5">
-            Every change made to this server&apos;s settings through the web dashboard — who, what, and when.
-          </p>
+      <div className="page-head">
+        <div className="page-head-icon"><History className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>Dashboard Audit Log</h1>
+          <div className="page-head-desc">Every change made to this server&apos;s settings through the web dashboard — who, what, and when.</div>
         </div>
       </div>
 
       {entries.length === 0 ? (
-        <p className="text-gray-500 text-sm">
-          No dashboard changes recorded yet. Entries appear here whenever an admin saves settings, creates alerts, or deletes configuration through the dashboard.
-        </p>
+        <div className="card empty-state">
+          <div className="empty-state-icon"><History className="w-6 h-6" /></div>
+          <h4>No dashboard changes yet</h4>
+          <p>Entries appear here whenever an admin saves settings, creates alerts, or deletes configuration through the dashboard.</p>
+        </div>
       ) : (
         <>
-          <div className="overflow-hidden rounded-lg border border-gray-700/50">
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[560px]">
-                <thead className="bg-discord-darkest-bg">
-                  <tr>
-                    <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">When</th>
-                    <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Who</th>
-                    <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Action</th>
-                    <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Area</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-700/50">
-                  {entries.map((entry) => (
-                    <tr key={entry.id} className="hover:bg-discord-dark-bg/30 transition-colors">
-                      <td className="px-4 py-3 text-xs text-gray-400 whitespace-nowrap" title={new Date(entry.createdAt).toISOString()}>
-                        {new Date(entry.createdAt).toLocaleString()}
-                      </td>
-                      <td className="px-4 py-3 text-sm text-gray-200">
-                        {entry.username ?? <span className="font-mono text-xs text-gray-500">{entry.userId}</span>}
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className={`text-[11px] font-semibold px-2 py-0.5 rounded border ${METHOD_STYLES[entry.method] ?? 'bg-gray-500/15 text-gray-400 border-gray-500/30'}`}>
-                          {METHOD_VERBS[entry.method] ?? entry.method}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-sm text-gray-300">
-                        {humanizeSection(entry.section)}
-                        <span className="block text-[11px] text-gray-600 font-mono truncate max-w-[260px]">{entry.path}</span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+          <div className="card p-0 overflow-hidden">
+            {(() => {
+              const groups: Array<{ day: string; items: AuditEntry[] }> = [];
+              for (const entry of entries) {
+                const d = new Date(entry.createdAt);
+                const today = new Date();
+                const yesterday = new Date(Date.now() - 86400000);
+                const day = d.toDateString() === today.toDateString() ? 'Today'
+                  : d.toDateString() === yesterday.toDateString() ? 'Yesterday'
+                  : d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+                const g = groups[groups.length - 1];
+                if (g && g.day === day) g.items.push(entry);
+                else groups.push({ day, items: [entry] });
+              }
+              return groups.map((group) => (
+                <div key={group.day}>
+                  <div className="px-4 pt-4 pb-1.5 text-[10.5px] font-bold uppercase tracking-widest text-[var(--text-muted)]">{group.day}</div>
+                  {group.items.map((entry) => {
+                    const initials = (entry.username ?? '??').slice(0, 2);
+                    return (
+                      <div key={entry.id} className="flex items-start gap-3 px-4 py-2.5 border-b border-[var(--border-subtle)] last:border-0">
+                        <div className="w-7 h-7 rounded-full grid place-items-center flex-shrink-0 text-[10px] font-extrabold bg-[var(--accent-glow)] text-[var(--accent)]">
+                          {initials}
+                        </div>
+                        <div className="flex-1 min-w-0 text-[13px]">
+                          <span className="font-semibold text-white">{entry.username ?? entry.userId}</span>{' '}
+                          <span className={`inline-block align-middle mx-1 text-[10.5px] font-semibold px-2 py-px rounded-full border ${METHOD_STYLES[entry.method] ?? 'bg-gray-500/15 text-gray-400 border-gray-500/30'}`}>
+                            {METHOD_VERBS[entry.method] ?? entry.method}
+                          </span>{' '}
+                          <span className="text-gray-300">{humanizeSection(entry.section)}</span>
+                          <div className="font-mono text-[10.5px] text-[var(--text-muted)] truncate">{entry.path}</div>
+                        </div>
+                        <time className="text-[11.5px] text-[var(--text-muted)] tabular flex-shrink-0 pt-0.5" title={new Date(entry.createdAt).toISOString()}>
+                          {new Date(entry.createdAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}
+                        </time>
+                      </div>
+                    );
+                  })}
+                </div>
+              ));
+            })()}
           </div>
 
           {pages > 1 && (

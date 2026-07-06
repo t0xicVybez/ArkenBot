@@ -428,15 +428,13 @@ export default function EmbedsPage() {
   return (
     <div className="p-3 sm:p-6 max-w-7xl">
       <div className="mb-6 flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <Layout className="w-6 h-6 text-discord-blurple flex-shrink-0" />
-          <div>
-            <h1 className="text-2xl font-bold text-white">Embed Builder</h1>
-            <p className="text-sm text-gray-400">
-              Create and send rich Discord embeds from the dashboard.
-            </p>
-          </div>
+        <div className="page-head">
+        <div className="page-head-icon"><Layout className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>Embed Builder</h1>
+          <div className="page-head-desc">Create and send rich Discord embeds from the dashboard.</div>
         </div>
+      </div>
         {editingId && (
           <button onClick={resetForm} className="btn-secondary gap-1.5 text-sm">
             <Plus className="w-4 h-4" />
@@ -489,7 +487,7 @@ export default function EmbedsPage() {
             />
           </div>
 
-          <div className="border-t border-gray-700/50 pt-4">
+          <div className="border-t border-[var(--border-subtle)] pt-4">
             <h3 className="text-sm font-semibold text-gray-300 mb-3">Embed Content</h3>
             <div className="flex gap-3 items-end mb-4">
               <div className="flex-shrink-0">
@@ -534,7 +532,7 @@ export default function EmbedsPage() {
             </div>
           </div>
 
-          <div className="border-t border-gray-700/50 pt-4">
+          <div className="border-t border-[var(--border-subtle)] pt-4">
             <h3 className="text-sm font-semibold text-gray-300 mb-3">Author</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
@@ -555,7 +553,7 @@ export default function EmbedsPage() {
             </div>
           </div>
 
-          <div className="border-t border-gray-700/50 pt-4">
+          <div className="border-t border-[var(--border-subtle)] pt-4">
             <h3 className="text-sm font-semibold text-gray-300 mb-3">Images</h3>
             <div className="space-y-4">
               <ImageInput
@@ -571,7 +569,7 @@ export default function EmbedsPage() {
             </div>
           </div>
 
-          <div className="border-t border-gray-700/50 pt-4">
+          <div className="border-t border-[var(--border-subtle)] pt-4">
             <h3 className="text-sm font-semibold text-gray-300 mb-3">Footer</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-3">
               <div>
@@ -593,7 +591,7 @@ export default function EmbedsPage() {
             <label className="flex items-center gap-2.5 cursor-pointer select-none">
               <input
                 type="checkbox"
-                className="w-4 h-4 rounded border-gray-600 bg-discord-darkest-bg text-discord-blurple focus:ring-discord-blurple focus:ring-offset-discord-darkest-bg"
+                className="w-4 h-4 rounded border-gray-600 bg-[var(--bg-base)] text-discord-blurple focus:ring-discord-blurple focus:ring-offset-discord-darkest-bg"
                 checked={form.embedTimestamp}
                 onChange={(e) => set('embedTimestamp', e.target.checked)}
               />
@@ -601,7 +599,7 @@ export default function EmbedsPage() {
             </label>
           </div>
 
-          <div className="border-t border-gray-700/50 pt-4">
+          <div className="border-t border-[var(--border-subtle)] pt-4">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-semibold text-gray-300">
                 Fields ({form.embedFields.length}/25)
@@ -616,7 +614,7 @@ export default function EmbedsPage() {
             {form.embedFields.length > 0 && (
               <div className="space-y-3">
                 {form.embedFields.map((field, i) => (
-                  <div key={i} className="bg-discord-darkest-bg rounded-md p-3 space-y-2">
+                  <div key={i} className="bg-[var(--bg-base)] rounded-md p-3 space-y-2">
                     <div className="flex items-start gap-2">
                       <div className="flex-1 grid grid-cols-2 gap-2">
                         <input
@@ -645,7 +643,7 @@ export default function EmbedsPage() {
                     <label className="flex items-center gap-2 cursor-pointer select-none">
                       <input
                         type="checkbox"
-                        className="w-3.5 h-3.5 rounded border-gray-600 bg-discord-darkest-bg text-discord-blurple focus:ring-discord-blurple"
+                        className="w-3.5 h-3.5 rounded border-gray-600 bg-[var(--bg-base)] text-discord-blurple focus:ring-discord-blurple"
                         checked={field.inline}
                         onChange={(e) => updateField(i, { inline: e.target.checked })}
                       />
@@ -657,7 +655,7 @@ export default function EmbedsPage() {
             )}
           </div>
 
-          <div className="border-t border-gray-700/50 pt-4 flex flex-wrap gap-3">
+          <div className="border-t border-[var(--border-subtle)] pt-4 flex flex-wrap gap-3">
             <button
               type="button"
               onClick={handleSave}
@@ -697,7 +695,7 @@ export default function EmbedsPage() {
       </div>
 
       <div className="card p-0 overflow-hidden">
-        <div className="px-4 py-3 border-b border-gray-700/50">
+        <div className="px-4 py-3 border-b border-[var(--border-subtle)]">
           <h2 className="text-lg font-semibold text-white">Saved Embeds</h2>
         </div>
 
@@ -715,7 +713,7 @@ export default function EmbedsPage() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[560px]">
-              <thead className="bg-discord-darkest-bg">
+              <thead className="bg-[var(--bg-base)]">
                 <tr>
                   <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">
                     Name
@@ -731,11 +729,11 @@ export default function EmbedsPage() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-700/50">
+              <tbody className="divide-y divide-[var(--border-subtle)]">
                 {embeds.map((embed) => (
                   <tr
                     key={embed.id}
-                    className={`hover:bg-discord-dark-bg/30 transition-colors ${
+                    className={`hover:bg-white/[0.02] transition-colors ${
                       editingId === embed.id ? 'bg-discord-blurple/5' : ''
                     }`}
                   >

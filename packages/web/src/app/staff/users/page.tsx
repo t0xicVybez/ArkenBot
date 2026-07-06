@@ -37,9 +37,12 @@ export default function StaffUsersPage() {
 
   return (
     <div className="p-3 sm:p-6">
-      <div className="mb-6 flex items-center gap-3">
-        <Users className="w-6 h-6 text-discord-blurple" />
-        <h1 className="text-2xl font-bold text-white">Portal Users</h1>
+      <div className="page-head">
+        <div className="page-head-icon"><Users className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>Portal Users</h1>
+          <div className="page-head-desc">Staff roles and dashboard access.</div>
+        </div>
       </div>
 
       <div className="card mb-6">
@@ -58,7 +61,7 @@ export default function StaffUsersPage() {
       <div className="card overflow-hidden p-0">
         <div className="overflow-x-auto">
         <table className="w-full min-w-[600px]">
-          <thead className="bg-discord-darkest-bg">
+          <thead className="bg-[var(--bg-base)]">
             <tr>
               <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">User</th>
               <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">ID</th>
@@ -67,7 +70,7 @@ export default function StaffUsersPage() {
               <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-700/50">
+          <tbody className="divide-y divide-[var(--border-subtle)]">
             {isLoading ? (
               [...Array(5)].map((_, i) => (
                 <tr key={i} className="animate-pulse">
@@ -77,7 +80,7 @@ export default function StaffUsersPage() {
                 </tr>
               ))
             ) : users.map((user) => (
-              <tr key={user.id} className="hover:bg-discord-dark-bg/30 transition-colors">
+              <tr key={user.id} className="hover:bg-white/[0.02] transition-colors">
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-3">
                     {user.avatar ? (

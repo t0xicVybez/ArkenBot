@@ -6,7 +6,7 @@ import { guildsApi, mondayApi } from '@/lib/api';
 import { Toggle } from '@/components/Toggle';
 import { SettingsSection } from '@/components/SettingsSection';
 import toast from 'react-hot-toast';
-import { useState, Fragment } from 'react';
+import { useState } from 'react';
 import { Plus, Trash2, Pencil, X, Copy, Check } from 'lucide-react';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.arkenbot.app';
@@ -160,27 +160,25 @@ export default function MondayPage() {
   return (
     <div className="p-3 sm:p-6 max-w-4xl space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <div className="page-head">
+        <div className="page-head-icon"><svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="4.5" cy="12" r="3.5" fill="#ff3d57"/>
             <circle cx="12" cy="12" r="3.5" fill="#ffcb00"/>
             <circle cx="19.5" cy="12" r="3.5" fill="#00ca72"/>
-          </svg>
-          <div>
-            <h1 className="text-2xl font-bold text-white">monday.com Alerts</h1>
-            <p className="text-sm text-gray-400 mt-0.5">
-              Post detailed Discord notifications when monday.com board events occur
-            </p>
-          </div>
+          </svg></div>
+        <div className="min-w-0">
+          <h1>monday.com Alerts</h1>
+          <div className="page-head-desc">Post detailed Discord notifications when monday.com board events occur</div>
         </div>
-        <button
+        <div className="page-head-actions">
+          <button
           onClick={() => setShowForm((v) => !v)}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-discord-blurple hover:bg-discord-blurple/80 text-white text-sm font-medium transition-colors"
+          className="btn-primary"
         >
           <Plus className="w-4 h-4" />
           Add Alert
         </button>
+        </div>
       </div>
 
       {/* How it works */}
@@ -270,157 +268,105 @@ export default function MondayPage() {
 
       {/* Empty state */}
       {alerts.length === 0 && !showForm && (
-        <p className="text-gray-500 text-sm">
-          No monday.com alerts configured yet. Click <strong className="text-gray-300">Add Alert</strong> to get started.
-        </p>
+        <div className="card empty-state" style={{ padding: 0 }}>
+          <div className="empty-state">
+            <div className="empty-state-icon"><Plus className="w-6 h-6" /></div>
+            <h4>Connect monday.com</h4>
+            <p>Post a rich Discord embed the moment items are created, moved, renamed, or commented on.</p>
+            <button onClick={() => setShowForm(true)} className="btn-primary">Add Alert</button>
+          </div>
+        </div>
       )}
 
       {/* Alert list */}
       {alerts.length > 0 && (
-        <div className="overflow-hidden rounded-lg border border-gray-700/50">
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[560px]">
-              <thead className="bg-discord-darkest-bg">
-                <tr>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Board</th>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Channel</th>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Events</th>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Names</th>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Enabled</th>
-                  <th className="px-4 py-3" />
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-700/50">
-                {alerts.map((alert) => {
-                  const ch = textChannels.find((c) => c.id === alert.discordChannelId);
-                  const webhookUrl = `${API_URL}/monday/webhook/${alert.webhookToken}`;
-                  return (
-                    <Fragment key={alert.id}>
-                      <tr className="hover:bg-discord-dark-bg/30 transition-colors">
-                        <td className="px-4 py-3">
-                          <div className="text-sm font-medium text-gray-200">
-                            {alert.boardName ?? <span className="text-gray-500 italic">All boards</span>}
-                          </div>
-                          {/* Webhook URL inline copy */}
-                          <div className="flex items-center gap-1 mt-1 max-w-xs">
-                            <span className="text-xs text-gray-600 font-mono truncate">{webhookUrl}</span>
-                            <CopyButton text={webhookUrl} />
-                          </div>
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-300">
-                          {ch ? `#${ch.name}` : <span className="text-gray-600 text-xs">{alert.discordChannelId}</span>}
-                        </td>
-                        <td className="px-4 py-3 text-xs text-gray-400">
-                          {alert.events.length === 0
-                            ? <span className="text-green-400">All events</span>
-                            : (
-                              <span>
-                                {alert.events
-                                  .map((e) => ALL_EVENTS.find((ev) => ev.value === e)?.label ?? e)
-                                  .join(', ')}
-                              </span>
-                            )
-                          }
-                        </td>
-                        <td className="px-4 py-3 text-xs">
-                          {alert.hasApiToken
-                            ? <span className="text-green-400">✓ Set</span>
-                            : <span className="text-gray-600">—</span>}
-                        </td>
-                        <td className="px-4 py-3">
-                          <Toggle
-                            enabled={alert.enabled}
-                            onChange={(v) => toggleMutation.mutate({ id: alert.id, enabled: v })}
-                            disabled={toggleMutation.isPending}
-                          />
-                        </td>
-                        <td className="px-4 py-3 text-right flex items-center justify-end gap-2">
-                          <button
-                            onClick={() => handleEditOpen(alert)}
-                            className="text-gray-400 hover:text-white transition-colors p-1"
-                            title="Edit"
-                          >
-                            <Pencil className="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            onClick={() => deleteMutation.mutate(alert.id)}
-                            disabled={deleteMutation.isPending}
-                            className="text-gray-500 hover:text-red-400 transition-colors p-1"
-                            title="Delete"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
-                        </td>
-                      </tr>
-
-                      {/* Inline edit row */}
-                      {editingId === alert.id && (
-                        <tr className="bg-discord-darkest-bg">
-                          <td colSpan={6} className="px-4 py-4">
-                            <form onSubmit={handleUpdate} className="space-y-4">
-                              <div className="flex items-center justify-between mb-1">
-                                <p className="text-sm font-semibold text-white">Edit Alert</p>
-                                <button type="button" onClick={() => setEditingId(null)} className="text-gray-500 hover:text-white">
-                                  <X className="w-4 h-4" />
-                                </button>
-                              </div>
-                              <div>
-                                <label className="label">Board Name <span className="text-gray-500 font-normal">(optional)</span></label>
-                                <input
-                                  type="text"
-                                  className="input"
-                                  placeholder="e.g. Marketing Tasks"
-                                  value={editForm.boardName}
-                                  onChange={(e) => setEditForm((f) => ({ ...f, boardName: e.target.value }))}
-                                />
-                              </div>
-                              <div>
-                                <label className="label">
-                                  Monday.com API Token{' '}
-                                  {alert.hasApiToken
-                                    ? <span className="text-green-400 font-normal text-xs">✓ currently set — paste new token to replace</span>
-                                    : <span className="text-gray-500 font-normal">(optional — enables display names)</span>}
-                                </label>
-                                <input
-                                  type="password"
-                                  className="input"
-                                  placeholder={alert.hasApiToken ? '••••••••••••••••' : 'eyJhbGciOiJIUzI1NiJ9…'}
-                                  value={editForm.mondayApiToken}
-                                  onChange={(e) => setEditForm((f) => ({ ...f, mondayApiToken: e.target.value }))}
-                                />
-                              </div>
-                              <div>
-                                <label className="label">Event Filter <span className="text-gray-500 font-normal">(unchecked = all events)</span></label>
-                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-1">
-                                  {ALL_EVENTS.map((ev) => (
-                                    <label key={ev.value} className="flex items-center gap-2 text-sm text-gray-300 cursor-pointer select-none">
-                                      <input
-                                        type="checkbox"
-                                        className="w-3.5 h-3.5 accent-discord-blurple"
-                                        checked={editForm.events.includes(ev.value)}
-                                        onChange={() => setEditForm((f) => ({ ...f, events: toggleEvent(f.events, ev.value) }))}
-                                      />
-                                      {ev.label}
-                                    </label>
-                                  ))}
-                                </div>
-                              </div>
-                              <div className="flex gap-2">
-                                <button type="submit" disabled={editMutation.isPending} className="btn-primary">
-                                  {editMutation.isPending ? 'Saving…' : 'Save'}
-                                </button>
-                                <button type="button" onClick={() => setEditingId(null)} className="btn-secondary">Cancel</button>
-                              </div>
-                            </form>
-                          </td>
-                        </tr>
-                      )}
-                    </Fragment>
-                  );
-                })}
-              </tbody>
-            </table>
+        <div className="card p-0 overflow-hidden">
+          <div className="px-4 py-3 border-b border-[var(--border-subtle)]">
+            <span className="text-[13px] font-bold text-white">{alerts.length} alert{alerts.length === 1 ? '' : 's'}</span>
           </div>
+          {alerts.map((alert) => {
+            const ch = textChannels.find((c) => c.id === alert.discordChannelId);
+            const webhookUrl = `${API_URL}/monday/webhook/${alert.webhookToken}`;
+            return (
+              <div key={alert.id} className="border-b border-[var(--border-subtle)] last:border-0">
+                <div className="group flex items-center gap-3.5 px-4 py-3 hover:bg-white/[0.018] transition-colors">
+                  <div className="w-9 h-9 rounded-lg grid place-items-center flex-shrink-0" style={{ background: 'rgba(255,203,0,0.10)' }}>
+                    <svg className="w-4.5 h-4.5" style={{ width: 18, height: 18 }} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="4.5" cy="12" r="3.5" fill="#ff3d57"/><circle cx="12" cy="12" r="3.5" fill="#ffcb00"/><circle cx="19.5" cy="12" r="3.5" fill="#00ca72"/>
+                    </svg>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[13.5px] font-semibold text-white truncate">
+                      {alert.boardName ?? <span className="text-gray-500 italic font-normal">All boards</span>}
+                      <span className="font-normal text-[var(--text-muted)]"> · posts to {ch ? `#${ch.name}` : alert.discordChannelId}</span>
+                    </p>
+                    <div className="flex items-center gap-1 mt-0.5 max-w-md">
+                      <span className="text-[11px] text-[var(--text-muted)] font-mono truncate">{webhookUrl}</span>
+                      <CopyButton text={webhookUrl} />
+                    </div>
+                  </div>
+                  <span className="text-[11.5px] text-[var(--text-muted)] hidden sm:block flex-shrink-0">
+                    {alert.events.length === 0 ? 'All events' : `${alert.events.length} event${alert.events.length === 1 ? '' : 's'}`}
+                  </span>
+                  {alert.hasApiToken && <span className="badge-success flex-shrink-0">Names ✓</span>}
+                  <Toggle
+                    enabled={alert.enabled}
+                    onChange={(v) => toggleMutation.mutate({ id: alert.id, enabled: v })}
+                    disabled={toggleMutation.isPending}
+                  />
+                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button onClick={() => handleEditOpen(alert)} className="p-1.5 rounded-md text-gray-400 hover:text-white hover:bg-white/[0.06]" title="Edit">
+                      <Pencil className="w-3.5 h-3.5" />
+                    </button>
+                    <button onClick={() => deleteMutation.mutate(alert.id)} disabled={deleteMutation.isPending} className="p-1.5 rounded-md text-gray-500 hover:text-red-400 hover:bg-red-500/10" title="Delete">
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+
+                {editingId === alert.id && (
+                  <div className="px-4 py-4 bg-[var(--bg-base)]/60 border-t border-[var(--border-subtle)]">
+                    <form onSubmit={handleUpdate} className="space-y-4">
+                      <div className="flex items-center justify-between mb-1">
+                        <p className="text-sm font-semibold text-white">Edit Alert</p>
+                        <button type="button" onClick={() => setEditingId(null)} className="text-gray-500 hover:text-white">
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                      <div>
+                        <label className="label">Board Name <span className="text-gray-500 font-normal">(optional)</span></label>
+                        <input type="text" className="input" placeholder="e.g. Marketing Tasks" value={editForm.boardName} onChange={(e) => setEditForm((f) => ({ ...f, boardName: e.target.value }))} />
+                      </div>
+                      <div>
+                        <label className="label">
+                          Monday.com API Token{' '}
+                          {alert.hasApiToken
+                            ? <span className="text-green-400 font-normal text-xs">✓ currently set — paste new token to replace</span>
+                            : <span className="text-gray-500 font-normal">(optional — enables display names)</span>}
+                        </label>
+                        <input type="password" className="input" placeholder={alert.hasApiToken ? '••••••••••••••••' : 'eyJhbGciOiJIUzI1NiJ9…'} value={editForm.mondayApiToken} onChange={(e) => setEditForm((f) => ({ ...f, mondayApiToken: e.target.value }))} />
+                      </div>
+                      <div>
+                        <label className="label">Event Filter <span className="text-gray-500 font-normal">(unchecked = all events)</span></label>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-1">
+                          {ALL_EVENTS.map((ev) => (
+                            <label key={ev.value} className="flex items-center gap-2 text-sm text-gray-300 cursor-pointer select-none">
+                              <input type="checkbox" className="w-3.5 h-3.5 accent-discord-blurple" checked={editForm.events.includes(ev.value)} onChange={() => setEditForm((f) => ({ ...f, events: toggleEvent(f.events, ev.value) }))} />
+                              {ev.label}
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <button type="submit" disabled={editMutation.isPending} className="btn-primary">{editMutation.isPending ? 'Saving…' : 'Save'}</button>
+                        <button type="button" onClick={() => setEditingId(null)} className="btn-secondary">Cancel</button>
+                      </div>
+                    </form>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
 

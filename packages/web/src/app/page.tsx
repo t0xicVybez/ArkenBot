@@ -2,7 +2,7 @@ import Link from 'next/link';
 import {
   Shield, Bot, TrendingUp, Music, Smile, Puzzle,
   Ticket, Megaphone, Zap, ArrowRight, Check, ExternalLink,
-  ChevronRight, Star, Terminal, Users, MessageSquare,
+  ChevronRight, Star, Users, MessageSquare, Sparkles, LayoutDashboard,
   Gift, Radio, Lightbulb, Calendar, Gamepad2,
   BarChart2, Clock, Settings, Command, Globe, X,
   Mic, ShieldAlert, ShieldCheck, MessagesSquare, Flag, BarChart,
@@ -383,121 +383,70 @@ export default async function LandingPage() {
           />
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="relative z-10 max-w-4xl mx-auto text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-discord-blurple/15 border border-discord-blurple/25 text-discord-blurple text-[13px] font-semibold mb-9">
+            <Sparkles className="w-3.5 h-3.5" />
+            Free forever — no paywalls, no premium tiers
+          </div>
 
-            {/* Left: text */}
-            <div className="text-center lg:text-left">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-discord-blurple/15 border border-discord-blurple/25 text-discord-blurple text-xs font-medium mb-8">
-                <Zap className="w-3 h-3" />
-                Free forever · No paywalls · No premium tiers
+          <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-bold leading-[1.12] tracking-tight mb-6 text-white">
+            The Discord bot that
+            <br />
+            does <span className="bg-gradient-to-r from-[var(--accent)] to-[var(--accent-2)] bg-clip-text text-transparent">everything</span>, elegantly.
+          </h1>
+
+          <p className="text-lg text-[var(--text-secondary)] mb-9 max-w-xl mx-auto leading-relaxed">
+            Moderation, leveling, tickets, stream alerts, Trello &amp; Monday.com boards,
+            and a real-time dashboard — all free, all in one bot.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-3 justify-center mb-12">
+            <a
+              href={SITE.inviteUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary text-[15px] px-8 py-3 shadow-lg shadow-discord-blurple/20"
+            >
+              Add to Discord <ArrowRight className="w-4 h-4" />
+            </a>
+            <Link href="/auth" className="btn-secondary text-[15px] px-8 py-3">
+              Explore the dashboard
+            </Link>
+          </div>
+
+          {/* Stats row */}
+          <div className="flex flex-wrap gap-x-12 gap-y-4 justify-center mb-16">
+            {[
+              { value: stats ? fmt(stats.servers) : '30+', label: 'servers' },
+              { value: stats ? fmt(stats.users) : '18k+', label: 'members served' },
+              { value: '50+', label: 'features' },
+              { value: '$0', label: 'forever' },
+            ].map((s) => (
+              <div key={s.label} className="flex flex-col items-center">
+                <span className="text-[22px] font-bold text-white leading-tight tabular">{s.value}</span>
+                <span className="text-[12px] text-[var(--text-muted)] mt-0.5">{s.label}</span>
               </div>
+            ))}
+          </div>
 
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.06] tracking-tight mb-6">
-                {SITE.tagline.split('\n').map((line, i) => (
-                  <span
-                    key={i}
-                    className={i === 1
-                      ? 'bg-gradient-to-r from-discord-blurple via-purple-400 to-blue-400 bg-clip-text text-transparent block'
-                      : 'block text-white'}
-                  >
-                    {line}
-                  </span>
-                ))}
-              </h1>
-
-              <p className="text-lg text-[var(--text-secondary)] mb-10 max-w-xl leading-relaxed">
-                {SITE.description}
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start mb-12">
-                <a
-                  href={SITE.inviteUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-primary text-[15px] px-8 py-3 shadow-lg shadow-discord-blurple/20"
-                >
-                  Add to Server — It&apos;s Free <ArrowRight className="w-4 h-4" />
-                </a>
-                <Link href="/auth" className="btn-secondary text-[15px] px-8 py-3">
-                  Open Dashboard
-                </Link>
-              </div>
-
-              {/* Stats row */}
-              <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
-                {[
-                  { value: stats ? fmt(stats.servers) : '0+', label: 'Servers' },
-                  { value: stats ? fmt(stats.users) : '0+', label: 'Users Tracked' },
-                  { value: '30+', label: 'Features' },
-                  { value: '99.9%', label: 'Uptime' },
-                ].map((s) => (
-                  <div key={s.label} className="flex flex-col items-center px-4 py-2.5 rounded-xl border border-[var(--border-strong)] bg-[var(--bg-card)]">
-                    <span className="text-lg font-bold text-white leading-tight">{s.value}</span>
-                    <span className="text-[11px] text-[var(--text-muted)] mt-0.5">{s.label}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Right: command preview cards */}
-            <div className="hidden lg:flex flex-col gap-3 relative">
-              <div className="absolute -top-4 -right-2 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-discord-green/15 border border-discord-green/20 text-discord-green text-xs font-medium">
-                <span className="w-1.5 h-1.5 rounded-full bg-discord-green animate-pulse" />
-                Bot online
-              </div>
-
-              {/* Activity summary card */}
-              <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-4 shadow-xl shadow-black/20">
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-6 h-6 bg-discord-blurple rounded-full flex items-center justify-center">
-                    <span className="w-3.5 h-3.5 text-white">{DISCORD_ICON}</span>
-                  </div>
-                  <span className="text-xs font-semibold text-white">Arken Bot</span>
-                  <span className="ml-auto text-[10px] text-[var(--text-muted)]">Today</span>
-                </div>
-                <div className="grid grid-cols-3 gap-2">
-                  {[
-                    { icon: Shield, value: '12', label: 'Mod actions', color: 'text-red-400 bg-red-500/10' },
-                    { icon: Users, value: '34', label: 'New members', color: 'text-discord-green bg-discord-green/10' },
-                    { icon: MessageSquare, value: '847', label: 'Messages', color: 'text-blue-400 bg-blue-500/10' },
-                  ].map((item) => (
-                    <div key={item.label} className="bg-[var(--bg-base)] rounded-lg p-2.5 border border-[var(--border-subtle)] text-center">
-                      <div className={`w-6 h-6 rounded-md ${item.color} flex items-center justify-center mx-auto mb-1.5`}>
-                        <item.icon className="w-3 h-3" />
-                      </div>
-                      <p className="text-sm font-bold text-white">{item.value}</p>
-                      <p className="text-[9px] text-[var(--text-muted)] mt-0.5">{item.label}</p>
-                    </div>
-                  ))}
+          {/* Mini feature cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
+            {[
+              { icon: Shield, title: 'Moderation that scales', desc: 'Cases, escalation, anti-nuke, and a full audit trail.' },
+              { icon: Zap, title: 'Alerts for everything', desc: 'Twitch, Kick, YouTube, X, Reddit, RSS — plus Trello and Monday.com boards.' },
+              { icon: TrendingUp, title: 'Leveling & engagement', desc: 'XP, role rewards, starboard, birthdays, giveaways.' },
+              { icon: LayoutDashboard, title: "A dashboard you'll enjoy", desc: 'Everything configurable in the browser, changes live instantly.' },
+            ].map((f) => (
+              <div key={f.title} className="flex gap-3.5 bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl p-5">
+                <span className="w-9 h-9 rounded-[10px] bg-[var(--accent-glow)] grid place-items-center flex-shrink-0">
+                  <f.icon className="w-4 h-4 text-[var(--accent)]" />
+                </span>
+                <div>
+                  <h3 className="text-white font-bold text-[14.5px] tracking-tight">{f.title}</h3>
+                  <p className="text-[var(--text-secondary)] text-[13px] leading-relaxed mt-1">{f.desc}</p>
                 </div>
               </div>
-
-              {/* Command interaction cards */}
-              {HERO_COMMANDS.map((item, i) => (
-                <div
-                  key={i}
-                  className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-3.5 shadow-lg shadow-black/20"
-                  style={{ marginLeft: i % 2 === 1 ? '1rem' : '0' }}
-                >
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className={`w-5 h-5 rounded-md ${item.bg} flex items-center justify-center flex-shrink-0`}>
-                      <item.icon className={`w-2.5 h-2.5 ${item.color}`} />
-                    </div>
-                    <code className="text-xs text-[var(--text-secondary)] font-mono">{item.cmd}</code>
-                  </div>
-                  <div className="flex items-center gap-2 pl-7">
-                    <span className={`text-xs ${item.responseColor}`}>{item.response}</span>
-                  </div>
-                </div>
-              ))}
-
-              <div className="flex items-center gap-2 px-3.5 py-2.5 bg-[var(--bg-card)] border border-[var(--border)] rounded-xl shadow-lg shadow-black/20">
-                <Terminal className="w-3.5 h-3.5 text-[var(--text-muted)] flex-shrink-0" />
-                <span className="text-xs text-[var(--text-muted)]">30+ commands · unlimited custom commands</span>
-                <span className="ml-auto text-[10px] text-discord-blurple font-medium">View all →</span>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>

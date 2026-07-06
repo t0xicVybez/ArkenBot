@@ -41,9 +41,11 @@ export default function StaffGuildsPage() {
 
   return (
     <div className="p-3 sm:p-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-white">All Guilds</h1>
-        <p className="text-gray-400 text-sm">Total: {total} guilds</p>
+      <div className="page-head">
+        <div className="min-w-0">
+          <h1>All Guilds</h1>
+          <div className="page-head-desc">Total: {total} guilds</div>
+        </div>
       </div>
 
       <div className="card mb-6 flex flex-col sm:flex-row gap-3">
@@ -71,7 +73,7 @@ export default function StaffGuildsPage() {
       <div className="card overflow-hidden p-0">
         <div className="overflow-x-auto">
         <table className="w-full min-w-[600px]">
-          <thead className="bg-discord-darkest-bg">
+          <thead className="bg-[var(--bg-base)]">
             <tr>
               <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Guild</th>
               <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">ID</th>
@@ -80,7 +82,7 @@ export default function StaffGuildsPage() {
               <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-700/50">
+          <tbody className="divide-y divide-[var(--border-subtle)]">
             {isLoading ? (
               [...Array(10)].map((_, i) => (
                 <tr key={i} className="animate-pulse">
@@ -97,7 +99,7 @@ export default function StaffGuildsPage() {
               </tr>
             ) : (
               guilds.map((guild) => (
-                <tr key={guild.id} className="hover:bg-discord-dark-bg/30 transition-colors">
+                <tr key={guild.id} className="hover:bg-white/[0.02] transition-colors">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
                       {guild.iconUrl ? (
@@ -153,7 +155,7 @@ export default function StaffGuildsPage() {
         </div>
 
         {total > 20 && (
-          <div className="px-4 py-3 border-t border-gray-700/50 flex items-center justify-between">
+          <div className="px-4 py-3 border-t border-[var(--border-subtle)] flex items-center justify-between">
             <p className="text-xs text-gray-400">
               Page {page} • {total} total guilds
             </p>

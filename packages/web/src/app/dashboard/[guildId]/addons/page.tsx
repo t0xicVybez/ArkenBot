@@ -239,7 +239,7 @@ function AddonSettingsModal({
         </div>
 
         {/* Footer */}
-        <div className="flex gap-3 mt-6 pt-4 border-t border-gray-700/50">
+        <div className="flex gap-3 mt-6 pt-4 border-t border-[var(--border-subtle)]">
           <button
             onClick={() => saveMutation.mutate()}
             disabled={saveMutation.isPending}
@@ -306,13 +306,13 @@ export default function AddonsPage() {
       )}
 
       <div className="p-3 sm:p-6">
-        <div className="mb-6 flex items-center gap-3">
-          <Puzzle className="w-6 h-6 text-discord-blurple" />
-          <div>
-            <h1 className="text-2xl font-bold text-white">Addons Marketplace</h1>
-            <p className="text-gray-400 text-sm">{installedIds.size} installed</p>
-          </div>
+        <div className="page-head">
+        <div className="page-head-icon"><Puzzle className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>Addons Marketplace</h1>
+          <div className="page-head-desc">{installedIds.size} installed</div>
         </div>
+      </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {allAddons.map((addon) => {

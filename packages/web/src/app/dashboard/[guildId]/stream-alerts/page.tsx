@@ -37,11 +37,10 @@ export default function StreamAlertsPage() {
   return (
     <FeedAlertsPage
       title="Stream Alerts"
-      description="Get notified in Discord the moment a streamer goes live on Twitch, Kick, or YouTube. Checks every 5 minutes."
+      description="Notify the community when creators go live or post — Twitch, Kick, YouTube, X, Reddit, RSS."
       icon={Radio}
       iconColor="text-purple-400"
       platforms={PLATFORMS}
-      notice="Twitch requires TWITCH_CLIENT_ID and TWITCH_CLIENT_SECRET in .env. YouTube requires YOUTUBE_API_KEY. Kick works out of the box."
     />
   );
 }

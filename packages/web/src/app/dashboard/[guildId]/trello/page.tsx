@@ -6,7 +6,7 @@ import { guildsApi, trelloApi } from '@/lib/api';
 import { Toggle } from '@/components/Toggle';
 import { SettingsSection } from '@/components/SettingsSection';
 import toast from 'react-hot-toast';
-import { useState, Fragment } from 'react';
+import { useState } from 'react';
 import { Plus, Trash2, Pencil, X } from 'lucide-react';
 
 const ALL_EVENTS = [
@@ -142,27 +142,25 @@ export default function TrelloPage() {
   return (
     <div className="p-3 sm:p-6 max-w-4xl space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <svg className="w-6 h-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <div className="page-head">
+        <div className="page-head-icon"><svg className="w-6 h-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <rect width="24" height="24" rx="3" fill="#0079BF"/>
             <rect x="3.5" y="3.5" width="7.2" height="14" rx="1.5" fill="#fff"/>
             <rect x="13.3" y="3.5" width="7.2" height="9" rx="1.5" fill="#fff"/>
-          </svg>
-          <div>
-            <h1 className="text-2xl font-bold text-white">Trello Alerts</h1>
-            <p className="text-sm text-gray-400 mt-0.5">
-              Post Discord notifications when Trello board events occur
-            </p>
-          </div>
+          </svg></div>
+        <div className="min-w-0">
+          <h1>Trello Alerts</h1>
+          <div className="page-head-desc">Post Discord notifications when Trello board events occur</div>
         </div>
-        <button
+        <div className="page-head-actions">
+          <button
           onClick={() => setShowForm((v) => !v)}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-discord-blurple hover:bg-discord-blurple/80 text-white text-sm font-medium transition-colors"
+          className="btn-primary"
         >
           <Plus className="w-4 h-4" />
           Add Alert
         </button>
+        </div>
       </div>
 
       {/* How it works */}
@@ -259,133 +257,99 @@ export default function TrelloPage() {
 
       {/* Empty state */}
       {alerts.length === 0 && !showForm && (
-        <p className="text-gray-500 text-sm">
-          No Trello alerts configured yet. Click <strong className="text-gray-300">Add Alert</strong> to get started.
-        </p>
+        <div className="card empty-state" style={{ padding: 0 }}>
+          <div className="empty-state">
+            <div className="empty-state-icon"><Plus className="w-6 h-6" /></div>
+            <h4>Connect Trello</h4>
+            <p>Connect a board and get a Discord embed for every card event — webhooks are registered automatically.</p>
+            <button onClick={() => setShowForm(true)} className="btn-primary">Add Alert</button>
+          </div>
+        </div>
       )}
 
       {/* Alert list */}
       {alerts.length > 0 && (
-        <div className="overflow-hidden rounded-lg border border-gray-700/50">
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[520px]">
-              <thead className="bg-discord-darkest-bg">
-                <tr>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Board</th>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Channel</th>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Events</th>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Enabled</th>
-                  <th className="px-4 py-3" />
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-700/50">
-                {alerts.map((alert) => {
-                  const ch = textChannels.find((c) => c.id === alert.discordChannelId);
-                  return (
-                    <Fragment key={alert.id}>
-                      <tr className="hover:bg-discord-dark-bg/30 transition-colors">
-                        <td className="px-4 py-3">
-                          <div className="text-sm font-medium text-gray-200">
-                            {alert.boardName ?? <span className="text-gray-500 italic">Unknown board</span>}
-                          </div>
-                          {alert.boardId && (
-                            <div className="text-xs text-gray-600 font-mono truncate max-w-[200px]">{alert.boardId}</div>
-                          )}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-300">
-                          {ch ? `#${ch.name}` : <span className="text-gray-600 text-xs">{alert.discordChannelId}</span>}
-                        </td>
-                        <td className="px-4 py-3 text-xs text-gray-400">
-                          {alert.events.length === 0
-                            ? <span className="text-green-400">All events</span>
-                            : (
-                              <span>
-                                {alert.events
-                                  .map((e) => ALL_EVENTS.find((ev) => ev.value === e)?.label ?? e)
-                                  .join(', ')}
-                              </span>
-                            )
-                          }
-                        </td>
-                        <td className="px-4 py-3">
-                          <Toggle
-                            enabled={alert.enabled}
-                            onChange={(v) => toggleMutation.mutate({ id: alert.id, enabled: v })}
-                            disabled={toggleMutation.isPending}
-                          />
-                        </td>
-                        <td className="px-4 py-3 text-right flex items-center justify-end gap-2">
-                          <button
-                            onClick={() => handleEditOpen(alert)}
-                            className="text-gray-400 hover:text-white transition-colors p-1"
-                            title="Edit"
-                          >
-                            <Pencil className="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            onClick={() => deleteMutation.mutate(alert.id)}
-                            disabled={deleteMutation.isPending}
-                            className="text-gray-500 hover:text-red-400 transition-colors p-1"
-                            title="Delete"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
-                        </td>
-                      </tr>
-
-                      {/* Inline edit row */}
-                      {editingId === alert.id && (
-                        <tr className="bg-discord-darkest-bg">
-                          <td colSpan={5} className="px-4 py-4">
-                            <form onSubmit={handleUpdate} className="space-y-4">
-                              <div className="flex items-center justify-between mb-1">
-                                <p className="text-sm font-semibold text-white">Edit Alert</p>
-                                <button type="button" onClick={() => setEditingId(null)} className="text-gray-500 hover:text-white">
-                                  <X className="w-4 h-4" />
-                                </button>
-                              </div>
-                              <div>
-                                <label className="label">Board Label <span className="text-gray-500 font-normal">(display name in embeds)</span></label>
-                                <input
-                                  type="text"
-                                  className="input"
-                                  placeholder="e.g. Sprint Board"
-                                  value={editForm.boardName}
-                                  onChange={(e) => setEditForm((f) => ({ ...f, boardName: e.target.value }))}
-                                />
-                              </div>
-                              <div>
-                                <label className="label">Event Filter <span className="text-gray-500 font-normal">(unchecked = all events)</span></label>
-                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-1">
-                                  {ALL_EVENTS.map((ev) => (
-                                    <label key={ev.value} className="flex items-center gap-2 text-sm text-gray-300 cursor-pointer select-none">
-                                      <input
-                                        type="checkbox"
-                                        className="w-3.5 h-3.5 accent-discord-blurple"
-                                        checked={editForm.events.includes(ev.value)}
-                                        onChange={() => setEditForm((f) => ({ ...f, events: toggleEvent(f.events, ev.value) }))}
-                                      />
-                                      {ev.label}
-                                    </label>
-                                  ))}
-                                </div>
-                              </div>
-                              <div className="flex gap-2">
-                                <button type="submit" disabled={editMutation.isPending} className="btn-primary">
-                                  {editMutation.isPending ? 'Saving…' : 'Save'}
-                                </button>
-                                <button type="button" onClick={() => setEditingId(null)} className="btn-secondary">Cancel</button>
-                              </div>
-                            </form>
-                          </td>
-                        </tr>
-                      )}
-                    </Fragment>
-                  );
-                })}
-              </tbody>
-            </table>
+        <div className="card p-0 overflow-hidden">
+          <div className="px-4 py-3 border-b border-[var(--border-subtle)]">
+            <span className="text-[13px] font-bold text-white">{alerts.length} board{alerts.length === 1 ? '' : 's'} connected</span>
           </div>
+          {alerts.map((alert) => {
+            const ch = textChannels.find((c) => c.id === alert.discordChannelId);
+            return (
+              <div key={alert.id} className="border-b border-[var(--border-subtle)] last:border-0">
+                <div className="group flex items-center gap-3.5 px-4 py-3 hover:bg-white/[0.018] transition-colors">
+                  <div className="w-9 h-9 rounded-lg grid place-items-center flex-shrink-0" style={{ background: 'rgba(0,121,191,0.16)' }}>
+                    <svg style={{ width: 17, height: 17 }} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <rect width="24" height="24" rx="3" fill="#0079BF"/>
+                      <rect x="3.5" y="3.5" width="7.2" height="14" rx="1.5" fill="#fff"/>
+                      <rect x="13.3" y="3.5" width="7.2" height="9" rx="1.5" fill="#fff"/>
+                    </svg>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[13.5px] font-semibold text-white truncate">
+                      {alert.boardName ?? <span className="text-gray-500 italic font-normal">Unknown board</span>}
+                    </p>
+                    <p className="text-[12px] text-[var(--text-muted)] truncate">
+                      posts to {ch ? `#${ch.name}` : alert.discordChannelId}
+                      {' · '}
+                      {alert.events.length === 0 ? 'all events' : `${alert.events.length} event${alert.events.length === 1 ? '' : 's'}`}
+                    </p>
+                  </div>
+                  {alert.enabled && (
+                    <span className="badge-success flex-shrink-0">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                      Active
+                    </span>
+                  )}
+                  <Toggle
+                    enabled={alert.enabled}
+                    onChange={(v) => toggleMutation.mutate({ id: alert.id, enabled: v })}
+                    disabled={toggleMutation.isPending}
+                  />
+                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button onClick={() => handleEditOpen(alert)} className="p-1.5 rounded-md text-gray-400 hover:text-white hover:bg-white/[0.06]" title="Edit">
+                      <Pencil className="w-3.5 h-3.5" />
+                    </button>
+                    <button onClick={() => deleteMutation.mutate(alert.id)} disabled={deleteMutation.isPending} className="p-1.5 rounded-md text-gray-500 hover:text-red-400 hover:bg-red-500/10" title="Delete">
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+
+                {editingId === alert.id && (
+                  <div className="px-4 py-4 bg-[var(--bg-base)]/60 border-t border-[var(--border-subtle)]">
+                    <form onSubmit={handleUpdate} className="space-y-4">
+                      <div className="flex items-center justify-between mb-1">
+                        <p className="text-sm font-semibold text-white">Edit Alert</p>
+                        <button type="button" onClick={() => setEditingId(null)} className="text-gray-500 hover:text-white">
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                      <div>
+                        <label className="label">Board Label <span className="text-gray-500 font-normal">(display name in embeds)</span></label>
+                        <input type="text" className="input" placeholder="e.g. Sprint Board" value={editForm.boardName} onChange={(e) => setEditForm((f) => ({ ...f, boardName: e.target.value }))} />
+                      </div>
+                      <div>
+                        <label className="label">Event Filter <span className="text-gray-500 font-normal">(unchecked = all events)</span></label>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-1">
+                          {ALL_EVENTS.map((ev) => (
+                            <label key={ev.value} className="flex items-center gap-2 text-sm text-gray-300 cursor-pointer select-none">
+                              <input type="checkbox" className="w-3.5 h-3.5 accent-discord-blurple" checked={editForm.events.includes(ev.value)} onChange={() => setEditForm((f) => ({ ...f, events: toggleEvent(f.events, ev.value) }))} />
+                              {ev.label}
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="flex gap-2">
+                        <button type="submit" disabled={editMutation.isPending} className="btn-primary">{editMutation.isPending ? 'Saving…' : 'Save'}</button>
+                        <button type="button" onClick={() => setEditingId(null)} className="btn-secondary">Cancel</button>
+                      </div>
+                    </form>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
 

@@ -6,15 +6,15 @@ module.exports = {
     extend: {
       colors: {
         discord: {
-          blurple: '#5865F2',
-          green: '#3ecf8e',
-          yellow: '#f5c542',
-          red: '#f0574c',
-          'base': '#13141a',
-          'surface': '#17181f',
-          'card': '#1e2029',
-          'elevated': '#23263a',
-          'hover': '#2a2d40',
+          blurple: '#7C8AFF',
+          green: '#43cf8c',
+          yellow: '#f2c14b',
+          red: '#f26d5f',
+          'base': '#0c0e13',
+          'surface': '#10131a',
+          'card': '#161a23',
+          'elevated': '#1c2130',
+          'hover': '#212737',
         },
       },
       fontFamily: {

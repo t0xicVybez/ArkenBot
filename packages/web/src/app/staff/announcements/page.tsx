@@ -97,11 +97,11 @@ export default function AnnouncementsPage() {
 
   return (
     <div className="p-3 sm:p-6 max-w-4xl">
-      <div className="flex items-center gap-3 mb-6">
-        <Megaphone className="w-6 h-6 text-discord-blurple" />
-        <div>
-          <h1 className="text-2xl font-bold text-white">Announcements</h1>
-          <p className="text-gray-400 text-sm">Broadcast updates to all opted-in servers</p>
+      <div className="page-head">
+        <div className="page-head-icon"><Megaphone className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>Announcements</h1>
+          <div className="page-head-desc">Broadcast updates to all opted-in servers</div>
         </div>
       </div>
 

@@ -67,11 +67,11 @@ export default function AnnouncementsSettingsPage() {
 
   return (
     <div className="p-3 sm:p-6 max-w-3xl">
-      <div className="mb-6 flex items-center gap-3">
-        <Megaphone className="w-6 h-6 text-discord-blurple" />
-        <div>
-          <h1 className="text-2xl font-bold text-white">Bot Announcements</h1>
-          <p className="text-gray-400 text-sm">Receive update announcements directly in your server</p>
+      <div className="page-head">
+        <div className="page-head-icon"><Megaphone className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>Bot Announcements</h1>
+          <div className="page-head-desc">Receive update announcements directly in your server</div>
         </div>
       </div>
 

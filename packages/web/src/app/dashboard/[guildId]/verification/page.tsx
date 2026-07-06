@@ -81,11 +81,11 @@ export default function VerificationPage() {
 
   return (
     <div className="p-3 sm:p-6 max-w-2xl">
-      <div className="mb-6 flex items-center gap-3">
-        <ShieldCheck className="w-6 h-6 text-discord-blurple" />
-        <div>
-          <h1 className="text-2xl font-bold text-white">Verification Gate</h1>
-          <p className="text-sm text-gray-400">Require new members to verify before accessing the server.</p>
+      <div className="page-head">
+        <div className="page-head-icon"><ShieldCheck className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>Verification Gate</h1>
+          <div className="page-head-desc">Require new members to verify before accessing the server.</div>
         </div>
       </div>
 

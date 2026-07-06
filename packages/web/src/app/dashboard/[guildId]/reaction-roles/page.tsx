@@ -132,18 +132,21 @@ export default function ReactionRolesPage() {
 
   return (
     <div className="p-3 sm:p-6 max-w-3xl">
-      <div className="mb-6 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Smile className="w-6 h-6 text-discord-blurple" />
-          <h1 className="text-2xl font-bold text-white">Reaction Roles</h1>
+      <div className="page-head">
+        <div className="page-head-icon"><Smile className="w-5 h-5" /></div>
+        <div className="min-w-0">
+          <h1>Reaction Roles</h1>
+          <div className="page-head-desc">Members grab roles by reacting to a panel.</div>
         </div>
-        <button
+        <div className="page-head-actions">
+          <button
           className="btn-primary flex items-center gap-2"
           onClick={() => setShowNewPanel((v) => !v)}
         >
           <Plus className="w-4 h-4" />
           New Panel
         </button>
+        </div>
       </div>
 
       {showNewPanel && (
@@ -210,7 +213,7 @@ export default function ReactionRolesPage() {
           const isFormValid = roleForm.emoji.trim() && roleForm.roleId;
 
           return (
-            <div key={panel.id} className="card border border-gray-700/50">
+            <div key={panel.id} className="card border border-[var(--border-subtle)]">
               <button
                 className="w-full flex items-center justify-between p-4 text-left"
                 onClick={() => togglePanel(panel.id)}
@@ -245,7 +248,7 @@ export default function ReactionRolesPage() {
               </button>
 
               {expanded && (
-                <div className="px-4 pb-4 space-y-4 border-t border-gray-700/50 pt-4">
+                <div className="px-4 pb-4 space-y-4 border-t border-[var(--border-subtle)] pt-4">
                   <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <div>
                       <label className="label">Title</label>
@@ -277,7 +280,7 @@ export default function ReactionRolesPage() {
                       {panel.roles.map((r) => (
                         <div
                           key={r.id}
-                          className="flex items-center justify-between bg-discord-darkest-bg rounded-lg px-3 py-2"
+                          className="flex items-center justify-between bg-[var(--bg-base)] rounded-lg px-3 py-2"
                         >
                           <div className="flex items-center gap-3">
                             <span className="text-xl leading-none">{r.emoji}</span>
