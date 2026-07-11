@@ -130,7 +130,7 @@ export default function AddonsPage() {
             </span>
           </h1>
           <p className="text-gray-400 text-lg mb-8 leading-relaxed max-w-xl mx-auto">
-            Arken ships 4 official first-party addons covering game server management, advanced tickets, and developer tools. Install any addon from the dashboard — or build your own with the TypeScript SDK.
+            Arken ships official first-party addons covering advanced tickets, game server status, and developer tools. Install any addon from the dashboard — or build your own with the TypeScript SDK.
           </p>
 
           {/* Jump links */}
