@@ -3,7 +3,7 @@ import {
   Shield, Bot, TrendingUp, Music, Smile, Puzzle,
   Ticket, Megaphone, Zap, ArrowRight, Check, ExternalLink,
   ChevronRight, Star, Users, MessageSquare, Sparkles, LayoutDashboard,
-  Gift, Radio, Lightbulb, Calendar, Gamepad2,
+  Gift, Radio, Lightbulb, Calendar,
   BarChart2, Clock, Settings, Command, Globe, X,
   Mic, ShieldAlert, ShieldCheck, MessagesSquare, Flag, BarChart,
   Trello } from 'lucide-react';
@@ -14,18 +14,18 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Arken Bot — Free Discord Bot with Web Dashboard',
   description:
-    'Arken Bot is a completely free Discord bot with 20+ features: moderation, leveling, tickets, auto-responses, game server management for FiveM, Minecraft, Rust, ARK, and Palworld, plus a real-time web dashboard. No paywalls, ever.',
+    'Arken Bot is a completely free Discord bot with moderation, leveling, tickets, stream alerts, Trello & Monday.com integrations, temp voice, anti-nuke, and a real-time web dashboard. No paywalls, ever.',
   openGraph: {
     title: 'Arken Bot — Free Discord Bot with Web Dashboard',
     description:
-      '20+ features including moderation, leveling, game server management, and a real-time dashboard. Completely free — no paywalls, no premium tiers.',
+      'Moderation, leveling, tickets, stream alerts, integrations, and a real-time dashboard. Completely free — no paywalls, no premium tiers.',
     url: 'https://arkenbot.app',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Arken Bot — Free Discord Bot with Web Dashboard',
     description:
-      '20+ features including moderation, leveling, game server management, and a real-time dashboard. Completely free — no paywalls, no premium tiers.',
+      'Moderation, leveling, tickets, stream alerts, integrations, and a real-time dashboard. Completely free — no paywalls, no premium tiers.',
   },
 };
 
@@ -175,14 +175,6 @@ const FEATURES = [
     desc: 'Schedule recurring announcements or reminders to post automatically in any channel on any interval.',
   },
   {
-    icon: Gamepad2,
-    color: 'text-orange-400',
-    bg: 'bg-orange-500/10',
-    border: 'border-orange-500/20',
-    title: 'Game Server Management',
-    desc: 'Manage FiveM, Minecraft, Rust, ARK, and Palworld servers directly from Discord. Kick, ban, give items, broadcast, and run commands.',
-  },
-  {
     icon: Mic,
     color: 'text-sky-400',
     bg: 'bg-sky-500/10',
@@ -286,11 +278,6 @@ const COMPARISON = [
 
 const ADDONS = [
   { name: 'Ticket System', version: '1.0.0', desc: 'Full support ticket workflow — panels, form fields, SLA escalation, transcripts, ratings, and more.', icon: '🎫', verified: true },
-  { name: 'FiveM Manager', version: '1.0.0', desc: 'Manage your FiveM server from Discord — kick, ban, give items, money, set jobs, teleport, and more. Supports QBCore & ESX.', icon: '🚗', verified: true },
-  { name: 'Minecraft Manager', version: '1.0.0', desc: 'Control your Minecraft server via RCON — kick, ban, give items, broadcast messages, and run console commands.', icon: '⛏️', verified: true },
-  { name: 'Rust Manager', version: '1.0.0', desc: 'Manage your Rust server via WebSocket RCON — kick, ban, give items, broadcast, and run console commands.', icon: '🔧', verified: true },
-  { name: 'ARK Manager', version: '1.0.0', desc: 'Control your ARK: Survival Evolved server via RCON — kick, ban, broadcast, and run admin commands.', icon: '🦕', verified: true },
-  { name: 'Palworld Manager', version: '1.0.0', desc: 'Manage your Palworld dedicated server via REST API — kick, ban, broadcast, and run server commands.', icon: '🌍', verified: true },
   { name: 'Code Review', version: '2.0.0', desc: 'Static analysis for JavaScript, TypeScript, Python, JSON, CSS, and HTML snippets, with optional Groq AI-powered review.', icon: '💻', verified: true },
 ];
 

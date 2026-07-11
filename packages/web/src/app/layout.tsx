@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     template: '%s | Arken Bot',
   },
   description:
-    'Arken Bot is a completely free Discord bot with moderation, leveling, tickets, game server management, auto-responses, and a real-time web dashboard. No paywalls, no premium tiers — ever.',
+    'Arken Bot is a completely free Discord bot with moderation, leveling, tickets, stream alerts, Trello & Monday.com integrations, temp voice, and a real-time web dashboard. No paywalls, no premium tiers — ever.',
   icons: { icon: '/icon.svg' },
   metadataBase: new URL('https://arkenbot.app'),
   openGraph: {
@@ -23,14 +23,14 @@ export const metadata: Metadata = {
     siteName: 'Arken Bot',
     title: 'Arken Bot — Free Discord Bot',
     description:
-      'Moderation, leveling, tickets, game server management, auto-responses, and a real-time web dashboard. Completely free, no paywalls.',
+      'Moderation, leveling, tickets, stream alerts, integrations, and a real-time web dashboard. Completely free, no paywalls.',
     url: 'https://arkenbot.app',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Arken Bot — Free Discord Bot',
     description:
-      'Moderation, leveling, tickets, game server management, auto-responses, and a real-time web dashboard. Completely free, no paywalls.',
+      'Moderation, leveling, tickets, stream alerts, integrations, and a real-time web dashboard. Completely free, no paywalls.',
   },
   verification: {
     google: '5HXI9HfbW5APt8TluWCjhjDfwp0WNl6vuF-3zwVIrB8',
