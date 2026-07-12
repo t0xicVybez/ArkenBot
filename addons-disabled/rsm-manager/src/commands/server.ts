@@ -11,7 +11,7 @@ import {
   type ContextMenuCommandInteraction,
 } from 'discord.js';
 import type { AddonContext, AddonCommandDefinition } from '@arkenbot/addon-sdk';
-import { fetchServers, fetchServer, startServer, stopServer, sendCommand, fetchPlayers, restartServer, killServer, fetchLogs, captureFingerprint } from '../utils/api.js';
+import { fetchServers, fetchServer, startServer, stopServer, sendCommand, fetchPlayers, restartServer, killServer, fetchLogs, captureCertificate } from '../utils/api.js';
 import type { RsmConfig, RsmServer } from '../utils/api.js';
 
 // ── Storage keys ──────────────────────────────────────────────────────────────
@@ -269,23 +269,23 @@ const serverCommand: AddonCommandDefinition = {
 
       try {
         let serverCount: number;
-        let fingerprint: string | undefined;
+        let cert: string | undefined;
 
         if (url.startsWith('https://')) {
-          // Trust-on-first-use: read the panel's certificate fingerprint, then make
-          // the request pinned to it. Every later call is pinned to this value, so a
-          // substituted certificate is rejected from here on.
-          fingerprint = await captureFingerprint(url);
-          const servers = await fetchServers({ url, apiKey, fingerprint });
+          // Trust-on-first-use: capture the panel's self-signed certificate, then
+          // pin every later request to it. A substituted certificate is rejected
+          // from here on because it won't chain to this one.
+          cert = await captureCertificate(url);
+          const servers = await fetchServers({ url, apiKey, cert });
           serverCount = servers.length;
         } else {
           const servers = await fetchServers({ url, apiKey });
           serverCount = servers.length;
         }
 
-        const config: RsmConfig = { url, apiKey, ...(fingerprint ? { fingerprint } : {}) };
+        const config: RsmConfig = { url, apiKey, ...(cert ? { cert } : {}) };
         await ctx.storage.set(CONFIG_KEY, config, guildId);
-        const certNote = fingerprint ? `\n🔒 TLS certificate pinned (\`${fingerprint.slice(0, 23)}…\`)` : '';
+        const certNote = cert ? '\n🔒 TLS certificate pinned' : '';
         await interaction.editReply(`✅ Connected to RSM — found **${serverCount}** server(s).${certNote}`);
       } catch {
         await interaction.editReply('❌ Could not connect to RSM. Check the URL and API key.');

@@ -1,14 +1,12 @@
 import axios from 'axios';
 import * as https from 'https';
 import * as tls from 'tls';
-import type * as stream from 'stream';
-import type { ClientRequestArgs } from 'http';
 
 export interface RsmConfig {
   url: string;
   apiKey: string;
-  /** SHA-256 cert fingerprint (AA:BB:CC… format) for HTTPS cert pinning via TOFU. */
-  fingerprint?: string;
+  /** PEM of the panel's pinned self-signed certificate, captured on first pairing (TOFU). */
+  cert?: string;
 }
 
 export interface RsmServer {
@@ -42,66 +40,34 @@ function headers(config: RsmConfig) {
   return { 'x-api-key': config.apiKey, 'Content-Type': 'application/json' };
 }
 
-/** Normalises a SHA-256 fingerprint (`AA:BB:…`) for comparison. */
-export function normaliseFingerprint(fingerprint: string): string {
-  return fingerprint.replace(/:/g, '').toLowerCase();
-}
-
 /**
- * HTTPS agent that pins a self-signed certificate by SHA-256 fingerprint.
+ * HTTPS agent that pins a panel's self-signed certificate.
  *
- * RSM panels use self-signed certs, so `rejectUnauthorized` has to stay off —
- * but Node only invokes `checkServerIdentity` when it is ON. Passing both is the
- * trap: the callback never runs, every certificate is accepted, and the
- * connection is wide open to interception while appearing to be pinned.
+ * The captured certificate is installed as the *only* trusted CA, and
+ * certificate validation stays ON — so Node rejects any certificate that does
+ * not chain to this exact one. A man-in-the-middle presenting a different
+ * self-signed certificate fails validation and the request never completes.
  *
- * The fingerprint is therefore checked on the TLS socket itself, once the
- * handshake completes, and the socket is destroyed on mismatch — which is what
- * actually severs the connection before any request data is written.
+ * Hostname verification is the one check we skip: self-signed panel certificates
+ * rarely carry a CN/SAN matching the host (they are often issued for `localhost`
+ * or a bare IP). The pinned certificate itself is the identity, so a mismatched
+ * hostname is expected and not a failure.
  */
-class PinnedAgent extends https.Agent {
-  private readonly expected: string;
-
-  constructor(expected: string) {
-    super({ rejectUnauthorized: false });
-    this.expected = expected;
-  }
-
-  /** Node calls this to open the socket for each request. */
-  createConnection(
-    options: ClientRequestArgs,
-    callback?: (err: Error | null, stream: stream.Duplex) => void,
-  ): stream.Duplex {
-    const socket = tls.connect({
-      ...(options as tls.ConnectionOptions),
-      rejectUnauthorized: false,
-    });
-
-    socket.once('secureConnect', () => {
-      const actual = normaliseFingerprint(socket.getPeerCertificate().fingerprint256 ?? '');
-      if (actual !== this.expected) {
-        socket.destroy(new Error('TLS fingerprint mismatch — possible MITM attack'));
-        return;
-      }
-      callback?.(null, socket);
-    });
-
-    return socket;
-  }
-}
-
-/** Returns a cert-pinned HTTPS agent when the config carries a fingerprint. */
 function agentFor(config: RsmConfig): https.Agent | undefined {
-  if (!config.fingerprint || !config.url.startsWith('https://')) return undefined;
-  return new PinnedAgent(normaliseFingerprint(config.fingerprint));
+  if (!config.cert || !config.url.startsWith('https://')) return undefined;
+  return new https.Agent({
+    ca: config.cert,
+    checkServerIdentity: () => undefined,
+  });
 }
 
 /**
- * Opens a TLS connection purely to read the server's certificate fingerprint
- * (trust-on-first-use). Used when pairing with a panel for the first time, before
- * any fingerprint is known — so there is nothing to pin against yet.
+ * Trust-on-first-use: connect once to read the panel's self-signed certificate
+ * so it can be pinned for every later request. On this first contact there is no
+ * trust anchor to validate against yet, so the presented certificate is accepted
+ * as-is and recorded — the same model as SSH accepting a host key the first time.
  */
-export function captureFingerprint(url: string, timeoutMs = 5000): Promise<string> {
+export function captureCertificate(url: string, timeoutMs = 5000): Promise<string> {
   const { hostname, port } = new URL(url);
   // SNI must carry a hostname, never an IP literal (RFC 6066) — panels are often
   // reached by bare IP, and Node warns then drops it.
@@ -112,13 +78,19 @@ export function captureFingerprint(url: string, timeoutMs = 5000): Promise<strin
       {
         host: hostname,
         port: Number(port) || 443,
+        // No trust anchor exists on first pairing; the cert is read, then pinned.
         rejectUnauthorized: false,
         ...(isIp ? {} : { servername: hostname }),
       },
       () => {
-        const fingerprint = socket.getPeerCertificate().fingerprint256;
+        const der = socket.getPeerCertificate().raw;
         socket.destroy();
-        fingerprint ? resolve(fingerprint) : reject(new Error('Server presented no certificate'));
+        if (!der || der.length === 0) {
+          reject(new Error('Server presented no certificate'));
+          return;
+        }
+        const body = der.toString('base64').match(/.{1,64}/g)?.join('\n') ?? '';
+        resolve(`-----BEGIN CERTIFICATE-----\n${body}\n-----END CERTIFICATE-----\n`);
       },
     );
     socket.setTimeout(timeoutMs, () => socket.destroy(new Error('TLS handshake timed out')));
