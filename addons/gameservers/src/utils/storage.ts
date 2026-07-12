@@ -3,6 +3,47 @@ import type { AddonStorage } from '@arkenbot/addon-sdk';
 import type { SavedServer } from '../types.js';
 
 const KEY = 'servers';
+const PENDING_KEY = 'pending';
+
+/**
+ * An `/server add` or `/server status` parked while we collect the admin password
+ * from a modal — the modal submit is a separate interaction, so the original
+ * command's arguments have to survive the round trip.
+ */
+export interface PendingQuery {
+  action: 'add' | 'status';
+  name?: string;
+  game: string;
+  host: string;
+  port?: number;
+}
+
+/** Parks a command's arguments against the user who invoked it. */
+export async function setPending(
+  storage: AddonStorage,
+  guildId: string,
+  userId: string,
+  pending: PendingQuery,
+): Promise<void> {
+  const all = (await storage.get<Record<string, PendingQuery>>(PENDING_KEY, guildId)) ?? {};
+  all[userId] = pending;
+  await storage.set(PENDING_KEY, all, guildId);
+}
+
+/** Retrieves and clears a parked command — a pending entry is good for one submit. */
+export async function takePending(
+  storage: AddonStorage,
+  guildId: string,
+  userId: string,
+): Promise<PendingQuery | undefined> {
+  const all = (await storage.get<Record<string, PendingQuery>>(PENDING_KEY, guildId)) ?? {};
+  const pending = all[userId];
+  if (!pending) return undefined;
+
+  delete all[userId];
+  await storage.set(PENDING_KEY, all, guildId);
+  return pending;
+}
 
 export async function getServers(storage: AddonStorage, guildId: string): Promise<SavedServer[]> {
   return (await storage.get<SavedServer[]>(KEY, guildId)) ?? [];
