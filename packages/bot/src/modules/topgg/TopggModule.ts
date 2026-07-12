@@ -18,15 +18,22 @@ const VOTE_COOLDOWN_MS = 12 * 60 * 60 * 1000;
 const STREAK_WINDOW_MS = 36 * 60 * 60 * 1000;
 
 export class TopggModule {
-  /** Handles one forwarded vote: records it globally, then rewards per guild. */
-  static async processVote(client: Client, userId: string, weight: number): Promise<void> {
+  /**
+   * Handles one forwarded vote: records it globally, then applies rewards.
+   * When `guildId` is set the vote was for that specific server, so rewards are
+   * scoped to it; otherwise it was a vote for the bot and every opted-in guild
+   * the voter belongs to is rewarded.
+   */
+  static async processVote(client: Client, userId: string, weight: number, guildId?: string): Promise<void> {
     const now = new Date();
     const doubled = weight >= 2;
 
     const voter = await this.recordVote(userId, now);
-    logger.info({ userId, weight, streak: voter.currentStreak, total: voter.totalVotes }, 'top.gg vote received');
+    logger.info({ userId, weight, guildId: guildId ?? null, streak: voter.currentStreak, total: voter.totalVotes }, 'top.gg vote received');
 
-    const configs = await prisma.topggConfig.findMany({ where: { enabled: true } });
+    const configs = await prisma.topggConfig.findMany({
+      where: guildId ? { guildId, enabled: true } : { enabled: true },
+    });
     if (configs.length === 0) return;
 
     for (const config of configs) {
