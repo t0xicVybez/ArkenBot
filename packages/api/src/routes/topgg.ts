@@ -89,6 +89,7 @@ const ConfigSchema = z.object({
   voterRoleHours: z.number().int().min(1).max(168).optional(),
   xpReward: z.number().int().min(0).max(100000).optional(),
   weekendDouble: z.boolean().optional(),
+  voteUrl: z.string().url().max(300).nullable().optional(),
   announceChannelId: z.string().nullable().optional(),
   announceMessage: z.string().max(1000).optional(),
 }).strict();

@@ -17,6 +17,7 @@ type TopggConfig = {
   voterRoleHours: number;
   xpReward: number;
   weekendDouble: boolean;
+  voteUrl: string | null;
   announceChannelId: string | null;
   announceMessage: string;
 };
@@ -124,6 +125,22 @@ export default function VotingPage() {
               enabled={config.weekendDouble ?? true}
               onChange={(v) => save({ weekendDouble: v })}
             />
+
+            <div>
+              <label className="label">Vote link</label>
+              <p className="text-xs text-[var(--text-muted)] mb-2">
+                Where <code>/vote</code> and the <code>{'{url}'}</code> placeholder send people. Paste your server&apos;s
+                top.gg link (e.g. <code>https://top.gg/servers/{guildId}/vote</code>) for server votes, or leave empty to use the bot&apos;s vote page.
+              </p>
+              <input
+                type="url"
+                className="input"
+                placeholder={`https://top.gg/servers/${guildId}/vote`}
+                value={config.voteUrl ?? ''}
+                onChange={(e) => setConfig((c) => ({ ...c, voteUrl: e.target.value }))}
+                onBlur={(e) => save({ voteUrl: e.target.value.trim() || null })}
+              />
+            </div>
 
             <div>
               <label className="label">Announcement channel</label>
