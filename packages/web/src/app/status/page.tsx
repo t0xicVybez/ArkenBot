@@ -1,8 +1,8 @@
 'use client';
 
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { LandingNav } from '@/components/LandingNav';
+import { Footer } from '@/components/Footer';
 
 const CLIENT_ID = process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID ?? '';
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.arkenbot.app';
@@ -160,17 +160,7 @@ export default function StatusPage() {
         </p>
       </main>
 
-      <footer className="border-t border-[var(--border)] py-8 px-6 bg-[var(--bg-base)]">
-        <div className="max-w-2xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-          <span className="text-[var(--text-muted)] text-xs">© {new Date().getFullYear()} Arken Bot. All rights reserved.</span>
-          <div className="flex items-center gap-4 text-xs">
-            <Link href="/changelog" className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">Changelog</Link>
-            <Link href="/status" className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">Status</Link>
-            <Link href="/privacy" className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">Privacy Policy</Link>
-            <Link href="/terms" className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">Terms of Service</Link>
-          </div>
-        </div>
-      </footer>
+      <Footer maxWidthClass="max-w-2xl" />
     </div>
   );
 }
