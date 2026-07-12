@@ -10,6 +10,7 @@ overrides:
   undici: 6.27.0
   shell-quote: 1.8.4
   esbuild: 0.28.1
+  fast-jwt: '>=6.2.4'
   bullmq>uuid: ^11.1.1
   sockjs>uuid: ^11.1.1
   next-auth>uuid: ^11.1.1
