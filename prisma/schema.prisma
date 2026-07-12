@@ -786,6 +786,10 @@ model TopggConfig {
   // or the bot (top.gg/bot/…). Used by /vote and, when set, by announcements.
   voteUrl String?
 
+  // This server's own top.gg webhook signing secret (whs_…), so server-listing
+  // votes verify without the bot owner touching env. Never returned by the API.
+  webhookSecret String?
+
   // Public thank-you announcement.
   announceChannelId String?
   announceMessage   String  @default("🎉 {user} just voted for us on top.gg — thank you! You can vote too: {url}")

@@ -90,6 +90,7 @@ const ConfigSchema = z.object({
   xpReward: z.number().int().min(0).max(100000).optional(),
   weekendDouble: z.boolean().optional(),
   voteUrl: z.string().url().max(300).nullable().optional(),
+  webhookSecret: z.string().max(200).nullable().optional(),
   announceChannelId: z.string().nullable().optional(),
   announceMessage: z.string().max(1000).optional(),
 }).strict();
@@ -109,18 +110,27 @@ export async function topggRoutes(server: FastifyInstance): Promise<void> {
 
   // ── Inbound vote webhook (called by top.gg) ────────────────────────────────
   server.post('/topgg/webhook', async (request, reply) => {
-    // Accept either the bot listing's secret or the server listing's secret.
+    const vote = parseVote(request.body);
+    if (!vote) return reply.code(400).send({ success: false, error: 'Unrecognised payload' });
+
+    // Candidate secrets: the owner's env secrets (bot listing + one server), plus
+    // the voted server's own secret from its dashboard config. The body is parsed
+    // untrusted only to route to the right secret — forging still requires it.
     const secrets = [process.env.TOPGG_WEBHOOK_SECRET, process.env.TOPGG_SERVER_WEBHOOK_SECRET].filter(
       (s): s is string => !!s,
     );
+    if (vote.guildId) {
+      const cfg = await prisma.topggConfig.findUnique({
+        where: { guildId: vote.guildId },
+        select: { webhookSecret: true },
+      });
+      if (cfg?.webhookSecret) secrets.push(cfg.webhookSecret);
+    }
     if (secrets.length === 0) return reply.code(503).send({ success: false, error: 'Webhook not configured' });
 
     if (!verifyWebhook(request, secrets)) {
       return reply.code(401).send({ success: false, error: 'Unauthorized' });
     }
-
-    const vote = parseVote(request.body);
-    if (!vote) return reply.code(400).send({ success: false, error: 'Unrecognised payload' });
 
     // Acknowledge immediately; the bot does the reward work asynchronously.
     if (!vote.isTest) {
@@ -135,7 +145,10 @@ export async function topggRoutes(server: FastifyInstance): Promise<void> {
   server.get('/guilds/:guildId/topgg', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const config = await prisma.topggConfig.findUnique({ where: { guildId } });
-    return reply.send({ success: true, data: config ?? { guildId, enabled: false } });
+    if (!config) return reply.send({ success: true, data: { guildId, enabled: false, hasWebhookSecret: false } });
+    // Never return the raw signing secret — only whether one is set.
+    const { webhookSecret, ...safe } = config;
+    return reply.send({ success: true, data: { ...safe, hasWebhookSecret: !!webhookSecret } });
   });
 
   server.patch('/guilds/:guildId/topgg', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
@@ -143,14 +156,20 @@ export async function topggRoutes(server: FastifyInstance): Promise<void> {
     const parsed = ConfigSchema.safeParse(request.body);
     if (!parsed.success) return reply.code(400).send({ success: false, error: 'Invalid config', details: parsed.error.issues });
 
+    const data = { ...parsed.data };
+    // An empty secret field means "leave it unchanged", not "clear it".
+    if (data.webhookSecret === '') delete data.webhookSecret;
+
     const config = await prisma.topggConfig.upsert({
       where: { guildId },
-      create: { guildId, ...parsed.data },
-      update: parsed.data,
+      create: { guildId, ...data },
+      update: data,
     });
     // Let the bot drop any cached config.
     await pub.publish('topgg:config', guildId).catch(() => null);
-    return reply.send({ success: true, data: config });
+    // Never echo the secret back.
+    const { webhookSecret, ...safe } = config;
+    return reply.send({ success: true, data: { ...safe, hasWebhookSecret: !!webhookSecret } });
   });
 
   // ── Top voters (bot-wide) ──────────────────────────────────────────────────

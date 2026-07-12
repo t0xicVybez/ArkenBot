@@ -18,6 +18,9 @@ type TopggConfig = {
   xpReward: number;
   weekendDouble: boolean;
   voteUrl: string | null;
+  hasWebhookSecret: boolean;
+  /** Write-only: sent when the admin sets a secret, never returned by the API. */
+  webhookSecret?: string;
   announceChannelId: string | null;
   announceMessage: string;
 };
@@ -140,6 +143,24 @@ export default function VotingPage() {
                 onChange={(e) => setConfig((c) => ({ ...c, voteUrl: e.target.value }))}
                 onBlur={(e) => save({ voteUrl: e.target.value.trim() || null })}
               />
+            </div>
+
+            <div className="rounded-lg border border-[var(--border-subtle)] bg-white/[0.02] p-4">
+              <label className="label">Server vote webhook secret</label>
+              <p className="text-xs text-[var(--text-muted)] mb-2">
+                To reward <strong>votes for this server</strong>, list your server on{' '}
+                <a className="text-discord-blurple hover:underline" href="https://top.gg/servers/new" target="_blank" rel="noopener noreferrer">top.gg</a>,
+                add a webhook pointing to <code>https://api.arkenbot.app/topgg/webhook</code> with the <strong>Vote Created</strong> event, then paste the
+                generated <code>whs_…</code> secret here. {config.hasWebhookSecret && <span className="text-green-400">✓ A secret is currently saved.</span>}
+              </p>
+              <input
+                type="password"
+                className="input"
+                placeholder={config.hasWebhookSecret ? '•••••••• (saved — type to replace)' : 'whs_…'}
+                autoComplete="off"
+                onBlur={(e) => { const v = e.target.value.trim(); if (v) { save({ webhookSecret: v }); e.target.value = ''; } }}
+              />
+              <p className="text-[11px] text-[var(--text-muted)] mt-1">Not needed if you only reward votes for the bot itself — that works automatically.</p>
             </div>
 
             <div>
