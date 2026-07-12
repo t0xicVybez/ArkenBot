@@ -495,6 +495,7 @@ export const adminApi = {
   getUsers: (params?: object) => api.get('/admin/users', { params }),
   updateUser: (id: string, data: object) => api.patch(`/admin/users/${id}`, data),
   getLogs: (params?: object) => api.get('/admin/logs', { params }),
+  getServiceLogs: (params?: object) => api.get('/admin/service-logs', { params }),
   getBotConfig: () => api.get('/admin/bot-config'),
   updateBotConfig: (data: object) => api.patch('/admin/bot-config', data),
   getMetrics: () => api.get<string>('/admin/metrics', { responseType: 'text' }),

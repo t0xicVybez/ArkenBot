@@ -22,6 +22,7 @@ import {
   X,
   LayoutGrid,
   Megaphone,
+  Terminal,
 } from 'lucide-react';
 import { Topbar } from '@/components/Topbar';
 
@@ -30,7 +31,8 @@ const staffNav = [
   { href: '/staff/guilds', label: 'Guilds', icon: Server },
   { href: '/staff/users', label: 'Users', icon: Users },
   { href: '/staff/addons', label: 'Addons', icon: Puzzle },
-  { href: '/staff/logs', label: 'Logs', icon: FileText },
+  { href: '/staff/logs', label: 'Audit Logs', icon: FileText },
+  { href: '/staff/service-logs', label: 'Service Logs', icon: Terminal },
   { href: '/staff/metrics', label: 'Metrics', icon: BarChart3 },
   { href: '/staff/announcements', label: 'Announcements', icon: Megaphone },
   { href: '/staff/settings', label: 'Settings', icon: Settings },
