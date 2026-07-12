@@ -24,7 +24,12 @@ const command: BotCommand = {
   async execute(interaction: ChatInputCommandInteraction, client: BotClient) {
     await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
-    const voteUrl = `https://top.gg/bot/${client.user!.id}/vote`;
+    // Prefer this server's configured vote link (e.g. its own top.gg server
+    // listing); fall back to the bot's vote page.
+    const guildConfig = interaction.guildId
+      ? await prisma.topggConfig.findUnique({ where: { guildId: interaction.guildId } })
+      : null;
+    const voteUrl = guildConfig?.voteUrl || `https://top.gg/bot/${client.user!.id}/vote`;
     const reminders = interaction.options.getString('reminders');
 
     // Toggle reminders if requested.
@@ -56,14 +61,11 @@ const command: BotCommand = {
       );
 
     // Show this server's configured rewards, if any.
-    if (interaction.guildId) {
-      const config = await prisma.topggConfig.findUnique({ where: { guildId: interaction.guildId } });
-      if (config?.enabled) {
-        const perks: string[] = [];
-        if (config.voterRoleId) perks.push(`<@&${config.voterRoleId}> role for ${config.voterRoleHours}h`);
-        if (config.xpReward > 0) perks.push(`+${config.xpReward} XP${config.weekendDouble ? ' (2× on weekends)' : ''}`);
-        if (perks.length) embed.addFields({ name: '🎁 Rewards here', value: perks.join('\n') });
-      }
+    if (guildConfig?.enabled) {
+      const perks: string[] = [];
+      if (guildConfig.voterRoleId) perks.push(`<@&${guildConfig.voterRoleId}> role for ${guildConfig.voterRoleHours}h`);
+      if (guildConfig.xpReward > 0) perks.push(`+${guildConfig.xpReward} XP${guildConfig.weekendDouble ? ' (2× on weekends)' : ''}`);
+      if (perks.length) embed.addFields({ name: '🎁 Rewards here', value: perks.join('\n') });
     }
 
     if (reminders) {
