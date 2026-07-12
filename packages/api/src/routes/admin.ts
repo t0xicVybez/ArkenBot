@@ -9,6 +9,8 @@ import { prisma } from '../database.js';
 import { pub } from '../redis.js';
 import { register } from 'prom-client';
 import { execSync } from 'child_process';
+import { readServiceLogs } from '../services/ServiceLogReader.js';
+import { resolveGuildNames, resolveChannelNames } from '../services/LogContextResolver.js';
 const GITHUB_REPO = 't0xicVybez/ArkenBot';
 
 /**
@@ -176,6 +178,39 @@ export async function adminRoutes(server: FastifyInstance): Promise<void> {
       success: true,
       data: { items: entries, total, page: page + 1, pageSize, hasMore: (page + 1) * pageSize < total },
     });
+  });
+
+  // Tails and parses the running services' PM2 logs (bot, api, web), classifying
+  // any errors into friendly categories. Staff-only.
+  server.get('/admin/service-logs', { preHandler: [requireStaff] }, async (request, reply) => {
+    const q = request.query as {
+      service?: string; stream?: string; level?: string; search?: string; limit?: string;
+    };
+    const isService = (s?: string): s is 'bot' | 'api' | 'web' => s === 'bot' || s === 'api' || s === 'web';
+    const isLevel = (l?: string): l is 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal' =>
+      ['trace', 'debug', 'info', 'warn', 'error', 'fatal'].includes(l ?? '');
+
+    const items = await readServiceLogs({
+      service: isService(q.service) ? q.service : 'all',
+      stream: q.stream === 'out' || q.stream === 'err' ? q.stream : 'all',
+      minLevel: isLevel(q.level) ? q.level : undefined,
+      search: q.search?.slice(0, 200) || undefined,
+      limit: q.limit ? Math.min(Math.max(parseInt(q.limit, 10) || 200, 1), 1000) : 200,
+    });
+
+    // Resolve guild/channel IDs to names for display.
+    const guildIds = [...new Set(items.map((i) => i.guildId).filter((v): v is string => !!v))];
+    const channelIds = [...new Set(items.map((i) => i.channelId).filter((v): v is string => !!v))];
+    const [guildNames, channelNames] = await Promise.all([
+      resolveGuildNames(guildIds),
+      resolveChannelNames(channelIds),
+    ]);
+    for (const item of items) {
+      if (item.guildId && guildNames[item.guildId]) item.guildName = guildNames[item.guildId];
+      if (item.channelId && channelNames[item.channelId]) item.channelName = channelNames[item.channelId];
+    }
+
+    return reply.send({ success: true, data: { items, services: ['bot', 'api', 'web'] } });
   });
 
   // Reads recent git commits and transforms them into a human-readable announcement draft.
