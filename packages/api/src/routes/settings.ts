@@ -67,6 +67,8 @@ const AutoModPatchSchema = z.object({
   raidAction:              z.enum(['kick', 'lockdown']).optional(),
   antiPhishingEnabled:     z.boolean().optional(),
   antiPhishingAction:      z.enum(['delete', 'delete_mute']).optional(),
+  aiModEnabled:            z.boolean().optional(),
+  aiModAction:             z.enum(['flag', 'delete']).optional(),
   exemptRoles:             z.array(z.string()).max(25).optional(),
   exemptChannels:          z.array(z.string()).max(50).optional(),
 }).strict();

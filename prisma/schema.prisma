@@ -192,6 +192,10 @@ model AutoModConfig {
   antiPhishingEnabled Boolean @default(false)
   antiPhishingAction  String  @default("delete_mute") // delete | delete_mute
 
+  // AI moderation — context-aware detection of harassment, hate, threats, scams
+  aiModEnabled       Boolean  @default(false)
+  aiModAction        String   @default("flag")        // flag (alert only) | delete
+
   // Exempt roles/channels
   exemptRoles        String[] @default([])
   exemptChannels     String[] @default([])

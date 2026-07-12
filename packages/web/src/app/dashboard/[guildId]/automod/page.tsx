@@ -489,6 +489,34 @@ export default function AutoModPage() {
       </SettingsSection>
 
       <SettingsSection
+        title="AI Moderation"
+        description="Uses AI to catch subtle harassment, hate, threats, and scams that keyword filters miss. Opt-in, rate-limited, and conservative by design. Requires an AI key on the bot."
+      >
+        <Toggle
+          label="Enable AI Moderation"
+          description="Have the AI review messages and flag genuinely harmful ones for your moderators"
+          enabled={config.aiModEnabled ?? false}
+          onChange={(v) => handleToggle('aiModEnabled', v)}
+        />
+        {config.aiModEnabled && (
+          <div className="mt-3">
+            <label className="label">Action on a confident violation</label>
+            <select
+              className="input w-auto"
+              value={config.aiModAction ?? 'flag'}
+              onChange={(e) => {
+                setConfig((c) => ({ ...c, aiModAction: e.target.value }));
+                handleSave({ aiModAction: e.target.value });
+              }}
+            >
+              <option value="flag">Flag only — post an alert for moderators (recommended)</option>
+              <option value="delete">Delete the message and log it</option>
+            </select>
+          </div>
+        )}
+      </SettingsSection>
+
+      <SettingsSection
         title="Exempt Roles"
         description="Members with any of these roles are never moderated by Auto-Mod. Administrators are always exempt."
       >

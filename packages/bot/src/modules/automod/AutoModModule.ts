@@ -10,6 +10,7 @@ import { redis } from '../../redis.js';
 import { REDIS_KEYS, COLORS } from '@arkenbot/shared';
 import type { AutoModConfig } from '@arkenbot/shared';
 import { logger } from '../../logger.js';
+import { AiModerationModule } from './AiModerationModule.js';
 
 /** Redis key for the per-user word filter violation counter (24-hour rolling window). */
 const FILTER_VIOLATION_KEY = (guildId: string, userId: string) =>
@@ -55,6 +56,11 @@ export class AutoModModule {
     if (config.antiLinkEnabled && this.checkLinks(message, config)) return;
     if (config.antiMentionEnabled && this.checkMentions(message, config)) return;
     if (config.antiCapsEnabled && this.checkCaps(message, config)) return;
+
+    // Nothing deterministic caught it — hand off to the AI classifier when the
+    // guild has opted in. Fire-and-forget: it is rate-limited and must not add
+    // latency to (or throw into) the message pipeline.
+    if (config.aiModEnabled) void AiModerationModule.scan(message, config);
   }
 
   private static async checkSpam(message: Message, config: AutoModConfig): Promise<boolean> {
