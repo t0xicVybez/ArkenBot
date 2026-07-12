@@ -8,6 +8,7 @@ import {
   Mic, ShieldAlert, ShieldCheck, MessagesSquare, Flag, BarChart,
   Trello } from 'lucide-react';
 import { LandingNav } from '@/components/LandingNav';
+import { Footer } from '@/components/Footer';
 
 import type { Metadata } from 'next';
 
@@ -828,55 +829,7 @@ export default async function LandingPage() {
       </section>
 
       {/* ── Footer ── */}
-      <footer className="border-t border-[var(--border)] py-10 px-6 bg-[var(--bg-base)]">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-            {/* Brand column */}
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-6 h-6 bg-discord-blurple rounded-md flex items-center justify-center">
-                  <span className="w-3.5 h-3.5 text-white">{DISCORD_ICON}</span>
-                </div>
-                <span className="font-semibold text-white text-sm tracking-tight">{SITE.name}</span>
-              </div>
-              <p className="text-[var(--text-muted)] text-xs leading-relaxed max-w-xs">
-                A completely free Discord bot with 20+ features and a real-time web dashboard. No paywalls, ever.
-              </p>
-            </div>
-
-            {/* Links column */}
-            <div>
-              <p className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-widest mb-3">Links</p>
-              <div className="space-y-2">
-                <Link href="/features" className="block text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">Features</Link>
-                <Link href="/addons" className="block text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">Addons</Link>
-                <Link href="/auth" className="block text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">Dashboard</Link>
-                <a href={SITE.docsUrl} target="_blank" rel="noopener noreferrer" className="block text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">Docs</a>
-              </div>
-            </div>
-
-            {/* Community column */}
-            <div>
-              <p className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-widest mb-3">Community</p>
-              <div className="space-y-2">
-                <a href={SITE.supportUrl} target="_blank" rel="noopener noreferrer" className="block text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">Support Server</a>
-                <a href={SITE.inviteUrl} target="_blank" rel="noopener noreferrer" className="block text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">Add to Server</a>
-              </div>
-            </div>
-          </div>
-
-          <div className="border-t border-[var(--border-subtle)] pt-6 flex flex-col sm:flex-row items-center justify-between gap-2">
-            <span className="text-[var(--text-muted)] text-xs">© {new Date().getFullYear()} {SITE.name}. All rights reserved.</span>
-            <div className="flex items-center gap-4">
-              <Link href="/changelog" className="text-[var(--text-muted)] text-xs hover:text-[var(--text-secondary)] transition-colors">Changelog</Link>
-              <Link href="/status" className="text-[var(--text-muted)] text-xs hover:text-[var(--text-secondary)] transition-colors">Status</Link>
-              <Link href="/privacy" className="text-[var(--text-muted)] text-xs hover:text-[var(--text-secondary)] transition-colors">Privacy Policy</Link>
-              <Link href="/terms" className="text-[var(--text-muted)] text-xs hover:text-[var(--text-secondary)] transition-colors">Terms of Service</Link>
-              <span className="text-[var(--text-muted)] text-xs">Made with care for Discord communities.</span>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer variant="full" docsUrl={SITE.docsUrl} supportUrl={SITE.supportUrl} inviteUrl={SITE.inviteUrl} />
     </div>
   );
 }
