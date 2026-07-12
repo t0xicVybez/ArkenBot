@@ -762,7 +762,10 @@ export class BackgroundJobs {
       const guild = this.client.guilds.cache.get(alert.guildId);
       if (!guild) return;
       const channel = guild.channels.cache.get(alert.discordChannelId) as TextChannel | undefined;
-      if (!channel?.isTextBased()) return;
+      if (!channel?.isTextBased()) {
+        await this.recordAlertFailure(alert.id, 'Channel not found — deleted or the bot lost access');
+        return;
+      }
 
       const alertSettings = await getGuildSettings(alert.guildId);
       const alertColor = alertSettings?.streamAlertColor
@@ -799,11 +802,12 @@ export class BackgroundJobs {
       const alertMsg = await channel.send({ content: message, embeds: [embed] });
       await prisma.streamAlert.update({
         where: { id: alert.id },
-        data: { lastMessageId: alertMsg.id, lastMessageChannelId: alertMsg.channelId },
+        data: { lastMessageId: alertMsg.id, lastMessageChannelId: alertMsg.channelId, failureCount: 0, lastError: null },
       }).catch(() => null);
       logger.info({ guildId: alert.guildId, channelId: alert.channelId }, 'YouTube live alert sent');
     } catch (err) {
       logger.error({ err, alertId: alert.id }, 'Failed to process YouTube alert');
+      await this.recordAlertPermissionFailure(alert.id, err);
     }
   }
 
@@ -822,7 +826,10 @@ export class BackgroundJobs {
       if (!guild) return;
 
       const channel = guild.channels.cache.get(alert.discordChannelId) as TextChannel | undefined;
-      if (!channel?.isTextBased()) return;
+      if (!channel?.isTextBased()) {
+        await this.recordAlertFailure(alert.id, 'Channel not found — deleted or the bot lost access');
+        return;
+      }
 
       const alertSettings = await getGuildSettings(alert.guildId);
       const alertColor = alertSettings?.streamAlertColor
@@ -865,7 +872,7 @@ export class BackgroundJobs {
           .setTimestamp();
 
         const alertMsg = await channel.send({ content: message, embeds: [embed] });
-        await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastMessageId: alertMsg.id, lastMessageChannelId: alertMsg.channelId } }).catch(() => null);
+        await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastMessageId: alertMsg.id, lastMessageChannelId: alertMsg.channelId, failureCount: 0, lastError: null } }).catch(() => null);
         logger.info({ guildId: alert.guildId, streamer: alert.channelUsername }, 'Twitch stream alert sent');
 
       } else if (alert.platform === 'kick') {
@@ -901,7 +908,7 @@ export class BackgroundJobs {
           .setTimestamp();
 
         const alertMsg = await channel.send({ content: message, embeds: [embed] });
-        await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastMessageId: alertMsg.id, lastMessageChannelId: alertMsg.channelId } }).catch(() => null);
+        await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastMessageId: alertMsg.id, lastMessageChannelId: alertMsg.channelId, failureCount: 0, lastError: null } }).catch(() => null);
         logger.info({ guildId: alert.guildId, streamer: alert.channelUsername }, 'Kick stream alert sent');
 
       } else if (alert.platform === 'twitter' && twitterBearerToken) {
@@ -950,7 +957,7 @@ export class BackgroundJobs {
           .setTimestamp();
 
         const alertMsg = await channel.send({ content: message, embeds: [embed] });
-        await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastMessageId: alertMsg.id, lastMessageChannelId: alertMsg.channelId } }).catch(() => null);
+        await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastMessageId: alertMsg.id, lastMessageChannelId: alertMsg.channelId, failureCount: 0, lastError: null } }).catch(() => null);
         logger.info({ guildId: alert.guildId, streamer: alert.channelUsername }, 'Twitter/X alert sent');
 
       } else if (alert.platform === 'reddit') {
@@ -992,7 +999,7 @@ export class BackgroundJobs {
           .setTimestamp();
 
         const alertMsg = await channel.send({ content: message, embeds: [embed] });
-        await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastMessageId: alertMsg.id, lastMessageChannelId: alertMsg.channelId } }).catch(() => null);
+        await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastMessageId: alertMsg.id, lastMessageChannelId: alertMsg.channelId, failureCount: 0, lastError: null } }).catch(() => null);
         logger.info({ guildId: alert.guildId, subreddit }, 'Reddit post alert sent');
 
       } else if (alert.platform === 'rss') {
@@ -1024,12 +1031,46 @@ export class BackgroundJobs {
           .setTimestamp();
 
         const alertMsg = await channel.send({ content: message, embeds: [embed] });
-        await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastMessageId: alertMsg.id, lastMessageChannelId: alertMsg.channelId } }).catch(() => null);
+        await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastMessageId: alertMsg.id, lastMessageChannelId: alertMsg.channelId, failureCount: 0, lastError: null } }).catch(() => null);
         logger.info({ guildId: alert.guildId, feed: alert.channelUsername }, 'RSS/Podcast alert sent');
       }
     } catch (err) {
       logger.error({ err, alertId: alert.id }, 'Failed to process stream alert');
+      await this.recordAlertPermissionFailure(alert.id, err);
     }
+  }
+
+  /**
+   * Counts a failure only when Discord says the bot cannot post to the channel.
+   * Feed and upstream-API errors are transient and must not disable an alert.
+   */
+  private async recordAlertPermissionFailure(id: string, err: unknown): Promise<void> {
+    const code = (err as { code?: number }).code;
+    if (code !== 50001 && code !== 50013 && code !== 10003) return;
+    await this.recordAlertFailure(id, `Discord error ${code}: ${(err as Error).message ?? 'permission denied'}`);
+  }
+
+  /**
+   * Increments a stream alert's consecutive-failure counter and disables it once
+   * the threshold is reached. Without this, an alert pointed at a channel the bot
+   * can no longer see retries every 5 minutes forever. Reset on any successful send.
+   */
+  private async recordAlertFailure(id: string, reason: string): Promise<void> {
+    const MAX_FAILURES = 5;
+    try {
+      const updated = await prisma.streamAlert.update({
+        where: { id },
+        data: { failureCount: { increment: 1 }, lastError: reason.slice(0, 300) },
+        select: { failureCount: true, guildId: true, platform: true, channelUsername: true },
+      });
+      if (updated.failureCount >= MAX_FAILURES) {
+        await prisma.streamAlert.update({ where: { id }, data: { enabled: false } });
+        logger.warn(
+          { id, guildId: updated.guildId, platform: updated.platform, feed: updated.channelUsername, failures: updated.failureCount, reason },
+          `Stream alert auto-disabled after ${MAX_FAILURES} consecutive failures`,
+        );
+      }
+    } catch { /* row deleted mid-flight — nothing to record */ }
   }
 
   // ── Weekly Analytics Reports ─────────────────────────────────────────────
