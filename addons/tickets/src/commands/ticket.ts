@@ -127,9 +127,6 @@ const command: AddonCommandDefinition = {
     )
     .addSubcommand((s) =>
       s.setName('waiting').setDescription('Toggle waiting status on this ticket (staff only)'),
-    )
-    .addSubcommand((s) =>
-      s.setName('triage').setDescription('AI summary, urgency, and a suggested reply (staff only)'),
     ) as unknown as SlashCommandBuilder,
 
   async autocomplete(interaction: AutocompleteInteraction, ctx: AddonContext): Promise<void> {
@@ -479,11 +476,6 @@ const command: AddonCommandDefinition = {
           await updateControlsMessage(ctx, ticket, !!ticket.claimedBy);
           await interaction.reply({ content: '⏳ Ticket set to waiting — awaiting user response.', flags: MessageFlags.Ephemeral });
         }
-        break;
-      }
-      case 'triage': {
-        const { generateTriage } = await import('../events/interaction.js');
-        await generateTriage(ctx, interaction, interaction.channelId);
         break;
       }
     }
