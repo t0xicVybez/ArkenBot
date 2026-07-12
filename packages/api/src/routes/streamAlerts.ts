@@ -83,6 +83,14 @@ export async function streamAlertRoutes(server: FastifyInstance): Promise<void> 
     if (body.enabled !== undefined) data.enabled = body.enabled;
     if (body.discordChannelId) data.discordChannelId = body.discordChannelId;
 
+    // Re-enabling or repointing an alert is the user telling us the problem is
+    // fixed. Clear the failure counter, or an auto-disabled alert would trip
+    // again on its very next failure instead of getting a fresh five attempts.
+    if (body.enabled === true || body.discordChannelId) {
+      data.failureCount = 0;
+      data.lastError = null;
+    }
+
     if (body.channelUsername) {
       let newUsername = (body.channelUsername as string).trim();
       if (existing.platform === 'youtube') {

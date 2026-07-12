@@ -37,6 +37,8 @@ type StreamAlert = {
   message?: string | null;
   enabled: boolean;
   lastStreamId?: string | null;
+  failureCount?: number;
+  lastError?: string | null;
 };
 
 /** Per-platform icon tile treatment for the alert list. */
@@ -301,6 +303,11 @@ export function FeedAlertsPage({ title, description, icon: Icon, platforms, noti
                     <p className="text-[12px] text-[var(--text-muted)] truncate">
                       {pc?.label ?? alert.platform} · posts to {ch ? `#${ch.name}` : alert.discordChannelId}
                     </p>
+                    {!alert.enabled && alert.lastError && (
+                      <p className="text-[11px] text-red-400/90 truncate mt-0.5" title={alert.lastError}>
+                        Auto-disabled: {alert.lastError}
+                      </p>
+                    )}
                   </div>
                   {isLive && (
                     <span className="badge-success flex-shrink-0">
