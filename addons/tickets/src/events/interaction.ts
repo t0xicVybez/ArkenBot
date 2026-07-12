@@ -7,6 +7,7 @@ import {
   EmbedBuilder,
   type Interaction,
   type ButtonInteraction,
+  type ChatInputCommandInteraction,
   type ModalSubmitInteraction,
   type TextChannel,
   type Guild,
@@ -98,9 +99,6 @@ async function handleButton(ctx: AddonContext, interaction: ButtonInteraction): 
   } else if (id.startsWith('ticket:waiting:')) {
     const channelId = id.slice('ticket:waiting:'.length);
     await handleWaitingButton(ctx, interaction, channelId);
-  } else if (id.startsWith('ticket:summary:')) {
-    const channelId = id.slice('ticket:summary:'.length);
-    await handleSummaryButton(ctx, interaction, channelId);
   }
 }
 
@@ -615,11 +613,12 @@ async function handleClaimButton(
  * Generates an AI triage of the ticket for staff — a short summary of the user's
  * issue, an urgency estimate, and a suggested first reply. Shown ephemerally so
  * the suggestion stays private to the staff member who requested it, and only run
- * on demand to keep the model cost bounded.
+ * on demand to keep the model cost bounded. Invoked by the `/ticket triage`
+ * subcommand.
  */
-async function handleSummaryButton(
+export async function generateTriage(
   ctx: AddonContext,
-  interaction: ButtonInteraction,
+  interaction: ButtonInteraction | ChatInputCommandInteraction,
   channelId: string,
 ): Promise<void> {
   if (!interaction.guildId) return;
