@@ -6,7 +6,8 @@
  *  - GET/PATCH /guilds/:id/topgg — per-guild reward configuration (admin only).
  *  - GET /guilds/:id/topgg/leaderboard — the bot's top voters.
  */
-import type { FastifyInstance } from 'fastify';
+import type { FastifyInstance, FastifyRequest } from 'fastify';
+import crypto from 'crypto';
 import { z } from 'zod';
 import { prisma } from '../database.js';
 import { pub } from '../redis.js';
@@ -33,6 +34,37 @@ function parseVote(body: unknown): { userId: string; weight: number; isTest: boo
   return null;
 }
 
+/** Constant-time string comparison that tolerates unequal lengths. */
+function safeEqual(a: string, b: string): boolean {
+  const ba = Buffer.from(a);
+  const bb = Buffer.from(b);
+  return ba.length === bb.length && crypto.timingSafeEqual(ba, bb);
+}
+
+/**
+ * Verifies an inbound webhook against the configured secret.
+ *
+ * Current webhooks (v1) sign the request: header `x-topgg-signature` is
+ * `t={unixTimestamp},v1={signature}` where signature = HMAC-SHA256 of
+ * `${timestamp}.${rawBody}` keyed by the `whs_…` secret. Legacy webhooks instead
+ * send the secret verbatim in the `Authorization` header — supported as a
+ * fallback for anyone still on the old setup.
+ */
+function verifyWebhook(request: FastifyRequest, secret: string): boolean {
+  const sigHeader = request.headers['x-topgg-signature'];
+  if (typeof sigHeader === 'string') {
+    const parts = Object.fromEntries(sigHeader.split(',').map((p) => p.split('=')));
+    const timestamp = parts['t'];
+    const signature = parts['v1'];
+    if (!timestamp || !signature) return false;
+    const rawBody = (request as FastifyRequest & { rawBody?: string }).rawBody ?? '';
+    const digest = crypto.createHmac('sha256', secret).update(`${timestamp}.${rawBody}`).digest('hex');
+    return safeEqual(signature, digest);
+  }
+  // Legacy: shared secret in the Authorization header.
+  return typeof request.headers.authorization === 'string' && safeEqual(request.headers.authorization, secret);
+}
+
 const ConfigSchema = z.object({
   enabled: z.boolean().optional(),
   voterRoleId: z.string().nullable().optional(),
@@ -44,12 +76,24 @@ const ConfigSchema = z.object({
 }).strict();
 
 export async function topggRoutes(server: FastifyInstance): Promise<void> {
+  // Capture the raw request body so the webhook's HMAC signature can be verified
+  // against the exact bytes top.gg signed. Encapsulated to this plugin, so it does
+  // not change body parsing for the rest of the API.
+  server.addContentTypeParser('application/json', { parseAs: 'string' }, (req, body, done) => {
+    (req as FastifyRequest & { rawBody?: string }).rawBody = body as string;
+    try {
+      done(null, body ? JSON.parse(body as string) : {});
+    } catch (err) {
+      done(err as Error, undefined);
+    }
+  });
+
   // ── Inbound vote webhook (called by top.gg) ────────────────────────────────
   server.post('/topgg/webhook', async (request, reply) => {
     const secret = process.env.TOPGG_WEBHOOK_SECRET;
     if (!secret) return reply.code(503).send({ success: false, error: 'Webhook not configured' });
-    // top.gg sends the secret you set in its dashboard as the Authorization header.
-    if (request.headers.authorization !== secret) {
+
+    if (!verifyWebhook(request, secret)) {
       return reply.code(401).send({ success: false, error: 'Unauthorized' });
     }
 
@@ -62,7 +106,7 @@ export async function topggRoutes(server: FastifyInstance): Promise<void> {
         .publish('topgg:vote', JSON.stringify({ userId: vote.userId, weight: vote.weight }))
         .catch((err) => request.log.warn({ err }, 'Failed to publish topgg vote'));
     }
-    return reply.code(204).send();
+    return reply.code(200).send({ success: true });
   });
 
   // ── Per-guild reward configuration ─────────────────────────────────────────
