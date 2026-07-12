@@ -140,6 +140,7 @@ export function buildTicketControls(channelId: string, waiting = false): ActionR
         .setLabel(waiting ? 'Mark Active' : 'Waiting')
         .setEmoji(waiting ? '🔄' : '⏳')
         .setStyle(waiting ? ButtonStyle.Primary : ButtonStyle.Secondary),
+      new ButtonBuilder().setCustomId(`ticket:summary:${channelId}`).setLabel('AI').setEmoji('🤖').setStyle(ButtonStyle.Secondary),
     ),
   ];
 }
@@ -155,6 +156,7 @@ export function buildClaimedControls(channelId: string, waiting = false): Action
         .setLabel(waiting ? 'Mark Active' : 'Waiting')
         .setEmoji(waiting ? '🔄' : '⏳')
         .setStyle(waiting ? ButtonStyle.Primary : ButtonStyle.Secondary),
+      new ButtonBuilder().setCustomId(`ticket:summary:${channelId}`).setLabel('AI').setEmoji('🤖').setStyle(ButtonStyle.Secondary),
     ),
   ];
 }
