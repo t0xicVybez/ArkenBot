@@ -31,6 +31,11 @@ export class TopggModule {
     const voter = await this.recordVote(userId, now);
     logger.info({ userId, weight, guildId: guildId ?? null, streak: voter.currentStreak, total: voter.totalVotes }, 'top.gg vote received');
 
+    // A server vote links back to the server's top.gg page; a bot vote to the bot's.
+    const voteUrl = guildId
+      ? `https://top.gg/servers/${guildId}/vote`
+      : `https://top.gg/bot/${client.user!.id}/vote`;
+
     const configs = await prisma.topggConfig.findMany({
       where: guildId ? { guildId, enabled: true } : { enabled: true },
     });
@@ -49,7 +54,7 @@ export class TopggModule {
       const xp = config.weekendDouble && doubled ? config.xpReward * 2 : config.xpReward;
       if (xp > 0) await this.grantXp(config.guildId, member, xp);
 
-      await this.announce(guild, config.announceChannelId, config.announceMessage, member, voter, client);
+      await this.announce(config.announceChannelId, config.announceMessage, member, voter, config.voteUrl || voteUrl);
     }
   }
 
@@ -105,18 +110,16 @@ export class TopggModule {
 
   /** Posts the configured thank-you message to the announcement channel. */
   private static async announce(
-    guild: { channels: { cache: Map<string, unknown> } },
     channelId: string | null,
     template: string,
     member: GuildMember,
     voter: { currentStreak: number; totalVotes: number },
-    client: Client,
+    voteUrl: string,
   ): Promise<void> {
     if (!channelId) return;
     const channel = member.guild.channels.cache.get(channelId) as TextChannel | undefined;
     if (!channel?.isTextBased()) return;
 
-    const voteUrl = `https://top.gg/bot/${client.user!.id}/vote`;
     const content = template
       .replace(/\{user\}/g, `<@${member.id}>`)
       .replace(/\{url\}/g, voteUrl)
