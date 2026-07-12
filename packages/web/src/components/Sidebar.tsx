@@ -37,6 +37,7 @@ import {
   Radio,
   LineChart,
   UserPlus,
+  ThumbsUp,
   Hash,
   Layout,
   UserCheck,
@@ -115,6 +116,7 @@ const buildNavSections = (guildId: string, installedAddons: string[]): NavSectio
         { href: `/dashboard/${guildId}/starboard`, label: 'Starboard', icon: Star },
         { href: `/dashboard/${guildId}/members`, label: 'Members', icon: Users },
         { href: `/dashboard/${guildId}/invite-tracker`, label: 'Invite Tracker', icon: UserPlus },
+        { href: `/dashboard/${guildId}/voting`, label: 'Vote Rewards', icon: ThumbsUp },
       ],
     },
     {
