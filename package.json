@@ -43,11 +43,16 @@
       "unrs-resolver"
     ],
     "overrides": {
-      "gray-matter>js-yaml": "3.14.2",
+      "gray-matter>js-yaml": "3.15.0",
       "ws": "8.21.0",
       "undici": "6.27.0",
       "shell-quote": "1.8.4",
-      "esbuild": "0.28.1"
+      "esbuild": "0.28.1",
+      "bullmq>uuid": "^11.1.1",
+      "sockjs>uuid": "^11.1.1",
+      "next-auth>uuid": "^11.1.1",
+      "next>postcss": "^8.5.17",
+      "serialize-javascript": "^7.0.7"
     }
   }
 }
