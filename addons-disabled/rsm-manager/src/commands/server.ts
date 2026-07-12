@@ -10,10 +10,8 @@ import {
   type Client,
   type ContextMenuCommandInteraction,
 } from 'discord.js';
-import axios from 'axios';
-import * as https from 'https';
 import type { AddonContext, AddonCommandDefinition } from '@arkenbot/addon-sdk';
-import { fetchServers, fetchServer, startServer, stopServer, sendCommand, fetchPlayers, restartServer, killServer, fetchLogs } from '../utils/api.js';
+import { fetchServers, fetchServer, startServer, stopServer, sendCommand, fetchPlayers, restartServer, killServer, fetchLogs, captureFingerprint } from '../utils/api.js';
 import type { RsmConfig, RsmServer } from '../utils/api.js';
 
 // ── Storage keys ──────────────────────────────────────────────────────────────
@@ -274,24 +272,12 @@ const serverCommand: AddonCommandDefinition = {
         let fingerprint: string | undefined;
 
         if (url.startsWith('https://')) {
-          // TOFU: single request with rejectUnauthorized:false to capture the cert fingerprint
-          // and verify the connection in one shot. Avoids a second request that would reject
-          // the self-signed cert under default TLS validation.
-          let captured: string | undefined;
-          const setupAgent = new https.Agent({
-            rejectUnauthorized: false,
-            checkServerIdentity: (_host: string, cert: { fingerprint256?: string }) => {
-              captured = cert.fingerprint256;
-              return undefined;
-            },
-          });
-          const res = await axios.get(`${url}/api/servers`, {
-            headers: { 'x-api-key': apiKey },
-            httpsAgent: setupAgent,
-            timeout: 5000,
-          });
-          serverCount = (res.data as { servers: RsmServer[] }).servers.length;
-          fingerprint = captured;
+          // Trust-on-first-use: read the panel's certificate fingerprint, then make
+          // the request pinned to it. Every later call is pinned to this value, so a
+          // substituted certificate is rejected from here on.
+          fingerprint = await captureFingerprint(url);
+          const servers = await fetchServers({ url, apiKey, fingerprint });
+          serverCount = servers.length;
         } else {
           const servers = await fetchServers({ url, apiKey });
           serverCount = servers.length;

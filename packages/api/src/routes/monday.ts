@@ -48,6 +48,30 @@ const EVENT_META: Record<string, { label: string; emoji: string; color: number }
   duplicate_item:       { label: 'Item Duplicated',      emoji: '📋', color: 0x7c3aed },
 };
 
+/** Longest comment body we will run the tag-stripper over. */
+const MAX_BODY_INPUT = 4096;
+
+/**
+ * Reduces a Monday comment body to plain text for a Discord embed.
+ *
+ * The body is HTML from an inbound webhook, so it is untrusted on two counts:
+ *
+ *  - Tag-stripping with `<[^>]+>` is quadratic on input that is mostly '<' with
+ *    no '>' to close it, so a large enough payload burns CPU on the API. The
+ *    input is capped before any regex touches it.
+ *  - A single strip pass is not enough on its own. Unterminated markup like
+ *    '<script' has no closing '>', so it survives the pass verbatim. Any angle
+ *    bracket still standing afterwards is removed, so no partial tag can escape.
+ */
+function stripHtml(input: unknown): string {
+  return String(input)
+    .slice(0, MAX_BODY_INPUT)
+    .replace(/<[^>]*>/g, '')
+    .replace(/[<>]/g, '')
+    .trim()
+    .slice(0, 512);
+}
+
 // ── Embed builder ────────────────────────────────────────────────────────────
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function buildEmbed(event: Record<string, any>, boardName?: string | null, resolvedUserName?: string | null) {
@@ -137,8 +161,7 @@ function buildEmbed(event: Record<string, any>, boardName?: string | null, resol
       addField('Board', boardUrl ? `[${boardLabel}](${boardUrl})` : boardLabel);
       addField('Comment By', fmtUser(event.userId));
       if (event.body) {
-        // Strip HTML tags from comment body
-        const cleanBody = String(event.body).replace(/<[^>]+>/g, '').trim().slice(0, 512);
+        const cleanBody = stripHtml(event.body);
         if (cleanBody) addField('Comment', cleanBody, false);
       }
       break;

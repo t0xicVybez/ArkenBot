@@ -243,7 +243,10 @@ export async function trelloRoutes(server: FastifyInstance): Promise<void> {
     const auth = `key=${encodeURIComponent(trelloKey.trim())}&token=${encodeURIComponent(trelloToken.trim())}`;
 
     // Resolve the board — validates credentials and gets the full ID + name.
-    const boardRes = await fetch(`${TRELLO_API}/boards/${boardRef}?fields=id,name&${auth}`).catch(() => null);
+    // boardRef is encoded even though parseBoardId already constrains it to
+    // alphanumerics: it lands in the request path, so nothing user-derived should
+    // reach it without escaping.
+    const boardRes = await fetch(`${TRELLO_API}/boards/${encodeURIComponent(boardRef)}?fields=id,name&${auth}`).catch(() => null);
     if (!boardRes?.ok) {
       const detail = boardRes ? await boardRes.text().catch(() => '') : '';
       return reply.code(400).send({ success: false, error: `Trello rejected the board lookup (${boardRes?.status ?? 'network error'}). Check the board URL, API key, and token. ${detail.slice(0, 120)}` });
