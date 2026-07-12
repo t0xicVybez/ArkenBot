@@ -1,5 +1,8 @@
 import axios from 'axios';
 import * as https from 'https';
+import * as tls from 'tls';
+import type * as stream from 'stream';
+import type { ClientRequestArgs } from 'http';
 
 export interface RsmConfig {
   url: string;
@@ -39,19 +42,87 @@ function headers(config: RsmConfig) {
   return { 'x-api-key': config.apiKey, 'Content-Type': 'application/json' };
 }
 
-// Returns a cert-pinned HTTPS agent when the config carries a fingerprint.
-// Uses rejectUnauthorized:false (self-signed) but validates the fingerprint
-// itself, so a MITM with a different cert will be rejected.
+/** Normalises a SHA-256 fingerprint (`AA:BB:…`) for comparison. */
+export function normaliseFingerprint(fingerprint: string): string {
+  return fingerprint.replace(/:/g, '').toLowerCase();
+}
+
+/**
+ * HTTPS agent that pins a self-signed certificate by SHA-256 fingerprint.
+ *
+ * RSM panels use self-signed certs, so `rejectUnauthorized` has to stay off —
+ * but Node only invokes `checkServerIdentity` when it is ON. Passing both is the
+ * trap: the callback never runs, every certificate is accepted, and the
+ * connection is wide open to interception while appearing to be pinned.
+ *
+ * The fingerprint is therefore checked on the TLS socket itself, once the
+ * handshake completes, and the socket is destroyed on mismatch — which is what
+ * actually severs the connection before any request data is written.
+ */
+class PinnedAgent extends https.Agent {
+  private readonly expected: string;
+
+  constructor(expected: string) {
+    super({ rejectUnauthorized: false });
+    this.expected = expected;
+  }
+
+  /** Node calls this to open the socket for each request. */
+  createConnection(
+    options: ClientRequestArgs,
+    callback?: (err: Error | null, stream: stream.Duplex) => void,
+  ): stream.Duplex {
+    const socket = tls.connect({
+      ...(options as tls.ConnectionOptions),
+      rejectUnauthorized: false,
+    });
+
+    socket.once('secureConnect', () => {
+      const actual = normaliseFingerprint(socket.getPeerCertificate().fingerprint256 ?? '');
+      if (actual !== this.expected) {
+        socket.destroy(new Error('TLS fingerprint mismatch — possible MITM attack'));
+        return;
+      }
+      callback?.(null, socket);
+    });
+
+    return socket;
+  }
+}
+
+/** Returns a cert-pinned HTTPS agent when the config carries a fingerprint. */
 function agentFor(config: RsmConfig): https.Agent | undefined {
   if (!config.fingerprint || !config.url.startsWith('https://')) return undefined;
-  const expected = config.fingerprint.replace(/:/g, '').toLowerCase();
-  return new https.Agent({
-    rejectUnauthorized: false,
-    checkServerIdentity: (_host: string, cert: { fingerprint256?: string }) => {
-      const actual = (cert.fingerprint256 ?? '').replace(/:/g, '').toLowerCase();
-      if (actual !== expected) return new Error('TLS fingerprint mismatch — possible MITM attack');
-      return undefined;
-    },
+  return new PinnedAgent(normaliseFingerprint(config.fingerprint));
+}
+
+/**
+ * Opens a TLS connection purely to read the server's certificate fingerprint
+ * (trust-on-first-use). Used when pairing with a panel for the first time, before
+ * any fingerprint is known — so there is nothing to pin against yet.
+ */
+export function captureFingerprint(url: string, timeoutMs = 5000): Promise<string> {
+  const { hostname, port } = new URL(url);
+  // SNI must carry a hostname, never an IP literal (RFC 6066) — panels are often
+  // reached by bare IP, and Node warns then drops it.
+  const isIp = /^\d+\.\d+\.\d+\.\d+$/.test(hostname);
+
+  return new Promise((resolve, reject) => {
+    const socket = tls.connect(
+      {
+        host: hostname,
+        port: Number(port) || 443,
+        rejectUnauthorized: false,
+        ...(isIp ? {} : { servername: hostname }),
+      },
+      () => {
+        const fingerprint = socket.getPeerCertificate().fingerprint256;
+        socket.destroy();
+        fingerprint ? resolve(fingerprint) : reject(new Error('Server presented no certificate'));
+      },
+    );
+    socket.setTimeout(timeoutMs, () => socket.destroy(new Error('TLS handshake timed out')));
+    socket.once('error', reject);
   });
 }
 
