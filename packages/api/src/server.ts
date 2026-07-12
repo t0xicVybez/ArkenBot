@@ -23,6 +23,7 @@ import { publicRoutes } from './routes/public.js';
 import { featureRoutes } from './routes/features.js';
 import { giveawayRoutes } from './routes/giveaways.js';
 import { streamAlertRoutes } from './routes/streamAlerts.js';
+import { topggRoutes } from './routes/topgg.js';
 import { suggestionRoutes } from './routes/suggestions.js';
 import { starboardRoutes } from './routes/starboard.js';
 import { levelRoleRoutes } from './routes/levelRoles.js';
@@ -147,6 +148,7 @@ export async function createServer() {
   await server.register(featureRoutes);
   await server.register(giveawayRoutes);
   await server.register(streamAlertRoutes);
+  await server.register(topggRoutes);
   await server.register(suggestionRoutes);
   await server.register(starboardRoutes);
   await server.register(levelRoleRoutes);

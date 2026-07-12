@@ -137,6 +137,14 @@ const event: BotEvent = {
     sub.removeAllListeners('message');
     sub.on('message', async (_channel: string, message: string) => {
       try {
+        // A forwarded top.gg vote — reward the voter across opted-in guilds.
+        if (_channel === 'topgg:vote') {
+          const { userId, weight } = JSON.parse(message) as { userId: string; weight: number };
+          const { TopggModule } = await import('../modules/topgg/TopggModule.js');
+          await TopggModule.processVote(client, userId, weight);
+          return;
+        }
+
         // Some channels (like 'api:events') publish JSON event objects, while
         // others (like 'cache:invalidate:settings') publish a plain guildId.
         if (_channel === 'cache:invalidate:settings') {
@@ -321,6 +329,7 @@ const event: BotEvent = {
 
     await sub.subscribe('api:events');
     await sub.subscribe('cache:invalidate:settings');
+    await sub.subscribe('topgg:vote');
 
 
     logger.info('Bot ready! Serving ' + client.guilds.cache.size + ' guilds');

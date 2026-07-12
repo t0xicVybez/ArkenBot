@@ -285,6 +285,13 @@ export const streamAlertsApi = {
   delete: (guildId: string, id: string) => api.delete(`/guilds/${guildId}/stream-alerts/${id}`),
 };
 
+// ─── Top.gg Voting ────────────────────────────────────────────────
+export const topggApi = {
+  getConfig: (guildId: string) => api.get(`/guilds/${guildId}/topgg`),
+  updateConfig: (guildId: string, data: object) => api.patch(`/guilds/${guildId}/topgg`, data),
+  getLeaderboard: (guildId: string) => api.get(`/guilds/${guildId}/topgg/leaderboard`),
+};
+
 // ─── Suggestions ──────────────────────────────────────────────────
 export const suggestionsApi = {
   getConfig: (guildId: string) => api.get(`/guilds/${guildId}/suggestions/config`),
