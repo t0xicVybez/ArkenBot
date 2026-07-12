@@ -102,6 +102,7 @@ export default async function ChangelogPage() {
           <span className="text-[var(--text-muted)] text-xs">© {new Date().getFullYear()} Arken Bot. All rights reserved.</span>
           <div className="flex items-center gap-4 text-xs">
             <Link href="/changelog" className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">Changelog</Link>
+            <Link href="/status" className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">Status</Link>
             <Link href="/privacy" className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">Privacy Policy</Link>
             <Link href="/terms" className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">Terms of Service</Link>
             <a href={SITE.supportUrl} target="_blank" rel="noopener noreferrer" className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors">Support</a>
