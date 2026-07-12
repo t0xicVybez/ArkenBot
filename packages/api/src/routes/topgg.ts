@@ -13,23 +13,38 @@ import { prisma } from '../database.js';
 import { pub } from '../redis.js';
 import { requireGuildAdmin } from '../middleware/auth.js';
 
-/** Normalises a vote webhook body (v0 or v1) into a common shape. */
-function parseVote(body: unknown): { userId: string; weight: number; isTest: boolean } | null {
+/**
+ * Normalises a vote webhook body (v0 or v1) into a common shape.
+ * `guildId` is set only for *server* votes — the vote was cast for a specific
+ * Discord server rather than the bot, so rewards are scoped to that server.
+ */
+function parseVote(body: unknown): { userId: string; weight: number; isTest: boolean; guildId?: string } | null {
   if (typeof body !== 'object' || body === null) return null;
   const b = body as Record<string, unknown>;
 
-  // v1: { type: 'vote.create' | 'webhook.test', data: { user: { id }, weight } }
+  // v1: { type, data: { user: { id, platform_id }, project: { type, platform_id }, weight } }.
+  // For the user, `platform_id` is the Discord ID (`id` is top.gg's internal one).
+  // For the project, type "server" means this is a server vote and platform_id is the guild ID.
   if (typeof b.type === 'string' && (b.type === 'vote.create' || b.type === 'webhook.test')) {
-    const data = (b.data ?? {}) as { user?: { id?: string }; weight?: number };
-    const userId = data.user?.id;
+    const data = (b.data ?? {}) as {
+      user?: { id?: string; platform_id?: string };
+      project?: { type?: string; platform_id?: string };
+      weight?: number;
+    };
+    const userId = data.user?.platform_id ?? data.user?.id;
     if (!userId) return null;
-    return { userId, weight: data.weight ?? 1, isTest: b.type === 'webhook.test' };
+    const guildId = data.project?.type === 'server' ? data.project.platform_id : undefined;
+    return { userId, weight: data.weight ?? 1, isTest: b.type === 'webhook.test', guildId };
   }
 
-  // v0: { user, type: 'upvote' | 'test', isWeekend }
+  // v0: bot vote { user, type, isWeekend } or server vote { user, guild, type, isWeekend }.
   if (typeof b.user === 'string') {
-    const isTest = b.type === 'test';
-    return { userId: b.user, weight: b.isWeekend ? 2 : 1, isTest };
+    return {
+      userId: b.user,
+      weight: b.isWeekend ? 2 : 1,
+      isTest: b.type === 'test',
+      guildId: typeof b.guild === 'string' ? b.guild : undefined,
+    };
   }
   return null;
 }
@@ -42,15 +57,15 @@ function safeEqual(a: string, b: string): boolean {
 }
 
 /**
- * Verifies an inbound webhook against the configured secret.
+ * Verifies an inbound webhook against any of the configured secrets.
  *
- * Current webhooks (v1) sign the request: header `x-topgg-signature` is
- * `t={unixTimestamp},v1={signature}` where signature = HMAC-SHA256 of
- * `${timestamp}.${rawBody}` keyed by the `whs_…` secret. Legacy webhooks instead
- * send the secret verbatim in the `Authorization` header — supported as a
- * fallback for anyone still on the old setup.
+ * Bot and server listings each have their own webhook secret, so this accepts a
+ * request that validates against either. Current webhooks (v1) sign the request:
+ * header `x-topgg-signature` is `t={unixTimestamp},v1={signature}` where signature
+ * = HMAC-SHA256 of `${timestamp}.${rawBody}` keyed by the `whs_…` secret. Legacy
+ * webhooks instead send the secret verbatim in the `Authorization` header.
  */
-function verifyWebhook(request: FastifyRequest, secret: string): boolean {
+function verifyWebhook(request: FastifyRequest, secrets: string[]): boolean {
   const sigHeader = request.headers['x-topgg-signature'];
   if (typeof sigHeader === 'string') {
     const parts = Object.fromEntries(sigHeader.split(',').map((p) => p.split('=')));
@@ -58,11 +73,14 @@ function verifyWebhook(request: FastifyRequest, secret: string): boolean {
     const signature = parts['v1'];
     if (!timestamp || !signature) return false;
     const rawBody = (request as FastifyRequest & { rawBody?: string }).rawBody ?? '';
-    const digest = crypto.createHmac('sha256', secret).update(`${timestamp}.${rawBody}`).digest('hex');
-    return safeEqual(signature, digest);
+    return secrets.some((secret) => {
+      const digest = crypto.createHmac('sha256', secret).update(`${timestamp}.${rawBody}`).digest('hex');
+      return safeEqual(signature, digest);
+    });
   }
   // Legacy: shared secret in the Authorization header.
-  return typeof request.headers.authorization === 'string' && safeEqual(request.headers.authorization, secret);
+  const auth = request.headers.authorization;
+  return typeof auth === 'string' && secrets.some((secret) => safeEqual(auth, secret));
 }
 
 const ConfigSchema = z.object({
@@ -90,10 +108,13 @@ export async function topggRoutes(server: FastifyInstance): Promise<void> {
 
   // ── Inbound vote webhook (called by top.gg) ────────────────────────────────
   server.post('/topgg/webhook', async (request, reply) => {
-    const secret = process.env.TOPGG_WEBHOOK_SECRET;
-    if (!secret) return reply.code(503).send({ success: false, error: 'Webhook not configured' });
+    // Accept either the bot listing's secret or the server listing's secret.
+    const secrets = [process.env.TOPGG_WEBHOOK_SECRET, process.env.TOPGG_SERVER_WEBHOOK_SECRET].filter(
+      (s): s is string => !!s,
+    );
+    if (secrets.length === 0) return reply.code(503).send({ success: false, error: 'Webhook not configured' });
 
-    if (!verifyWebhook(request, secret)) {
+    if (!verifyWebhook(request, secrets)) {
       return reply.code(401).send({ success: false, error: 'Unauthorized' });
     }
 
@@ -103,7 +124,7 @@ export async function topggRoutes(server: FastifyInstance): Promise<void> {
     // Acknowledge immediately; the bot does the reward work asynchronously.
     if (!vote.isTest) {
       await pub
-        .publish('topgg:vote', JSON.stringify({ userId: vote.userId, weight: vote.weight }))
+        .publish('topgg:vote', JSON.stringify({ userId: vote.userId, weight: vote.weight, guildId: vote.guildId }))
         .catch((err) => request.log.warn({ err }, 'Failed to publish topgg vote'));
     }
     return reply.code(200).send({ success: true });

@@ -137,11 +137,12 @@ const event: BotEvent = {
     sub.removeAllListeners('message');
     sub.on('message', async (_channel: string, message: string) => {
       try {
-        // A forwarded top.gg vote — reward the voter across opted-in guilds.
+        // A forwarded top.gg vote — reward the voter. A guildId means it was a
+        // vote for that specific server; otherwise it was a vote for the bot.
         if (_channel === 'topgg:vote') {
-          const { userId, weight } = JSON.parse(message) as { userId: string; weight: number };
+          const { userId, weight, guildId } = JSON.parse(message) as { userId: string; weight: number; guildId?: string };
           const { TopggModule } = await import('../modules/topgg/TopggModule.js');
-          await TopggModule.processVote(client, userId, weight);
+          await TopggModule.processVote(client, userId, weight, guildId);
           return;
         }
 
