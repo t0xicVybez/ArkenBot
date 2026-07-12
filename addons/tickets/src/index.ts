@@ -5,6 +5,7 @@ import { Redis } from 'ioredis';
 
 import setupCommand from './commands/setup.js';
 import ticketCommand from './commands/ticket.js';
+import triageCommand from './commands/triage.js';
 import { isTicketInteraction, handleTicketInteraction, closeTicket, postNoteToThread, updateControlsMessage } from './events/interaction.js';
 import { handleTicketMessage } from './events/message.js';
 import { getTickets, getPanels, getConfig, getPanel, getTicketByChannel, appendMessage, saveTicket } from './utils/storage.js';
@@ -24,11 +25,11 @@ export default defineAddon({
     description:
       'Full-featured ticket system with panels, transcripts, auto-close, priorities, staff notes, ratings, canned responses, SLA warnings, webhooks, and a portal dashboard.',
     author: 't0ixcyVybez',
-    commands: ['ticket-setup', 'ticket'],
+    commands: ['ticket-setup', 'ticket', 'triage'],
     settings: [],
   },
 
-  commands: [setupCommand, ticketCommand],
+  commands: [setupCommand, ticketCommand, triageCommand],
 
   events: [
     {
