@@ -869,6 +869,7 @@ export default async function LandingPage() {
             <span className="text-[var(--text-muted)] text-xs">© {new Date().getFullYear()} {SITE.name}. All rights reserved.</span>
             <div className="flex items-center gap-4">
               <Link href="/changelog" className="text-[var(--text-muted)] text-xs hover:text-[var(--text-secondary)] transition-colors">Changelog</Link>
+              <Link href="/status" className="text-[var(--text-muted)] text-xs hover:text-[var(--text-secondary)] transition-colors">Status</Link>
               <Link href="/privacy" className="text-[var(--text-muted)] text-xs hover:text-[var(--text-secondary)] transition-colors">Privacy Policy</Link>
               <Link href="/terms" className="text-[var(--text-muted)] text-xs hover:text-[var(--text-secondary)] transition-colors">Terms of Service</Link>
               <span className="text-[var(--text-muted)] text-xs">Made with care for Discord communities.</span>
