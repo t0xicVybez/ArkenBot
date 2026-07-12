@@ -17,7 +17,7 @@ const SITE = {
   supportUrl: 'https://discord.gg/fXJnYPdHRX',
 };
 
-const LAST_UPDATED = 'July 5, 2026';
+const LAST_UPDATED = 'July 12, 2026';
 const CONTACT_EMAIL = 'support@arkenbot.app';
 
 function Section({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
@@ -151,7 +151,23 @@ export default function PrivacyPage() {
           <p><span className="text-white font-medium">Data stored:</span> Alert configuration only — the Discord channel, the board ID and name, and the event filter. When an alert is deleted, the corresponding Trello webhook is deactivated automatically.</p>
         </Section>
 
-        <Section id="how-we-use" title="7. How We Use Your Data">
+        <Section id="ai" title="7. AI Features">
+          <p>
+            Some optional Arken Bot features use a third-party AI provider,{' '}
+            <a href="https://groq.com" target="_blank" rel="noopener noreferrer" className="text-discord-blurple hover:underline">Groq</a>,
+            to process text. Groq&apos;s handling of the data it receives is governed by the{' '}
+            <a href="https://groq.com/privacy-policy/" target="_blank" rel="noopener noreferrer" className="text-discord-blurple hover:underline">Groq Privacy Policy</a>{' '}
+            and{' '}
+            <a href="https://groq.com/terms-of-use/" target="_blank" rel="noopener noreferrer" className="text-discord-blurple hover:underline">Terms of Use</a>.
+          </p>
+          <p><span className="text-white font-medium">Which features use AI:</span> the <code className="text-xs bg-white/10 px-1 py-0.5 rounded">/ask</code> and <code className="text-xs bg-white/10 px-1 py-0.5 rounded">/summarize</code> commands (when a member runs them), the AI triage button in the ticket system (when a staff member clicks it), and AI Moderation (only in servers where an administrator has explicitly enabled it — it is off by default).</p>
+          <p><span className="text-white font-medium">What is sent:</span> when one of these features runs, only the text needed for that request is sent to Groq to generate a response — the question you type (<code className="text-xs bg-white/10 px-1 py-0.5 rounded">/ask</code>), the recent messages in the channel (<code className="text-xs bg-white/10 px-1 py-0.5 rounded">/summarize</code>), the ticket&apos;s details and conversation (ticket triage), or the individual message being checked (AI Moderation). We do not send account identifiers, and <strong>no data is sent to any AI provider unless one of these features is actually used</strong>.</p>
+          <p><span className="text-white font-medium">Opt-in and control:</span> AI Moderation is disabled by default and runs only after a server administrator turns it on in <span className="text-white">Dashboard → Auto-Mod</span>. The assistant commands and ticket triage run only when a member or staff member chooses to use them.</p>
+          <p><span className="text-white font-medium">Storage and training:</span> we do not store the text sent to Groq or the AI&apos;s responses beyond delivering the result. An AI Moderation flag is recorded in your server&apos;s moderation log in the same way as any other Auto-Mod action. Per Groq&apos;s Terms of Use, data submitted through its API is not used to train its models.</p>
+          <p><span className="text-white font-medium">Availability:</span> AI features require an API key configured on the bot. Where none is set, these features are unavailable and no data is sent to any AI provider.</p>
+        </Section>
+
+        <Section id="how-we-use" title="8. How We Use Your Data">
           <ul className="list-disc list-inside space-y-1.5 pl-2">
             <li>To operate bot features configured by server administrators (moderation, leveling, alerts, etc.)</li>
             <li>To display your server&apos;s dashboard and settings on the web interface</li>
@@ -161,7 +177,7 @@ export default function PrivacyPage() {
           <p>We do not sell, share, or license your data to third parties for advertising or marketing purposes.</p>
         </Section>
 
-        <Section id="data-sharing" title="8. Data Sharing">
+        <Section id="data-sharing" title="9. Data Sharing">
           <p>We share data only with the following service providers necessary to operate the bot:</p>
           <ul className="list-disc list-inside space-y-1.5 pl-2">
             <li><span className="text-white font-medium">Discord</span> — to operate the bot and authenticate dashboard users via OAuth.</li>
@@ -169,11 +185,12 @@ export default function PrivacyPage() {
             <li><span className="text-white font-medium">Reddit</span> — public post metadata API calls for feed notifications. See <a href="#reddit" className="text-discord-blurple hover:underline">Section 4</a>.</li>
             <li><span className="text-white font-medium">Monday.com</span> — inbound board event webhooks and optional display-name lookups. See <a href="#monday" className="text-discord-blurple hover:underline">Section 5</a>.</li>
             <li><span className="text-white font-medium">Trello / Atlassian</span> — inbound board action webhooks; credentials used once at setup. See <a href="#trello" className="text-discord-blurple hover:underline">Section 6</a>.</li>
+            <li><span className="text-white font-medium">Groq</span> — text processing for optional AI features (assistant commands, ticket triage, and opt-in AI moderation), only when those features are used. See <a href="#ai" className="text-discord-blurple hover:underline">Section 7</a>.</li>
             <li><span className="text-white font-medium">Infrastructure providers</span> — hosting, database, and CDN providers bound by their own privacy policies and data processing agreements.</li>
           </ul>
         </Section>
 
-        <Section id="retention" title="9. Data Retention and Deletion">
+        <Section id="retention" title="10. Data Retention and Deletion">
           <p>
             Server data is retained only for as long as the bot remains in your Discord server.
           </p>
@@ -190,25 +207,25 @@ export default function PrivacyPage() {
           </p>
         </Section>
 
-        <Section id="security" title="10. Security">
+        <Section id="security" title="11. Security">
           <p>
             We use industry-standard security measures including encrypted connections (HTTPS/TLS), access-controlled databases, and server-side API key storage to protect your data. No internet transmission is 100% secure, and we cannot guarantee absolute security.
           </p>
         </Section>
 
-        <Section id="childrens" title="11. Children's Privacy">
+        <Section id="childrens" title="12. Children's Privacy">
           <p>
             Arken Bot is not directed at children under the age of 13. We do not knowingly collect personal information from children under 13. If you believe we have inadvertently collected such information, please contact us immediately.
           </p>
         </Section>
 
-        <Section id="changes" title="12. Changes to This Policy">
+        <Section id="changes" title="13. Changes to This Policy">
           <p>
             We may update this Privacy Policy from time to time. The &ldquo;Last updated&rdquo; date at the top of this page reflects when the most recent changes were made. Continued use of Arken Bot after changes are posted constitutes acceptance of the updated policy.
           </p>
         </Section>
 
-        <Section id="contact" title="13. Contact">
+        <Section id="contact" title="14. Contact">
           <p>
             If you have questions about this Privacy Policy or want to request data deletion, contact us at{' '}
             <a href={`mailto:${CONTACT_EMAIL}`} className="text-discord-blurple hover:underline">{CONTACT_EMAIL}</a>{' '}
