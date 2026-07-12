@@ -18,7 +18,7 @@ import type { BotClient } from '../client.js';
 import { errorEmbed } from '../utils/embed.js';
 import { logger } from '../logger.js';
 import { isAddonEnabledForGuild } from '../utils/settings.js';
-import { ADDON_CATEGORY_PREFIX } from '@arkenbot/shared';
+import { ADDON_CATEGORY_PREFIX, classifyError } from '@arkenbot/shared';
 import { prisma } from '../database.js';
 import { redis } from '../redis.js';
 import { VerificationModule } from '../modules/verification/VerificationModule.js';
@@ -158,8 +158,22 @@ export class InteractionHandler {
     try {
       await command.execute(interaction, this.client);
     } catch (err) {
-      logger.error({ err, command: command.data.name }, 'Command execution error');
-      const embed = errorEmbed('Error', 'An error occurred while executing this command.');
+      const classified = classifyError(err);
+      logger.error(
+        { err, command: command.data.name, category: classified.category, code: classified.code },
+        `Command execution error — ${classified.summary}`,
+      );
+
+      // An expired/duplicate interaction can no longer be responded to.
+      if (classified.category === 'interaction') return;
+
+      // Surface the specific reason for known failures (e.g. a missing
+      // permission), and fall back to a generic message for anything unclassified.
+      const description =
+        classified.category === 'unknown'
+          ? 'An error occurred while executing this command.'
+          : `${classified.summary}${classified.hint ? `\n\n*${classified.hint}*` : ''}`;
+      const embed = errorEmbed('Error', description);
 
       if (interaction.replied || interaction.deferred) {
         await interaction.editReply({ embeds: [embed] }).catch(() => null);
