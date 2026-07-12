@@ -48,6 +48,7 @@ model Guild {
   streamAlerts      StreamAlert[]
   tempBans          TempBan[]
   tempRoles         TempRole[]
+  topggConfig       TopggConfig?
   reminders         Reminder[]
   countingState     CountingState?
   inviteCounts      InviteCount[]
@@ -761,6 +762,54 @@ model TempRole {
   @@unique([guildId, userId, roleId])
   @@index([guildId, removed, expiresAt])
   @@map("temp_roles")
+}
+
+// ─────────────────────────────────────────────
+// Top.gg voting — per-guild reward config + global voter records
+// ─────────────────────────────────────────────
+model TopggConfig {
+  id      String @id @default(cuid())
+  guildId String @unique
+  guild   Guild  @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  enabled Boolean @default(false)
+
+  // Temporary "voter" role granted on each vote.
+  voterRoleId    String?
+  voterRoleHours Int     @default(12)
+
+  // XP granted on each vote (0 = off). Doubled on weekends when weekendDouble.
+  xpReward      Int     @default(0)
+  weekendDouble Boolean @default(true)
+
+  // Public thank-you announcement.
+  announceChannelId String?
+  announceMessage   String  @default("🎉 {user} just voted for us on top.gg — thank you! You can vote too: {url}")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("topgg_configs")
+}
+
+model TopggVoter {
+  id             String    @id @default(cuid())
+  userId         String    @unique
+  totalVotes     Int       @default(0)
+  currentStreak  Int       @default(0)
+  longestStreak  Int       @default(0)
+  lastVotedAt    DateTime?
+  // When the 12-hour cooldown ends and the user may vote again.
+  eligibleAt     DateTime?
+  remindersOptIn Boolean   @default(false)
+  reminderSent   Boolean   @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([remindersOptIn, reminderSent, eligibleAt])
+  @@index([totalVotes])
+  @@map("topgg_voters")
 }
 
 // ─────────────────────────────────────────────

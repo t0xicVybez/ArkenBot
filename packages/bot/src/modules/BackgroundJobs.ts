@@ -88,6 +88,9 @@ export class BackgroundJobs {
       logger.info('TOPGG_TOKEN not set — skipping top.gg stats posting');
     }
 
+    // "You can vote again" DM reminders for opted-in voters.
+    setTimeout(() => this.timers.push(setInterval(() => void this.runTopggReminders(), 5 * 60 * 1000)), jitter());
+
     logger.info('Background jobs started (birthdays, scheduled messages, stats channels, temp bans, temp roles, reminders, giveaways, stream alerts, xp decay, analytics, weekly analytics, guild purge sweep, heartbeat, top.gg stats)');
   }
 
@@ -106,6 +109,37 @@ export class BackgroundJobs {
       }
     } catch (err) {
       logger.warn(`top.gg stats post failed: ${err instanceof Error ? err.message : String(err)}`);
+    }
+  }
+
+  /**
+   * DMs opted-in voters once their 12-hour cooldown has elapsed, so they know
+   * they can vote again. `reminderSent` is set to avoid repeat DMs and reset on
+   * the next vote.
+   */
+  private async runTopggReminders(): Promise<void> {
+    if (!this.client.user) return;
+    try {
+      const due = await prisma.topggVoter.findMany({
+        where: { remindersOptIn: true, reminderSent: false, eligibleAt: { lte: new Date() } },
+        take: 50,
+      });
+      if (due.length === 0) return;
+
+      const voteUrl = `https://top.gg/bot/${this.client.user.id}/vote`;
+      for (const voter of due) {
+        try {
+          const user = await this.client.users.fetch(voter.userId);
+          await user.send(
+            `🗳️ You can vote for **${this.client.user.username}** again on top.gg!\n${voteUrl}\n\n_Turn reminders off anytime with \`/vote reminders:off\`._`,
+          );
+        } catch {
+          // DMs closed or user gone — mark as sent anyway so we don't retry every cycle.
+        }
+        await prisma.topggVoter.update({ where: { userId: voter.userId }, data: { reminderSent: true } }).catch(() => null);
+      }
+    } catch (err) {
+      logger.warn({ err }, 'top.gg reminder sweep failed');
     }
   }
 
