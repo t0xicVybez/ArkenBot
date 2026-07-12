@@ -56,20 +56,22 @@ const MAX_BODY_INPUT = 4096;
  *
  * The body is HTML from an inbound webhook, so it is untrusted on two counts:
  *
- *  - Tag-stripping with `<[^>]+>` is quadratic on input that is mostly '<' with
+ *  - Tag-stripping with `<[^>]*>` is quadratic on input that is mostly '<' with
  *    no '>' to close it, so a large enough payload burns CPU on the API. The
- *    input is capped before any regex touches it.
- *  - A single strip pass is not enough on its own. Unterminated markup like
- *    '<script' has no closing '>', so it survives the pass verbatim. Any angle
- *    bracket still standing afterwards is removed, so no partial tag can escape.
+ *    input is length-capped first, which bounds the work.
+ *  - A single strip pass can be defeated: split markup like '<scr<script>ipt>'
+ *    leaves a fresh '<script>' behind after one replacement. The strip is
+ *    therefore repeated until the string stops changing, so no tag can be
+ *    reconstructed from the leftovers.
  */
 function stripHtml(input: unknown): string {
-  return String(input)
-    .slice(0, MAX_BODY_INPUT)
-    .replace(/<[^>]*>/g, '')
-    .replace(/[<>]/g, '')
-    .trim()
-    .slice(0, 512);
+  let text = String(input).slice(0, MAX_BODY_INPUT);
+  let previous: string;
+  do {
+    previous = text;
+    text = text.replace(/<[^>]*>/g, '');
+  } while (text !== previous);
+  return text.trim().slice(0, 512);
 }
 
 // ── Embed builder ────────────────────────────────────────────────────────────
