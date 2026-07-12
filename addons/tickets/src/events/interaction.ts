@@ -4,14 +4,17 @@ import {
   TextInputBuilder,
   TextInputStyle,
   ActionRowBuilder,
+  EmbedBuilder,
   type Interaction,
   type ButtonInteraction,
   type ModalSubmitInteraction,
   type TextChannel,
   type Guild,
+  type Message,
 } from 'discord.js';
 import { randomUUID } from 'crypto';
 import type { AddonContext } from '@arkenbot/addon-sdk';
+import { jsonCompletion, isLLMAvailable, LLMUnavailableError } from '@arkenbot/shared';
 import type { Ticket, TicketPanel, TicketNote } from '../types.js';
 import {
   getPanel,
@@ -95,6 +98,9 @@ async function handleButton(ctx: AddonContext, interaction: ButtonInteraction): 
   } else if (id.startsWith('ticket:waiting:')) {
     const channelId = id.slice('ticket:waiting:'.length);
     await handleWaitingButton(ctx, interaction, channelId);
+  } else if (id.startsWith('ticket:summary:')) {
+    const channelId = id.slice('ticket:summary:'.length);
+    await handleSummaryButton(ctx, interaction, channelId);
   }
 }
 
@@ -603,6 +609,120 @@ async function handleClaimButton(
   await saveTicket(ctx.storage, interaction.guildId, ticket);
   await updateControlsMessage(ctx, ticket, true);
   await interaction.reply(`🙋 **${interaction.user.tag}** has claimed this ticket.`);
+}
+
+/**
+ * Generates an AI triage of the ticket for staff — a short summary of the user's
+ * issue, an urgency estimate, and a suggested first reply. Shown ephemerally so
+ * the suggestion stays private to the staff member who requested it, and only run
+ * on demand to keep the model cost bounded.
+ */
+async function handleSummaryButton(
+  ctx: AddonContext,
+  interaction: ButtonInteraction,
+  channelId: string,
+): Promise<void> {
+  if (!interaction.guildId) return;
+
+  const ticket = await getTicketByChannel(ctx.storage, interaction.guildId, channelId);
+  if (!ticket || ticket.status === 'closed') {
+    await interaction.reply({ content: '❌ Ticket not found or already closed.', flags: MessageFlags.Ephemeral });
+    return;
+  }
+
+  const panel = await getPanel(ctx.storage, interaction.guildId, ticket.panelId);
+  const member = interaction.guild?.members.cache.get(interaction.user.id);
+  const effectiveStaffRoles = panel?.staffRoles ?? [];
+  const isStaff =
+    !panel ||
+    effectiveStaffRoles.length === 0 ||
+    effectiveStaffRoles.some((rid) => member?.roles.cache.has(rid));
+  if (!isStaff) {
+    await interaction.reply({ content: '❌ Only staff can generate an AI summary.', flags: MessageFlags.Ephemeral });
+    return;
+  }
+
+  if (!isLLMAvailable()) {
+    await interaction.reply({
+      content: '🤖 AI features are not configured on this bot. An administrator needs to set `GROQ_API_KEY`.',
+      flags: MessageFlags.Ephemeral,
+    });
+    return;
+  }
+
+  await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+
+  const details: string[] = [];
+  if (ticket.reason) details.push(`Reason given: ${ticket.reason}`);
+  for (const [k, v] of Object.entries(ticket.formResponses ?? {})) details.push(`${k}: ${v}`);
+
+  let transcript: string[] = [];
+  const channel = interaction.channel;
+  if (channel && 'messages' in channel) {
+    try {
+      const fetched = await channel.messages.fetch({ limit: 40 });
+      transcript = [...fetched.values()]
+        .reverse()
+        .filter((m: Message) => m.content.trim().length > 0)
+        .map((m: Message) => `${m.author.bot ? '[bot] ' : ''}${m.author.username}: ${m.content.replace(/\n+/g, ' ').slice(0, 300)}`);
+    } catch { /* fall back to just the ticket details */ }
+  }
+
+  const context = [
+    details.length ? `Ticket details:\n${details.join('\n')}` : '',
+    transcript.length ? `Conversation so far:\n${transcript.join('\n')}` : '',
+  ].filter(Boolean).join('\n\n');
+
+  if (!context) {
+    await interaction.editReply('🤷 There is nothing in this ticket to summarise yet.');
+    return;
+  }
+
+  try {
+    const result = await jsonCompletion<{ summary?: string; urgency?: string; reply?: string }>(
+      [
+        {
+          role: 'system',
+          content:
+            'You triage support tickets for staff. Given the ticket details and conversation, respond with a JSON object ' +
+            '{"summary": string, "urgency": "low"|"medium"|"high", "reply": string}. ' +
+            '"summary" is 1-2 sentences describing the user\'s issue. "urgency" reflects how time-sensitive it is. ' +
+            '"reply" is a friendly, helpful first response a staff member could send, ready to adapt. ' +
+            'Base everything only on the provided content; do not invent facts.',
+        },
+        { role: 'user', content: context },
+      ],
+      { temperature: 0.3, maxTokens: 600 },
+    );
+
+    const urgency = (result.urgency ?? 'medium').toLowerCase();
+    const urgencyMeta: Record<string, { emoji: string; color: number }> = {
+      low: { emoji: '🟢', color: 0x57f287 },
+      medium: { emoji: '🟡', color: 0xfee75c },
+      high: { emoji: '🔴', color: 0xed4245 },
+    };
+    const meta = urgencyMeta[urgency] ?? urgencyMeta.medium;
+
+    const embed = new EmbedBuilder()
+      .setColor(meta.color)
+      .setTitle(`🤖 AI Triage — Ticket #${ticket.number}`)
+      .addFields(
+        { name: '📋 Summary', value: (result.summary ?? 'No summary produced.').slice(0, 1024) },
+        { name: '⏱️ Urgency', value: `${meta.emoji} ${urgency.charAt(0).toUpperCase() + urgency.slice(1)}`, inline: true },
+        { name: '💬 Suggested Reply', value: (result.reply ?? '—').slice(0, 1024) },
+      )
+      .setFooter({ text: 'AI-generated · only you can see this · review before sending' })
+      .setTimestamp();
+
+    await interaction.editReply({ embeds: [embed] });
+  } catch (err) {
+    if (err instanceof LLMUnavailableError) {
+      await interaction.editReply('🤖 AI features are not configured on this bot.');
+      return;
+    }
+    ctx.logger.warn(`Ticket AI triage failed: ${err instanceof Error ? err.message : String(err)}`);
+    await interaction.editReply('⚠️ Could not generate a summary right now. Please try again in a moment.');
+  }
 }
 
 async function handleUnclaimButton(
