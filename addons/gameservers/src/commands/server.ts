@@ -5,9 +5,21 @@ import {
   type ContextMenuCommandInteraction,
 } from 'discord.js';
 import type { AddonContext, AddonCommandDefinition } from '@arkenbot/addon-sdk';
-import { SUPPORTED_GAMES, queryServer } from '../query.js';
-import { getServers, getServerByName, addServer, removeServer } from '../utils/storage.js';
+import { SUPPORTED_GAMES, AUTHENTICATED_GAMES, queryServer } from '../query.js';
+import { getServers, getServerByName, addServer, removeServer, setPending } from '../utils/storage.js';
 import { buildStatusEmbed, buildServerListEmbed, buildCheckAllEmbed } from '../utils/embeds.js';
+import { canStoreCredentials, decryptCredential } from '../utils/crypto.js';
+import { buildCredentialModal } from '../utils/modal.js';
+import type { QueryAuth, SavedServer } from '../types.js';
+
+/**
+ * Rebuilds the auth needed to query a saved server, for games that have no
+ * anonymous status protocol. Returns undefined for everything else.
+ */
+function authFor(server: SavedServer): QueryAuth | undefined {
+  if (!server.credential) return undefined;
+  return { password: decryptCredential(server.credential), queryPort: server.queryPort };
+}
 
 const command: AddonCommandDefinition = {
   data: new SlashCommandBuilder()
@@ -126,6 +138,19 @@ const command: AddonCommandDefinition = {
         return;
       }
 
+      // Games with no anonymous query protocol need a password before we can ask
+      // anything. showModal must be the first response, so this precedes the defer.
+      if (AUTHENTICATED_GAMES.has(game)) {
+        await setPending(ctx.storage, interaction.guildId, interaction.user.id, {
+          action: 'status',
+          game,
+          host: address,
+          port,
+        });
+        await interaction.showModal(buildCredentialModal('status', SUPPORTED_GAMES[game].label));
+        return;
+      }
+
       await interaction.deferReply();
       const status = await queryServer(game, address, port);
       await interaction.editReply({ embeds: [buildStatusEmbed(status, game, address, port)] });
@@ -145,7 +170,7 @@ const command: AddonCommandDefinition = {
       }
 
       await interaction.deferReply();
-      const status = await queryServer(saved.game, saved.host, saved.port);
+      const status = await queryServer(saved.game, saved.host, saved.port, authFor(saved));
       await interaction.editReply({
         embeds: [buildStatusEmbed(status, saved.game, saved.host, saved.port, saved.name)],
       });
@@ -185,6 +210,27 @@ const command: AddonCommandDefinition = {
       const servers = await getServers(ctx.storage, interaction.guildId);
       if (servers.length >= 25) {
         await interaction.reply({ content: '❌ Maximum of 25 saved servers reached.', ephemeral: true });
+        return;
+      }
+
+      if (AUTHENTICATED_GAMES.has(game)) {
+        if (!canStoreCredentials()) {
+          await interaction.reply({
+            content:
+              `❌ **${SUPPORTED_GAMES[game].label}** needs an admin password to query, but this bot has no ` +
+              'encryption key configured to store one safely. Set `ADDON_ENCRYPTION_KEY` and restart.',
+            ephemeral: true,
+          });
+          return;
+        }
+        await setPending(ctx.storage, interaction.guildId, interaction.user.id, {
+          action: 'add',
+          name,
+          game,
+          host: address,
+          port,
+        });
+        await interaction.showModal(buildCredentialModal('add', SUPPORTED_GAMES[game].label));
         return;
       }
 
@@ -250,7 +296,7 @@ const command: AddonCommandDefinition = {
       const results = await Promise.all(
         servers.map(async (s) => ({
           server: s,
-          status: await queryServer(s.game, s.host, s.port),
+          status: await queryServer(s.game, s.host, s.port, authFor(s)),
         })),
       );
 
