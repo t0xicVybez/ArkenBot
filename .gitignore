@@ -42,3 +42,6 @@ docker/redis/
 youtube-cookies.txt
 db.sh
 .claude/
+
+# Standalone public library — lives in its own repo
+GameQuery/
