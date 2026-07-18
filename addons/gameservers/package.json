@@ -10,7 +10,7 @@
   "dependencies": {
     "@arkenbot/addon-sdk": "workspace:*",
     "@arkenbot/shared": "workspace:*",
-    "gamedig": "^4.3.2",
+    "@t0xicvybez/gamequery": "file:../../GameQuery/node",
     "minecraft-server-util": "^5.4.0"
   },
   "peerDependencies": {
