@@ -1,15 +1,20 @@
 /**
  * Game server query dispatcher.
  * Routes queries to the appropriate backend depending on the game type:
- * - Minecraft Java: SLP over TCP (minecraft-server-util), with a Gamedig fallback.
- * - Minecraft Bedrock: RakNet over UDP.
+ * - Minecraft Java: SLP over TCP (minecraft-server-util), with a GameQuery fallback.
+ * - Minecraft Bedrock: RakNet over UDP (minecraft-server-util).
  * - FiveM: HTTP REST API.
  * - Palworld: authenticated HTTP REST API — it answers no anonymous query protocol.
- * - Source/Valve games: A2S queries via Gamedig.
- * - All others: Gamedig generic query.
+ * - Source/Valve games and everything else: A2S via GameQuery's `source` protocol.
+ *
+ * GameQuery (https://github.com/t0xicVybez/GameQuery) is our own dependency-free
+ * query library; it replaced Gamedig here. Almost every dedicated server the bot
+ * tracks answers Valve's A2S protocol, which GameQuery's `source` handler speaks;
+ * a handful of games with bespoke query protocols that Gamedig covered but
+ * GameQuery does not yet speak natively (Satisfactory, Eco, Starbound, Stationeers)
+ * will report offline until a native GameQuery protocol is added for them.
  */
-import Gamedig from 'gamedig';
-import type { QueryResult as GamedigResult } from 'gamedig';
+import { GameQuery, type Result } from '@t0xicvybez/gamequery';
 import { status as mcJavaStatus, statusBedrock as mcBedrockStatus } from 'minecraft-server-util';
 import type { QueryAuth, QueryResult, ServerStatus } from './types.js';
 
@@ -18,13 +23,6 @@ export interface GameInfo {
   label: string;
   defaultPort: number;
   emoji: string;
-  /**
-   * Gamedig type to query with, when it differs from our registry key.
-   * Our keys are persisted on saved servers, so they must stay stable even when
-   * Gamedig names the same game differently. `protocol-valve` drives Gamedig's
-   * A2S implementation directly, for Steam games it has no registry entry for.
-   */
-  gamedigType?: string;
 }
 
 /** The UDP port Palworld players connect on (`PublicPort`). */
@@ -46,11 +44,11 @@ export const SUPPORTED_GAMES: Record<string, GameInfo> = {
   minecraftbe:          { label: 'Minecraft Bedrock',         defaultPort: 19132, emoji: '⛏️' },
   rust:                 { label: 'Rust',                      defaultPort: 28015, emoji: '🔧' },
   valheim:              { label: 'Valheim',                   defaultPort: 2457,  emoji: '⚔️' },
-  ark:                  { label: 'ARK: Survival Evolved',     defaultPort: 27015, emoji: '🦕', gamedigType: 'arkse' },
+  ark:                  { label: 'ARK: Survival Evolved',     defaultPort: 27015, emoji: '🦕' },
   asa:                  { label: 'ARK: Survival Ascended',    defaultPort: 27015, emoji: '🦕' },
   dayz:                 { label: 'DayZ',                      defaultPort: 27016, emoji: '🧟' },
-  projectzomboid:       { label: 'Project Zomboid',           defaultPort: 16261, emoji: '🧟', gamedigType: 'przomboid' },
-  sevendaystodie:       { label: '7 Days to Die',             defaultPort: 26900, emoji: '🧟', gamedigType: '7d2d' },
+  projectzomboid:       { label: 'Project Zomboid',           defaultPort: 16261, emoji: '🧟' },
+  sevendaystodie:       { label: '7 Days to Die',             defaultPort: 26900, emoji: '🧟' },
   conanexiles:          { label: 'Conan Exiles',              defaultPort: 7777,  emoji: '⚔️' },
   vrising:              { label: 'V Rising',                  defaultPort: 9876,  emoji: '🧛' },
   palworld:             { label: 'Palworld',                  defaultPort: PALWORLD_GAME_PORT, emoji: '🌿' },
@@ -70,18 +68,18 @@ export const SUPPORTED_GAMES: Record<string, GameInfo> = {
   satisfactory:         { label: 'Satisfactory',              defaultPort: 15777, emoji: '🏭' },
   barotrauma:           { label: 'Barotrauma',                defaultPort: 27015, emoji: '🌊' },
   killingfloor2:        { label: 'Killing Floor 2',           defaultPort: 7777,  emoji: '🔪' },
-  l4d2:                 { label: 'Left 4 Dead 2',             defaultPort: 27015, emoji: '🧟', gamedigType: 'left4dead2' },
+  l4d2:                 { label: 'Left 4 Dead 2',             defaultPort: 27015, emoji: '🧟' },
   unturned:             { label: 'Unturned',                  defaultPort: 27015, emoji: '🧟' },
 
   // ── Competitive / FPS ───────────────────────────────────────────────────────
   csgo:                 { label: 'CS:GO / CS2',               defaultPort: 27015, emoji: '🎯' },
   tf2:                  { label: 'Team Fortress 2',           defaultPort: 27015, emoji: '🔫' },
-  gmod:                 { label: "Garry's Mod",               defaultPort: 27015, emoji: '🔧', gamedigType: 'garrysmod' },
+  gmod:                 { label: "Garry's Mod",               defaultPort: 27015, emoji: '🔧' },
   blackmesa:            { label: 'Black Mesa',                defaultPort: 27015, emoji: '🔬' },
   insurgencysandstorm:  { label: 'Insurgency: Sandstorm',     defaultPort: 27131, emoji: '💣' },
   squad:                { label: 'Squad',                     defaultPort: 27165, emoji: '🪖' },
-  postscriptum:         { label: 'Post Scriptum',             defaultPort: 10037, emoji: '🪖', gamedigType: 'ps' },
-  hellletloose:         { label: 'Hell Let Loose',            defaultPort: 26420, emoji: '🪖', gamedigType: 'hll' },
+  postscriptum:         { label: 'Post Scriptum',             defaultPort: 10037, emoji: '🪖' },
+  hellletloose:         { label: 'Hell Let Loose',            defaultPort: 26420, emoji: '🪖' },
   mordhau:              { label: 'Mordhau',                   defaultPort: 7777,  emoji: '⚔️' },
   groundbranch:         { label: 'Ground Branch',             defaultPort: 27015, emoji: '🔫' },
   pavlovvr:             { label: 'Pavlov VR',                 defaultPort: 7777,  emoji: '🎮' },
@@ -92,25 +90,11 @@ export const SUPPORTED_GAMES: Record<string, GameInfo> = {
   fivem:                { label: 'FiveM (GTA V)',             defaultPort: 30120, emoji: '🚗' },
 };
 
-/**
- * Games that use Valve's A2S protocol and are queried via Gamedig's Source engine handler.
- * FiveM and both Minecraft variants are excluded and handled by dedicated functions.
- */
-const VALVE_GAMES = new Set([
-  'rust', 'csgo', 'tf2', 'gmod', 'ark', 'asa', 'dayz', 'l4d2', 'killingfloor2',
-  'sevendaystodie', 'insurgencysandstorm', 'squad', 'conanexiles', 'vrising',
-  'barotrauma', 'mordhau', 'wreckfest', 'blackmesa', 'postscriptum', 'hellletloose',
-  'groundbranch', 'hurtworld', 'miscreated', 'unturned', 'spaceengineers', 'scum',
-  'valheim', 'projectzomboid', 'pavlovvr', 'theforest', 'avorion', 'empyrion',
-]);
+/** Query timeout for GameQuery/A2S lookups, in milliseconds. */
+const QUERY_TIMEOUT_MS = 8000;
 
-/**
- * Resolves one of our registry keys to the type Gamedig expects.
- * Saved servers persist our key, so the two are deliberately decoupled.
- */
-function gamedigTypeFor(game: string): string {
-  return SUPPORTED_GAMES[game]?.gamedigType ?? game;
-}
+/** Retry count passed to GameQuery (total attempts = retries + 1). */
+const QUERY_RETRIES = 2;
 
 /**
  * Translates common network error messages into user-readable strings.
@@ -125,7 +109,9 @@ function classifyError(err: unknown): string {
   if (
     msg.includes('Failed after') || msg.includes('Failed all') ||
     msg.includes('timed out') || msg.includes('ETIMEDOUT') || msg.includes('timeout') ||
-    msg.includes('EHOSTUNREACH') || msg.includes('Timed out')
+    msg.includes('EHOSTUNREACH') || msg.includes('ENETUNREACH') || msg.includes('Timed out') ||
+    // GameQuery's UDP transport reports an unreachable/unresolvable host as "send failed".
+    msg.includes('send failed')
   ) return 'Server did not respond (offline or unreachable)';
   if (msg.includes('ECONNREFUSED')) return 'Connection refused — is the query port open?';
   if (msg.includes('ENOTFOUND') || msg.includes('ENOENT')) return 'Host not found — check the address';
@@ -134,12 +120,12 @@ function classifyError(err: unknown): string {
 
 /**
  * Queries a Minecraft Java Edition server using the Server List Ping protocol.
- * Falls back to Gamedig when SLP fails (e.g. BungeeCord or modded servers that
- * respond differently).
+ * Falls back to GameQuery's `minecraft` protocol when SLP fails (e.g. BungeeCord
+ * or modded servers that respond differently).
  *
  * SRV lookups are skipped for raw IP addresses to avoid issues on some hosting providers.
  */
-async function queryMinecraft(host: string, port: number, givenPortOnly: boolean): Promise<ServerStatus> {
+async function queryMinecraft(host: string, port: number): Promise<ServerStatus> {
   const isIp = /^\d+\.\d+\.\d+\.\d+$/.test(host);
   try {
     const result = await mcJavaStatus(host, port, { timeout: 8000, enableSRV: !isIp });
@@ -159,7 +145,7 @@ async function queryMinecraft(host: string, port: number, givenPortOnly: boolean
       connect: port === 25565 ? host : `${host}:${port}`,
     };
   } catch {
-    return queryGamedig('minecraft', host, port, givenPortOnly);
+    return queryGameQuery('minecraft', host, port);
   }
 }
 
@@ -223,37 +209,49 @@ async function queryFiveM(host: string, port: number): Promise<ServerStatus> {
   }
 }
 
-/** Maps a raw Gamedig result onto our own status shape. */
-function toStatus(result: GamedigResult, host: string): QueryResult {
-  const playerList = result.players
-    .map((p: { name?: string }) => p.name)
+/** Maps a GameQuery `source`/A2S result onto our own status shape. */
+function toStatus(result: Result, host: string, port: number): QueryResult {
+  const data = result.data;
+  const rawList = Array.isArray(data.players_list)
+    ? (data.players_list as Array<{ name?: unknown }>)
+    : [];
+  const playerList = rawList
+    .map((p) => p.name)
     .filter((n): n is string => typeof n === 'string' && n.trim() !== '');
+
+  const num = (v: unknown): number => (typeof v === 'number' ? v : 0);
+  const str = (v: unknown): string => (typeof v === 'string' && v.trim() !== '' ? v : '');
+
   return {
     online: true,
-    serverName: result.name ?? host,
-    map: result.map ?? 'Unknown',
-    players: result.players.length,
-    maxPlayers: result.maxplayers,
+    serverName: str(data.name) || host,
+    map: str(data.map) || 'Unknown',
+    players: typeof data.players === 'number' ? data.players : playerList.length,
+    maxPlayers: num(data.max_players),
     playerList,
-    bots: result.bots.length,
-    ping: Math.round(result.ping),
-    password: result.password,
-    connect: result.connect,
+    bots: num(data.bots),
+    ping: Math.round(result.pingMs),
+    password: Boolean(data.password_protected),
+    connect: `${host}:${port}`,
   };
 }
 
-/** Queries a Valve/Source game server using the A2S protocol via Gamedig. */
-async function queryValve(type: string, host: string, port: number, givenPortOnly: boolean): Promise<ServerStatus> {
+/**
+ * Queries a server through GameQuery and maps the result onto our status shape.
+ * The `source` protocol covers Valve's A2S (nearly every dedicated server the bot
+ * tracks); `minecraft` is used only as the Java SLP fallback.
+ */
+async function queryGameQuery(protocol: string, host: string, port: number): Promise<ServerStatus> {
   try {
-    const result = await Gamedig.query({
-      type,
-      host,
-      port,
-      maxRetries: 3,
-      socketTimeout: 8000,
-      givenPortOnly,
-    });
-    return toStatus(result, host);
+    const results = await new GameQuery(QUERY_TIMEOUT_MS, QUERY_RETRIES)
+      .addServer(protocol, `${host}:${port}`)
+      .process();
+
+    const result = results[0];
+    if (!result || !result.online) {
+      return { online: false, error: classifyError(result?.error ?? 'Server did not respond (offline or unreachable)') };
+    }
+    return toStatus(result, host, port);
   } catch (err) {
     return { online: false, error: classifyError(err) };
   }
@@ -317,23 +315,6 @@ async function queryPalworld(host: string, gamePort: number, auth: QueryAuth): P
   }
 }
 
-/** Queries any game supported by Gamedig that doesn't have a more specific handler. */
-async function queryGamedig(type: string, host: string, port: number, givenPortOnly: boolean): Promise<ServerStatus> {
-  try {
-    const result = await Gamedig.query({
-      type,
-      host,
-      port,
-      maxRetries: 3,
-      socketTimeout: 10000,
-      givenPortOnly,
-    });
-    return toStatus(result, host);
-  } catch (err) {
-    return { online: false, error: classifyError(err) };
-  }
-}
-
 /**
  * Queries a game server and returns its status.
  * Selects the appropriate query method based on the `game` identifier.
@@ -350,7 +331,6 @@ export async function queryServer(
 ): Promise<ServerStatus> {
   const gameInfo = SUPPORTED_GAMES[game];
   const resolvedPort = port ?? gameInfo?.defaultPort ?? 27015;
-  const givenPortOnly = port !== undefined;
 
   if (game === 'palworld') {
     if (!auth) {
@@ -364,11 +344,10 @@ export async function queryServer(
     return queryPalworld(host, resolvedPort, auth);
   }
 
-  if (game === 'minecraft') return queryMinecraft(host, resolvedPort, givenPortOnly);
+  if (game === 'minecraft') return queryMinecraft(host, resolvedPort);
   if (game === 'minecraftbe') return queryMinecraftBedrock(host, resolvedPort);
   if (game === 'fivem') return queryFiveM(host, resolvedPort);
 
-  const type = gamedigTypeFor(game);
-  if (VALVE_GAMES.has(game)) return queryValve(type, host, resolvedPort, givenPortOnly);
-  return queryGamedig(type, host, resolvedPort, givenPortOnly);
+  // Everything else is Valve A2S, spoken by GameQuery's `source` protocol.
+  return queryGameQuery('source', host, resolvedPort);
 }
