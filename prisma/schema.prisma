@@ -439,19 +439,30 @@ model PortalUser {
 }
 
 // ─────────────────────────────────────────────
-// User Sessions (JWT refresh tracking)
+// User Sessions (opaque server-side sessions)
 // ─────────────────────────────────────────────
+// The dashboard stores no token in the browser — the httpOnly cookie holds an
+// opaque session id whose SHA-256 hash is kept here. `previousHash` retains the
+// pre-rotation hash for a short grace window so a replayed (rotated-away) token
+// can be detected as theft and the whole `familyId` revoked.
 model UserSession {
-  id        String   @id @default(cuid())
-  userId    String
-  user      PortalUser @relation(fields: [userId], references: [id], onDelete: Cascade)
-  token     String   @unique
-  expiresAt DateTime
-  userAgent String?
-  ipAddress String?
+  id           String     @id @default(cuid())
+  userId       String
+  user         PortalUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash    String     @unique
+  previousHash String?    @unique
+  familyId     String
+  expiresAt    DateTime
+  rotatedAt    DateTime   @default(now())
+  revokedAt    DateTime?
+  lastUsedAt   DateTime   @default(now())
+  userAgent    String?
+  ipAddress    String?
 
   createdAt DateTime @default(now())
 
+  @@index([userId])
+  @@index([familyId])
   @@map("user_sessions")
 }
 

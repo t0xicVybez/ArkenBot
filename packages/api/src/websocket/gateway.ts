@@ -1,11 +1,13 @@
 /**
- * WebSocket gateway for real-time dashboard updates. Clients authenticate
- * with a JWT after connecting and subscribe to specific guild IDs. Events
- * originating from the bot arrive via Redis pub/sub and are forwarded to
- * all relevant connected clients.
+ * WebSocket gateway for real-time dashboard updates. Clients authenticate via
+ * the session cookie sent on the upgrade handshake, then subscribe to specific
+ * guild IDs. Events originating from the bot arrive via Redis pub/sub and are
+ * forwarded to all relevant connected clients.
  */
 import type { FastifyInstance } from 'fastify';
 import { sub, pub } from '../redis.js';
+import { config } from '../config.js';
+import { SessionService } from '../services/SessionService.js';
 
 interface WebSocket {
   readyState: number;
@@ -58,47 +60,49 @@ export async function setupWebSocket(server: FastifyInstance): Promise<void> {
     }
   });
 
-  server.get('/ws', { websocket: true }, (socket, request) => {
+  server.get('/ws', { websocket: true }, async (socket, request) => {
     let client: WSClient | null = null;
     const clientId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
-    logger.debug(`WebSocket client connected: ${clientId}`);
+    // Authenticate at the upgrade using the httpOnly session cookie (sent
+    // automatically on the handshake). Resolve without rotating — a WS cannot
+    // deliver a rotated cookie back to the browser.
+    const sid = request.cookies[config.cookie.name];
+    const resolved = sid
+      ? await SessionService.resolve(sid, {}, { rotate: false })
+      : null;
+    if (!resolved) {
+      socket.send(JSON.stringify({ type: 'auth:error', error: 'Unauthorized' }));
+      socket.close();
+      return;
+    }
+
+    const { prisma } = await import('../database.js');
+    const user = await prisma.portalUser.findUnique({ where: { id: resolved.userId } });
+    if (!user) {
+      socket.send(JSON.stringify({ type: 'auth:error', error: 'User not found' }));
+      socket.close();
+      return;
+    }
+
+    client = {
+      ws: socket as unknown as WebSocket,
+      userId: user.id,
+      guildIds: new Set(),
+      isStaff: user.isStaff || user.isBotOwner,
+    };
+    clients.set(clientId, client);
+    socket.send(JSON.stringify({ type: 'auth:success', userId: user.id }));
+    logger.debug(`WebSocket authenticated: ${user.username}`);
 
     socket.on('message', async (raw: { toString(): string }) => {
       try {
         const msg = JSON.parse(raw.toString()) as {
           type: string;
-          token?: string;
           guildIds?: string[];
         };
 
-        if (msg.type === 'auth') {
-          try {
-            const payload = server.jwt.verify<{ sub: string }>(msg.token ?? '');
-            const { prisma } = await import('../database.js');
-            const user = await prisma.portalUser.findUnique({ where: { id: payload.sub } });
-
-            if (!user) {
-              socket.send(JSON.stringify({ type: 'auth:error', error: 'User not found' }));
-              socket.close();
-              return;
-            }
-
-            client = {
-              ws: socket as unknown as WebSocket,
-              userId: user.id,
-              guildIds: new Set(msg.guildIds ?? []),
-              isStaff: user.isStaff || user.isBotOwner,
-            };
-
-            clients.set(clientId, client);
-            socket.send(JSON.stringify({ type: 'auth:success', userId: user.id }));
-            logger.debug(`WebSocket authenticated: ${user.username}`);
-          } catch {
-            socket.send(JSON.stringify({ type: 'auth:error', error: 'Invalid token' }));
-            socket.close();
-          }
-        } else if (msg.type === 'subscribe:guilds' && client) {
+        if (msg.type === 'subscribe:guilds' && client) {
           client.guildIds = new Set(msg.guildIds ?? []);
           socket.send(JSON.stringify({ type: 'subscribed', guildIds: [...client.guildIds] }));
         } else if (msg.type === 'ping') {

@@ -39,32 +39,29 @@ const staffNav = [
 ];
 
 export default function StaffLayout({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, user, logout, accessToken } = useAuth();
+  const { status, isAuthenticated, user, logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
-  const [hydrated, setHydrated] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  useEffect(() => { setHydrated(true); }, []);
-
+  // The session cookie authenticates the WebSocket upgrade — no token needed.
   useEffect(() => {
-    if (!accessToken) return;
-    wsClient.connect(accessToken);
+    if (!isAuthenticated) return;
+    wsClient.connect();
     return () => wsClient.disconnect();
-  }, [accessToken]);
+  }, [isAuthenticated]);
 
   useEffect(() => {
-    if (!hydrated) return;
-    if (!isAuthenticated) { router.push('/auth'); return; }
+    if (status === 'loading') return;
+    if (status === 'unauthenticated') { router.push('/auth'); return; }
     if (!user?.isStaff && !user?.isBotOwner) router.push('/dashboard');
-  }, [hydrated, isAuthenticated, user, router]);
+  }, [status, user, router]);
 
-  if (!hydrated || !isAuthenticated || (!user?.isStaff && !user?.isBotOwner)) return null;
+  if (status !== 'authenticated' || (!user?.isStaff && !user?.isBotOwner)) return null;
 
   const handleLogout = async () => {
-    const refreshToken = localStorage.getItem('refreshToken');
     try {
-      if (refreshToken) await authApi.logout(refreshToken);
+      await authApi.logout();
     } catch { /* ignore */ }
     logout();
     router.push('/');

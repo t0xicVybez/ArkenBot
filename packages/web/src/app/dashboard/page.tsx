@@ -10,21 +10,18 @@ import Link from 'next/link';
 import { Bot, Search } from 'lucide-react';
 
 export default function DashboardPage() {
-  const { isAuthenticated, user } = useAuth();
+  const { status, isAuthenticated, user } = useAuth();
   const router = useRouter();
-  const [hydrated, setHydrated] = useState(false);
 
-  useEffect(() => { setHydrated(true); }, []);
-
+  // Redirect only once the initial `/auth/me` check has resolved.
   useEffect(() => {
-    if (!hydrated) return;
-    if (!isAuthenticated) router.push('/auth');
-  }, [hydrated, isAuthenticated, router]);
+    if (status === 'unauthenticated') router.push('/auth');
+  }, [status, router]);
 
   const { data: guildsRes, isLoading } = useQuery({
     queryKey: ['guilds'],
     queryFn: () => guildsApi.list(),
-    enabled: hydrated && isAuthenticated,
+    enabled: isAuthenticated,
   });
 
   const allGuilds: GuildOverview[] = guildsRes?.data?.data ?? [];
@@ -33,7 +30,7 @@ export default function DashboardPage() {
   const activeGuilds = filtered.filter((g) => g.botPresent);
   const inactiveGuilds = filtered.filter((g) => !g.botPresent);
 
-  if (!hydrated || !isAuthenticated) return null;
+  if (status !== 'authenticated') return null;
 
   const GuildCard = ({ guild }: { guild: GuildOverview }) => (
     <div className="flex items-center gap-3 mb-3">
@@ -61,11 +58,16 @@ export default function DashboardPage() {
             <h1 className="text-xl font-bold text-white">Select a Server</h1>
             <p className="text-gray-400 text-sm">Choose a server to manage its settings</p>
           </div>
-          {user?.isStaff && (
-            <Link href="/staff" className="btn-secondary text-sm">
-              Staff Portal
+          <div className="flex items-center gap-2">
+            <Link href="/dashboard/account" className="btn-secondary text-sm">
+              Account &amp; Security
             </Link>
-          )}
+            {user?.isStaff && (
+              <Link href="/staff" className="btn-secondary text-sm">
+                Staff Portal
+              </Link>
+            )}
+          </div>
         </div>
       </header>
 

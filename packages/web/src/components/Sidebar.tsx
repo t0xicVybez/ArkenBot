@@ -206,9 +206,8 @@ export function Sidebar({ guildId, guildName, guildIcon, memberCount, installedA
   const handleNavClick = () => { onClose?.(); };
 
   const handleLogout = async () => {
-    const refreshToken = useAuth.getState().refreshToken;
     try {
-      if (refreshToken) await authApi.logout(refreshToken);
+      await authApi.logout();
     } catch { /* ignore */ }
     logout();
     router.push('/');

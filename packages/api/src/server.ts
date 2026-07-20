@@ -7,7 +7,6 @@ import fastifyCors from '@fastify/cors';
 import fastifyHelmet from '@fastify/helmet';
 import fastifyRateLimit from '@fastify/rate-limit';
 import fastifyWebSocket from '@fastify/websocket';
-import fastifyJwt from '@fastify/jwt';
 import fastifyCookie from '@fastify/cookie';
 import { config } from './config.js';
 import { logger } from './logger.js';
@@ -46,7 +45,7 @@ import { auditLogRoutes } from './routes/auditLog.js';
 import { configTransferRoutes } from './routes/configTransfer.js';
 import { setupWebSocket } from './websocket/gateway.js';
 import { prisma } from './database.js';
-import { AuthService } from './services/AuthService.js';
+import { SessionService } from './services/SessionService.js';
 import { collectDefaultMetrics } from 'prom-client';
 
 /**
@@ -58,7 +57,7 @@ import { collectDefaultMetrics } from 'prom-client';
 export async function createServer() {
   collectDefaultMetrics();
 
-  await AuthService.cleanupExpiredSessions();
+  await SessionService.cleanupExpired();
 
   const server = Fastify({
     logger: {
@@ -69,6 +68,9 @@ export async function createServer() {
           : undefined,
     },
     bodyLimit: 4 * 1024 * 1024,
+    // Behind nginx in production: trust X-Forwarded-For so `request.ip` (used for
+    // session metadata and rate-limit keying) reflects the real client.
+    trustProxy: config.env === 'production',
   });
 
   // ─── Plugins ──────────────────────────────────────────────────────
@@ -94,16 +96,34 @@ export async function createServer() {
       (request.user as { id: string } | undefined)?.id ?? request.ip,
   });
 
-  await server.register(fastifyJwt, {
-    secret: config.secret,
-    sign: { expiresIn: config.jwt.accessExpiry },
-  });
-
   await server.register(fastifyCookie, {
     secret: config.secret,
   });
 
   await server.register(fastifyWebSocket);
+
+  // ─── CSRF defence ─────────────────────────────────────────────────
+  // Session auth rides on a SameSite=Lax cookie, which already blocks cross-site
+  // form/navigation forgery. As defence-in-depth for scripted cross-origin
+  // requests, reject state-changing methods whose `Origin` is not the dashboard.
+  // Same-origin requests (no `Origin`, or an allowed one) pass through.
+  const CSRF_METHODS = new Set(['POST', 'PATCH', 'PUT', 'DELETE']);
+  const allowedOrigins = new Set(
+    [config.cors.origin, config.web.url].flatMap((o) => o.split(',')).map((o) => o.trim()).filter(Boolean)
+  );
+  server.addHook('onRequest', async (request, reply) => {
+    if (!CSRF_METHODS.has(request.method)) return;
+    // Inbound webhooks (top.gg, Monday, Trello) are called by third parties and
+    // authenticate by token/signature, not by cookie, so the Origin check does
+    // not apply. They also carry no browser Origin, but exempt them explicitly.
+    const path = request.url.split('?')[0];
+    if (path.includes('/webhook') || path.startsWith('/topgg/')) return;
+    const origin = request.headers.origin;
+    if (!origin) return; // non-browser / same-origin server-to-server calls
+    if (!allowedOrigins.has(origin)) {
+      reply.code(403).send({ success: false, error: 'Cross-origin request blocked' });
+    }
+  });
 
 
   // ─── Dashboard Audit Trail ────────────────────────────────────────

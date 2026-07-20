@@ -16,37 +16,34 @@ import { Topbar } from '@/components/Topbar';
 import { Menu } from 'lucide-react';
 
 export default function GuildLayout({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, accessToken } = useAuth();
+  const { status, isAuthenticated } = useAuth();
   const router = useRouter();
   const params = useParams();
   const guildId = params.guildId as string;
-  const [hydrated, setHydrated] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Zustand's persisted store hydrates asynchronously from localStorage on the client.
-  // Render nothing until hydration is complete to avoid a flash of unauthenticated content.
-  useEffect(() => { setHydrated(true); }, []);
-
+  // The session cookie authenticates the WebSocket upgrade — no token needed.
   useEffect(() => {
-    if (!accessToken || !guildId) return;
-    wsClient.connect(accessToken, [guildId]);
+    if (!isAuthenticated || !guildId) return;
+    wsClient.connect([guildId]);
     return () => wsClient.disconnect();
-  }, [accessToken, guildId]);
+  }, [isAuthenticated, guildId]);
 
+  // Wait for `/auth/me` to resolve (status !== 'loading') before redirecting, so
+  // a returning user isn't bounced to /auth during the initial check.
   useEffect(() => {
-    if (!hydrated) return;
-    if (!isAuthenticated) router.push('/auth');
-  }, [hydrated, isAuthenticated, router]);
+    if (status === 'unauthenticated') router.push('/auth');
+  }, [status, router]);
 
   const { data: guildRes } = useQuery({
     queryKey: ['guild', guildId],
     queryFn: () => guildsApi.get(guildId),
-    enabled: hydrated && isAuthenticated && !!guildId,
+    enabled: isAuthenticated && !!guildId,
   });
 
   const guild = guildRes?.data?.data;
 
-  if (!hydrated || !isAuthenticated) return null;
+  if (status !== 'authenticated') return null;
 
   return (
     <div className="flex min-h-screen bg-discord-surface">
