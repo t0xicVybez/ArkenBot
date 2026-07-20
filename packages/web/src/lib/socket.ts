@@ -19,15 +19,18 @@ class WebSocketClient {
   private connected = false;
   private pingInterval: ReturnType<typeof setInterval> | null = null;
 
-  connect(token: string, guildIds: string[] = []) {
+  connect(guildIds: string[] = []) {
     if (this.ws?.readyState === WebSocket.OPEN) return;
 
     const url = `${WS_URL}/ws`;
+    // The httpOnly session cookie is sent automatically on the upgrade handshake,
+    // so the server authenticates the connection without any token from JS. We
+    // just declare which guilds to receive events for once the socket opens.
     this.ws = new WebSocket(url);
 
     this.ws.onopen = () => {
       this.connected = true;
-      this.ws!.send(JSON.stringify({ type: 'auth', token, guildIds }));
+      this.ws!.send(JSON.stringify({ type: 'subscribe:guilds', guildIds }));
 
       this.pingInterval = setInterval(() => {
         if (this.ws?.readyState === WebSocket.OPEN) {
@@ -53,7 +56,7 @@ class WebSocketClient {
     this.ws.onclose = () => {
       this.connected = false;
       if (this.pingInterval) clearInterval(this.pingInterval);
-      this.reconnectTimer = setTimeout(() => this.connect(token, guildIds), 5000);
+      this.reconnectTimer = setTimeout(() => this.connect(guildIds), 5000);
     };
 
     this.ws.onerror = () => {

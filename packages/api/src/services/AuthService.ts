@@ -1,12 +1,14 @@
 /**
- * Handles Discord OAuth2 authentication, JWT issuance, refresh-token rotation,
- * and portal user persistence.
+ * Discord OAuth2: authorisation-URL construction (with PKCE), code exchange,
+ * profile fetch, and portal-user persistence. Session issuance lives in
+ * `SessionService`; this module deals only with the Discord side of the flow.
  */
 import axios from 'axios';
+import { createHash, randomBytes } from 'crypto';
 import { prisma } from '../database.js';
 import { config } from '../config.js';
-import type { FastifyInstance } from 'fastify';
-import type { LoginResponse, PortalUser } from '@arkenbot/shared';
+import { encryptSecret } from '../utils/crypto.js';
+import type { PortalUser } from '@arkenbot/shared';
 
 const DISCORD_API = 'https://discord.com/api/v10';
 
@@ -25,33 +27,56 @@ interface DiscordUser {
   email?: string;
 }
 
+/** A PKCE verifier and its S256 challenge, generated per authorisation attempt. */
+export interface PkcePair {
+  verifier: string;
+  challenge: string;
+}
+
 export class AuthService {
   /**
-   * Builds the Discord OAuth2 authorisation URL for the given CSRF state token.
-   * The state value must be stored server-side and validated in the callback.
+   * Generates a PKCE verifier/challenge pair. The verifier is held server-side
+   * (Redis, keyed by state) and replayed at code exchange; only the S256
+   * challenge travels to Discord, so an intercepted authorisation code cannot be
+   * redeemed without the verifier.
    */
-  static getOAuthUrl(state: string): string {
+  static generatePkce(): PkcePair {
+    const verifier = randomBytes(32).toString('base64url');
+    const challenge = createHash('sha256').update(verifier).digest('base64url');
+    return { verifier, challenge };
+  }
+
+  /**
+   * Builds the Discord OAuth2 authorisation URL for the given CSRF state token
+   * and PKCE challenge. The state value must be stored server-side and validated
+   * in the callback.
+   */
+  static getOAuthUrl(state: string, codeChallenge: string): string {
     const params = new URLSearchParams({
       client_id: config.discord.clientId,
       redirect_uri: config.discord.redirectUri,
       response_type: 'code',
       scope: 'identify email guilds',
       state,
+      code_challenge: codeChallenge,
+      code_challenge_method: 'S256',
     });
     return `https://discord.com/api/oauth2/authorize?${params}`;
   }
 
   /**
-   * Exchanges a Discord OAuth2 authorisation code for access and refresh tokens.
+   * Exchanges a Discord OAuth2 authorisation code (plus its PKCE verifier) for
+   * access and refresh tokens.
    * @throws If the Discord token endpoint returns an error.
    */
-  static async exchangeCode(code: string): Promise<DiscordTokenResponse> {
+  static async exchangeCode(code: string, codeVerifier: string): Promise<DiscordTokenResponse> {
     const params = new URLSearchParams({
       client_id: config.discord.clientId,
       client_secret: config.discord.clientSecret,
       grant_type: 'authorization_code',
       code,
       redirect_uri: config.discord.redirectUri,
+      code_verifier: codeVerifier,
     });
 
     const response = await axios.post<DiscordTokenResponse>(
@@ -75,35 +100,30 @@ export class AuthService {
 
   /**
    * Creates or updates the portal user record for the given Discord user,
-   * storing fresh OAuth tokens and refreshing the bot-owner flag from config.
+   * sealing the OAuth tokens at rest and refreshing the bot-owner flag from
+   * config.
    */
   static async upsertUser(discordUser: DiscordUser, tokens: DiscordTokenResponse): Promise<PortalUser> {
     const tokenExpires = new Date(Date.now() + tokens.expires_in * 1000);
     const isBotOwner = config.owners.includes(discordUser.id);
+    const accessToken = encryptSecret(tokens.access_token);
+    const refreshToken = encryptSecret(tokens.refresh_token);
+
+    const shared = {
+      username: discordUser.username,
+      discriminator: discordUser.discriminator,
+      avatar: discordUser.avatar,
+      email: discordUser.email,
+      accessToken,
+      refreshToken,
+      tokenExpires,
+      isBotOwner,
+    };
 
     const user = await prisma.portalUser.upsert({
       where: { id: discordUser.id },
-      update: {
-        username: discordUser.username,
-        discriminator: discordUser.discriminator,
-        avatar: discordUser.avatar,
-        email: discordUser.email,
-        accessToken: tokens.access_token,
-        refreshToken: tokens.refresh_token,
-        tokenExpires,
-        isBotOwner,
-      },
-      create: {
-        id: discordUser.id,
-        username: discordUser.username,
-        discriminator: discordUser.discriminator,
-        avatar: discordUser.avatar,
-        email: discordUser.email,
-        accessToken: tokens.access_token,
-        refreshToken: tokens.refresh_token,
-        tokenExpires,
-        isBotOwner,
-      },
+      update: shared,
+      create: { id: discordUser.id, ...shared },
     });
 
     return {
@@ -115,89 +135,5 @@ export class AuthService {
       isStaff: user.isStaff,
       isBotOwner: user.isBotOwner,
     };
-  }
-
-  /**
-   * Issues a new access/refresh token pair for the given user, persists the
-   * refresh token as a `UserSession`, and prunes any expired sessions for that
-   * user in the same transaction window.
-   *
-   * Expiry is computed from the config string at call time rather than being
-   * hard-coded, so changes to `JWT_REFRESH_EXPIRY` take effect without a schema
-   * migration.
-   */
-  static async generateTokens(
-    server: FastifyInstance,
-    userId: string
-  ): Promise<{ accessToken: string; refreshToken: string }> {
-    const accessToken = server.jwt.sign({ sub: userId }, { expiresIn: config.jwt.accessExpiry });
-    const refreshToken = server.jwt.sign({ sub: userId, type: 'refresh' }, { expiresIn: config.jwt.refreshExpiry });
-
-    const expiresAt = new Date(Date.now() + parseExpiry(config.jwt.refreshExpiry));
-
-    await prisma.userSession.deleteMany({ where: { userId, expiresAt: { lt: new Date() } } });
-
-    await prisma.userSession.create({
-      data: { userId, token: refreshToken, expiresAt },
-    });
-
-    return { accessToken, refreshToken };
-  }
-
-  /**
-   * Validates a refresh token against the database, rotates it by issuing a new
-   * token pair, and deletes the consumed session. Returns `null` if the token is
-   * invalid, expired, or not a refresh token.
-   */
-  static async refreshTokens(
-    server: FastifyInstance,
-    refreshToken: string
-  ): Promise<{ accessToken: string; refreshToken: string } | null> {
-    const session = await prisma.userSession.findUnique({ where: { token: refreshToken } });
-    if (!session || session.expiresAt < new Date()) return null;
-
-    try {
-      const payload = server.jwt.verify<{ sub: string; type: string }>(refreshToken);
-      if (payload.type !== 'refresh') return null;
-
-      await prisma.userSession.delete({ where: { id: session.id } });
-
-      return this.generateTokens(server, session.userId);
-    } catch {
-      return null;
-    }
-  }
-
-  /**
-   * Invalidates the session associated with the given refresh token.
-   */
-  static async logout(refreshToken: string): Promise<void> {
-    await prisma.userSession.deleteMany({ where: { token: refreshToken } });
-  }
-
-  /** Removes all expired sessions from the database. Called once at API startup. */
-  static async cleanupExpiredSessions(): Promise<void> {
-    const { count } = await prisma.userSession.deleteMany({
-      where: { expiresAt: { lt: new Date() } },
-    });
-    if (count > 0) {
-      console.info(`[AuthService] Cleaned up ${count} expired session(s)`);
-    }
-  }
-}
-
-// ── Helpers ──────────────────────────────────────────────────────────────────
-
-/** Converts a JWT expiry string such as "15m", "7d", or "3600s" to milliseconds. */
-function parseExpiry(expiry: string): number {
-  const match = expiry.match(/^(\d+)([smhd])$/);
-  if (!match) return 30 * 24 * 3600 * 1000; // fallback: 30 days
-  const value = parseInt(match[1], 10);
-  switch (match[2]) {
-    case 's': return value * 1000;
-    case 'm': return value * 60 * 1000;
-    case 'h': return value * 3600 * 1000;
-    case 'd': return value * 86400 * 1000;
-    default:  return 30 * 24 * 3600 * 1000;
   }
 }

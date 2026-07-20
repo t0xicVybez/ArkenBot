@@ -3,6 +3,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
 import { useState } from 'react';
+import { AuthProvider } from '@/components/AuthProvider';
 
 /**
  * Root client-side providers: React Query with a 30 s stale time and single
@@ -25,7 +26,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {children}
+      <AuthProvider>{children}</AuthProvider>
       <Toaster
         position="bottom-right"
         toastOptions={{
