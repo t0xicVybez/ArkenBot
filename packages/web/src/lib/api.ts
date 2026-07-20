@@ -1,10 +1,13 @@
 /**
  * Centralised Axios instance for the Arken Bot API.
- * Handles Bearer token injection, automatic token refresh on 401,
- * and exports typed API objects for every feature area.
+ *
+ * Authentication is by httpOnly session cookie — the browser holds no token, so
+ * there is no Authorization header or refresh logic here. `withCredentials`
+ * sends the cookie cross-subdomain (dashboard ↔ API are same-site in
+ * production). On a 401 the auth store is flipped to unauthenticated and each
+ * page's guard handles the redirect to `/auth`.
  */
 import axios from 'axios';
-import toast from 'react-hot-toast';
 import type {
   ApiResponse,
   GuildSettings,
@@ -12,6 +15,7 @@ import type {
   WelcomeConfig,
   GuildOverview,
   SystemStats,
+  PortalUser,
 } from '@arkenbot/shared';
 import { useAuth } from './auth';
 
@@ -22,70 +26,43 @@ const api = axios.create({
   withCredentials: true,
 });
 
-// Zustand is the single source of truth for tokens — read directly from the store
-// rather than React context so this interceptor works outside component trees.
-api.interceptors.request.use((config) => {
-  if (typeof window !== 'undefined') {
-    const token = useAuth.getState().accessToken;
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-  }
-  return config;
-});
-
-// Shared refresh promise — ensures concurrent 401s share one refresh call
-// instead of each racing to delete and recreate the session.
-let refreshPromise: Promise<string | null> | null = null;
-
+// A 401 means the session cookie is missing/expired/revoked. Reflect that in the
+// store; page-level guards (watching `status`) route the user to `/auth`. The
+// `/auth/me` bootstrap probe handles its own 401 in AuthProvider, so it is
+// exempt from the store mutation here to avoid a redundant state flip.
 api.interceptors.response.use(
   (res) => res,
-  async (error) => {
-    const originalRequest = error.config;
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-
-      if (!refreshPromise) {
-        refreshPromise = (async () => {
-          const refreshToken = useAuth.getState().refreshToken;
-          if (!refreshToken) return null;
-          try {
-            const res = await axios.post(`${API_URL}/auth/refresh`, { refreshToken });
-            const { accessToken, refreshToken: newRefreshToken } = res.data.data;
-            const store = useAuth.getState();
-            if (store.user) store.login(store.user, accessToken, newRefreshToken);
-            return accessToken as string;
-          } catch {
-            useAuth.getState().logout();
-            toast.error('Your session expired — please log in again.');
-            setTimeout(() => { window.location.href = '/auth'; }, 2000);
-            return null;
-          } finally {
-            refreshPromise = null;
-          }
-        })();
-      }
-
-      const newAccessToken = await refreshPromise;
-      if (newAccessToken) {
-        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-        return api(originalRequest);
-      }
+  (error) => {
+    const url: string = error.config?.url ?? '';
+    if (error.response?.status === 401 && !url.endsWith('/auth/me')) {
+      if (typeof window !== 'undefined') useAuth.getState().logout();
     }
     return Promise.reject(error);
   }
 );
 
+/** Full URL that begins the server-mediated Discord login, returning to `redirect`. */
+export function getLoginUrl(redirect = '/dashboard'): string {
+  return `${API_URL}/auth/login?redirect=${encodeURIComponent(redirect)}`;
+}
+
+/** One active session as returned by `GET /auth/sessions`. */
+export interface ActiveSession {
+  id: string;
+  userAgent: string | null;
+  ipAddress: string | null;
+  lastUsedAt: string;
+  createdAt: string;
+  current: boolean;
+}
+
 // ─── Auth ─────────────────────────────────────────────────────────
 export const authApi = {
-  getOAuthUrl: () => api.get<ApiResponse<{ url: string; state: string }>>('/auth/url'),
-  callback: (code: string, state: string) =>
-    api.post<ApiResponse<{ user: import('@arkenbot/shared').PortalUser; accessToken: string; refreshToken: string }>>('/auth/callback', { code, state }),
-  refresh: (refreshToken: string) =>
-    api.post<ApiResponse<{ accessToken: string; refreshToken: string }>>('/auth/refresh', { refreshToken }),
-  logout: (refreshToken: string) =>
-    api.post('/auth/logout', { refreshToken }),
-  me: () => api.get<ApiResponse<import('@arkenbot/shared').PortalUser>>('/auth/me'),
+  me: () => api.get<ApiResponse<PortalUser>>('/auth/me'),
+  logout: () => api.post('/auth/logout'),
+  logoutAll: () => api.post('/auth/logout-all'),
+  sessions: () => api.get<ApiResponse<ActiveSession[]>>('/auth/sessions'),
+  revokeSession: (id: string) => api.delete(`/auth/sessions/${id}`),
 };
 
 // ─── Guilds ───────────────────────────────────────────────────────

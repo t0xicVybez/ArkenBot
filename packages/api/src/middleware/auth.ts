@@ -1,46 +1,68 @@
 /**
- * Fastify preHandler hooks for JWT-based authentication and role-based
+ * Fastify preHandler hooks for cookie-session authentication and role-based
  * authorization. Import and pass these directly in route `preHandler` arrays.
+ *
+ * Authentication is by opaque server-side session (see `SessionService`): the
+ * httpOnly cookie carries an id, `requireAuth` resolves it to a user, and — when
+ * the session rotates its id — transparently re-sets the cookie on the response.
  */
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { prisma } from '../database.js';
 import { config } from '../config.js';
+import { SessionService } from '../services/SessionService.js';
+import { setSessionCookie } from '../utils/sessionCookie.js';
+import { decryptSecretLenient } from '../utils/crypto.js';
 
-declare module '@fastify/jwt' {
-  interface FastifyJWT {
-    user: {
+declare module 'fastify' {
+  interface FastifyRequest {
+    user?: {
       id: string;
       username: string;
       isStaff: boolean;
       isBotOwner: boolean;
     };
+    /** Database id of the session that authenticated this request. */
+    sessionId?: string;
   }
 }
 
 /**
- * Verifies the JWT and attaches the authenticated user to `request.user`.
- * Responds with 401 if the token is missing, invalid, or the user no longer exists.
+ * Resolves the session cookie, attaches the authenticated user to `request.user`,
+ * and re-sets the cookie if the session rotated its id. Responds with 401 if the
+ * cookie is missing, invalid, expired, revoked, or the user no longer exists.
  */
 export async function requireAuth(request: FastifyRequest, reply: FastifyReply): Promise<void> {
-  try {
-    await request.jwtVerify();
-    const payload = request.user as unknown as { sub: string };
-
-    const user = await prisma.portalUser.findUnique({ where: { id: payload.sub } });
-    if (!user) {
-      reply.code(401).send({ success: false, error: 'User not found' });
-      return;
-    }
-
-    request.user = {
-      id: user.id,
-      username: user.username,
-      isStaff: user.isStaff,
-      isBotOwner: user.isBotOwner,
-    };
-  } catch {
+  const sid = request.cookies[config.cookie.name];
+  if (!sid) {
     reply.code(401).send({ success: false, error: 'Unauthorized' });
+    return;
   }
+
+  const resolved = await SessionService.resolve(sid, {
+    userAgent: request.headers['user-agent'] ?? null,
+    ipAddress: request.ip,
+  });
+  if (!resolved) {
+    reply.code(401).send({ success: false, error: 'Unauthorized' });
+    return;
+  }
+
+  // Transparent rotation: hand the browser the freshly-minted id.
+  if (resolved.newSid) setSessionCookie(reply, resolved.newSid);
+
+  const user = await prisma.portalUser.findUnique({ where: { id: resolved.userId } });
+  if (!user) {
+    reply.code(401).send({ success: false, error: 'User not found' });
+    return;
+  }
+
+  request.sessionId = resolved.sessionId;
+  request.user = {
+    id: user.id,
+    username: user.username,
+    isStaff: user.isStaff,
+    isBotOwner: user.isBotOwner,
+  };
 }
 
 /**
@@ -98,8 +120,10 @@ export async function requireGuildAdmin(request: FastifyRequest, reply: FastifyR
 
   try {
     const { default: axios } = await import('axios');
+    // Stored sealed; legacy plaintext rows decrypt to themselves until next login.
+    const accessToken = decryptSecretLenient(user.accessToken);
     const guildsRes = await axios.get('https://discord.com/api/v10/users/@me/guilds', {
-      headers: { Authorization: `Bearer ${user.accessToken}` },
+      headers: { Authorization: `Bearer ${accessToken}` },
     });
 
     const guild = guildsRes.data.find((g: { id: string; permissions: string }) => g.id === guildId);

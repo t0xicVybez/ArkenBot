@@ -1,19 +1,30 @@
 'use client';
 
 /**
- * Discord OAuth2 login page. Fetches an authorisation URL from the API and
- * stores the CSRF `state` token in sessionStorage before redirecting the user.
+ * Discord login page. Login is fully server-mediated: the button sends the
+ * browser to the API's `/auth/login`, which handles state, PKCE, the Discord
+ * round-trip, and the session cookie, then redirects back to the dashboard. No
+ * OAuth state or code is ever handled here.
  */
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { authApi } from '@/lib/api';
+import { Suspense, useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { getLoginUrl } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 
-export default function AuthPage() {
+/** Maps `?error=` codes from a failed callback to a friendly message. */
+const ERROR_MESSAGES: Record<string, string> = {
+  invalid_request: 'Something went wrong starting the login. Please try again.',
+  invalid_state: 'Your login session expired. Please try again.',
+  oauth_failed: 'Discord sign-in failed. Please try again.',
+};
+
+function AuthInner() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { isAuthenticated } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const error = searchParams.get('error');
+  const errorMessage = error ? (ERROR_MESSAGES[error] ?? 'Login failed. Please try again.') : null;
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -21,19 +32,9 @@ export default function AuthPage() {
     }
   }, [isAuthenticated, router]);
 
-  const handleLogin = async () => {
+  const handleLogin = () => {
     setLoading(true);
-    setError(null);
-    try {
-      const res = await authApi.getOAuthUrl();
-      const { url, state } = res.data.data!;
-      // Store state for CSRF validation in the callback handler.
-      sessionStorage.setItem('oauth_state', state);
-      window.location.href = url;
-    } catch {
-      setError('Failed to get login URL. Please try again.');
-      setLoading(false);
-    }
+    window.location.href = getLoginUrl('/dashboard');
   };
 
   return (
@@ -48,9 +49,9 @@ export default function AuthPage() {
         <h1 className="text-2xl font-bold text-white mb-2">Welcome Back</h1>
         <p className="text-gray-400 mb-8">Sign in with your Discord account to manage your servers.</p>
 
-        {error && (
+        {errorMessage && (
           <div className="bg-red-900/30 border border-red-700 rounded-md p-3 mb-4 text-red-400 text-sm">
-            {error}
+            {errorMessage}
           </div>
         )}
 
@@ -78,5 +79,15 @@ export default function AuthPage() {
         </button>
       </div>
     </div>
+  );
+}
+
+export default function AuthPage() {
+  // `useSearchParams` (for the ?error= code) requires a Suspense boundary in the
+  // App Router.
+  return (
+    <Suspense fallback={null}>
+      <AuthInner />
+    </Suspense>
   );
 }
