@@ -2,6 +2,7 @@ import type { FastifyInstance } from 'fastify';
 import axios from 'axios';
 import { requireAuth, requireGuildAdmin } from '../middleware/auth.js';
 import { prisma } from '../database.js';
+import { decryptSecretLenient } from '../utils/crypto.js';
 
 export async function guildRoutes(server: FastifyInstance): Promise<void> {
   // GET /guilds - List guilds the user can manage
@@ -20,7 +21,8 @@ export async function guildRoutes(server: FastifyInstance): Promise<void> {
         owner: boolean;
         approximate_member_count?: number;
       }>>('https://discord.com/api/v10/users/@me/guilds?with_counts=true', {
-        headers: { Authorization: `Bearer ${user.accessToken}` },
+        // Stored sealed at rest; decrypt before use (legacy plaintext rows pass through).
+        headers: { Authorization: `Bearer ${decryptSecretLenient(user.accessToken)}` },
       });
 
       const ADMINISTRATOR = BigInt(0x8);
