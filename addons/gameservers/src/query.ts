@@ -75,7 +75,7 @@ export const SUPPORTED_GAMES: Record<string, GameInfo> = {
   satisfactory:         { label: 'Satisfactory',              defaultPort: 7777,  emoji: '🏭', protocol: 'satisfactory' },
   terraria:             { label: 'Terraria (TShock)',         defaultPort: 7878,  emoji: '🌳', protocol: 'terraria' },
   barotrauma:           { label: 'Barotrauma',                defaultPort: 27015, emoji: '🌊', protocol: 'source' },
-  killingfloor2:        { label: 'Killing Floor 2',           defaultPort: 7777,  emoji: '🔪', protocol: 'source' },
+  killingfloor2:        { label: 'Killing Floor 2',           defaultPort: 27015, emoji: '🔪', protocol: 'source' },
   l4d2:                 { label: 'Left 4 Dead 2',             defaultPort: 27015, emoji: '🧟', protocol: 'source' },
   unturned:             { label: 'Unturned',                  defaultPort: 27015, emoji: '🧟', protocol: 'source' },
 
