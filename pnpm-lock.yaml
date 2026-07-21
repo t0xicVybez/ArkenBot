@@ -144,8 +144,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/shared
       '@t0xicvybez/gamequery':
-        specifier: ^0.5.3
-        version: 0.5.3
+        specifier: ^0.5.4
+        version: 0.5.4
       minecraft-server-util:
         specifier: ^5.4.0
         version: 5.4.4
@@ -2808,8 +2808,8 @@ packages:
     resolution: {integrity: sha512-+PmQX0PiAYPMeVYe237LJAYvOMYW1j2rH5YROyS3b4CTVJum34HfRvKvAzozHAQG0TnHNdUfY9nCeUyRAs//cw==}
     engines: {node: '>=14.16'}
 
-  '@t0xicvybez/gamequery@0.5.3':
-    resolution: {integrity: sha512-hZaFKjNBlH00vAGZZ3g/jj1BgThLxkaixERr5xPDOPGFbtk6kxJh7Dx11AMwKE7xxmcOHtmKvLlES4Hl5RCiSQ==}
+  '@t0xicvybez/gamequery@0.5.4':
+    resolution: {integrity: sha512-MCmNjXNpqrRwLJzpFvPENS6cjdB7EOH64y8H1ZgmZ0n39sczBEzB2+HZb0QgSTm/kxiZDNBcp43XX/JVekjxHg==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -11334,7 +11334,7 @@ snapshots:
     dependencies:
       defer-to-connect: 2.0.1
 
-  '@t0xicvybez/gamequery@0.5.3': {}
+  '@t0xicvybez/gamequery@0.5.4': {}
 
   '@tanstack/query-core@5.90.20': {}
 
