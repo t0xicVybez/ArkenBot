@@ -1,21 +1,17 @@
 /**
  * Game server query dispatcher.
- * Routes queries to the appropriate backend depending on the game type:
- * - Minecraft Java: SLP over TCP (minecraft-server-util), with a GameQuery fallback.
- * - Minecraft Bedrock: RakNet over UDP (minecraft-server-util).
- * - FiveM: HTTP REST API.
- * - Palworld: authenticated HTTP REST API — it answers no anonymous query protocol.
- * - Source/Valve games and everything else: A2S via GameQuery's `source` protocol.
  *
- * GameQuery (https://github.com/t0xicVybez/GameQuery) is our own dependency-free
- * query library; it replaced Gamedig here. Almost every dedicated server the bot
- * tracks answers Valve's A2S protocol, which GameQuery's `source` handler speaks;
- * a handful of games with bespoke query protocols that Gamedig covered but
- * GameQuery does not yet speak natively (Satisfactory, Eco, Starbound, Stationeers)
- * will report offline until a native GameQuery protocol is added for them.
+ * Almost everything is delegated to GameQuery (our own dependency-free query
+ * library, https://github.com/t0xicVybez/GameQuery): each supported game maps to
+ * a GameQuery protocol (`source`/A2S for most dedicated servers, plus native
+ * `bedrock`, `fivem`, `satisfactory`, …). Two games keep a bespoke handler here:
+ * - Minecraft Java: SLP via minecraft-server-util for its SRV-record support,
+ *   falling back to GameQuery's `minecraft` protocol.
+ * - Palworld: authenticated REST (admin password + the /metrics max-players
+ *   endpoint that GameQuery's lightweight `palworld` handler doesn't fetch).
  */
 import { GameQuery, type Result } from '@t0xicvybez/gamequery';
-import { status as mcJavaStatus, statusBedrock as mcBedrockStatus } from 'minecraft-server-util';
+import { status as mcJavaStatus } from 'minecraft-server-util';
 import type { QueryAuth, QueryResult, ServerStatus } from './types.js';
 
 /** Metadata associated with each supported game type. */
@@ -23,6 +19,8 @@ export interface GameInfo {
   label: string;
   defaultPort: number;
   emoji: string;
+  /** The GameQuery protocol used to query this game. */
+  protocol: string;
 }
 
 /** The UDP port Palworld players connect on (`PublicPort`). */
@@ -31,66 +29,96 @@ const PALWORLD_GAME_PORT = 8211;
 /** Default port of Palworld's REST API (`RESTAPIPort`). */
 export const PALWORLD_REST_PORT = 8212;
 
-/** Games with no anonymous query protocol — they need an admin password to check. */
-export const AUTHENTICATED_GAMES = new Set(['palworld']);
+/**
+ * Games with no anonymous query protocol — they need a stored secret to check.
+ * Palworld uses its REST admin password; Terraria (TShock) uses a REST API token.
+ * Both are collected through the same credential flow and stored encrypted.
+ */
+export const AUTHENTICATED_GAMES = new Set(['palworld', 'terraria']);
 
 /** Raised when a game's status API rejects the stored credential. */
 class UnauthorizedError extends Error {}
 
-/** Registry of supported game types keyed by our own stable identifier. */
+/**
+ * Registry of supported game types keyed by our own stable identifier.
+ *
+ * Every entry maps to a GameQuery protocol that can *actually* read the server
+ * (A2S/`source` for Steam dedicated servers, plus GameQuery's native handlers).
+ * Games with no working query protocol are deliberately absent — listing them
+ * would only let users add servers that always report offline.
+ */
 export const SUPPORTED_GAMES: Record<string, GameInfo> = {
   // ── Sandbox / Survival ──────────────────────────────────────────────────────
-  minecraft:            { label: 'Minecraft Java Edition',    defaultPort: 25565, emoji: '⛏️' },
-  minecraftbe:          { label: 'Minecraft Bedrock',         defaultPort: 19132, emoji: '⛏️' },
-  rust:                 { label: 'Rust',                      defaultPort: 28015, emoji: '🔧' },
-  valheim:              { label: 'Valheim',                   defaultPort: 2457,  emoji: '⚔️' },
-  ark:                  { label: 'ARK: Survival Evolved',     defaultPort: 27015, emoji: '🦕' },
-  asa:                  { label: 'ARK: Survival Ascended',    defaultPort: 27015, emoji: '🦕' },
-  dayz:                 { label: 'DayZ',                      defaultPort: 27016, emoji: '🧟' },
-  projectzomboid:       { label: 'Project Zomboid',           defaultPort: 16261, emoji: '🧟' },
-  sevendaystodie:       { label: '7 Days to Die',             defaultPort: 26900, emoji: '🧟' },
-  conanexiles:          { label: 'Conan Exiles',              defaultPort: 7777,  emoji: '⚔️' },
-  vrising:              { label: 'V Rising',                  defaultPort: 9876,  emoji: '🧛' },
-  palworld:             { label: 'Palworld',                  defaultPort: PALWORLD_GAME_PORT, emoji: '🌿' },
-  scum:                 { label: 'SCUM',                      defaultPort: 7042,  emoji: '🏝️' },
-  hurtworld:            { label: 'Hurtworld',                 defaultPort: 12871, emoji: '🌵' },
-  miscreated:           { label: 'Miscreated',                defaultPort: 64090, emoji: '🌲' },
-  theforest:            { label: 'The Forest',                defaultPort: 27016, emoji: '🌲' },
-  eco:                  { label: 'Eco',                       defaultPort: 3000,  emoji: '🌍' },
-  empyrion:             { label: 'Empyrion',                  defaultPort: 30000, emoji: '🚀' },
-  avorion:              { label: 'Avorion',                   defaultPort: 27000, emoji: '🚀' },
-  spaceengineers:       { label: 'Space Engineers',           defaultPort: 27016, emoji: '🚀' },
-  stationeers:          { label: 'Stationeers',               defaultPort: 27500, emoji: '🛸' },
+  minecraft:            { label: 'Minecraft Java Edition',    defaultPort: 25565, emoji: '⛏️', protocol: 'minecraft' },
+  minecraftbe:          { label: 'Minecraft Bedrock',         defaultPort: 19132, emoji: '⛏️', protocol: 'bedrock' },
+  rust:                 { label: 'Rust',                      defaultPort: 28015, emoji: '🔧', protocol: 'source' },
+  valheim:              { label: 'Valheim',                   defaultPort: 2457,  emoji: '⚔️', protocol: 'source' },
+  ark:                  { label: 'ARK: Survival Evolved',     defaultPort: 27015, emoji: '🦕', protocol: 'source' },
+  asa:                  { label: 'ARK: Survival Ascended',    defaultPort: 27015, emoji: '🦕', protocol: 'source' },
+  dayz:                 { label: 'DayZ',                      defaultPort: 27016, emoji: '🧟', protocol: 'source' },
+  projectzomboid:       { label: 'Project Zomboid',           defaultPort: 16261, emoji: '🧟', protocol: 'source' },
+  sevendaystodie:       { label: '7 Days to Die',             defaultPort: 26900, emoji: '🧟', protocol: 'source' },
+  conanexiles:          { label: 'Conan Exiles',              defaultPort: 27015, emoji: '⚔️', protocol: 'source' },
+  vrising:              { label: 'V Rising',                  defaultPort: 9876,  emoji: '🧛', protocol: 'source' },
+  palworld:             { label: 'Palworld',                  defaultPort: PALWORLD_GAME_PORT, emoji: '🌿', protocol: 'palworld' },
+  scum:                 { label: 'SCUM',                      defaultPort: 7042,  emoji: '🏝️', protocol: 'source' },
+  hurtworld:            { label: 'Hurtworld',                 defaultPort: 12871, emoji: '🌵', protocol: 'source' },
+  miscreated:           { label: 'Miscreated',                defaultPort: 64090, emoji: '🌲', protocol: 'source' },
+  theforest:            { label: 'The Forest',                defaultPort: 27016, emoji: '🌲', protocol: 'source' },
+  empyrion:             { label: 'Empyrion',                  defaultPort: 30000, emoji: '🚀', protocol: 'source' },
+  avorion:              { label: 'Avorion',                   defaultPort: 27000, emoji: '🚀', protocol: 'source' },
+  spaceengineers:       { label: 'Space Engineers',           defaultPort: 27016, emoji: '🚀', protocol: 'source' },
+  stationeers:          { label: 'Stationeers',               defaultPort: 27500, emoji: '🛸', protocol: 'source' },
 
   // ── Co-op ───────────────────────────────────────────────────────────────────
-  terraria:             { label: 'Terraria',                  defaultPort: 7777,  emoji: '🌳' },
-  starbound:            { label: 'Starbound',                 defaultPort: 21025, emoji: '⭐' },
-  satisfactory:         { label: 'Satisfactory',              defaultPort: 15777, emoji: '🏭' },
-  barotrauma:           { label: 'Barotrauma',                defaultPort: 27015, emoji: '🌊' },
-  killingfloor2:        { label: 'Killing Floor 2',           defaultPort: 7777,  emoji: '🔪' },
-  l4d2:                 { label: 'Left 4 Dead 2',             defaultPort: 27015, emoji: '🧟' },
-  unturned:             { label: 'Unturned',                  defaultPort: 27015, emoji: '🧟' },
+  satisfactory:         { label: 'Satisfactory',              defaultPort: 7777,  emoji: '🏭', protocol: 'satisfactory' },
+  terraria:             { label: 'Terraria (TShock)',         defaultPort: 7878,  emoji: '🌳', protocol: 'terraria' },
+  barotrauma:           { label: 'Barotrauma',                defaultPort: 27015, emoji: '🌊', protocol: 'source' },
+  killingfloor2:        { label: 'Killing Floor 2',           defaultPort: 7777,  emoji: '🔪', protocol: 'source' },
+  l4d2:                 { label: 'Left 4 Dead 2',             defaultPort: 27015, emoji: '🧟', protocol: 'source' },
+  unturned:             { label: 'Unturned',                  defaultPort: 27015, emoji: '🧟', protocol: 'source' },
 
   // ── Competitive / FPS ───────────────────────────────────────────────────────
-  csgo:                 { label: 'CS:GO / CS2',               defaultPort: 27015, emoji: '🎯' },
-  tf2:                  { label: 'Team Fortress 2',           defaultPort: 27015, emoji: '🔫' },
-  gmod:                 { label: "Garry's Mod",               defaultPort: 27015, emoji: '🔧' },
-  blackmesa:            { label: 'Black Mesa',                defaultPort: 27015, emoji: '🔬' },
-  insurgencysandstorm:  { label: 'Insurgency: Sandstorm',     defaultPort: 27131, emoji: '💣' },
-  squad:                { label: 'Squad',                     defaultPort: 27165, emoji: '🪖' },
-  postscriptum:         { label: 'Post Scriptum',             defaultPort: 10037, emoji: '🪖' },
-  hellletloose:         { label: 'Hell Let Loose',            defaultPort: 26420, emoji: '🪖' },
-  mordhau:              { label: 'Mordhau',                   defaultPort: 7777,  emoji: '⚔️' },
-  groundbranch:         { label: 'Ground Branch',             defaultPort: 27015, emoji: '🔫' },
-  pavlovvr:             { label: 'Pavlov VR',                 defaultPort: 7777,  emoji: '🎮' },
-  wreckfest:            { label: 'Wreckfest',                 defaultPort: 27015, emoji: '🏎️' },
+  cs2:                  { label: 'Counter-Strike 2',          defaultPort: 27015, emoji: '🎯', protocol: 'source' },
+  csgo:                 { label: 'CS:GO',                     defaultPort: 27015, emoji: '🎯', protocol: 'source' },
+  css:                  { label: 'Counter-Strike: Source',    defaultPort: 27015, emoji: '🎯', protocol: 'source' },
+  tf2:                  { label: 'Team Fortress 2',           defaultPort: 27015, emoji: '🔫', protocol: 'source' },
+  gmod:                 { label: "Garry's Mod",               defaultPort: 27015, emoji: '🔧', protocol: 'source' },
+  blackmesa:            { label: 'Black Mesa',                defaultPort: 27015, emoji: '🔬', protocol: 'source' },
+  insurgencysandstorm:  { label: 'Insurgency: Sandstorm',     defaultPort: 27131, emoji: '💣', protocol: 'source' },
+  squad:                { label: 'Squad',                     defaultPort: 27165, emoji: '🪖', protocol: 'source' },
+  postscriptum:         { label: 'Post Scriptum',             defaultPort: 10037, emoji: '🪖', protocol: 'source' },
+  hellletloose:         { label: 'Hell Let Loose',            defaultPort: 26420, emoji: '🪖', protocol: 'source' },
+  mordhau:              { label: 'Mordhau',                   defaultPort: 7777,  emoji: '⚔️', protocol: 'source' },
+  groundbranch:         { label: 'Ground Branch',             defaultPort: 27015, emoji: '🔫', protocol: 'source' },
+  pavlovvr:             { label: 'Pavlov VR',                 defaultPort: 7777,  emoji: '🎮', protocol: 'source' },
+
+  // ── Arena / Retro (id Tech, Unreal, GameSpy) ────────────────────────────────
+  quake3:               { label: 'Quake III Arena',           defaultPort: 27960, emoji: '🔺', protocol: 'quake3' },
+  cod4:                 { label: 'Call of Duty 4',            defaultPort: 28960, emoji: '🔫', protocol: 'quake3' },
+  doom3:                { label: 'Doom 3',                    defaultPort: 27666, emoji: '👹', protocol: 'doom3' },
+  ut2004:               { label: 'Unreal Tournament 2004',    defaultPort: 7778,  emoji: '🎯', protocol: 'unreal2' },
+  bf1942:               { label: 'Battlefield 1942',          defaultPort: 23000, emoji: '✈️', protocol: 'gamespy2' },
+
+  // ── Racing ──────────────────────────────────────────────────────────────────
+  assettocorsa:         { label: 'Assetto Corsa',             defaultPort: 8081,  emoji: '🏎️', protocol: 'assettocorsa' },
+  wreckfest:            { label: 'Wreckfest',                 defaultPort: 27015, emoji: '🏁', protocol: 'source' },
+
+  // ── GTA / Multiplayer mods ──────────────────────────────────────────────────
+  fivem:                { label: 'FiveM (GTA V)',             defaultPort: 30120, emoji: '🚗', protocol: 'fivem' },
+  mtasa:                { label: 'Multi Theft Auto',          defaultPort: 22126, emoji: '🚗', protocol: 'ase' },
+  samp:                 { label: 'SA-MP',                     defaultPort: 7777,  emoji: '🚗', protocol: 'samp' },
+  openmp:               { label: 'open.mp',                   defaultPort: 7777,  emoji: '🚗', protocol: 'samp' },
 
   // ── Mil-Sim / Open World ────────────────────────────────────────────────────
-  arma3:                { label: 'Arma 3',                    defaultPort: 2302,  emoji: '🪖' },
-  fivem:                { label: 'FiveM (GTA V)',             defaultPort: 30120, emoji: '🚗' },
+  arma3:                { label: 'Arma 3',                    defaultPort: 2303,  emoji: '🪖', protocol: 'source' },
+
+  // ── Voice (queryable alongside game servers) ────────────────────────────────
+  teamspeak3:           { label: 'TeamSpeak 3',               defaultPort: 10011, emoji: '🎙️', protocol: 'teamspeak3' },
+  mumble:               { label: 'Mumble',                    defaultPort: 64738, emoji: '🎙️', protocol: 'mumble' },
 };
 
-/** Query timeout for GameQuery/A2S lookups, in milliseconds. */
+/** Query timeout for GameQuery lookups, in milliseconds. */
 const QUERY_TIMEOUT_MS = 8000;
 
 /** Retry count passed to GameQuery (total attempts = retries + 1). */
@@ -120,8 +148,9 @@ function classifyError(err: unknown): string {
 
 /**
  * Queries a Minecraft Java Edition server using the Server List Ping protocol.
- * Falls back to GameQuery's `minecraft` protocol when SLP fails (e.g. BungeeCord
- * or modded servers that respond differently).
+ * Uses minecraft-server-util for its SRV-record resolution (a domain can point at
+ * a server on another host/port), falling back to GameQuery's `minecraft`
+ * protocol when SLP fails (e.g. some proxied/modded setups).
  *
  * SRV lookups are skipped for raw IP addresses to avoid issues on some hosting providers.
  */
@@ -149,102 +178,33 @@ async function queryMinecraft(host: string, port: number): Promise<ServerStatus>
   }
 }
 
-/** Queries a Minecraft Bedrock Edition server over RakNet/UDP. */
-async function queryMinecraftBedrock(host: string, port: number): Promise<ServerStatus> {
-  try {
-    const result = await mcBedrockStatus(host, port, { timeout: 8000 });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const r = result as any;
-    return {
-      online: true,
-      serverName: result.motd.clean || host,
-      map: r.levelName ?? r.worldName ?? `Bedrock ${result.version.name}`,
-      players: result.players.online,
-      maxPlayers: result.players.max,
-      playerList: [],
-      bots: 0,
-      ping: r.roundTripLatency ?? r.latency ?? 0,
-      password: false,
-      connect: port === 19132 ? host : `${host}:${port}`,
-    };
-  } catch (err) {
-    return { online: false, error: classifyError(err) };
-  }
-}
-
-/** Queries a FiveM server using its public HTTP REST endpoints (`/info.json`, `/players.json`). */
-async function queryFiveM(host: string, port: number): Promise<ServerStatus> {
-  try {
-    const base = `http://${host}:${port}`;
-    const start = Date.now();
-    const [infoRes, playersRes] = await Promise.all([
-      fetch(`${base}/info.json`, { signal: AbortSignal.timeout(8000) }),
-      fetch(`${base}/players.json`, { signal: AbortSignal.timeout(8000) }),
-    ]);
-    const ping = Date.now() - start;
-
-    if (!infoRes.ok) throw new Error(`HTTP ${infoRes.status}`);
-
-    const info = await infoRes.json() as {
-      hostname?: string; mapname?: string; clients?: number; sv_maxclients?: number;
-    };
-    const players = playersRes.ok
-      ? (await playersRes.json() as { name: string }[])
-      : [];
-
-    return {
-      online: true,
-      serverName: info.hostname ?? host,
-      map: info.mapname ?? 'Unknown',
-      players: players.length,
-      maxPlayers: info.sv_maxclients ?? 32,
-      playerList: players.map((p) => p.name).filter(Boolean),
-      bots: 0,
-      ping,
-      password: false,
-      connect: `${host}:${port}`,
-    };
-  } catch (err) {
-    return { online: false, error: classifyError(err) };
-  }
-}
-
-/** Maps a GameQuery `source`/A2S result onto our own status shape. */
+/** Maps a GameQuery result onto our own status shape using its normalized accessors. */
 function toStatus(result: Result, host: string, port: number): QueryResult {
-  const data = result.data;
-  const rawList = Array.isArray(data.players_list)
-    ? (data.players_list as Array<{ name?: unknown }>)
-    : [];
-  const playerList = rawList
-    .map((p) => p.name)
-    .filter((n): n is string => typeof n === 'string' && n.trim() !== '');
-
-  const num = (v: unknown): number => (typeof v === 'number' ? v : 0);
-  const str = (v: unknown): string => (typeof v === 'string' && v.trim() !== '' ? v : '');
-
+  const version = typeof result.data.version === 'string' ? result.data.version : null;
   return {
     online: true,
-    serverName: str(data.name) || host,
-    map: str(data.map) || 'Unknown',
-    players: typeof data.players === 'number' ? data.players : playerList.length,
-    maxPlayers: num(data.max_players),
-    playerList,
-    bots: num(data.bots),
+    serverName: result.name() ?? host,
+    map: result.map() ?? version ?? 'Unknown',
+    players: result.players() ?? result.playerNames().length,
+    maxPlayers: result.maxPlayers() ?? 0,
+    playerList: result.playerNames(),
+    bots: typeof result.data.bots === 'number' ? result.data.bots : 0,
     ping: Math.round(result.pingMs),
-    password: Boolean(data.password_protected),
+    password: Boolean(result.data.password_protected),
     connect: `${host}:${port}`,
   };
 }
 
-/**
- * Queries a server through GameQuery and maps the result onto our status shape.
- * The `source` protocol covers Valve's A2S (nearly every dedicated server the bot
- * tracks); `minecraft` is used only as the Java SLP fallback.
- */
-async function queryGameQuery(protocol: string, host: string, port: number): Promise<ServerStatus> {
+/** Queries a server through GameQuery on the given protocol and maps the result. */
+async function queryGameQuery(
+  protocol: string,
+  host: string,
+  port: number,
+  options: Record<string, unknown> = {},
+): Promise<ServerStatus> {
   try {
     const results = await new GameQuery(QUERY_TIMEOUT_MS, QUERY_RETRIES)
-      .addServer(protocol, `${host}:${port}`)
+      .addServer(protocol, `${host}:${port}`, null, options)
       .process();
 
     const result = results[0];
@@ -263,7 +223,9 @@ async function queryGameQuery(protocol: string, host: string, port: number): Pro
  * Palworld exposes no anonymous status protocol — its dedicated servers do not
  * answer Steam A2S on any port — so the authenticated REST API is the only way to
  * read live status. The server must set `RESTAPIEnabled=True` in
- * PalWorldSettings.ini, and we need its `AdminPassword`.
+ * PalWorldSettings.ini, and we need its `AdminPassword`. We keep a bespoke
+ * handler (rather than GameQuery's `palworld`) because it also reads /metrics for
+ * the max-player count.
  *
  * `auth.queryPort` is the REST port (`RESTAPIPort`, default 8212), which is
  * separate from the game port players connect on.
@@ -344,10 +306,23 @@ export async function queryServer(
     return queryPalworld(host, resolvedPort, auth);
   }
 
-  if (game === 'minecraft') return queryMinecraft(host, resolvedPort);
-  if (game === 'minecraftbe') return queryMinecraftBedrock(host, resolvedPort);
-  if (game === 'fivem') return queryFiveM(host, resolvedPort);
+  // Terraria has no anonymous query — TShock's REST API needs an app token,
+  // which we pass through as the GameQuery `token` option (stored like a password).
+  if (game === 'terraria') {
+    if (!auth) {
+      return {
+        online: false,
+        error:
+          'Terraria needs a TShock REST API token to query — vanilla Terraria has no status protocol. ' +
+          'Enable the TShock REST API, provision a token, and re-add the server.',
+      };
+    }
+    return queryGameQuery('terraria', host, resolvedPort, { token: auth.password });
+  }
 
-  // Everything else is Valve A2S, spoken by GameQuery's `source` protocol.
-  return queryGameQuery('source', host, resolvedPort);
+  // Minecraft Java keeps its own handler for SRV support; everything else is
+  // queried through GameQuery on the protocol its game entry declares.
+  if (game === 'minecraft') return queryMinecraft(host, resolvedPort);
+
+  return queryGameQuery(gameInfo?.protocol ?? 'source', host, resolvedPort);
 }
