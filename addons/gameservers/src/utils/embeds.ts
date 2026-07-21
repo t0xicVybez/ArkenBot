@@ -12,12 +12,22 @@ export function buildStatusEmbed(
   const gameInfo = SUPPORTED_GAMES[game];
   const gameLabel = gameInfo?.label ?? game;
   const emoji = gameInfo?.emoji ?? '🎮';
-  const address = port ? `${host}:${port}` : host;
+
+  // Show the address players connect on, which for some games is not the port we
+  // query (Killing Floor 2 answers A2S on 27015 but is joined on 7777). An
+  // explicit port from the caller wins — we can't infer their game port.
+  const queryPort = port ?? gameInfo?.defaultPort;
+  const joinPort = port ?? gameInfo?.gamePort ?? gameInfo?.defaultPort;
+  const address = status.online && status.connect ? status.connect : joinPort ? `${host}:${joinPort}` : host;
+  // When the two differ, say which port was actually probed — it's the first
+  // thing you want to know when a server reports offline.
+  const queriedNote =
+    queryPort && joinPort && queryPort !== joinPort ? `\n-# queried on \`${host}:${queryPort}\`` : '';
 
   if (!status.online) {
     return new EmbedBuilder()
       .setTitle(`${emoji} ${savedName ?? host}`)
-      .setDescription(`\`${address}\`\n\n❌ **Offline** — ${status.error}`)
+      .setDescription(`\`${address}\`${queriedNote}\n\n❌ **Offline** — ${status.error}`)
       .setColor(0xed4245)
       .setFooter({ text: gameLabel })
       .setTimestamp();
