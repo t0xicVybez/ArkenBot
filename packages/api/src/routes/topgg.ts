@@ -109,7 +109,12 @@ export async function topggRoutes(server: FastifyInstance): Promise<void> {
   });
 
   // ── Inbound vote webhook (called by top.gg) ────────────────────────────────
-  server.post('/topgg/webhook', async (request, reply) => {
+  // Explicitly rate limited on top of the global limit: this route is
+  // unauthenticated and has to hit the database before the signature can be
+  // checked (verifying needs the voted guild's own secret), so we bound how fast
+  // an unsigned caller can drive that lookup. The ceiling sits well above real
+  // vote traffic, which arrives from top.gg's own hosts.
+  server.post('/topgg/webhook', { config: { rateLimit: { max: 120, timeWindow: '1 minute' } } }, async (request, reply) => {
     const vote = parseVote(request.body);
     if (!vote) return reply.code(400).send({ success: false, error: 'Unrecognised payload' });
 

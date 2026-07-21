@@ -44,9 +44,12 @@
     ],
     "overrides": {
       "gray-matter>js-yaml": "3.15.0",
+      "js-yaml@>=4.0.0 <4.3.0": "4.3.0",
+      "brace-expansion@<1.1.16": "1.1.16",
+      "brace-expansion@>=3.0.0 <5.0.7": "5.0.7",
       "ws": "8.21.0",
       "undici": "6.27.0",
-      "shell-quote": "1.8.4",
+      "shell-quote": "1.9.0",
       "esbuild": "0.28.1",
       "fast-jwt": ">=6.2.4",
       "bullmq>uuid": "^11.1.1",
