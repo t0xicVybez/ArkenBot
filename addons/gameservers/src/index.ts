@@ -20,7 +20,7 @@ export default defineAddon({
     displayName: 'Game Server Status',
     version: '1.0.0',
     description:
-      'Check and monitor game server status for Minecraft, Rust, Palworld, Valheim, ARK, CS2, Arma 3, FiveM, and 40+ other games. Save servers per-guild for quick lookups.',
+      'Check and monitor game server status for Minecraft, Rust, Palworld, Valheim, ARK, CS2, Arma 3, FiveM and 53 games in total. Save servers per-guild for quick lookups. Powered by GameQuery (query.arkenbot.app), our own dependency-free query library.',
     author: 't0xicVybez',
     commands: ['server'],
     settings: [],
