@@ -6,7 +6,7 @@ import {
   Gift, Radio, Lightbulb, Calendar,
   BarChart2, Clock, Settings, Command, Globe, X,
   Mic, ShieldAlert, ShieldCheck, MessagesSquare, Flag, BarChart,
-  Trello } from 'lucide-react';
+  Trello, Code2, Server } from 'lucide-react';
 import { LandingNav } from '@/components/LandingNav';
 import { Footer } from '@/components/Footer';
 
@@ -275,17 +275,6 @@ const COMPARISON = [
   { feature: 'Real-time Web Dashboard',       arken: true,  note: '' },
   { feature: 'Addon Marketplace',             arken: true,  note: 'Unique to Arken' },
   { feature: 'Price',                         arken: true,  note: 'Free, always' },
-];
-
-const ADDONS = [
-  { name: 'Ticket System', version: '1.0.0', desc: 'Full support ticket workflow — panels, form fields, SLA escalation, transcripts, ratings, and more.', icon: '🎫', verified: true },
-  { name: 'Code Review', version: '2.0.0', desc: 'Static analysis for JavaScript, TypeScript, Python, JSON, CSS, and HTML snippets, with optional Groq AI-powered review.', icon: '💻', verified: true },
-];
-
-const HOW_IT_WORKS = [
-  { step: '01', title: 'Invite the Bot', desc: 'Add Arken Bot to your server with one click. No complex setup required.' },
-  { step: '02', title: 'Configure Your Server', desc: 'Use the web dashboard to enable features, set channels, and configure permissions instantly.' },
-  { step: '03', title: 'Sit Back & Enjoy', desc: 'Your server is protected, engaged, and running smoothly. Extend further with addons.' },
 ];
 
 const HERO_COMMANDS = [
@@ -725,68 +714,94 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* ── Addons ── */}
-      <section id="addons" className="py-24 px-6 bg-[var(--bg-surface)]">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-14">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-pink-500/10 border border-pink-500/20 text-pink-400 text-xs font-semibold uppercase tracking-widest mb-4">
-              Addon System
+      {/* ── Open source / GameQuery ── */}
+      <section className="py-24 px-6 bg-[var(--bg-surface)]">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold uppercase tracking-widest mb-4">
+              <Code2 className="w-3.5 h-3.5" />
+              Open Source
             </div>
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight">
-              Extend with addons
+              We build our own tools
             </h2>
-            <p className="text-[var(--text-secondary)] max-w-md mx-auto">
-              Install community addons directly from the dashboard, or build your own with the Arken Addon SDK.
+            <p className="text-[var(--text-secondary)] max-w-xl mx-auto">
+              Arken Bot isn&apos;t glued together from other people&apos;s libraries. When we needed
+              something better, we wrote it — and released it for everyone.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
-            {ADDONS.map((addon) => (
-              <div key={addon.name} className="bg-[var(--bg-card)] rounded-xl border border-[var(--border)] p-5 hover:border-[var(--border-strong)] hover:-translate-y-0.5 transition-all duration-200">
-                <div className="flex items-start justify-between mb-4">
-                  <span className="text-3xl">{addon.icon}</span>
-                  {addon.verified && (
-                    <div className="flex items-center gap-1 text-[11px] text-blue-400 bg-blue-500/10 border border-blue-500/20 px-2 py-0.5 rounded-full">
-                      <Star className="w-2.5 h-2.5" /> Verified
+          <div className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-card)]/40 p-8 md:p-10">
+            <div className="flex flex-col md:flex-row md:items-start gap-8">
+              <div className="flex-1">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-11 h-11 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                    <Server className="w-5 h-5 text-emerald-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-white font-bold text-xl tracking-tight">GameQuery</h3>
+                    <p className="text-[var(--text-secondary)] text-xs">
+                      Powers the Game Server Status addon
+                    </p>
+                  </div>
+                </div>
+
+                <p className="text-[var(--text-secondary)] text-sm leading-relaxed mb-5">
+                  A dependency-free game server query library for PHP and Node/TypeScript. It reads
+                  player counts, map, ping and rules from one server or hundreds at once — and it&apos;s
+                  what Arken Bot uses every time you run <code className="text-emerald-400">/server status</code>.
+                </p>
+
+                <div className="grid grid-cols-3 gap-3 mb-6 max-w-sm">
+                  {[
+                    { n: '53', l: 'Games' },
+                    { n: '23', l: 'Protocols' },
+                    { n: '0', l: 'Dependencies' },
+                  ].map((s) => (
+                    <div
+                      key={s.l}
+                      className="rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)]/60 px-3 py-2.5 text-center"
+                    >
+                      <div className="text-white font-bold text-lg leading-none">{s.n}</div>
+                      <div className="text-[var(--text-secondary)] text-[11px] mt-1">{s.l}</div>
                     </div>
-                  )}
+                  ))}
                 </div>
-                <h3 className="text-white font-semibold mb-1 tracking-tight">{addon.name}</h3>
-                <p className="text-[var(--text-muted)] text-xs mb-3 font-mono">v{addon.version}</p>
-                <p className="text-[var(--text-secondary)] text-sm leading-relaxed">{addon.desc}</p>
-              </div>
-            ))}
-          </div>
 
-          <div className="text-center">
-            <a href={SITE.docsUrl} target="_blank" rel="noopener noreferrer" className="btn-secondary inline-flex">
-              Build your own addon <ExternalLink className="w-4 h-4" />
-            </a>
-          </div>
-        </div>
-      </section>
-
-      {/* ── How it works ── */}
-      <section className="py-24 px-6 border-y border-[var(--border-subtle)] bg-[var(--bg-card)]/20">
-        <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-14">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight">Get started in minutes</h2>
-            <p className="text-[var(--text-secondary)]">No technical knowledge required.</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {HOW_IT_WORKS.map((step, i) => (
-              <div key={step.step} className="relative flex flex-col items-center text-center">
-                {i < HOW_IT_WORKS.length - 1 && (
-                  <div className="hidden md:block absolute top-5 left-[calc(50%+2.5rem)] w-[calc(100%-5rem)] h-px bg-gradient-to-r from-[var(--text-muted)] to-transparent" />
-                )}
-                <div className="w-10 h-10 rounded-xl bg-discord-blurple/15 border border-discord-blurple/30 flex items-center justify-center text-discord-blurple font-bold text-xs mb-4">
-                  {step.step}
+                <div className="flex flex-wrap gap-3">
+                  <a
+                    href="https://query.arkenbot.app"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-[#05231a] font-semibold text-sm transition-colors"
+                  >
+                    Try it live
+                    <ArrowRight className="w-4 h-4" />
+                  </a>
+                  <a
+                    href="https://github.com/t0xicVybez/GameQuery"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-[var(--border-subtle)] hover:border-emerald-500/40 text-white font-semibold text-sm transition-colors"
+                  >
+                    View source
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
                 </div>
-                <h3 className="text-white font-semibold text-sm mb-2 tracking-tight">{step.title}</h3>
-                <p className="text-[var(--text-secondary)] text-sm leading-relaxed">{step.desc}</p>
               </div>
-            ))}
+
+              <div className="md:w-72 shrink-0">
+                <div className="rounded-xl border border-[var(--border-subtle)] bg-[#0e1320] p-4 font-mono text-[12px] leading-relaxed overflow-x-auto">
+                  <div className="text-[#5c6b8a] mb-1"># install it yourself</div>
+                  <div className="text-[#c3e88d] mb-3">npm i @t0xicvybez/gamequery</div>
+                  <div className="text-[#5c6b8a] mb-1"># or for PHP</div>
+                  <div className="text-[#c3e88d]">composer require t0xicvybez/gamequery</div>
+                </div>
+                <p className="text-[var(--text-secondary)] text-[11px] mt-3 text-center">
+                  AGPL-3.0 · free forever
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
