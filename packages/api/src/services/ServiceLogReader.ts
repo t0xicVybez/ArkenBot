@@ -176,7 +176,14 @@ function parseLine(line: string, service: LogService, stream: 'out' | 'err', mti
  * entries first after applying the level, stream, and search filters.
  */
 export async function readServiceLogs(query: ServiceLogQuery = {}): Promise<ServiceLogEntry[]> {
-  const services = query.service && query.service !== 'all' ? [query.service] : [...LOG_SERVICES];
+  // Resolve the requested service(s) back to our own constants before they reach
+  // a filename. Callers are already expected to validate, but re-deriving the
+  // value from LOG_SERVICES here means the string interpolated into the log path
+  // is provably one of 'bot' | 'api' | 'web' and never caller-supplied input.
+  const requested = query.service && query.service !== 'all' ? [query.service] : [...LOG_SERVICES];
+  const services = requested
+    .map((name) => LOG_SERVICES.find((allowed) => allowed === name))
+    .filter((name): name is LogService => name !== undefined);
   const streams: Array<'out' | 'err'> =
     query.stream && query.stream !== 'all' ? [query.stream] : ['out', 'err'];
   const minRank = query.minLevel ? LEVEL_RANK[query.minLevel] : 0;
