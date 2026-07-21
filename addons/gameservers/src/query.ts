@@ -31,10 +31,11 @@ export const PALWORLD_REST_PORT = 8212;
 
 /**
  * Games with no anonymous query protocol — they need a stored secret to check.
- * Palworld uses its REST admin password; Terraria (TShock) uses a REST API token.
- * Both are collected through the same credential flow and stored encrypted.
+ * Palworld's REST API requires the admin password (collected through the
+ * credential flow and stored encrypted). Terraria's TShock status endpoint is
+ * public, so it is queried anonymously and is not listed here.
  */
-export const AUTHENTICATED_GAMES = new Set(['palworld', 'terraria']);
+export const AUTHENTICATED_GAMES = new Set(['palworld']);
 
 /** Raised when a game's status API rejects the stored credential. */
 class UnauthorizedError extends Error {}
@@ -306,18 +307,11 @@ export async function queryServer(
     return queryPalworld(host, resolvedPort, auth);
   }
 
-  // Terraria has no anonymous query — TShock's REST API needs an app token,
-  // which we pass through as the GameQuery `token` option (stored like a password).
+  // Terraria (TShock): the /v2/server/status endpoint is public, so we query it
+  // anonymously. A token is only needed if an admin locked the endpoint down —
+  // passed through if the server happens to have one stored.
   if (game === 'terraria') {
-    if (!auth) {
-      return {
-        online: false,
-        error:
-          'Terraria needs a TShock REST API token to query — vanilla Terraria has no status protocol. ' +
-          'Enable the TShock REST API, provision a token, and re-add the server.',
-      };
-    }
-    return queryGameQuery('terraria', host, resolvedPort, { token: auth.password });
+    return queryGameQuery('terraria', host, resolvedPort, auth?.password ? { token: auth.password } : {});
   }
 
   // Minecraft Java keeps its own handler for SRV support; everything else is
