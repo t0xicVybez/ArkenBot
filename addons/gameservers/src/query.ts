@@ -17,10 +17,17 @@ import type { QueryAuth, QueryResult, ServerStatus } from './types.js';
 /** Metadata associated with each supported game type. */
 export interface GameInfo {
   label: string;
+  /** Default port the query protocol answers on — what we actually talk to. */
   defaultPort: number;
   emoji: string;
   /** The GameQuery protocol used to query this game. */
   protocol: string;
+  /**
+   * Default port players *join* on, when it differs from the query port (Killing
+   * Floor 2 is queried on 27015 but joined on 7777). Mirrors GameQuery's
+   * `gamePort`; used only to display a connect address, never to query.
+   */
+  gamePort?: number;
 }
 
 /** The UDP port Palworld players connect on (`PublicPort`). */
@@ -53,13 +60,13 @@ export const SUPPORTED_GAMES: Record<string, GameInfo> = {
   minecraft:            { label: 'Minecraft Java Edition',    defaultPort: 25565, emoji: '⛏️', protocol: 'minecraft' },
   minecraftbe:          { label: 'Minecraft Bedrock',         defaultPort: 19132, emoji: '⛏️', protocol: 'bedrock' },
   rust:                 { label: 'Rust',                      defaultPort: 28015, emoji: '🔧', protocol: 'source' },
-  valheim:              { label: 'Valheim',                   defaultPort: 2457,  emoji: '⚔️', protocol: 'source' },
+  valheim:              { label: 'Valheim',                   defaultPort: 2457,  emoji: '⚔️', protocol: 'source', gamePort: 2456 },
   ark:                  { label: 'ARK: Survival Evolved',     defaultPort: 27015, emoji: '🦕', protocol: 'source' },
   asa:                  { label: 'ARK: Survival Ascended',    defaultPort: 27015, emoji: '🦕', protocol: 'source' },
-  dayz:                 { label: 'DayZ',                      defaultPort: 27016, emoji: '🧟', protocol: 'source' },
+  dayz:                 { label: 'DayZ',                      defaultPort: 27016, emoji: '🧟', protocol: 'source', gamePort: 2302 },
   projectzomboid:       { label: 'Project Zomboid',           defaultPort: 16261, emoji: '🧟', protocol: 'source' },
   sevendaystodie:       { label: '7 Days to Die',             defaultPort: 26900, emoji: '🧟', protocol: 'source' },
-  conanexiles:          { label: 'Conan Exiles',              defaultPort: 27015, emoji: '⚔️', protocol: 'source' },
+  conanexiles:          { label: 'Conan Exiles',              defaultPort: 27015, emoji: '⚔️', protocol: 'source', gamePort: 7777 },
   vrising:              { label: 'V Rising',                  defaultPort: 9876,  emoji: '🧛', protocol: 'source' },
   palworld:             { label: 'Palworld',                  defaultPort: PALWORLD_GAME_PORT, emoji: '🌿', protocol: 'palworld' },
   scum:                 { label: 'SCUM',                      defaultPort: 7042,  emoji: '🏝️', protocol: 'source' },
@@ -73,9 +80,9 @@ export const SUPPORTED_GAMES: Record<string, GameInfo> = {
 
   // ── Co-op ───────────────────────────────────────────────────────────────────
   satisfactory:         { label: 'Satisfactory',              defaultPort: 7777,  emoji: '🏭', protocol: 'satisfactory' },
-  terraria:             { label: 'Terraria (TShock)',         defaultPort: 7878,  emoji: '🌳', protocol: 'terraria' },
+  terraria:             { label: 'Terraria (TShock)',         defaultPort: 7878,  emoji: '🌳', protocol: 'terraria', gamePort: 7777 },
   barotrauma:           { label: 'Barotrauma',                defaultPort: 27015, emoji: '🌊', protocol: 'source' },
-  killingfloor2:        { label: 'Killing Floor 2',           defaultPort: 27015, emoji: '🔪', protocol: 'source' },
+  killingfloor2:        { label: 'Killing Floor 2',           defaultPort: 27015, emoji: '🔪', protocol: 'source', gamePort: 7777 },
   l4d2:                 { label: 'Left 4 Dead 2',             defaultPort: 27015, emoji: '🧟', protocol: 'source' },
   unturned:             { label: 'Unturned',                  defaultPort: 27015, emoji: '🧟', protocol: 'source' },
 
@@ -86,9 +93,9 @@ export const SUPPORTED_GAMES: Record<string, GameInfo> = {
   tf2:                  { label: 'Team Fortress 2',           defaultPort: 27015, emoji: '🔫', protocol: 'source' },
   gmod:                 { label: "Garry's Mod",               defaultPort: 27015, emoji: '🔧', protocol: 'source' },
   blackmesa:            { label: 'Black Mesa',                defaultPort: 27015, emoji: '🔬', protocol: 'source' },
-  insurgencysandstorm:  { label: 'Insurgency: Sandstorm',     defaultPort: 27131, emoji: '💣', protocol: 'source' },
-  squad:                { label: 'Squad',                     defaultPort: 27165, emoji: '🪖', protocol: 'source' },
-  postscriptum:         { label: 'Post Scriptum',             defaultPort: 10037, emoji: '🪖', protocol: 'source' },
+  insurgencysandstorm:  { label: 'Insurgency: Sandstorm',     defaultPort: 27131, emoji: '💣', protocol: 'source', gamePort: 27102 },
+  squad:                { label: 'Squad',                     defaultPort: 27165, emoji: '🪖', protocol: 'source', gamePort: 7787 },
+  postscriptum:         { label: 'Post Scriptum',             defaultPort: 10037, emoji: '🪖', protocol: 'source', gamePort: 10027 },
   hellletloose:         { label: 'Hell Let Loose',            defaultPort: 26420, emoji: '🪖', protocol: 'source' },
   mordhau:              { label: 'Mordhau',                   defaultPort: 7777,  emoji: '⚔️', protocol: 'source' },
   groundbranch:         { label: 'Ground Branch',             defaultPort: 27015, emoji: '🔫', protocol: 'source' },
@@ -98,24 +105,24 @@ export const SUPPORTED_GAMES: Record<string, GameInfo> = {
   quake3:               { label: 'Quake III Arena',           defaultPort: 27960, emoji: '🔺', protocol: 'quake3' },
   cod4:                 { label: 'Call of Duty 4',            defaultPort: 28960, emoji: '🔫', protocol: 'quake3' },
   doom3:                { label: 'Doom 3',                    defaultPort: 27666, emoji: '👹', protocol: 'doom3' },
-  ut2004:               { label: 'Unreal Tournament 2004',    defaultPort: 7778,  emoji: '🎯', protocol: 'unreal2' },
+  ut2004:               { label: 'Unreal Tournament 2004',    defaultPort: 7778,  emoji: '🎯', protocol: 'unreal2', gamePort: 7777 },
   bf1942:               { label: 'Battlefield 1942',          defaultPort: 23000, emoji: '✈️', protocol: 'gamespy2' },
 
   // ── Racing ──────────────────────────────────────────────────────────────────
-  assettocorsa:         { label: 'Assetto Corsa',             defaultPort: 8081,  emoji: '🏎️', protocol: 'assettocorsa' },
+  assettocorsa:         { label: 'Assetto Corsa',             defaultPort: 8081,  emoji: '🏎️', protocol: 'assettocorsa', gamePort: 9600 },
   wreckfest:            { label: 'Wreckfest',                 defaultPort: 27015, emoji: '🏁', protocol: 'source' },
 
   // ── GTA / Multiplayer mods ──────────────────────────────────────────────────
   fivem:                { label: 'FiveM (GTA V)',             defaultPort: 30120, emoji: '🚗', protocol: 'fivem' },
-  mtasa:                { label: 'Multi Theft Auto',          defaultPort: 22126, emoji: '🚗', protocol: 'ase' },
+  mtasa:                { label: 'Multi Theft Auto',          defaultPort: 22126, emoji: '🚗', protocol: 'ase', gamePort: 22003 },
   samp:                 { label: 'SA-MP',                     defaultPort: 7777,  emoji: '🚗', protocol: 'samp' },
   openmp:               { label: 'open.mp',                   defaultPort: 7777,  emoji: '🚗', protocol: 'samp' },
 
   // ── Mil-Sim / Open World ────────────────────────────────────────────────────
-  arma3:                { label: 'Arma 3',                    defaultPort: 2303,  emoji: '🪖', protocol: 'source' },
+  arma3:                { label: 'Arma 3',                    defaultPort: 2303,  emoji: '🪖', protocol: 'source', gamePort: 2302 },
 
   // ── Voice (queryable alongside game servers) ────────────────────────────────
-  teamspeak3:           { label: 'TeamSpeak 3',               defaultPort: 10011, emoji: '🎙️', protocol: 'teamspeak3' },
+  teamspeak3:           { label: 'TeamSpeak 3',               defaultPort: 10011, emoji: '🎙️', protocol: 'teamspeak3', gamePort: 9987 },
   mumble:               { label: 'Mumble',                    defaultPort: 64738, emoji: '🎙️', protocol: 'mumble' },
 };
 
@@ -179,8 +186,12 @@ async function queryMinecraft(host: string, port: number): Promise<ServerStatus>
   }
 }
 
-/** Maps a GameQuery result onto our own status shape using its normalized accessors. */
-function toStatus(result: Result, host: string, port: number): QueryResult {
+/**
+ * Maps a GameQuery result onto our own status shape using its normalized
+ * accessors. `connectPort` is the port players join on, which is not always the
+ * port we queried (see GameInfo.gamePort).
+ */
+function toStatus(result: Result, host: string, connectPort: number): QueryResult {
   const version = typeof result.data.version === 'string' ? result.data.version : null;
   return {
     online: true,
@@ -192,7 +203,7 @@ function toStatus(result: Result, host: string, port: number): QueryResult {
     bots: typeof result.data.bots === 'number' ? result.data.bots : 0,
     ping: Math.round(result.pingMs),
     password: Boolean(result.data.password_protected),
-    connect: `${host}:${port}`,
+    connect: `${host}:${connectPort}`,
   };
 }
 
@@ -202,6 +213,7 @@ async function queryGameQuery(
   host: string,
   port: number,
   options: Record<string, unknown> = {},
+  connectPort: number = port,
 ): Promise<ServerStatus> {
   try {
     const results = await new GameQuery(QUERY_TIMEOUT_MS, QUERY_RETRIES)
@@ -212,7 +224,7 @@ async function queryGameQuery(
     if (!result || !result.online) {
       return { online: false, error: classifyError(result?.error ?? 'Server did not respond (offline or unreachable)') };
     }
-    return toStatus(result, host, port);
+    return toStatus(result, host, connectPort);
   } catch (err) {
     return { online: false, error: classifyError(err) };
   }
@@ -294,6 +306,10 @@ export async function queryServer(
 ): Promise<ServerStatus> {
   const gameInfo = SUPPORTED_GAMES[game];
   const resolvedPort = port ?? gameInfo?.defaultPort ?? 27015;
+  // The port players join on isn't always the one we query. When we fell back to
+  // our own defaults we know both, so show the join port; if the caller gave an
+  // explicit port we can't infer their game port and echo what they supplied.
+  const connectPort = port === undefined ? (gameInfo?.gamePort ?? resolvedPort) : resolvedPort;
 
   if (game === 'palworld') {
     if (!auth) {
@@ -311,12 +327,12 @@ export async function queryServer(
   // anonymously. A token is only needed if an admin locked the endpoint down —
   // passed through if the server happens to have one stored.
   if (game === 'terraria') {
-    return queryGameQuery('terraria', host, resolvedPort, auth?.password ? { token: auth.password } : {});
+    return queryGameQuery('terraria', host, resolvedPort, auth?.password ? { token: auth.password } : {}, connectPort);
   }
 
   // Minecraft Java keeps its own handler for SRV support; everything else is
   // queried through GameQuery on the protocol its game entry declares.
   if (game === 'minecraft') return queryMinecraft(host, resolvedPort);
 
-  return queryGameQuery(gameInfo?.protocol ?? 'source', host, resolvedPort);
+  return queryGameQuery(gameInfo?.protocol ?? 'source', host, resolvedPort, {}, connectPort);
 }
