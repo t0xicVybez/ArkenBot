@@ -14,7 +14,7 @@
     "next": "^15.5.18",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "next-auth": "^4.24.0",
+    "next-auth": "^4.24.15",
     "axios": "^1.18.0",
     "socket.io-client": "^4.8.0",
     "react-hot-toast": "^2.4.1",
