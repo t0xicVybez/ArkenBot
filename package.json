@@ -52,6 +52,7 @@
       "fast-uri": "^3.1.5",
       "find-my-way": "^9.7.0",
       "socket.io-parser": "^4.2.7",
+      "sharp": "^0.35.0",
       "shell-quote": "1.9.0",
       "esbuild": "0.28.1",
       "fast-jwt": ">=6.2.4",
