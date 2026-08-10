@@ -37,7 +37,7 @@ export default function StreamAlertsPage() {
   return (
     <FeedAlertsPage
       title="Stream Alerts"
-      description="Notify the community when creators go live or post — Twitch, Kick, YouTube, X, Reddit, RSS."
+      description="Notify the community when creators go live or post — Twitch, Kick, YouTube, X, RSS."
       icon={Radio}
       iconColor="text-purple-400"
       platforms={PLATFORMS}
