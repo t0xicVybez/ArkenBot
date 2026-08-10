@@ -1,29 +1,22 @@
 'use client';
 
 import { Globe } from 'lucide-react';
-import { FeedAlertsPage } from '@/components/FeedAlertsPage';
 
-const PLATFORMS = [
-  {
-    value: 'reddit',
-    label: 'Reddit',
-    badgeClass: 'bg-orange-500/15 text-orange-400',
-    usernameLabel: 'Subreddit name',
-    usernamePlaceholder: 'e.g. gaming  (no r/ prefix needed)',
-    variables: '{streamer} = r/subreddit · {title} = post title · {author} = username · {url} = post link',
-    messagePlaceholder: 'e.g. New post in {streamer}: {title} — {url}',
-  },
-];
-
+// Reddit Feeds are temporarily hidden pending Reddit Data API approval.
+// To restore the full feature, revert this file to render <FeedAlertsPage>
+// with the reddit platform config (see git history), and re-add the sidebar
+// (Sidebar.tsx) and command-palette (CommandPalette.tsx) entries.
 export default function RedditFeedsPage() {
   return (
-    <FeedAlertsPage
-      title="Reddit Feeds"
-      description="Post a Discord notification whenever a subreddit receives a new post. Checks every 5 minutes."
-      icon={Globe}
-      iconColor="text-orange-400"
-      platforms={PLATFORMS}
-      notice="Reddit requires REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET in the bot's .env file. Reddit blocks unauthenticated requests from server IPs even for public subreddits. Create a free script app at reddit.com/prefs/apps to get credentials."
-    />
+    <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-6">
+      <div className="w-16 h-16 rounded-2xl bg-orange-500/15 text-orange-400 flex items-center justify-center mb-6">
+        <Globe className="w-8 h-8" />
+      </div>
+      <h1 className="text-2xl font-semibold text-white mb-2">Reddit Feeds — Coming Soon</h1>
+      <p className="text-[var(--text-secondary)] max-w-md">
+        Reddit notifications are temporarily unavailable while we complete Reddit&apos;s
+        Data API approval. This feature will return automatically once access is granted.
+      </p>
+    </div>
   );
 }

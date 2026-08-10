@@ -21,6 +21,9 @@ import RSSParser from 'rss-parser';
 export class BackgroundJobs {
   private client: BotClient;
   private timers: NodeJS.Timeout[] = [];
+  // Suppress the "Reddit alert skipped — no OAuth token" warning after the first
+  // occurrence so it doesn't flood logs every polling cycle while creds are unset.
+  private redditSkipWarned = false;
 
   constructor(client: BotClient) {
     this.client = client;
@@ -998,7 +1001,10 @@ export class BackgroundJobs {
         // Reddit blocks unauthenticated requests from datacenter IPs.
         // Requires REDDIT_CLIENT_ID + REDDIT_CLIENT_SECRET in .env.
         if (!redditToken) {
-          logger.warn({ alertId: alert.id }, 'Reddit alert skipped — no OAuth token (set REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET)');
+          if (!this.redditSkipWarned) {
+            logger.warn('Reddit alerts skipped — no OAuth token (set REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET). Further warnings suppressed this run.');
+            this.redditSkipWarned = true;
+          }
           return;
         }
         const subreddit = alert.channelUsername.replace(/^r\//, '');

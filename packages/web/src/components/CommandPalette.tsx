@@ -27,7 +27,7 @@ const PAGES: Array<[string, string, string]> = [
   ['Temp Voice', '/temp-voice', 'Tools'], ['Commands', '/commands', 'Tools'],
   ['Forum Management', '/forum-management', 'Tools'],
   ['Stream Alerts', '/stream-alerts', 'Integrations'], ['X / Twitter Feeds', '/twitter-feeds', 'Integrations'],
-  ['Reddit Feeds', '/reddit-feeds', 'Integrations'], ['RSS Feeds', '/rss-feeds', 'Integrations'],
+  ['RSS Feeds', '/rss-feeds', 'Integrations'],
   ['Monday.com', '/monday', 'Integrations'], ['Trello', '/trello', 'Integrations'],
   ['Logs', '/logs', 'System'], ['Audit Log', '/audit-log', 'System'],
   ['Announcements', '/announcements', 'System'], ['Addon Manager', '/addons', 'System'],

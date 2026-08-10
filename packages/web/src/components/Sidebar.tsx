@@ -42,7 +42,6 @@ import {
   Layout,
   UserCheck,
   AtSign,
-  Globe,
   Rss,
   Mic,
   ShieldAlert,
@@ -136,7 +135,7 @@ const buildNavSections = (guildId: string, installedAddons: string[]): NavSectio
       items: [
         { href: `/dashboard/${guildId}/stream-alerts`, label: 'Stream Alerts', icon: Radio },
         { href: `/dashboard/${guildId}/twitter-feeds`, label: 'X / Twitter Feeds', icon: AtSign },
-        { href: `/dashboard/${guildId}/reddit-feeds`, label: 'Reddit Feeds', icon: Globe },
+        // Reddit Feeds hidden pending Reddit Data API approval — restore this line to re-enable.
         { href: `/dashboard/${guildId}/rss-feeds`, label: 'RSS Feeds', icon: Rss },
         { href: `/dashboard/${guildId}/monday`, label: 'Monday.com', icon: ClipboardList },
         { href: `/dashboard/${guildId}/trello`, label: 'Trello', icon: Trello },
