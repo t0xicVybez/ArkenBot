@@ -1,0 +1,53 @@
+name: CI
+
+# Runs on every PR and on pushes to main. Gates on typecheck + server build,
+# which catch the "compiles-but-broken" and stale-dist regressions that have
+# bitten deploys before. Lint is intentionally NOT gated yet: api/bot have no
+# eslint installed and web's `next lint` currently exits non-zero — see the
+# follow-up task to set up a working lint before adding it here.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Typecheck & Build
+    runs-on: ubuntu-latest
+    env:
+      # prisma generate requires the var to be defined; it never connects here.
+      DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma client
+        run: pnpm db:generate
+
+      - name: Typecheck (all packages)
+        run: pnpm -r typecheck
+
+      - name: Build server packages
+        run: |
+          pnpm --filter @arkenbot/shared build
+          pnpm --filter @arkenbot/addon-sdk build
+          pnpm --filter @arkenbot/api build
+          pnpm --filter @arkenbot/bot build
