@@ -12,6 +12,7 @@ import { z } from 'zod';
 import { prisma } from '../database.js';
 import { pub } from '../redis.js';
 import { requireGuildAdmin } from '../middleware/auth.js';
+import { encryptSecret, decryptSecretLenient } from '../utils/crypto.js';
 
 /**
  * Normalises a vote webhook body (v0 or v1) into a common shape.
@@ -129,7 +130,7 @@ export async function topggRoutes(server: FastifyInstance): Promise<void> {
         where: { guildId: vote.guildId },
         select: { webhookSecret: true },
       });
-      if (cfg?.webhookSecret) secrets.push(cfg.webhookSecret);
+      if (cfg?.webhookSecret) secrets.push(decryptSecretLenient(cfg.webhookSecret));
     }
     if (secrets.length === 0) return reply.code(503).send({ success: false, error: 'Webhook not configured' });
 
@@ -164,6 +165,7 @@ export async function topggRoutes(server: FastifyInstance): Promise<void> {
     const data = { ...parsed.data };
     // An empty secret field means "leave it unchanged", not "clear it".
     if (data.webhookSecret === '') delete data.webhookSecret;
+    else if (typeof data.webhookSecret === 'string') data.webhookSecret = encryptSecret(data.webhookSecret);
 
     const config = await prisma.topggConfig.upsert({
       where: { guildId },

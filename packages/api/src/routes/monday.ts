@@ -1,5 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 import { requireGuildAdmin } from '../middleware/auth.js';
+import { encryptSecret, decryptSecretLenient } from '../utils/crypto.js';
 import { prisma } from '../database.js';
 
 const DISCORD_API = 'https://discord.com/api/v10';
@@ -295,7 +296,7 @@ export async function mondayRoutes(server: FastifyInstance): Promise<void> {
         discordChannelId: discordChannelId as string,
         boardName: typeof boardName === 'string' ? boardName.trim() || null : null,
         events: Array.isArray(events) ? (events as string[]) : [],
-        mondayApiToken: typeof mondayApiToken === 'string' ? mondayApiToken.trim() || null : null,
+        mondayApiToken: typeof mondayApiToken === 'string' && mondayApiToken.trim() ? encryptSecret(mondayApiToken.trim()) : null,
       },
     });
     return reply.code(201).send({ success: true, data: alert });
@@ -316,7 +317,7 @@ export async function mondayRoutes(server: FastifyInstance): Promise<void> {
     if (Array.isArray(body.events)) data.events = body.events as string[];
 
     if (typeof body.mondayApiToken === 'string') {
-      data.mondayApiToken = body.mondayApiToken.trim() || null;
+      data.mondayApiToken = body.mondayApiToken.trim() ? encryptSecret(body.mondayApiToken.trim()) : null;
       // Clear cache entries for this alert so the new token takes effect immediately
       for (const key of userNameCache.keys()) {
         if (key.includes(':')) userNameCache.delete(key);
@@ -392,7 +393,7 @@ export async function mondayRoutes(server: FastifyInstance): Promise<void> {
 
     // Resolve user display name if API token is configured
     const resolvedUserName = alert.mondayApiToken && normalizedEvent.userId
-      ? await resolveMondayUserName(normalizedEvent.userId, alert.mondayApiToken)
+      ? await resolveMondayUserName(normalizedEvent.userId, decryptSecretLenient(alert.mondayApiToken))
       : null;
 
     const embed = buildEmbed(normalizedEvent, alert.boardName, resolvedUserName);
