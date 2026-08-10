@@ -2,8 +2,21 @@
  * Routes for managing guild-specific custom text commands.
  */
 import type { FastifyInstance } from 'fastify';
+import { z } from 'zod';
 import { requireGuildAdmin } from '../middleware/auth.js';
+import { parse } from '../utils/validate.js';
 import { prisma } from '../database.js';
+
+const cmdFields = {
+  aliases: z.array(z.string().trim().min(1).max(32)).max(25).optional(),
+  response: z.string().min(1).max(2000),
+  embed: z.boolean().optional(),
+  embedTitle: z.string().max(256).nullish(),
+  embedColor: z.string().max(16).nullish(),
+  deleteInvoking: z.boolean().optional(),
+  dmResponse: z.boolean().optional(),
+  cooldown: z.number().int().min(0).max(86400).optional(),
+};
 
 /**
  * Registers custom command routes.
@@ -23,22 +36,23 @@ export async function customCommandRoutes(server: FastifyInstance): Promise<void
 
   server.post('/guilds/:guildId/custom-commands', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
-    const { name, aliases, response, embed, embedTitle, embedColor, deleteInvoking, dmResponse, cooldown } = request.body as any;
-    if (!name || !response) {
-      return reply.code(400).send({ success: false, error: 'name and response are required' });
-    }
+    const input = parse(z.object({
+      name: z.string().trim().min(1).max(32),
+      ...cmdFields,
+    }), request.body, reply);
+    if (!input) return;
     const command = await prisma.customCommand.create({
       data: {
         guildId,
-        name: name.toLowerCase().trim(),
-        aliases: aliases ?? [],
-        response,
-        embed: embed ?? false,
-        embedTitle: embedTitle ?? null,
-        embedColor: embedColor ?? null,
-        deleteInvoking: deleteInvoking ?? false,
-        dmResponse: dmResponse ?? false,
-        cooldown: cooldown ?? 0,
+        name: input.name.toLowerCase(),
+        aliases: input.aliases ?? [],
+        response: input.response,
+        embed: input.embed ?? false,
+        embedTitle: input.embedTitle ?? null,
+        embedColor: input.embedColor ?? null,
+        deleteInvoking: input.deleteInvoking ?? false,
+        dmResponse: input.dmResponse ?? false,
+        cooldown: input.cooldown ?? 0,
       },
     });
     return reply.code(201).send({ success: true, data: command });
@@ -46,7 +60,12 @@ export async function customCommandRoutes(server: FastifyInstance): Promise<void
 
   server.patch('/guilds/:guildId/custom-commands/:id', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, id } = request.params as { guildId: string; id: string };
-    const body = request.body as any;
+    const body = parse(z.object({
+      enabled: z.boolean().optional(),
+      ...cmdFields,
+      response: cmdFields.response.optional(),
+    }), request.body, reply);
+    if (!body) return;
     const result = await prisma.customCommand.updateMany({
       where: { id, guildId },
       data: {
