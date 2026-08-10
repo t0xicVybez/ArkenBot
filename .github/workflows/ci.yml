@@ -50,6 +50,11 @@ jobs:
       - name: Typecheck (all packages)
         run: pnpm -r typecheck
 
+      # Warn-first: surfaces issues but won't fail the build (no error-level rules
+      # yet). Promote rules to "error" over time to make this a hard gate.
+      - name: Lint
+        run: pnpm lint
+
       - name: Build server packages
         run: |
           pnpm --filter @arkenbot/api build

@@ -12,7 +12,7 @@
     "dev": "pnpm build:deps && concurrently \"pnpm --filter @arkenbot/api dev\" \"pnpm --filter @arkenbot/bot dev\" \"pnpm --filter @arkenbot/web dev\"",
     "build": "pnpm --filter @arkenbot/shared build && pnpm --filter @arkenbot/addon-sdk build && pnpm --filter tickets build && pnpm --filter ai build && pnpm --filter @arkenbot/api build && pnpm --filter @arkenbot/bot build && pnpm --filter @arkenbot/web build",
     "start": "concurrently \"pnpm --filter @arkenbot/api start\" \"pnpm --filter @arkenbot/bot start\" \"pnpm --filter @arkenbot/web start\"",
-    "lint": "pnpm -r lint",
+    "lint": "eslint .",
     "typecheck": "pnpm -r typecheck",
     "db:generate": "prisma generate --schema=./prisma/schema.prisma",
     "db:migrate": "prisma migrate deploy --schema=./prisma/schema.prisma",
@@ -25,11 +25,13 @@
     "docs:build": "pnpm --filter @arkenbot/docs build"
   },
   "devDependencies": {
+    "@prisma/client": "^5.22.0",
     "concurrently": "^9.0.0",
-    "typescript": "^5.7.0",
-    "tsx": "^4.19.0",
+    "eslint": "^9.39.4",
     "prisma": "^5.22.0",
-    "@prisma/client": "^5.22.0"
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0",
+    "typescript-eslint": "^8.67.0"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
