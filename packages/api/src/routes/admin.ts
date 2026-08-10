@@ -4,7 +4,9 @@
  * system logs, bot presence configuration, and announcement broadcasting.
  */
 import type { FastifyInstance } from 'fastify';
+import { z } from 'zod';
 import { requireStaff, requireBotOwner } from '../middleware/auth.js';
+import { parse } from '../utils/validate.js';
 import { prisma } from '../database.js';
 import { pub } from '../redis.js';
 import { register } from 'prom-client';
@@ -375,11 +377,13 @@ export async function adminRoutes(server: FastifyInstance): Promise<void> {
   // to each guild's configured announcement channel.
   server.post('/admin/announcements', { preHandler: [requireStaff] }, async (request, reply) => {
     const user = (request as any).user as { id: string };
-    const { title, body, type } = request.body as { title: string; body: string; type?: string };
-
-    if (!title?.trim() || !body?.trim()) {
-      return reply.code(400).send({ success: false, error: 'title and body are required' });
-    }
+    const input = parse(z.object({
+      title: z.string().trim().min(1).max(256),
+      body: z.string().trim().min(1).max(4000),
+      type: z.string().trim().max(32).optional(),
+    }), request.body, reply);
+    if (!input) return;
+    const { title, body, type } = input;
 
     const opted = await prisma.guildSettings.findMany({
       where: { announcementsEnabled: true, announcementChannelId: { not: null } },
