@@ -8,10 +8,10 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@lezer/common": "^1.5.1",
-    "@lezer/python": "^1.1.18",
-    "acorn": "^8.11.3",
-    "prettier": "^3.2.5"
+    "@lezer/common": "^1.5.2",
+    "@lezer/python": "^1.1.19",
+    "acorn": "^8.18.0",
+    "prettier": "^3.9.6"
   },
   "peerDependencies": {
     "@arkenbot/addon-sdk": "*"
@@ -19,6 +19,6 @@
   "devDependencies": {
     "@arkenbot/addon-sdk": "workspace:*",
     "@types/acorn": "^4.0.6",
-    "discord.js": "^14.25.1"
+    "discord.js": "^14.27.0"
   }
 }
