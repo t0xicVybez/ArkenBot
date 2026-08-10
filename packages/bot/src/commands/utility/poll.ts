@@ -18,6 +18,7 @@ import type { BotCommand } from '../../types.js';
 import { prisma } from '../../database.js';
 import { generatePollChart } from '../../utils/pollChart.js';
 
+import { swallow } from '../../logger.js';
 /**
  * Builds the poll embed showing each option's vote count and percentage bar.
  *
@@ -132,7 +133,7 @@ const command: BotCommand = {
           const closedEmbed = buildPollEmbed(question, rawOptions, updatedPoll.votes, endsAt)
             .setTitle(`📊 [ENDED] ${question}`)
             .setColor(0x57f287);
-          const chartBuffer = await generatePollChart(question, rawOptions, updatedPoll.votes).catch(() => null);
+          const chartBuffer = await generatePollChart(question, rawOptions, updatedPoll.votes).catch(swallow);
           await interaction.editReply({
             embeds: [closedEmbed],
             components: buildPollComponents(poll.id, rawOptions, true),
@@ -164,7 +165,7 @@ const command: BotCommand = {
       const embed = buildPollEmbed(poll.question, options, updatedVotes, poll.endsAt)
         .setTitle(`📊 [ENDED] ${poll.question}`)
         .setColor(0x57f287);
-      const chartBuffer = await generatePollChart(poll.question, options, updatedVotes).catch(() => null);
+      const chartBuffer = await generatePollChart(poll.question, options, updatedVotes).catch(swallow);
       await interaction.update({
         embeds: [embed],
         components: buildPollComponents(pollId, options, true),

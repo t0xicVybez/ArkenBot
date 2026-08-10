@@ -7,7 +7,7 @@ import {
 import type { BotClient } from '../../client.js';
 import { prisma } from '../../database.js';
 import { COLORS } from '@arkenbot/shared';
-import { logger } from '../../logger.js';
+import { logger, swallow} from '../../logger.js';
 import { getGuildSettings } from '../../utils/settings.js';
 
 /**
@@ -159,7 +159,7 @@ export class ReactionRolesModule {
         msg: import('discord.js').Message,
         role: (typeof panel.roles)[number],
       ): Promise<string> => {
-        const mr = await msg.react(role.emoji).catch(() => null);
+        const mr = await msg.react(role.emoji).catch(swallow);
         if (mr) {
           // Use the emoji Discord resolved to — this is what reaction events return
           return mr.emoji.id
@@ -177,7 +177,7 @@ export class ReactionRolesModule {
           for (const role of panel.roles) {
             const canonical = await reactAndCanonicalise(existing, role);
             if (canonical !== role.emoji) {
-              await prisma.reactionRole.update({ where: { id: role.id }, data: { emoji: canonical } }).catch(() => null);
+              await prisma.reactionRole.update({ where: { id: role.id }, data: { emoji: canonical } }).catch(swallow);
             }
           }
         } catch {
@@ -191,7 +191,7 @@ export class ReactionRolesModule {
         for (const role of panel.roles) {
           const canonical = await reactAndCanonicalise(msg, role);
           if (canonical !== role.emoji) {
-            await prisma.reactionRole.update({ where: { id: role.id }, data: { emoji: canonical } }).catch(() => null);
+            await prisma.reactionRole.update({ where: { id: role.id }, data: { emoji: canonical } }).catch(swallow);
           }
         }
       }
@@ -227,8 +227,8 @@ export class ReactionRolesModule {
     try {
       const guild = client.guilds.cache.get(guildId);
       const channel = guild?.channels.cache.get(channelId) as TextChannel | undefined;
-      const msg = await channel?.messages.fetch(messageId).catch(() => null);
-      if (msg) await msg.delete().catch(() => null);
+      const msg = await channel?.messages.fetch(messageId).catch(swallow);
+      if (msg) await msg.delete().catch(swallow);
     } catch (err) {
       logger.error({ err }, 'Failed to delete panel message');
     }

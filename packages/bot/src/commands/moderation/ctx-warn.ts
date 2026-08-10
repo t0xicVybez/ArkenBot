@@ -25,6 +25,7 @@ import { prisma } from '../../database.js';
 import { getNextCaseNumber, getGuildSettings } from '../../utils/settings.js';
 import { LoggingModule } from '../../modules/logging/LoggingModule.js';
 
+import { swallow } from '../../logger.js';
 const command: BotCommand = {
   data: new ContextMenuCommandBuilder()
     .setName('⚠️ Warn Member')
@@ -67,14 +68,14 @@ const command: BotCommand = {
     const reason = interaction.fields.getTextInputValue('reason');
     const guild = interaction.guild;
 
-    const targetUser = await interaction.client.users.fetch(targetUserId).catch(() => null);
+    const targetUser = await interaction.client.users.fetch(targetUserId).catch(swallow);
     if (!targetUser) {
       await interaction.editReply({ embeds: [errorEmbed('Not Found', 'Could not find that user.')] });
       return;
     }
 
-    const moderator = await guild.members.fetch(interaction.user.id).catch(() => null);
-    const targetMember = await guild.members.fetch(targetUserId).catch(() => null);
+    const moderator = await guild.members.fetch(interaction.user.id).catch(swallow);
+    const targetMember = await guild.members.fetch(targetUserId).catch(swallow);
 
     if (moderator && targetMember && !canModerate(moderator, targetMember)) {
       await interaction.editReply({ embeds: [errorEmbed('Hierarchy Error', 'You cannot warn a member with a higher or equal role.')] });
@@ -120,7 +121,7 @@ const command: BotCommand = {
         moderator: interaction.user.tag,
         reason,
       }, settings?.moderationColor)],
-    }).catch(() => null);
+    }).catch(swallow);
 
     await LoggingModule.logModerationAction(guild, {
       type: 'warn',

@@ -16,6 +16,7 @@ import { prisma } from '../../database.js';
 import { getNextCaseNumber, getGuildSettings } from '../../utils/settings.js';
 import { LoggingModule } from '../../modules/logging/LoggingModule.js';
 
+import { swallow } from '../../logger.js';
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('mute')
@@ -69,7 +70,7 @@ const command: BotCommand = {
     }
 
     const moderator = await interaction.guild.members.fetch(interaction.user.id);
-    const targetMember = await interaction.guild.members.fetch(targetUser.id).catch(() => null);
+    const targetMember = await interaction.guild.members.fetch(targetUser.id).catch(swallow);
 
     if (!targetMember) {
       await interaction.editReply({ embeds: [errorEmbed('Not Found', 'That user is not in this server.')] });
@@ -103,7 +104,7 @@ const command: BotCommand = {
             }, settings?.moderationColor),
           ],
         })
-        .catch(() => null);
+        .catch(swallow);
 
       await targetMember.timeout(durationSeconds * 1000, `${reason} | Moderator: ${interaction.user.tag}`);
 
@@ -139,7 +140,7 @@ const command: BotCommand = {
       await prisma.moderationCase.update({
         where: { guildId_caseNumber: { guildId: interaction.guild.id, caseNumber } },
         data: { messageId: replyMsg.id, channelId: replyMsg.channelId },
-      }).catch(() => null);
+      }).catch(swallow);
 
       await LoggingModule.logModerationAction(interaction.guild, {
         type: 'mute',

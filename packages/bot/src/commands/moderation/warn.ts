@@ -15,6 +15,7 @@ import { prisma } from '../../database.js';
 import { getNextCaseNumber, getGuildSettings } from '../../utils/settings.js';
 import { LoggingModule } from '../../modules/logging/LoggingModule.js';
 
+import { swallow } from '../../logger.js';
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('warn')
@@ -52,7 +53,7 @@ const command: BotCommand = {
     }
 
     const moderator = await interaction.guild.members.fetch(interaction.user.id);
-    const targetMember = await interaction.guild.members.fetch(targetUser.id).catch(() => null);
+    const targetMember = await interaction.guild.members.fetch(targetUser.id).catch(swallow);
 
     if (!targetMember) {
       await interaction.editReply({ embeds: [errorEmbed('Not Found', 'That user is not in this server.')] });
@@ -107,7 +108,7 @@ const command: BotCommand = {
           }, settings?.moderationColor),
         ],
       })
-      .catch(() => null);
+      .catch(swallow);
 
     // Check warning escalation thresholds stored in GuildSettings.extended
     let escalationNote = '';
@@ -124,22 +125,22 @@ const command: BotCommand = {
           if (matched.action === 'mute' && muteRoleId) {
             const role = interaction.guild.roles.cache.get(muteRoleId);
             if (role) {
-              await targetMember.roles.add(role, `Auto-mute: ${warningCount} warnings`).catch(() => null);
+              await targetMember.roles.add(role, `Auto-mute: ${warningCount} warnings`).catch(swallow);
               escalationNote = `\nAuto-muted (${warningCount} warnings reached threshold).`;
             }
           } else if (matched.action === 'timeout' && matched.duration) {
             await targetMember.disableCommunicationUntil(
               Date.now() + matched.duration * 1000,
               `Auto-timeout: ${warningCount} warnings`,
-            ).catch(() => null);
+            ).catch(swallow);
             escalationNote = `\nAuto-timed out for ${matched.duration}s (${warningCount} warnings reached threshold).`;
           } else if (matched.action === 'ban') {
             await interaction.guild.members.ban(targetUser, {
               reason: `Auto-ban: ${warningCount} warnings reached threshold`,
-            }).catch(() => null);
+            }).catch(swallow);
             escalationNote = `\nAuto-banned (${warningCount} warnings reached threshold).`;
           } else if (matched.action === 'kick') {
-            await targetMember.kick(`Auto-kick: ${warningCount} warnings`).catch(() => null);
+            await targetMember.kick(`Auto-kick: ${warningCount} warnings`).catch(swallow);
             escalationNote = `\nAuto-kicked (${warningCount} warnings reached threshold).`;
           }
         } catch { /* escalation errors are non-fatal */ }
@@ -158,7 +159,7 @@ const command: BotCommand = {
     await prisma.moderationCase.update({
       where: { guildId_caseNumber: { guildId: interaction.guild.id, caseNumber } },
       data: { messageId: replyMsg.id, channelId: replyMsg.channelId },
-    }).catch(() => null);
+    }).catch(swallow);
 
     await LoggingModule.logModerationAction(interaction.guild, {
       type: 'warn',

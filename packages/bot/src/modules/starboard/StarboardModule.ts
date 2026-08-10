@@ -10,6 +10,7 @@ import type { MessageReaction, User } from 'discord.js';
 import { prisma } from '../../database.js';
 import { getGuildSettings } from '../../utils/settings.js';
 
+import { swallow } from '../../logger.js';
 export class StarboardModule {
   /**
    * Processes a reaction event (add or remove) on any message in the guild.
@@ -26,13 +27,13 @@ export class StarboardModule {
     if (!reaction.message.guild) return;
     const guildId = reaction.message.guild.id;
 
-    const config = await prisma.starboardConfig.findUnique({ where: { guildId } }).catch(() => null);
+    const config = await prisma.starboardConfig.findUnique({ where: { guildId } }).catch(swallow);
     if (!config?.enabled || !config.channelId) return;
     if (reaction.emoji.name !== config.emoji && reaction.emoji.toString() !== config.emoji) return;
     if (!config.selfStar && user.id === reaction.message.author?.id) return;
 
     // Partial messages only contain the ID; fetch the full payload before reading content or attachments.
-    const msg = reaction.message.partial ? await reaction.message.fetch().catch(() => null) : reaction.message;
+    const msg = reaction.message.partial ? await reaction.message.fetch().catch(swallow) : reaction.message;
     if (!msg) return;
 
     // Starring a message inside the starboard channel would create an infinite loop of reposts.
@@ -50,8 +51,8 @@ export class StarboardModule {
     if (starCount < config.threshold) {
       // Star count dropped below threshold — delete the starboard post if one exists.
       if (existing) {
-        const starMsg = await starboardChannel.messages.fetch(existing.starboardMsgId).catch(() => null);
-        if (starMsg) await starMsg.delete().catch(() => null);
+        const starMsg = await starboardChannel.messages.fetch(existing.starboardMsgId).catch(swallow);
+        if (starMsg) await starMsg.delete().catch(swallow);
         await prisma.starboardEntry.delete({ where: { id: existing.id } });
       }
       return;
@@ -79,8 +80,8 @@ export class StarboardModule {
 
     if (existing) {
       // Update the live star count on the existing starboard post.
-      const starMsg = await starboardChannel.messages.fetch(existing.starboardMsgId).catch(() => null);
-      if (starMsg) await starMsg.edit({ content, embeds: [embed] }).catch(() => null);
+      const starMsg = await starboardChannel.messages.fetch(existing.starboardMsgId).catch(swallow);
+      if (starMsg) await starMsg.edit({ content, embeds: [embed] }).catch(swallow);
       await prisma.starboardEntry.update({ where: { id: existing.id }, data: { starCount } });
     } else {
       // First time this message crosses the threshold — create a new starboard post.

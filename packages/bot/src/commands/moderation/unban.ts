@@ -13,6 +13,7 @@ import { successEmbed, errorEmbed } from '../../utils/embed.js';
 import { prisma } from '../../database.js';
 import { getNextCaseNumber, getGuildSettings } from '../../utils/settings.js';
 
+import { swallow } from '../../logger.js';
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('unban')
@@ -51,7 +52,7 @@ const command: BotCommand = {
     }
 
     try {
-      const ban = await interaction.guild.bans.fetch(userId).catch(() => null);
+      const ban = await interaction.guild.bans.fetch(userId).catch(swallow);
       if (!ban) {
         await interaction.editReply({ embeds: [errorEmbed('Not Banned', 'That user is not banned from this server.')] });
         return;

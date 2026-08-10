@@ -12,6 +12,7 @@ import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { COLORS } from '@arkenbot/shared';
 
+import { swallow } from '../../logger.js';
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('userinfo')
@@ -29,7 +30,7 @@ const command: BotCommand = {
       return;
     }
 
-    const member = await interaction.guild.members.fetch(targetUser.id).catch(() => null);
+    const member = await interaction.guild.members.fetch(targetUser.id).catch(swallow);
 
     const embed = new EmbedBuilder()
       .setColor(member?.displayColor ?? COLORS.INFO)

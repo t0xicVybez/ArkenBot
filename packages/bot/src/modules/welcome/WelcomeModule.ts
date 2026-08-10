@@ -1,7 +1,7 @@
 import { type Guild, type GuildMember, EmbedBuilder, type TextChannel } from 'discord.js';
 import { prisma } from '../../database.js';
 import { formatTemplate } from '@arkenbot/shared';
-import { logger } from '../../logger.js';
+import { logger, swallow} from '../../logger.js';
 
 export class WelcomeModule {
   static async handleJoin(guild: Guild, member: GuildMember): Promise<void> {
@@ -46,9 +46,9 @@ export class WelcomeModule {
             .setFooter({ text: `ID: ${member.id}`, iconURL: guild.iconURL() ?? undefined })
             .setTimestamp();
 
-          await textChannel.send({ content: `<@${member.id}>`, embeds: [embed] }).catch(() => null);
+          await textChannel.send({ content: `<@${member.id}>`, embeds: [embed] }).catch(swallow);
         } else {
-          await textChannel.send({ content: message }).catch(() => null);
+          await textChannel.send({ content: message }).catch(swallow);
         }
       }
     }
@@ -56,7 +56,7 @@ export class WelcomeModule {
     // Send DM
     if (config.welcomeDMEnabled && config.welcomeDMMessage) {
       const dmMessage = formatTemplate(config.welcomeDMMessage, variables);
-      await member.user.send({ content: dmMessage }).catch(() => null);
+      await member.user.send({ content: dmMessage }).catch(swallow);
     }
 
     // Auto-role
@@ -64,7 +64,7 @@ export class WelcomeModule {
     if (settings?.autoRoleId) {
       const role = guild.roles.cache.get(settings.autoRoleId);
       if (role && role.editable) {
-        await member.roles.add(role, 'Auto-role on join').catch(() => null);
+        await member.roles.add(role, 'Auto-role on join').catch(swallow);
       }
     }
   }
@@ -94,6 +94,6 @@ export class WelcomeModule {
       .setFooter({ text: `ID: ${member.id}`, iconURL: guild.iconURL() ?? undefined })
       .setTimestamp();
 
-    await (channel as TextChannel).send({ embeds: [leaveEmbed] }).catch(() => null);
+    await (channel as TextChannel).send({ embeds: [leaveEmbed] }).catch(swallow);
   }
 }

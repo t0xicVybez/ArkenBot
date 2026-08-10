@@ -19,6 +19,7 @@ import { COLORS, ADDON_CATEGORY_PREFIX } from '@arkenbot/shared';
 import { prisma } from '../../database.js';
 import { isAddonEnabledForGuild } from '../../utils/settings.js';
 
+import { swallow } from '../../logger.js';
 const CATEGORY_META: Record<string, { emoji: string; label: string }> = {
   moderation: { emoji: '🛡️', label: 'Moderation' },
   leveling:   { emoji: '📈', label: 'Leveling'   },
@@ -213,7 +214,7 @@ const command: BotCommand = {
     await interaction.deferReply({ ephemeral: true });
 
     const member = interaction.guild
-      ? await interaction.guild.members.fetch(interaction.user.id).catch(() => null)
+      ? await interaction.guild.members.fetch(interaction.user.id).catch(swallow)
       : null;
 
     const pages = await buildPages(client, member, interaction.guildId);
@@ -246,7 +247,7 @@ const command: BotCommand = {
         new ButtonBuilder().setCustomId('help_home').setLabel('Overview').setStyle(ButtonStyle.Primary).setDisabled(true),
         new ButtonBuilder().setCustomId('help_next').setEmoji('▶').setStyle(ButtonStyle.Secondary).setDisabled(true),
       );
-      await interaction.editReply({ components: [disabled] }).catch(() => null);
+      await interaction.editReply({ components: [disabled] }).catch(swallow);
     });
   },
 };

@@ -15,6 +15,7 @@ import type { BotClient } from '../../client.js';
 import { prisma } from '../../database.js';
 import { redis } from '../../redis.js';
 
+import { swallow } from '../../logger.js';
 const REP_COOLDOWN_SECONDS = 24 * 60 * 60;
 
 const command: BotCommand = {
@@ -136,7 +137,7 @@ const command: BotCommand = {
 
       const lines = await Promise.all(
         top.map(async (entry, i) => {
-          const user = await interaction.client.users.fetch(entry.receiverId).catch(() => null);
+          const user = await interaction.client.users.fetch(entry.receiverId).catch(swallow);
           const name = user?.username ?? entry.receiverId;
           const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}.`;
           return `${medal} **${name}** — ${entry._count.id} rep`;

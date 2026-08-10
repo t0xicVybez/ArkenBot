@@ -12,7 +12,7 @@ import { ChannelType, PermissionFlagsBits, type VoiceState } from 'discord.js';
 import type { BotEvent } from '../types.js';
 import type { BotClient } from '../client.js';
 import { prisma } from '../database.js';
-import { logger } from '../logger.js';
+import { logger, swallow} from '../logger.js';
 
 const event: BotEvent = {
   name: 'voiceStateUpdate',
@@ -24,7 +24,7 @@ const event: BotEvent = {
     if (newState.channelId && newState.channelId !== oldState.channelId && newState.member) {
       const trigger = await prisma.tempVoiceTrigger.findUnique({
         where: { guildId_channelId: { guildId: guild.id, channelId: newState.channelId } },
-      }).catch(() => null);
+      }).catch(swallow);
 
       if (trigger) {
         const member = newState.member;
@@ -60,7 +60,7 @@ const event: BotEvent = {
             data: { guildId: guild.id, channelId: tempChannel.id, ownerId: member.id },
           });
 
-          await member.voice.setChannel(tempChannel, 'Moved to temp VC').catch(() => null);
+          await member.voice.setChannel(tempChannel, 'Moved to temp VC').catch(swallow);
           logger.info({ guildId: guild.id, channelId: tempChannel.id, ownerId: member.id }, 'Temp voice channel created');
         } catch (err) {
           logger.error({ err, guildId: guild.id }, 'Failed to create temp voice channel');
@@ -73,14 +73,14 @@ const event: BotEvent = {
     if (leftChannelId && leftChannelId !== newState.channelId) {
       const record = await prisma.tempVoiceChannel.findUnique({
         where: { guildId_channelId: { guildId: guild.id, channelId: leftChannelId } },
-      }).catch(() => null);
+      }).catch(swallow);
 
       if (record) {
         const voiceChannel = guild.channels.cache.get(leftChannelId);
         if (!voiceChannel || voiceChannel.type !== ChannelType.GuildVoice) {
           await prisma.tempVoiceChannel.delete({
             where: { guildId_channelId: { guildId: guild.id, channelId: leftChannelId } },
-          }).catch(() => null);
+          }).catch(swallow);
           return;
         }
 
@@ -90,7 +90,7 @@ const event: BotEvent = {
             await voiceChannel.delete('Temp VC empty — auto-deleted');
             await prisma.tempVoiceChannel.delete({
               where: { guildId_channelId: { guildId: guild.id, channelId: leftChannelId } },
-            }).catch(() => null);
+            }).catch(swallow);
             logger.info({ guildId: guild.id, channelId: leftChannelId }, 'Temp voice channel deleted (empty)');
           } catch (err) {
             logger.error({ err, guildId: guild.id }, 'Failed to delete temp voice channel');

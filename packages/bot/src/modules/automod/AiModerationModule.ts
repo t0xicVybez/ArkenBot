@@ -17,7 +17,7 @@ import { prisma } from '../../database.js';
 import { redis } from '../../redis.js';
 import { chatCompletion, isLLMAvailable } from '@arkenbot/shared';
 import type { AutoModConfig } from '@arkenbot/shared';
-import { logger } from '../../logger.js';
+import { logger, swallow} from '../../logger.js';
 
 /** Only scan messages within this length band — skip "lol" and copy-paste walls. */
 const MIN_LENGTH = 24;
@@ -95,7 +95,7 @@ export class AiModerationModule {
   /** Deletes (if configured) and logs the flagged message for moderators. */
   private static async act(message: Message, config: AutoModConfig, verdict: Verdict): Promise<void> {
     const deleted = config.aiModAction === 'delete';
-    if (deleted) await message.delete().catch(() => null);
+    if (deleted) await message.delete().catch(swallow);
 
     await prisma.logEntry.create({
       data: {
@@ -109,7 +109,7 @@ export class AiModerationModule {
           source: 'ai',
         },
       },
-    }).catch(() => null);
+    }).catch(swallow);
 
     // Post a moderator alert to the same channel when only flagging, so it is
     // visible without a separate log channel; deletions are surfaced via the log.
@@ -125,7 +125,7 @@ export class AiModerationModule {
         )
         .setFooter({ text: 'AI-generated · review before acting' })
         .setTimestamp();
-      await (message.channel as TextChannel).send({ embeds: [embed] }).catch(() => null);
+      await (message.channel as TextChannel).send({ embeds: [embed] }).catch(swallow);
     }
   }
 }

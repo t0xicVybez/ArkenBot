@@ -7,7 +7,7 @@
  */
 import { ActivityType, ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, type PresenceStatusData, type TextChannel } from 'discord.js';
 import type { BotEvent } from '../types.js';
-import { logger } from '../logger.js';
+import { logger, swallow} from '../logger.js';
 import { pub } from '../redis.js';
 import { prisma } from '../database.js';
 import { getGuildSettings } from '../utils/settings.js';
@@ -169,7 +169,7 @@ const event: BotEvent = {
                 // Skip if the previously posted panel still exists in this channel.
                 const existingId = verification.panelMessageId as string | undefined;
                 const existing = existingId
-                  ? await channel.messages.fetch(existingId).catch(() => null)
+                  ? await channel.messages.fetch(existingId).catch(swallow)
                   : null;
                 if (!existing) {
                   const me = guild.members.me;
@@ -186,7 +186,7 @@ const event: BotEvent = {
                     await prisma.guildSettings.update({
                       where: { guildId },
                       data: { extended: { ...extended, verification: { ...verification, panelMessageId: panelMsg.id } } },
-                    }).catch(() => null);
+                    }).catch(swallow);
                     invalidateSettingsCache(guildId);
                     logger.info({ guildId, channelId: verification.verifyChannelId, messageId: panelMsg.id }, 'Posted verify panel after dashboard update');
                   }
@@ -316,7 +316,7 @@ const event: BotEvent = {
             await prisma.guildEmbed.update({
               where: { id: embed.id },
               data: { lastSentMessageId: sentMsg.id, lastSentChannelId: sentMsg.channelId },
-            }).catch(() => null);
+            }).catch(swallow);
 
             logger.info({ guildId, channelId }, 'Embed sent via dashboard');
           } catch (err) {

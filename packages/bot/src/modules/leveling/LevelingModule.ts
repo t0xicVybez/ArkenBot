@@ -10,7 +10,7 @@ import { AchievementsModule } from './AchievementsModule.js';
 import { redis } from '../../redis.js';
 import { REDIS_KEYS, xpForLevel, levelFromXp, formatTemplate } from '@arkenbot/shared';
 import { getGuildSettings } from '../../utils/settings.js';
-import { logger } from '../../logger.js';
+import { logger, swallow} from '../../logger.js';
 
 export class LevelingModule {
   /**
@@ -51,7 +51,7 @@ export class LevelingModule {
       if (message?.channelId) {
         const channelMultiplierRecord = await prisma.xpChannelMultiplier.findUnique({
           where: { guildId_channelId: { guildId: guild.id, channelId: message.channelId } },
-        }).catch(() => null);
+        }).catch(swallow);
         const channelMultiplier = channelMultiplierRecord?.multiplier ?? 1.0;
         effectiveMultiplier = effectiveMultiplier * channelMultiplier;
       }
@@ -188,7 +188,7 @@ export class LevelingModule {
       });
 
       if (!useEmbed) {
-        await channel.send({ content }).catch(() => null);
+        await channel.send({ content }).catch(swallow);
         logger.debug(`${user.tag} leveled up to ${level} in ${guild.name}`);
         return;
       }
@@ -217,12 +217,12 @@ export class LevelingModule {
         embed.addFields({ name: 'Achievement', value: milestoneLabel, inline: true });
       }
 
-      const msg = await channel.send({ embeds: [embed] }).catch(() => null);
+      const msg = await channel.send({ embeds: [embed] }).catch(swallow);
       if (msg) {
         await prisma.userLevel.update({
           where: { guildId_userId: { guildId: guild.id, userId: user.id } },
           data: { levelUpMessageId: msg.id, levelUpChannelId: msg.channelId },
-        }).catch(() => null);
+        }).catch(swallow);
       }
       logger.debug(`${user.tag} leveled up to ${level} in ${guild.name}`);
     } catch (err) {
@@ -244,7 +244,7 @@ export class LevelingModule {
       const allLevelRoles = await prisma.levelRole.findMany({ where: { guildId: guild.id } });
       if (allLevelRoles.length === 0) return;
 
-      const member = guild.members.cache.get(userId) ?? await guild.members.fetch(userId).catch(() => null);
+      const member = guild.members.cache.get(userId) ?? await guild.members.fetch(userId).catch(swallow);
       if (!member) return;
 
       const earned = allLevelRoles.filter((lr: LevelRole) => lr.level <= currentLevel);
@@ -254,7 +254,7 @@ export class LevelingModule {
         for (const lr of earned) {
           const role = guild.roles.cache.get(lr.roleId);
           if (role && !member.roles.cache.has(role.id)) {
-            await member.roles.add(role, `Level ${lr.level} role reward`).catch(() => null);
+            await member.roles.add(role, `Level ${lr.level} role reward`).catch(swallow);
           }
         }
       } else {
@@ -266,14 +266,14 @@ export class LevelingModule {
         if (highest) {
           const role = guild.roles.cache.get(highest.roleId);
           if (role && !member.roles.cache.has(role.id)) {
-            await member.roles.add(role, `Level ${highest.level} role reward`).catch(() => null);
+            await member.roles.add(role, `Level ${highest.level} role reward`).catch(swallow);
           }
         }
 
         for (const lr of lowerEarned) {
           const role = guild.roles.cache.get(lr.roleId);
           if (role && member.roles.cache.has(role.id)) {
-            await member.roles.remove(role, 'Replaced by higher level role').catch(() => null);
+            await member.roles.remove(role, 'Replaced by higher level role').catch(swallow);
           }
         }
       }
@@ -281,7 +281,7 @@ export class LevelingModule {
       for (const lr of notEarned) {
         const role = guild.roles.cache.get(lr.roleId);
         if (role && member.roles.cache.has(role.id)) {
-          await member.roles.remove(role, 'Level role not yet earned').catch(() => null);
+          await member.roles.remove(role, 'Level role not yet earned').catch(swallow);
         }
       }
     } catch (err) {
