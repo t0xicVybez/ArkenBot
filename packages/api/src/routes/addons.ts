@@ -4,7 +4,9 @@
  * Staff members may register and update addon definitions in the registry.
  */
 import type { FastifyInstance } from 'fastify';
+import { z } from 'zod';
 import { requireGuildAdmin, requireStaff } from '../middleware/auth.js';
+import { parse } from '../utils/validate.js';
 import { prisma } from '../database.js';
 import { pub } from '../redis.js';
 
@@ -104,8 +106,10 @@ export async function addonRoutes(server: FastifyInstance): Promise<void> {
 
   server.patch('/guilds/:guildId/addons/:addonId/settings', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, addonId } = request.params as { guildId: string; addonId: string };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const settings = request.body as any;
+    // Addon settings are addon-defined key/value config; validate the shape is a
+    // JSON object (not a primitive/array) but leave the values to each addon.
+    const settings = parse(z.record(z.string(), z.any()), request.body, reply);
+    if (!settings) return;
 
     const guildAddon = await prisma.guildAddon.update({
       where: { guildId_addonId: { guildId, addonId } },
