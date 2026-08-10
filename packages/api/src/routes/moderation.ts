@@ -1,5 +1,7 @@
 import type { FastifyInstance } from 'fastify';
+import { z } from 'zod';
 import { requireGuildAdmin } from '../middleware/auth.js';
+import { parse } from '../utils/validate.js';
 import { prisma } from '../database.js';
 
 export async function moderationRoutes(server: FastifyInstance): Promise<void> {
@@ -49,11 +51,12 @@ export async function moderationRoutes(server: FastifyInstance): Promise<void> {
   // PATCH /guilds/:guildId/cases/:caseNumber - Update reason
   server.patch('/guilds/:guildId/cases/:caseNumber', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, caseNumber } = request.params as { guildId: string; caseNumber: string };
-    const { reason } = request.body as { reason: string };
+    const input = parse(z.object({ reason: z.string().trim().min(1).max(512) }), request.body, reply);
+    if (!input) return;
 
     const updated = await prisma.moderationCase.update({
       where: { guildId_caseNumber: { guildId, caseNumber: parseInt(caseNumber) } },
-      data: { reason },
+      data: { reason: input.reason },
     });
 
     return reply.send({ success: true, data: updated });
