@@ -9,7 +9,7 @@ import { prisma } from '../../database.js';
 import { redis } from '../../redis.js';
 import { REDIS_KEYS, COLORS } from '@arkenbot/shared';
 import type { AutoModConfig } from '@arkenbot/shared';
-import { logger } from '../../logger.js';
+import { logger, swallow} from '../../logger.js';
 import { AiModerationModule } from './AiModerationModule.js';
 
 /** Redis key for the per-user word filter violation counter (24-hour rolling window). */
@@ -105,7 +105,7 @@ export class AutoModModule {
     const userId = message.author.id;
     const member = message.member as GuildMember;
 
-    await message.delete().catch(() => null);
+    await message.delete().catch(swallow);
 
     // Track cumulative violations within a 24-hour rolling window. The expiry is
     // set only on the first increment so subsequent hits don't extend the window.
@@ -136,7 +136,7 @@ export class AutoModModule {
         moderatorTag: message.client.user!.tag,
         reason: `[AutoMod] Word filter violation #${count}`,
       },
-    }).catch(() => null);
+    }).catch(swallow);
 
     await prisma.logEntry.create({
       data: {
@@ -145,11 +145,11 @@ export class AutoModModule {
         userId,
         data: { action, reason: 'Word filter violation', count, channelId: message.channelId },
       },
-    }).catch(() => null);
+    }).catch(swallow);
 
     if (action === 'timeout') {
       await member.timeout(timeoutDuration * 1000, `AutoMod: Word filter violation #${count}`)
-        .catch(() => null);
+        .catch(swallow);
     } else if (action === 'kick') {
       // Attempt a DM notification before the kick so the user knows why they were removed.
       const dmText = (config.filterKickDMMessage ?? `You were kicked from **{server}** for repeated word filter violations (violation #{count}).`)
@@ -164,9 +164,9 @@ export class AutoModModule {
               .setDescription(dmText),
           ],
         })
-        .catch(() => null);
+        .catch(swallow);
 
-      await member.kick(`AutoMod: Word filter violation #${count}`).catch(() => null);
+      await member.kick(`AutoMod: Word filter violation #${count}`).catch(swallow);
 
       // Reset the counter so a rejoining user starts fresh rather than being
       // immediately kicked again on their first message.
@@ -197,8 +197,8 @@ export class AutoModModule {
 
     await ch
       .send({ content: notifyContent })
-      .then((m) => setTimeout(() => m.delete().catch(() => null), 8000))
-      .catch(() => null);
+      .then((m) => setTimeout(() => m.delete().catch(swallow), 8000))
+      .catch(swallow);
   }
 
   // ─── Other checks ────────────────────────────────────────────────────────
@@ -257,7 +257,7 @@ export class AutoModModule {
     reason: string
   ): Promise<void> {
     try {
-      await message.delete().catch(() => null);
+      await message.delete().catch(swallow);
 
       if (action === 'warn' || action === 'mute' || action === 'kick' || action === 'ban') {
         if ('send' in message.channel) {
@@ -265,21 +265,21 @@ export class AutoModModule {
             .send({
               content: `<@${message.author.id}> Your message was removed: **${reason}**`,
             })
-            .then((m) => setTimeout(() => m.delete().catch(() => null), 5000))
-            .catch(() => null);
+            .then((m) => setTimeout(() => m.delete().catch(swallow), 5000))
+            .catch(swallow);
         }
       }
 
       if (action === 'mute' && message.member) {
-        await message.member.timeout(60000, `AutoMod: ${reason}`).catch(() => null);
+        await message.member.timeout(60000, `AutoMod: ${reason}`).catch(swallow);
       }
 
       if (action === 'kick' && message.member?.kickable) {
-        await message.member.kick(`AutoMod: ${reason}`).catch(() => null);
+        await message.member.kick(`AutoMod: ${reason}`).catch(swallow);
       }
 
       if (action === 'ban' && message.member?.bannable) {
-        await message.member.ban({ reason: `AutoMod: ${reason}`, deleteMessageSeconds: 86400 }).catch(() => null);
+        await message.member.ban({ reason: `AutoMod: ${reason}`, deleteMessageSeconds: 86400 }).catch(swallow);
       }
 
       if (message.guild) {

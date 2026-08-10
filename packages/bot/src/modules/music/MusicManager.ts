@@ -20,7 +20,7 @@ import {
 import { spawn, type ChildProcess } from 'child_process';
 import { YouTube } from 'youtube-sr';
 import { prisma } from '../../database.js';
-import { logger } from '../../logger.js';
+import { logger, swallow} from '../../logger.js';
 import { getGuildSettings } from '../../utils/settings.js';
 
 interface SerializedTrack {
@@ -181,7 +181,7 @@ export class MusicQueue {
       .setTitle('⚠️ Playback Failed')
       .setDescription(`Could not play **${track.title}**.\n\`${reason.slice(0, 200)}\``)
       .setFooter({ text: 'Try a different search or check that yt-dlp is up to date.' });
-    this.textChannel.send({ embeds: [embed] }).catch(() => null);
+    this.textChannel.send({ embeds: [embed] }).catch(swallow);
   }
 
   private notifyNowPlaying(track: Track): void {
@@ -199,12 +199,12 @@ export class MusicQueue {
           ...(track.duration ? [{ name: 'Duration', value: track.duration, inline: true }] : []),
         )
         .setThumbnail(track.thumbnail ?? null);
-      const msg = await this.textChannel?.send({ embeds: [embed] }).catch(() => null);
+      const msg = await this.textChannel?.send({ embeds: [embed] }).catch(swallow);
       if (msg) {
         await prisma.musicQueue.update({
           where: { guildId: this.guildId },
           data: { nowPlayingMessageId: msg.id, nowPlayingChannelId: msg.channelId },
-        }).catch(() => null);
+        }).catch(swallow);
       }
     });
   }
@@ -298,7 +298,7 @@ export class MusicQueue {
     this.killStream = null;
     this.player.stop();
     this.connection.destroy();
-    void prisma.musicQueue.deleteMany({ where: { guildId: this.guildId } }).catch(() => null);
+    void prisma.musicQueue.deleteMany({ where: { guildId: this.guildId } }).catch(swallow);
   }
 }
 
@@ -389,7 +389,7 @@ export class MusicManager {
       if (textChannel) queue.textChannel = textChannel;
 
       // Restore persisted volume/loop from DB (tracks are replayed fresh, not auto-resumed)
-      const saved = await prisma.musicQueue.findUnique({ where: { guildId: guild.id } }).catch(() => null);
+      const saved = await prisma.musicQueue.findUnique({ where: { guildId: guild.id } }).catch(swallow);
       if (saved) {
         queue.volume = saved.volume;
         queue.loop = saved.loop as 'none' | 'track' | 'queue';

@@ -11,7 +11,7 @@ import { postAnalytics } from '../commands/utility/analytics.js';
 import { prisma } from '../database.js';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = prisma as any;
-import { logger } from '../logger.js';
+import { logger, swallow} from '../logger.js';
 import type { BotClient } from '../client.js';
 import { getGuildSettings } from '../utils/settings.js';
 import { XPDecayModule } from './leveling/XPDecayModule.js';
@@ -139,7 +139,7 @@ export class BackgroundJobs {
         } catch {
           // DMs closed or user gone — mark as sent anyway so we don't retry every cycle.
         }
-        await prisma.topggVoter.update({ where: { userId: voter.userId }, data: { reminderSent: true } }).catch(() => null);
+        await prisma.topggVoter.update({ where: { userId: voter.userId }, data: { reminderSent: true } }).catch(swallow);
       }
     } catch (err) {
       logger.warn({ err }, 'top.gg reminder sweep failed');
@@ -229,7 +229,7 @@ export class BackgroundJobs {
         return;
       }
 
-      const member = await guild.members.fetch(userId).catch(() => null);
+      const member = await guild.members.fetch(userId).catch(swallow);
       if (!member) {
         logger.warn({ guildId, userId }, 'Birthday skipped: member not found');
         return;
@@ -262,7 +262,7 @@ export class BackgroundJobs {
       if (config.birthdayRoleId) {
         const role = guild.roles.cache.get(config.birthdayRoleId);
         if (role && member.roles.cache.has(role.id) === false) {
-          await member.roles.add(role, 'Birthday role').catch(() => null);
+          await member.roles.add(role, 'Birthday role').catch(swallow);
 
           // Schedule role removal at midnight UTC so the birthday role lasts
           // exactly one calendar day without needing a separate polling job.
@@ -270,7 +270,7 @@ export class BackgroundJobs {
             new Date(Date.UTC(year, new Date().getUTCMonth(), new Date().getUTCDate() + 1)).getTime() -
             Date.now();
           setTimeout(
-            () => member.roles.remove(role, 'Birthday role expired').catch(() => null),
+            () => member.roles.remove(role, 'Birthday role expired').catch(swallow),
             msUntilTomorrow,
           );
         }
@@ -452,7 +452,7 @@ export class BackgroundJobs {
 
       const newName = cfg.format.replace('{value}', value);
       if (channel.name !== newName) {
-        await channel.setName(newName, 'Stats channel update').catch(() => null);
+        await channel.setName(newName, 'Stats channel update').catch(swallow);
       }
     } catch (err) {
       logger.error({ err, channelId: cfg?.channelId }, 'Failed to update stats channel');
@@ -470,7 +470,7 @@ export class BackgroundJobs {
       for (const ban of expired) {
         const guild = this.client.guilds.cache.get(ban.guildId);
         if (!guild) continue;
-        await guild.bans.remove(ban.userId, 'Temporary ban expired').catch(() => null);
+        await guild.bans.remove(ban.userId, 'Temporary ban expired').catch(swallow);
         await prisma.tempBan.update({ where: { id: ban.id }, data: { unbanned: true } });
         logger.info({ guildId: ban.guildId, userId: ban.userId }, 'Temp ban expired and removed');
       }
@@ -490,9 +490,9 @@ export class BackgroundJobs {
       for (const tempRole of expired) {
         const guild = this.client.guilds.cache.get(tempRole.guildId);
         if (guild) {
-          const member = await guild.members.fetch(tempRole.userId).catch(() => null);
+          const member = await guild.members.fetch(tempRole.userId).catch(swallow);
           if (member) {
-            await member.roles.remove(tempRole.roleId, 'Temporary role expired').catch(() => null);
+            await member.roles.remove(tempRole.roleId, 'Temporary role expired').catch(swallow);
           }
         }
         await db.tempRole.update({ where: { id: tempRole.id }, data: { removed: true } });
@@ -514,7 +514,7 @@ export class BackgroundJobs {
       for (const reminder of due) {
         const channel = this.client.channels.cache.get(reminder.channelId);
         if (channel?.isTextBased() && 'send' in channel) {
-          await (channel as import('discord.js').TextChannel).send({ content: `<@${reminder.userId}> Reminder: ${reminder.message}` }).catch(() => null);
+          await (channel as import('discord.js').TextChannel).send({ content: `<@${reminder.userId}> Reminder: ${reminder.message}` }).catch(swallow);
         }
         await prisma.reminder.update({ where: { id: reminder.id }, data: { sent: true } });
       }
@@ -551,9 +551,9 @@ export class BackgroundJobs {
         return;
       }
 
-      const msg = await channel.messages.fetch(giveaway.messageId).catch(() => null);
+      const msg = await channel.messages.fetch(giveaway.messageId).catch(swallow);
       const reaction = msg?.reactions.cache.get('🎉');
-      const users = reaction ? await reaction.users.fetch().catch(() => null) : null;
+      const users = reaction ? await reaction.users.fetch().catch(swallow) : null;
       const eligibleBase = users?.filter(u => !u.bot && u.id !== giveaway.hostId);
 
       // Filter by required role if set
@@ -597,7 +597,7 @@ export class BackgroundJobs {
           .setDescription(`**Prize:** ${giveaway.prize}\n**Winner${winnerIds.length > 1 ? 's' : ''}:** ${winnerMentions}`)
           .setColor(0x95a5a6)
           .setTimestamp();
-        await msg.edit({ embeds: [endedEmbed] }).catch(() => null);
+        await msg.edit({ embeds: [endedEmbed] }).catch(swallow);
       }
 
       logger.info({ id: giveaway.id, guildId: giveaway.guildId }, 'Giveaway ended');
@@ -636,7 +636,7 @@ export class BackgroundJobs {
         const tokenRes = await fetch(
           `https://id.twitch.tv/oauth2/token?client_id=${twitchClientId}&client_secret=${twitchClientSecret}&grant_type=client_credentials`,
           { method: 'POST' },
-        ).catch(() => null);
+        ).catch(swallow);
         if (tokenRes?.ok) {
           const tokenData = await tokenRes.json() as { access_token: string };
           twitchToken = tokenData.access_token;
@@ -656,7 +656,7 @@ export class BackgroundJobs {
             'Content-Type': 'application/x-www-form-urlencoded',
           },
           body: 'grant_type=client_credentials',
-        }).catch(() => null);
+        }).catch(swallow);
         if (tokenRes?.ok) {
           const tokenData = await tokenRes.json() as { access_token: string };
           redditToken = tokenData.access_token;
@@ -695,7 +695,7 @@ export class BackgroundJobs {
         const handle = alert.channelUsername.replace(/^@/, '');
         const res = await fetch(
           `https://www.googleapis.com/youtube/v3/channels?part=id&forHandle=${encodeURIComponent(handle)}&key=${apiKey}`,
-        ).catch(() => null);
+        ).catch(swallow);
         if (!res?.ok) continue;
         const data = await res.json() as { items?: Array<{ id: string }> };
         const channelId = data.items?.[0]?.id;
@@ -724,7 +724,7 @@ export class BackgroundJobs {
 
         const playlistRes = await fetch(
           `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${uploadsPlaylistId}&maxResults=5&key=${apiKey}`,
-        ).catch(() => null);
+        ).catch(swallow);
         if (!playlistRes?.ok) continue;
 
         const playlistData = await playlistRes.json() as {
@@ -737,7 +737,7 @@ export class BackgroundJobs {
 
         const videosRes = await fetch(
           `https://www.googleapis.com/youtube/v3/videos?part=snippet,liveStreamingDetails&id=${videoIds.join(',')}&key=${apiKey}`,
-        ).catch(() => null);
+        ).catch(swallow);
         if (!videosRes?.ok) continue;
 
         const videosData = await videosRes.json() as {
@@ -840,7 +840,7 @@ export class BackgroundJobs {
       await prisma.streamAlert.update({
         where: { id: alert.id },
         data: { lastMessageId: alertMsg.id, lastMessageChannelId: alertMsg.channelId, failureCount: 0, lastError: null },
-      }).catch(() => null);
+      }).catch(swallow);
       logger.info({ guildId: alert.guildId, channelId: alert.channelId }, 'YouTube live alert sent');
     } catch (err) {
       logger.error({ err, alertId: alert.id }, 'Failed to process YouTube alert');
@@ -909,7 +909,7 @@ export class BackgroundJobs {
           .setTimestamp();
 
         const alertMsg = await channel.send({ content: message, embeds: [embed] });
-        await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastMessageId: alertMsg.id, lastMessageChannelId: alertMsg.channelId, failureCount: 0, lastError: null } }).catch(() => null);
+        await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastMessageId: alertMsg.id, lastMessageChannelId: alertMsg.channelId, failureCount: 0, lastError: null } }).catch(swallow);
         logger.info({ guildId: alert.guildId, streamer: alert.channelUsername }, 'Twitch stream alert sent');
 
       } else if (alert.platform === 'kick') {
@@ -945,7 +945,7 @@ export class BackgroundJobs {
           .setTimestamp();
 
         const alertMsg = await channel.send({ content: message, embeds: [embed] });
-        await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastMessageId: alertMsg.id, lastMessageChannelId: alertMsg.channelId, failureCount: 0, lastError: null } }).catch(() => null);
+        await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastMessageId: alertMsg.id, lastMessageChannelId: alertMsg.channelId, failureCount: 0, lastError: null } }).catch(swallow);
         logger.info({ guildId: alert.guildId, streamer: alert.channelUsername }, 'Kick stream alert sent');
 
       } else if (alert.platform === 'twitter' && twitterBearerToken) {
@@ -994,7 +994,7 @@ export class BackgroundJobs {
           .setTimestamp();
 
         const alertMsg = await channel.send({ content: message, embeds: [embed] });
-        await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastMessageId: alertMsg.id, lastMessageChannelId: alertMsg.channelId, failureCount: 0, lastError: null } }).catch(() => null);
+        await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastMessageId: alertMsg.id, lastMessageChannelId: alertMsg.channelId, failureCount: 0, lastError: null } }).catch(swallow);
         logger.info({ guildId: alert.guildId, streamer: alert.channelUsername }, 'Twitter/X alert sent');
 
       } else if (alert.platform === 'reddit') {
@@ -1039,13 +1039,13 @@ export class BackgroundJobs {
           .setTimestamp();
 
         const alertMsg = await channel.send({ content: message, embeds: [embed] });
-        await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastMessageId: alertMsg.id, lastMessageChannelId: alertMsg.channelId, failureCount: 0, lastError: null } }).catch(() => null);
+        await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastMessageId: alertMsg.id, lastMessageChannelId: alertMsg.channelId, failureCount: 0, lastError: null } }).catch(swallow);
         logger.info({ guildId: alert.guildId, subreddit }, 'Reddit post alert sent');
 
       } else if (alert.platform === 'rss') {
         // For RSS/Podcast alerts, `channelUsername` stores the feed URL rather
         // than a platform username, as there is no separate channel concept.
-        const feed = await rssParser.parseURL(alert.channelUsername).catch(() => null);
+        const feed = await rssParser.parseURL(alert.channelUsername).catch(swallow);
         if (!feed) return;
 
         const latestItem = feed.items?.[0];
@@ -1071,7 +1071,7 @@ export class BackgroundJobs {
           .setTimestamp();
 
         const alertMsg = await channel.send({ content: message, embeds: [embed] });
-        await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastMessageId: alertMsg.id, lastMessageChannelId: alertMsg.channelId, failureCount: 0, lastError: null } }).catch(() => null);
+        await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastMessageId: alertMsg.id, lastMessageChannelId: alertMsg.channelId, failureCount: 0, lastError: null } }).catch(swallow);
         logger.info({ guildId: alert.guildId, feed: alert.channelUsername }, 'RSS/Podcast alert sent');
       }
     } catch (err) {

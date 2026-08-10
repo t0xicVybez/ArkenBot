@@ -15,7 +15,7 @@ import { AnalyticsModule } from '../modules/AnalyticsModule.js';
 import { CountingModule } from '../modules/counting/CountingModule.js';
 import { prisma } from '../database.js';
 import { redis } from '../redis.js';
-import { logger } from '../logger.js';
+import { logger, swallow} from '../logger.js';
 
 // Per-user cooldown tracker for custom commands: `${commandId}:${userId}` → expiry timestamp
 const cooldownMap = new Map<string, number>();
@@ -81,7 +81,7 @@ async function checkAutoResponses(message: Message): Promise<void> {
   const cacheKey = `ar:list:${guildId}`;
 
   let rows: AutoResponseRow[];
-  const cached = await redis.get(cacheKey).catch(() => null);
+  const cached = await redis.get(cacheKey).catch(swallow);
   if (cached === 'null') return;
   if (cached) {
     rows = JSON.parse(cached) as AutoResponseRow[];
@@ -89,11 +89,11 @@ async function checkAutoResponses(message: Message): Promise<void> {
     const dbRows = await prisma.autoResponse.findMany({
       where: { guildId, enabled: true },
       select: { id: true, pattern: true, flags: true, response: true, embed: true, embedColor: true, deleteMessage: true, requiredRoles: true, ignoredRoles: true },
-    }).catch(() => null);
+    }).catch(swallow);
     if (!dbRows) return;
     rows = dbRows as AutoResponseRow[];
     // Cache for 120 s. 'null' sentinel avoids re-querying guilds with no rules.
-    await redis.setex(cacheKey, 120, rows.length ? JSON.stringify(rows) : 'null').catch(() => null);
+    await redis.setex(cacheKey, 120, rows.length ? JSON.stringify(rows) : 'null').catch(swallow);
     if (!rows.length) return;
   }
 
@@ -102,7 +102,7 @@ async function checkAutoResponses(message: Message): Promise<void> {
   // Resolve member once only when at least one row has role gates.
   const needsRoles = rows.some((r) => r.requiredRoles.length > 0 || r.ignoredRoles.length > 0);
   const member = needsRoles
-    ? (message.member ?? await message.guild.members.fetch(message.author.id).catch(() => null))
+    ? (message.member ?? await message.guild.members.fetch(message.author.id).catch(swallow))
     : null;
   const memberRoleIds = member ? [...member.roles.cache.keys()] : [];
 
@@ -121,7 +121,7 @@ async function checkAutoResponses(message: Message): Promise<void> {
     }
     if (!matches) continue;
 
-    if (row.deleteMessage) await message.delete().catch(() => null);
+    if (row.deleteMessage) await message.delete().catch(swallow);
 
     let payload: Parameters<typeof textChannel.send>[0];
     if (row.embed) {
@@ -132,9 +132,9 @@ async function checkAutoResponses(message: Message): Promise<void> {
       payload = row.response;
     }
 
-    await textChannel.send(payload).catch(() => null);
+    await textChannel.send(payload).catch(swallow);
     // Fire-and-forget usage counter — never block the message pipeline.
-    prisma.autoResponse.update({ where: { id: row.id }, data: { uses: { increment: 1 } } }).catch(() => null);
+    prisma.autoResponse.update({ where: { id: row.id }, data: { uses: { increment: 1 } } }).catch(swallow);
     break; // Stop at first match per message to avoid response spam.
   }
 }
@@ -150,16 +150,16 @@ async function checkSlowmode(message: Message): Promise<void> {
   const cacheKey = `slowmode:cfg:${guildId}:${channelId}`;
   let config: SlowmodeCfg | null = null;
 
-  const cached = await redis.get(cacheKey).catch(() => null);
+  const cached = await redis.get(cacheKey).catch(swallow);
   if (cached === 'null') return;
   if (cached) {
     config = JSON.parse(cached) as SlowmodeCfg;
   } else {
     config = await prisma.slowmodeConfig.findUnique({
       where: { guildId_channelId: { guildId, channelId } },
-    }).catch(() => null) as SlowmodeCfg | null;
+    }).catch(swallow) as SlowmodeCfg | null;
     // Cache for 60 s. 'null' string sentinel avoids re-querying unconfigured channels.
-    await redis.setex(cacheKey, 60, config ? JSON.stringify(config) : 'null').catch(() => null);
+    await redis.setex(cacheKey, 60, config ? JSON.stringify(config) : 'null').catch(swallow);
   }
 
   if (!config?.enabled) return;
@@ -218,11 +218,11 @@ const event: BotEvent = {
             enabled: true,
             OR: [{ name: commandName }, { aliases: { has: commandName } }],
           },
-        }).catch(() => null);
+        }).catch(swallow);
 
         if (custom) {
           if (custom.requiredRoles.length > 0) {
-            const member = message.member ?? await message.guild.members.fetch(message.author.id).catch(() => null);
+            const member = message.member ?? await message.guild.members.fetch(message.author.id).catch(swallow);
             const hasRole = member?.roles.cache.some((r) => custom.requiredRoles.includes(r.id));
             if (!hasRole) return;
           }
@@ -235,7 +235,7 @@ const event: BotEvent = {
           }
 
           // Resolve member for display-name substitution, falling back to a fetch if not cached.
-          const member = message.member ?? await message.guild.members.fetch(message.author.id).catch(() => null);
+          const member = message.member ?? await message.guild.members.fetch(message.author.id).catch(swallow);
           const mentionedUser = message.mentions.users.first() ?? message.author;
           const substitute = (str: string) => str
             .replace(/\{user\}/g, `<@${message.author.id}>`)
@@ -254,7 +254,7 @@ const event: BotEvent = {
           if (!message.channel.isTextBased() || !('send' in message.channel)) return;
           const textChannel = message.channel as TextChannel;
 
-          if (custom.deleteInvoking) await message.delete().catch(() => null);
+          if (custom.deleteInvoking) await message.delete().catch(swallow);
 
           let payload: Parameters<typeof textChannel.send>[0];
           if (custom.embed) {
@@ -267,13 +267,13 @@ const event: BotEvent = {
           }
 
           if (custom.dmResponse) {
-            await message.author.send(payload).catch(() => null);
+            await message.author.send(payload).catch(swallow);
           } else {
-            await textChannel.send(payload).catch(() => null);
+            await textChannel.send(payload).catch(swallow);
           }
 
           // Fire-and-forget: failure to increment the counter should not affect the response.
-          prisma.customCommand.update({ where: { id: custom.id }, data: { uses: { increment: 1 } } }).catch(() => null);
+          prisma.customCommand.update({ where: { id: custom.id }, data: { uses: { increment: 1 } } }).catch(swallow);
         }
       }
     }

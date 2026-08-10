@@ -21,6 +21,7 @@ import { errorEmbed, successEmbed } from '../../utils/embed.js';
 import { prisma } from '../../database.js';
 import { getGuildSettings } from '../../utils/settings.js';
 
+import { swallow } from '../../logger.js';
 function buildReportEmbed(report: {
   reporterId: string; reporterTag: string;
   targetId: string; targetTag: string;
@@ -238,9 +239,9 @@ const command: BotCommand = {
       const reportChannel = interaction.guild.channels.cache.get(updatedReport.reviewChannelId);
       if (reportChannel?.isTextBased() && 'messages' in reportChannel) {
         const originalMsg = await (reportChannel as import('discord.js').TextChannel).messages
-          .fetch(updatedReport.messageId).catch(() => null);
+          .fetch(updatedReport.messageId).catch(swallow);
         if (originalMsg) {
-          await originalMsg.edit({ embeds: [embed], components: [buildReportButtons(reportId, true)] }).catch(() => null);
+          await originalMsg.edit({ embeds: [embed], components: [buildReportButtons(reportId, true)] }).catch(swallow);
         }
       }
     }

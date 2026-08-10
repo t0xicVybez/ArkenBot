@@ -9,7 +9,7 @@
  */
 import type { Client, GuildMember, TextChannel } from 'discord.js';
 import { prisma } from '../../database.js';
-import { logger } from '../../logger.js';
+import { logger, swallow} from '../../logger.js';
 import { classifyError } from '@arkenbot/shared';
 
 /** Cooldown between votes, in ms (top.gg allows a vote every 12 hours). */
@@ -44,7 +44,7 @@ export class TopggModule {
     for (const config of configs) {
       const guild = client.guilds.cache.get(config.guildId);
       if (!guild) continue;
-      const member = await guild.members.fetch(userId).catch(() => null);
+      const member = await guild.members.fetch(userId).catch(swallow);
       if (!member) continue; // user isn't in this guild
 
       await this.grantVoterRole(member, config.voterRoleId, config.voterRoleHours).catch((err) =>

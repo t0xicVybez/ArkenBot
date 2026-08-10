@@ -7,6 +7,7 @@ import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { prisma } from '../../database.js';
 
+import { swallow } from '../../logger.js';
 const STATUS_COLORS: Record<string, number> = {
   approved: 0x57f287,
   denied: 0xed4245,
@@ -51,7 +52,7 @@ const command: BotCommand = {
     if (suggestion.messageId && suggestion.channelId) {
       const channel = interaction.guild!.channels.cache.get(suggestion.channelId);
       if (channel?.isTextBased()) {
-        const msg = await channel.messages.fetch(suggestion.messageId).catch(() => null);
+        const msg = await channel.messages.fetch(suggestion.messageId).catch(swallow);
         if (msg?.editable) {
           const updatedEmbed = EmbedBuilder.from(msg.embeds[0])
             .setColor(STATUS_COLORS[status] ?? 0x5865f2)

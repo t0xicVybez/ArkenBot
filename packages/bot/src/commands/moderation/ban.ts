@@ -16,6 +16,7 @@ import { prisma } from '../../database.js';
 import { getNextCaseNumber, getGuildSettings } from '../../utils/settings.js';
 import { LoggingModule } from '../../modules/logging/LoggingModule.js';
 
+import { swallow } from '../../logger.js';
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('ban')
@@ -75,7 +76,7 @@ const command: BotCommand = {
     }
 
     const moderator = await interaction.guild.members.fetch(interaction.user.id);
-    let targetMember = await interaction.guild.members.fetch(targetUser.id).catch(() => null);
+    let targetMember = await interaction.guild.members.fetch(targetUser.id).catch(swallow);
 
     if (targetMember) {
       if (!canModerate(moderator, targetMember)) {
@@ -123,7 +124,7 @@ const command: BotCommand = {
               }, settings?.moderationColor),
             ],
           })
-          .catch(() => null);
+          .catch(swallow);
       }
 
       await interaction.guild.members.ban(targetUser.id, {
@@ -174,7 +175,7 @@ const command: BotCommand = {
       await prisma.moderationCase.update({
         where: { guildId_caseNumber: { guildId: interaction.guild.id, caseNumber } },
         data: { messageId: replyMsg.id, channelId: replyMsg.channelId },
-      }).catch(() => null);
+      }).catch(swallow);
 
       await LoggingModule.logModerationAction(interaction.guild, {
         type: durationStr ? 'tempban' : 'ban',

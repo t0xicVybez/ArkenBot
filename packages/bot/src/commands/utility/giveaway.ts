@@ -8,6 +8,7 @@ import type { BotClient } from '../../client.js';
 import { prisma } from '../../database.js';
 import { getGuildSettings } from '../../utils/settings.js';
 
+import { swallow } from '../../logger.js';
 /**
  * Parses a short duration string (e.g. `1h`, `7d`) into milliseconds.
  * Returns null if the format is unrecognised.
@@ -131,7 +132,7 @@ const command: BotCommand = {
         return;
       }
 
-      const msg = await channel.messages.fetch(giveaway.messageId).catch(() => null);
+      const msg = await channel.messages.fetch(giveaway.messageId).catch(swallow);
       if (!msg) {
         await interaction.reply({ content: 'Could not find giveaway message.', flags: 64 });
         return;

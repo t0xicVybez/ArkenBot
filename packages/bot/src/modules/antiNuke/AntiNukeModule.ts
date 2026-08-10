@@ -10,7 +10,7 @@
 import { type Guild, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 import { redis } from '../../redis.js';
 import { getGuildSettings } from '../../utils/settings.js';
-import { logger } from '../../logger.js';
+import { logger, swallow} from '../../logger.js';
 
 type ActionType = 'channelDelete' | 'roleDelete' | 'ban' | 'kick';
 
@@ -72,13 +72,13 @@ export class AntiNukeModule {
 
   static async punish(guild: Guild, userId: string, actionType: ActionType, config: AntiNukeConfig): Promise<void> {
     try {
-      const member = guild.members.cache.get(userId) ?? await guild.members.fetch(userId).catch(() => null);
+      const member = guild.members.cache.get(userId) ?? await guild.members.fetch(userId).catch(swallow);
 
       // Remove all roles from the offender
       if (member) {
         const rolesToRemove = member.roles.cache.filter(r => r.id !== guild.id);
         for (const [, role] of rolesToRemove) {
-          await member.roles.remove(role, 'Anti-nuke: destructive action threshold exceeded').catch(() => null);
+          await member.roles.remove(role, 'Anti-nuke: destructive action threshold exceeded').catch(swallow);
         }
       }
 
@@ -93,14 +93,14 @@ export class AntiNukeModule {
         .setTimestamp();
 
       for (const [, admin] of adminMembers) {
-        await admin.send({ embeds: [dmEmbed] }).catch(() => null);
+        await admin.send({ embeds: [dmEmbed] }).catch(swallow);
       }
 
       // Apply configured punishment
       if (config.action === 'ban' && guild.members.me?.permissions.has(PermissionFlagsBits.BanMembers)) {
-        await guild.members.ban(userId, { reason: `Anti-nuke: ${actionType} threshold exceeded` }).catch(() => null);
+        await guild.members.ban(userId, { reason: `Anti-nuke: ${actionType} threshold exceeded` }).catch(swallow);
       } else if (config.action === 'kick' && member && guild.members.me?.permissions.has(PermissionFlagsBits.KickMembers)) {
-        await member.kick(`Anti-nuke: ${actionType} threshold exceeded`).catch(() => null);
+        await member.kick(`Anti-nuke: ${actionType} threshold exceeded`).catch(swallow);
       }
 
       // Send alert embed to configured channel
@@ -116,7 +116,7 @@ export class AntiNukeModule {
               { name: 'Trigger', value: actionType, inline: true },
             )
             .setTimestamp();
-          await (alertChannel as import('discord.js').TextChannel).send({ embeds: [alertEmbed] }).catch(() => null);
+          await (alertChannel as import('discord.js').TextChannel).send({ embeds: [alertEmbed] }).catch(swallow);
         }
       }
 

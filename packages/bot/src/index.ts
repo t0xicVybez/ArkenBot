@@ -12,7 +12,7 @@ import { AddonHandler } from './handlers/AddonHandler.js';
 import { BackgroundJobs } from './modules/BackgroundJobs.js';
 import { connectDatabase } from './database.js';
 import { connectRedis } from './redis.js';
-import { logger } from './logger.js';
+import { logger, swallow} from './logger.js';
 
 // When the ShardingManager spawns shard processes it sets SHARDS to a JSON
 // array of shard IDs (e.g. "[0]"). Each shard gets its own lock key so they
@@ -43,7 +43,7 @@ async function main() {
 
   // Refresh the lock every 15 seconds so it outlives the TTL between refreshes.
   const lockRefresher = setInterval(async () => {
-    await redis.set(INSTANCE_LOCK_KEY, process.pid, 'EX', LOCK_TTL_SECONDS, 'XX').catch(() => null);
+    await redis.set(INSTANCE_LOCK_KEY, process.pid, 'EX', LOCK_TTL_SECONDS, 'XX').catch(swallow);
   }, 15_000);
 
   const client = new BotClient();
@@ -65,7 +65,7 @@ async function main() {
   const shutdown = async (signal: string) => {
     logger.info(`Received ${signal}, shutting down gracefully...`);
     clearInterval(lockRefresher);
-    await redis.del(INSTANCE_LOCK_KEY).catch(() => null);
+    await redis.del(INSTANCE_LOCK_KEY).catch(swallow);
     jobs.stop();
     client.destroy();
 

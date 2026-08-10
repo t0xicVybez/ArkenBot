@@ -17,6 +17,7 @@ import { getGuildSettings, getNextCaseNumber } from '../../utils/settings.js';
 import { LoggingModule } from '../../modules/logging/LoggingModule.js';
 import { COLORS } from '@arkenbot/shared';
 
+import { swallow } from '../../logger.js';
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('clearwarnings')
@@ -59,7 +60,7 @@ const command: BotCommand = {
     }
 
     const moderator = await interaction.guild.members.fetch(interaction.user.id);
-    const targetMember = await interaction.guild.members.fetch(targetUser.id).catch(() => null);
+    const targetMember = await interaction.guild.members.fetch(targetUser.id).catch(swallow);
 
     if (targetMember && !canModerate(moderator, targetMember)) {
       await interaction.editReply({
@@ -114,7 +115,7 @@ const command: BotCommand = {
             .addFields({ name: 'Reason', value: reason }),
         ],
       })
-      .catch(() => null);
+      .catch(swallow);
 
     await interaction.editReply({
       embeds: [
