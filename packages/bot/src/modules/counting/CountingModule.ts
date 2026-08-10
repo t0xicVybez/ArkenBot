@@ -6,7 +6,7 @@
 
 import type { Message } from 'discord.js';
 import { prisma } from '../../database.js';
-import { logger } from '../../logger.js';
+import { logger, swallow} from '../../logger.js';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = prisma as any;
@@ -34,7 +34,7 @@ async function getAddonSettings(guildId: string): Promise<Record<string, unknown
   const ga = await prisma.guildAddon.findFirst({
     where: { guildId, addon: { name: 'counting' }, enabled: true },
     select: { settings: true },
-  }).catch(() => null);
+  }).catch(swallow);
   return ga ? (ga.settings as Record<string, unknown>) : null;
 }
 
@@ -53,7 +53,7 @@ export class CountingModule {
 
     const state = await db.countingState.findUnique({
       where: { guildId: message.guild.id },
-    }).catch(() => null);
+    }).catch(swallow);
 
     const expected = (state?.currentCount ?? 0) + 1;
     const raw = message.content.trim();
@@ -65,29 +65,29 @@ export class CountingModule {
     const resetOnFail = settings.resetOnFail !== false;
 
     const ch = message.channel as { send?: (t: string) => Promise<unknown> };
-    const send = (text: string) => ch.send?.(text).catch(() => null) ?? Promise.resolve();
+    const send = (text: string) => ch.send?.(text).catch(swallow) ?? Promise.resolve();
 
     if (isNaN(num) || num !== expected) {
-      await message.react('❌').catch(() => null);
+      await message.react('❌').catch(swallow);
       if (resetOnFail) {
         await db.countingState.upsert({
           where:  { guildId: message.guild.id },
           update: { currentCount: 0, lastUserId: null },
           create: { guildId: message.guild.id, channelId: String(settings.channelId), currentCount: 0 },
-        }).catch(() => null);
+        }).catch(swallow);
         await send(`❌ <@${message.author.id}> ruined the count at **${state?.currentCount ?? 0}**! Start again from **1**.`);
       }
       return;
     }
 
     if (!allowSameUser && state?.lastUserId === message.author.id) {
-      await message.react('❌').catch(() => null);
+      await message.react('❌').catch(swallow);
       if (resetOnFail) {
         await db.countingState.upsert({
           where:  { guildId: message.guild.id },
           update: { currentCount: 0, lastUserId: null },
           create: { guildId: message.guild.id, channelId: String(settings.channelId), currentCount: 0 },
-        }).catch(() => null);
+        }).catch(swallow);
         await send(`❌ <@${message.author.id}> can't count twice in a row! Count reset — start again from **1**.`);
       }
       return;
@@ -107,6 +107,6 @@ export class CountingModule {
     }).catch((err: unknown) => logger.error({ err }, 'CountingModule: failed to update state'));
 
     // Milestone every 100 counts gets a celebration reaction.
-    await message.react(num % 100 === 0 ? '🎉' : '✅').catch(() => null);
+    await message.react(num % 100 === 0 ? '🎉' : '✅').catch(swallow);
   }
 }

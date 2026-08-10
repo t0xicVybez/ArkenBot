@@ -7,7 +7,7 @@
  */
 import { type GuildMember, type ButtonInteraction, type TextChannel, type Guild, type Message, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, MessageFlags } from 'discord.js';
 import { getGuildSettings } from '../../utils/settings.js';
-import { logger } from '../../logger.js';
+import { logger, swallow} from '../../logger.js';
 
 interface VerificationConfig {
   enabled: boolean;
@@ -27,7 +27,7 @@ export class VerificationModule {
 
       const pendingRole = member.guild.roles.cache.get(config.pendingRoleId);
       if (pendingRole) {
-        await member.roles.add(pendingRole, 'Verification: pending role assigned on join').catch(() => null);
+        await member.roles.add(pendingRole, 'Verification: pending role assigned on join').catch(swallow);
       }
 
       const channel = member.guild.channels.cache.get(config.verifyChannelId);
@@ -35,7 +35,7 @@ export class VerificationModule {
 
       await member.send(
         `Welcome to **${member.guild.name}**! Please click the Verify button in ${channelName} to gain access.`
-      ).catch(() => null);
+      ).catch(swallow);
     } catch (err) {
       logger.error({ err, guildId: member.guild.id, userId: member.id }, 'VerificationModule.handleJoin error');
     }
@@ -58,23 +58,23 @@ export class VerificationModule {
         return;
       }
 
-      const member = await interaction.guild.members.fetch(interaction.user.id).catch(() => null);
+      const member = await interaction.guild.members.fetch(interaction.user.id).catch(swallow);
       if (!member) {
         await interaction.reply({ content: 'Could not fetch your member data.', flags: MessageFlags.Ephemeral });
         return;
       }
 
       if (config.pendingRoleId) {
-        await member.roles.remove(config.pendingRoleId, 'Verification complete').catch(() => null);
+        await member.roles.remove(config.pendingRoleId, 'Verification complete').catch(swallow);
       }
       if (config.memberRoleId) {
-        await member.roles.add(config.memberRoleId, 'Verification complete').catch(() => null);
+        await member.roles.add(config.memberRoleId, 'Verification complete').catch(swallow);
       }
 
       await interaction.reply({ content: '✅ Verified! Welcome to the server.', flags: MessageFlags.Ephemeral });
     } catch (err) {
       logger.error({ err }, 'VerificationModule.handleVerifyButton error');
-      await interaction.reply({ content: 'An error occurred during verification.', flags: MessageFlags.Ephemeral }).catch(() => null);
+      await interaction.reply({ content: 'An error occurred during verification.', flags: MessageFlags.Ephemeral }).catch(swallow);
     }
   }
 

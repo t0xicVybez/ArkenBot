@@ -23,6 +23,7 @@ import { getNextCaseNumber, getGuildSettings } from '../../utils/settings.js';
 import { prisma } from '../../database.js';
 import { LoggingModule } from '../../modules/logging/LoggingModule.js';
 
+import { swallow } from '../../logger.js';
 function parseDuration(str: string): number | null {
   const match = str.trim().match(/^(\d+)(s|m|h|d)$/i);
   if (!match) return null;
@@ -90,14 +91,14 @@ const command: BotCommand = {
     }
 
     const guild = interaction.guild;
-    const targetUser = await interaction.client.users.fetch(targetUserId).catch(() => null);
+    const targetUser = await interaction.client.users.fetch(targetUserId).catch(swallow);
     if (!targetUser) {
       await interaction.editReply({ embeds: [errorEmbed('Not Found', 'Could not find that user.')] });
       return;
     }
 
-    const moderator = await guild.members.fetch(interaction.user.id).catch(() => null);
-    const targetMember = await guild.members.fetch(targetUserId).catch(() => null);
+    const moderator = await guild.members.fetch(interaction.user.id).catch(swallow);
+    const targetMember = await guild.members.fetch(targetUserId).catch(swallow);
 
     if (!targetMember) {
       await interaction.editReply({ embeds: [errorEmbed('Not Found', 'That user is not in this server.')] });
@@ -109,7 +110,7 @@ const command: BotCommand = {
       return;
     }
 
-    await targetMember.disableCommunicationUntil(Date.now() + ms, reason).catch(() => null);
+    await targetMember.disableCommunicationUntil(Date.now() + ms, reason).catch(swallow);
 
     const settings = await getGuildSettings(guild.id);
     const caseNumber = await getNextCaseNumber(guild.id);
@@ -136,7 +137,7 @@ const command: BotCommand = {
         reason,
         duration: durationLabel,
       }, settings?.moderationColor)],
-    }).catch(() => null);
+    }).catch(swallow);
 
     await LoggingModule.logModerationAction(guild, {
       type: 'mute',

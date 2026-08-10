@@ -15,9 +15,10 @@ import { prisma } from '../../database.js';
 import { redis } from '../../redis.js';
 import { errorEmbed, successEmbed } from '../../utils/embed.js';
 
+import { swallow } from '../../logger.js';
 /** Invalidates the guild's cached auto-response list so the next message picks up the change. */
 async function bustCache(guildId: string): Promise<void> {
-  await redis.del(`ar:list:${guildId}`).catch(() => null);
+  await redis.del(`ar:list:${guildId}`).catch(swallow);
 }
 
 const command: BotCommand = {

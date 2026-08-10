@@ -9,7 +9,7 @@
 import { type Message, PermissionFlagsBits } from 'discord.js';
 import { prisma } from '../../database.js';
 import { redis } from '../../redis.js';
-import { logger } from '../../logger.js';
+import { logger, swallow} from '../../logger.js';
 import axios from 'axios';
 
 const BLOCKLIST_REDIS_KEY = 'antiphishing:domains';
@@ -117,22 +117,22 @@ export class AntiPhishingModule {
     logger.warn({ guildId: message.guild.id, userId: message.author.id, domain: hit }, 'Phishing domain detected');
 
     // Delete the message
-    await message.delete().catch(() => null);
+    await message.delete().catch(swallow);
 
     // Warn the user in-channel (brief ephemeral-style message that deletes itself)
     const channel = message.channel;
     if ('send' in channel) {
       const warning = await (channel as import('discord.js').TextChannel)
         .send(`⚠️ <@${message.author.id}> — your message was removed for containing a known phishing link.`)
-        .catch(() => null);
-      if (warning) setTimeout(() => warning.delete().catch(() => null), 8_000);
+        .catch(swallow);
+      if (warning) setTimeout(() => warning.delete().catch(swallow), 8_000);
     }
 
     // Optionally mute (10-minute Discord timeout)
     if (config.antiPhishingAction === 'delete_mute') {
       await member
         .disableCommunicationUntil(Date.now() + 10 * 60 * 1000, 'Anti-phishing: sent a phishing link')
-        .catch(() => null);
+        .catch(swallow);
     }
   }
 }

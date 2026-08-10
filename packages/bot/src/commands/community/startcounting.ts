@@ -9,6 +9,7 @@ import { prisma } from '../../database.js';
 import { errorEmbed } from '../../utils/embed.js';
 import { COLORS } from '@arkenbot/shared';
 
+import { swallow } from '../../logger.js';
 // Prisma is cast to `any` here because the `countingState` model is generated
 // by an addon migration that the shared Prisma client type does not include.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -22,7 +23,7 @@ async function getCountingSettings(guildId: string): Promise<Record<string, unkn
   const ga = await prisma.guildAddon.findFirst({
     where: { guildId, addon: { name: 'counting' }, enabled: true },
     select: { settings: true },
-  }).catch(() => null);
+  }).catch(swallow);
   return ga ? (ga.settings as Record<string, unknown>) : null;
 }
 
@@ -55,7 +56,7 @@ const command: BotCommand = {
 
     const state = await db.countingState.findUnique({
       where: { guildId: interaction.guild.id },
-    }).catch(() => null);
+    }).catch(swallow);
 
     const resetOnFail   = settings.resetOnFail !== false;
     const allowSameUser = settings.allowSameUser === true;

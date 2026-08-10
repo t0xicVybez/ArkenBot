@@ -17,7 +17,7 @@ import { COLORS, LOG_TYPES, type LogType } from '@arkenbot/shared';
 import type { ModerationAction } from '@arkenbot/shared';
 import { prisma } from '../../database.js';
 import { getGuildSettings } from '../../utils/settings.js';
-import { logger } from '../../logger.js';
+import { logger, swallow} from '../../logger.js';
 import { pub } from '../../redis.js';
 
 export class LoggingModule {
@@ -51,7 +51,7 @@ export class LoggingModule {
       const channel = await this.getLogChannel(guild, logChannelId);
       if (channel) {
         if (settings.loggingColor) embed.setColor(settings.loggingColor as `#${string}`);
-        await channel.send({ embeds: [embed] }).catch(() => null);
+        await channel.send({ embeds: [embed] }).catch(swallow);
       }
 
       const userId = (data.userId ?? data.authorId) as string | undefined;
@@ -105,7 +105,7 @@ export class LoggingModule {
       guildId: action.guildId,
       data: { type: action.type, userTag: action.userTag, moderatorTag: action.moderatorTag },
       timestamp: Date.now(),
-    })).catch(() => null);
+    })).catch(swallow);
   }
 
   static async logMessageDelete(guild: Guild, message: Message): Promise<void> {
@@ -181,7 +181,7 @@ export class LoggingModule {
       guildId: guild.id,
       data: { userTag: member.user.tag, memberCount: guild.memberCount },
       timestamp: Date.now(),
-    })).catch(() => null);
+    })).catch(swallow);
   }
 
   static async logMemberLeave(guild: Guild, member: GuildMember): Promise<void> {

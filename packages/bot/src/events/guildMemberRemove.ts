@@ -10,13 +10,14 @@ import { LoggingModule } from '../modules/logging/LoggingModule.js';
 import { AnalyticsModule } from '../modules/AnalyticsModule.js';
 import { InviteTrackerModule } from '../modules/inviteTracker/InviteTrackerModule.js';
 
+import { swallow } from '../logger.js';
 const event: BotEvent = {
   name: 'guildMemberRemove',
   async execute(_client: unknown, member: GuildMember | PartialGuildMember) {
     if (!member.guild) return;
     // Partial members lack roles and other data needed by downstream handlers.
     const fullMember = member.partial
-      ? await member.guild.members.fetch(member.id).catch(() => null)
+      ? await member.guild.members.fetch(member.id).catch(swallow)
       : member;
 
     if (!fullMember) return;

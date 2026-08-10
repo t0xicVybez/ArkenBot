@@ -14,6 +14,7 @@ import type { BotClient } from '../../client.js';
 import { prisma } from '../../database.js';
 import { errorEmbed, successEmbed } from '../../utils/embed.js';
 
+import { swallow } from '../../logger.js';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = prisma as any;
 
@@ -129,7 +130,7 @@ const command: BotCommand = {
         return;
       }
 
-      await member.roles.remove(role.id, `Temp role removed early by ${interaction.user.tag}`).catch(() => null);
+      await member.roles.remove(role.id, `Temp role removed early by ${interaction.user.tag}`).catch(swallow);
       await db.tempRole.update({ where: { id: record.id }, data: { removed: true } });
 
       await interaction.editReply({ embeds: [successEmbed('Temp Role Removed', `${role} removed from ${member}.`)] });

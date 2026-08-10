@@ -16,7 +16,7 @@ import {
 } from 'discord.js';
 import type { BotClient } from '../client.js';
 import { errorEmbed } from '../utils/embed.js';
-import { logger } from '../logger.js';
+import { logger, swallow} from '../logger.js';
 import { isAddonEnabledForGuild } from '../utils/settings.js';
 import { ADDON_CATEGORY_PREFIX, classifyError } from '@arkenbot/shared';
 import { prisma } from '../database.js';
@@ -99,7 +99,7 @@ export class InteractionHandler {
         select: { roleId: true, allow: true },
       });
       if (rolePerms.length > 0) {
-        const member = await interaction.guild?.members.fetch(interaction.user.id).catch(() => null);
+        const member = await interaction.guild?.members.fetch(interaction.user.id).catch(swallow);
 
         if (!member?.permissions.has('Administrator')) {
           const memberRoleIds = member ? [...member.roles.cache.keys()] : [];
@@ -135,7 +135,7 @@ export class InteractionHandler {
     }
 
     if (command.userPermissions && interaction.guild) {
-      const member = await interaction.guild.members.fetch(interaction.user.id).catch(() => null);
+      const member = await interaction.guild.members.fetch(interaction.user.id).catch(swallow);
       if (member) {
         const missing = command.userPermissions.filter(
           (p) => !member.permissions.has(p)
@@ -176,9 +176,9 @@ export class InteractionHandler {
       const embed = errorEmbed('Error', description);
 
       if (interaction.replied || interaction.deferred) {
-        await interaction.editReply({ embeds: [embed] }).catch(() => null);
+        await interaction.editReply({ embeds: [embed] }).catch(swallow);
       } else {
-        await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral }).catch(() => null);
+        await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral }).catch(swallow);
       }
     }
   }

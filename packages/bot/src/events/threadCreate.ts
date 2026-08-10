@@ -9,7 +9,7 @@ import { ChannelType, type AnyThreadChannel } from 'discord.js';
 import type { BotEvent } from '../types.js';
 import type { BotClient } from '../client.js';
 import { getGuildSettings } from '../utils/settings.js';
-import { logger } from '../logger.js';
+import { logger, swallow} from '../logger.js';
 
 interface ForumChannelConfig {
   requireTag?: boolean;
@@ -47,14 +47,14 @@ const event: BotEvent = {
         if (tag) {
           const currentTagIds = thread.appliedTags ?? [];
           if (!currentTagIds.includes(tag.id)) {
-            await thread.setAppliedTags([...currentTagIds, tag.id], 'Forum auto-tag').catch(() => null);
+            await thread.setAppliedTags([...currentTagIds, tag.id], 'Forum auto-tag').catch(swallow);
           }
         }
       }
 
       // Send template message if configured
       if (channelConfig.templateMessage) {
-        await thread.send({ content: channelConfig.templateMessage }).catch(() => null);
+        await thread.send({ content: channelConfig.templateMessage }).catch(swallow);
       }
     } catch (err) {
       logger.error({ err, guildId: thread.guild.id, threadId: thread.id }, 'threadCreate forum management error');

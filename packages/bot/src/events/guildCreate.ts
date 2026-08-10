@@ -21,7 +21,7 @@ import {
 import type { BotEvent } from '../types.js';
 import type { BotClient } from '../client.js';
 import { ensureGuildExists } from '../utils/settings.js';
-import { logger } from '../logger.js';
+import { logger, swallow} from '../logger.js';
 import { pub } from '../redis.js';
 import { config } from '../config.js';
 
@@ -72,7 +72,7 @@ async function sendWelcomeMessage(guild: Guild): Promise<void> {
       const entry = logs.entries.find((e) => e.target?.id === guild.client.user?.id);
       const executor = entry?.executor ?? null;
       // Audit log executors can be partial — fetch the full user before DMing.
-      inviter = executor ? await guild.client.users.fetch(executor.id).catch(() => null) : null;
+      inviter = executor ? await guild.client.users.fetch(executor.id).catch(swallow) : null;
     }
   } catch { /* no audit log access — fall through */ }
 
@@ -85,7 +85,7 @@ async function sendWelcomeMessage(guild: Guild): Promise<void> {
   }
 
   // 2) DM the guild owner.
-  const owner = await guild.fetchOwner().catch(() => null);
+  const owner = await guild.fetchOwner().catch(swallow);
   if (owner && owner.id !== inviter?.id) {
     const sent = await owner.send(payload).then(() => true).catch(() => false);
     if (sent) {

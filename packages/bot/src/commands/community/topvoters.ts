@@ -7,6 +7,7 @@ import type { BotClient } from '../../client.js';
 import { COLORS } from '@arkenbot/shared';
 import { prisma } from '../../database.js';
 
+import { swallow } from '../../logger.js';
 const MEDALS = ['🥇', '🥈', '🥉'];
 
 const command: BotCommand = {
@@ -32,7 +33,7 @@ const command: BotCommand = {
     const lines = await Promise.all(
       voters.map(async (v, i) => {
         const rank = MEDALS[i] ?? `**${i + 1}.**`;
-        const user = await client.users.fetch(v.userId).catch(() => null);
+        const user = await client.users.fetch(v.userId).catch(swallow);
         const name = user ? user.username : `User ${v.userId}`;
         const streak = v.currentStreak > 1 ? ` · ${v.currentStreak}🔥` : '';
         return `${rank} ${name} — **${v.totalVotes}** vote${v.totalVotes === 1 ? '' : 's'}${streak}`;
