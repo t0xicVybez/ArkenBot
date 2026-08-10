@@ -8,7 +8,7 @@
     "build": "tsc",
     "start": "node --env-file ../../.env dist/index.js",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint src --ext .ts",
+    "lint": "eslint src -c ../../eslint.config.mjs",
     "migrate:stream-alert-role-mentions": "tsx src/scripts/resolveStreamAlertRoleMentions.ts"
   },
   "dependencies": {
