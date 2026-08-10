@@ -15,8 +15,8 @@
     "discord.js": "^14.0.0"
   },
   "devDependencies": {
-    "@types/node": "^22.0.0",
+    "@types/node": "^22.20.1",
     "discord.js": "14.25.1",
-    "typescript": "^5.7.0"
+    "typescript": "^5.9.3"
   }
 }
