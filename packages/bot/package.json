@@ -39,7 +39,7 @@
   "devDependencies": {
     "@types/ms": "^0.7.34",
     "@types/node": "^22.0.0",
-    "tsx": "^4.19.0",
+    "tsx": "^4.23.11",
     "typescript": "^5.7.0"
   }
 }
