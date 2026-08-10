@@ -42,12 +42,15 @@ jobs:
       - name: Generate Prisma client
         run: pnpm db:generate
 
+      # shared + addon-sdk must be built first: downstream packages typecheck
+      # against their emitted declarations, which don't exist in a fresh checkout.
+      - name: Build workspace libraries
+        run: pnpm build:deps
+
       - name: Typecheck (all packages)
         run: pnpm -r typecheck
 
       - name: Build server packages
         run: |
-          pnpm --filter @arkenbot/shared build
-          pnpm --filter @arkenbot/addon-sdk build
           pnpm --filter @arkenbot/api build
           pnpm --filter @arkenbot/bot build
