@@ -1,5 +1,7 @@
 import type { FastifyInstance } from 'fastify';
+import { z } from 'zod';
 import { requireGuildAdmin } from '../middleware/auth.js';
+import { parse } from '../utils/validate.js';
 import { prisma } from '../database.js';
 
 export async function levelRoleRoutes(server: FastifyInstance): Promise<void> {
@@ -18,12 +20,15 @@ export async function levelRoleRoutes(server: FastifyInstance): Promise<void> {
   // POST /guilds/:guildId/level-roles
   server.post('/guilds/:guildId/level-roles', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
-    const { level, roleId } = request.body as any;
-    if (!level || !roleId) return reply.code(400).send({ success: false, error: 'level and roleId are required' });
+    const input = parse(z.object({
+      level: z.coerce.number().int().min(1).max(1000),
+      roleId: z.string().min(1).max(32),
+    }), request.body, reply);
+    if (!input) return;
     const role = await prisma.levelRole.upsert({
-      where: { guildId_level: { guildId, level: Number(level) } },
-      update: { roleId },
-      create: { guildId, level: Number(level), roleId },
+      where: { guildId_level: { guildId, level: input.level } },
+      update: { roleId: input.roleId },
+      create: { guildId, level: input.level, roleId: input.roleId },
     });
     return reply.code(201).send({ success: true, data: role });
   });
