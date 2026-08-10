@@ -11,6 +11,7 @@ import { randomBytes } from 'crypto';
 import { prisma } from '../database.js';
 import { config } from '../config.js';
 import { sha256 } from '../utils/crypto.js';
+import { logger } from '../logger.js';
 
 /** Metadata captured for the active-sessions view and audit. */
 export interface SessionMeta {
@@ -177,7 +178,7 @@ export class SessionService {
       },
     });
     if (count > 0) {
-      console.info(`[SessionService] Cleaned up ${count} expired/revoked session(s)`);
+      logger.info({ count }, 'SessionService: cleaned up expired/revoked sessions');
     }
   }
 }

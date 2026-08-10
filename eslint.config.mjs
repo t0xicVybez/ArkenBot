@@ -40,4 +40,10 @@ export default tseslint.config(
       ],
     },
   },
+  {
+    // CLI scripts are command-line tools, not long-running services — plain
+    // console output is the right thing there, not the structured logger.
+    files: ['**/scripts/**'],
+    rules: { 'no-console': 'off' },
+  },
 );
