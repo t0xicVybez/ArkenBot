@@ -9,9 +9,14 @@
  *   pnpm --filter @arkenbot/api exec tsx src/scripts/encrypt-integration-secrets.ts
  */
 import { prisma } from '../database.js';
-import { encryptSecret } from '../utils/crypto.js';
+import { encryptSecret, decryptSecret } from '../utils/crypto.js';
 
-const isEncrypted = (v: string): boolean => v.split('.').length === 3;
+// A value is already encrypted only if it actually decrypts. A plain part-count
+// check is unsafe: Monday API tokens are JWTs (also 3 dot-separated parts) and
+// would be mistaken for encrypted payloads and skipped.
+const isEncrypted = (v: string): boolean => {
+  try { decryptSecret(v); return true; } catch { return false; }
+};
 
 async function main(): Promise<void> {
   let monday = 0;
