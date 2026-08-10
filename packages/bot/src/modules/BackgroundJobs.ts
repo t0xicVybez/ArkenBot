@@ -649,7 +649,7 @@ export class BackgroundJobs {
           method: 'POST',
           headers: {
             Authorization: `Basic ${creds}`,
-            'User-Agent': 'linux:arkenbot:v1.0 (by /u/ArkenBot)',
+            'User-Agent': 'linux:arkenbot:v1.0 (by /u/ArkenbotOffical)',
             'Content-Type': 'application/x-www-form-urlencoded',
           },
           body: 'grant_type=client_credentials',
@@ -1007,7 +1007,7 @@ export class BackgroundJobs {
           {
             headers: {
               Authorization: `Bearer ${redditToken}`,
-              'User-Agent': 'linux:arkenbot:v1.0 (by /u/ArkenBot)',
+              'User-Agent': 'linux:arkenbot:v1.0 (by /u/ArkenbotOffical)',
             },
           },
         );
