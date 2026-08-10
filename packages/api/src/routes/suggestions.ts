@@ -1,5 +1,7 @@
 import type { FastifyInstance } from 'fastify';
+import { z } from 'zod';
 import { requireGuildAdmin } from '../middleware/auth.js';
+import { parse } from '../utils/validate.js';
 import { prisma } from '../database.js';
 
 export async function suggestionRoutes(server: FastifyInstance): Promise<void> {
@@ -18,7 +20,13 @@ export async function suggestionRoutes(server: FastifyInstance): Promise<void> {
   // PATCH /guilds/:guildId/suggestions/config
   server.patch('/guilds/:guildId/suggestions/config', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
-    const body = request.body as any;
+    const body = parse(z.object({
+      enabled: z.boolean().optional(),
+      channelId: z.string().max(32).nullish(),
+      reviewChannelId: z.string().max(32).nullish(),
+      allowVoting: z.boolean().optional(),
+    }), request.body, reply);
+    if (!body) return;
     const config = await prisma.suggestionConfig.upsert({
       where: { guildId },
       update: { ...body },
@@ -40,7 +48,11 @@ export async function suggestionRoutes(server: FastifyInstance): Promise<void> {
   // PATCH /guilds/:guildId/suggestions/:id
   server.patch('/guilds/:guildId/suggestions/:id', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, id } = request.params as { guildId: string; id: string };
-    const body = request.body as any;
+    const body = parse(z.object({
+      status: z.string().max(32).optional(),
+      staffNote: z.string().max(1000).nullish(),
+    }), request.body, reply);
+    if (!body) return;
     const updated = await prisma.suggestion.updateMany({
       where: { id, guildId },
       data: {

@@ -3,8 +3,19 @@
  */
 import vm from 'node:vm';
 import type { FastifyInstance } from 'fastify';
+import { z } from 'zod';
 import { requireGuildAdmin } from '../middleware/auth.js';
+import { parse } from '../utils/validate.js';
 import { prisma } from '../database.js';
+
+const arFields = {
+  flags: z.string().max(10).optional(),
+  embed: z.boolean().optional(),
+  embedColor: z.string().max(16).nullish(),
+  deleteMessage: z.boolean().optional(),
+  requiredRoles: z.array(z.string().max(32)).max(50).optional(),
+  ignoredRoles: z.array(z.string().max(32)).max(50).optional(),
+};
 
 const MAX_PATTERN_LENGTH = 500;
 
@@ -45,26 +56,27 @@ export async function autoResponseRoutes(server: FastifyInstance): Promise<void>
 
   server.post('/guilds/:guildId/auto-responses', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
-    const { pattern, flags, response, embed, embedColor, deleteMessage, requiredRoles, ignoredRoles } = request.body as any;
+    const input = parse(z.object({
+      pattern: z.string().min(1).max(500),
+      response: z.string().min(1).max(2000),
+      ...arFields,
+    }), request.body, reply);
+    if (!input) return;
 
-    if (!pattern || !response) {
-      return reply.code(400).send({ success: false, error: 'pattern and response are required' });
-    }
-
-    const patternError = validatePattern(pattern, flags);
+    const patternError = validatePattern(input.pattern, input.flags);
     if (patternError) return reply.code(400).send({ success: false, error: patternError });
 
     const row = await prisma.autoResponse.create({
       data: {
         guildId,
-        pattern,
-        flags:         flags ?? 'i',
-        response,
-        embed:         embed ?? false,
-        embedColor:    embedColor ?? null,
-        deleteMessage: deleteMessage ?? false,
-        requiredRoles: requiredRoles ?? [],
-        ignoredRoles:  ignoredRoles ?? [],
+        pattern:       input.pattern,
+        flags:         input.flags ?? 'i',
+        response:      input.response,
+        embed:         input.embed ?? false,
+        embedColor:    input.embedColor ?? null,
+        deleteMessage: input.deleteMessage ?? false,
+        requiredRoles: input.requiredRoles ?? [],
+        ignoredRoles:  input.ignoredRoles ?? [],
         createdById:   (request as any).user?.id ?? 'dashboard',
       },
     });
@@ -74,7 +86,13 @@ export async function autoResponseRoutes(server: FastifyInstance): Promise<void>
 
   server.patch('/guilds/:guildId/auto-responses/:id', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, id } = request.params as { guildId: string; id: string };
-    const body = request.body as any;
+    const body = parse(z.object({
+      pattern: z.string().min(1).max(500).optional(),
+      response: z.string().min(1).max(2000).optional(),
+      enabled: z.boolean().optional(),
+      ...arFields,
+    }), request.body, reply);
+    if (!body) return;
 
     if (body.pattern !== undefined || body.flags !== undefined) {
       const patternError = validatePattern(body.pattern ?? '', body.flags);
