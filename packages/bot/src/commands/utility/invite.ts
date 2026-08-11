@@ -2,6 +2,7 @@ import { SlashCommandBuilder, OAuth2Scopes, PermissionFlagsBits, type ChatInputC
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { infoEmbed } from '../../utils/embed.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 
 const command: BotCommand = {
   data: new SlashCommandBuilder()
@@ -11,6 +12,7 @@ const command: BotCommand = {
   cooldown: 10,
 
   async execute(interaction: ChatInputCommandInteraction, client: BotClient) {
+    const loc = await resolveUserLocale(interaction);
     const url = client.generateInvite({
       scopes: [OAuth2Scopes.Bot, OAuth2Scopes.ApplicationsCommands],
       permissions: [
@@ -43,7 +45,7 @@ const command: BotCommand = {
     });
 
     await interaction.reply({
-      embeds: [infoEmbed('Invite ArkenBot', `[Click here to add ArkenBot to your server](${url})`)],
+      embeds: [infoEmbed(t('cmd.invite.title', loc), t('cmd.invite.body', loc, { url }))],
       ephemeral: true,
     });
   },

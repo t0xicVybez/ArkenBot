@@ -11,6 +11,7 @@ import { redis } from '../../redis.js';
 import { REDIS_KEYS, levelFromXp, formatTemplate } from '@arkenbot/shared';
 import { getGuildSettings } from '../../utils/settings.js';
 import { logger, swallow} from '../../logger.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 
 export class LevelingModule {
   /**
@@ -133,15 +134,15 @@ export class LevelingModule {
   /** Levels that receive a special embed colour and milestone badge in level-up notifications. */
   private static readonly MILESTONES = new Set([5, 10, 25, 50, 75, 100, 150, 200]);
 
-  private static getMilestoneLabel(level: number): string | null {
-    if (level >= 200) return '🏆 Legendary';
-    if (level >= 150) return '💎 Diamond';
-    if (level >= 100) return '🌟 Century';
-    if (level >= 75)  return '⚡ Elite';
-    if (level >= 50)  return '🔥 Veteran';
-    if (level >= 25)  return '🥇 Experienced';
-    if (level >= 10)  return '🥈 Rising';
-    if (level >= 5)   return '🥉 Newcomer';
+  private static getMilestoneLabel(level: number, loc: string): string | null {
+    if (level >= 200) return t('leveling.milestones.legendary', loc);
+    if (level >= 150) return t('leveling.milestones.diamond', loc);
+    if (level >= 100) return t('leveling.milestones.century', loc);
+    if (level >= 75)  return t('leveling.milestones.elite', loc);
+    if (level >= 50)  return t('leveling.milestones.veteran', loc);
+    if (level >= 25)  return t('leveling.milestones.experienced', loc);
+    if (level >= 10)  return t('leveling.milestones.rising', loc);
+    if (level >= 5)   return t('leveling.milestones.newcomer', loc);
     return null;
   }
 
@@ -180,6 +181,8 @@ export class LevelingModule {
 
       if (!channel) return;
 
+      const loc = await resolveUserLocale({ user: { id: '' }, guildId: guild.id, guildLocale: guild.preferredLocale });
+
       const content = formatTemplate(messageTemplate, {
         user: `<@${user.id}>`,
         username: user.username,
@@ -194,7 +197,7 @@ export class LevelingModule {
       }
 
       const isMilestone = LevelingModule.isMilestone(level);
-      const milestoneLabel = LevelingModule.getMilestoneLabel(level);
+      const milestoneLabel = LevelingModule.getMilestoneLabel(level, loc);
 
       const embedColor = colorHex
         ? (parseInt(colorHex.replace('#', ''), 16) as import('discord.js').ColorResolvable)
@@ -206,15 +209,15 @@ export class LevelingModule {
 
       const embed = new EmbedBuilder()
         .setColor(embedColor)
-        .setTitle(isMilestone ? `${milestoneLabel} Milestone Reached!` : 'Level Up!')
+        .setTitle(isMilestone ? t('leveling.milestoneReached', loc, { label: milestoneLabel ?? '' }) : t('leveling.levelUp', loc))
         .setDescription(content)
         .setThumbnail(user.displayAvatarURL({ size: 128 }))
-        .addFields({ name: 'Level', value: `**${level}**`, inline: true })
+        .addFields({ name: t('leveling.level', loc), value: `**${level}**`, inline: true })
         .setFooter({ text: guild.name, iconURL: guild.iconURL() ?? undefined })
         .setTimestamp();
 
       if (isMilestone && milestoneLabel) {
-        embed.addFields({ name: 'Achievement', value: milestoneLabel, inline: true });
+        embed.addFields({ name: t('leveling.achievement', loc), value: milestoneLabel, inline: true });
       }
 
       const msg = await channel.send({ embeds: [embed] }).catch(swallow);

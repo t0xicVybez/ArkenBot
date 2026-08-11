@@ -11,6 +11,7 @@ import { logger, swallow} from '../logger.js';
 import { pub } from '../redis.js';
 import { prisma } from '../database.js';
 import { getGuildSettings } from '../utils/settings.js';
+import { t, resolveUserLocale } from '../i18n/index.js';
 
 /** Shape of the `botConfig` singleton row used for presence configuration. */
 type BotConfigRow = { activityType: string; activityText: string; status: string };
@@ -40,12 +41,8 @@ async function sendAnnouncement(
 ): Promise<void> {
   const defaultColor = TYPE_COLOR[data.type] ?? TYPE_COLOR.update;
   const meta = TYPE_LABEL[data.type] ?? TYPE_LABEL.update;
+  const typeKey = TYPE_LABEL[data.type] ? data.type : 'update';
   const botAvatar = client.user?.displayAvatarURL() ?? undefined;
-
-  const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-    new ButtonBuilder().setStyle(ButtonStyle.Link).setLabel('Full Changelog').setURL('https://arkenbot.app/changelog'),
-    new ButtonBuilder().setStyle(ButtonStyle.Link).setLabel('Dashboard').setURL('https://arkenbot.app/dashboard'),
-  );
 
   let sent = 0;
   for (const target of data.targets) {
@@ -53,15 +50,22 @@ async function sendAnnouncement(
       const channel = client.channels.cache.get(target.announcementChannelId) as TextChannel | undefined;
       if (channel?.isTextBased()) {
         const guildSettings = await getGuildSettings(target.guildId);
+        const guild = client.guilds.cache.get(target.guildId);
+        const loc = await resolveUserLocale({ user: { id: '' }, guildId: target.guildId, guildLocale: guild?.preferredLocale });
+        const label = t(`announcement.labels.${typeKey}`, loc);
+        const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+          new ButtonBuilder().setStyle(ButtonStyle.Link).setLabel(t('announcement.buttonChangelog', loc)).setURL('https://arkenbot.app/changelog'),
+          new ButtonBuilder().setStyle(ButtonStyle.Link).setLabel(t('announcement.buttonDashboard', loc)).setURL('https://arkenbot.app/dashboard'),
+        );
         const color = guildSettings?.announcementColor
           ? parseInt(guildSettings.announcementColor.replace('#', ''), 16)
           : defaultColor;
         const embed = new EmbedBuilder()
           .setColor(color)
-          .setAuthor({ name: 'ArkenBot Announcements', iconURL: botAvatar })
+          .setAuthor({ name: t('announcement.author', loc), iconURL: botAvatar })
           .setTitle(`${meta.emoji} ${data.title}`)
           .setDescription(data.body)
-          .setFooter({ text: `ArkenBot • ${meta.label}`, iconURL: botAvatar })
+          .setFooter({ text: `ArkenBot • ${label}`, iconURL: botAvatar })
           .setTimestamp();
         await channel.send({ embeds: [embed], components: [row] });
         sent++;

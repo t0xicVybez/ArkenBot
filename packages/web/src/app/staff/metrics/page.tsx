@@ -13,9 +13,11 @@ import {
 } from 'recharts';
 import { BarChart3, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { useWebSocket } from '@/lib/socket';
 
 export default function StaffMetricsPage() {
+  const t = useTranslations('staffMetrics');
   const queryClient = useQueryClient();
   const [memHistory, setMemHistory] = useState<Array<{ time: string; value: number }>>([]);
   const [showRaw, setShowRaw] = useState(false);
@@ -45,15 +47,15 @@ export default function StaffMetricsPage() {
       <div className="page-head">
         <div className="page-head-icon"><BarChart3 className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>System Metrics</h1>
-          <div className="page-head-desc">Usage and performance across the fleet.</div>
+          <h1>{t('title')}</h1>
+          <div className="page-head-desc">{t('subtitle')}</div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Memory Usage Chart */}
         <div className="card">
-          <h3 className="text-lg font-semibold text-white mb-4">Memory Usage (MB)</h3>
+          <h3 className="text-lg font-semibold text-white mb-4">{t('memoryChart')}</h3>
           <div className="h-48">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={memHistory}>
@@ -83,14 +85,14 @@ export default function StaffMetricsPage() {
 
         {/* Current Stats */}
         <div className="card">
-          <h3 className="text-lg font-semibold text-white mb-4">Current Stats</h3>
+          <h3 className="text-lg font-semibold text-white mb-4">{t('currentStats')}</h3>
           <dl className="space-y-3">
             {[
-              { label: 'Total Guilds', value: stats?.totalGuilds ?? '—' },
-              { label: 'Active Guilds', value: stats?.activeGuilds ?? '—' },
-              { label: 'Total Users', value: stats?.totalUsers ?? '—' },
-              { label: 'Memory Usage', value: stats?.memoryUsage ? `${stats.memoryUsage} MB` : '—' },
-              { label: 'Uptime', value: stats?.uptime ? `${Math.floor(stats.uptime / 3600)}h ${Math.floor((stats.uptime % 3600) / 60)}m` : '—' },
+              { label: t('totalGuilds'), value: stats?.totalGuilds ?? '—' },
+              { label: t('activeGuilds'), value: stats?.activeGuilds ?? '—' },
+              { label: t('totalUsers'), value: stats?.totalUsers ?? '—' },
+              { label: t('memoryUsage'), value: stats?.memoryUsage ? `${stats.memoryUsage} MB` : '—' },
+              { label: t('uptime'), value: stats?.uptime ? `${Math.floor(stats.uptime / 3600)}h ${Math.floor((stats.uptime % 3600) / 60)}m` : '—' },
             ].map((item) => (
               <div key={item.label} className="flex justify-between items-center py-1 border-b border-[var(--border-subtle)]">
                 <dt className="text-gray-400 text-sm">{item.label}</dt>
@@ -98,15 +100,15 @@ export default function StaffMetricsPage() {
               </div>
             ))}
           </dl>
-          <p className="text-xs text-gray-600 mt-3">Updates every 30 seconds</p>
+          <p className="text-xs text-gray-600 mt-3">{t('updatesEvery')}</p>
         </div>
       </div>
 
       {/* Prometheus Metrics */}
       <div className="card mt-6">
-        <h3 className="text-lg font-semibold text-white mb-2">Prometheus Metrics</h3>
+        <h3 className="text-lg font-semibold text-white mb-2">{t('prometheusTitle')}</h3>
         <p className="text-gray-400 text-sm mb-3">
-          Raw Prometheus metrics for scraping with Grafana or Prometheus.
+          {t('prometheusDesc')}
         </p>
         <button
           className="btn-secondary text-sm"
@@ -122,7 +124,7 @@ export default function StaffMetricsPage() {
             }
           }}
         >
-          {rawLoading ? 'Loading…' : 'View Raw Metrics →'}
+          {rawLoading ? t('loading') : t('viewRaw')}
         </button>
       </div>
 
@@ -131,7 +133,7 @@ export default function StaffMetricsPage() {
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
           <div className="bg-discord-dark-bg border border-gray-700 rounded-xl w-full max-w-4xl max-h-[80vh] flex flex-col">
             <div className="flex items-center justify-between p-4 border-b border-gray-700">
-              <h2 className="text-white font-semibold">Raw Prometheus Metrics</h2>
+              <h2 className="text-white font-semibold">{t('rawModalTitle')}</h2>
               <button onClick={() => setShowRaw(false)} className="text-gray-400 hover:text-white transition-colors">
                 <X className="w-5 h-5" />
               </button>

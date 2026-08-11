@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { clsx } from 'clsx';
+import { useTranslations } from 'next-intl';
 import { useAuth } from '@/lib/auth';
 import { authApi } from '@/lib/api';
 import { wsClient } from '@/lib/socket';
@@ -27,18 +28,19 @@ import {
 import { Topbar } from '@/components/Topbar';
 
 const staffNav = [
-  { href: '/staff', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/staff/guilds', label: 'Guilds', icon: Server },
-  { href: '/staff/users', label: 'Users', icon: Users },
-  { href: '/staff/addons', label: 'Addons', icon: Puzzle },
-  { href: '/staff/logs', label: 'Audit Logs', icon: FileText },
-  { href: '/staff/service-logs', label: 'Service Logs', icon: Terminal },
-  { href: '/staff/metrics', label: 'Metrics', icon: BarChart3 },
-  { href: '/staff/announcements', label: 'Announcements', icon: Megaphone },
-  { href: '/staff/settings', label: 'Settings', icon: Settings },
+  { href: '/staff', key: 'dashboard', icon: LayoutDashboard },
+  { href: '/staff/guilds', key: 'guilds', icon: Server },
+  { href: '/staff/users', key: 'users', icon: Users },
+  { href: '/staff/addons', key: 'addons', icon: Puzzle },
+  { href: '/staff/logs', key: 'auditLogs', icon: FileText },
+  { href: '/staff/service-logs', key: 'serviceLogs', icon: Terminal },
+  { href: '/staff/metrics', key: 'metrics', icon: BarChart3 },
+  { href: '/staff/announcements', key: 'announcements', icon: Megaphone },
+  { href: '/staff/settings', key: 'settings', icon: Settings },
 ];
 
 export default function StaffLayout({ children }: { children: React.ReactNode }) {
+  const t = useTranslations('staffNav');
   const { status, isAuthenticated, user, logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
@@ -85,8 +87,8 @@ export default function StaffLayout({ children }: { children: React.ReactNode })
               <Shield className="w-4 h-4 text-white" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-white font-bold text-[13px] leading-tight">ArkenBot HQ</p>
-              <p className="text-[var(--text-muted)] text-[11px] truncate">staff portal · {user?.username}</p>
+              <p className="text-white font-bold text-[13px] leading-tight">{t('hq')}</p>
+              <p className="text-[var(--text-muted)] text-[11px] truncate">{t('staffPortalUser', { username: user?.username ?? '' })}</p>
             </div>
             <button onClick={() => setSidebarOpen(false)} className="md:hidden text-gray-500 hover:text-white p-1">
               <X className="w-4 h-4" />
@@ -112,7 +114,7 @@ export default function StaffLayout({ children }: { children: React.ReactNode })
                 )}
               >
                 <Icon className={clsx('w-3.5 h-3.5 flex-shrink-0', isActive ? 'text-purple-400' : '')} />
-                {item.label}
+                {t(item.key)}
               </Link>
             );
           })}
@@ -126,14 +128,14 @@ export default function StaffLayout({ children }: { children: React.ReactNode })
             className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-[13px] font-medium text-blue-400 hover:text-blue-300 hover:bg-blue-500/10 transition-colors w-full"
           >
             <LayoutGrid className="w-3.5 h-3.5 flex-shrink-0" />
-            Server Dashboard
+            {t('serverDashboard')}
           </Link>
           <button
             onClick={handleLogout}
             className="flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-[13px] font-medium text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors w-full"
           >
             <LogOut className="w-3.5 h-3.5 flex-shrink-0" />
-            Logout
+            {t('logout')}
           </button>
         </div>
       </aside>
@@ -141,12 +143,12 @@ export default function StaffLayout({ children }: { children: React.ReactNode })
       <main className="flex-1 overflow-auto flex flex-col min-w-0">
         {/* Mobile top bar */}
         <div className="md:hidden flex items-center gap-3 px-4 py-3 border-b border-white/[0.06] bg-[var(--bg-card)]">
-          <button onClick={() => setSidebarOpen(true)} className="text-gray-400 hover:text-white transition-colors" aria-label="Open menu">
+          <button onClick={() => setSidebarOpen(true)} className="text-gray-400 hover:text-white transition-colors" aria-label={t('openMenu')}>
             <Menu className="w-5 h-5" />
           </button>
           <div className="flex items-center gap-2">
             <Shield className="w-3.5 h-3.5 text-purple-400" />
-            <p className="text-white font-semibold text-sm">Staff Portal</p>
+            <p className="text-white font-semibold text-sm">{t('staffPortal')}</p>
           </div>
         </div>
         <Topbar variant="staff" />

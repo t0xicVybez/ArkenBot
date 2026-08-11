@@ -11,6 +11,7 @@ import { REDIS_KEYS, COLORS } from '@arkenbot/shared';
 import type { AutoModConfig } from '@arkenbot/shared';
 import { logger, swallow} from '../../logger.js';
 import { AiModerationModule } from './AiModerationModule.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 
 /** Redis key for the per-user word filter violation counter (24-hour rolling window). */
 const FILTER_VIOLATION_KEY = (guildId: string, userId: string) =>
@@ -152,15 +153,18 @@ export class AutoModModule {
         .catch(swallow);
     } else if (action === 'kick') {
       // Attempt a DM notification before the kick so the user knows why they were removed.
-      const dmText = (config.filterKickDMMessage ?? `You were kicked from **{server}** for repeated word filter violations (violation #{count}).`)
-        .replace(/\{count\}/g, String(count))
-        .replace(/\{server\}/g, message.guild!.name);
+      const authorLoc = await resolveUserLocale({ user: message.author, guildId, guildLocale: message.guild!.preferredLocale });
+      const dmText = config.filterKickDMMessage
+        ? config.filterKickDMMessage
+            .replace(/\{count\}/g, String(count))
+            .replace(/\{server\}/g, message.guild!.name)
+        : t('automod.filterKickDM', authorLoc, { server: message.guild!.name, count });
       await message.author
         .send({
           embeds: [
             new EmbedBuilder()
               .setColor(COLORS.ERROR)
-              .setTitle(`Kicked from ${message.guild!.name}`)
+              .setTitle(t('automod.kickedTitle', authorLoc, { server: message.guild!.name }))
               .setDescription(dmText),
           ],
         })
@@ -181,18 +185,17 @@ export class AutoModModule {
       template.replace(/\{(\w+)\}/g, (_, k: string) => vars[k] ?? `{${k}}`);
 
     const vars = { user: `<@${userId}>`, count: String(count), server: message.guild!.name };
+    const loc = await resolveUserLocale({ user: { id: '' }, guildId, guildLocale: message.guild!.preferredLocale });
 
     let notifyContent: string;
     if (action === 'kick') {
-      notifyContent = resolveMsg(
-        config.filterKickMessage ?? `⛔ {user} was **kicked** for repeated word filter violations (violation #{count}).`,
-        vars,
-      );
+      notifyContent = config.filterKickMessage
+        ? resolveMsg(config.filterKickMessage, vars)
+        : t('automod.filterKick', loc, { user: vars.user, count: vars.count });
     } else {
-      notifyContent = resolveMsg(
-        config.filterWarnMessage ?? `⚠️ {user} Your message was removed for containing a filtered word (violation #{count}).`,
-        vars,
-      );
+      notifyContent = config.filterWarnMessage
+        ? resolveMsg(config.filterWarnMessage, vars)
+        : t('automod.filterWarn', loc, { user: vars.user, count: vars.count });
     }
 
     await ch
@@ -261,9 +264,17 @@ export class AutoModModule {
 
       if (action === 'warn' || action === 'mute' || action === 'kick' || action === 'ban') {
         if ('send' in message.channel) {
+          const loc = await resolveUserLocale({ user: { id: '' }, guildId: message.guild?.id, guildLocale: message.guild?.preferredLocale });
+          const reasonKeyMap: Record<string, string> = {
+            'Spam detected': 'automod.reasons.spam',
+            'Blocked link detected': 'automod.reasons.link',
+            'Mention spam': 'automod.reasons.mention',
+            'Excessive caps': 'automod.reasons.caps',
+          };
+          const localizedReason = reasonKeyMap[reason] ? t(reasonKeyMap[reason], loc) : reason;
           await (message.channel as TextChannel)
             .send({
-              content: `<@${message.author.id}> Your message was removed: **${reason}**`,
+              content: t('automod.removed', loc, { user: `<@${message.author.id}>`, reason: localizedReason }),
             })
             .then((m) => setTimeout(() => m.delete().catch(swallow), 5000))
             .catch(swallow);

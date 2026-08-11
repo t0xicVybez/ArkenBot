@@ -6,6 +6,7 @@ import { statsChannelsApi, guildsApi } from '@/lib/api';
 import { BarChart2, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 type StatsChannel = {
   id: string;
@@ -23,7 +24,10 @@ const STAT_TYPES = [
 
 export default function StatsChannelsPage() {
   const { guildId } = useParams() as { guildId: string };
+  const t = useTranslations('statsChannels');
   const queryClient = useQueryClient();
+  const statLabel = (value: string): string =>
+    ({ members: t('typeMembers'), online: t('typeOnline'), boosts: t('typeBoosts'), bots: t('typeBots') } as Record<string, string>)[value] ?? value;
 
   const [newChannelId, setNewChannelId] = useState('');
   const [newType, setNewType] = useState('members');
@@ -46,23 +50,23 @@ export default function StatsChannelsPage() {
   const deleteMutation = useMutation({
     mutationFn: (id: string) => statsChannelsApi.delete(guildId, id),
     onSuccess: () => {
-      toast.success('Stats channel removed');
+      toast.success(t('removed'));
       queryClient.invalidateQueries({ queryKey: ['stats-channels', guildId] });
     },
-    onError: () => toast.error('Failed to remove stats channel'),
+    onError: () => toast.error(t('removeError')),
   });
 
   const createMutation = useMutation({
     mutationFn: (data: { channelId: string; type: string; format?: string }) =>
       statsChannelsApi.create(guildId, data),
     onSuccess: () => {
-      toast.success('Stats channel created');
+      toast.success(t('created'));
       queryClient.invalidateQueries({ queryKey: ['stats-channels', guildId] });
       setNewChannelId('');
       setNewType('members');
       setNewFormat('Members: {value}');
     },
-    onError: () => toast.error('Failed to create stats channel'),
+    onError: () => toast.error(t('createError')),
   });
 
   const handleTypeChange = (type: string) => {
@@ -73,7 +77,7 @@ export default function StatsChannelsPage() {
 
   const handleCreate = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newChannelId) return toast.error('Please select a channel');
+    if (!newChannelId) return toast.error(t('selectChannelError'));
     createMutation.mutate({ channelId: newChannelId, type: newType, format: newFormat });
   };
 
@@ -82,13 +86,13 @@ export default function StatsChannelsPage() {
       <div className="page-head">
         <div className="page-head-icon"><BarChart2 className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>Stats Channels</h1>
-          <div className="page-head-desc">Display live server statistics in voice channel names.</div>
+          <h1>{t('title')}</h1>
+          <div className="page-head-desc">{t('description')}</div>
         </div>
       </div>
 
       <div className="card mb-6">
-        <h2 className="text-lg font-semibold text-white mb-4">Active Stats Channels</h2>
+        <h2 className="text-lg font-semibold text-white mb-4">{t('activeTitle')}</h2>
         {statsLoading ? (
           <div className="space-y-3">
             {[...Array(3)].map((_, i) => (
@@ -96,7 +100,7 @@ export default function StatsChannelsPage() {
             ))}
           </div>
         ) : statsChannels.length === 0 ? (
-          <p className="text-gray-500 text-sm text-center py-6">No stats channels configured yet.</p>
+          <p className="text-gray-500 text-sm text-center py-6">{t('empty')}</p>
         ) : (
           <div className="space-y-2">
             {statsChannels.map((sc) => {
@@ -119,7 +123,7 @@ export default function StatsChannelsPage() {
                     onClick={() => deleteMutation.mutate(sc.id)}
                     disabled={deleteMutation.isPending}
                     className="text-gray-500 hover:text-red-400 transition-colors flex-shrink-0 ml-3"
-                    title="Remove stats channel"
+                    title={t('removeTitle')}
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -131,17 +135,17 @@ export default function StatsChannelsPage() {
       </div>
 
       <div className="card">
-        <h2 className="text-lg font-semibold text-white mb-4">Add Stats Channel</h2>
+        <h2 className="text-lg font-semibold text-white mb-4">{t('addTitle')}</h2>
         <form onSubmit={handleCreate} className="space-y-4">
           <div>
-            <label className="label">Voice Channel</label>
+            <label className="label">{t('voiceChannelLabel')}</label>
             <select
               className="input"
               value={newChannelId}
               onChange={(e) => setNewChannelId(e.target.value)}
               required
             >
-              <option value="">Select a voice channel</option>
+              <option value="">{t('selectVoiceChannel')}</option>
               {voiceChannels.map((ch) => (
                 <option key={ch.id} value={ch.id}>
                   🔊 {ch.name}
@@ -150,21 +154,21 @@ export default function StatsChannelsPage() {
             </select>
           </div>
           <div>
-            <label className="label">Stat Type</label>
+            <label className="label">{t('statTypeLabel')}</label>
             <select
               className="input"
               value={newType}
               onChange={(e) => handleTypeChange(e.target.value)}
             >
-              {STAT_TYPES.map((t) => (
-                <option key={t.value} value={t.value}>
-                  {t.label}
+              {STAT_TYPES.map((st) => (
+                <option key={st.value} value={st.value}>
+                  {statLabel(st.value)}
                 </option>
               ))}
             </select>
           </div>
           <div>
-            <label className="label">Format</label>
+            <label className="label">{t('formatLabel')}</label>
             <input
               type="text"
               className="input"
@@ -172,14 +176,14 @@ export default function StatsChannelsPage() {
               onChange={(e) => setNewFormat(e.target.value)}
               placeholder="Members: {value}"
             />
-            <p className="text-xs text-gray-500 mt-1">Use {'{value}'} as a placeholder for the value.</p>
+            <p className="text-xs text-gray-500 mt-1">{t('formatHelp', { token: '{value}' })}</p>
           </div>
           <button
             type="submit"
             disabled={createMutation.isPending}
             className="btn-primary"
           >
-            {createMutation.isPending ? 'Adding...' : 'Add Stats Channel'}
+            {createMutation.isPending ? t('adding') : t('addButton')}
           </button>
         </form>
       </div>

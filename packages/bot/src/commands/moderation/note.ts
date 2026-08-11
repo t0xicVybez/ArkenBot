@@ -10,6 +10,7 @@ import {
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { successEmbed, errorEmbed } from '../../utils/embed.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 import { prisma } from '../../database.js';
 
 const command: BotCommand = {
@@ -45,6 +46,7 @@ const command: BotCommand = {
 
   async execute(interaction: ChatInputCommandInteraction, _client: BotClient) {
     await interaction.deferReply({ flags: 64 });
+    const loc = await resolveUserLocale(interaction);
 
     const sub = interaction.options.getSubcommand();
     const targetUser = interaction.options.getUser('user', true);
@@ -64,7 +66,7 @@ const command: BotCommand = {
       });
 
       await interaction.editReply({
-        embeds: [successEmbed('Note Added', `Note \`${note.id}\` added for **${targetUser.tag}**.\n\n> ${content}`)],
+        embeds: [successEmbed(t('cmd.note.addedTitle', loc), t('cmd.note.added', loc, { id: note.id, user: targetUser.tag, content }))],
       });
     }
 
@@ -76,21 +78,21 @@ const command: BotCommand = {
       });
 
       if (notes.length === 0) {
-        await interaction.editReply({ embeds: [errorEmbed('No Notes', `No notes found for **${targetUser.tag}**.`)] });
+        await interaction.editReply({ embeds: [errorEmbed(t('cmd.note.noNotesTitle', loc), t('cmd.note.noNotes', loc, { user: targetUser.tag }))] });
         return;
       }
 
       const embed = new EmbedBuilder()
         .setColor(0x5865f2)
-        .setTitle(`📝 Notes for ${targetUser.tag}`)
+        .setTitle(t('cmd.note.listTitle', loc, { user: targetUser.tag }))
         .setThumbnail(targetUser.displayAvatarURL({ size: 64 }))
-        .setFooter({ text: `Showing ${notes.length} most recent note${notes.length !== 1 ? 's' : ''}` })
+        .setFooter({ text: t('cmd.note.listFooter', loc, { count: notes.length }) })
         .setTimestamp();
 
       for (const note of notes) {
         const date = `<t:${Math.floor(note.createdAt.getTime() / 1000)}:d>`;
         embed.addFields({
-          name: `ID: \`${note.id}\` — ${date} by ${note.staffTag}`,
+          name: t('cmd.note.fieldName', loc, { id: note.id, date, staff: note.staffTag }),
           value: note.content.length > 200 ? note.content.slice(0, 197) + '...' : note.content,
         });
       }
@@ -106,18 +108,18 @@ const command: BotCommand = {
       });
 
       if (!note) {
-        await interaction.editReply({ embeds: [errorEmbed('Not Found', 'Note not found for that user and ID.')] });
+        await interaction.editReply({ embeds: [errorEmbed(t('cmd.note.notFoundTitle', loc), t('cmd.note.notFound', loc))] });
         return;
       }
 
       await prisma.userNote.delete({ where: { id } });
-      await interaction.editReply({ embeds: [successEmbed('Note Removed', `Note \`${id}\` has been deleted.`)] });
+      await interaction.editReply({ embeds: [successEmbed(t('cmd.note.removedTitle', loc), t('cmd.note.removed', loc, { id }))] });
     }
 
     if (sub === 'clear') {
       const confirm = interaction.options.getBoolean('confirm', true);
       if (!confirm) {
-        await interaction.editReply({ embeds: [errorEmbed('Cancelled', 'Set `confirm: true` to clear all notes.')] });
+        await interaction.editReply({ embeds: [errorEmbed(t('cmd.note.cancelledTitle', loc), t('cmd.note.cancelled', loc))] });
         return;
       }
 
@@ -126,7 +128,7 @@ const command: BotCommand = {
       });
 
       await interaction.editReply({
-        embeds: [successEmbed('Notes Cleared', `Deleted **${count}** note${count !== 1 ? 's' : ''} for **${targetUser.tag}**.`)],
+        embeds: [successEmbed(t('cmd.note.clearedTitle', loc), t('cmd.note.cleared', loc, { count, user: targetUser.tag }))],
       });
     }
   },

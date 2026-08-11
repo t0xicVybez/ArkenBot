@@ -6,6 +6,7 @@ import { SlashCommandBuilder, type ChatInputCommandInteraction } from 'discord.j
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { infoEmbed } from '../../utils/embed.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 
 const command: BotCommand = {
   data: new SlashCommandBuilder()
@@ -15,16 +16,17 @@ const command: BotCommand = {
   cooldown: 5,
 
   async execute(interaction: ChatInputCommandInteraction, client: BotClient) {
-    const { resource } = await interaction.reply({ content: 'Pinging...', withResponse: true });
+    const loc = await resolveUserLocale(interaction);
+    const { resource } = await interaction.reply({ content: t('cmd.ping.pinging', loc), withResponse: true });
     const roundtrip = resource!.message!.createdTimestamp - interaction.createdTimestamp;
 
     await interaction.editReply({
       content: '',
       embeds: [
-        infoEmbed('🏓 Pong!')
+        infoEmbed(t('cmd.ping.pong', loc))
           .addFields(
-            { name: 'Roundtrip', value: `${roundtrip}ms`, inline: true },
-            { name: 'WebSocket', value: `${client.ws.ping}ms`, inline: true },
+            { name: t('cmd.ping.roundtrip', loc), value: `${roundtrip}ms`, inline: true },
+            { name: t('cmd.ping.websocket', loc), value: `${client.ws.ping}ms`, inline: true },
           ),
       ],
     });

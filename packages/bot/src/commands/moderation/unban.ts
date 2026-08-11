@@ -10,6 +10,7 @@ import {
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { successEmbed, errorEmbed } from '../../utils/embed.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 import { prisma } from '../../database.js';
 import { getNextCaseNumber, getGuildSettings } from '../../utils/settings.js';
 
@@ -31,10 +32,11 @@ const command: BotCommand = {
 
   async execute(interaction: ChatInputCommandInteraction, _client: BotClient) {
     await interaction.deferReply();
+    const loc = await resolveUserLocale(interaction);
 
     const settings = await getGuildSettings(interaction.guildId!);
     if (settings && !settings.moderationEnabled) {
-      await interaction.editReply({ embeds: [errorEmbed('Moderation Disabled', 'Moderation commands are disabled for this server.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('moderation.disabledTitle', loc), t('moderation.disabled', loc))] });
       return;
     }
 
@@ -42,19 +44,19 @@ const command: BotCommand = {
     const reason = interaction.options.getString('reason') ?? 'No reason provided';
 
     if (!interaction.guild) {
-      await interaction.editReply({ embeds: [errorEmbed('Error', 'This command must be used in a server.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('common.error', loc), t('common.notInServer', loc))] });
       return;
     }
 
     if (!/^\d{17,20}$/.test(userId)) {
-      await interaction.editReply({ embeds: [errorEmbed('Invalid ID', 'Please provide a valid Discord user ID.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('cmd.unban.invalidIdTitle', loc), t('cmd.unban.invalidId', loc))] });
       return;
     }
 
     try {
       const ban = await interaction.guild.bans.fetch(userId).catch(swallow);
       if (!ban) {
-        await interaction.editReply({ embeds: [errorEmbed('Not Banned', 'That user is not banned from this server.')] });
+        await interaction.editReply({ embeds: [errorEmbed(t('cmd.unban.notBannedTitle', loc), t('cmd.unban.notBanned', loc))] });
         return;
       }
 
@@ -87,10 +89,10 @@ const command: BotCommand = {
       });
 
       await interaction.editReply({
-        embeds: [successEmbed('Unbanned', `Successfully unbanned **${ban.user.tag}** (${userId})\n**Reason:** ${reason}`)],
+        embeds: [successEmbed(t('cmd.unban.successTitle', loc), t('cmd.unban.success', loc, { user: ban.user.tag, userId, reason }))],
       });
     } catch {
-      await interaction.editReply({ embeds: [errorEmbed('Failed', 'Could not unban that user.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('cmd.unban.failedTitle', loc), t('cmd.unban.failed', loc))] });
     }
   },
 };

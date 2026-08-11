@@ -12,6 +12,7 @@ import {
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { successEmbed, errorEmbed, infoEmbed } from '../../utils/embed.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 import { MusicManager } from '../../modules/music/MusicManager.js';
 import { getGuildSettings } from '../../utils/settings.js';
 
@@ -27,15 +28,16 @@ const command: BotCommand = {
 
   async execute(interaction: ChatInputCommandInteraction, client: BotClient) {
     await interaction.deferReply();
+    const loc = await resolveUserLocale(interaction);
 
     if (!interaction.guild) {
-      await interaction.editReply({ embeds: [errorEmbed('Error', 'This command must be used in a server.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('common.error', loc), t('common.notInServer', loc))] });
       return;
     }
 
     const settings = await getGuildSettings(interaction.guild.id);
     if (settings && !settings.musicEnabled) {
-      await interaction.editReply({ embeds: [errorEmbed('Music Disabled', 'Music commands are disabled for this server.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('cmd.play.disabledTitle', loc), t('cmd.play.disabled', loc))] });
       return;
     }
 
@@ -44,7 +46,7 @@ const command: BotCommand = {
 
     if (!voiceChannel) {
       await interaction.editReply({
-        embeds: [errorEmbed('Join a Voice Channel', 'You must be in a voice channel to play music.')],
+        embeds: [errorEmbed(t('cmd.play.joinVcTitle', loc), t('cmd.play.joinVc', loc))],
       });
       return;
     }
@@ -52,7 +54,7 @@ const command: BotCommand = {
     const botMember = await interaction.guild.members.fetchMe();
     if (botMember.voice.channel && botMember.voice.channel.id !== voiceChannel.id) {
       await interaction.editReply({
-        embeds: [errorEmbed('Wrong Channel', `I'm already playing in <#${botMember.voice.channel.id}>`)],
+        embeds: [errorEmbed(t('cmd.play.wrongChannelTitle', loc), t('cmd.play.wrongChannel', loc, { channel: `<#${botMember.voice.channel.id}>` }))],
       });
       return;
     }
@@ -66,16 +68,16 @@ const command: BotCommand = {
       if (result.type === 'added') {
         await interaction.editReply({
           embeds: [
-            successEmbed('Added to Queue', `**${result.title}** has been added to the queue.\nPosition: #${result.position}`),
+            successEmbed(t('cmd.play.addedTitle', loc), t('cmd.play.added', loc, { title: result.title, position: `${result.position ?? ''}` })),
           ],
         });
       } else if (result.type === 'playing') {
         await interaction.editReply({
           embeds: [
-            infoEmbed('Now Playing', `🎵 **${result.title}**`)
+            infoEmbed(t('cmd.play.nowPlayingTitle', loc), t('cmd.play.nowPlaying', loc, { title: result.title }))
               .addFields(
-                { name: 'Requested by', value: `<@${interaction.user.id}>`, inline: true },
-                { name: 'Duration', value: result.duration ?? 'Unknown', inline: true },
+                { name: t('cmd.play.requestedBy', loc), value: `<@${interaction.user.id}>`, inline: true },
+                { name: t('cmd.play.duration', loc), value: result.duration ?? t('cmd.play.unknown', loc), inline: true },
               )
               .setThumbnail(result.thumbnail ?? null),
           ],
@@ -83,7 +85,7 @@ const command: BotCommand = {
       }
     } catch (err) {
       await interaction.editReply({
-        embeds: [errorEmbed('Error', `Could not play that track: ${(err as Error).message}`)],
+        embeds: [errorEmbed(t('common.error', loc), t('cmd.play.failed', loc, { error: (err as Error).message }))],
       });
     }
   },

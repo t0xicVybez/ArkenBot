@@ -4,6 +4,7 @@ import {
   Check, Zap, Code2, Shield, Ticket,
   Terminal, Package, BookOpen, Globe,
 } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
 import { LandingNav } from '@/components/LandingNav';
 
 const CLIENT_ID = process.env.DISCORD_CLIENT_ID ?? process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID ?? '';
@@ -16,6 +17,8 @@ const SITE = {
   supportUrl: 'https://discord.gg/fXJnYPdHRX',
 };
 
+// Visual config only — text (title, tagline, description, bullets) comes from
+// the `addonsPage.addons.<id>` message objects.
 const FIRST_PARTY_ADDONS = [
   {
     id: 'tickets',
@@ -24,25 +27,7 @@ const FIRST_PARTY_ADDONS = [
     bg: 'bg-cyan-500/10',
     border: 'border-cyan-500/20',
     accentBorder: 'border-cyan-500/40',
-    badge: 'Official',
     badgeColor: 'bg-cyan-500/15 text-cyan-400 border-cyan-500/30',
-    title: 'Ticket System',
-    tagline: 'Full-featured support desk with SLA, transcripts & staff portal.',
-    description:
-      'A complete customer-support experience inside Discord. Multi-panel routing, custom intake forms, round-robin staff assignment, SLA escalation, canned responses, and a web staff portal — all included.',
-    bullets: [
-      'Multi-button panels routing to different ticket categories',
-      'Private channel or thread per ticket',
-      'Custom form fields collected on ticket open',
-      'Staff claim, transfer, and priority controls',
-      'Multi-level SLA escalation with configurable ping roles',
-      'Round-robin auto-assignment for staff',
-      'Canned responses with Discord autocomplete',
-      'HTML transcript posted to log channel on close',
-      'User 1–5 star rating on ticket close',
-      'Webhook notifications for third-party integrations',
-      'Full staff portal: filters, notes, bulk close, stats',
-    ],
   },
   {
     id: 'gameservers',
@@ -51,21 +36,7 @@ const FIRST_PARTY_ADDONS = [
     bg: 'bg-sky-500/10',
     border: 'border-sky-500/20',
     accentBorder: 'border-sky-500/40',
-    badge: 'Official',
     badgeColor: 'bg-sky-500/15 text-sky-400 border-sky-500/30',
-    title: 'Game Server Status',
-    tagline: 'Check and monitor the status of any game server from Discord.',
-    description:
-      'Query live player counts, map names, ping, and server info for 40+ game types directly from Discord. Save servers per-guild for quick lookups with autocomplete. No admin access to the server required — read-only status queries only.',
-    bullets: [
-      'Query any game server by IP and port with /server status',
-      'Supports 40+ game types: Minecraft (Java + Bedrock), Rust, ARK, Valheim, CS2, DayZ, FiveM, and more',
-      'Displays player count, map, ping, and server name',
-      'Save named servers per-guild for quick autocomplete lookups',
-      'Remove or list saved servers with /server remove and /server list',
-      'No admin credentials required — status queries only',
-      'Minecraft Java uses native SLP; all others use Gamedig',
-    ],
   },
   {
     id: 'code-review',
@@ -74,33 +45,11 @@ const FIRST_PARTY_ADDONS = [
     bg: 'bg-fuchsia-500/10',
     border: 'border-fuchsia-500/20',
     accentBorder: 'border-fuchsia-500/40',
-    badge: 'Official',
     badgeColor: 'bg-fuchsia-500/15 text-fuchsia-400 border-fuchsia-500/30',
-    title: 'Code Review',
-    tagline: 'Instant static analysis and AI-powered code review inside Discord.',
-    description:
-      'Run /reviewcode, paste your snippet into a modal, and get instant feedback — error and warning counts, a list of specific issues, and a formatted/corrected version of the code. Results are ephemeral so only the submitter sees them. Optionally configure a Groq API key for smarter AI-powered analysis.',
-    bullets: [
-      'Run /reviewcode and paste code into a Discord modal',
-      'Results are ephemeral — only the submitter sees the feedback',
-      'Error, warning, and info issue counts with per-issue descriptions',
-      'Formatted/corrected code sent as a follow-up code block',
-      'AI-powered mode via Groq API key for smarter analysis and summaries',
-      'Static analysis fallback: JavaScript, TypeScript, Python, JSON, CSS, and HTML',
-      'Auto-detect language or specify it manually with the language option',
-      'Configurable max code length per server (500–4000 characters)',
-    ],
   },
 ];
 
-const SDK_FEATURES = [
-  { icon: Package, text: 'defineAddon() — TypeScript-first entry point with full type inference; no class boilerplate required' },
-  { icon: Terminal, text: 'Slash and context-menu commands with optional autocomplete handler built in' },
-  { icon: BookOpen, text: 'Discord gateway event listeners with once support; ctx.client exposes the full discord.js Client' },
-  { icon: Shield, text: 'Per-guild isolated key-value storage backed by PostgreSQL — data is always scoped per server' },
-  { icon: Zap, text: 'Structured logger tagged with your addon name plus a typed inter-addon event bus for cross-addon messaging' },
-  { icon: Code2, text: 'Lifecycle hooks: onLoad, onUnload, onSettingsUpdate, onGuildInstall, and onGuildUninstall' },
-];
+const SDK_ICONS = [Package, Terminal, BookOpen, Shield, Zap, Code2];
 
 export const metadata = {
   title: 'Addons — Arken Bot',
@@ -108,7 +57,9 @@ export const metadata = {
     'Explore Arken Bot first-party addons: Ticket System, Game Server Status, and Code Review. Or build your own with the Arken Addon SDK.',
 };
 
-export default function AddonsPage() {
+export default async function AddonsPage() {
+  const t = await getTranslations('addonsPage');
+  const sdkFeatures = t.raw('sdkFeatures') as string[];
   return (
     <div className="min-h-screen bg-discord-darkest-bg text-gray-200 flex flex-col">
       <LandingNav docsUrl={SITE.docsUrl} supportUrl={SITE.supportUrl} inviteUrl={SITE.inviteUrl} />
@@ -121,16 +72,19 @@ export default function AddonsPage() {
         <div className="relative z-10 max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-fuchsia-500/10 border border-fuchsia-500/20 text-fuchsia-400 text-xs font-medium mb-6">
             <Puzzle className="w-3 h-3" />
-            First-party &amp; community addons
+            {t('heroBadge')}
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
-            Extend Arken Bot{' '}
-            <span className="bg-gradient-to-r from-fuchsia-400 via-purple-400 to-blue-400 bg-clip-text text-transparent">
-              with Addons
-            </span>
+            {t.rich('heroTitle', {
+              hl: (c) => (
+                <span className="bg-gradient-to-r from-fuchsia-400 via-purple-400 to-blue-400 bg-clip-text text-transparent">
+                  {c}
+                </span>
+              ),
+            })}
           </h1>
           <p className="text-gray-400 text-lg mb-8 leading-relaxed max-w-xl mx-auto">
-            Arken ships official first-party addons covering advanced tickets, game server status, and developer tools. Install any addon from the dashboard — or build your own with the TypeScript SDK.
+            {t('heroSubtitle')}
           </p>
 
           {/* Jump links */}
@@ -141,14 +95,14 @@ export default function AddonsPage() {
                 href={`#${a.id}`}
                 className="px-3 py-1 rounded-full bg-white/[0.05] border border-white/[0.08] text-xs text-gray-400 hover:text-white hover:bg-white/[0.08] transition-colors"
               >
-                {a.title}
+                {t(`addons.${a.id}.title`)}
               </a>
             ))}
             <a
               href="#sdk"
               className="px-3 py-1 rounded-full bg-white/[0.05] border border-white/[0.08] text-xs text-gray-400 hover:text-white hover:bg-white/[0.08] transition-colors"
             >
-              Build Your Own
+              {t('buildYourOwn')}
             </a>
           </div>
         </div>
@@ -173,20 +127,20 @@ export default function AddonsPage() {
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <h2 className="text-white font-bold text-xl">{a.title}</h2>
+                    <h2 className="text-white font-bold text-xl">{t(`addons.${a.id}.title`)}</h2>
                     <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${a.badgeColor}`}>
-                      {a.badge}
+                      {t('official')}
                     </span>
                   </div>
-                  <p className={`text-sm font-medium mt-0.5 ${a.color}`}>{a.tagline}</p>
+                  <p className={`text-sm font-medium mt-0.5 ${a.color}`}>{t(`addons.${a.id}.tagline`)}</p>
                 </div>
               </div>
 
               {/* Body */}
               <div className="p-6">
-                <p className="text-gray-400 text-sm leading-relaxed mb-5">{a.description}</p>
+                <p className="text-gray-400 text-sm leading-relaxed mb-5">{t(`addons.${a.id}.description`)}</p>
                 <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
-                  {a.bullets.map((b) => (
+                  {(t.raw(`addons.${a.id}.bullets`) as string[]).map((b) => (
                     <li key={b} className="flex items-start gap-2.5 text-sm text-gray-300">
                       <span className={`w-4 h-4 rounded-full ${a.bg} border ${a.border} flex items-center justify-center flex-shrink-0 mt-0.5`}>
                         <Check className={`w-2.5 h-2.5 ${a.color}`} />
@@ -208,13 +162,13 @@ export default function AddonsPage() {
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-fuchsia-500/10 border border-fuchsia-500/20 text-fuchsia-400 text-xs font-medium mb-5">
                 <Code2 className="w-3 h-3" />
-                Addon SDK
+                {t('sdkBadge')}
               </div>
               <h2 className="text-3xl font-bold text-white mb-4 tracking-tight">
-                Build your own addon
+                {t('sdkHeading')}
               </h2>
               <p className="text-gray-400 text-sm leading-relaxed mb-6">
-                The Arken Addon SDK gives you everything you need to extend the bot with slash commands, event listeners, per-guild persistent storage, typed settings, and lifecycle hooks — all in TypeScript. Build your addon, drop the compiled dist/ into the addons folder, restart the bot, and the runtime auto-registers it so it appears in the dashboard immediately.
+                {t('sdkDescription')}
               </p>
               <a
                 href={SITE.docsUrl}
@@ -222,20 +176,20 @@ export default function AddonsPage() {
                 rel="noopener noreferrer"
                 className="btn-secondary inline-flex items-center gap-2 text-sm"
               >
-                Read the SDK docs <ExternalLink className="w-3.5 h-3.5" />
+                {t('readSdkDocs')} <ExternalLink className="w-3.5 h-3.5" />
               </a>
             </div>
 
             <div className="space-y-3">
-              {SDK_FEATURES.map(({ icon: SIcon, text }) => (
+              {SDK_ICONS.map((SIcon, i) => (
                 <div
-                  key={text}
+                  key={i}
                   className="flex items-start gap-3 p-4 rounded-xl bg-discord-darker-bg border border-white/[0.06]"
                 >
                   <div className="w-8 h-8 rounded-lg bg-fuchsia-500/10 border border-fuchsia-500/20 flex items-center justify-center flex-shrink-0">
                     <SIcon className="w-4 h-4 text-fuchsia-400" />
                   </div>
-                  <p className="text-sm text-gray-300 leading-snug">{text}</p>
+                  <p className="text-sm text-gray-300 leading-snug">{sdkFeatures[i]}</p>
                 </div>
               ))}
             </div>
@@ -247,10 +201,10 @@ export default function AddonsPage() {
       <section className="py-20 px-6 text-center border-t border-white/[0.04] bg-discord-darker-bg/30">
         <div className="max-w-2xl mx-auto">
           <h2 className="text-3xl font-bold text-white mb-3 tracking-tight">
-            Ready to supercharge your server?
+            {t('ctaHeading')}
           </h2>
           <p className="text-gray-500 text-sm mb-8">
-            Add Arken Bot and enable any addon from the dashboard — free, forever.
+            {t('ctaSubtitle')}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <a
@@ -259,10 +213,10 @@ export default function AddonsPage() {
               rel="noopener noreferrer"
               className="btn-primary text-[15px] px-10 py-3 shadow-lg shadow-discord-blurple/20 inline-flex items-center gap-2 justify-center"
             >
-              Add to Server — It&apos;s Free <ArrowRight className="w-4 h-4" />
+              {t('ctaAddButton')} <ArrowRight className="w-4 h-4" />
             </a>
             <Link href="/features" className="btn-secondary text-[15px] px-10 py-3 inline-flex items-center gap-2 justify-center">
-              View All Features <ChevronRight className="w-4 h-4" />
+              {t('viewAllFeatures')} <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
         </div>
@@ -282,16 +236,16 @@ export default function AddonsPage() {
           </div>
 
           <div className="flex items-center gap-5 text-xs text-gray-500">
-            <Link href="/" className="hover:text-gray-300 transition-colors">Home</Link>
-            <Link href="/features" className="hover:text-gray-300 transition-colors">Features</Link>
-            <Link href="/addons" className="hover:text-gray-300 transition-colors text-gray-300">Addons</Link>
-            <Link href="/auth" className="hover:text-gray-300 transition-colors">Dashboard</Link>
+            <Link href="/" className="hover:text-gray-300 transition-colors">{t('footHome')}</Link>
+            <Link href="/features" className="hover:text-gray-300 transition-colors">{t('footFeatures')}</Link>
+            <Link href="/addons" className="hover:text-gray-300 transition-colors text-gray-300">{t('footAddons')}</Link>
+            <Link href="/auth" className="hover:text-gray-300 transition-colors">{t('footDashboard')}</Link>
             <a href={SITE.docsUrl} target="_blank" rel="noopener noreferrer" className="hover:text-gray-300 transition-colors flex items-center gap-1">
-              Docs <ExternalLink className="w-2.5 h-2.5" />
+              {t('footDocs')} <ExternalLink className="w-2.5 h-2.5" />
             </a>
-            <a href={SITE.supportUrl} target="_blank" rel="noopener noreferrer" className="hover:text-gray-300 transition-colors">Support</a>
-            <Link href="/privacy" className="hover:text-gray-300 transition-colors">Privacy</Link>
-            <Link href="/terms" className="hover:text-gray-300 transition-colors">Terms</Link>
+            <a href={SITE.supportUrl} target="_blank" rel="noopener noreferrer" className="hover:text-gray-300 transition-colors">{t('footSupport')}</a>
+            <Link href="/privacy" className="hover:text-gray-300 transition-colors">{t('footPrivacy')}</Link>
+            <Link href="/terms" className="hover:text-gray-300 transition-colors">{t('footTerms')}</Link>
           </div>
         </div>
       </footer>

@@ -2,11 +2,14 @@ import { type Guild, type GuildMember, EmbedBuilder, type TextChannel } from 'di
 import { prisma } from '../../database.js';
 import { formatTemplate } from '@arkenbot/shared';
 import { swallow} from '../../logger.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 
 export class WelcomeModule {
   static async handleJoin(guild: Guild, member: GuildMember): Promise<void> {
     const config = await prisma.welcomeConfig.findUnique({ where: { guildId: guild.id } });
     if (!config?.welcomeEnabled) return;
+
+    const loc = await resolveUserLocale({ user: { id: '' }, guildId: guild.id, guildLocale: guild.preferredLocale });
 
     const variables = {
       user: `@${member.displayName}`,
@@ -36,12 +39,12 @@ export class WelcomeModule {
               name: member.user.username,
               iconURL: member.user.displayAvatarURL({ size: 64 }),
             })
-            .setTitle(`👋 Welcome to ${guild.name}!`)
+            .setTitle(t('welcome.title', loc, { server: guild.name }))
             .setDescription(message)
             .setThumbnail(member.user.displayAvatarURL({ size: 256 }))
             .addFields(
-              { name: '📅 Account Age', value: accountAge, inline: true },
-              { name: '👥 Member Count', value: `#${guild.memberCount}`, inline: true },
+              { name: t('welcome.accountAge', loc), value: accountAge, inline: true },
+              { name: t('welcome.memberCount', loc), value: `#${guild.memberCount}`, inline: true },
             )
             .setFooter({ text: `ID: ${member.id}`, iconURL: guild.iconURL() ?? undefined })
             .setTimestamp();

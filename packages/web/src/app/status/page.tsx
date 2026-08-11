@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { LandingNav } from '@/components/LandingNav';
 import { Footer } from '@/components/Footer';
 
@@ -33,6 +34,7 @@ function formatUptime(seconds: number): string {
 }
 
 function StatusRow({ name, online, detail }: { name: string; online: boolean | null; detail?: string }) {
+  const t = useTranslations('statusPage');
   return (
     <div className="flex items-center justify-between py-4 border-b border-[var(--border-subtle)] last:border-0">
       <div className="flex items-center gap-3">
@@ -47,7 +49,7 @@ function StatusRow({ name, online, detail }: { name: string; online: boolean | n
       <div className="flex items-center gap-4">
         {detail && <span className="text-xs text-[var(--text-muted)]">{detail}</span>}
         <span className={`text-xs font-semibold ${online === null ? 'text-gray-500' : online ? 'text-green-400' : 'text-red-400'}`}>
-          {online === null ? 'Checking…' : online ? 'Operational' : 'Down'}
+          {online === null ? t('checking') : online ? t('operational') : t('down')}
         </span>
       </div>
     </div>
@@ -55,6 +57,7 @@ function StatusRow({ name, online, detail }: { name: string; online: boolean | n
 }
 
 export default function StatusPage() {
+  const t = useTranslations('statusPage');
   const [status, setStatus] = useState<Status | null>(null);
   const [apiReachable, setApiReachable] = useState<boolean | null>(null);
 
@@ -88,9 +91,9 @@ export default function StatusPage() {
 
       <main className="max-w-2xl mx-auto px-6 py-16">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">System Status</h1>
+          <h1 className="text-3xl font-bold text-white mb-2">{t('title')}</h1>
           <p className="text-sm text-[var(--text-secondary)]">
-            Live health of Arken Bot services. This page refreshes automatically every 30 seconds.
+            {t('subtitle')}
           </p>
         </div>
 
@@ -105,57 +108,57 @@ export default function StatusPage() {
           }`}
         >
           {apiReachable === null
-            ? 'Checking systems…'
+            ? t('bannerChecking')
             : allUp
-              ? '✓ All systems operational'
+              ? t('bannerAllUp')
               : apiReachable === false
-                ? '⚠ API unreachable — some services may be down'
-                : '⚠ Partial outage — one or more components are degraded'}
+                ? t('bannerApiDown')
+                : t('bannerPartial')}
         </div>
 
         <div className="card border border-[var(--border-subtle)] rounded-lg px-5">
           <StatusRow
-            name="Discord Bot"
+            name={t('serviceBot')}
             online={apiReachable === null ? null : (status?.bot.online ?? false)}
             detail={
               status?.bot.online
-                ? `${status.bot.guilds ?? '—'} servers · ${status.bot.wsPingMs != null ? `${status.bot.wsPingMs}ms gateway` : ''}`
+                ? `${status.bot.guilds ?? '—'} ${t('serversWord')}${status.bot.wsPingMs != null ? ` · ${status.bot.wsPingMs}ms ${t('gatewayWord')}` : ''}`
                 : status?.bot.lastSeen
-                  ? `last seen ${new Date(status.bot.lastSeen).toLocaleTimeString()}`
+                  ? t('lastSeen', { time: new Date(status.bot.lastSeen).toLocaleTimeString() })
                   : undefined
             }
           />
           <StatusRow
-            name="API"
+            name={t('serviceApi')}
             online={apiReachable === null ? null : apiReachable && !!status}
-            detail={status ? `up ${formatUptime(status.api.uptimeSeconds)}` : undefined}
+            detail={status ? t('upFor', { uptime: formatUptime(status.api.uptimeSeconds) }) : undefined}
           />
           <StatusRow
-            name="Web Dashboard"
+            name={t('serviceWeb')}
             online={true}
-            detail="you're looking at it"
+            detail={t('lookingAtIt')}
           />
           <StatusRow
-            name="Database"
+            name={t('serviceDatabase')}
             online={apiReachable === null ? null : (status?.database.online ?? false)}
             detail={status?.database.latencyMs != null ? `${status.database.latencyMs}ms` : undefined}
           />
           <StatusRow
-            name="Cache"
+            name={t('serviceCache')}
             online={apiReachable === null ? null : (status?.cache.online ?? false)}
           />
         </div>
 
         {status && (
           <p className="text-xs text-[var(--text-muted)] mt-4">
-            Last checked {new Date(status.checkedAt).toLocaleTimeString()}
+            {t('lastChecked', { time: new Date(status.checkedAt).toLocaleTimeString() })}
           </p>
         )}
 
         <p className="text-sm text-[var(--text-secondary)] mt-8">
-          Seeing an issue not reflected here? Report it in our{' '}
+          {t('reportIssue')}{' '}
           <a href={SITE.supportUrl} target="_blank" rel="noopener noreferrer" className="text-discord-blurple hover:underline">
-            support server
+            {t('supportServerLink')}
           </a>.
         </p>
       </main>

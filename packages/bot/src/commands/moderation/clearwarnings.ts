@@ -11,6 +11,7 @@ import {
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { errorEmbed } from '../../utils/embed.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 import { canModerate } from '../../utils/permissions.js';
 import { prisma } from '../../database.js';
 import { getGuildSettings, getNextCaseNumber } from '../../utils/settings.js';
@@ -37,11 +38,12 @@ const command: BotCommand = {
 
   async execute(interaction: ChatInputCommandInteraction, _client: BotClient) {
     await interaction.deferReply();
+    const loc = await resolveUserLocale(interaction);
 
     const settings = await getGuildSettings(interaction.guildId!);
     if (settings && !settings.moderationEnabled) {
       await interaction.editReply({
-        embeds: [errorEmbed('Moderation Disabled', 'Moderation commands are disabled for this server.')],
+        embeds: [errorEmbed(t('moderation.disabledTitle', loc), t('moderation.disabled', loc))],
       });
       return;
     }
@@ -50,12 +52,12 @@ const command: BotCommand = {
     const reason = interaction.options.getString('reason') ?? 'No reason provided';
 
     if (!interaction.guild) {
-      await interaction.editReply({ embeds: [errorEmbed('Error', 'This command must be used in a server.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('common.error', loc), t('common.notInServer', loc))] });
       return;
     }
 
     if (targetUser.id === interaction.user.id) {
-      await interaction.editReply({ embeds: [errorEmbed('Invalid Target', 'You cannot clear your own warnings.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('moderation.cannotBanSelfTitle', loc), t('cmd.clearwarnings.cannotSelf', loc))] });
       return;
     }
 
@@ -64,7 +66,7 @@ const command: BotCommand = {
 
     if (targetMember && !canModerate(moderator, targetMember)) {
       await interaction.editReply({
-        embeds: [errorEmbed('Hierarchy Error', 'You cannot manage warnings for a member with a higher or equal role.')],
+        embeds: [errorEmbed(t('cmd.clearwarnings.hierarchyTitle', loc), t('cmd.clearwarnings.hierarchyUser', loc))],
       });
       return;
     }
@@ -78,8 +80,8 @@ const command: BotCommand = {
         embeds: [
           new EmbedBuilder()
             .setColor(COLORS.SUCCESS)
-            .setTitle('✅ No Active Warnings')
-            .setDescription(`${targetUser.tag} has no active warnings to clear.`),
+            .setTitle(t('cmd.clearwarnings.noActiveTitle', loc))
+            .setDescription(t('cmd.clearwarnings.noActive', loc, { user: targetUser.tag })),
         ],
       });
       return;
@@ -110,9 +112,9 @@ const command: BotCommand = {
         embeds: [
           new EmbedBuilder()
             .setColor(COLORS.SUCCESS)
-            .setTitle(`Warnings Cleared in ${interaction.guild.name}`)
-            .setDescription(`Your ${activeCount} active warning(s) have been cleared by a moderator.`)
-            .addFields({ name: 'Reason', value: reason }),
+            .setTitle(t('cmd.clearwarnings.dmTitle', loc, { guild: interaction.guild.name }))
+            .setDescription(t('cmd.clearwarnings.dmDesc', loc, { count: activeCount }))
+            .addFields({ name: t('cmd.clearwarnings.fieldReason', loc), value: reason }),
         ],
       })
       .catch(swallow);
@@ -121,12 +123,12 @@ const command: BotCommand = {
       embeds: [
         new EmbedBuilder()
           .setColor(COLORS.SUCCESS)
-          .setTitle('✅ Warnings Cleared')
+          .setTitle(t('cmd.clearwarnings.clearedTitle', loc))
           .addFields(
-            { name: 'User', value: `${targetUser.tag} (${targetUser.id})`, inline: true },
-            { name: 'Cleared', value: `${activeCount} warning(s)`, inline: true },
-            { name: 'Moderator', value: interaction.user.tag, inline: true },
-            { name: 'Reason', value: reason },
+            { name: t('cmd.clearwarnings.fieldUser', loc), value: `${targetUser.tag} (${targetUser.id})`, inline: true },
+            { name: t('cmd.clearwarnings.fieldCleared', loc), value: t('cmd.clearwarnings.clearedValue', loc, { count: activeCount }), inline: true },
+            { name: t('cmd.clearwarnings.fieldModerator', loc), value: interaction.user.tag, inline: true },
+            { name: t('cmd.clearwarnings.fieldReason', loc), value: reason },
           ),
       ],
     });

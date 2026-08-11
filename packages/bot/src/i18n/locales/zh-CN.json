@@ -7,22 +7,176 @@
   "language": {
     "commandDescription": "设置或查看我回复给你的语言",
     "setDescription": "选择我回复给你的语言",
-    "clearDescription": "清除你的语言并恢复自动检测",
+    "clearDescription": "清除你的语言并回到自动检测",
     "showDescription": "显示你的当前语言",
     "optionDescription": "要使用的语言",
     "setTitle": "语言已更新",
     "set": "我现在将以 **{language}** 回复你。",
     "clearedTitle": "语言已重置",
-    "cleared": "你的语言偏好已被清除 —— 我将从你的 Discord 设置中自动检测它。",
+    "cleared": "你的语言偏好已被清除 —— 我将根据你的 Discord 设置自动检测它。",
     "currentTitle": "你的语言",
     "currentSet": "你的语言设置为 **{language}**。",
-    "currentAuto": "你没有设置语言，所以我会自动检测（当前为 **{language}**）。",
+    "currentAuto": "你没有设置语言，所以我将根据你的 Discord 设置自动检测（当前 **{language}**）。",
     "invalid": "**{input}** 不是支持的语言。"
   },
   "moderation": {
-    "disabledTitle": "已禁用管理",
-    "disabled": "此服务器的管理命令已被禁用。",
+    "disabledTitle": "管理命令已禁用",
+    "disabled": "此服务器的管理命令已禁用。",
     "cannotBanSelfTitle": "无效目标",
     "cannotBanSelf": "你不能禁止自己。"
+  },
+  "welcome": {
+    "title": "👋 欢迎来到 {server}！",
+    "accountAge": "📅 账户年龄",
+    "memberCount": "👥 成员数量"
+  },
+  "leveling": {
+    "levelUp": "升级！",
+    "milestoneReached": "{label} 里程碑达成！",
+    "level": "等级",
+    "achievement": "成就",
+    "milestones": {
+      "legendary": "🏆 传奇",
+      "diamond": "💎 钻石",
+      "century": "🌟 世纪",
+      "elite": "⚡ 精英",
+      "veteran": "🔥 老兵",
+      "experienced": "🥇 经验丰富",
+      "rising": "🥈 新星",
+      "newcomer": "🥉 新人"
+    }
+  },
+  "counting": {
+    "ruined": "❌ {user} 破坏了计数，当前计数为 **{count}**！重新开始从 **1**。",
+    "twiceInRow": "❌ {user} 不能连续计数！计数重置 —— 从 **1** 开始。"
+  },
+  "automod": {
+    "kickedTitle": "被踢出 {server}",
+    "filterKickDM": "你因反复违反词语过滤规则（违规 #{count} 次）被踢出 **{server}**。",
+    "filterKick": "⛔ {user} 因反复违反词语过滤规则（违规 #{count} 次）被踢出。",
+    "filterWarn": "⚠️ {user} 你的消息因包含过滤词语（违规 #{count} 次）被移除。",
+    "removed": "{user} 你的消息被移除：**{reason}**",
+    "reasons": {
+      "spam": "检测到垃圾信息",
+      "link": "检测到被阻止的链接",
+      "mention": "提及垃圾信息",
+      "caps": "过多大写字母"
+    },
+    "phishingRemoved": "⚠️ {user} —— 你的消息因包含已知的钓鱼链接被移除。",
+    "aiFlagTitle": "🤖 AI 管理标志",
+    "aiFlagDescription": "标记来自 {user} 在 {channel} 的消息进行审查。\n\n**类别：** {category} · **严重程度：** {severity}\n**原因：** {reason}\n[跳转到消息]({url})",
+    "aiFlagFooter": "AI 生成 · 审查后再采取行动"
+  },
+  "verification": {
+    "verifyChannelFallback": "验证频道",
+    "dmWelcome": "欢迎来到 **{server}**！请在 {channel} 点击验证按钮以获得访问权限。",
+    "serverOnly": "此按钮只能在服务器中使用。",
+    "notConfigured": "此服务器未配置验证。",
+    "fetchFailed": "无法获取你的成员数据。",
+    "verified": "✅ 已验证！欢迎来到服务器。",
+    "error": "验证过程中发生错误。",
+    "panelTitle": "✅ 验证你的账户",
+    "panelDescription": "点击下面的按钮验证自己并获得服务器访问权限。",
+    "buttonLabel": "验证"
+  },
+  "starboard": {
+    "unknownAuthor": "未知作者",
+    "source": "来源",
+    "jumpToMessage": "[跳转到消息]({url})"
+  },
+  "reactionRoles": {
+    "addOnly": " *(仅添加)*",
+    "removeOnly": " *(仅移除)*",
+    "noRoles": "*尚未配置任何角色.*",
+    "footer": "{count} 个角色 • 点击反应分配角色"
+  },
+  "antiNuke": {
+    "alertTitle": "🚨 反核警报",
+    "alertDescription": "用户 {user} 在 **{server}** 中超过了 **{action}** 阈值，并被解除管理员权限。",
+    "triggeredTitle": "🚨 反核触发",
+    "triggeredDescription": "{user} 因超过 **{action}** 动作阈值而受到惩罚。",
+    "actionTaken": "采取的行动",
+    "deopped": "解除管理员权限（移除角色）",
+    "trigger": "触发器"
+  },
+  "onboarding": {
+    "title": "👋 感谢你添加 ArkenBot！",
+    "description": "ArkenBot刚刚加入 **{server}**。以下是如何在几分钟内设置它：",
+    "step1Name": "1️⃣ 配置你的服务器",
+    "step1Value": "使用 Discord 登录 [仪表板]({dashboardUrl})，选择 **{server}**，并启用你想要的功能 —— 管理、等级、票务、流媒体提醒等。",
+    "step2Name": "2️⃣ 设置公告频道",
+    "step2Value": "在 **仪表板 → 公告** 中，选择一个频道来接收关于 ArkenBot 的更新 —— 新功能、更改和重要通知将出现在那里。",
+    "step3Name": "3️⃣ 阅读文档",
+    "step3Value": "每个功能都有一个指南，位于 [docs.arkenbot.app]({docsUrl})。",
+    "footer": "ArkenBot —— 完全免费，无付费墙",
+    "buttonDashboard": "打开仪表板",
+    "buttonDocs": "文档",
+    "buttonSupport": "支持服务器"
+  },
+  "music": {
+    "playbackFailedTitle": "⚠️ 播放失败",
+    "playbackFailedDescription": "无法播放 **{title}**。\n`{reason}`",
+    "playbackFailedFooter": "尝试不同的搜索或检查 yt-dlp 是否更新。",
+    "nowPlayingTitle": "🎵 正在播放",
+    "requestedBy": "请求者",
+    "duration": "时长"
+  },
+  "topgg": {
+    "voteReminder": "🗳️ 你可以在 top.gg 再次为 **{bot}** 投票！\n{url}\n\n_随时使用 `/vote reminders:off` 关闭提醒。_"
+  },
+  "birthday": {
+    "title": "🎂 生日快乐！"
+  },
+  "reminders": {
+    "deliver": "{user} 提醒：{message}"
+  },
+  "giveaway": {
+    "noEntrants": "没有合格的参与者",
+    "winnerLabel": "获奖者",
+    "winnersLabel": "获奖者",
+    "ended": "🎉 抽奖结束！{winnerLabel}：{winners}\n奖品：**{prize}**",
+    "endedTitle": "🎉 抽奖结束",
+    "endedEmbed": "**奖品：** {prize}\n**{winnerLabel}：** {winners}"
+  },
+  "streamAlert": {
+    "youtubeLive": "{streamer} 在 YouTube 上直播！",
+    "twitchLive": "{streamer} 在 Twitch 上直播！",
+    "playing": "正在播放",
+    "unknownGame": "未知游戏",
+    "kickLive": "{streamer} 在 Kick 上直播！",
+    "twitterPosted": "{handle} 在 X 上发布",
+    "redditPostedBy": "由 u/{author} 在 r/{subreddit} 发布",
+    "rssNewPost": "来自 **{feed}** 的新帖子"
+  },
+  "announcement": {
+    "author": "ArkenBot 公告",
+    "buttonChangelog": "完整的更改日志",
+    "buttonDashboard": "仪表板",
+    "labels": {
+      "update": "更新",
+      "feature": "新功能",
+      "maintenance": "维护",
+      "hotfix": "热修复"
+    }
+  },
+  "logging": {
+    "user": "用户",
+    "moderator": "管理员",
+    "reason": "原因",
+    "noReason": "没有提供原因",
+    "messageDeleted": "🗑️ 消息已删除",
+    "author": "作者",
+    "channel": "频道",
+    "content": "内容",
+    "messageEdited": "✏️ 消息已编辑",
+    "before": "之前",
+    "after": "之后",
+    "noContent": "*无内容*",
+    "memberJoined": "📥 成员加入",
+    "accountAge": "账户年龄",
+    "memberCount": "成员数量",
+    "memberLeft": "📤 成员离开",
+    "joined": "加入",
+    "unknown": "未知"
   }
 }

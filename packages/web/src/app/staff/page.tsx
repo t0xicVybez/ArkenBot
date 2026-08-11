@@ -5,6 +5,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { adminApi } from '@/lib/api';
 import { Server, Users, Puzzle, Shield, LayoutGrid, ArrowRight } from 'lucide-react';
 import type { SystemStats } from '@arkenbot/shared';
+import { useTranslations } from 'next-intl';
 import { useWebSocket } from '@/lib/socket';
 
 /** Mock-pattern stat tile: uppercase label, big tabular value. */
@@ -20,6 +21,7 @@ function StatTile({ label, value }: { label: string; value: string | number }) {
 }
 
 export default function StaffDashboard() {
+  const t = useTranslations('staffDashboard');
   const queryClient = useQueryClient();
 
   const { data: statsRes, isLoading } = useQuery({
@@ -45,8 +47,8 @@ export default function StaffDashboard() {
       <div className="page-head">
         <div className="page-head-icon"><LayoutGrid className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>Fleet overview</h1>
-          <div className="page-head-desc">Every server, user, and moving part of ArkenBot.</div>
+          <h1>{t('title')}</h1>
+          <div className="page-head-desc">{t('subtitle')}</div>
         </div>
       </div>
 
@@ -59,14 +61,14 @@ export default function StaffDashboard() {
         </div>
       ) : (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 mb-6">
-          <StatTile label="Servers" value={stats?.totalGuilds ?? 0} />
-          <StatTile label="Active Servers" value={stats?.activeGuilds ?? 0} />
-          <StatTile label="Total Users" value={stats?.totalUsers ?? 0} />
-          <StatTile label="Mod Cases" value={stats?.totalCases ?? 0} />
-          <StatTile label="Active Warnings" value={stats?.totalWarnings ?? 0} />
-          <StatTile label="Addons" value={stats?.totalAddons ?? 0} />
-          <StatTile label="Uptime" value={stats?.uptime ? formatUptime(stats.uptime) : '—'} />
-          <StatTile label="Memory" value={stats?.memoryUsage ? `${stats.memoryUsage} MB` : '—'} />
+          <StatTile label={t('servers')} value={stats?.totalGuilds ?? 0} />
+          <StatTile label={t('activeServers')} value={stats?.activeGuilds ?? 0} />
+          <StatTile label={t('totalUsers')} value={stats?.totalUsers ?? 0} />
+          <StatTile label={t('modCases')} value={stats?.totalCases ?? 0} />
+          <StatTile label={t('activeWarnings')} value={stats?.totalWarnings ?? 0} />
+          <StatTile label={t('addons')} value={stats?.totalAddons ?? 0} />
+          <StatTile label={t('uptime')} value={stats?.uptime ? formatUptime(stats.uptime) : '—'} />
+          <StatTile label={t('memory')} value={stats?.memoryUsage ? `${stats.memoryUsage} MB` : '—'} />
         </div>
       )}
 
@@ -74,14 +76,14 @@ export default function StaffDashboard() {
         {/* Quick actions */}
         <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl p-0 overflow-hidden">
           <div className="px-[18px] py-[13px] border-b border-[var(--border-subtle)]">
-            <h2 className="text-[13.5px] font-bold text-white">Quick actions</h2>
+            <h2 className="text-[13.5px] font-bold text-white">{t('quickActions')}</h2>
           </div>
           <div>
             {[
-              { href: '/staff/guilds', icon: Server, label: 'Browse guilds', sub: 'Every server ArkenBot is in' },
-              { href: '/staff/users', icon: Users, label: 'Manage users', sub: 'Staff roles and dashboard access' },
-              { href: '/staff/addons', icon: Puzzle, label: 'Addon registry', sub: 'Publish and maintain addons' },
-              { href: '/staff/logs', icon: Shield, label: 'System logs', sub: 'Bot and API level events' },
+              { href: '/staff/guilds', icon: Server, label: t('browseGuilds'), sub: t('browseGuildsSub') },
+              { href: '/staff/users', icon: Users, label: t('manageUsers'), sub: t('manageUsersSub') },
+              { href: '/staff/addons', icon: Puzzle, label: t('addonRegistry'), sub: t('addonRegistrySub') },
+              { href: '/staff/logs', icon: Shield, label: t('systemLogs'), sub: t('systemLogsSub') },
             ].map((action) => (
               <Link
                 key={action.href}
@@ -104,19 +106,19 @@ export default function StaffDashboard() {
         {/* System health */}
         <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl p-0 overflow-hidden">
           <div className="flex items-center px-[18px] py-[13px] border-b border-[var(--border-subtle)]">
-            <h2 className="text-[13.5px] font-bold text-white">System health</h2>
+            <h2 className="text-[13.5px] font-bold text-white">{t('systemHealth')}</h2>
             <span className="ml-auto inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-0.5 rounded-full text-[var(--success)] bg-[var(--success)]/10 border border-[var(--success)]/30">
               <span className="w-[7px] h-[7px] rounded-full bg-[var(--success)]" />
-              Operational
+              {t('operational')}
             </span>
           </div>
           <div className="px-[18px]">
             {[
-              { label: 'Discord Bot', value: `${stats?.totalGuilds ?? '—'} servers` },
-              { label: 'API', value: stats?.uptime ? `up ${formatUptime(stats.uptime)}` : '—' },
-              { label: 'Version', value: stats?.version ?? '1.0.0', mono: true },
-              { label: 'Memory', value: stats?.memoryUsage ? `${stats.memoryUsage} MB heap` : '—' },
-              { label: 'Environment', value: process.env.NODE_ENV ?? 'development' },
+              { label: t('healthBot'), value: stats?.totalGuilds != null ? t('serversValue', { count: stats.totalGuilds }) : '—' },
+              { label: t('healthApi'), value: stats?.uptime ? t('upValue', { uptime: formatUptime(stats.uptime) }) : '—' },
+              { label: t('healthVersion'), value: stats?.version ?? '1.0.0', mono: true },
+              { label: t('healthMemory'), value: stats?.memoryUsage ? t('memoryHeap', { mb: stats.memoryUsage }) : '—' },
+              { label: t('healthEnvironment'), value: process.env.NODE_ENV ?? 'development' },
             ].map((row) => (
               <div key={row.label} className="flex items-center gap-2.5 py-3 border-b border-[var(--border-subtle)] last:border-0">
                 <span className="w-[7px] h-[7px] rounded-full bg-[var(--success)] flex-shrink-0" />

@@ -4,8 +4,10 @@ import { useQuery } from '@tanstack/react-query';
 import { adminApi } from '@/lib/api';
 import { useState } from 'react';
 import { FileText, Search } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 export default function StaffLogsPage() {
+  const t = useTranslations('staffLogs');
   const [page, setPage] = useState(1);
   const [guildId, setGuildId] = useState('');
   const [type, setType] = useState('');
@@ -38,15 +40,15 @@ export default function StaffLogsPage() {
       <div className="page-head">
         <div className="page-head-icon"><FileText className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>System Logs</h1>
-          <div className="page-head-desc">Total: {total} entries</div>
+          <h1>{t('title')}</h1>
+          <div className="page-head-desc">{t('total', { total })}</div>
         </div>
       </div>
 
       <div className="card mb-6 flex flex-col sm:flex-row gap-3">
         <input
           type="text"
-          placeholder="Filter by Guild ID..."
+          placeholder={t('filterGuild')}
           value={guildId}
           onChange={(e) => { setGuildId(e.target.value); setPage(1); }}
           className="input flex-1"
@@ -56,15 +58,15 @@ export default function StaffLogsPage() {
           onChange={(e) => { setType(e.target.value); setPage(1); }}
           className="input sm:w-48"
         >
-          <option value="">All Types</option>
-          <option value="member_join">Member Join</option>
-          <option value="member_leave">Member Leave</option>
-          <option value="message_delete">Message Delete</option>
-          <option value="message_edit">Message Edit</option>
-          <option value="member_ban">Ban</option>
-          <option value="member_kick">Kick</option>
-          <option value="member_warn">Warning</option>
-          <option value="automod">AutoMod</option>
+          <option value="">{t('allTypes')}</option>
+          <option value="member_join">{t('typeMemberJoin')}</option>
+          <option value="member_leave">{t('typeMemberLeave')}</option>
+          <option value="message_delete">{t('typeMessageDelete')}</option>
+          <option value="message_edit">{t('typeMessageEdit')}</option>
+          <option value="member_ban">{t('typeBan')}</option>
+          <option value="member_kick">{t('typeKick')}</option>
+          <option value="member_warn">{t('typeWarning')}</option>
+          <option value="automod">{t('typeAutomod')}</option>
         </select>
       </div>
 
@@ -77,7 +79,7 @@ export default function StaffLogsPage() {
               </div>
             ))
           ) : logs.length === 0 ? (
-            <div className="px-4 py-8 text-center text-gray-500">No logs found</div>
+            <div className="px-4 py-8 text-center text-gray-500">{t('noLogs')}</div>
           ) : (
             logs.map((log) => (
               <div key={log.id} className="px-4 py-2.5 hover:bg-white/[0.02] flex items-center gap-3">
@@ -100,13 +102,13 @@ export default function StaffLogsPage() {
 
         {total > 100 && (
           <div className="px-4 py-3 border-t border-[var(--border-subtle)] flex items-center justify-between">
-            <p className="text-xs text-gray-400">Page {page} of {Math.ceil(total / 100)}</p>
+            <p className="text-xs text-gray-400">{t('pageOf', { page, pages: Math.ceil(total / 100) })}</p>
             <div className="flex gap-2">
               <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page <= 1} className="btn-secondary text-xs py-1 px-3">
-                Previous
+                {t('previous')}
               </button>
               <button onClick={() => setPage((p) => p + 1)} disabled={!hasMore} className="btn-secondary text-xs py-1 px-3">
-                Next
+                {t('next')}
               </button>
             </div>
           </div>

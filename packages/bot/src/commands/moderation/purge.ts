@@ -5,6 +5,7 @@
 import { SlashCommandBuilder, PermissionFlagsBits, type ChatInputCommandInteraction } from 'discord.js';
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 
 const command: BotCommand = {
   data: new SlashCommandBuilder()
@@ -18,13 +19,14 @@ const command: BotCommand = {
   category: 'moderation',
   cooldown: 5,
   async execute(interaction: ChatInputCommandInteraction, _client: BotClient) {
+    const loc = await resolveUserLocale(interaction);
     const amount = interaction.options.getInteger('amount', true);
     const user = interaction.options.getUser('user');
     const botsOnly = interaction.options.getBoolean('bots') ?? false;
     const contains = interaction.options.getString('contains');
 
     if (!interaction.channel?.isTextBased()) {
-      await interaction.reply({ content: 'This command can only be used in text channels.', flags: 64 });
+      await interaction.reply({ content: t('cmd.purge.textOnly', loc), flags: 64 });
       return;
     }
 
@@ -42,18 +44,18 @@ const command: BotCommand = {
     toDelete = toDelete.filter(m => m.createdTimestamp > twoWeeksAgo);
 
     if (toDelete.length === 0) {
-      await interaction.editReply('No messages matched the filters (messages must be under 14 days old).');
+      await interaction.editReply(t('cmd.purge.noMatch', loc));
       return;
     }
 
     const { TextChannel } = await import('discord.js');
     if (!(interaction.channel instanceof TextChannel)) {
-      await interaction.editReply('Bulk delete is only available in text channels.');
+      await interaction.editReply(t('cmd.purge.bulkTextOnly', loc));
       return;
     }
 
     const deleted = await interaction.channel.bulkDelete(toDelete, true);
-    await interaction.editReply(`Deleted ${deleted.size} message${deleted.size !== 1 ? 's' : ''}.`);
+    await interaction.editReply(t('cmd.purge.deleted', loc, { count: deleted.size }));
   },
 };
 
