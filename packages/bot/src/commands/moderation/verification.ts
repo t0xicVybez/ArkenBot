@@ -9,7 +9,7 @@ import {
 } from 'discord.js';
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
-import { successEmbed, errorEmbed } from '../../utils/embed.js';
+import { successEmbed } from '../../utils/embed.js';
 import { prisma } from '../../database.js';
 import type { Prisma } from '@prisma/client';
 import { invalidateSettingsCache } from '../../utils/settings.js';

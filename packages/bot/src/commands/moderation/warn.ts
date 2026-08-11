@@ -9,7 +9,7 @@ import {
 } from 'discord.js';
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
-import { moderationEmbed, errorEmbed, infoEmbed } from '../../utils/embed.js';
+import { moderationEmbed, errorEmbed } from '../../utils/embed.js';
 import { canModerate } from '../../utils/permissions.js';
 import { prisma } from '../../database.js';
 import { getNextCaseNumber, getGuildSettings } from '../../utils/settings.js';

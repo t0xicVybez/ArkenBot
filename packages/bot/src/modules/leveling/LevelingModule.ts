@@ -8,7 +8,7 @@ import { prisma } from '../../database.js';
 import type { LevelRole } from '@prisma/client';
 import { AchievementsModule } from './AchievementsModule.js';
 import { redis } from '../../redis.js';
-import { REDIS_KEYS, xpForLevel, levelFromXp, formatTemplate } from '@arkenbot/shared';
+import { REDIS_KEYS, levelFromXp, formatTemplate } from '@arkenbot/shared';
 import { getGuildSettings } from '../../utils/settings.js';
 import { logger, swallow} from '../../logger.js';
 

@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import { prisma } from '../database.js';
 import { redis } from '../redis.js';
-import { levelFromXp, xpForLevel } from '@arkenbot/shared';
+import { xpForLevel } from '@arkenbot/shared';
 
 export async function publicRoutes(server: FastifyInstance): Promise<void> {
   // GET /public/status — component health for the public status page.
