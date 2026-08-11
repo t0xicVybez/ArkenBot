@@ -1,15 +1,17 @@
 name: CI
 
-# Runs on every PR and on pushes to main. Gates on typecheck + server build,
-# which catch the "compiles-but-broken" and stale-dist regressions that have
-# bitten deploys before. Lint is intentionally NOT gated yet: api/bot have no
-# eslint installed and web's `next lint` currently exits non-zero — see the
-# follow-up task to set up a working lint before adding it here.
+# Runs on every PR and on pushes to main. Gates on typecheck + lint + server
+# build, which catch the "compiles-but-broken" and stale-dist regressions that
+# have bitten deploys before.
 
 on:
   push:
     branches: [main]
   pull_request:
+
+# Least-privilege: this workflow only reads the repo. No write scopes granted.
+permissions:
+  contents: read
 
 concurrency:
   group: ci-${{ github.ref }}
