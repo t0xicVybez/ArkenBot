@@ -439,6 +439,23 @@ model PortalUser {
 }
 
 // ─────────────────────────────────────────────
+// User Preferences (per-Discord-user, shared by bot + dashboard)
+// ─────────────────────────────────────────────
+// Language preference keyed by Discord user ID. Written by the dashboard's
+// language switcher and the bot's /language command, read by both. `language`
+// is null when the user hasn't chosen one — callers then fall back to
+// auto-detection (Discord client locale / browser Accept-Language) -> guild
+// locale -> default. Kept separate from PortalUser so bot-only users (who never
+// logged into the dashboard) can still set a preference.
+model UserPreferences {
+  userId    String   @id // Discord user ID
+  language  String? // BCP-47 locale code, or null = auto-detect
+  updatedAt DateTime @updatedAt
+
+  @@map("user_preferences")
+}
+
+// ─────────────────────────────────────────────
 // User Sessions (opaque server-side sessions)
 // ─────────────────────────────────────────────
 // The dashboard stores no token in the browser — the httpOnly cookie holds an
