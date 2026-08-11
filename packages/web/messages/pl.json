@@ -1,0 +1,21 @@
+{
+  "common": {
+    "save": "Zapisz",
+    "cancel": "Anuluj",
+    "saved": "Zapisano",
+    "loading": "Ładowanie…",
+    "language": "Język"
+  },
+  "nav": {
+    "overview": "Przegląd",
+    "moderation": "Moderacja",
+    "leveling": "Poziomy",
+    "settings": "Ustawienia",
+    "integrations": "Integracje"
+  },
+  "language": {
+    "label": "Język",
+    "description": "Wybierz język dla pulpitu nawigacyjnego. To ustawienie określa również, w jaki sposób ArkenBot odpowiada na Twoje wiadomości.",
+    "saved": "Język zaktualizowany"
+  }
+}

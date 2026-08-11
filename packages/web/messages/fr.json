@@ -1,0 +1,21 @@
+{
+  "common": {
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "saved": "Enregistré",
+    "loading": "Chargement…",
+    "language": "Langue"
+  },
+  "nav": {
+    "overview": "Aperçu",
+    "moderation": "Modération",
+    "leveling": "Niveau",
+    "settings": "Paramètres",
+    "integrations": "Intégrations"
+  },
+  "language": {
+    "label": "Langue",
+    "description": "Choisissez la langue pour le tableau de bord. Cela définit également la façon dont le bot vous répond.",
+    "saved": "Langue mise à jour"
+  }
+}

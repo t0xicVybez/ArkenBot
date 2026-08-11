@@ -1,0 +1,21 @@
+{
+  "common": {
+    "save": "Salva",
+    "cancel": "Annulla",
+    "saved": "Salvato",
+    "loading": "Caricamento…",
+    "language": "Lingua"
+  },
+  "nav": {
+    "overview": "Panoramica",
+    "moderation": "Moderazione",
+    "leveling": "Progressione",
+    "settings": "Impostazioni",
+    "integrations": "Integrazioni"
+  },
+  "language": {
+    "label": "Lingua",
+    "description": "Scegli la lingua per il pannello di controllo. Ciò imposta anche come il bot risponde a te.",
+    "saved": "Lingua aggiornata"
+  }
+}

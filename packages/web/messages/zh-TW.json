@@ -1,0 +1,21 @@
+{
+  "common": {
+    "save": "儲存",
+    "cancel": "取消",
+    "saved": "儲存完成",
+    "loading": "載入中…",
+    "language": "語言"
+  },
+  "nav": {
+    "overview": "概覽",
+    "moderation": "管理",
+    "leveling": "等級",
+    "settings": "設定",
+    "integrations": "整合"
+  },
+  "language": {
+    "label": "語言",
+    "description": "選擇儀表板的語言。這也設定了機器人如何回應您。",
+    "saved": "語言已更新"
+  }
+}

@@ -10,6 +10,7 @@ import {
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { moderationEmbed, errorEmbed } from '../../utils/embed.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 import { canModerate } from '../../utils/permissions.js';
 import { parseDuration, formatDuration } from '@arkenbot/shared';
 import { prisma } from '../../database.js';
@@ -48,10 +49,11 @@ const command: BotCommand = {
 
   async execute(interaction: ChatInputCommandInteraction, client: BotClient) {
     await interaction.deferReply();
+    const loc = await resolveUserLocale(interaction);
 
     const settings = await getGuildSettings(interaction.guildId!);
     if (settings && !settings.moderationEnabled) {
-      await interaction.editReply({ embeds: [errorEmbed('Moderation Disabled', 'Moderation commands are disabled for this server.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('moderation.disabledTitle', loc), t('moderation.disabled', loc))] });
       return;
     }
 
@@ -61,12 +63,12 @@ const command: BotCommand = {
     const deleteMessages = interaction.options.getInteger('delete_messages') ?? 0;
 
     if (!interaction.guild) {
-      await interaction.editReply({ embeds: [errorEmbed('Error', 'This command must be used in a server.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('common.error', loc), t('common.notInServer', loc))] });
       return;
     }
 
     if (targetUser.id === interaction.user.id) {
-      await interaction.editReply({ embeds: [errorEmbed('Invalid Target', 'You cannot ban yourself.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('moderation.cannotBanSelfTitle', loc), t('moderation.cannotBanSelf', loc))] });
       return;
     }
 
