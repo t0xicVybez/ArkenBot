@@ -11,6 +11,7 @@ import type { BotClient } from '../../client.js';
 import { prisma } from '../../database.js';
 import { generateAnalyticsImage } from '../../utils/analyticsChart.js';
 import { errorEmbed, successEmbed } from '../../utils/embed.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 
 const command: BotCommand = {
   data: new SlashCommandBuilder()
@@ -39,6 +40,7 @@ const command: BotCommand = {
 
   async execute(interaction: ChatInputCommandInteraction, _client: BotClient) {
     const sub = interaction.options.getSubcommand();
+    const loc = await resolveUserLocale(interaction);
 
     if (sub === 'view') {
       await interaction.deferReply();
@@ -49,7 +51,7 @@ const command: BotCommand = {
     // set-channel and disable require Manage Guild
     if (!interaction.memberPermissions?.has(PermissionFlagsBits.ManageGuild)) {
       await interaction.reply({
-        embeds: [errorEmbed('Missing Permission', 'You need the **Manage Server** permission to configure analytics.')],
+        embeds: [errorEmbed(t('cmd.analytics.missingPermTitle', loc), t('cmd.analytics.missingPerm', loc))],
         ephemeral: true,
       });
       return;
@@ -63,7 +65,7 @@ const command: BotCommand = {
         create: { guildId: interaction.guildId!, analyticsChannelId: channel.id },
       });
       await interaction.reply({
-        embeds: [successEmbed('Analytics Channel Set', `Weekly reports will be posted in <#${channel.id}> every Monday.`)],
+        embeds: [successEmbed(t('cmd.analytics.channelSetTitle', loc), t('cmd.analytics.channelSet', loc, { channel: `<#${channel.id}>` }))],
       });
       return;
     }
@@ -74,7 +76,7 @@ const command: BotCommand = {
         data:   { analyticsChannelId: null },
       });
       await interaction.reply({
-        embeds: [successEmbed('Analytics Disabled', 'Weekly analytics reports have been turned off.')],
+        embeds: [successEmbed(t('cmd.analytics.disabledTitle', loc), t('cmd.analytics.disabled', loc))],
       });
     }
   },
@@ -90,6 +92,10 @@ export async function postAnalytics(
     orderBy: { date: 'asc' },
   });
 
+  const loc = 'deferReply' in target
+    ? await resolveUserLocale(target)
+    : await resolveUserLocale({ user: { id: '' }, guildId, guildLocale: target.guild?.preferredLocale });
+
   const image = await generateAnalyticsImage(rows);
   const file  = new AttachmentBuilder(image, { name: 'analytics.png' });
 
@@ -99,15 +105,15 @@ export async function postAnalytics(
   const totalLeaves   = rows.reduce((s, r) => s + r.leftMembers, 0);
 
   const embed = new EmbedBuilder()
-    .setTitle('Server Analytics — Last 30 Days')
+    .setTitle(t('cmd.analytics.reportTitle', loc))
     .setColor(0x5865f2)
     .addFields(
-      { name: '💬 Messages',   value: totalMessages.toLocaleString(), inline: true },
-      { name: '⌨️ Commands',   value: totalCommands.toLocaleString(), inline: true },
+      { name: t('cmd.analytics.messages', loc),   value: totalMessages.toLocaleString(loc), inline: true },
+      { name: t('cmd.analytics.commands', loc),   value: totalCommands.toLocaleString(loc), inline: true },
       { name: '​',        value: '​',                       inline: true },
-      { name: '📥 Joins',      value: totalJoins.toLocaleString(),    inline: true },
-      { name: '📤 Leaves',     value: totalLeaves.toLocaleString(),   inline: true },
-      { name: '📈 Net Growth', value: (totalJoins - totalLeaves).toLocaleString(), inline: true },
+      { name: t('cmd.analytics.joins', loc),      value: totalJoins.toLocaleString(loc),    inline: true },
+      { name: t('cmd.analytics.leaves', loc),     value: totalLeaves.toLocaleString(loc),   inline: true },
+      { name: t('cmd.analytics.netGrowth', loc), value: (totalJoins - totalLeaves).toLocaleString(loc), inline: true },
     )
     .setImage('attachment://analytics.png')
     .setTimestamp();

@@ -13,6 +13,7 @@ import { successEmbed, errorEmbed } from '../../utils/embed.js';
 import { prisma } from '../../database.js';
 import type { Prisma } from '@prisma/client';
 import { invalidateSettingsCache } from '../../utils/settings.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 
 interface ForumChannelConfig {
   requireTag?: boolean;
@@ -52,12 +53,13 @@ const command: BotCommand = {
   async execute(interaction: ChatInputCommandInteraction, _client: BotClient) {
     await interaction.deferReply({ flags: 64 });
 
+    const loc = await resolveUserLocale(interaction);
     const sub = interaction.options.getSubcommand();
     const channel = interaction.options.getChannel('channel', true);
 
     // Verify it's a forum channel (type 15 = GuildForum)
     if (sub !== 'clear' && channel.type !== ChannelType.GuildForum) {
-      await interaction.editReply({ embeds: [errorEmbed('Invalid Channel', 'Please select a Forum channel.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('cmd.forum.invalidChannelTitle', loc), t('cmd.forum.invalidChannel', loc))] });
       return;
     }
 
@@ -78,7 +80,7 @@ const command: BotCommand = {
       await invalidateSettingsCache(interaction.guildId!);
 
       await interaction.editReply({
-        embeds: [successEmbed('Template Set', `Template message configured for <#${channel.id}>.`)],
+        embeds: [successEmbed(t('cmd.forum.templateSetTitle', loc), t('cmd.forum.templateSet', loc, { channel: `<#${channel.id}>` }))],
       });
     }
 
@@ -94,7 +96,7 @@ const command: BotCommand = {
       await invalidateSettingsCache(interaction.guildId!);
 
       await interaction.editReply({
-        embeds: [successEmbed('Auto-Tag Set', `Tag \`${tagId}\` will be automatically applied in <#${channel.id}>.`)],
+        embeds: [successEmbed(t('cmd.forum.autoTagSetTitle', loc), t('cmd.forum.autoTagSet', loc, { tag: tagId, channel: `<#${channel.id}>` }))],
       });
     }
 
@@ -105,7 +107,7 @@ const command: BotCommand = {
       await invalidateSettingsCache(interaction.guildId!);
 
       await interaction.editReply({
-        embeds: [successEmbed('Config Cleared', `Forum management config for <#${channel.id}> has been removed.`)],
+        embeds: [successEmbed(t('cmd.forum.clearedTitle', loc), t('cmd.forum.cleared', loc, { channel: `<#${channel.id}>` }))],
       });
     }
   },
