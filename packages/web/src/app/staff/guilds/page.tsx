@@ -5,9 +5,11 @@ import { adminApi } from '@/lib/api';
 import { useState } from 'react';
 import { Search, Server, ExternalLink, Trash2 } from 'lucide-react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { useWebSocket } from '@/lib/socket';
 
 export default function StaffGuildsPage() {
+  const t = useTranslations('staffGuilds');
   const queryClient = useQueryClient();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
@@ -43,8 +45,8 @@ export default function StaffGuildsPage() {
     <div className="p-3 sm:p-6">
       <div className="page-head">
         <div className="min-w-0">
-          <h1>All Guilds</h1>
-          <div className="page-head-desc">Total: {total} guilds</div>
+          <h1>{t('title')}</h1>
+          <div className="page-head-desc">{t('total', { total })}</div>
         </div>
       </div>
 
@@ -53,7 +55,7 @@ export default function StaffGuildsPage() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input
             type="text"
-            placeholder="Search guilds..."
+            placeholder={t('searchPlaceholder')}
             value={search}
             onChange={(e) => { setSearch(e.target.value); setPage(1); }}
             className="input pl-9"
@@ -64,9 +66,9 @@ export default function StaffGuildsPage() {
           onChange={(e) => { setActiveFilter(e.target.value); setPage(1); }}
           className="input sm:w-40"
         >
-          <option value="">All Status</option>
-          <option value="true">Active</option>
-          <option value="false">Inactive</option>
+          <option value="">{t('allStatus')}</option>
+          <option value="true">{t('active')}</option>
+          <option value="false">{t('inactive')}</option>
         </select>
       </div>
 
@@ -75,11 +77,11 @@ export default function StaffGuildsPage() {
         <table className="w-full min-w-[600px]">
           <thead className="bg-[var(--bg-base)]">
             <tr>
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Guild</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">ID</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Status</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Joined</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Actions</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colGuild')}</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colId')}</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colStatus')}</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colJoined')}</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colActions')}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[var(--border-subtle)]">
@@ -94,7 +96,7 @@ export default function StaffGuildsPage() {
             ) : guilds.length === 0 ? (
               <tr>
                 <td colSpan={5} className="px-4 py-8 text-center text-gray-500">
-                  No guilds found
+                  {t('noGuilds')}
                 </td>
               </tr>
             ) : (
@@ -115,7 +117,7 @@ export default function StaffGuildsPage() {
                   <td className="px-4 py-3 text-sm text-gray-400 font-mono">{guild.id}</td>
                   <td className="px-4 py-3">
                     <span className={guild.isActive ? 'badge-success' : 'badge-danger'}>
-                      {guild.isActive ? 'Active' : 'Inactive'}
+                      {guild.isActive ? t('active') : t('inactive')}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-sm text-gray-400">
@@ -127,14 +129,14 @@ export default function StaffGuildsPage() {
                         href={`/dashboard/${guild.id}`}
                         className="text-discord-blurple hover:text-blue-400 transition-colors text-sm flex items-center gap-1"
                       >
-                        View <ExternalLink className="w-3 h-3" />
+                        {t('view')} <ExternalLink className="w-3 h-3" />
                       </Link>
                       {!guild.isActive && (
                         <button
                           type="button"
                           disabled={deleteGuildMutation.isPending}
                           onClick={() => {
-                            if (!window.confirm(`Delete inactive guild ${guild.name}? This will remove its settings and remove it from the staff portal.`)) {
+                            if (!window.confirm(t('deleteConfirm', { name: guild.name }))) {
                               return;
                             }
                             deleteGuildMutation.mutate(guild.id);
@@ -142,7 +144,7 @@ export default function StaffGuildsPage() {
                           className="btn-danger text-xs py-1 px-2 flex items-center gap-1"
                         >
                           <Trash2 className="w-3 h-3" />
-                          Delete
+                          {t('delete')}
                         </button>
                       )}
                     </div>
@@ -157,14 +159,14 @@ export default function StaffGuildsPage() {
         {total > 20 && (
           <div className="px-4 py-3 border-t border-[var(--border-subtle)] flex items-center justify-between">
             <p className="text-xs text-gray-400">
-              Page {page} • {total} total guilds
+              {t('pageInfo', { page, total })}
             </p>
             <div className="flex gap-2">
               <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page <= 1} className="btn-secondary text-xs py-1 px-3">
-                Previous
+                {t('previous')}
               </button>
               <button onClick={() => setPage((p) => p + 1)} disabled={!hasMore} className="btn-secondary text-xs py-1 px-3">
-                Next
+                {t('next')}
               </button>
             </div>
           </div>

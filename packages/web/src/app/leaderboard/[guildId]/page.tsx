@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'next/navigation';
 import axios from 'axios';
 import { Trophy, Medal, Star, MessageSquare, TrendingUp } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
 
@@ -56,6 +57,7 @@ function XpBar({ xpIntoLevel, xpForNext }: { xpIntoLevel: number; xpForNext: num
 
 export default function LeaderboardPage() {
   const params = useParams();
+  const t = useTranslations('leaderboardPage');
   const guildId = params.guildId as string;
   const [page, setPage] = useState(1);
 
@@ -68,7 +70,7 @@ export default function LeaderboardPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-discord-darkest-bg flex items-center justify-center">
-        <div className="text-gray-400 animate-pulse text-lg">Loading leaderboard…</div>
+        <div className="text-gray-400 animate-pulse text-lg">{t('loading')}</div>
       </div>
     );
   }
@@ -78,8 +80,8 @@ export default function LeaderboardPage() {
       <div className="min-h-screen bg-discord-darkest-bg flex items-center justify-center">
         <div className="text-center">
           <Trophy className="w-12 h-12 text-gray-600 mx-auto mb-3" />
-          <p className="text-gray-400">Leaderboard not available for this server.</p>
-          <p className="text-gray-600 text-sm mt-1">Leveling may be disabled or the server may not exist.</p>
+          <p className="text-gray-400">{t('unavailable')}</p>
+          <p className="text-gray-600 text-sm mt-1">{t('unavailableHint')}</p>
         </div>
       </div>
     );
@@ -104,7 +106,7 @@ export default function LeaderboardPage() {
               <h1 className="text-2xl font-bold">{guild.name}</h1>
               <p className="text-gray-400 text-sm flex items-center gap-1.5 mt-0.5">
                 <TrendingUp className="w-4 h-4" />
-                {total} ranked members
+                {t('rankedMembers', { count: total })}
               </p>
             </div>
           </div>
@@ -115,7 +117,7 @@ export default function LeaderboardPage() {
       <div className="max-w-3xl mx-auto px-4 py-6">
         {entries.length === 0 ? (
           <div className="text-center py-16 text-gray-500">
-            No members ranked yet. Start chatting!
+            {t('empty')}
           </div>
         ) : (
           <div className="space-y-2">
@@ -139,7 +141,7 @@ export default function LeaderboardPage() {
                     <span className="font-medium truncate text-sm">{entry.userTag}</span>
                     <div className="flex items-center gap-3 flex-shrink-0 ml-2">
                       <span className="text-discord-blurple font-bold text-sm">
-                        Level {entry.level}
+                        {t('level', { level: entry.level })}
                       </span>
                       <span className="text-gray-500 text-xs flex items-center gap-1">
                         <MessageSquare className="w-3 h-3" />
@@ -162,28 +164,28 @@ export default function LeaderboardPage() {
         {/* Pagination */}
         {total > 25 && (
           <div className="flex items-center justify-between mt-6 text-sm">
-            <p className="text-gray-500">Page {page} • {total} total</p>
+            <p className="text-gray-500">{t('pageInfo', { page, total })}</p>
             <div className="flex gap-2">
               <button
                 onClick={() => setPage((p: number) => Math.max(1, p - 1))}
                 disabled={page <= 1}
                 className="btn-secondary text-xs py-1.5 px-3 disabled:opacity-40"
               >
-                Previous
+                {t('previous')}
               </button>
               <button
                 onClick={() => setPage((p: number) => p + 1)}
                 disabled={!hasMore}
                 className="btn-secondary text-xs py-1.5 px-3 disabled:opacity-40"
               >
-                Next
+                {t('next')}
               </button>
             </div>
           </div>
         )}
 
         <p className="text-center text-gray-700 text-xs mt-8">
-          Powered by Arken Bot • Leaderboard updates in real time
+          {t('poweredBy')}
         </p>
       </div>
     </div>

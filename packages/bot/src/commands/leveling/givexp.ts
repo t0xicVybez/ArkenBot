@@ -13,6 +13,7 @@ import type { BotClient } from '../../client.js';
 import { COLORS, levelFromXp } from '@arkenbot/shared';
 import { prisma } from '../../database.js';
 import { errorEmbed } from '../../utils/embed.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 import { getGuildSettings } from '../../utils/settings.js';
 
 const command: BotCommand = {
@@ -30,15 +31,16 @@ const command: BotCommand = {
 
   async execute(interaction: ChatInputCommandInteraction, _client: BotClient) {
     await interaction.deferReply();
+    const loc = await resolveUserLocale(interaction);
 
     if (!interaction.guild) {
-      await interaction.editReply({ embeds: [errorEmbed('Error', 'This command must be used in a server.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('common.error', loc), t('common.notInServer', loc))] });
       return;
     }
 
     const settings = await getGuildSettings(interaction.guild.id);
     if (settings && !settings.levelingEnabled) {
-      await interaction.editReply({ embeds: [errorEmbed('Leveling Disabled', 'The leveling system is disabled for this server.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('cmd.givexp.disabledTitle', loc), t('cmd.givexp.disabled', loc))] });
       return;
     }
 
@@ -46,7 +48,7 @@ const command: BotCommand = {
     const amount = interaction.options.getInteger('amount', true);
 
     if (target.bot) {
-      await interaction.editReply({ embeds: [errorEmbed('Invalid User', 'You cannot give XP to a bot.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('cmd.givexp.invalidUserTitle', loc), t('cmd.givexp.botTarget', loc))] });
       return;
     }
 
@@ -73,16 +75,16 @@ const command: BotCommand = {
     });
 
     const levelUpText = newLevel > oldLevel
-      ? `\n> They leveled up from **${oldLevel}** → **${newLevel}**!`
+      ? `\n> ${t('cmd.givexp.levelUp', loc, { old: oldLevel, new: newLevel })}`
       : '';
 
     const embed = new EmbedBuilder()
       .setColor(COLORS.SUCCESS)
-      .setTitle('XP Given')
-      .setDescription(`Gave **${amount.toLocaleString()} XP** to <@${target.id}>.${levelUpText}`)
+      .setTitle(t('cmd.givexp.title', loc))
+      .setDescription(`${t('cmd.givexp.description', loc, { amount: amount.toLocaleString(), user: `<@${target.id}>` })}${levelUpText}`)
       .addFields(
-        { name: 'Before', value: `${oldXp.toLocaleString()} XP (Level ${oldLevel})`, inline: true },
-        { name: 'After', value: `${newXp.toLocaleString()} XP (Level ${newLevel})`, inline: true },
+        { name: t('cmd.givexp.fieldBefore', loc), value: t('cmd.givexp.statValue', loc, { xp: oldXp.toLocaleString(), level: oldLevel }), inline: true },
+        { name: t('cmd.givexp.fieldAfter', loc), value: t('cmd.givexp.statValue', loc, { xp: newXp.toLocaleString(), level: newLevel }), inline: true },
       )
       .setTimestamp();
 

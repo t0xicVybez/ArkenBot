@@ -14,6 +14,7 @@ const db = prisma as any;
 import { logger, swallow} from '../logger.js';
 import type { BotClient } from '../client.js';
 import { getGuildSettings } from '../utils/settings.js';
+import { t, resolveUserLocale } from '../i18n/index.js';
 import { XPDecayModule } from './leveling/XPDecayModule.js';
 import { AnalyticsModule } from './AnalyticsModule.js';
 import RSSParser from 'rss-parser';
@@ -133,8 +134,9 @@ export class BackgroundJobs {
       for (const voter of due) {
         try {
           const user = await this.client.users.fetch(voter.userId);
+          const loc = await resolveUserLocale({ user: { id: voter.userId } });
           await user.send(
-            `🗳️ You can vote for **${this.client.user.username}** again on top.gg!\n${voteUrl}\n\n_Turn reminders off anytime with \`/vote reminders:off\`._`,
+            t('topgg.voteReminder', loc, { bot: this.client.user.username, url: voteUrl }),
           );
         } catch {
           // DMs closed or user gone — mark as sent anyway so we don't retry every cycle.
@@ -244,6 +246,7 @@ export class BackgroundJobs {
       const message = config.message.replace(/\{user\}/g, `<@${userId}>`);
 
       const settings = await getGuildSettings(guildId);
+      const loc = await resolveUserLocale({ user: { id: '' }, guildId, guildLocale: guild.preferredLocale });
       const birthdayColor = settings?.birthdayColor
         ? (parseInt(settings.birthdayColor.replace('#', ''), 16) as number)
         : 0xffc0cb;
@@ -252,7 +255,7 @@ export class BackgroundJobs {
         embeds: [
           new EmbedBuilder()
             .setColor(birthdayColor)
-            .setTitle('🎂 Happy Birthday!')
+            .setTitle(t('birthday.title', loc))
             .setDescription(message)
             .setThumbnail(member.user.displayAvatarURL())
             .setTimestamp(),
@@ -514,7 +517,8 @@ export class BackgroundJobs {
       for (const reminder of due) {
         const channel = this.client.channels.cache.get(reminder.channelId);
         if (channel?.isTextBased() && 'send' in channel) {
-          await (channel as import('discord.js').TextChannel).send({ content: `<@${reminder.userId}> Reminder: ${reminder.message}` }).catch(swallow);
+          const loc = await resolveUserLocale({ user: { id: reminder.userId } });
+          await (channel as import('discord.js').TextChannel).send({ content: t('reminders.deliver', loc, { user: `<@${reminder.userId}>`, message: reminder.message }) }).catch(swallow);
         }
         await prisma.reminder.update({ where: { id: reminder.id }, data: { sent: true } });
       }
@@ -575,8 +579,10 @@ export class BackgroundJobs {
         }
       }
 
+      const loc = await resolveUserLocale({ user: { id: '' }, guildId: giveaway.guildId, guildLocale: guild.preferredLocale });
+
       let winnerIds: string[] = [];
-      let winnerMentions = 'No eligible entrants';
+      let winnerMentions = t('giveaway.noEntrants', loc);
 
       if (entries.length > 0) {
         const winners = entries.sort(() => Math.random() - 0.5).slice(0, giveaway.winnersCount);
@@ -584,17 +590,19 @@ export class BackgroundJobs {
         winnerMentions = winnerIds.map(id => `<@${id}>`).join(', ');
       }
 
+      const winnerLabel = winnerIds.length > 1 ? t('giveaway.winnersLabel', loc) : t('giveaway.winnerLabel', loc);
+
       await prisma.giveaway.update({ where: { id: giveaway.id }, data: { ended: true, winnerIds } });
 
       await channel.send({
-        content: `🎉 Giveaway ended! Winner${winnerIds.length > 1 ? 's' : ''}: ${winnerMentions}\nPrize: **${giveaway.prize}**`,
+        content: t('giveaway.ended', loc, { winnerLabel, winners: winnerMentions, prize: giveaway.prize }),
       });
 
       if (msg) {
         const { EmbedBuilder } = await import('discord.js');
         const endedEmbed = new EmbedBuilder()
-          .setTitle('🎉 Giveaway Ended')
-          .setDescription(`**Prize:** ${giveaway.prize}\n**Winner${winnerIds.length > 1 ? 's' : ''}:** ${winnerMentions}`)
+          .setTitle(t('giveaway.endedTitle', loc))
+          .setDescription(t('giveaway.endedEmbed', loc, { prize: giveaway.prize, winnerLabel, winners: winnerMentions }))
           .setColor(0x95a5a6)
           .setTimestamp();
         await msg.edit({ embeds: [endedEmbed] }).catch(swallow);
@@ -805,6 +813,7 @@ export class BackgroundJobs {
       }
 
       const alertSettings = await getGuildSettings(alert.guildId);
+      const loc = await resolveUserLocale({ user: { id: '' }, guildId: alert.guildId });
       const alertColor = alertSettings?.streamAlertColor
         ? parseInt(alertSettings.streamAlertColor.replace('#', ''), 16)
         : null;
@@ -827,7 +836,7 @@ export class BackgroundJobs {
         .trim();
 
       const embed = new EmbedBuilder()
-        .setTitle(`${channelName} is live on YouTube!`)
+        .setTitle(t('streamAlert.youtubeLive', loc, { streamer: channelName }))
         .setDescription(streamTitle)
         .setURL(videoUrl)
         .setColor(alertColor ?? 0xff0000)
@@ -869,6 +878,7 @@ export class BackgroundJobs {
       }
 
       const alertSettings = await getGuildSettings(alert.guildId);
+      const loc = await resolveUserLocale({ user: { id: '' }, guildId: alert.guildId });
       const alertColor = alertSettings?.streamAlertColor
         ? parseInt(alertSettings.streamAlertColor.replace('#', ''), 16)
         : null;
@@ -900,9 +910,9 @@ export class BackgroundJobs {
         const previewUrl = stream.thumbnail_url.replace('{width}', '640').replace('{height}', '360');
 
         const embed = new EmbedBuilder()
-          .setTitle(`${alert.channelUsername} is live on Twitch!`)
+          .setTitle(t('streamAlert.twitchLive', loc, { streamer: alert.channelUsername }))
           .setDescription(stream.title)
-          .addFields({ name: 'Playing', value: stream.game_name || 'Unknown' })
+          .addFields({ name: t('streamAlert.playing', loc), value: stream.game_name || t('streamAlert.unknownGame', loc) })
           .setURL(`https://twitch.tv/${alert.channelUsername}`)
           .setColor(alertColor ?? 0x9146ff)
           .setImage(previewUrl)
@@ -938,7 +948,7 @@ export class BackgroundJobs {
           .replace(/\{title\}/g, data.livestream.session_title);
 
         const embed = new EmbedBuilder()
-          .setTitle(`${alert.channelUsername} is live on Kick!`)
+          .setTitle(t('streamAlert.kickLive', loc, { streamer: alert.channelUsername }))
           .setDescription(data.livestream.session_title)
           .setURL(kickUrl)
           .setColor(alertColor ?? 0x53fc18)
@@ -987,7 +997,7 @@ export class BackgroundJobs {
           .replace(/\{title\}/g, latestTweet.text);
 
         const embed = new EmbedBuilder()
-          .setTitle(`${handle} posted on X`)
+          .setTitle(t('streamAlert.twitterPosted', loc, { handle }))
           .setDescription(latestTweet.text)
           .setURL(tweetUrl)
           .setColor(alertColor ?? 0x000000)
@@ -1034,7 +1044,7 @@ export class BackgroundJobs {
         const embed = new EmbedBuilder()
           .setTitle(latestPost.title)
           .setURL(postUrl)
-          .setDescription(`Posted by u/${latestPost.author} in r/${subreddit}`)
+          .setDescription(t('streamAlert.redditPostedBy', loc, { author: latestPost.author, subreddit }))
           .setColor(alertColor ?? 0xff4500)
           .setTimestamp();
 
@@ -1066,7 +1076,7 @@ export class BackgroundJobs {
         const embed = new EmbedBuilder()
           .setTitle(latestItem.title ?? 'New post')
           .setURL(itemUrl)
-          .setDescription(`New post from **${feedTitle}**`)
+          .setDescription(t('streamAlert.rssNewPost', loc, { feed: feedTitle }))
           .setColor(alertColor ?? 0xf26522)
           .setTimestamp();
 

@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 import { useState } from 'react';
 import { Mic, Plus, Trash2 } from 'lucide-react';
 import { SettingsSection } from '@/components/SettingsSection';
+import { useTranslations } from 'next-intl';
 
 interface Trigger {
   channelId: string;
@@ -21,6 +22,7 @@ interface Channel {
 
 export default function TempVoicePage() {
   const { guildId } = useParams() as { guildId: string };
+  const t = useTranslations('tempVoice');
   const queryClient = useQueryClient();
 
   const [newChannelId, setNewChannelId] = useState('');
@@ -50,21 +52,21 @@ export default function TempVoicePage() {
     mutationFn: () =>
       tempVoiceApi.addTrigger(guildId, newChannelId, newCategoryId || null),
     onSuccess: () => {
-      toast.success('Trigger channel added!');
+      toast.success(t('added'));
       setNewChannelId('');
       setNewCategoryId('');
       queryClient.invalidateQueries({ queryKey: ['temp-voice-triggers', guildId] });
     },
-    onError: () => toast.error('Failed to add trigger channel'),
+    onError: () => toast.error(t('addError')),
   });
 
   const removeMutation = useMutation({
     mutationFn: (channelId: string) => tempVoiceApi.removeTrigger(guildId, channelId),
     onSuccess: () => {
-      toast.success('Trigger removed');
+      toast.success(t('removed'));
       queryClient.invalidateQueries({ queryKey: ['temp-voice-triggers', guildId] });
     },
-    onError: () => toast.error('Failed to remove trigger'),
+    onError: () => toast.error(t('removeError')),
   });
 
   const channelName = (id: string) =>
@@ -75,40 +77,40 @@ export default function TempVoicePage() {
       <div className="page-head">
         <div className="page-head-icon"><Mic className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>Temporary Voice Channels</h1>
-          <div className="page-head-desc">Join-to-Create: members get their own VC when they join a trigger channel.</div>
+          <h1>{t('title')}</h1>
+          <div className="page-head-desc">{t('description')}</div>
         </div>
       </div>
 
       <SettingsSection
-        title="Trigger Channels"
-        description="Each trigger is a voice channel members can join to automatically get a private channel. You can add multiple triggers in different categories."
+        title={t('triggersTitle')}
+        description={t('triggersDesc')}
       >
         <div className="space-y-4">
           {triggers.length === 0 ? (
-            <p className="text-sm text-gray-500">No trigger channels configured yet.</p>
+            <p className="text-sm text-gray-500">{t('empty')}</p>
           ) : (
             <ul className="space-y-2">
-              {triggers.map((t) => (
+              {triggers.map((trig) => (
                 <li
-                  key={t.channelId}
+                  key={trig.channelId}
                   className="flex items-center justify-between rounded-lg bg-white/5 px-3 py-2"
                 >
                   <div className="flex flex-col min-w-0">
                     <span className="text-sm font-medium text-white truncate">
-                      🔊 {channelName(t.channelId)}
+                      🔊 {channelName(trig.channelId)}
                     </span>
                     <span className="text-xs text-gray-400">
-                      {t.categoryId
-                        ? `Creates in: 📁 ${channelName(t.categoryId)}`
-                        : 'Creates in same category as trigger'}
+                      {trig.categoryId
+                        ? t('createsIn', { category: channelName(trig.categoryId) })
+                        : t('createsInSame')}
                     </span>
                   </div>
                   <button
-                    onClick={() => removeMutation.mutate(t.channelId)}
+                    onClick={() => removeMutation.mutate(trig.channelId)}
                     disabled={removeMutation.isPending}
                     className="ml-3 p-1.5 rounded text-gray-400 hover:text-red-400 hover:bg-red-400/10 transition-colors"
-                    aria-label="Remove trigger"
+                    aria-label={t('removeTrigger')}
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -119,17 +121,17 @@ export default function TempVoicePage() {
 
           <div className="border-t border-white/10 pt-4">
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">
-              Add Trigger Channel
+              {t('addTriggerHeading')}
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="label">Trigger Voice Channel</label>
+                <label className="label">{t('triggerChannelLabel')}</label>
                 <select
                   className="input"
                   value={newChannelId}
                   onChange={(e) => setNewChannelId(e.target.value)}
                 >
-                  <option value="">Select a voice channel…</option>
+                  <option value="">{t('selectVoiceChannel')}</option>
                   {voiceChannels
                     .filter((c) => !usedChannelIds.has(c.id))
                     .map((ch) => (
@@ -140,13 +142,13 @@ export default function TempVoicePage() {
                 </select>
               </div>
               <div>
-                <label className="label">Target Category (optional)</label>
+                <label className="label">{t('targetCategoryLabel')}</label>
                 <select
                   className="input"
                   value={newCategoryId}
                   onChange={(e) => setNewCategoryId(e.target.value)}
                 >
-                  <option value="">Same category as trigger</option>
+                  <option value="">{t('sameCategory')}</option>
                   {categories.map((cat) => (
                     <option key={cat.id} value={cat.id}>
                       📁 {cat.name}
@@ -161,21 +163,21 @@ export default function TempVoicePage() {
               className="btn-primary mt-3 flex items-center gap-2"
             >
               <Plus className="w-4 h-4" />
-              {addMutation.isPending ? 'Adding…' : 'Add Trigger'}
+              {addMutation.isPending ? t('adding') : t('addTrigger')}
             </button>
           </div>
         </div>
       </SettingsSection>
 
       <div className="card mt-4 bg-discord-blurple/5 border border-discord-blurple/20">
-        <h3 className="text-sm font-semibold text-discord-blurple mb-2">How it works</h3>
+        <h3 className="text-sm font-semibold text-discord-blurple mb-2">{t('howItWorks')}</h3>
         <ul className="text-sm text-gray-400 space-y-1 list-disc list-inside">
-          <li>Create one or more voice channels (e.g. &quot;➕ Join to Create&quot;) and add them as triggers</li>
-          <li>When a member joins a trigger, the bot creates a new VC named after them</li>
-          <li>The member is moved to their new channel automatically</li>
-          <li>Set a &quot;Target Category&quot; to place created channels in a specific category</li>
-          <li>The channel is deleted when it becomes empty</li>
-          <li>The channel owner can rename or manage it via Discord</li>
+          <li>{t('how1')}</li>
+          <li>{t('how2')}</li>
+          <li>{t('how3')}</li>
+          <li>{t('how4')}</li>
+          <li>{t('how5')}</li>
+          <li>{t('how6')}</li>
         </ul>
       </div>
     </div>

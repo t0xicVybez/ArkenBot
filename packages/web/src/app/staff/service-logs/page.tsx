@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { adminApi } from '@/lib/api';
 import { useState } from 'react';
 import { Terminal, ChevronRight } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 type ClassifiedError = { category: string; summary: string; hint?: string; code?: string | number };
 type LogEntry = {
@@ -36,20 +37,8 @@ const SERVICE_STYLES: Record<string, string> = {
   web: 'text-orange-300 bg-orange-500/15',
 };
 
-const CATEGORY_LABELS: Record<string, string> = {
-  permissions: 'Missing Permission',
-  access: 'Missing Access',
-  'not-found': 'Not Found',
-  'dm-blocked': 'DMs Blocked',
-  'rate-limit': 'Rate Limited',
-  validation: 'Invalid Request',
-  network: 'Network',
-  timeout: 'Timeout',
-  interaction: 'Interaction',
-  unknown: 'Error',
-};
-
 export default function ServiceLogsPage() {
+  const t = useTranslations('staffServiceLogs');
   const [service, setService] = useState('all');
   const [level, setLevel] = useState('warn');
   const [stream, setStream] = useState('all');
@@ -76,34 +65,34 @@ export default function ServiceLogsPage() {
       <div className="page-head">
         <div className="page-head-icon"><Terminal className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>Service Logs</h1>
+          <h1>{t('title')}</h1>
           <div className="page-head-desc">
-            Live output from the bot, API, and web services{isFetching ? ' · refreshing…' : ''}
+            {t('subtitle')}{isFetching ? t('refreshing') : ''}
           </div>
         </div>
       </div>
 
       <div className="card mb-6 flex flex-col sm:flex-row flex-wrap gap-3">
         <select value={service} onChange={(e) => setService(e.target.value)} className="input sm:w-40">
-          <option value="all">All services</option>
-          <option value="bot">Bot</option>
-          <option value="api">API</option>
-          <option value="web">Web</option>
+          <option value="all">{t('allServices')}</option>
+          <option value="bot">{t('serviceBot')}</option>
+          <option value="api">{t('serviceApi')}</option>
+          <option value="web">{t('serviceWeb')}</option>
         </select>
         <select value={level} onChange={(e) => setLevel(e.target.value)} className="input sm:w-40">
-          <option value="all">All levels</option>
-          <option value="info">Info & above</option>
-          <option value="warn">Warnings & errors</option>
-          <option value="error">Errors only</option>
+          <option value="all">{t('allLevels')}</option>
+          <option value="info">{t('levelInfo')}</option>
+          <option value="warn">{t('levelWarn')}</option>
+          <option value="error">{t('levelError')}</option>
         </select>
         <select value={stream} onChange={(e) => setStream(e.target.value)} className="input sm:w-40">
-          <option value="all">All streams</option>
+          <option value="all">{t('allStreams')}</option>
           <option value="out">stdout</option>
           <option value="err">stderr</option>
         </select>
         <input
           type="text"
-          placeholder="Search messages…"
+          placeholder={t('searchPlaceholder')}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="input flex-1 min-w-40"
@@ -117,7 +106,7 @@ export default function ServiceLogsPage() {
               <div key={i} className="px-4 py-2 animate-pulse"><div className="h-3 bg-gray-700 rounded w-full" /></div>
             ))
           ) : logs.length === 0 ? (
-            <div className="px-4 py-8 text-center text-gray-500 font-sans">No matching log entries</div>
+            <div className="px-4 py-8 text-center text-gray-500 font-sans">{t('noEntries')}</div>
           ) : (
             logs.map((log, i) => {
               const hasDetail = !!(log.error || log.stack);
@@ -143,7 +132,7 @@ export default function ServiceLogsPage() {
                     </span>
                     {log.error && (
                       <span className="px-1.5 rounded text-[10px] font-semibold flex-shrink-0 bg-white/[0.06] text-gray-300">
-                        {CATEGORY_LABELS[log.error.category] ?? log.error.category}
+                        {t.has(`category_${log.error.category}`) ? t(`category_${log.error.category}`) : log.error.category}
                       </span>
                     )}
                     <span className={`flex-1 min-w-0 ${isOpen ? '' : 'truncate'} ${log.level === 'error' || log.level === 'fatal' ? 'text-red-300/90' : 'text-gray-300'}`}>
@@ -164,25 +153,25 @@ export default function ServiceLogsPage() {
                   {isOpen && hasDetail && (
                     <div className="px-3 pb-3 pl-[4.5rem] space-y-2 text-[11px]">
                       {log.error?.hint && (
-                        <p className="text-yellow-300/80"><span className="text-gray-500">Hint:</span> {log.error.hint}</p>
+                        <p className="text-yellow-300/80"><span className="text-gray-500">{t('hint')}</span> {log.error.hint}</p>
                       )}
                       {(log.guildId || log.channelId) && (
                         <p className="text-gray-500 flex flex-wrap gap-x-4">
                           {log.guildId && (
-                            <span>Guild: <span className="text-gray-400">{log.guildName ?? 'Unknown'}</span> <span className="text-gray-600 select-all">({log.guildId})</span></span>
+                            <span>{t('guild')} <span className="text-gray-400">{log.guildName ?? t('unknown')}</span> <span className="text-gray-600 select-all">({log.guildId})</span></span>
                           )}
                           {log.channelId && (
-                            <span>Channel: <span className="text-gray-400">{log.channelName ? `#${log.channelName}` : 'Unknown / deleted'}</span> <span className="text-gray-600 select-all">({log.channelId})</span></span>
+                            <span>{t('channel')} <span className="text-gray-400">{log.channelName ? `#${log.channelName}` : t('unknownDeleted')}</span> <span className="text-gray-600 select-all">({log.channelId})</span></span>
                           )}
                         </p>
                       )}
                       {log.message && log.error && log.message !== log.error.summary && (
-                        <p className="text-gray-400"><span className="text-gray-600">Message:</span> {log.message}</p>
+                        <p className="text-gray-400"><span className="text-gray-600">{t('message')}</span> {log.message}</p>
                       )}
                       {(log.error?.code !== undefined || log.errorType) && (
                         <p className="text-gray-500">
-                          {log.errorType && <span>Type: <span className="text-gray-400">{log.errorType}</span>&nbsp;&nbsp;</span>}
-                          {log.error?.code !== undefined && <span>Code: <span className="text-gray-400">{String(log.error.code)}</span></span>}
+                          {log.errorType && <span>{t('type')} <span className="text-gray-400">{log.errorType}</span>&nbsp;&nbsp;</span>}
+                          {log.error?.code !== undefined && <span>{t('code')} <span className="text-gray-400">{String(log.error.code)}</span></span>}
                         </p>
                       )}
                       {log.stack && (
@@ -200,7 +189,7 @@ export default function ServiceLogsPage() {
       </div>
 
       <p className="text-xs text-gray-600 mt-3">
-        Showing up to 300 most-recent entries from the current log tail. Refreshes every 15 seconds.
+        {t('footer')}
       </p>
     </div>
   );

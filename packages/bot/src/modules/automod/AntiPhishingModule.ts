@@ -10,6 +10,7 @@ import { type Message, PermissionFlagsBits } from 'discord.js';
 import { prisma } from '../../database.js';
 import { redis } from '../../redis.js';
 import { logger, swallow} from '../../logger.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 import axios from 'axios';
 
 const BLOCKLIST_REDIS_KEY = 'antiphishing:domains';
@@ -122,8 +123,9 @@ export class AntiPhishingModule {
     // Warn the user in-channel (brief ephemeral-style message that deletes itself)
     const channel = message.channel;
     if ('send' in channel) {
+      const loc = await resolveUserLocale({ user: { id: '' }, guildId: message.guild.id, guildLocale: message.guild.preferredLocale });
       const warning = await (channel as import('discord.js').TextChannel)
-        .send(`⚠️ <@${message.author.id}> — your message was removed for containing a known phishing link.`)
+        .send(t('automod.phishingRemoved', loc, { user: `<@${message.author.id}>` }))
         .catch(swallow);
       if (warning) setTimeout(() => warning.delete().catch(swallow), 8_000);
     }
