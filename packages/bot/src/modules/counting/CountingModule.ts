@@ -22,7 +22,7 @@ const db = prisma as any;
 function safeEval(expr: string): number {
   if (!/^[\d\s+\-*/.()]+$/.test(expr)) return NaN;
   try {
-    // eslint-disable-next-line @typescript-eslint/no-implied-eval
+     
     const result = Function('"use strict"; return (' + expr + ')')();
     return typeof result === 'number' && isFinite(result) ? Math.floor(result) : NaN;
   } catch {

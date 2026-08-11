@@ -8,11 +8,8 @@ import type {
   ChatInputCommandInteraction,
   ContextMenuCommandBuilder,
   ContextMenuCommandInteraction,
-  Client,
-  GuildMember,
-  Message,
 } from 'discord.js';
-import type { AddonManifest, AddonSettingSchema } from '@arkenbot/shared';
+import type { AddonManifest } from '@arkenbot/shared';
 import type { AddonContext } from './AddonContext.js';
 
 /**

@@ -10,7 +10,7 @@ import fastifyWebSocket from '@fastify/websocket';
 import fastifyCookie from '@fastify/cookie';
 import { config } from './config.js';
 import { logger } from './logger.js';
-import { connectRedis, redis } from './redis.js';
+import { redis } from './redis.js';
 import { authRoutes } from './routes/auth.js';
 import { guildRoutes } from './routes/guilds.js';
 import { settingsRoutes } from './routes/settings.js';

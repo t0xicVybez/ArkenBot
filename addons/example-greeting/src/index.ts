@@ -14,7 +14,6 @@
 
 import { SlashCommandBuilder, EmbedBuilder, type GuildMember } from 'discord.js';
 import { defineAddon } from '@arkenbot/addon-sdk';
-import { COLORS } from '@arkenbot/shared';
 
 export default defineAddon({
   manifest: {

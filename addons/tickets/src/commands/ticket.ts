@@ -14,7 +14,6 @@ import {
   saveTicket,
   getMessages,
   getPanel,
-  getPanels,
   getCannedResponses,
   getTickets,
 } from '../utils/storage.js';
@@ -22,7 +21,6 @@ import {
   buildInfoEmbed,
   buildTranscriptEmbed,
   buildTicketControls,
-  buildClaimedControls,
 } from '../utils/embeds.js';
 import { generateTranscriptHtml } from '../utils/transcript.js';
 import {

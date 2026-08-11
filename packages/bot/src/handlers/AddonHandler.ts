@@ -13,9 +13,7 @@ import type { AddonDefinition } from '@arkenbot/addon-sdk';
 import { AddonContext } from '@arkenbot/addon-sdk';
 import { AddonEventBus } from '@arkenbot/addon-sdk';
 import { prisma } from '../database.js';
-import { redis } from '../redis.js';
 import { logger } from '../logger.js';
-import { config } from '../config.js';
 import { ADDON_CATEGORY_PREFIX } from '@arkenbot/shared';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));

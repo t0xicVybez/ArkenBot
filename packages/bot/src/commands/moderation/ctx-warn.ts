@@ -14,8 +14,6 @@ import {
   type UserContextMenuCommandInteraction,
   type ModalSubmitInteraction,
   type ChatInputCommandInteraction,
-  type ButtonInteraction,
-  type StringSelectMenuInteraction,
 } from 'discord.js';
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';

@@ -86,7 +86,7 @@ function buildEmbed(event: Record<string, any>, boardName?: string | null, resol
     ? `https://app.monday.com/boards/${event.boardId}/pulses/${event.itemId}`
     : null;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   const fields: Array<{ name: string; value: string; inline?: boolean }> = [];
 
   const addField = (name: string, value: string, inline = true) => {
