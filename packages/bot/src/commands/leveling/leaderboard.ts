@@ -15,6 +15,7 @@ import type { BotClient } from '../../client.js';
 import { COLORS } from '@arkenbot/shared';
 import { prisma } from '../../database.js';
 import { errorEmbed } from '../../utils/embed.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 import { getGuildSettings } from '../../utils/settings.js';
 import { config } from '../../config.js';
 
@@ -30,15 +31,16 @@ const command: BotCommand = {
 
   async execute(interaction: ChatInputCommandInteraction, _client: BotClient) {
     await interaction.deferReply();
+    const loc = await resolveUserLocale(interaction);
 
     const settings = await getGuildSettings(interaction.guildId!);
     if (settings && !settings.levelingEnabled) {
-      await interaction.editReply({ embeds: [errorEmbed('Leveling Disabled', 'The leveling system is disabled for this server.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('cmd.leaderboard.disabledTitle', loc), t('cmd.leaderboard.disabled', loc))] });
       return;
     }
 
     if (!interaction.guild) {
-      await interaction.editReply({ embeds: [errorEmbed('Error', 'This command must be used in a server.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('common.error', loc), t('common.notInServer', loc))] });
       return;
     }
 
@@ -58,7 +60,7 @@ const command: BotCommand = {
 
     if (users.length === 0) {
       await interaction.editReply({
-        embeds: [errorEmbed('Empty', 'No one has earned XP in this server yet.')],
+        embeds: [errorEmbed(t('cmd.leaderboard.emptyTitle', loc), t('cmd.leaderboard.empty', loc))],
       });
       return;
     }
@@ -70,7 +72,7 @@ const command: BotCommand = {
       .map((u, i) => {
         const rank = offset + i + 1;
         const medal = rank <= 3 ? medals[rank - 1] : `**#${rank}**`;
-        return `${medal} <@${u.userId}> — Level **${u.level}** | **${u.xp.toLocaleString()}** XP`;
+        return t('cmd.leaderboard.line', loc, { medal, user: `<@${u.userId}>`, level: u.level, xp: u.xp.toLocaleString() });
       })
       .join('\n');
 
@@ -78,14 +80,14 @@ const command: BotCommand = {
 
     const embed = new EmbedBuilder()
       .setColor(COLORS.INFO)
-      .setTitle(`🏆 ${interaction.guild.name} Leaderboard`)
+      .setTitle(t('cmd.leaderboard.title', loc, { guild: interaction.guild.name }))
       .setDescription(description)
-      .setFooter({ text: `Page ${page + 1} of ${Math.ceil(total / pageSize)} • ${total} total users` })
+      .setFooter({ text: t('cmd.leaderboard.footer', loc, { page: page + 1, pages: Math.ceil(total / pageSize), total }) })
       .setTimestamp();
 
     const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
       new ButtonBuilder()
-        .setLabel('View Full Leaderboard')
+        .setLabel(t('cmd.leaderboard.viewFull', loc))
         .setStyle(ButtonStyle.Link)
         .setURL(leaderboardUrl)
         .setEmoji('🏆')

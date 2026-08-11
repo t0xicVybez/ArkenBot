@@ -8,6 +8,7 @@ import type { BotClient } from '../../client.js';
 import { COLORS } from '@arkenbot/shared';
 import { InviteTrackerModule } from '../../modules/inviteTracker/InviteTrackerModule.js';
 import { errorEmbed } from '../../utils/embed.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 import { getGuildSettings } from '../../utils/settings.js';
 
 const command: BotCommand = {
@@ -18,22 +19,23 @@ const command: BotCommand = {
 
   async execute(interaction: ChatInputCommandInteraction, _client: BotClient) {
     await interaction.deferReply();
+    const loc = await resolveUserLocale(interaction);
     if (!interaction.guild) {
-      await interaction.editReply({ embeds: [errorEmbed('Error', 'Use this command in a server.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('common.error', loc), t('cmd.invitetop.notInServer', loc))] });
       return;
     }
 
     const settings = await getGuildSettings(interaction.guild.id);
     const extended = (settings?.extended ?? {}) as Record<string, unknown>;
     if (!extended.inviteTrackerEnabled) {
-      await interaction.editReply({ embeds: [errorEmbed('Disabled', 'Invite tracking is not enabled for this server.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('cmd.invitetop.disabledTitle', loc), t('cmd.invitetop.disabled', loc))] });
       return;
     }
 
     const rows = await InviteTrackerModule.getLeaderboard(interaction.guild.id, 10);
 
     if (rows.length === 0) {
-      await interaction.editReply({ embeds: [errorEmbed('No Data', 'No invite data recorded yet.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('cmd.invitetop.noDataTitle', loc), t('cmd.invitetop.noData', loc))] });
       return;
     }
 
@@ -41,14 +43,14 @@ const command: BotCommand = {
     const lines = rows.map((r: { userId: string; invites: number; bonus: number }, i: number) => {
       const total = r.invites + r.bonus;
       const prefix = medals[i] ?? `**${i + 1}.**`;
-      return `${prefix} <@${r.userId}> — **${total}** invite${total !== 1 ? 's' : ''}`;
+      return t('cmd.invitetop.line', loc, { prefix, user: `<@${r.userId}>`, count: total });
     });
 
     const embed = new EmbedBuilder()
       .setColor(COLORS.INFO)
-      .setTitle(`🏆 Top Inviters — ${interaction.guild.name}`)
+      .setTitle(t('cmd.invitetop.title', loc, { guild: interaction.guild.name }))
       .setDescription(lines.join('\n'))
-      .setFooter({ text: `Top ${rows.length} inviters` });
+      .setFooter({ text: t('cmd.invitetop.footer', loc, { count: rows.length }) });
 
     await interaction.editReply({ embeds: [embed] });
   },

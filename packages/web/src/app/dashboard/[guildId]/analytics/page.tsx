@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import api from '@/lib/api';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from 'recharts';
 import { LineChart as LineChartIcon } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 type DailyStats = {
   date: string;
@@ -24,6 +25,7 @@ type AnalyticsData = {
 
 export default function AnalyticsPage() {
   const { guildId } = useParams() as { guildId: string };
+  const t = useTranslations('analytics');
 
   const { data: res, isLoading } = useQuery({
     queryKey: ['analytics', guildId],
@@ -44,9 +46,9 @@ export default function AnalyticsPage() {
   }));
 
   const statCards = [
-    { label: 'New Members (24h)', value: data.newMembers24h, color: 'text-green-400' },
-    { label: 'Left Members (24h)', value: data.leftMembers24h, color: 'text-red-400' },
-    { label: 'Mod Actions (24h)', value: data.moderationActions24h, color: 'text-yellow-400' },
+    { label: t('newMembers24h'), value: data.newMembers24h, color: 'text-green-400' },
+    { label: t('leftMembers24h'), value: data.leftMembers24h, color: 'text-red-400' },
+    { label: t('modActions24h'), value: data.moderationActions24h, color: 'text-yellow-400' },
   ];
 
   if (isLoading) {
@@ -62,8 +64,8 @@ export default function AnalyticsPage() {
       <div className="page-head">
         <div className="page-head-icon"><LineChartIcon className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>Analytics</h1>
-          <div className="page-head-desc">Growth, activity, and engagement for your server.</div>
+          <h1>{t('title')}</h1>
+          <div className="page-head-desc">{t('description')}</div>
         </div>
       </div>
 
@@ -79,27 +81,27 @@ export default function AnalyticsPage() {
 
       {history.length === 0 ? (
         <div className="card text-center py-12 text-gray-500 text-sm">
-          No historical data yet. Analytics data is collected daily and will appear here after the first full day.
+          {t('empty')}
         </div>
       ) : (
         <>
           {/* Member count over time */}
           <div className="card">
-            <h3 className="text-base font-semibold text-white mb-4">Member Growth (30 days)</h3>
+            <h3 className="text-base font-semibold text-white mb-4">{t('memberGrowth')}</h3>
             <ResponsiveContainer width="100%" height={220}>
               <LineChart data={history}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
                 <XAxis dataKey="date" tick={{ fill: '#9ca3af', fontSize: 11 }} />
                 <YAxis tick={{ fill: '#9ca3af', fontSize: 11 }} />
                 <Tooltip contentStyle={{ background: '#1e2124', border: '1px solid #374151', borderRadius: 6 }} />
-                <Line type="monotone" dataKey="memberCount" stroke="#5865f2" strokeWidth={2} dot={false} name="Members" />
+                <Line type="monotone" dataKey="memberCount" stroke="#5865f2" strokeWidth={2} dot={false} name={t('seriesMembers')} />
               </LineChart>
             </ResponsiveContainer>
           </div>
 
           {/* Messages & commands */}
           <div className="card">
-            <h3 className="text-base font-semibold text-white mb-4">Activity (30 days)</h3>
+            <h3 className="text-base font-semibold text-white mb-4">{t('activity')}</h3>
             <ResponsiveContainer width="100%" height={220}>
               <BarChart data={history}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
@@ -107,15 +109,15 @@ export default function AnalyticsPage() {
                 <YAxis tick={{ fill: '#9ca3af', fontSize: 11 }} />
                 <Tooltip contentStyle={{ background: '#1e2124', border: '1px solid #374151', borderRadius: 6 }} />
                 <Legend wrapperStyle={{ color: '#9ca3af', fontSize: 12 }} />
-                <Bar dataKey="messagesCount" fill="#5865f2" name="Messages" radius={[2, 2, 0, 0]} />
-                <Bar dataKey="commandsCount" fill="#57f287" name="Commands" radius={[2, 2, 0, 0]} />
+                <Bar dataKey="messagesCount" fill="#5865f2" name={t('seriesMessages')} radius={[2, 2, 0, 0]} />
+                <Bar dataKey="commandsCount" fill="#57f287" name={t('seriesCommands')} radius={[2, 2, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
 
           {/* Joins vs leaves */}
           <div className="card">
-            <h3 className="text-base font-semibold text-white mb-4">Member Flow (30 days)</h3>
+            <h3 className="text-base font-semibold text-white mb-4">{t('memberFlow')}</h3>
             <ResponsiveContainer width="100%" height={220}>
               <BarChart data={history}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
@@ -123,8 +125,8 @@ export default function AnalyticsPage() {
                 <YAxis tick={{ fill: '#9ca3af', fontSize: 11 }} />
                 <Tooltip contentStyle={{ background: '#1e2124', border: '1px solid #374151', borderRadius: 6 }} />
                 <Legend wrapperStyle={{ color: '#9ca3af', fontSize: 12 }} />
-                <Bar dataKey="newMembers" fill="#57f287" name="Joins" radius={[2, 2, 0, 0]} />
-                <Bar dataKey="leftMembers" fill="#ed4245" name="Leaves" radius={[2, 2, 0, 0]} />
+                <Bar dataKey="newMembers" fill="#57f287" name={t('seriesJoins')} radius={[2, 2, 0, 0]} />
+                <Bar dataKey="leftMembers" fill="#ed4245" name={t('seriesLeaves')} radius={[2, 2, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>

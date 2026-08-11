@@ -9,6 +9,7 @@ import { prisma } from '../../database.js';
 import { COLORS } from '@arkenbot/shared';
 import { logger, swallow} from '../../logger.js';
 import { getGuildSettings } from '../../utils/settings.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 
 /**
  * Returns the canonical emoji key matching what the API stores in the DB:
@@ -124,11 +125,13 @@ export class ReactionRolesModule {
     const channel = guild.channels.cache.get(panel.channelId) as TextChannel | undefined;
     if (!channel?.isTextBased()) return;
 
+    const loc = await resolveUserLocale({ user: { id: '' }, guildId: panel.guildId, guildLocale: guild.preferredLocale });
+
     const roleLines = panel.roles.map((r) => {
       const role = guild.roles.cache.get(r.roleId);
       const roleName = role?.name ?? r.roleId;
       const typeLabel =
-        r.type === 'add' ? ' *(add only)*' : r.type === 'remove' ? ' *(remove only)*' : '';
+        r.type === 'add' ? t('reactionRoles.addOnly', loc) : r.type === 'remove' ? t('reactionRoles.removeOnly', loc) : '';
       return `${r.emoji}  <@&${r.roleId}> — **${roleName}**${typeLabel}`;
     });
 
@@ -144,10 +147,10 @@ export class ReactionRolesModule {
         panel.description +
           (roleLines.length > 0
             ? '\n\n' + roleLines.join('\n')
-            : '\n\n*No roles configured yet.*')
+            : '\n\n' + t('reactionRoles.noRoles', loc))
       )
       .setFooter({
-        text: `${panel.roles.length} role${panel.roles.length !== 1 ? 's' : ''} • React to assign yourself a role`,
+        text: t('reactionRoles.footer', loc, { count: panel.roles.length }),
       })
       .setTimestamp();
 

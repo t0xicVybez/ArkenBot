@@ -7,6 +7,7 @@ import {
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { getSelfRoles } from './selfrole.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 
 const command: BotCommand = {
   data: new SlashCommandBuilder()
@@ -19,6 +20,7 @@ const command: BotCommand = {
   category: 'utility',
 
   async execute(interaction: ChatInputCommandInteraction, _client: BotClient) {
+    const loc = await resolveUserLocale(interaction);
     const guildId = interaction.guildId!;
     const name    = interaction.options.getString('name', true).toLowerCase();
 
@@ -26,27 +28,27 @@ const command: BotCommand = {
     const entry = roles.find((r) => r.name === name);
 
     if (!entry) {
-      await interaction.reply({ content: `❌ No self-assignable role named \`${name}\`. Use \`/selfrole list\` to see available roles.`, ephemeral: true });
+      await interaction.reply({ content: t('cmd.selfassignrole.noRole', loc, { name }), ephemeral: true });
       return;
     }
 
     const member = interaction.member as GuildMember;
     if (member.roles.cache.has(entry.roleId)) {
-      await interaction.reply({ content: `You already have the **${name}** role.`, ephemeral: true });
+      await interaction.reply({ content: t('cmd.selfassignrole.alreadyHave', loc, { name }), ephemeral: true });
       return;
     }
 
     const role = interaction.guild?.roles.cache.get(entry.roleId);
     if (!role) {
-      await interaction.reply({ content: `❌ The role for \`${name}\` no longer exists. Ask an admin to remove it with \`/selfrole remove\`.`, ephemeral: true });
+      await interaction.reply({ content: t('cmd.selfassignrole.roleGone', loc, { name }), ephemeral: true });
       return;
     }
 
     try {
       await member.roles.add(role, 'Self-assigned via /selfassignrole');
-      await interaction.reply({ content: `✅ You've been given the <@&${role.id}> role.`, ephemeral: true });
+      await interaction.reply({ content: t('cmd.selfassignrole.assigned', loc, { role: `<@&${role.id}>` }), ephemeral: true });
     } catch {
-      await interaction.reply({ content: `❌ Failed to assign the role. Make sure the bot's role is above <@&${role.id}> in the role list.`, ephemeral: true });
+      await interaction.reply({ content: t('cmd.selfassignrole.failed', loc, { role: `<@&${role.id}>` }), ephemeral: true });
     }
   },
 

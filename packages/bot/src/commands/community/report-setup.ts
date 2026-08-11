@@ -9,6 +9,7 @@ import {
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { successEmbed } from '../../utils/embed.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 import { prisma } from '../../database.js';
 import type { Prisma } from '@prisma/client';
 import { invalidateSettingsCache } from '../../utils/settings.js';
@@ -28,6 +29,7 @@ const command: BotCommand = {
 
   async execute(interaction: ChatInputCommandInteraction, _client: BotClient) {
     await interaction.deferReply({ flags: 64 });
+    const loc = await resolveUserLocale(interaction);
 
     const channel = interaction.options.getChannel('channel', true);
 
@@ -42,7 +44,7 @@ const command: BotCommand = {
     await invalidateSettingsCache(interaction.guildId!);
 
     await interaction.editReply({
-      embeds: [successEmbed('Report System Configured', `Reports will now be sent to <#${channel.id}>.`)],
+      embeds: [successEmbed(t('cmd.reportSetup.title', loc), t('cmd.reportSetup.configured', loc, { channel: `<#${channel.id}>` }))],
     });
   },
 };

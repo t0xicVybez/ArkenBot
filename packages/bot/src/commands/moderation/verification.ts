@@ -10,6 +10,7 @@ import {
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { successEmbed } from '../../utils/embed.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 import { prisma } from '../../database.js';
 import type { Prisma } from '@prisma/client';
 import { invalidateSettingsCache } from '../../utils/settings.js';
@@ -36,6 +37,7 @@ const command: BotCommand = {
 
   async execute(interaction: ChatInputCommandInteraction, _client: BotClient) {
     await interaction.deferReply({ flags: 64 });
+    const loc = await resolveUserLocale(interaction);
 
     const sub = interaction.options.getSubcommand();
 
@@ -67,7 +69,7 @@ const command: BotCommand = {
       }
 
       await interaction.editReply({
-        embeds: [successEmbed('Verification Gate Enabled', `Pending role: <@&${pendingRole.id}>\nMember role: <@&${memberRole.id}>\nVerify channel: <#${channel.id}>`)],
+        embeds: [successEmbed(t('cmd.verification.enabledTitle', loc), t('cmd.verification.enabled', loc, { pending: `<@&${pendingRole.id}>`, member: `<@&${memberRole.id}>`, channel: `<#${channel.id}>` }))],
       });
     }
 
@@ -82,7 +84,7 @@ const command: BotCommand = {
       });
       await invalidateSettingsCache(interaction.guildId!);
 
-      await interaction.editReply({ embeds: [successEmbed('Verification Disabled', 'The verification gate has been disabled.')] });
+      await interaction.editReply({ embeds: [successEmbed(t('cmd.verification.disabledTitle', loc), t('cmd.verification.disabled', loc))] });
     }
   },
 };

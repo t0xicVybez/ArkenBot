@@ -14,6 +14,7 @@ import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { prisma } from '../../database.js';
 import { redis } from '../../redis.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 
 import { swallow } from '../../logger.js';
 const REP_COOLDOWN_SECONDS = 24 * 60 * 60;
@@ -46,17 +47,18 @@ const command: BotCommand = {
   async execute(interaction: ChatInputCommandInteraction, _client: BotClient) {
     if (!interaction.guild) return;
 
+    const loc = await resolveUserLocale(interaction);
     const sub = interaction.options.getSubcommand();
 
     if (sub === 'give') {
       const target = interaction.options.getUser('user', true);
 
       if (target.id === interaction.user.id) {
-        await interaction.reply({ content: "You can't give rep to yourself.", flags: MessageFlags.Ephemeral });
+        await interaction.reply({ content: t('cmd.rep.selfGive', loc), flags: MessageFlags.Ephemeral });
         return;
       }
       if (target.bot) {
-        await interaction.reply({ content: "You can't give rep to bots.", flags: MessageFlags.Ephemeral });
+        await interaction.reply({ content: t('cmd.rep.botGive', loc), flags: MessageFlags.Ephemeral });
         return;
       }
 
@@ -66,7 +68,7 @@ const command: BotCommand = {
       if (ttl > 0) {
         const hours = Math.ceil(ttl / 3600);
         await interaction.reply({
-          content: `You already gave rep today. Try again in **${hours}h**.`,
+          content: t('cmd.rep.cooldown', loc, { hours }),
           flags: MessageFlags.Ephemeral,
         });
         return;
@@ -84,7 +86,7 @@ const command: BotCommand = {
 
       const embed = new EmbedBuilder()
         .setColor(Colors.Green)
-        .setDescription(`⭐ ${interaction.user} gave a reputation point to ${target}!\nThey now have **${total}** rep point${total === 1 ? '' : 's'}.`)
+        .setDescription(t('cmd.rep.gave', loc, { giver: interaction.user.toString(), target: target.toString(), total }))
         .setTimestamp();
 
       await interaction.reply({ embeds: [embed] });
@@ -109,11 +111,11 @@ const command: BotCommand = {
 
       const embed = new EmbedBuilder()
         .setColor(Colors.Blurple)
-        .setTitle(`${target.username}'s Reputation`)
+        .setTitle(t('cmd.rep.checkTitle', loc, { user: target.username }))
         .setThumbnail(target.displayAvatarURL())
         .addFields(
-          { name: '⭐ Rep Points', value: `${total}`, inline: true },
-          { name: '🏆 Server Rank', value: rankPosition > 0 ? `#${rankPosition}` : 'Unranked', inline: true },
+          { name: t('cmd.rep.fieldPoints', loc), value: `${total}`, inline: true },
+          { name: t('cmd.rep.fieldRank', loc), value: rankPosition > 0 ? `#${rankPosition}` : t('cmd.rep.unranked', loc), inline: true },
         )
         .setTimestamp();
 
@@ -131,7 +133,7 @@ const command: BotCommand = {
       });
 
       if (top.length === 0) {
-        await interaction.reply({ content: 'No reputation points have been given in this server yet.', flags: MessageFlags.Ephemeral });
+        await interaction.reply({ content: t('cmd.rep.topEmpty', loc), flags: MessageFlags.Ephemeral });
         return;
       }
 
@@ -140,13 +142,13 @@ const command: BotCommand = {
           const user = await interaction.client.users.fetch(entry.receiverId).catch(swallow);
           const name = user?.username ?? entry.receiverId;
           const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}.`;
-          return `${medal} **${name}** — ${entry._count.id} rep`;
+          return t('cmd.rep.topLine', loc, { medal, name, count: entry._count.id });
         }),
       );
 
       const embed = new EmbedBuilder()
         .setColor(Colors.Gold)
-        .setTitle('⭐ Reputation Leaderboard')
+        .setTitle(t('cmd.rep.topTitle', loc))
         .setDescription(lines.join('\n'))
         .setFooter({ text: interaction.guild.name, iconURL: interaction.guild.iconURL() ?? undefined })
         .setTimestamp();

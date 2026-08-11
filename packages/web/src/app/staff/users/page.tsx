@@ -5,8 +5,10 @@ import { adminApi } from '@/lib/api';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { Search, Users } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 export default function StaffUsersPage() {
+  const t = useTranslations('staffUsers');
   const [search, setSearch] = useState('');
   const queryClient = useQueryClient();
 
@@ -19,10 +21,10 @@ export default function StaffUsersPage() {
     mutationFn: ({ id, isStaff }: { id: string; isStaff: boolean }) =>
       adminApi.updateUser(id, { isStaff }),
     onSuccess: () => {
-      toast.success('User updated!');
+      toast.success(t('userUpdated'));
       queryClient.invalidateQueries({ queryKey: ['admin-users'] });
     },
-    onError: () => toast.error('Failed to update user.'),
+    onError: () => toast.error(t('updateError')),
   });
 
   const users = (usersRes?.data?.data ?? []) as Array<{
@@ -40,8 +42,8 @@ export default function StaffUsersPage() {
       <div className="page-head">
         <div className="page-head-icon"><Users className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>Portal Users</h1>
-          <div className="page-head-desc">Staff roles and dashboard access.</div>
+          <h1>{t('title')}</h1>
+          <div className="page-head-desc">{t('subtitle')}</div>
         </div>
       </div>
 
@@ -50,7 +52,7 @@ export default function StaffUsersPage() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input
             type="text"
-            placeholder="Search by username..."
+            placeholder={t('searchPlaceholder')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="input pl-9"
@@ -63,11 +65,11 @@ export default function StaffUsersPage() {
         <table className="w-full min-w-[600px]">
           <thead className="bg-[var(--bg-base)]">
             <tr>
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">User</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">ID</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Role</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Joined</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Actions</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colUser')}</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colId')}</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colRole')}</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colJoined')}</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colActions')}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[var(--border-subtle)]">
@@ -100,11 +102,11 @@ export default function StaffUsersPage() {
                 <td className="px-4 py-3 text-sm text-gray-400 font-mono">{user.id}</td>
                 <td className="px-4 py-3">
                   {user.isBotOwner ? (
-                    <span className="badge-warning">Owner</span>
+                    <span className="badge-warning">{t('roleOwner')}</span>
                   ) : user.isStaff ? (
-                    <span className="badge-info">Staff</span>
+                    <span className="badge-info">{t('roleStaff')}</span>
                   ) : (
-                    <span className="badge">User</span>
+                    <span className="badge">{t('roleUser')}</span>
                   )}
                 </td>
                 <td className="px-4 py-3 text-sm text-gray-400">
@@ -116,7 +118,7 @@ export default function StaffUsersPage() {
                       onClick={() => updateMutation.mutate({ id: user.id, isStaff: !user.isStaff })}
                       className={`text-xs py-1 px-2 rounded ${user.isStaff ? 'btn-danger' : 'btn-primary'}`}
                     >
-                      {user.isStaff ? 'Remove Staff' : 'Make Staff'}
+                      {user.isStaff ? t('removeStaff') : t('makeStaff')}
                     </button>
                   )}
                 </td>
