@@ -33,6 +33,9 @@ const onlyFlag = flags.find((f) => f.startsWith('--only='));
 const only = onlyFlag ? onlyFlag.slice('--only='.length).split(',') : null;
 const chunkFlag = flags.find((f) => f.startsWith('--chunk='));
 const CHUNK_SIZE = chunkFlag ? parseInt(chunkFlag.slice('--chunk='.length)) : 40;
+const delayFlag = flags.find((f) => f.startsWith('--delay='));
+// Pace between chunks to stay near Groq's tokens-per-minute ceiling and avoid a 429 storm.
+const CHUNK_DELAY = delayFlag ? parseInt(delayFlag.slice('--delay='.length)) : 1500;
 
 // Collect every configured Groq key for round-robin rotation.
 const KEYS = [process.env.GROQ_API_KEY, process.env.GROQ_API_KEY_2, process.env.GROQ_API_KEY_3]
@@ -140,7 +143,7 @@ async function main(): Promise<void> {
         const out = await translateChunk(loc, batch);
         // Keep only keys we asked for; fall back to English for any the model dropped.
         for (const k of slice) merged[k] = typeof out[k] === 'string' ? out[k]! : flatSource[k]!;
-        await sleep(1500);
+        await sleep(CHUNK_DELAY);
       }
     } catch (err) {
       console.error(`FAIL  ${loc.code}: ${(err as Error).message} — skipping (rerun to resume)`);
