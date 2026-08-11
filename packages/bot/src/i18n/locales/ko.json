@@ -2,27 +2,844 @@
   "common": {
     "error": "오류",
     "success": "성공",
-    "notInServer": "이 명령어는 서버에서 사용해야 합니다."
+    "notInServer": "이 명령어는 서버에서 사용해야 합니다.",
+    "enabled": "활성화됨",
+    "disabled": "비활성화됨"
   },
   "language": {
-    "commandDescription": "나의 응답 언어를 설정하거나 확인합니다",
-    "setDescription": "나의 응답 언어를 선택합니다",
-    "clearDescription": "나의 언어 설정을 초기화하고 자동 감지를 사용합니다",
-    "showDescription": "현재 언어 설정을 확인합니다",
+    "commandDescription": "답변에 사용하는 언어를 설정하거나 확인합니다",
+    "setDescription": "내가 답변할 때 사용할 언어를 선택하세요",
+    "clearDescription": "언어를 지우고 자동 감지로 되돌립니다",
+    "showDescription": "현재 언어를 표시합니다",
     "optionDescription": "사용할 언어",
-    "setTitle": "언어 설정 완료",
-    "set": "이제 **{language}**로 응답합니다.",
-    "clearedTitle": "언어 초기화",
-    "cleared": "언어 설정을 초기화했습니다. 이제 디스코드 설정에서 자동 감지를 사용합니다.",
-    "currentTitle": "현재 언어",
-    "currentSet": "현재 언어는 **{language}**입니다.",
-    "currentAuto": "언어를 설정하지 않았으므로 자동 감지를 사용합니다 (현재 **{language}**).",
-    "invalid": "**{input}**은(는) 지원하지 않는 언어입니다."
+    "setTitle": "언어가 업데이트되었습니다",
+    "set": "이제부터 **{language}**(으)로 답변하겠습니다.",
+    "clearedTitle": "언어가 초기화되었습니다",
+    "cleared": "언어 설정이 지워졌습니다 — Discord 설정을 기반으로 자동 감지합니다.",
+    "currentTitle": "당신의 언어",
+    "currentSet": "당신의 언어는 **{language}**(으)로 설정되어 있습니다.",
+    "currentAuto": "언어를 설정하지 않아 자동으로 감지합니다(현재 **{language}**).",
+    "invalid": "**{input}**은(는) 지원되지 않는 언어입니다."
   },
   "moderation": {
-    "disabledTitle": "모더레이션 비활성화",
-    "disabled": "이 서버의 모더레이션 명령어가 비활성화되었습니다.",
+    "disabledTitle": "관리 기능 비활성화됨",
+    "disabled": "이 서버에서는 관리 명령어가 비활성화되어 있습니다.",
     "cannotBanSelfTitle": "잘못된 대상",
-    "cannotBanSelf": "자신을 차단할 수 없습니다."
+    "cannotBanSelf": "자기 자신을 차단할 수 없습니다."
+  },
+  "welcome": {
+    "title": "👋 {server}에 오신 것을 환영합니다!",
+    "accountAge": "📅 계정 생성 기간",
+    "memberCount": "👥 멤버 수"
+  },
+  "leveling": {
+    "levelUp": "레벨 업!",
+    "milestoneReached": "{label} 마일스톤 달성!",
+    "level": "레벨",
+    "achievement": "업적",
+    "milestones": {
+      "legendary": "🏆 전설",
+      "diamond": "💎 다이아몬드",
+      "century": "🌟 센추리",
+      "elite": "⚡ 엘리트",
+      "veteran": "🔥 베테랑",
+      "experienced": "🥇 숙련",
+      "rising": "🥈 떠오르는",
+      "newcomer": "🥉 신입"
+    }
+  },
+  "counting": {
+    "ruined": "❌ {user}님이 **{count}**에서 숫자 세기를 망쳤습니다! **1**부터 다시 시작하세요.",
+    "twiceInRow": "❌ {user}님은 연속으로 두 번 셀 수 없습니다! 세기가 초기화되었습니다 — **1**부터 다시 시작하세요."
+  },
+  "automod": {
+    "kickedTitle": "{server}에서 추방됨",
+    "filterKickDM": "단어 필터를 반복적으로 위반하여 **{server}**에서 추방되었습니다(위반 #{count}).",
+    "filterKick": "⛔ {user}님이 단어 필터를 반복적으로 위반하여 **추방**되었습니다(위반 #{count}).",
+    "filterWarn": "⚠️ {user} 필터링된 단어가 포함되어 메시지가 삭제되었습니다(위반 #{count}).",
+    "removed": "{user} 메시지가 삭제되었습니다: **{reason}**",
+    "reasons": {
+      "spam": "스팸 감지됨",
+      "link": "차단된 링크 감지됨",
+      "mention": "멘션 스팸",
+      "caps": "과도한 대문자 사용"
+    },
+    "phishingRemoved": "⚠️ {user} — 알려진 피싱 링크가 포함되어 메시지가 삭제되었습니다.",
+    "aiFlagTitle": "🤖 AI 관리 플래그",
+    "aiFlagDescription": "{channel}에서 {user}님의 메시지를 검토용으로 플래그했습니다.\n\n**분류:** {category} · **심각도:** {severity}\n**이유:** {reason}\n[메시지로 이동]({url})",
+    "aiFlagFooter": "AI 생성 · 조치 전에 검토하세요"
+  },
+  "verification": {
+    "verifyChannelFallback": "인증 채널",
+    "dmWelcome": "**{server}**에 오신 것을 환영합니다! 접근 권한을 얻으려면 {channel}에서 인증 버튼을 클릭하세요.",
+    "serverOnly": "이 버튼은 서버에서만 사용할 수 있습니다.",
+    "notConfigured": "이 서버에는 인증이 설정되어 있지 않습니다.",
+    "fetchFailed": "당신의 멤버 데이터를 가져올 수 없습니다.",
+    "verified": "✅ 인증되었습니다! 서버에 오신 것을 환영합니다.",
+    "error": "인증 중에 오류가 발생했습니다.",
+    "panelTitle": "✅ 계정 인증",
+    "panelDescription": "아래 버튼을 클릭하여 인증하고 서버 접근 권한을 얻으세요.",
+    "buttonLabel": "인증"
+  },
+  "starboard": {
+    "unknownAuthor": "알 수 없음",
+    "source": "출처",
+    "jumpToMessage": "[메시지로 이동]({url})"
+  },
+  "reactionRoles": {
+    "addOnly": " *(추가 전용)*",
+    "removeOnly": " *(제거 전용)*",
+    "noRoles": "*아직 설정된 역할이 없습니다.*",
+    "footer": "{count}개의 역할 • 반응하여 자신에게 역할을 부여하세요"
+  },
+  "antiNuke": {
+    "alertTitle": "🚨 안티 누크 경고",
+    "alertDescription": "사용자 {user}님이 **{server}**에서 **{action}** 임계값을 초과하여 권한이 해제되었습니다.",
+    "triggeredTitle": "🚨 안티 누크 작동",
+    "triggeredDescription": "{user}님이 **{action}** 작업 임계값을 초과하여 제재되었습니다.",
+    "actionTaken": "취한 조치",
+    "deopped": "권한 해제됨(역할 제거됨)",
+    "trigger": "트리거"
+  },
+  "onboarding": {
+    "title": "👋 ArkenBot을 추가해 주셔서 감사합니다!",
+    "description": "ArkenBot이 방금 **{server}**에 참여했습니다. 몇 분 만에 설정하는 방법은 다음과 같습니다:",
+    "step1Name": "1️⃣ 서버 설정하기",
+    "step1Value": "Discord로 [대시보드]({dashboardUrl})에 로그인하고 **{server}**를 선택한 후, 관리·레벨·티켓·방송 알림 등 원하는 기능을 활성화하세요.",
+    "step2Name": "2️⃣ 공지 채널 설정하기",
+    "step2Value": "**대시보드 → 공지**에서 ArkenBot 업데이트를 받을 채널을 선택하세요. 새 기능, 변경 사항, 중요한 알림이 그곳에 전달됩니다.",
+    "step3Name": "3️⃣ 문서 읽기",
+    "step3Value": "모든 기능에는 [docs.arkenbot.app]({docsUrl})에 가이드가 있습니다.",
+    "footer": "ArkenBot — 완전 무료, 유료 장벽 없음",
+    "buttonDashboard": "대시보드 열기",
+    "buttonDocs": "문서",
+    "buttonSupport": "지원 서버"
+  },
+  "music": {
+    "playbackFailedTitle": "⚠️ 재생 실패",
+    "playbackFailedDescription": "**{title}**을(를) 재생할 수 없습니다.\n`{reason}`",
+    "playbackFailedFooter": "다른 검색어를 시도하거나 yt-dlp가 최신인지 확인하세요.",
+    "nowPlayingTitle": "🎵 재생 중",
+    "requestedBy": "요청자",
+    "duration": "길이"
+  },
+  "topgg": {
+    "voteReminder": "🗳️ top.gg에서 다시 **{bot}**에 투표할 수 있습니다!\n{url}\n\n_`/vote reminders:off`로 언제든지 알림을 끌 수 있습니다._"
+  },
+  "birthday": {
+    "title": "🎂 생일 축하합니다!"
+  },
+  "reminders": {
+    "deliver": "{user} 알림: {message}"
+  },
+  "giveaway": {
+    "noEntrants": "자격을 갖춘 참가자가 없습니다",
+    "winnerLabel": "당첨자",
+    "winnersLabel": "당첨자",
+    "ended": "🎉 경품 이벤트 종료! {winnerLabel}: {winners}\n상품: **{prize}**",
+    "endedTitle": "🎉 경품 이벤트 종료",
+    "endedEmbed": "**상품:** {prize}\n**{winnerLabel}:** {winners}"
+  },
+  "streamAlert": {
+    "youtubeLive": "{streamer}님이 YouTube에서 라이브 중입니다!",
+    "twitchLive": "{streamer}님이 Twitch에서 라이브 중입니다!",
+    "playing": "플레이 중",
+    "unknownGame": "알 수 없음",
+    "kickLive": "{streamer}님이 Kick에서 라이브 중입니다!",
+    "twitterPosted": "{handle}님이 X에 게시했습니다",
+    "redditPostedBy": "r/{subreddit}에서 u/{author}님이 게시함",
+    "rssNewPost": "**{feed}**의 새 게시물"
+  },
+  "announcement": {
+    "author": "ArkenBot 공지",
+    "buttonChangelog": "전체 변경 로그",
+    "buttonDashboard": "대시보드",
+    "labels": {
+      "update": "업데이트",
+      "feature": "새 기능",
+      "maintenance": "점검",
+      "hotfix": "긴급 수정"
+    }
+  },
+  "logging": {
+    "user": "사용자",
+    "moderator": "관리자",
+    "reason": "이유",
+    "noReason": "이유가 제공되지 않음",
+    "messageDeleted": "🗑️ 메시지 삭제됨",
+    "author": "작성자",
+    "channel": "채널",
+    "content": "내용",
+    "messageEdited": "✏️ 메시지 편집됨",
+    "before": "이전",
+    "after": "이후",
+    "noContent": "*내용 없음*",
+    "memberJoined": "📥 멤버 참여",
+    "accountAge": "계정 생성 기간",
+    "memberCount": "멤버 수",
+    "memberLeft": "📤 멤버 퇴장",
+    "joined": "참여일",
+    "unknown": "알 수 없음"
+  },
+  "cmd": {
+    "kick": {
+      "cannotSelf": "자기 자신을 추방할 수 없습니다.",
+      "cannotSelfBot": "저는 저 자신을 추방할 수 없습니다.",
+      "notFoundTitle": "찾을 수 없음",
+      "notFound": "해당 사용자는 이 서버에 없습니다.",
+      "hierarchyTitle": "계층 오류",
+      "notKickable": "이 멤버를 추방할 수 없습니다.",
+      "hierarchyUser": "당신보다 높거나 같은 역할을 가진 멤버는 추방할 수 없습니다.",
+      "dmAction": "{guild}에서 추방됨",
+      "action": "추방",
+      "failedTitle": "실패",
+      "failed": "해당 멤버를 추방할 수 없었습니다. 제 권한을 확인하세요."
+    },
+    "unban": {
+      "invalidIdTitle": "잘못된 ID",
+      "invalidId": "유효한 Discord 사용자 ID를 입력하세요.",
+      "notBannedTitle": "차단되지 않음",
+      "notBanned": "해당 사용자는 이 서버에서 차단되지 않았습니다.",
+      "successTitle": "차단 해제됨",
+      "success": "**{user}**({userId}) 님의 차단을 성공적으로 해제했습니다\n**이유:** {reason}",
+      "failedTitle": "실패",
+      "failed": "해당 사용자의 차단을 해제할 수 없었습니다."
+    },
+    "warn": {
+      "cannotSelf": "자기 자신에게 경고할 수 없습니다.",
+      "notFoundTitle": "찾을 수 없음",
+      "notFound": "해당 사용자는 이 서버에 없습니다.",
+      "hierarchyTitle": "계층 오류",
+      "hierarchyUser": "당신보다 높거나 같은 역할을 가진 멤버에게 경고할 수 없습니다.",
+      "dmAction": "{guild}에서의 경고",
+      "escalationMute": "자동으로 음소거되었습니다(경고 {count}건이 임계값에 도달함).",
+      "escalationTimeout": "자동으로 {duration}초 동안 타임아웃되었습니다(경고 {count}건이 임계값에 도달함).",
+      "escalationBan": "자동으로 차단되었습니다(경고 {count}건이 임계값에 도달함).",
+      "escalationKick": "자동으로 추방되었습니다(경고 {count}건이 임계값에 도달함).",
+      "action": "경고",
+      "totalWarnings": "총 경고 수"
+    },
+    "mute": {
+      "invalidDurationTitle": "잘못된 기간",
+      "invalidDuration": "`10m`, `1h`, `1d` 같은 형식을 사용하세요. 최대는 28일입니다.",
+      "tooLongTitle": "너무 긺",
+      "tooLong": "Discord 타임아웃의 최대는 28일입니다.",
+      "notFoundTitle": "찾을 수 없음",
+      "notFound": "해당 사용자는 이 서버에 없습니다.",
+      "hierarchyTitle": "계층 오류",
+      "hierarchyUser": "당신보다 높거나 같은 역할을 가진 멤버를 음소거할 수 없습니다.",
+      "notMutable": "이 멤버를 음소거할 수 없습니다.",
+      "dmAction": "{guild}에서 음소거됨",
+      "action": "음소거",
+      "failedTitle": "실패",
+      "failed": "해당 멤버를 음소거할 수 없었습니다."
+    },
+    "case": {
+      "notFoundTitle": "찾을 수 없음",
+      "notFound": "사건 #{number}을(를) 찾을 수 없습니다.",
+      "caseLabel": "사건 #{number}",
+      "fieldUser": "사용자",
+      "fieldModerator": "관리자",
+      "fieldReason": "이유",
+      "fieldStatus": "상태",
+      "fieldDate": "날짜",
+      "fieldDuration": "기간",
+      "statusActive": "🔴 진행 중",
+      "statusResolved": "🟢 해결됨",
+      "noOpenTitle": "열린 사건 없음",
+      "noOpen": "{user}님의 열린 사건을 찾을 수 없습니다.",
+      "closedTitle": "사건 종료됨",
+      "closed": "{user}님의 열린 사건 **{count}**건을 종료했습니다.\n**이유:** {reason}"
+    },
+    "clearwarnings": {
+      "cannotSelf": "자신의 경고를 지울 수 없습니다.",
+      "hierarchyTitle": "계층 오류",
+      "hierarchyUser": "당신보다 높거나 같은 역할을 가진 멤버의 경고를 관리할 수 없습니다.",
+      "noActiveTitle": "✅ 활성 경고 없음",
+      "noActive": "{user}님에게는 지울 활성 경고가 없습니다.",
+      "dmTitle": "{guild}에서 경고가 지워졌습니다",
+      "dmDesc": "당신의 활성 경고 {count}건이 관리자에 의해 지워졌습니다.",
+      "clearedTitle": "✅ 경고가 지워졌습니다",
+      "fieldUser": "사용자",
+      "fieldCleared": "지워짐",
+      "clearedValue": "경고 {count}건",
+      "fieldModerator": "관리자",
+      "fieldReason": "이유"
+    },
+    "warnings": {
+      "noneTitle": "✅ 경고 없음",
+      "noneAll": "{user}님에게는 경고가 없습니다.",
+      "noneActive": "{user}님에게는 활성 경고가 없습니다.",
+      "title": "⚠️ {user}님의 경고",
+      "lineMeta": "{moderator}님이 {date}에",
+      "cleared": "~~(지워짐)~~",
+      "footer": "경고 {count}건 표시 중"
+    },
+    "note": {
+      "addedTitle": "메모 추가됨",
+      "added": "**{user}**님에 대한 메모 `{id}`을(를) 추가했습니다.\n\n> {content}",
+      "noNotesTitle": "메모 없음",
+      "noNotes": "**{user}**님의 메모를 찾을 수 없습니다.",
+      "listTitle": "📝 {user}님의 메모",
+      "listFooter": "최근 메모 {count}건 표시 중",
+      "fieldName": "ID: `{id}` — {date}, {staff}",
+      "notFoundTitle": "찾을 수 없음",
+      "notFound": "해당 사용자와 ID의 메모를 찾을 수 없습니다.",
+      "removedTitle": "메모 제거됨",
+      "removed": "메모 `{id}`이(가) 삭제되었습니다.",
+      "cancelledTitle": "취소됨",
+      "cancelled": "모든 메모를 지우려면 `confirm: true`를 설정하세요.",
+      "clearedTitle": "메모 지워짐",
+      "cleared": "**{user}**님의 메모 **{count}**건을 삭제했습니다."
+    },
+    "ctxBan": {
+      "notFoundTitle": "찾을 수 없음",
+      "notFound": "해당 사용자를 찾을 수 없습니다.",
+      "hierarchyTitle": "계층 오류",
+      "hierarchyUser": "당신보다 높거나 같은 역할을 가진 멤버를 차단할 수 없습니다.",
+      "dmAction": "{guild}에서 차단됨",
+      "action": "차단"
+    },
+    "ctxTimeout": {
+      "invalidDurationTitle": "잘못된 기간",
+      "invalidDuration": "기간은 5초에서 28일 사이여야 합니다(예: 10m, 1h, 7d).",
+      "notFoundTitle": "찾을 수 없음",
+      "notFoundUser": "해당 사용자를 찾을 수 없습니다.",
+      "notInServer": "해당 사용자는 이 서버에 없습니다.",
+      "hierarchyTitle": "계층 오류",
+      "hierarchyUser": "당신보다 높거나 같은 역할을 가진 멤버를 타임아웃할 수 없습니다.",
+      "dmAction": "{guild}에서의 타임아웃",
+      "action": "타임아웃"
+    },
+    "ctxWarn": {
+      "notFoundTitle": "찾을 수 없음",
+      "notFound": "해당 사용자를 찾을 수 없습니다.",
+      "hierarchyTitle": "계층 오류",
+      "hierarchyUser": "당신보다 높거나 같은 역할을 가진 멤버에게 경고할 수 없습니다.",
+      "dmAction": "{guild}에서의 경고",
+      "action": "경고",
+      "totalWarnings": "총 경고 수"
+    },
+    "purge": {
+      "textOnly": "이 명령어는 텍스트 채널에서만 사용할 수 있습니다.",
+      "noMatch": "필터와 일치하는 메시지가 없습니다(메시지는 14일 이내여야 합니다).",
+      "bulkTextOnly": "대량 삭제는 텍스트 채널에서만 사용할 수 있습니다.",
+      "deleted": "{count}개의 메시지를 삭제했습니다."
+    },
+    "suggestion": {
+      "notFound": "제안을 찾을 수 없습니다.",
+      "statusApproved": "승인됨",
+      "statusDenied": "거부됨",
+      "statusConsidering": "검토 중",
+      "footer": "{user}님이 {status}",
+      "result": "제안이 {status}되었습니다."
+    },
+    "temprole": {
+      "memberNotFound": "이 서버에서 해당 멤버를 찾을 수 없습니다.",
+      "invalidDurationTitle": "잘못된 기간",
+      "invalidDuration": "`30m`, `2h`, `7d` 같은 형식을 사용하세요. 최소는 60초입니다.",
+      "assignedTitle": "임시 역할 부여됨",
+      "assigned": "{expires}까지 {member}님에게 {role}을(를) 부여했습니다.\n**이유:** {reason}",
+      "notFoundTitle": "찾을 수 없음",
+      "notFound": "해당 멤버와 역할에 대한 활성 임시 역할 기록을 찾을 수 없습니다.",
+      "removedTitle": "임시 역할 제거됨",
+      "removed": "{member}님에게서 {role}을(를) 제거했습니다.",
+      "noneTitle": "활성 임시 역할 없음",
+      "none": "이 서버에는 활성 임시 역할이 없습니다.",
+      "listLine": "{user} → {role} — {expires}에 만료",
+      "listTitle": "활성 임시 역할"
+    },
+    "verification": {
+      "enabledTitle": "인증 게이트 활성화됨",
+      "enabled": "대기 역할: {pending}\n멤버 역할: {member}\n인증 채널: {channel}",
+      "disabledTitle": "인증 비활성화됨",
+      "disabled": "인증 게이트가 비활성화되었습니다."
+    },
+    "invites": {
+      "notInServer": "이 명령어는 서버에서 사용하세요.",
+      "disabledTitle": "비활성화됨",
+      "disabled": "이 서버에서는 초대 추적이 활성화되어 있지 않습니다.",
+      "title": "초대 — {user}",
+      "totalInvites": "총 초대 수",
+      "bonus": "보너스"
+    },
+    "invitetop": {
+      "notInServer": "이 명령어는 서버에서 사용하세요.",
+      "disabledTitle": "비활성화됨",
+      "disabled": "이 서버에서는 초대 추적이 활성화되어 있지 않습니다.",
+      "noDataTitle": "데이터 없음",
+      "noData": "아직 기록된 초대 데이터가 없습니다.",
+      "line": "{prefix} {user} — 초대 **{count}**건",
+      "title": "🏆 상위 초대자 — {guild}",
+      "footer": "상위 {count}명 초대자"
+    },
+    "vote": {
+      "statusCooldown": "⏳ {time}에 다시 투표할 수 있습니다",
+      "statusReady": "✅ 지금 바로 투표할 수 있습니다!",
+      "title": "🗳️ top.gg에서 투표하기",
+      "description": "12시간마다 무료 투표로 저희를 응원해 주세요 — 10초면 되고 정말 큰 도움이 됩니다.\n\n**[▶ 여기서 투표]({voteUrl})**\n\n{status}",
+      "yourVotes": "당신의 투표 수",
+      "currentStreak": "현재 연속 기록",
+      "streakValue": "{count} 🔥",
+      "reminders": "알림",
+      "on": "켜짐",
+      "off": "꺼짐",
+      "perkRole": "{hours}시간 동안 {role} 역할",
+      "perkXp": "+{xp} XP",
+      "perkWeekend": " (주말에는 2배)",
+      "rewardsHere": "🎁 보상은 여기",
+      "footerOn": "알림 켜짐 — 다시 투표할 수 있을 때 DM으로 알려드릴게요.",
+      "footerOff": "알림 꺼짐."
+    },
+    "topvoters": {
+      "noVotes": "아직 기록된 투표가 없습니다 — `/vote`로 첫 번째 투표자가 되어보세요! 🗳️",
+      "unknownUser": "사용자 {id}",
+      "line": "{rank} {name} — **{count}**표{streak}",
+      "title": "🏆 상위 투표자",
+      "footer": "/vote로 투표하기 · {url}"
+    },
+    "report": {
+      "statusPending": "대기 중",
+      "statusDismissed": "기각됨",
+      "statusReviewed": "검토됨",
+      "embedTitle": "📋 멤버 신고",
+      "fieldReporter": "신고자",
+      "fieldTarget": "대상",
+      "fieldReason": "이유",
+      "fieldStatus": "상태",
+      "fieldReviewedBy": "검토자",
+      "fieldStaffNote": "스태프 메모",
+      "btnDismiss": "기각",
+      "btnTakeAction": "조치 취하기",
+      "cannotSelf": "자기 자신을 신고할 수 없습니다.",
+      "submittedTitle": "신고 제출됨",
+      "submitted": "신고가 관리팀에 제출되었습니다.",
+      "notFound": "신고를 찾을 수 없습니다.",
+      "markedReviewed": "신고를 검토됨으로 표시했습니다."
+    },
+    "reportSetup": {
+      "title": "신고 시스템 구성됨",
+      "configured": "이제 신고가 {channel}(으)로 전송됩니다."
+    },
+    "startcounting": {
+      "notInServer": "이 명령어는 서버에서 사용하세요.",
+      "notConfiguredTitle": "구성되지 않음",
+      "notConfigured": "숫자 세기 애드온이 설치되지 않았거나 채널이 설정되지 않았습니다. 먼저 대시보드에서 구성하세요.",
+      "channelNotFoundTitle": "채널을 찾을 수 없음",
+      "channelNotFound": "구성된 숫자 세기 채널이 더 이상 존재하지 않습니다.",
+      "title": "🔢 숫자 세기 게임",
+      "description": "숫자 세기 게임이 시작되었습니다! **1**부터 세기 시작해서 얼마나 높이 갈 수 있는지 봅시다.\n\n한 번에 한 숫자씩 세세요 — 다음 사람은 순서상 다음 숫자를 보내야 합니다.",
+      "fieldCurrentCount": "현재 카운트",
+      "fieldBestCount": "최고 카운트",
+      "fieldResetOnFail": "실패 시 초기화",
+      "fieldSameUser": "같은 사용자 두 번",
+      "yes": "예",
+      "no": "아니요",
+      "footer": "{start}부터 시작",
+      "posted": "{channel}에 공지를 게시했습니다!"
+    },
+    "givexp": {
+      "disabledTitle": "레벨 기능 비활성화됨",
+      "disabled": "이 서버에서는 레벨 시스템이 비활성화되어 있습니다.",
+      "invalidUserTitle": "잘못된 사용자",
+      "botTarget": "봇에게 XP를 줄 수 없습니다.",
+      "levelUp": "레벨 **{old}** → **{new}**(으)로 올랐습니다!",
+      "title": "XP 지급됨",
+      "description": "{user}님에게 **{amount} XP**를 지급했습니다.",
+      "fieldBefore": "이전",
+      "fieldAfter": "이후",
+      "statValue": "{xp} XP (레벨 {level})"
+    },
+    "removexp": {
+      "disabledTitle": "레벨 기능 비활성화됨",
+      "disabled": "이 서버에서는 레벨 시스템이 비활성화되어 있습니다.",
+      "invalidUserTitle": "잘못된 사용자",
+      "botTarget": "봇에게서 XP를 제거할 수 없습니다.",
+      "noDataTitle": "데이터 없음",
+      "noData": "{user}님은 이 서버에 XP가 없습니다.",
+      "levelDown": "레벨 **{old}** → **{new}**(으)로 내려갔습니다.",
+      "title": "XP 제거됨",
+      "description": "{user}님에게서 **{amount} XP**를 제거했습니다.",
+      "fieldBefore": "이전",
+      "fieldAfter": "이후",
+      "statValue": "{xp} XP (레벨 {level})"
+    },
+    "rank": {
+      "disabledTitle": "레벨 기능 비활성화됨",
+      "disabled": "이 서버에서는 레벨 시스템이 비활성화되어 있습니다.",
+      "noDataTitle": "데이터 없음",
+      "noData": "{user}님은 아직 XP를 획득하지 않았습니다.",
+      "embedTitle": "📊 {user}님의 랭크",
+      "fieldRank": "🏆 랭크",
+      "fieldLevel": "📈 레벨",
+      "fieldTotalXp": "✨ 총 XP",
+      "fieldMessages": "💬 메시지",
+      "fieldProgress": "레벨 {level}까지의 진행도"
+    },
+    "stats": {
+      "disabledTitle": "레벨 기능 비활성화됨",
+      "disabled": "이 서버에서는 레벨 시스템이 비활성화되어 있습니다.",
+      "noDataTitle": "데이터 없음",
+      "noData": "{user}님은 아직 XP를 획득하지 않았습니다.",
+      "never": "없음",
+      "title": "{user}님의 활동 통계",
+      "fieldRank": "🏆 랭크",
+      "fieldLevel": "📈 레벨",
+      "fieldTotalXp": "✨ 총 XP",
+      "fieldMessages": "💬 보낸 메시지",
+      "fieldDayStreak": "연속 일수",
+      "dayValue": "{count}일",
+      "fieldReputation": "⭐ 평판",
+      "fieldAchievements": "🎖️ 업적",
+      "fieldLastActive": "🕐 마지막 활동"
+    },
+    "leaderboard": {
+      "disabledTitle": "레벨 기능 비활성화됨",
+      "disabled": "이 서버에서는 레벨 시스템이 비활성화되어 있습니다.",
+      "emptyTitle": "비어 있음",
+      "empty": "이 서버에서는 아직 아무도 XP를 획득하지 않았습니다.",
+      "line": "{medal} {user} — 레벨 **{level}** | **{xp}** XP",
+      "title": "🏆 {guild} 리더보드",
+      "footer": "{page}/{pages} 페이지 • 총 {total}명의 사용자",
+      "viewFull": "전체 리더보드 보기"
+    },
+    "profile": {
+      "disabledTitle": "레벨 기능 비활성화됨",
+      "disabled": "이 서버에서는 레벨 시스템이 비활성화되어 있습니다.",
+      "noDataTitle": "데이터 없음",
+      "noData": "{user}님은 아직 XP를 획득하지 않았습니다.",
+      "noAchievements": "*아직 업적이 없습니다. 계속 채팅하세요!*",
+      "unknown": "알 수 없음",
+      "title": "{user}님의 프로필",
+      "fieldServerRank": "🏆 서버 랭크",
+      "fieldLevel": "📈 레벨",
+      "fieldTotalXp": "✨ 총 XP",
+      "fieldMessages": "💬 메시지",
+      "fieldJoined": "📅 참여일",
+      "fieldProgress": "레벨 {level}까지의 진행도",
+      "fieldAchievements": "🎖️ 업적 ({count})"
+    },
+    "rankcard": {
+      "resetTitle": "초기화됨",
+      "reset": "랭크 카드가 기본 스타일로 초기화되었습니다.",
+      "invalidColorTitle": "잘못된 색상",
+      "invalidColor": "유효한 16진수 색상 코드를 입력하세요(예: `#ff5733` 또는 `#f53`).",
+      "colorUpdatedTitle": "색상 업데이트됨",
+      "colorUpdated": "랭크 카드 강조 색상이 `{hex}`(으)로 설정되었습니다.",
+      "invalidUrlTitle": "잘못된 URL",
+      "invalidUrl": "`.png`, `.jpg`, `.gif`, `.webp`로 끝나는 직접 이미지 URL을 입력하세요.",
+      "bgUpdatedTitle": "배경 업데이트됨",
+      "bgUpdated": "랭크 카드 배경이 업데이트되었습니다. `/rank`로 확인하세요.",
+      "notInServer": "이 명령어는 서버에서 사용하세요.",
+      "previewContent": "다음은 당신의 랭크 카드 미리보기입니다:"
+    },
+    "leveling": {
+      "rateNormal": "일반",
+      "rateMultiplied": "{value}배의",
+      "multiplierSet": "XP 배율이 **{value}x**로 설정되었습니다. 이제 멤버는 메시지당 {rate} XP를 획득합니다.",
+      "keepRolesOn": "이제 멤버는 더 높은 레벨 역할을 얻을 때 **이전의 모든 레벨 역할을 유지**합니다.",
+      "keepRolesOff": "이제 멤버는 **가장 높은 레벨 역할만 유지**합니다(낮은 역할은 자동으로 제거됨).",
+      "syncComplete": "역할 동기화가 완료되었습니다. **{processed}**명의 멤버를 처리하고 **{updated}**명의 역할을 업데이트했습니다."
+    },
+    "loop": {
+      "disabledTitle": "음악 기능 비활성화됨",
+      "disabled": "이 서버에서는 음악 명령어가 비활성화되어 있습니다.",
+      "nothingTitle": "재생 중인 항목 없음",
+      "nothing": "현재 재생 중인 음악이 없습니다.",
+      "modeOff": "꺼짐",
+      "modeTrack": "곡",
+      "modeQueue": "대기열",
+      "title": "반복",
+      "set": "반복 모드가 **{mode}**(으)로 설정되었습니다"
+    },
+    "pause": {
+      "disabledTitle": "음악 기능 비활성화됨",
+      "disabled": "이 서버에서는 음악 명령어가 비활성화되어 있습니다.",
+      "nothingTitle": "재생 중인 항목 없음",
+      "nothing": "현재 재생 중인 음악이 없습니다.",
+      "alreadyPausedTitle": "이미 일시정지됨",
+      "alreadyPaused": "음악이 이미 일시정지되어 있습니다.",
+      "title": "일시정지됨",
+      "paused": "**{title}**을(를) 일시정지했습니다"
+    },
+    "resume": {
+      "disabledTitle": "음악 기능 비활성화됨",
+      "disabled": "이 서버에서는 음악 명령어가 비활성화되어 있습니다.",
+      "nothingTitle": "재생 중인 항목 없음",
+      "nothing": "현재 재생 중인 음악이 없습니다.",
+      "notPausedTitle": "일시정지되지 않음",
+      "notPaused": "음악이 일시정지되어 있지 않습니다.",
+      "title": "재개됨",
+      "resumed": "**{title}**을(를) 재개했습니다"
+    },
+    "skip": {
+      "disabledTitle": "음악 기능 비활성화됨",
+      "disabled": "이 서버에서는 음악 명령어가 비활성화되어 있습니다.",
+      "nothingTitle": "재생 중인 항목 없음",
+      "nothing": "건너뛸 항목이 없습니다.",
+      "title": "건너뜀",
+      "skipped": "**{title}**을(를) 건너뛰었습니다"
+    },
+    "stop": {
+      "disabledTitle": "음악 기능 비활성화됨",
+      "disabled": "이 서버에서는 음악 명령어가 비활성화되어 있습니다.",
+      "nothingTitle": "재생 중인 항목 없음",
+      "nothing": "현재 재생 중인 항목이 없습니다.",
+      "title": "정지됨",
+      "stopped": "음악을 정지하고 대기열을 비웠습니다."
+    },
+    "volume": {
+      "disabledTitle": "음악 기능 비활성화됨",
+      "disabled": "이 서버에서는 음악 명령어가 비활성화되어 있습니다.",
+      "nothingTitle": "재생 중인 항목 없음",
+      "nothing": "재생 중인 음악이 없습니다.",
+      "title": "볼륨",
+      "set": "볼륨이 **{level}%**(으)로 설정되었습니다"
+    },
+    "play": {
+      "disabledTitle": "음악 기능 비활성화됨",
+      "disabled": "이 서버에서는 음악 명령어가 비활성화되어 있습니다.",
+      "joinVcTitle": "음성 채널에 참여하세요",
+      "joinVc": "음악을 재생하려면 음성 채널에 있어야 합니다.",
+      "wrongChannelTitle": "잘못된 채널",
+      "wrongChannel": "이미 {channel}에서 재생 중입니다",
+      "addedTitle": "대기열에 추가됨",
+      "added": "**{title}**이(가) 대기열에 추가되었습니다.\n위치: #{position}",
+      "nowPlayingTitle": "재생 중",
+      "nowPlaying": "🎵 **{title}**",
+      "requestedBy": "요청자",
+      "duration": "길이",
+      "unknown": "알 수 없음",
+      "failed": "해당 트랙을 재생할 수 없습니다: {error}"
+    },
+    "queue": {
+      "disabledTitle": "음악 기능 비활성화됨",
+      "disabled": "이 서버에서는 음악 명령어가 비활성화되어 있습니다.",
+      "nothingTitle": "재생 중인 항목 없음",
+      "nothing": "현재 재생 중인 음악이 없습니다.",
+      "title": "🎵 음악 대기열",
+      "nowPlaying": "**재생 중:** {title}",
+      "empty": "_대기열이 비어 있습니다_",
+      "footer": "대기열에 {count}곡 • 반복: {loop}"
+    },
+    "ping": {
+      "pinging": "핑 확인 중...",
+      "pong": "🏓 퐁!",
+      "roundtrip": "왕복 시간",
+      "websocket": "WebSocket"
+    },
+    "avatar": {
+      "title": "{user}님의 아바타",
+      "footer": "사용자 ID: {id}",
+      "openBrowser": "브라우저에서 열기"
+    },
+    "invite": {
+      "title": "ArkenBot 초대하기",
+      "body": "[여기를 클릭하여 ArkenBot을 서버에 추가하세요]({url})"
+    },
+    "botstatus": {
+      "title": "봇 상태",
+      "fieldServers": "서버",
+      "fieldPing": "핑",
+      "fieldUptime": "가동 시간",
+      "fieldMemory": "메모리"
+    },
+    "resetxp": {
+      "cancelled": "초기화가 취소되었습니다.",
+      "complete": "초기화가 완료되었습니다. {count}명의 멤버 XP 기록을 삭제했습니다."
+    },
+    "rep": {
+      "selfGive": "자기 자신에게 평판을 줄 수 없습니다.",
+      "botGive": "봇에게 평판을 줄 수 없습니다.",
+      "cooldown": "오늘 이미 평판을 주었습니다. **{hours}시간** 후에 다시 시도하세요.",
+      "gave": "⭐ {giver}님이 {target}님에게 평판 포인트를 주었습니다!\n이제 **{total}** 평판 포인트를 보유하고 있습니다.",
+      "checkTitle": "{user}님의 평판",
+      "fieldPoints": "⭐ 평판 포인트",
+      "fieldRank": "🏆 서버 랭크",
+      "unranked": "순위 없음",
+      "topEmpty": "이 서버에서는 아직 평판 포인트가 지급되지 않았습니다.",
+      "topLine": "{medal} **{name}** — 평판 {count}",
+      "topTitle": "⭐ 평판 리더보드"
+    },
+    "suggest": {
+      "notEnabled": "이 서버에서는 제안 기능이 활성화되어 있지 않습니다.",
+      "channelNotFound": "제안 채널을 찾을 수 없습니다.",
+      "embedTitle": "새 제안",
+      "footer": "제안 ID: {id}",
+      "submitted": "제안이 제출되었습니다!"
+    },
+    "selfassignrole": {
+      "noRole": "❌ `{name}`이라는 이름의 자가 지정 역할이 없습니다. `/selfrole list`로 사용 가능한 역할을 확인하세요.",
+      "alreadyHave": "이미 **{name}** 역할을 가지고 있습니다.",
+      "roleGone": "❌ `{name}`에 해당하는 역할이 더 이상 존재하지 않습니다. 관리자에게 `/selfrole remove`로 제거해 달라고 요청하세요.",
+      "assigned": "✅ {role} 역할이 부여되었습니다.",
+      "failed": "❌ 역할 부여에 실패했습니다. 역할 목록에서 봇의 역할이 {role}보다 위에 있는지 확인하세요."
+    },
+    "selfremoverole": {
+      "noRole": "❌ `{name}`이라는 이름의 자가 지정 역할이 없습니다. `/selfrole list`로 사용 가능한 역할을 확인하세요.",
+      "dontHave": "**{name}** 역할을 가지고 있지 않습니다.",
+      "roleGone": "❌ `{name}`에 해당하는 역할이 더 이상 존재하지 않습니다.",
+      "removed": "✅ {role} 역할이 제거되었습니다.",
+      "failed": "❌ 역할 제거에 실패했습니다. 역할 목록에서 봇의 역할이 {role}보다 위에 있는지 확인하세요."
+    },
+    "remind": {
+      "invalidDuration": "잘못된 기간입니다. 예: `10m`, `2h`, `1d`, `7d`",
+      "tooLong": "알림의 최대 기간은 28일입니다.",
+      "set": "알림이 설정되었습니다! {time}에 \"{message}\"에 대해 알려드릴게요."
+    },
+    "serverinfo": {
+      "verifNone": "없음",
+      "verifLow": "낮음",
+      "verifMedium": "보통",
+      "verifHigh": "높음",
+      "verifVeryHigh": "매우 높음",
+      "unknown": "알 수 없음",
+      "fieldId": "🆔 ID",
+      "fieldOwner": "👑 소유자",
+      "fieldCreated": "📅 생성일",
+      "fieldMembers": "👥 멤버",
+      "fieldBots": "🤖 봇",
+      "fieldVerification": "🔒 인증 수준",
+      "fieldChannels": "📋 채널",
+      "channelsValue": "💬 텍스트 {text}개 | 🔊 음성 {voice}개 | 📁 카테고리 {categories}개",
+      "fieldRoles": "🎭 역할",
+      "fieldEmojis": "😀 이모지",
+      "fieldBoosts": "💎 부스트",
+      "boostsValue": "{tier} 레벨 (부스트 {count}개)",
+      "footer": "서버 ID: {id}",
+      "featModeration": "관리",
+      "featAutoMod": "자동 관리",
+      "featLeveling": "레벨",
+      "featWelcome": "환영",
+      "featLogging": "로깅",
+      "featMusic": "음악",
+      "featReactionRoles": "반응 역할",
+      "fieldFeatures": "⚙️ 활성화된 기능",
+      "noneConfigured": "구성된 기능 없음"
+    },
+    "userinfo": {
+      "yes": "예",
+      "no": "아니요",
+      "none": "없음",
+      "unknown": "알 수 없음",
+      "fieldId": "🆔 ID",
+      "fieldBot": "🤖 봇",
+      "fieldCreated": "📅 계정 생성일",
+      "fieldNickname": "🏷️ 닉네임",
+      "fieldJoined": "📥 서버 참여일",
+      "fieldRoles": "🎭 역할 ({count})",
+      "fieldBoosting": "💎 부스트 시작일"
+    },
+    "birthday": {
+      "setTitle": "🎂 생일이 설정되었습니다!",
+      "set": "생일이 {date}(으)로 설정되었습니다.",
+      "removed": "생일이 제거되었습니다.",
+      "none": "이 서버에는 아직 등록된 생일이 없습니다.",
+      "listTitle": "🎂 다가오는 생일",
+      "total": "총 {count}개",
+      "userNotSet": "{user}님은 생일을 설정하지 않았습니다.",
+      "userBirthday": "🎂 {user}님의 생일은 {date}입니다"
+    },
+    "selfrole": {
+      "needManageRoles": "❌ 이 기능을 사용하려면 **역할 관리** 권한이 필요합니다.",
+      "roleTooHigh": "❌ 역할 목록에서 봇의 역할이 **{role}**보다 아래에 있습니다. 먼저 봇의 역할을 그 위로 옮기세요.",
+      "added": "✅ {role}이(가) 이제 `{name}`(으)로 자가 지정할 수 있습니다.\n멤버는 `/selfassignrole {name}`을(를) 실행하여 얻을 수 있습니다.",
+      "exists": "❌ 해당 이름 또는 역할의 자가 지정 역할이 이미 존재합니다. `/selfrole list`로 현재 항목을 확인하세요.",
+      "notFound": "❌ `{name}`이라는 이름의 자가 지정 역할을 찾을 수 없습니다.",
+      "removed": "✅ `{name}`을(를) 자가 지정 역할 목록에서 제거했습니다.",
+      "none": "아직 자가 지정 역할이 구성되지 않았습니다. 관리자는 `/selfrole add`로 역할을 추가할 수 있습니다.",
+      "listTitle": "자가 지정 역할",
+      "listFooter": "얻으려면 /selfassignrole <이름> · 해제하려면 /selfremoverole <이름>",
+      "roleDeleted": "역할 삭제됨"
+    },
+    "analytics": {
+      "missingPermTitle": "권한 없음",
+      "missingPerm": "분석을 구성하려면 **서버 관리** 권한이 필요합니다.",
+      "channelSetTitle": "분석 채널 설정됨",
+      "channelSet": "주간 분석 보고서가 {channel}에 게시됩니다.",
+      "disabledTitle": "분석 비활성화됨",
+      "disabled": "자동 주간 분석 보고서가 꺼졌습니다.",
+      "reportTitle": "📊 서버 분석 — 최근 30일",
+      "messages": "메시지",
+      "commands": "명령어",
+      "joins": "참여",
+      "leaves": "퇴장",
+      "netGrowth": "순 증가"
+    },
+    "autoresponse": {
+      "invalidRegexTitle": "잘못된 정규식",
+      "invalidRegex": "플래그 `{flags}`이(가) 있는 패턴 `{pattern}`은(는) 유효한 정규 표현식이 아닙니다.",
+      "addedTitle": "자동 응답 추가됨",
+      "added": "**ID:** `{id}`\n**패턴:** `{pattern}` (플래그: `{flags}`)\n**응답:** {response}",
+      "notFoundTitle": "찾을 수 없음",
+      "notFound": "이 서버에서 해당 ID의 자동 응답을 찾을 수 없습니다.",
+      "removedTitle": "자동 응답 제거됨",
+      "removed": "패턴 `{pattern}`이(가) 삭제되었습니다.",
+      "updatedTitle": "자동 응답 업데이트됨",
+      "updated": "패턴 `{pattern}`이(가) 이제 **{state}**입니다.",
+      "noneTitle": "자동 응답 없음",
+      "none": "이 서버에는 구성된 자동 응답이 없습니다.",
+      "listTitle": "자동 응답",
+      "listFooter": "이 목록의 전체 ID를 /autoresponse remove 또는 toggle과 함께 사용하세요"
+    },
+    "poll": {
+      "votes": "{count}표",
+      "totalVotes": "총 {count}표",
+      "ends": "종료",
+      "endPoll": "투표 종료",
+      "ended": "[종료됨] {question}",
+      "optionCount": "`|`로 구분하여 2~10개의 옵션을 입력하세요.",
+      "notFound": "투표를 찾을 수 없습니다.",
+      "alreadyEnded": "이 투표는 종료되었습니다.",
+      "cannotEnd": "투표를 종료할 수 있는 사람은 작성자 또는 관리자뿐입니다."
+    },
+    "giveaway": {
+      "invalidDuration": "잘못된 기간입니다.",
+      "fieldPrize": "**상품:** {prize}",
+      "fieldWinners": "**당첨자 수:** {count}",
+      "fieldEnds": "**종료:** {time}",
+      "fieldRequiredRole": "**필수 역할:** {role}",
+      "fieldBonus": "**보너스 응모:** {role}은(는) +{count} 응모를 받습니다",
+      "enterPrompt": "🎉 로 반응하여 참여하세요!",
+      "title": "🎉 경품 이벤트!",
+      "winnersFooter": "당첨자 {count}명",
+      "started": "경품 이벤트가 시작되었습니다! ID: `{id}`",
+      "notFound": "경품 이벤트를 찾을 수 없습니다.",
+      "alreadyEnded": "경품 이벤트가 이미 종료되었습니다.",
+      "willEnd": "경품 이벤트는 다음 확인 주기(1분 이내)에 종료됩니다.",
+      "notEnded": "경품 이벤트를 찾을 수 없거나 아직 종료되지 않았습니다.",
+      "noChannel": "경품 이벤트 채널을 찾을 수 없습니다.",
+      "noMessage": "경품 이벤트 메시지를 찾을 수 없습니다.",
+      "noReactions": "반응을 찾을 수 없습니다.",
+      "noEligible": "자격을 갖춘 참가자가 없습니다.",
+      "rerollAnnounce": "🎉 재추첨! 새 당첨자: {winners}! **{prize}** 당첨을 축하합니다!",
+      "rerolled": "재추첨했습니다!"
+    },
+    "forum": {
+      "invalidChannelTitle": "잘못된 채널",
+      "invalidChannel": "포럼 채널을 선택하세요.",
+      "templateSetTitle": "템플릿 설정됨",
+      "templateSet": "{channel}에 대한 템플릿 메시지가 구성되었습니다.",
+      "autoTagSetTitle": "자동 태그 설정됨",
+      "autoTagSet": "태그 `{tag}`이(가) {channel}에서 자동으로 적용됩니다.",
+      "clearedTitle": "구성 지워짐",
+      "cleared": "{channel}의 포럼 관리 구성이 제거되었습니다."
+    },
+    "help": {
+      "cat": {
+        "moderation": "관리",
+        "leveling": "레벨",
+        "community": "커뮤니티",
+        "music": "음악",
+        "utility": "유틸리티"
+      },
+      "overviewTitle": "📋 명령어 참고서",
+      "overviewDesc": "**{categories}개 카테고리**에서 사용 가능한 **{commands}개 명령어**가 있습니다.",
+      "overviewHint": "◀ ▶ 로 탐색하거나 **개요**를 클릭하여 여기로 돌아오세요.",
+      "cmdCount": "{count}개 명령어",
+      "overview": "개요",
+      "pageFooter": "{page}/{total} 페이지  ·  사용 가능한 명령어 {commands}개",
+      "notYourMenu": "이 메뉴는 다른 사람의 것입니다."
+    }
   }
 }
