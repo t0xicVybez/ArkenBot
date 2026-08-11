@@ -34,4 +34,9 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+import createNextIntlPlugin from 'next-intl/plugin';
+
+// Points at the request config; the active locale is read from the arken_locale cookie.
+const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
+
+export default withNextIntl(nextConfig);

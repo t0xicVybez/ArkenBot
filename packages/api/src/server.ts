@@ -19,6 +19,7 @@ import { addonRoutes } from './routes/addons.js';
 import { adminRoutes } from './routes/admin.js';
 import { ticketAddonRoutes } from './routes/addon-tickets.js';
 import { publicRoutes } from './routes/public.js';
+import { userPreferencesRoutes } from './routes/userPreferences.js';
 import { featureRoutes } from './routes/features.js';
 import { giveawayRoutes } from './routes/giveaways.js';
 import { streamAlertRoutes } from './routes/streamAlerts.js';
@@ -165,6 +166,7 @@ export async function createServer() {
   await server.register(adminRoutes);
   await server.register(ticketAddonRoutes);
   await server.register(publicRoutes);
+  await server.register(userPreferencesRoutes);
   await server.register(featureRoutes);
   await server.register(giveawayRoutes);
   await server.register(streamAlertRoutes);

@@ -1,0 +1,21 @@
+{
+  "common": {
+    "save": "保存",
+    "cancel": "取消",
+    "saved": "已保存",
+    "loading": "加载中…",
+    "language": "语言"
+  },
+  "nav": {
+    "overview": "概览",
+    "moderation": "管理",
+    "leveling": "等级",
+    "settings": "设置",
+    "integrations": "集成"
+  },
+  "language": {
+    "label": "语言",
+    "description": "选择仪表板的语言。这也设置了机器人如何回复你。",
+    "saved": "语言已更新"
+  }
+}

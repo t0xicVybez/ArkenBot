@@ -14,6 +14,7 @@ import toast from 'react-hot-toast';
 import { ArrowLeft, Loader2, LogOut, Monitor, ShieldCheck, Trash2 } from 'lucide-react';
 import { authApi, type ActiveSession } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 
 /** Derives a coarse, human-readable device label from a User-Agent string. */
 function deviceLabel(ua: string | null): string {
@@ -98,6 +99,10 @@ export default function AccountPage() {
       </header>
 
       <main className="max-w-3xl mx-auto px-6 py-8">
+        <section className="mb-8 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-card)] p-5">
+          <LanguageSwitcher />
+        </section>
+
         <div className="flex items-center justify-between mb-4">
           <h2 className="flex items-center gap-2 text-lg font-semibold text-white">
             <ShieldCheck className="w-5 h-5 text-discord-blurple" /> Active sessions

@@ -1,0 +1,21 @@
+{
+  "common": {
+    "save": "Lagre",
+    "cancel": "Avbryt",
+    "saved": "Lagret",
+    "loading": "Laster…",
+    "language": "Språk"
+  },
+  "nav": {
+    "overview": "Oversikt",
+    "moderation": "Moderasjon",
+    "leveling": "Nivåsystem",
+    "settings": "Innstillinger",
+    "integrations": "Integrasjoner"
+  },
+  "language": {
+    "label": "Språk",
+    "description": "Velg språk for dashbordet. Dette setter også hvordan boten svarer deg.",
+    "saved": "Språk oppdatert"
+  }
+}

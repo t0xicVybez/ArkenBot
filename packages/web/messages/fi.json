@@ -1,0 +1,21 @@
+{
+  "common": {
+    "save": "Tallenna",
+    "cancel": "Peruuta",
+    "saved": "Tallennettu",
+    "loading": "Ladataan…",
+    "language": "Kieli"
+  },
+  "nav": {
+    "overview": "Yleiskatsaus",
+    "moderation": "Moderaatio",
+    "leveling": "Tasojen hallinta",
+    "settings": "Asetukset",
+    "integrations": "Integraatiot"
+  },
+  "language": {
+    "label": "Kieli",
+    "description": "Valitse kieli ArkenBotin hallintapaneelin käyttöön. Tämä asettaa myös, miten botti vastaa sinulle.",
+    "saved": "Kieli päivitetty"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "common": {
+    "save": "저장",
+    "cancel": "취소",
+    "saved": "저장됨",
+    "loading": "로딩 중…",
+    "language": "언어"
+  },
+  "nav": {
+    "overview": "개요",
+    "moderation": "관리",
+    "leveling": "레벨링",
+    "settings": "설정",
+    "integrations": "통합"
+  },
+  "language": {
+    "label": "언어",
+    "description": "대시보드 언어를 선택합니다. 이는 봇이您에게 응답하는 방법도 설정합니다.",
+    "saved": "언어가 업데이트되었습니다"
+  }
+}

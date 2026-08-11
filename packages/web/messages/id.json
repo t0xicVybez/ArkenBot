@@ -1,0 +1,21 @@
+{
+  "common": {
+    "save": "Simpan",
+    "cancel": "Batal",
+    "saved": "Tersimpan",
+    "loading": "Sedang memuat…",
+    "language": "Bahasa"
+  },
+  "nav": {
+    "overview": "Ikhtisar",
+    "moderation": "Moderasi",
+    "leveling": "Peningkatan Level",
+    "settings": "Pengaturan",
+    "integrations": "Integrasi"
+  },
+  "language": {
+    "label": "Bahasa",
+    "description": "Pilih bahasa untuk dasbor. Ini juga mengatur bagaimana ArkenBot menjawab Anda.",
+    "saved": "Bahasa diperbarui"
+  }
+}

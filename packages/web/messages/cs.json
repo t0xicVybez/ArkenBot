@@ -1,0 +1,21 @@
+{
+  "common": {
+    "save": "Uložit",
+    "cancel": "Zrušit",
+    "saved": "Uloženo",
+    "loading": "Načítání…",
+    "language": "Jazyk"
+  },
+  "nav": {
+    "overview": "Přehled",
+    "moderation": "Moderace",
+    "leveling": "Leveling",
+    "settings": "Nastavení",
+    "integrations": "Integrace"
+  },
+  "language": {
+    "label": "Jazyk",
+    "description": "Zvolte jazyk pro řídicí panel. Toto také nastaví, jak ArkenBot odpoví na vás.",
+    "saved": "Jazyk aktualizován"
+  }
+}

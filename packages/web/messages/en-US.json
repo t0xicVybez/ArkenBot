@@ -1,0 +1,21 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "saved": "Saved",
+    "loading": "Loading…",
+    "language": "Language"
+  },
+  "nav": {
+    "overview": "Overview",
+    "moderation": "Moderation",
+    "leveling": "Leveling",
+    "settings": "Settings",
+    "integrations": "Integrations"
+  },
+  "language": {
+    "label": "Language",
+    "description": "Choose the language for the dashboard. This also sets how the bot replies to you.",
+    "saved": "Language updated"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "common": {
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "saved": "Gespeichert",
+    "loading": "Lade…",
+    "language": "Sprache"
+  },
+  "nav": {
+    "overview": "Übersicht",
+    "moderation": "Moderation",
+    "leveling": "Levelsystem",
+    "settings": "Einstellungen",
+    "integrations": "Integrationen"
+  },
+  "language": {
+    "label": "Sprache",
+    "description": "Wählen Sie die Sprache für das Dashboard. Dies legt auch fest, wie der Bot auf Sie antwortet.",
+    "saved": "Sprache aktualisiert"
+  }
+}
