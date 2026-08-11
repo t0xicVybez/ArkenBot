@@ -1,0 +1,21 @@
+{
+  "common": {
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "saved": "Salvo",
+    "loading": "Carregando…",
+    "language": "Idioma"
+  },
+  "nav": {
+    "overview": "Visão geral",
+    "moderation": "Moderação",
+    "leveling": "Níveis",
+    "settings": "Configurações",
+    "integrations": "Integrações"
+  },
+  "language": {
+    "label": "Idioma",
+    "description": "Escolha o idioma para o painel de controle. Isso também define como o ArkenBot responde a você.",
+    "saved": "Idioma atualizado"
+  }
+}

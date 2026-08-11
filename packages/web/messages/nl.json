@@ -1,0 +1,21 @@
+{
+  "common": {
+    "save": "Opslaan",
+    "cancel": "Annuleren",
+    "saved": "Opgeslagen",
+    "loading": "Laden…",
+    "language": "Taal"
+  },
+  "nav": {
+    "overview": "Overzicht",
+    "moderation": "Moderatie",
+    "leveling": "Level systeem",
+    "settings": "Instellingen",
+    "integrations": "Integraties"
+  },
+  "language": {
+    "label": "Taal",
+    "description": "Kies de taal voor het dashboard. Hiermee wordt ook ingesteld hoe de bot antwoordt.",
+    "saved": "Taal bijgewerkt"
+  }
+}

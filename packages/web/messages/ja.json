@@ -1,0 +1,21 @@
+{
+  "common": {
+    "save": "保存",
+    "cancel": "キャンセル",
+    "saved": "保存しました",
+    "loading": "読み込み中…",
+    "language": "言語"
+  },
+  "nav": {
+    "overview": "概要",
+    "moderation": "モデレーション",
+    "leveling": "レベルシステム",
+    "settings": "設定",
+    "integrations": "統合"
+  },
+  "language": {
+    "label": "言語",
+    "description": "ダッシュボードの言語を選択します。これは、ボットがあなたに返信する方法も設定します。",
+    "saved": "言語を更新しました"
+  }
+}
