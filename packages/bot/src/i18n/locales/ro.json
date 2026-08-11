@@ -1,0 +1,28 @@
+{
+  "common": {
+    "error": "Eroare",
+    "success": "Succes",
+    "notInServer": "Această comandă trebuie utilizată într-un server."
+  },
+  "language": {
+    "commandDescription": "Setează sau vizualizează limba pe care o folosesc când îți răspund",
+    "setDescription": "Alege limba pentru răspunsurile mele către tine",
+    "clearDescription": "Șterge limba ta și revino la detectarea automată",
+    "showDescription": "Afișează limba ta curentă",
+    "optionDescription": "Limba de utilizat",
+    "setTitle": "Limba a fost actualizată",
+    "set": "Acum îți voi răspunde în **{language}**.",
+    "clearedTitle": "Resetare limbă",
+    "cleared": "Preferința ta de limbă a fost ștearsă — voi detecta automat din setările tale de pe Discord.",
+    "currentTitle": "Limba ta",
+    "currentSet": "Limba ta este setată pe **{language}**.",
+    "currentAuto": "Nu ai setat o limbă, așa că o detectez automat (în prezent **{language}**).",
+    "invalid": "**{input}** nu este o limbă suportată."
+  },
+  "moderation": {
+    "disabledTitle": "Moderare dezactivată",
+    "disabled": "Comenzile de moderare sunt dezactivate pentru acest server.",
+    "cannotBanSelfTitle": "Țintă invalidă",
+    "cannotBanSelf": "Nu te poți auto-elimina."
+  }
+}

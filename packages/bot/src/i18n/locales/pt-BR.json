@@ -1,0 +1,28 @@
+{
+  "common": {
+    "error": "Erro",
+    "success": "Sucesso",
+    "notInServer": "Este comando deve ser usado em um servidor."
+  },
+  "language": {
+    "commandDescription": "Definir ou visualizar o idioma que uso ao responder a você",
+    "setDescription": "Escolha o idioma para minhas respostas a você",
+    "clearDescription": "Limpar seu idioma e voltar à detecção automática",
+    "showDescription": "Mostrar seu idioma atual",
+    "optionDescription": "O idioma a ser usado",
+    "setTitle": "Idioma Atualizado",
+    "set": "Agora vou responder a você em **{language}**.",
+    "clearedTitle": "Idioma Reiniciado",
+    "cleared": "Sua preferência de idioma foi reiniciada — vou detectá-lo automaticamente a partir de suas configurações do Discord.",
+    "currentTitle": "Seu Idioma",
+    "currentSet": "Seu idioma está definido como **{language}**.",
+    "currentAuto": "Você não definiu um idioma, então vou detectá-lo automaticamente (atualmente **{language}**).",
+    "invalid": "**{input}** não é um idioma suportado."
+  },
+  "moderation": {
+    "disabledTitle": "Moderação Desativada",
+    "disabled": "Comandos de moderação estão desativados para este servidor.",
+    "cannotBanSelfTitle": "Alvo Inválido",
+    "cannotBanSelf": "Você não pode se banir."
+  }
+}

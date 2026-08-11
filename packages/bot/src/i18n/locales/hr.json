@@ -1,0 +1,28 @@
+{
+  "common": {
+    "error": "Greška",
+    "success": "Uspjeh",
+    "notInServer": "Ova naredba mora biti uporabljena na serveru."
+  },
+  "language": {
+    "commandDescription": "Postavi ili pregledaj jezik koji koristim kada ti odgovaram",
+    "setDescription": "Odaberi jezik za moje odgovore",
+    "clearDescription": "Obriši svoj jezik i vrati se na automatsko otkrivanje",
+    "showDescription": "Prikaži trenutni jezik",
+    "optionDescription": "Jezik za korištenje",
+    "setTitle": "Jezik ažuriran",
+    "set": "Sada ću ti odgovarati na **{language}**.",
+    "clearedTitle": "Jezik resetiran",
+    "cleared": "Vaša postavka jezika je obrisana — sada ću ga automatski otkrivati iz vaših Discord postavki.",
+    "currentTitle": "Vaš jezik",
+    "currentSet": "Vaš jezik je postavljen na **{language}**.",
+    "currentAuto": "Niste postavili jezik, pa ga automatski otkrivam (trenutno **{language}**).",
+    "invalid": "**{input}** nije podržan jezik."
+  },
+  "moderation": {
+    "disabledTitle": "Moderacija onemogućena",
+    "disabled": "Naredbe za moderaciju su onemogućene za ovaj server.",
+    "cannotBanSelfTitle": "Neispravan cilj",
+    "cannotBanSelf": "Ne možete zabraniti sami sebi."
+  }
+}

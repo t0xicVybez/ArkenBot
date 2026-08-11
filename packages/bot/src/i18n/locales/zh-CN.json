@@ -1,0 +1,28 @@
+{
+  "common": {
+    "error": "错误",
+    "success": "成功",
+    "notInServer": "此命令必须在服务器中使用"
+  },
+  "language": {
+    "commandDescription": "设置或查看我回复给你的语言",
+    "setDescription": "选择我回复给你的语言",
+    "clearDescription": "清除你的语言并恢复自动检测",
+    "showDescription": "显示你的当前语言",
+    "optionDescription": "要使用的语言",
+    "setTitle": "语言已更新",
+    "set": "我现在将以 **{language}** 回复你。",
+    "clearedTitle": "语言已重置",
+    "cleared": "你的语言偏好已被清除 —— 我将从你的 Discord 设置中自动检测它。",
+    "currentTitle": "你的语言",
+    "currentSet": "你的语言设置为 **{language}**。",
+    "currentAuto": "你没有设置语言，所以我会自动检测（当前为 **{language}**）。",
+    "invalid": "**{input}** 不是支持的语言。"
+  },
+  "moderation": {
+    "disabledTitle": "已禁用管理",
+    "disabled": "此服务器的管理命令已被禁用。",
+    "cannotBanSelfTitle": "无效目标",
+    "cannotBanSelf": "你不能禁止自己。"
+  }
+}

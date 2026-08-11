@@ -1,0 +1,28 @@
+{
+  "common": {
+    "error": "Kesalahan",
+    "success": "Sukses",
+    "notInServer": "Perintah ini harus digunakan di dalam server."
+  },
+  "language": {
+    "commandDescription": "Atur atau lihat bahasa yang saya gunakan saat membalas Anda",
+    "setDescription": "Pilih bahasa untuk balasan saya kepada Anda",
+    "clearDescription": "Hapus pengaturan bahasa Anda dan kembali ke deteksi otomatis",
+    "showDescription": "Tampilkan bahasa Anda saat ini",
+    "optionDescription": "Bahasa yang digunakan",
+    "setTitle": "Bahasa Diperbarui",
+    "set": "Saya akan membalas Anda dalam bahasa **{language}**.",
+    "clearedTitle": "Pengaturan Bahasa Direset",
+    "cleared": "Pengaturan bahasa Anda telah dihapus — saya akan mendeteksi secara otomatis dari pengaturan Discord Anda.",
+    "currentTitle": "Bahasa Anda",
+    "currentSet": "Bahasa Anda saat ini diatur ke **{language}**.",
+    "currentAuto": "Anda belum mengatur bahasa, jadi saya mendeteksi secara otomatis (saat ini **{language}**).",
+    "invalid": "**{input}** bukanlah bahasa yang didukung."
+  },
+  "moderation": {
+    "disabledTitle": "Moderasi Dinonaktifkan",
+    "disabled": "Perintah moderasi dinonaktifkan untuk server ini.",
+    "cannotBanSelfTitle": "Target Tidak Valid",
+    "cannotBanSelf": "Anda tidak dapat membanned diri sendiri."
+  }
+}

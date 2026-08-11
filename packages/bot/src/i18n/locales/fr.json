@@ -1,0 +1,28 @@
+{
+  "common": {
+    "error": "Erreur",
+    "success": "Succès",
+    "notInServer": "Cette commande doit être utilisée dans un serveur."
+  },
+  "language": {
+    "commandDescription": "Définir ou afficher la langue que j'utilise pour vous répondre",
+    "setDescription": "Choisissez la langue pour mes réponses à vous",
+    "clearDescription": "Effacer votre langue et revenir à la détection automatique",
+    "showDescription": "Afficher votre langue actuelle",
+    "optionDescription": "La langue à utiliser",
+    "setTitle": "Langue mise à jour",
+    "set": "Je vais maintenant vous répondre en **{language}**.",
+    "clearedTitle": "Réinitialisation de la langue",
+    "cleared": "Votre préférence de langue a été effacée — je vais la détecter automatiquement à partir de vos paramètres Discord.",
+    "currentTitle": "Votre langue",
+    "currentSet": "Votre langue est définie sur **{language}**.",
+    "currentAuto": "Vous n'avez pas défini de langue, donc je la détecte automatiquement (actuellement **{language}**).",
+    "invalid": "**{input}** n'est pas une langue prise en charge."
+  },
+  "moderation": {
+    "disabledTitle": "Modération désactivée",
+    "disabled": "Les commandes de modération sont désactivées pour ce serveur.",
+    "cannotBanSelfTitle": "Cible invalide",
+    "cannotBanSelf": "Vous ne pouvez pas vous bannir vous-même."
+  }
+}
