@@ -9,7 +9,7 @@ import {
 } from 'discord.js';
 import { randomUUID } from 'crypto';
 import type { AddonContext, AddonCommandDefinition } from '@arkenbot/addon-sdk';
-import type { TicketPanel, GuildTicketConfig, SlaLevel } from '../types.js';
+import type { TicketPanel, SlaLevel } from '../types.js';
 import {
   getPanels,
   getPanel,

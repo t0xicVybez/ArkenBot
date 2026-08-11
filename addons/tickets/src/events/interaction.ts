@@ -1001,7 +1001,7 @@ async function handleWaitingButton(
 }
 
 // Notes are saved to the ticket record and visible in the dashboard.
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 export async function postNoteToThread(_ctx: AddonContext, _ticket: Ticket, _guildId: string, _note: TicketNote): Promise<void> {
   // no-op — notes are stored in the DB and surfaced via the dashboard
 }

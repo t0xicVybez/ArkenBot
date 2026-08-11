@@ -1,7 +1,7 @@
 import { type Guild, type GuildMember, EmbedBuilder, type TextChannel } from 'discord.js';
 import { prisma } from '../../database.js';
 import { formatTemplate } from '@arkenbot/shared';
-import { logger, swallow} from '../../logger.js';
+import { swallow} from '../../logger.js';
 
 export class WelcomeModule {
   static async handleJoin(guild: Guild, member: GuildMember): Promise<void> {

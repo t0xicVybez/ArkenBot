@@ -10,7 +10,7 @@ import {
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { moderationEmbed, errorEmbed } from '../../utils/embed.js';
-import { canModerate, isBotOwner } from '../../utils/permissions.js';
+import { canModerate } from '../../utils/permissions.js';
 import { parseDuration, formatDuration } from '@arkenbot/shared';
 import { prisma } from '../../database.js';
 import { getNextCaseNumber, getGuildSettings } from '../../utils/settings.js';

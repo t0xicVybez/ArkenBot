@@ -17,7 +17,7 @@ import {
   type VoiceConnection,
   type AudioPlayer,
 } from '@discordjs/voice';
-import { spawn, type ChildProcess } from 'child_process';
+import { spawn } from 'child_process';
 import { YouTube } from 'youtube-sr';
 import { prisma } from '../../database.js';
 import { logger, swallow} from '../../logger.js';
