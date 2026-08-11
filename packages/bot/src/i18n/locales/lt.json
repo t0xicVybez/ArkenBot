@@ -1,0 +1,28 @@
+{
+  "common": {
+    "error": "Klaida",
+    "success": "Sėkmė",
+    "notInServer": "Šis komandas turi būti naudojamas serverio viduje."
+  },
+  "language": {
+    "commandDescription": "Nustatyti arba peržiūrėti kalbą, kurią aš naudoju atsakydamas jums",
+    "setDescription": "Pasirinkite kalbą, kurią aš naudosiu atsakydamas jums",
+    "clearDescription": "Išvalyti jūsų kalbą ir grįžti prie automatinio atpažinimo",
+    "showDescription": "Rodyti jūsų esamą kalbą",
+    "optionDescription": "Kalba, kurią naudoti",
+    "setTitle": "Kalba atnaujinta",
+    "set": "Dabar aš atsipsaku jums **{language}** kalba.",
+    "clearedTitle": "Kalba atkurtas",
+    "cleared": "Jūsų kalbos pasirinkimas buvo išvalytas — aš ją auto-atpažinsiu pagal jūsų Discord nustatymus.",
+    "currentTitle": "Jūsų kalba",
+    "currentSet": "Jūsų kalba yra nustatyta į **{language}**.",
+    "currentAuto": "Jūs nėra nustatę kalbos, tad aš ją auto-atpažinsiu (šiuo metu **{language}**).",
+    "invalid": "**{input}** nėra palaikoma kalba."
+  },
+  "moderation": {
+    "disabledTitle": "Moderavimas išjungtas",
+    "disabled": "Moderavimo komandos yra išjungtos šiam serveriui.",
+    "cannotBanSelfTitle": "Netinkamas taikinys",
+    "cannotBanSelf": "Jūs negalite uždrausti savęs."
+  }
+}
