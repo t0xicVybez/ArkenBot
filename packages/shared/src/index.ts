@@ -10,3 +10,4 @@ export * from './utils/constants.js';
 export * from './utils/helpers.js';
 export * from './utils/llm.js';
 export * from './utils/errors.js';
+export * from './i18n/locales.js';
