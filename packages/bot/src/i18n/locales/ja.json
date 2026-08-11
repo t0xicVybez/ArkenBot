@@ -1,0 +1,28 @@
+{
+  "common": {
+    "error": "エラー",
+    "success": "成功",
+    "notInServer": "このコマンドはサーバー内で使用する必要があります。"
+  },
+  "language": {
+    "commandDescription": "私があなたに返信するときに使用する言語を設定または表示します",
+    "setDescription": "私の返信の言語を選択してください",
+    "clearDescription": "言語をクリアして自動検出に戻します",
+    "showDescription": "現在の言語を表示します",
+    "optionDescription": "使用する言語",
+    "setTitle": "言語を更新しました",
+    "set": "私はあなたに **{language}** で返信します。",
+    "clearedTitle": "言語をリセットしました",
+    "cleared": "あなたの言語設定をクリアしました — 私はあなたのDiscord設定から自動的に検出します。",
+    "currentTitle": "あなたの言語",
+    "currentSet": "あなたの言語は **{language}** に設定されています。",
+    "currentAuto": "あなたは言語を設定していませんので、自動検出します (現在 **{language}** )。",
+    "invalid": "**{input}** はサポートされていない言語です。"
+  },
+  "moderation": {
+    "disabledTitle": "モデレーションを無効にしました",
+    "disabled": "このサーバーではモデレーションコマンドが無効になっています。",
+    "cannotBanSelfTitle": "無効な対象",
+    "cannotBanSelf": "あなた自身をBANすることはできません。"
+  }
+}

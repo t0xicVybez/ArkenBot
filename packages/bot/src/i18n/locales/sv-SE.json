@@ -1,0 +1,28 @@
+{
+  "common": {
+    "error": "Fel",
+    "success": "Lyckades",
+    "notInServer": "Detta kommando måste användas i en server."
+  },
+  "language": {
+    "commandDescription": "Ange eller visa språket jag använder när jag svarar dig",
+    "setDescription": "Välj språk för mina svar till dig",
+    "clearDescription": "Rensa ditt språk och gå tillbaka till automatisk upptäckt",
+    "showDescription": "Visa ditt aktuella språk",
+    "optionDescription": "Språk att använda",
+    "setTitle": "Språk uppdaterat",
+    "set": "Jag kommer nu att svara dig på **{language}**.",
+    "clearedTitle": "Språk återställt",
+    "cleared": "Din språkpreferens har raderats — jag kommer att upptäcka det automatiskt från dina Discord-inställningar.",
+    "currentTitle": "Ditt språk",
+    "currentSet": "Ditt språk är inställt på **{language}**.",
+    "currentAuto": "Du har inte ställt in ett språk, så jag upptäcker det automatiskt (för närvarande **{language}**).",
+    "invalid": "**{input}** är inte ett stödt språk."
+  },
+  "moderation": {
+    "disabledTitle": "Moderering inaktiverad",
+    "disabled": "Modereringskommandon är inaktiverade för denna server.",
+    "cannotBanSelfTitle": "Ogiltigt mål",
+    "cannotBanSelf": "Du kan inte banna dig själv."
+  }
+}

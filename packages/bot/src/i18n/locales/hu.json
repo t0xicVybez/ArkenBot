@@ -1,0 +1,28 @@
+{
+  "common": {
+    "error": "Hiba",
+    "success": "Sikeres",
+    "notInServer": "Ezt a parancsot szerveren kell használni."
+  },
+  "language": {
+    "commandDescription": "Állítsa be vagy tekintse meg a nyelvet, amelyet használok, amikor válaszolok önnek",
+    "setDescription": "Válassza ki a nyelvet, amelyen válaszolok önnek",
+    "clearDescription": "Törölje a nyelvét és térjen vissza az automatikus észleléshez",
+    "showDescription": "Tekintse meg az ön által beállított nyelvet",
+    "optionDescription": "A használandó nyelv",
+    "setTitle": "Nyelv frissítve",
+    "set": "Mostantól **{language}** nyelven válaszolok önnek.",
+    "clearedTitle": "Nyelv alapértelmezésre állítva",
+    "cleared": "Nyelvi preferenciája alapértelmezetten lett állítva — a Discord beállításai alapján fogom észlelni.",
+    "currentTitle": "Az ön nyelve",
+    "currentSet": "Az ön nyelve **{language}**.",
+    "currentAuto": "Nem állított be nyelvet, ezért automatikusan észlelem (jelenleg **{language}**).",
+    "invalid": "A **{input}** nem támogatott nyelv."
+  },
+  "moderation": {
+    "disabledTitle": "Moderálás letiltva",
+    "disabled": "A moderálási parancsok letiltva ezen a szerveren.",
+    "cannotBanSelfTitle": "Érvénytelen cél",
+    "cannotBanSelf": "Nem tilthatja le saját magát."
+  }
+}
