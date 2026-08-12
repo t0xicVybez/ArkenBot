@@ -9,13 +9,1534 @@
   "nav": {
     "overview": "Panoramica",
     "moderation": "Moderazione",
-    "leveling": "Progressione",
+    "leveling": "Livelli",
     "settings": "Impostazioni",
     "integrations": "Integrazioni"
   },
   "language": {
     "label": "Lingua",
-    "description": "Scegli la lingua per il pannello di controllo. Ciò imposta anche come il bot risponde a te.",
+    "description": "Scegli la lingua della dashboard. Questo imposta anche il modo in cui il bot ti risponde.",
     "saved": "Lingua aggiornata"
+  },
+  "music": {
+    "title": "Musica",
+    "description": "Riproduzione di alta qualità con una coda persistente.",
+    "saved": "Impostazioni musica salvate!",
+    "saveError": "Impossibile salvare le impostazioni della musica.",
+    "playerTitle": "Lettore musicale",
+    "playerDesc": "Gestisci le impostazioni di riproduzione della musica per questo server.",
+    "enableLabel": "Abilita musica",
+    "enableDesc": "Consenti al bot di riprodurre musica nei canali vocali tramite /play, /skip, /queue, ecc.",
+    "howToTitle": "Come usarlo",
+    "howToDesc": "La musica è controllata tramite i comandi slash di Discord.",
+    "cmdPlay": "Riproduce un brano da YouTube, Spotify o SoundCloud",
+    "cmdSkip": "Salta il brano corrente",
+    "cmdQueue": "Mostra la coda attuale",
+    "cmdPause": "Mette in pausa o riprende la riproduzione",
+    "cmdVolume": "Regola il volume",
+    "cmdStop": "Interrompe la riproduzione e svuota la coda",
+    "cmdNowplaying": "Mostra il brano attualmente in riproduzione"
+  },
+  "redditFeeds": {
+    "title": "Feed Reddit — Prossimamente",
+    "description": "Le notifiche di Reddit sono temporaneamente non disponibili mentre completiamo l'approvazione della Data API di Reddit. Questa funzione tornerà automaticamente una volta concesso l'accesso."
+  },
+  "rssFeeds": {
+    "title": "Feed RSS",
+    "description": "Pubblica una notifica su Discord ogni volta che un feed RSS o podcast pubblica un nuovo elemento. Controlla ogni 5 minuti. Nessuna chiave API richiesta.",
+    "usernameLabel": "URL del feed"
+  },
+  "twitterFeeds": {
+    "title": "Feed X / Twitter",
+    "description": "Pubblica una notifica su Discord ogni volta che un account monitorato pubblica un nuovo tweet. Controlla ogni 5 minuti.",
+    "usernameLabel": "Nome utente",
+    "notice": "Gli avvisi X/Twitter richiedono un Bearer Token (TWITTER_BEARER_TOKEN) impostato nel file .env del bot. È sufficiente un account sviluppatore X gratuito con un'app Basic. Senza di esso, gli avvisi Twitter verranno saltati silenziosamente."
+  },
+  "streamAlerts": {
+    "title": "Avvisi di live",
+    "description": "Avvisa la community quando i creator vanno in diretta o pubblicano — Twitch, Kick, YouTube, X, RSS.",
+    "channelUsername": "Nome utente del canale",
+    "channelHandle": "Handle del canale"
+  },
+  "counting": {
+    "title": "Conteggio",
+    "description": "Un numero alla volta — mantieni viva la catena.",
+    "resetSuccess": "Conteggio azzerato a 0.",
+    "resetError": "Impossibile azzerare il conteggio.",
+    "notInstalled": "L'addon Conteggio non è installato.",
+    "notInstalledHelp": "Vai al <manager>Gestore addon</manager> per installarlo, poi configura qui il canale di conteggio.",
+    "liveStatsTitle": "Statistiche in tempo reale",
+    "liveStatsDesc": "Stato attuale del gioco di conteggio in questo server.",
+    "currentCount": "Conteggio attuale",
+    "bestCount": "Conteggio migliore",
+    "configTitle": "Configurazione",
+    "configDesc": "Le impostazioni sono gestite tramite il Gestore addon. Usa il pulsante Azzera per ricominciare il conteggio.",
+    "countingChannel": "Canale di conteggio:",
+    "allowSameUser": "Consenti lo stesso utente due volte di fila:",
+    "resetOnFail": "Azzera il conteggio in caso di errore:",
+    "yes": "Sì",
+    "no": "No",
+    "resetting": "Azzeramento…",
+    "resetButton": "Azzera il conteggio a 0"
+  },
+  "members": {
+    "title": "Membri",
+    "description": "Cerca e visualizza i membri monitorati",
+    "searchPlaceholder": "Cerca per nome utente...",
+    "colUser": "Utente",
+    "colLevel": "Livello",
+    "colXp": "XP",
+    "noneMatching": "Nessun membro trovato corrispondente alla tua ricerca.",
+    "noneTracked": "Nessun membro ancora monitorato.",
+    "levelBadge": "Lv. {level}",
+    "xpValue": "{xp} XP",
+    "availableRoles": "Ruoli disponibili"
+  },
+  "polls": {
+    "title": "Sondaggi",
+    "description": "Visualizza e gestisci i sondaggi creati nel tuo server.",
+    "closed": "Sondaggio chiuso",
+    "closeError": "Impossibile chiudere il sondaggio",
+    "deleted": "Sondaggio eliminato",
+    "deleteError": "Impossibile eliminare il sondaggio",
+    "createdVia": "I sondaggi vengono creati in Discord usando il comando slash <cmd>/poll</cmd>.",
+    "empty": "Nessun sondaggio trovato per questo server.",
+    "statusClosed": "Chiuso",
+    "statusOpen": "Aperto",
+    "optionCount": "{count, plural, one {# opzione} other {# opzioni}}",
+    "voteCount": "{count, plural, one {# voto} other {# voti}}",
+    "createdOn": "Creato il {date}",
+    "alreadyClosed": "Sondaggio già chiuso",
+    "closePollTitle": "Chiudi sondaggio",
+    "closePoll": "Chiudi sondaggio",
+    "deletePollTitle": "Elimina sondaggio",
+    "delete": "Elimina"
+  },
+  "announcements": {
+    "saved": "Impostazioni annunci salvate!",
+    "saveError": "Impossibile salvare le impostazioni.",
+    "title": "Annunci del bot",
+    "description": "Ricevi gli annunci di aggiornamento direttamente nel tuo server",
+    "sectionTitle": "Impostazioni annunci",
+    "sectionDesc": "Quando abilitato, Arken Bot pubblicherà nel canale che scegli gli annunci di aggiornamento creati dal team. Puoi disabilitarlo in qualsiasi momento.",
+    "enableLabel": "Abilita annunci",
+    "enableDesc": "Ricevi i post di aggiornamento del bot in questo server",
+    "channelLabel": "Canale annunci",
+    "selectChannel": "Seleziona un canale…",
+    "mustSelect": "Devi selezionare un canale per ricevere gli annunci."
+  },
+  "analytics": {
+    "title": "Analisi",
+    "description": "Crescita, attività ed engagement del tuo server.",
+    "newMembers24h": "Nuovi membri (24 h)",
+    "leftMembers24h": "Membri usciti (24 h)",
+    "modActions24h": "Azioni di moderazione (24 h)",
+    "empty": "Ancora nessun dato storico. I dati analitici vengono raccolti quotidianamente e appariranno qui dopo il primo giorno completo.",
+    "memberGrowth": "Crescita dei membri (30 giorni)",
+    "activity": "Attività (30 giorni)",
+    "memberFlow": "Flusso dei membri (30 giorni)",
+    "seriesMembers": "Membri",
+    "seriesMessages": "Messaggi",
+    "seriesCommands": "Comandi",
+    "seriesJoins": "Ingressi",
+    "seriesLeaves": "Uscite"
+  },
+  "auditLog": {
+    "title": "Registro di controllo della dashboard",
+    "description": "Ogni modifica apportata alle impostazioni di questo server tramite la dashboard web — chi, cosa e quando.",
+    "verbCreated": "Ha creato",
+    "verbUpdated": "Ha aggiornato",
+    "verbDeleted": "Ha eliminato",
+    "emptyTitle": "Ancora nessuna modifica alla dashboard",
+    "emptyDesc": "Le voci appaiono qui ogni volta che un amministratore salva impostazioni, crea avvisi o elimina una configurazione tramite la dashboard.",
+    "today": "Oggi",
+    "yesterday": "Ieri",
+    "previous": "Precedente",
+    "next": "Successivo",
+    "pageOf": "Pagina {page} di {pages}"
+  },
+  "inviteTracker": {
+    "title": "Tracker inviti",
+    "description": "Sappi esattamente chi ha invitato chi.",
+    "updateError": "Impossibile aggiornare l'impostazione.",
+    "settingsTitle": "Impostazioni",
+    "settingsDesc": "Tieni traccia di quanti membri ogni utente ha invitato nel server.",
+    "enableLabel": "Abilita tracker inviti",
+    "enableHelp": "Abilita il tracciamento degli inviti per iniziare a registrare i dati sugli inviti. Usa i permessi di invito esistenti del tuo bot.",
+    "leaderboardTitle": "Classifica dei migliori invitanti",
+    "leaderboardDesc": "Clicca su una riga per vedere quali membri sono entrati tramite l'invito di quella persona.",
+    "noData": "Ancora nessun dato sugli inviti.",
+    "noDataEnable": "Abilita il tracciamento degli inviti sopra per iniziare.",
+    "memberCount": "{count, plural, one {# membro} other {# membri}}",
+    "inviteCount": "{count, plural, one {# invito} other {# inviti}}",
+    "bonus": "{bonus} bonus",
+    "total": "{total} in totale",
+    "invitedMembers": "Membri invitati — {stillHere} ancora qui · {left} usciti",
+    "leftBadge": "uscito",
+    "joinedOn": "Entrato il {date}"
+  },
+  "selfRoles": {
+    "added": "Ruolo aggiunto all'elenco auto-assegnabile.",
+    "addError": "Impossibile aggiungere il ruolo.",
+    "removed": "Ruolo rimosso.",
+    "removeError": "Impossibile rimuovere il ruolo.",
+    "title": "Ruoli auto-assegnabili",
+    "description": "I membri possono ottenere ruoli da soli con <assign>/selfassignrole</assign> e rimuoverli con <remove>/selfremoverole</remove>.",
+    "addTitle": "Aggiungi un ruolo",
+    "addDesc": "Seleziona un ruolo del server e dagli un nome breve che i membri digiteranno nel comando.",
+    "roleLabel": "Ruolo",
+    "selectRole": "Seleziona un ruolo",
+    "commandNameLabel": "Nome del comando",
+    "commandNamePlaceholder": "es. combattente",
+    "willRun": "I membri eseguiranno <code>/selfassignrole {name}</code>",
+    "namePlaceholder": "nome",
+    "adding": "Aggiunta…",
+    "addButton": "Aggiungi ruolo",
+    "currentTitle": "Ruoli auto-assegnabili attuali",
+    "currentDesc": "I membri possono ottenere uno qualsiasi di questi ruoli in qualsiasi momento.",
+    "deletedRole": "{roleId} (eliminato)",
+    "remove": "Rimuovi",
+    "empty": "Ancora nessun ruolo auto-assegnabile. Aggiungine uno sopra."
+  },
+  "verification": {
+    "saved": "Configurazione di verifica salvata!",
+    "saveError": "Impossibile salvare la configurazione",
+    "title": "Barriera di verifica",
+    "description": "Richiedi ai nuovi membri di verificarsi prima di accedere al server.",
+    "infoCard": "Quando abilitata, i nuovi membri ricevono il ruolo in attesa e possono vedere solo il canale di verifica. Cliccando su Verifica ottengono il ruolo membro e l'accesso al resto del server.",
+    "gateTitle": "Barriera di verifica",
+    "gateDesc": "Abilita il sistema di verifica per i nuovi membri.",
+    "enableLabel": "Abilita verifica",
+    "enableDesc": "I nuovi membri devono verificarsi prima di accedere ai canali del server",
+    "rolesTitle": "Ruoli e canale",
+    "rolesDesc": "Configura i ruoli e il canale usati per la verifica.",
+    "pendingRole": "Ruolo in attesa",
+    "pendingRoleHelp": "Ruolo assegnato ai nuovi membri quando entrano (prima della verifica).",
+    "memberRole": "Ruolo membro",
+    "memberRoleHelp": "Ruolo assegnato dopo che un membro si è verificato con successo.",
+    "verifyChannel": "Canale di verifica",
+    "verifyChannelHelp": "Canale in cui è mostrato il pannello con il pulsante di verifica.",
+    "none": "Nessuno",
+    "saving": "Salvataggio…",
+    "saveChanges": "Salva modifiche"
+  },
+  "pages": {
+    "overview": "Panoramica",
+    "setup": "Configurazione guidata",
+    "analytics": "Analisi",
+    "moderation": "Moderazione",
+    "automod": "Auto-moderazione",
+    "slowmode": "Modalità lenta automatica",
+    "anti-nuke": "Anti-nuke",
+    "verification": "Barriera di verifica",
+    "reports": "Segnalazioni",
+    "leveling": "Livelli",
+    "leaderboard": "Classifica",
+    "welcome": "Benvenuto",
+    "reaction-roles": "Ruoli da reazione",
+    "self-roles": "Ruoli auto-assegnabili",
+    "birthdays": "Compleanni",
+    "polls": "Sondaggi",
+    "suggestions": "Suggerimenti",
+    "giveaways": "Giveaway",
+    "starboard": "Starboard",
+    "members": "Membri",
+    "invite-tracker": "Tracker inviti",
+    "voting": "Ricompense voto",
+    "music": "Musica",
+    "stats-channels": "Canali statistiche",
+    "embeds": "Costruttore di embed",
+    "scheduled-messages": "Messaggi programmati",
+    "temp-voice": "Vocale temporaneo",
+    "commands": "Comandi",
+    "forum-management": "Gestione forum",
+    "stream-alerts": "Avvisi di live",
+    "twitter-feeds": "Feed X / Twitter",
+    "reddit-feeds": "Feed Reddit",
+    "rss-feeds": "Feed RSS",
+    "monday": "Monday.com",
+    "trello": "Trello",
+    "tickets": "Ticket",
+    "counting": "Conteggio",
+    "applications": "Candidature",
+    "logs": "Registri",
+    "audit-log": "Registro di controllo",
+    "announcements": "Annunci",
+    "addons": "Gestore addon",
+    "settings": "Impostazioni",
+    "guilds": "Server",
+    "users": "Utenti",
+    "metrics": "Metriche"
+  },
+  "sections": {
+    "general": "Generale",
+    "moderation": "Moderazione",
+    "community": "Community",
+    "contentTools": "Contenuti e strumenti",
+    "tools": "Strumenti",
+    "integrations": "Integrazioni",
+    "addons": "Addon",
+    "system": "Sistema"
+  },
+  "footer": {
+    "changelog": "Changelog",
+    "status": "Stato",
+    "privacy": "Informativa sulla privacy",
+    "terms": "Termini di servizio",
+    "brandDesc": "Un bot Discord completamente gratuito con oltre 20 funzioni e una dashboard web in tempo reale. Nessun paywall, mai.",
+    "links": "Link",
+    "features": "Funzioni",
+    "addons": "Addon",
+    "dashboard": "Dashboard",
+    "docs": "Documentazione",
+    "community": "Community",
+    "supportServer": "Server di supporto",
+    "addToServer": "Aggiungi al server",
+    "rights": "© {year} {siteName}. Tutti i diritti riservati.",
+    "madeWith": "Realizzato con cura per le community di Discord.",
+    "support": "Supporto"
+  },
+  "landingNav": {
+    "features": "Funzioni",
+    "addons": "Addon",
+    "docs": "Documentazione",
+    "support": "Supporto",
+    "dashboard": "Dashboard",
+    "login": "Accedi",
+    "addToServer": "Aggiungi al server",
+    "addBot": "Aggiungi bot",
+    "homeAria": "Home di Arken Bot",
+    "toggleMenu": "Attiva/disattiva menu"
+  },
+  "sidebar": {
+    "switchServer": "Cambia server",
+    "dashboardFallback": "Dashboard",
+    "memberCount": "{count, number} membri",
+    "serverSettings": "Impostazioni server",
+    "search": "Cerca…",
+    "pinned": "Fissati",
+    "unpin": "Rimuovi da fissati",
+    "pinToTop": "Fissa in alto",
+    "staffPortal": "Portale staff",
+    "owner": "Proprietario",
+    "staff": "Staff",
+    "logout": "Esci"
+  },
+  "topbar": {
+    "staffBadge": "STAFF",
+    "searchTitle": "Cerca (Ctrl K)",
+    "whatsNew": "Novità"
+  },
+  "commandPalette": {
+    "placeholder": "Vai a una pagina…",
+    "noMatch": "Nessuna pagina corrisponde a «{query}»",
+    "navigate": "↑↓ naviga",
+    "openHint": "↵ apri",
+    "closeHint": "esc chiudi"
+  },
+  "auth": {
+    "errInvalidRequest": "Qualcosa è andato storto all'avvio dell'accesso. Riprova.",
+    "errInvalidState": "La tua sessione di accesso è scaduta. Riprova.",
+    "errOauthFailed": "Accesso con Discord non riuscito. Riprova.",
+    "errDefault": "Accesso non riuscito. Riprova.",
+    "welcomeBack": "Bentornato",
+    "subtitle": "Accedi con il tuo account Discord per gestire i tuoi server.",
+    "redirecting": "Reindirizzamento...",
+    "loginWithDiscord": "Accedi con Discord"
+  },
+  "statusPage": {
+    "title": "Stato del sistema",
+    "subtitle": "Stato in tempo reale dei servizi di Arken Bot. Questa pagina si aggiorna automaticamente ogni 30 secondi.",
+    "checking": "Controllo…",
+    "operational": "Operativo",
+    "down": "Non attivo",
+    "bannerChecking": "Controllo dei sistemi…",
+    "bannerAllUp": "✓ Tutti i sistemi operativi",
+    "bannerApiDown": "⚠ API irraggiungibile — alcuni servizi potrebbero non essere attivi",
+    "bannerPartial": "⚠ Interruzione parziale — uno o più componenti sono degradati",
+    "serviceBot": "Bot Discord",
+    "serviceApi": "API",
+    "serviceWeb": "Dashboard web",
+    "serviceDatabase": "Database",
+    "serviceCache": "Cache",
+    "serversWord": "server",
+    "gatewayWord": "gateway",
+    "lastSeen": "visto l'ultima volta {time}",
+    "upFor": "attivo da {uptime}",
+    "lookingAtIt": "la stai guardando ora",
+    "lastChecked": "Ultimo controllo {time}",
+    "reportIssue": "Vedi un problema non riflesso qui? Segnalalo nel nostro",
+    "supportServerLink": "server di supporto"
+  },
+  "leaderboardPage": {
+    "loading": "Caricamento classifica…",
+    "unavailable": "Classifica non disponibile per questo server.",
+    "unavailableHint": "I livelli potrebbero essere disabilitati o il server potrebbe non esistere.",
+    "rankedMembers": "{count, number} membri in classifica",
+    "empty": "Ancora nessun membro in classifica. Inizia a chattare!",
+    "level": "Livello {level}",
+    "pageInfo": "Pagina {page} • {total} in totale",
+    "previous": "Precedente",
+    "next": "Successivo",
+    "poweredBy": "Powered by Arken Bot • La classifica si aggiorna in tempo reale"
+  },
+  "staffNav": {
+    "dashboard": "Dashboard",
+    "guilds": "Server",
+    "users": "Utenti",
+    "addons": "Addon",
+    "auditLogs": "Registri di controllo",
+    "serviceLogs": "Registri di servizio",
+    "metrics": "Metriche",
+    "announcements": "Annunci",
+    "settings": "Impostazioni",
+    "hq": "Quartier generale ArkenBot",
+    "staffPortalUser": "portale staff · {username}",
+    "serverDashboard": "Dashboard server",
+    "logout": "Esci",
+    "openMenu": "Apri menu",
+    "staffPortal": "Portale staff"
+  },
+  "staffDashboard": {
+    "title": "Panoramica della flotta",
+    "subtitle": "Ogni server, utente e ingranaggio di ArkenBot.",
+    "servers": "Server",
+    "activeServers": "Server attivi",
+    "totalUsers": "Utenti totali",
+    "modCases": "Casi di moderazione",
+    "activeWarnings": "Ammonizioni attive",
+    "addons": "Addon",
+    "uptime": "Tempo di attività",
+    "memory": "Memoria",
+    "quickActions": "Azioni rapide",
+    "browseGuilds": "Sfoglia server",
+    "browseGuildsSub": "Ogni server in cui si trova ArkenBot",
+    "manageUsers": "Gestisci utenti",
+    "manageUsersSub": "Ruoli dello staff e accesso alla dashboard",
+    "addonRegistry": "Registro addon",
+    "addonRegistrySub": "Pubblica e mantieni addon",
+    "systemLogs": "Registri di sistema",
+    "systemLogsSub": "Eventi a livello di bot e API",
+    "systemHealth": "Salute del sistema",
+    "operational": "Operativo",
+    "healthBot": "Bot Discord",
+    "healthApi": "API",
+    "healthVersion": "Versione",
+    "healthMemory": "Memoria",
+    "healthEnvironment": "Ambiente",
+    "serversValue": "{count, number} server",
+    "upValue": "attivo da {uptime}",
+    "memoryHeap": "{mb} MB di heap"
+  },
+  "staffAddons": {
+    "registered": "Addon registrato!",
+    "registerError": "Impossibile registrare l'addon.",
+    "updated": "Addon aggiornato!",
+    "updateError": "Impossibile aggiornare l'addon.",
+    "title": "Registro addon",
+    "subtitle": "Pubblica e mantieni pacchetti di addon.",
+    "registerAddon": "Registra addon",
+    "registerNew": "Registra nuovo addon",
+    "packageName": "Nome del pacchetto (univoco)",
+    "displayName": "Nome visualizzato",
+    "version": "Versione",
+    "author": "Autore",
+    "authorPlaceholder": "Nome dell'autore",
+    "description": "Descrizione",
+    "descriptionPlaceholder": "Breve descrizione...",
+    "register": "Registra",
+    "cancel": "Annulla",
+    "enabled": "Abilitato",
+    "disabled": "Disabilitato",
+    "byAuthor": "di {author}",
+    "disable": "Disabilita",
+    "enable": "Abilita",
+    "unverify": "Rimuovi verifica",
+    "verify": "Verifica"
+  },
+  "staffAnnouncements": {
+    "title": "Annunci",
+    "subtitle": "Trasmetti aggiornamenti a tutti i server che hanno aderito",
+    "compose": "Componi",
+    "draftTooltip": "Bozza automatica dai commit git recenti",
+    "drafting": "Redazione…",
+    "draftFromCommits": "Bozza dai commit",
+    "typeLabel": "Tipo",
+    "typeName_update": "Aggiornamento",
+    "typeName_feature": "Nuova funzione",
+    "typeName_maintenance": "Manutenzione",
+    "typeName_hotfix": "Correzione urgente",
+    "typeDesc_update": "Aggiornamento o modifica generale del bot",
+    "typeDesc_feature": "È stata aggiunta una nuova funzione",
+    "typeDesc_maintenance": "Interruzione o manutenzione programmata",
+    "typeDesc_hotfix": "Correzione critica di bug distribuita",
+    "titleLabel": "Titolo",
+    "titlePlaceholder": "v2.3.0 — Nuove funzioni ticket",
+    "messageLabel": "Messaggio",
+    "messagePlaceholder": "Descrivi ciò che è cambiato in linguaggio semplice. Puoi modificare la bozza automatica prima di inviare.",
+    "untitled": "Senza titolo",
+    "previewFooter": "Arken Bot — {type}",
+    "sending": "Invio…",
+    "sendAnnouncement": "Invia annuncio",
+    "history": "Cronologia",
+    "noneSent": "Ancora nessun annuncio inviato.",
+    "sentToast": "{count, plural, one {Annuncio inviato a # server!} other {Annuncio inviato a # server!}}",
+    "sendError": "Impossibile inviare l'annuncio.",
+    "draftGenerated": "Bozza generata — controlla e modifica prima di inviare!",
+    "draftError": "Impossibile generare la bozza.",
+    "serverCount": "{count, plural, one {# server} other {# server}}",
+    "justNow": "proprio ora",
+    "minsAgo": "{mins} min fa",
+    "hrsAgo": "{hrs} h fa",
+    "daysAgo": "{days} g fa"
+  },
+  "staffGuilds": {
+    "title": "Tutti i server",
+    "total": "Totale: {total} server",
+    "searchPlaceholder": "Cerca server...",
+    "allStatus": "Tutti gli stati",
+    "active": "Attivo",
+    "inactive": "Inattivo",
+    "colGuild": "Server",
+    "colId": "ID",
+    "colStatus": "Stato",
+    "colJoined": "Entrato",
+    "colActions": "Azioni",
+    "noGuilds": "Nessun server trovato",
+    "view": "Visualizza",
+    "deleteConfirm": "Eliminare il server inattivo {name}? Questo rimuoverà le sue impostazioni e lo toglierà dal portale staff.",
+    "delete": "Elimina",
+    "pageInfo": "Pagina {page} • {total} server in totale",
+    "previous": "Precedente",
+    "next": "Successivo"
+  },
+  "staffLogs": {
+    "title": "Registri di sistema",
+    "total": "Totale: {total} voci",
+    "filterGuild": "Filtra per ID server...",
+    "allTypes": "Tutti i tipi",
+    "typeMemberJoin": "Ingresso membro",
+    "typeMemberLeave": "Uscita membro",
+    "typeMessageDelete": "Eliminazione messaggio",
+    "typeMessageEdit": "Modifica messaggio",
+    "typeBan": "Ban",
+    "typeKick": "Espulsione",
+    "typeWarning": "Ammonizione",
+    "typeAutomod": "AutoMod",
+    "noLogs": "Nessun registro trovato",
+    "pageOf": "Pagina {page} di {pages}",
+    "previous": "Precedente",
+    "next": "Successivo"
+  },
+  "staffMetrics": {
+    "title": "Metriche di sistema",
+    "subtitle": "Utilizzo e prestazioni su tutta la flotta.",
+    "memoryChart": "Utilizzo memoria (MB)",
+    "currentStats": "Statistiche attuali",
+    "totalGuilds": "Server totali",
+    "activeGuilds": "Server attivi",
+    "totalUsers": "Utenti totali",
+    "memoryUsage": "Utilizzo memoria",
+    "uptime": "Tempo di attività",
+    "updatesEvery": "Si aggiorna ogni 30 secondi",
+    "prometheusTitle": "Metriche Prometheus",
+    "prometheusDesc": "Metriche Prometheus grezze per lo scraping con Grafana o Prometheus.",
+    "loading": "Caricamento…",
+    "viewRaw": "Visualizza metriche grezze →",
+    "rawModalTitle": "Metriche Prometheus grezze"
+  },
+  "staffServiceLogs": {
+    "title": "Registri di servizio",
+    "subtitle": "Output in tempo reale dai servizi bot, API e web",
+    "refreshing": " · aggiornamento…",
+    "allServices": "Tutti i servizi",
+    "serviceBot": "Bot",
+    "serviceApi": "API",
+    "serviceWeb": "Web",
+    "allLevels": "Tutti i livelli",
+    "levelInfo": "Info e superiori",
+    "levelWarn": "Avvisi ed errori",
+    "levelError": "Solo errori",
+    "allStreams": "Tutti gli stream",
+    "searchPlaceholder": "Cerca messaggi…",
+    "noEntries": "Nessuna voce di registro corrispondente",
+    "category_permissions": "Permesso mancante",
+    "category_access": "Accesso mancante",
+    "category_not-found": "Non trovato",
+    "category_dm-blocked": "DM bloccati",
+    "category_rate-limit": "Limite di frequenza",
+    "category_validation": "Richiesta non valida",
+    "category_network": "Rete",
+    "category_timeout": "Timeout",
+    "category_interaction": "Interazione",
+    "category_unknown": "Errore",
+    "hint": "Suggerimento:",
+    "guild": "Server:",
+    "unknown": "Sconosciuto",
+    "channel": "Canale:",
+    "unknownDeleted": "Sconosciuto / eliminato",
+    "message": "Messaggio:",
+    "type": "Tipo:",
+    "code": "Codice:",
+    "footer": "Vengono mostrate fino a 300 voci più recenti dalla fine del registro attuale. Si aggiorna ogni 15 secondi."
+  },
+  "staffSettings": {
+    "presenceUpdated": "Presenza del bot aggiornata!",
+    "presenceError": "Impossibile aggiornare la presenza del bot.",
+    "title": "Impostazioni del bot",
+    "subtitle": "Configurazione globale per lo staff di ArkenBot.",
+    "presenceTitle": "Presenza del bot",
+    "presenceDesc": "Controlla ciò che il bot mostra in Discord sotto il suo nome. Supporta le variabili <servers></servers> e <users></users>.",
+    "loading": "Caricamento...",
+    "statusLabel": "Stato",
+    "status_online": "Online",
+    "status_idle": "Inattivo",
+    "status_dnd": "Non disturbare",
+    "status_invisible": "Invisibile",
+    "activityTypeLabel": "Tipo di attività",
+    "activity_Playing": "Sta giocando a",
+    "activity_Listening": "Sta ascoltando",
+    "activity_Watching": "Sta guardando",
+    "activity_Competing": "Sta gareggiando in",
+    "activity_Custom": "Personalizzata",
+    "activityTextLabel": "Testo dell'attività",
+    "preview": "Anteprima",
+    "saving": "Salvataggio...",
+    "saveApply": "Salva e applica"
+  },
+  "staffUsers": {
+    "userUpdated": "Utente aggiornato!",
+    "updateError": "Impossibile aggiornare l'utente.",
+    "title": "Utenti del portale",
+    "subtitle": "Ruoli dello staff e accesso alla dashboard.",
+    "searchPlaceholder": "Cerca per nome utente...",
+    "colUser": "Utente",
+    "colId": "ID",
+    "colRole": "Ruolo",
+    "colJoined": "Entrato",
+    "colActions": "Azioni",
+    "roleOwner": "Proprietario",
+    "roleStaff": "Staff",
+    "roleUser": "Utente",
+    "removeStaff": "Rimuovi dallo staff",
+    "makeStaff": "Rendi staff"
+  },
+  "feedAlerts": {
+    "created": "Avviso feed creato!",
+    "createError": "Impossibile creare l'avviso feed",
+    "updateError": "Impossibile aggiornare l'avviso",
+    "updated": "Avviso aggiornato!",
+    "deleted": "Avviso eliminato",
+    "deleteError": "Impossibile eliminare l'avviso",
+    "channelRequired": "Il canale Discord è obbligatorio",
+    "sourceRequired": "La fonte / URL è obbligatoria",
+    "newAlert": "Nuovo avviso",
+    "newAlertTitle": "Nuovo avviso",
+    "newAlertDesc": "Pubblica una notifica su Discord ogni volta che questo feed ha nuova attività.",
+    "platform": "Piattaforma",
+    "discordChannel": "Canale Discord",
+    "selectChannel": "Seleziona un canale",
+    "customMessage": "Messaggio personalizzato",
+    "optional": "(facoltativo)",
+    "variables": "Variabili:",
+    "creating": "Creazione…",
+    "createButton": "Crea avviso",
+    "all": "Tutti",
+    "noAlertsTitle": "Ancora nessun avviso",
+    "noAlertsDesc": "Ricevi una notifica nel tuo server nel momento in cui c'è qualcosa di nuovo — la configurazione richiede meno di un minuto.",
+    "createFirst": "Crea il tuo primo avviso",
+    "alertCount": "{count, plural, one {# avviso} other {# avvisi}}",
+    "postsTo": "pubblica in",
+    "autoDisabled": "Disabilitato automaticamente: {error}",
+    "liveNow": "In diretta ora",
+    "edit": "Modifica",
+    "delete": "Elimina",
+    "editAlert": "Modifica avviso",
+    "sourceUrl": "Fonte / URL",
+    "saving": "Salvataggio…"
+  },
+  "changelogPage": {
+    "title": "Changelog",
+    "intro": "Ogni aggiornamento, funzione e correzione che annunciamo — pubblicato qui nel momento in cui il team lo invia. Li vuoi nel tuo server? Abilita gli annunci in <highlight>Dashboard → Annunci</highlight>.",
+    "empty": "Ancora nessun annuncio — torna presto.",
+    "badgeUpdate": "Aggiornamento",
+    "badgeFeature": "Nuova funzione",
+    "badgeMaintenance": "Manutenzione",
+    "badgeHotfix": "Correzione urgente"
+  },
+  "landing": {
+    "heroBadge": "Gratis per sempre — nessun paywall, nessun livello premium",
+    "heroTitle": "Il bot Discord che<br></br>fa <hl>tutto</hl>, con eleganza.",
+    "heroSubtitle": "Moderazione, livelli, ticket, avvisi di live, board Trello e Monday.com, e una dashboard in tempo reale — tutto gratis, tutto in un solo bot.",
+    "heroAddButton": "Aggiungi a Discord",
+    "heroExplore": "Esplora la dashboard",
+    "statServers": "server",
+    "statMembers": "membri serviti",
+    "statFeatures": "funzioni",
+    "statForever": "per sempre",
+    "heroCards": [
+      {
+        "title": "Moderazione che scala",
+        "desc": "Casi, escalation, anti-nuke e una traccia di controllo completa."
+      },
+      {
+        "title": "Avvisi per tutto",
+        "desc": "Twitch, Kick, YouTube, X, Reddit, RSS — più le board Trello e Monday.com."
+      },
+      {
+        "title": "Livelli ed engagement",
+        "desc": "XP, ricompense ruoli, starboard, compleanni, giveaway."
+      },
+      {
+        "title": "Una dashboard che ti piacerà",
+        "desc": "Tutto configurabile nel browser, le modifiche hanno effetto all'istante."
+      }
+    ],
+    "trustBar": [
+      "Nessun livello premium — tutto è gratis",
+      "Le impostazioni si applicano all'istante — nessun riavvio del bot",
+      "Suite di moderazione completa inclusa",
+      "Dashboard web in tempo reale"
+    ],
+    "featuresBadge": "Funzioni",
+    "featuresHeading": "Sostituisci 5 bot con uno",
+    "featuresSubtitle": "Moderazione, livelli, musica, ticket, comandi personalizzati, avvisi di live, giveaway — e altro. Tutto in un solo bot, tutto gratis.",
+    "features": {
+      "items": [
+        {
+          "title": "Moderazione",
+          "desc": "Banna, espelli, silenzia, ammonisci e banna temporaneamente con tracciamento completo dei casi, registri di controllo e cronologia delle ammonizioni — tutto gestibile dalla dashboard."
+        },
+        {
+          "title": "Auto-moderazione",
+          "desc": "Anti-spam, filtri parole, filtri link, rilevamento maiuscole, protezione dalle menzioni e anti-raid — tutto configurabile per ruolo e per canale."
+        },
+        {
+          "title": "Livelli e XP",
+          "desc": "Mantieni i membri coinvolti con un sistema di XP, carte rango, classifiche pubbliche, ricompense ruoli a qualsiasi soglia di livello e moltiplicatori di XP configurabili."
+        },
+        {
+          "title": "Musica",
+          "desc": "Musica di alta qualità da YouTube con gestione della coda, controllo del volume, modalità di ripetizione e stato della coda persistente."
+        },
+        {
+          "title": "Ticket di supporto",
+          "desc": "Sistema di ticket multi-pannello con canali privati o thread, campi modulo, escalation SLA, risposte predefinite, trascrizioni e valutazioni."
+        },
+        {
+          "title": "Comandi personalizzati",
+          "desc": "Crea i tuoi comandi con alias, risposte in embed, tempi di ricarica per utente, restrizioni di ruolo, risposte in DM e sostituzione di variabili."
+        },
+        {
+          "title": "Ruoli da reazione",
+          "desc": "Lascia che i membri si auto-assegnino i ruoli. Supporta le modalità alternanza, solo aggiunta e solo rimozione. I pannelli si aggiornano in Discord in tempo reale."
+        },
+        {
+          "title": "Benvenuto e uscita",
+          "desc": "Accogli i nuovi membri con messaggi in embed completamente personalizzabili, DM all'ingresso e notifiche di uscita con contatori di membri."
+        },
+        {
+          "title": "Giveaway",
+          "desc": "Organizza giveaway da Discord con selezione automatica dei vincitori. Visualizza tutti i giveaway attivi e conclusi con i nomi dei vincitori nella dashboard."
+        },
+        {
+          "title": "Avvisi di live",
+          "desc": "Ricevi una notifica quando i canali Twitch, Kick o YouTube vanno in diretta, o quando i feed Twitter, Reddit o RSS si aggiornano. Pubblica automaticamente un embed di notifica."
+        },
+        {
+          "title": "Avvisi monday.com e Trello",
+          "desc": "Collega le tue board di progetto a Discord. Embed dettagliati quando card ed elementi vengono creati, spostati, rinominati, commentati e altro."
+        },
+        {
+          "title": "Starboard",
+          "desc": "Metti in risalto i messaggi migliori del tuo server. Soglia di reazioni configurabile, alternanza dell'auto-stella e selezione di emoji."
+        },
+        {
+          "title": "Suggerimenti",
+          "desc": "Sistema di suggerimenti dei membri con revisione dello staff. Approva, rifiuta o segna come implementato — tutto dalla dashboard."
+        },
+        {
+          "title": "Compleanni",
+          "desc": "Tieni traccia dei compleanni dei membri e annunciali automaticamente in un canale. Facoltativamente assegna un ruolo di compleanno per 24 ore."
+        },
+        {
+          "title": "Canali statistiche",
+          "desc": "Canali vocali aggiornati in tempo reale che mostrano le statistiche del server — membri totali, conteggio online, livello di boost e altro."
+        },
+        {
+          "title": "Messaggi programmati",
+          "desc": "Programma annunci o promemoria ricorrenti da pubblicare automaticamente in qualsiasi canale a qualsiasi intervallo."
+        },
+        {
+          "title": "Canali vocali temporanei",
+          "desc": "I membri entrano in un canale trigger per ottenere all'istante il proprio canale vocale privato, che viene eliminato automaticamente quando è vuoto. Supporta più trigger in diverse categorie."
+        },
+        {
+          "title": "Anti-nuke",
+          "desc": "Rileva e reagisci in tempo reale a eliminazioni di massa di canali, eliminazioni di ruoli e ban di massa. Rimuove automaticamente i permessi, espelle o banna l'utente colpevole prima che il danno si diffonda."
+        },
+        {
+          "title": "Barriera di verifica",
+          "desc": "Richiedi ai nuovi membri di cliccare un pulsante di verifica prima di accedere al server. Assegna un ruolo in attesa all'ingresso e un ruolo membro dopo la verifica — tieni fuori bot e curiosi."
+        },
+        {
+          "title": "Gestione forum",
+          "desc": "Pubblica automaticamente un messaggio modello in ogni nuovo thread del forum e applica automaticamente un tag alla creazione. Configura indipendentemente per ogni canale forum dalla dashboard."
+        },
+        {
+          "title": "Sondaggi",
+          "desc": "Crea sondaggi a più opzioni con il comando /poll. I membri votano tramite pulsanti e lo staff può chiudere o eliminare i sondaggi dalla dashboard."
+        },
+        {
+          "title": "Segnalazioni membri",
+          "desc": "I membri inviano segnalazioni tramite /report. Lo staff revisiona le segnalazioni in sospeso nella dashboard, aggiunge note e le segna come revisionate o respinte."
+        },
+        {
+          "title": "Sistema di addon",
+          "desc": "Estendi il bot con addon della community o crea i tuoi usando l'Arken Addon SDK. Installa e configura dalla dashboard."
+        }
+      ]
+    },
+    "ticketBadge": "Sistema di ticket",
+    "ticketHeading": "Ticket di supporto professionali, integrati",
+    "ticketSubtitle": "La maggior parte dei bot fa pagare un sistema di ticket decente. Quello di Arken è completo di serie — da pannelli multi-pulsante e moduli di accoglienza personalizzati, all'escalation SLA e un portale completo per il tuo team.",
+    "ticketHighlights": [
+      "Canale privato o thread per ticket",
+      "Pannelli multi-pulsante con instradamento per categoria",
+      "Campi modulo personalizzati mostrati prima dell'apertura del ticket",
+      "Sistema di presa in carico, trasferimento e priorità dello staff",
+      "Sostituzioni di ruolo dello staff per utente e per pulsante",
+      "Escalation SLA a più livelli con ruoli da menzionare",
+      "Assegnazione automatica dei ticket a rotazione",
+      "Canale di notifica dello staff sui nuovi ticket",
+      "Risposte predefinite con completamento automatico di Discord",
+      "Trascrizioni pubblicate in un canale di registro alla chiusura",
+      "Sistema di valutazione dell'utente (1–5 stelle)",
+      "Stato di attesa per mettere in pausa i timer SLA",
+      "Notifiche webhook per le integrazioni",
+      "Portale completo: filtri, note, chiusura in blocco, statistiche"
+    ],
+    "addToServer": "Aggiungi al server",
+    "mockPanelPreview": "Anteprima embed del pannello",
+    "mockSupportCenter": "Centro assistenza",
+    "mockSupportDesc": "Serve aiuto? Clicca un pulsante qui sotto per aprire un ticket. Il nostro team ti risponderà a breve.",
+    "mockTechnical": "Tecnico",
+    "mockBilling": "Fatturazione",
+    "mockReport": "Segnalazione",
+    "mockSlaTitle": "Livelli di escalation SLA",
+    "mockSla1": "Il ticket richiede attenzione",
+    "mockSla2": "Nessuna risposta — escalation",
+    "mockSla3": "URGENTE: 24 h senza risposta",
+    "mockStatOpen": "Aperti",
+    "mockStatReply": "Risposta media",
+    "mockStatRating": "Valutazione",
+    "compareBadge": "Perché Arken",
+    "compareHeading": "Tutto. Gratis. In un solo bot.",
+    "compareSubtitle": "Smetti di pagare abbonamenti per server o di far girare cinque bot diversi. Arken ha tutto — nessun livello, nessun limite.",
+    "compareColFeature": "Funzione",
+    "compareColArken": "Arken Bot",
+    "comparison": {
+      "items": [
+        {
+          "feature": "Moderazione + cronologia casi",
+          "note": ""
+        },
+        {
+          "feature": "Auto-moderazione (spam, parole, link)",
+          "note": ""
+        },
+        {
+          "feature": "Livelli XP + classifiche",
+          "note": ""
+        },
+        {
+          "feature": "Riproduzione musica",
+          "note": ""
+        },
+        {
+          "feature": "Comandi personalizzati",
+          "note": ""
+        },
+        {
+          "feature": "Risposte automatiche (regex)",
+          "note": ""
+        },
+        {
+          "feature": "Ruoli temporanei",
+          "note": ""
+        },
+        {
+          "feature": "Ruoli da reazione",
+          "note": ""
+        },
+        {
+          "feature": "Sistema di ticket di supporto",
+          "note": ""
+        },
+        {
+          "feature": "Campi modulo ticket",
+          "note": "Esclusivo di Arken"
+        },
+        {
+          "feature": "Escalation SLA a più livelli",
+          "note": "Esclusivo di Arken"
+        },
+        {
+          "feature": "Giveaway",
+          "note": ""
+        },
+        {
+          "feature": "Avvisi Twitch, Kick e social",
+          "note": ""
+        },
+        {
+          "feature": "Starboard",
+          "note": ""
+        },
+        {
+          "feature": "Messaggi programmati",
+          "note": ""
+        },
+        {
+          "feature": "Canali statistiche",
+          "note": ""
+        },
+        {
+          "feature": "Canali vocali temporanei",
+          "note": ""
+        },
+        {
+          "feature": "Protezione anti-nuke",
+          "note": ""
+        },
+        {
+          "feature": "Barriera di verifica",
+          "note": ""
+        },
+        {
+          "feature": "Gestione forum",
+          "note": ""
+        },
+        {
+          "feature": "Sondaggi e segnalazioni membri",
+          "note": ""
+        },
+        {
+          "feature": "Dashboard web in tempo reale",
+          "note": ""
+        },
+        {
+          "feature": "Marketplace di addon",
+          "note": "Esclusivo di Arken"
+        },
+        {
+          "feature": "Prezzo",
+          "note": "Gratis, sempre"
+        }
+      ]
+    },
+    "dashBadge": "Dashboard web",
+    "dashHeading": "Gestisci tutto dal tuo browser",
+    "dashSubtitle": "Basta digitare comandi per configurare il tuo bot. Ogni impostazione è nella dashboard — le modifiche si applicano al bot nel momento in cui premi Salva, senza riavvio.",
+    "dashBullets": [
+      "Impostazioni in tempo reale via WebSocket — zero riavvii del bot",
+      "Cronologia casi di moderazione e gestione delle ammonizioni",
+      "Portale ticket completo con filtri, note e azioni in blocco",
+      "Classifiche XP, gestione ruoli di livello e analisi",
+      "Costruttore di comandi personalizzati con anteprime embed",
+      "Marketplace di addon — installa, configura e gestisci plugin"
+    ],
+    "dashOpenButton": "Apri la dashboard",
+    "dashMockOverview": "Panoramica",
+    "dashMockModeration": "Moderazione",
+    "dashMockAutomod": "Auto-moderazione",
+    "dashMockLeveling": "Livelli",
+    "dashMockWelcome": "Benvenuto",
+    "dashMockCommands": "Comandi",
+    "dashMockTickets": "Ticket",
+    "dashMockMusic": "Musica",
+    "dashMockAddons": "Addon",
+    "dashSecModeration": "MODERAZIONE",
+    "dashSecCommunity": "COMMUNITY",
+    "dashSecTools": "STRUMENTI",
+    "dashSecAddons": "ADDON",
+    "dashStatMod": "Azioni di moderazione",
+    "dashStatMembers": "Nuovi membri",
+    "dashStatTickets": "Ticket aperti",
+    "dashStatEvents": "Eventi di registro",
+    "dashActivity": "Attività dei messaggi (7 g)",
+    "dashInstant": "Le impostazioni si aggiornano all'istante · nessun riavvio richiesto",
+    "osBadge": "Open source",
+    "osHeading": "Costruiamo i nostri strumenti",
+    "osSubtitle": "Arken Bot non è incollato insieme dalle librerie di altri. Quando ci serviva qualcosa di meglio, l'abbiamo scritto — e rilasciato per tutti.",
+    "osTagline": "Alimenta l'addon Game Server Status",
+    "osDesc": "Una libreria di interrogazione dei server di gioco senza dipendenze per PHP e Node/TypeScript. Legge conteggio giocatori, mappa, ping e regole da un server o da centinaia in una volta — ed è ciò che Arken Bot usa ogni volta che esegui <code>/server status</code>.",
+    "osStatGames": "Giochi",
+    "osStatProtocols": "Protocolli",
+    "osStatDeps": "Dipendenze",
+    "osTryLive": "Provalo dal vivo",
+    "osViewSource": "Vedi il sorgente",
+    "osLicense": "AGPL-3.0 · gratis per sempre",
+    "ctaHeading": "Pronto a potenziare il tuo server?",
+    "ctaSubtitle": "Unisciti ai server che già girano su Arken Bot. Gratis per sempre — nessun abbonamento, nessuna tariffa per server, nessun blocco di funzioni.",
+    "ctaNote": "Funziona insieme ai tuoi bot esistenti, o sostituiscili completamente.",
+    "ctaAddButton": "Aggiungi Arken Bot — Gratis",
+    "ctaSupport": "Unisciti al server di supporto"
+  },
+  "featuresPage": {
+    "heroBadge": "Gratis per sempre · Nessun paywall · Nessun livello premium",
+    "heroTitle": "Ogni funzione, <hl>completamente documentata</hl>",
+    "heroSubtitle": "Arken Bot include 20 moduli di funzioni integrati, e in crescita. Serve di più? Il sistema di addon aggiunge ticket, monitoraggio server, revisione del codice e altro — tutto installabile dalla dashboard. Tutto è gratis — nessun livello, nessun paywall.",
+    "calloutEyebrow": "Ne vuoi ancora di più?",
+    "calloutHeading": "Estendi Arken con gli addon",
+    "calloutSubtitle": "Il sistema di addon aggiunge Ticket, Game Server Status e Revisione del codice — tutto installabile dalla dashboard. Oppure crea i tuoi con l'SDK TypeScript.",
+    "browseAddons": "Sfoglia gli addon",
+    "ctaHeading": "Pronto ad aggiungere Arken Bot al tuo server?",
+    "ctaSubtitle": "Tutte le funzioni sono disponibili immediatamente dopo l'invito — nessuna configurazione richiesta per iniziare.",
+    "ctaAddButton": "Aggiungi al server — È gratis",
+    "ctaOpenDashboard": "Apri la dashboard",
+    "footHome": "Home",
+    "footFeatures": "Funzioni",
+    "footDashboard": "Dashboard",
+    "footDocs": "Documentazione",
+    "footSupport": "Supporto",
+    "footPrivacy": "Privacy",
+    "footTerms": "Termini",
+    "sections": {
+      "moderation": {
+        "title": "Moderazione",
+        "tagline": "Mantieni il tuo server al sicuro con un kit di moderazione completo.",
+        "description": "Banna, espelli, silenzia, ammonisci e banna temporaneamente i membri con tracciamento completo dei casi e registri di controllo. Ogni azione è registrata con un ID caso, un motivo e un moderatore — tutto consultabile dalla dashboard.",
+        "bullets": [
+          "Comandi di ban, espulsione, timeout (silenziamento), ammonizione e ban temporaneo",
+          "Cronologia completa dei casi con ID caso e attribuzione al moderatore",
+          "Tracciamento dell'accumulo di ammonizioni per membro",
+          "Revisiona e gestisci tutti i casi dalla dashboard web",
+          "Integrazione del registro di controllo per la trasparenza del server",
+          "Controlli dei permessi basati sui ruoli su chi può moderare",
+          "Ruoli temporanei: assegna un ruolo Discord per una durata fissa, rimosso automaticamente alla scadenza",
+          "Chiusura in blocco dei casi: chiudi tutti i casi aperti di un utente in una sola azione"
+        ]
+      },
+      "automod": {
+        "title": "Auto-moderazione",
+        "tagline": "Protezione automatica che funziona 24 ore su 24.",
+        "description": "Previeni lo spam, filtra i contenuti indesiderati e blocca i raid prima che accadano — tutto senza muovere un dito. Le regole sono configurabili per ruolo e per canale, così gli utenti legittimi non finiscono mai nella rete.",
+        "bullets": [
+          "Anti-spam: limita la frequenza dei messaggi ed elimina l'eccesso automaticamente",
+          "Filtro parole e frasi con supporto ai caratteri jolly",
+          "Filtro link con lista di domini consentiti/bloccati",
+          "Rilevamento maiuscole per reprimere l'abuso di maiuscole",
+          "Protezione dallo spam di menzioni (prevenzione dei ping di massa)",
+          "Modalità anti-raid: blocca i canali o espelli i nuovi ingressi durante un attacco",
+          "Eccezioni alle regole per ruolo e per canale"
+        ]
+      },
+      "leveling": {
+        "title": "Livelli e XP",
+        "tagline": "Premia i membri attivi e costruisci una community fiorente.",
+        "description": "I membri guadagnano XP per ogni messaggio inviato. Salendo di livello sbloccano ruoli speciali, e la classifica pubblica incoraggia una sana competizione. Ogni aspetto è regolabile — inclusi moltiplicatori di XP, accumulo di ruoli, decadimento per gli utenti inattivi e tracciamento delle serie giornaliere.",
+        "bullets": [
+          "XP guadagnata automaticamente su ogni messaggio con frequenza configurabile",
+          "Moltiplicatori di XP per canale dalla dashboard",
+          "Carte rango che mostrano livello, XP e posizione in classifica con colori d'accento e sfondi personalizzati",
+          "Pagina della classifica pubblica accessibile senza accedere",
+          "Ruoli di livello: assegna ruoli automaticamente a qualsiasi soglia di livello",
+          "Mantieni o rimuovi i ruoli di livello precedenti quando un membro sale",
+          "Sincronizzazione di massa dei ruoli: applica i ruoli corretti a tutti i membri esistenti in una volta",
+          "Annunci di aumento di livello in embed ricco con immagini di traguardo (livelli 5, 10, 25, 50+)",
+          "Serie di messaggi giornalieri tracciate e mostrate sul profilo",
+          "Decadimento XP: riduce automaticamente l'XP dei membri inattivi oltre una soglia",
+          "Percentuale di decadimento e finestra di inattività configurabili per server",
+          "Comandi /profile e /stats per ripartizioni dettagliate per utente"
+        ]
+      },
+      "customization": {
+        "title": "Personalizzazione",
+        "tagline": "Fai sentire il bot nativo del tuo server e del tuo profilo.",
+        "description": "Imposta un soprannome personalizzato per il bot nel tuo server per abbinarlo al branding della tua community. Anche i membri possono personalizzare la propria carta rango con un colore d'accento e un'immagine di sfondo personalizzati — senza azione dello staff.",
+        "bullets": [
+          "Soprannome personalizzato del bot per server — impostato dalla pagina Impostazioni della dashboard",
+          "Il soprannome viene applicato all'istante tramite il bot senza riavvio",
+          "/rankcard color — imposta un colore d'accento hex personalizzato sulla tua carta rango",
+          "/rankcard background — imposta un URL di immagine di sfondo personalizzato",
+          "/rankcard preview — visualizza in anteprima il tuo stile prima che lo veda chiunque altro",
+          "/rankcard reset — ripristina lo stile predefinito della carta rango",
+          "Gli stili della carta rango sono per utente e si mantengono su tutti i server"
+        ]
+      },
+      "achievements": {
+        "title": "Obiettivi",
+        "tagline": "Dai ai membri qualcosa a cui puntare oltre la classifica.",
+        "description": "Gli obiettivi vengono assegnati automaticamente man mano che i membri raggiungono i traguardi — nessun comando dallo staff. I badge appaiono sulla carta /profile e incoraggiano l'engagement a lungo termine tramite serie, attività e obiettivi di livello.",
+        "bullets": [
+          "Assegnati automaticamente quando i membri raggiungono traguardi idonei",
+          "Traguardi di livello: Stella nascente (5), Veterano (25), Leggenda (100) e altri",
+          "Traguardi di attività: Primi passi (1° messaggio), Assiduo (1.000 messaggi)",
+          "Traguardi di serie: Guerriero della settimana (7 giorni), Leggenda del mese (30), Serie del secolo (100)",
+          "Badge mostrati nel comando /profile con emoji e nome",
+          "Conteggio degli obiettivi mostrato nel comando /stats",
+          "Nessuna configurazione richiesta — funziona da subito"
+        ]
+      },
+      "reputation": {
+        "title": "Reputazione",
+        "tagline": "Lascia che la community riconosca i suoi membri più utili.",
+        "description": "I membri possono darsi punti reputazione a vicenda per evidenziare l'utilità e i contributi positivi. Un tempo di ricarica di 24 ore per utente mantiene il sistema equo, e una classifica a livello di server fa emergere i membri più apprezzati della tua community.",
+        "bullets": [
+          "/rep give <utente> — assegna un punto reputazione a qualsiasi membro",
+          "/rep check <utente> — visualizza la reputazione totale di un membro",
+          "/rep top — classifica di reputazione a livello di server",
+          "Tempo di ricarica di 24 ore per donatore applicato tramite Redis",
+          "Conteggio della reputazione mostrato in /stats e /profile",
+          "Completamente gratis — nessuna integrazione con siti di voto richiesta"
+        ]
+      },
+      "analytics": {
+        "title": "Analisi del server",
+        "tagline": "Comprendi come cresce e resta attivo il tuo server.",
+        "description": "Arken Bot tiene traccia dei contatori di attività giornaliera in background e li memorizza in una cronologia mobile di 30 giorni. La dashboard genera grafici interattivi così puoi individuare le tendenze, misurare l'impatto degli eventi e cogliere presto i cali di attività.",
+        "bullets": [
+          "Conteggio giornaliero dei messaggi tracciato sull'intero server",
+          "Tracciamento dell'uso giornaliero dei comandi",
+          "Contatori di ingressi e uscite dei membri al giorno",
+          "Cronologia mobile di 30 giorni memorizzata nel database",
+          "Grafici a linee e a barre interattivi nella pagina Analisi della dashboard",
+          "Grafico di crescita dei membri (ingressi vs. uscite)",
+          "Grafico di attività (messaggi + comandi nel tempo)",
+          "Nessuna configurazione aggiuntiva — il tracciamento parte automaticamente"
+        ]
+      },
+      "invite-tracker": {
+        "title": "Tracker inviti",
+        "tagline": "Vedi esattamente chi sta facendo crescere la tua community.",
+        "description": "Arken Bot tiene traccia di quale link di invito ha usato ogni nuovo membro quando è entrato. Una classifica a livello di server ordina i membri in base a quante persone hanno portato, incoraggiando una sana crescita della community.",
+        "bullets": [
+          "Rileva automaticamente quale codice di invito ha usato un nuovo membro",
+          "/invites — controlla il tuo conteggio inviti o quello di un altro membro",
+          "/invitetop — classifica del server dei migliori invitanti con medaglie",
+          "Inviti bonus: lo staff può regolare manualmente il conteggio inviti di un membro",
+          "Abilita o disabilita per server dalla pagina Tracker inviti",
+          "Nessun permesso aggiuntivo del bot richiesto oltre a Gestisci server"
+        ]
+      },
+      "counting": {
+        "title": "Gioco del conteggio",
+        "tagline": "Un semplice gioco di community — contate insieme senza interrompere la serie.",
+        "description": "Designa un canale e i membri inviano a turno il numero successivo della sequenza. Interrompi la serie con il numero sbagliato e il conteggio si azzera per tutti. Le reazioni dei traguardi celebrano i numeri grandi. Installalo tramite il Gestore addon.",
+        "bullets": [
+          "Designa qualsiasi canale testuale come canale di conteggio",
+          "Il bot reagisce ✅ ai conteggi corretti e 🎉 ogni 100 numeri",
+          "Un numero sbagliato azzera il conteggio riportandolo a 1",
+          "Impedisce allo stesso utente di contare due volte di fila (configurabile)",
+          "L'azzeramento in caso di errore può essere disattivato per una modalità più rilassata",
+          "Record del miglior conteggio tracciato e visibile nella dashboard",
+          "/startcounting — pubblica un embed di annuncio del gioco nel canale di conteggio",
+          "Installato come addon — nessun impatto sui server che non lo usano"
+        ]
+      },
+      "music": {
+        "title": "Musica",
+        "tagline": "Musica di alta qualità direttamente nei tuoi canali vocali.",
+        "description": "Riproduci musica da YouTube con i comandi slash. Gestisci una coda, controlla il volume, ripeti i brani e mantieni viva la festa — tutto tramite Discord senza uscire dall'app.",
+        "bullets": [
+          "Riproduzione audio YouTube tramite comandi slash",
+          "Gestione coda: aggiungi, salta, rimuovi e visualizza i brani",
+          "Controllo del volume",
+          "Modalità di ripetizione: ripeti un brano o l'intera coda",
+          "Stato della coda persistente tra le sessioni",
+          "Controlli di riproduzione dai comandi Discord"
+        ]
+      },
+      "custom-commands": {
+        "title": "Comandi personalizzati",
+        "tagline": "Costruisci comandi unici per il tuo server.",
+        "description": "Crea i tuoi comandi con risposte in embed ricco, logica personalizzata e restrizioni basate sui ruoli — senza programmare. Costruisci un numero illimitato di comandi interamente dalla dashboard.",
+        "bullets": [
+          "Crea comandi personalizzati in stile slash o prefisso",
+          "Risposte in embed ricco con titolo, descrizione, campi e colore",
+          "Sostituzione di variabili: menzione utente, nome server, conteggio membri, ecc.",
+          "Tempi di ricarica per utente per prevenire lo spam",
+          "Restrizioni di ruolo: limita i comandi a ruoli specifici",
+          "Opzione risposta in DM: rispondi privatamente all'utente che invoca il comando",
+          "Alias dei comandi per nomi di attivazione alternativi",
+          "Comandi illimitati — nessun tetto"
+        ]
+      },
+      "auto-responses": {
+        "title": "Risposte automatiche",
+        "tagline": "Rispondi automaticamente ai messaggi che corrispondono a un pattern regex.",
+        "description": "Crea regole che attivano una risposta automatica ogni volta che un messaggio corrisponde a un pattern. Le regole supportano regex con flag configurabili, risposte in testo semplice o embed, eliminazione facoltativa del messaggio e restrizioni basate sui ruoli. Gestisci tutto dalla dashboard o tramite il comando /autoresponse.",
+        "bullets": [
+          "Corrispondenza pattern regex su ogni messaggio in arrivo",
+          "Flag regex configurabili (senza distinzione tra maiuscole e minuscole per impostazione predefinita)",
+          "Risposta in testo semplice o embed ricco per regola",
+          "Colore hex personalizzato per le risposte in embed",
+          "Facoltativamente elimina il messaggio che attiva la regola alla corrispondenza",
+          "Abilita o disabilita singole regole senza eliminarle",
+          "Elenco completo delle regole con contatori di utilizzo per regola nella dashboard",
+          "Elenco regole in cache su Redis per latenza quasi nulla",
+          "Gestisci le regole tramite /autoresponse o la pagina Comandi della dashboard",
+          "Regole illimitate per server"
+        ]
+      },
+      "reaction-roles": {
+        "title": "Ruoli da reazione",
+        "tagline": "Lascia che i membri si auto-assegnino i ruoli con un solo clic.",
+        "description": "Crea menu di ruoli usando pannelli di pulsanti con cui i membri possono interagire. Supporta le modalità alternanza, solo aggiunta e solo rimozione. I pannelli riflettono le modifiche in Discord in tempo reale quando vengono modificati dalla dashboard.",
+        "bullets": [
+          "Pannelli di ruoli basati su pulsanti (nessuna reazione emoji richiesta)",
+          "Modalità alternanza: clicca per aggiungere, clicca di nuovo per rimuovere",
+          "Modalità solo aggiunta: i membri possono solo ottenere il ruolo",
+          "Modalità solo rimozione: i membri possono solo rimuovere il ruolo",
+          "Più pannelli per server con configurazioni diverse",
+          "Editor della dashboard con aggiornamenti dell'anteprima Discord in tempo reale"
+        ]
+      },
+      "self-roles": {
+        "title": "Ruoli auto-assegnabili",
+        "tagline": "I membri scelgono i propri ruoli con un semplice comando slash.",
+        "description": "Gli admin definiscono un elenco di ruoli auto-assegnabili e danno a ciascuno un nome breve. I membri possono poi eseguire /selfassignrole o /selfremoverole in qualsiasi momento — nessun pannello di reazioni necessario. Il completamento automatico rende la scoperta immediata. Gestisci l'elenco dalla dashboard o con /selfrole.",
+        "bullets": [
+          "/selfassignrole <nome> — ottieni un ruolo all'istante",
+          "/selfremoverole <nome> — togliti un ruolo all'istante",
+          "Il completamento automatico mostra solo i ruoli che il membro può aggiungere o rimuovere",
+          "Gli admin gestiscono l'elenco con /selfrole add / remove / list",
+          "Editor completo nella dashboard — aggiungi o rimuovi voci senza un comando",
+          "Il controllo della gerarchia dei ruoli del bot impedisce di assegnare ruoli ingestibili",
+          "Elenco ruoli in cache su Redis per latenza quasi nulla",
+          "Ruoli auto-assegnabili illimitati per server"
+        ]
+      },
+      "welcome": {
+        "title": "Benvenuto e uscita",
+        "tagline": "Fai un'ottima prima impressione su ogni nuovo membro.",
+        "description": "Accogli i nuovi membri con un messaggio in embed completamente personalizzabile in qualsiasi canale, e facoltativamente inviagli un DM quando entrano. Ricevi notifiche di uscita con conteggi di membri aggiornati per conoscere sempre le dimensioni del tuo server.",
+        "bullets": [
+          "Embed di benvenuto personalizzabile: titolo, descrizione, colore, immagine",
+          "Sostituzione di variabili: nome utente, menzione, nome server, conteggio membri",
+          "DM facoltativo inviato ai nuovi membri all'ingresso",
+          "Embed di notifica di uscita in un canale separato",
+          "Il contatore di membri si aggiorna all'ingresso e all'uscita",
+          "Abilita o disabilita singolarmente dalla dashboard"
+        ]
+      },
+      "giveaways": {
+        "title": "Giveaway",
+        "tagline": "Organizza giveaway equi e automatizzati per la tua community.",
+        "description": "Avvia giveaway direttamente in Discord. Quando il timer termina, Arken Bot sceglie i vincitori automaticamente e li annuncia nel canale. Visualizza tutti i giveaway attivi e conclusi insieme ai nomi dei vincitori nella dashboard.",
+        "bullets": [
+          "Crea giveaway con un comando slash da Discord",
+          "Durata e numero di vincitori configurabili",
+          "Selezione automatica dei vincitori alla fine del timer",
+          "Annuncio dei vincitori pubblicato nel canale del giveaway",
+          "La dashboard mostra tutti i giveaway attivi e passati",
+          "Nomi dei vincitori e partecipazioni visibili nel portale"
+        ]
+      },
+      "stream-alerts": {
+        "title": "Avvisi di live",
+        "tagline": "Avvisa la tua community nel momento in cui qualcosa va in diretta o viene pubblicato.",
+        "description": "Monitora i feed Twitch, Kick, YouTube, X (Twitter), Reddit e RSS/Podcast e pubblica automaticamente un embed di notifica in qualsiasi canale Discord quando c'è nuovo contenuto. Mantieni la tua community coinvolta senza annunci manuali.",
+        "bullets": [
+          "Twitch: avvisi quando un canale va in diretta",
+          "Kick: avvisi quando un canale Kick.com va in diretta",
+          "YouTube: avvisi quando un canale avvia una diretta",
+          "X (Twitter): avvisi quando un utente pubblica un nuovo tweet",
+          "Reddit: avvisi quando un subreddit riceve un nuovo post",
+          "RSS / Podcast: avvisi quando un feed pubblica un nuovo episodio o post",
+          "Canale di avviso e messaggio personalizzato configurabili per avviso",
+          "Più avvisi tracciati simultaneamente su diverse piattaforme"
+        ]
+      },
+      "board-alerts": {
+        "title": "Avvisi monday.com e Trello",
+        "tagline": "Porta le tue board di progetto in Discord.",
+        "description": "Collega le board monday.com e Trello a Discord e ricevi un embed dettagliato nel momento in cui qualcosa cambia — card ed elementi creati, spostati, rinominati, commentati e altro. Perfetto per i team che si coordinano in Discord.",
+        "bullets": [
+          "monday.com: elemento creato/rinominato/spostato, modifiche di colonna, commenti, archiviazioni e altro tramite webhook",
+          "Trello: card creata/spostata/rinominata/aggiornata, commenti, etichette, allegati, membri e modifiche alle checklist",
+          "I webhook di Trello vengono registrati automaticamente — nessuna chiamata API manuale necessaria",
+          "Un token API monday.com facoltativo risolve gli ID utente in nomi visualizzati reali negli embed",
+          "Filtri eventi per avviso — iscriviti esattamente agli eventi che vuoi",
+          "Gli embed si collegano direttamente alla card, all'elemento e alla board"
+        ]
+      },
+      "starboard": {
+        "title": "Starboard",
+        "tagline": "Celebra i migliori messaggi del tuo server.",
+        "description": "Quando un messaggio raggiunge una soglia di reazioni, viene fissato automaticamente in un canale starboard dedicato. Un ottimo modo per mettere in risalto momenti divertenti, utili o memorabili.",
+        "bullets": [
+          "Emoji di reazione configurabile (⭐ per impostazione predefinita)",
+          "Soglia di reazioni configurabile per qualificarsi per la board",
+          "Alternanza dell'auto-stella: consenti o impedisci agli autori di mettere la stella ai propri post",
+          "Canale starboard dedicato con ripubblicazioni in embed",
+          "Abilita o disabilita dalla dashboard"
+        ]
+      },
+      "suggestions": {
+        "title": "Suggerimenti",
+        "tagline": "Dai ai membri una voce strutturata nel tuo server.",
+        "description": "I membri inviano suggerimenti tramite un comando slash. Lo staff può approvarli, rifiutarli o segnarli come implementati direttamente dalla dashboard. I suggerimenti accettati e rifiutati vengono comunicati chiaramente alla community.",
+        "bullets": [
+          "I membri inviano suggerimenti con un comando slash",
+          "I suggerimenti vengono pubblicati come embed in un canale dedicato",
+          "Lo staff può approvare, rifiutare o segnare come implementato",
+          "Vista nella dashboard di tutti i suggerimenti in sospeso e risolti",
+          "Gli aggiornamenti di stato vengono ripubblicati nel canale dei suggerimenti"
+        ]
+      },
+      "birthdays": {
+        "title": "Compleanni",
+        "tagline": "Non perdere mai più il compleanno di un membro.",
+        "description": "I membri registrano il proprio compleanno una volta. Nel giorno, Arken Bot pubblica un annuncio di compleanno nel canale che scegli e facoltativamente assegna un ruolo speciale di compleanno per esattamente 24 ore.",
+        "bullets": [
+          "I membri impostano il proprio compleanno con un comando slash",
+          "Annuncio di compleanno automatico nella data corretta",
+          "Canale di annuncio configurabile",
+          "Ruolo di compleanno facoltativo assegnato per 24 ore nel giorno",
+          "La dashboard mostra i prossimi compleanni"
+        ]
+      },
+      "stats-channels": {
+        "title": "Canali statistiche",
+        "tagline": "Statistiche del server in tempo reale mostrate direttamente nell'elenco dei tuoi canali.",
+        "description": "Crea canali vocali i cui nomi si aggiornano automaticamente per riflettere le statistiche del server in tempo reale. I membri possono vedere il conteggio totale dei membri, i livelli di boost e altro a colpo d'occhio senza alcun comando.",
+        "bullets": [
+          "Canali vocali con nomi ad aggiornamento automatico",
+          "Mostra il conteggio totale dei membri",
+          "Mostra il conteggio dei membri online",
+          "Mostra il livello e il conteggio dei boost del server",
+          "Configura più canali statistiche simultaneamente",
+          "Intervallo di aggiornamento gestito dalla dashboard"
+        ]
+      },
+      "scheduled-messages": {
+        "title": "Messaggi programmati",
+        "tagline": "Automatizza annunci e promemoria ricorrenti.",
+        "description": "Programma messaggi da pubblicare in qualsiasi canale a qualsiasi intervallo ripetuto. Ideale per annunci settimanali, promemoria delle regole del server, notifiche di eventi o qualsiasi contenuto ricorrente.",
+        "bullets": [
+          "Programma messaggi ricorrenti verso qualsiasi canale",
+          "Intervallo di ripetizione configurabile (orario, giornaliero, settimanale, personalizzato)",
+          "Supporta messaggi in testo semplice o embed ricco",
+          "Più messaggi programmati attivi simultaneamente",
+          "Gestisci e metti in pausa le programmazioni dalla dashboard"
+        ]
+      },
+      "temp-voice": {
+        "title": "Canali vocali temporanei",
+        "tagline": "I membri ottengono il proprio canale vocale su richiesta — senza disordine.",
+        "description": "Configura uno o più canali trigger Entra per creare. Quando un membro entra in un trigger, il bot crea all'istante un canale vocale privato per lui e lo sposta al suo interno. Quando l'ultima persona esce, il canale viene eliminato automaticamente.",
+        "bullets": [
+          "Più canali trigger per server — configurane quanti ne servono",
+          "Ogni trigger può instradare i canali creati in una categoria specifica",
+          "Il canale creato prende automaticamente il nome del membro",
+          "Il membro ottiene permessi da proprietario: rinominare, impostare il limite utenti, gestire i permessi",
+          "Tutti gli altri possono vedere ed entrare nel canale per impostazione predefinita",
+          "I canali vuoti vengono eliminati nel momento in cui l'ultimo membro esce",
+          "Nessun canale orfano — ciclo di vita completamente automatico",
+          "Gestisci tutti i trigger da Dashboard → Vocale temporaneo"
+        ]
+      },
+      "anti-nuke": {
+        "title": "Anti-nuke",
+        "tagline": "Ferma i nuke del server prima che il danno sia fatto.",
+        "description": "Anti-nuke monitora le azioni distruttive rapide — eliminazioni di massa di canali, eliminazioni di ruoli e ban di massa — e agisce automaticamente contro l'utente colpevole nel momento in cui le soglie vengono superate.",
+        "bullets": [
+          "Rileva eliminazioni di massa di canali oltre una soglia configurabile",
+          "Rileva eliminazioni di massa di ruoli oltre una soglia configurabile",
+          "Rileva ban di massa oltre una soglia configurabile",
+          "Opzioni di risposta: rimozione permessi (rimuovi tutti i ruoli), espulsione o ban",
+          "Canale di avviso configurabile per le notifiche di nuke",
+          "Tutte le soglie regolabili indipendentemente dalla dashboard",
+          "Funziona in tempo reale — nessun ritardo tra rilevamento e azione",
+          "Modalità di rimozione permessi consigliata per fermare gli attacchi senza ban permanenti"
+        ]
+      },
+      "verification": {
+        "title": "Barriera di verifica",
+        "tagline": "Filtra bot e account secondari prima che raggiungano la tua community.",
+        "description": "I nuovi membri ricevono un ruolo in attesa all'ingresso e possono vedere solo un canale di verifica designato. Cliccando sul pulsante di verifica ottengono il ruolo membro e l'accesso completo al server. Semplice, efficace e completamente automatizzato.",
+        "bullets": [
+          "Ai nuovi membri viene assegnato automaticamente il ruolo in attesa all'ingresso",
+          "Il ruolo in attesa limita l'accesso a tutti i canali tranne il canale di verifica",
+          "Pulsante di verifica con un clic pubblicato nel canale che scegli",
+          "Il ruolo membro viene assegnato alla verifica, concedendo l'accesso completo all'istante",
+          "Abilita o disabilita con un singolo interruttore dalla dashboard",
+          "Funziona con qualsiasi gerarchia di ruoli — ruoli e canale completamente personalizzabili",
+          "Compatibile con i messaggi di benvenuto per accogliere i membri dopo la verifica",
+          "Nessun comando richiesto dallo staff — completamente automatico dopo la configurazione"
+        ]
+      },
+      "forum-management": {
+        "title": "Gestione forum",
+        "tagline": "Automatizza modelli ed etichettatura nei canali forum di Discord.",
+        "description": "Configura un numero qualsiasi di canali forum per ricevere messaggi modello automatici quando viene creato un nuovo thread, e applica automaticamente un tag a ogni post. Ogni canale è configurato in modo indipendente.",
+        "bullets": [
+          "Pubblica automaticamente un messaggio modello come prima risposta in ogni nuovo thread",
+          "Applica automaticamente un tag del forum a ogni nuovo post",
+          "Configura più canali forum in modo indipendente",
+          "I messaggi modello supportano tutto il markdown di Discord",
+          "L'etichettatura automatica usa un ID tag — fai clic destro su qualsiasi tag in Discord per copiarlo",
+          "Aggiungi o rimuovi canali forum dalla gestione in qualsiasi momento",
+          "Le modifiche si applicano solo ai nuovi thread — i thread esistenti non sono interessati",
+          "Il bot richiede Invia messaggi e Gestisci thread in ogni canale forum"
+        ]
+      },
+      "polls": {
+        "title": "Sondaggi",
+        "tagline": "Raccogli feedback dalla community con sondaggi basati su pulsanti.",
+        "description": "Crea sondaggi direttamente in Discord con il comando /poll. I membri votano tramite pulsanti interattivi e la dashboard offre allo staff un luogo centrale per vedere i risultati, chiudere la votazione o eliminare i sondaggi.",
+        "bullets": [
+          "Comando slash /poll — crea un sondaggio con 2–4 opzioni",
+          "I membri votano tramite i pulsanti di Discord — un voto per membro imposto",
+          "Vista nella dashboard di tutti i sondaggi attivi e chiusi nel server",
+          "Chiudi un sondaggio per smettere di accettare nuovi voti senza eliminarlo",
+          "Elimina i sondaggi dalla dashboard per rimuovere i dati di voto",
+          "Ogni card del sondaggio mostra voti totali, conteggio opzioni e data di creazione",
+          "Stato Aperto/Chiuso visibile a colpo d'occhio"
+        ]
+      },
+      "reports": {
+        "title": "Segnalazioni membri",
+        "tagline": "Un canale strutturato per i membri per segnalare chi infrange le regole.",
+        "description": "I membri inviano segnalazioni tramite /report senza dover mandare un DM a un moderatore. Lo staff revisiona tutte le segnalazioni in sospeso nella dashboard, aggiunge note interne e le segna come revisionate o respinte — mantenendo la moderazione organizzata e verificabile.",
+        "bullets": [
+          "Comando slash /report per i membri per segnalare qualsiasi utente",
+          "Canale di notifica delle segnalazioni configurabile per gli avvisi allo staff",
+          "La dashboard mostra tutte le segnalazioni in sospeso con segnalante, bersaglio e motivo",
+          "Lo staff può segnare le segnalazioni come revisionate o respingerle con una nota",
+          "Le note dello staff registrate internamente e visibili nella cronologia delle segnalazioni",
+          "Schede separate per le segnalazioni in sospeso e revisionate",
+          "Le segnalazioni in sospeso si aggiornano automaticamente ogni 30 secondi",
+          "Il conteggio in sospeso è mostrato come badge sulla scheda per una visibilità rapida"
+        ]
+      }
+    }
+  },
+  "addonsPage": {
+    "heroBadge": "Addon first-party e della community",
+    "heroTitle": "Estendi Arken Bot <hl>con gli addon</hl>",
+    "heroSubtitle": "Arken include addon ufficiali first-party che coprono ticket avanzati, stato dei server di gioco e strumenti per sviluppatori. Installa qualsiasi addon dalla dashboard — o crea il tuo con l'SDK TypeScript.",
+    "buildYourOwn": "Crea il tuo",
+    "official": "Ufficiale",
+    "sdkBadge": "SDK addon",
+    "sdkHeading": "Crea il tuo addon",
+    "sdkDescription": "L'Arken Addon SDK ti dà tutto ciò che serve per estendere il bot con comandi slash, listener di eventi, archiviazione persistente per server, impostazioni tipizzate e hook del ciclo di vita — tutto in TypeScript. Crea il tuo addon, metti il dist/ compilato nella cartella addons, riavvia il bot, e il runtime lo registra automaticamente così appare subito nella dashboard.",
+    "readSdkDocs": "Leggi la documentazione dell'SDK",
+    "sdkFeatures": [
+      "defineAddon() — punto di ingresso orientato a TypeScript con inferenza dei tipi completa; nessun boilerplate di classe richiesto",
+      "Comandi slash e di menu contestuale con gestore di completamento automatico facoltativo integrato",
+      "Listener di eventi del gateway Discord con supporto once; ctx.client espone il Client discord.js completo",
+      "Archiviazione chiave-valore isolata per server basata su PostgreSQL — i dati hanno sempre ambito per server",
+      "Logger strutturato etichettato con il nome del tuo addon più un bus di eventi tipizzato tra addon per la messaggistica incrociata",
+      "Hook del ciclo di vita: onLoad, onUnload, onSettingsUpdate, onGuildInstall e onGuildUninstall"
+    ],
+    "ctaHeading": "Pronto a potenziare il tuo server?",
+    "ctaSubtitle": "Aggiungi Arken Bot e abilita qualsiasi addon dalla dashboard — gratis, per sempre.",
+    "ctaAddButton": "Aggiungi al server — È gratis",
+    "viewAllFeatures": "Vedi tutte le funzioni",
+    "footHome": "Home",
+    "footFeatures": "Funzioni",
+    "footAddons": "Addon",
+    "footDashboard": "Dashboard",
+    "footDocs": "Documentazione",
+    "footSupport": "Supporto",
+    "footPrivacy": "Privacy",
+    "footTerms": "Termini",
+    "addons": {
+      "tickets": {
+        "title": "Sistema di ticket",
+        "tagline": "Help desk completo con SLA, trascrizioni e portale staff.",
+        "description": "Un'esperienza completa di supporto clienti all'interno di Discord. Instradamento multi-pannello, moduli di accoglienza personalizzati, assegnazione dello staff a rotazione, escalation SLA, risposte predefinite e un portale web per lo staff — tutto incluso.",
+        "bullets": [
+          "Pannelli multi-pulsante che instradano a diverse categorie di ticket",
+          "Canale privato o thread per ticket",
+          "Campi modulo personalizzati raccolti all'apertura del ticket",
+          "Controlli di presa in carico, trasferimento e priorità dello staff",
+          "Escalation SLA a più livelli con ruoli da menzionare configurabili",
+          "Assegnazione automatica a rotazione per lo staff",
+          "Risposte predefinite con completamento automatico di Discord",
+          "Trascrizione HTML pubblicata nel canale di registro alla chiusura",
+          "Valutazione dell'utente da 1 a 5 stelle alla chiusura del ticket",
+          "Notifiche webhook per integrazioni di terze parti",
+          "Portale staff completo: filtri, note, chiusura in blocco, statistiche"
+        ]
+      },
+      "gameservers": {
+        "title": "Stato server di gioco",
+        "tagline": "Controlla e monitora lo stato di qualsiasi server di gioco da Discord.",
+        "description": "Interroga il conteggio giocatori in tempo reale, i nomi delle mappe, il ping e le info del server per oltre 40 tipi di gioco direttamente da Discord. Salva i server per server per ricerche rapide con completamento automatico. Nessun accesso admin al server richiesto — solo interrogazioni di stato in sola lettura.",
+        "bullets": [
+          "Interroga qualsiasi server di gioco per IP e porta con /server status",
+          "Supporta oltre 40 tipi di gioco: Minecraft (Java + Bedrock), Rust, ARK, Valheim, CS2, DayZ, FiveM e altri",
+          "Mostra conteggio giocatori, mappa, ping e nome del server",
+          "Salva server con nome per server per ricerche rapide con completamento automatico",
+          "Rimuovi o elenca i server salvati con /server remove e /server list",
+          "Nessuna credenziale admin richiesta — solo interrogazioni di stato",
+          "Minecraft Java usa SLP nativo; tutti gli altri usano Gamedig"
+        ]
+      },
+      "code-review": {
+        "title": "Revisione del codice",
+        "tagline": "Analisi statica istantanea e revisione del codice basata su IA dentro Discord.",
+        "description": "Esegui /reviewcode, incolla il tuo snippet in un modale e ottieni un feedback istantaneo — conteggio di errori e avvisi, un elenco di problemi specifici e una versione formattata/corretta del codice. I risultati sono effimeri, così solo chi invia li vede. Facoltativamente configura una chiave API Groq per un'analisi più intelligente basata su IA.",
+        "bullets": [
+          "Esegui /reviewcode e incolla il codice in un modale di Discord",
+          "I risultati sono effimeri — solo chi invia vede il feedback",
+          "Conteggio di problemi di errore, avviso e info con descrizioni per problema",
+          "Codice formattato/corretto inviato come blocco di codice di follow-up",
+          "Modalità basata su IA tramite chiave API Groq per analisi e riepiloghi più intelligenti",
+          "Analisi statica di riserva: JavaScript, TypeScript, Python, JSON, CSS e HTML",
+          "Rileva automaticamente la lingua o specificala manualmente con l'opzione lingua",
+          "Lunghezza massima del codice configurabile per server (500–4000 caratteri)"
+        ]
+      }
+    }
+  },
+  "termsPage": {
+    "title": "Termini di servizio",
+    "lastUpdated": "Ultimo aggiornamento: {date}",
+    "intro": "I presenti Termini di servizio («Termini») regolano il tuo utilizzo di Arken Bot (il «Bot») e della dashboard web all'indirizzo <site>arkenbot.app</site> (il «Servizio»), gestiti da Arken Bot («noi», «nostro» o «ci»). Aggiungendo il Bot al tuo server Discord o utilizzando il Servizio, accetti i presenti Termini. Se non sei d'accordo, non utilizzare il Servizio.",
+    "s1Title": "1. Idoneità",
+    "s1p1": "Devi avere almeno 13 anni (o l'età minima richiesta nella tua giurisdizione) per utilizzare il Servizio. Utilizzando il Servizio, dichiari di soddisfare questo requisito. L'utilizzo del Servizio è inoltre soggetto ai <tos>Termini di servizio</tos> di Discord; sei responsabile del rispetto delle politiche di Discord indipendentemente dai presenti Termini.",
+    "s2Title": "2. Utilizzo consentito",
+    "s2p1": "Puoi utilizzare Arken Bot per gestire il tuo server Discord in conformità con i presenti Termini e tutte le leggi applicabili. Accetti di non:",
+    "s2list": [
+      "Utilizzare il Servizio per molestare, abusare, minacciare o danneggiare qualsiasi persona",
+      "Tentare di aggirare, disabilitare o interferire con le funzioni di sicurezza del Servizio",
+      "Utilizzare il Servizio per distribuire spam, malware o messaggi commerciali non richiesti",
+      "Effettuare reverse engineering, decompilare o tentare di estrarre il codice sorgente dal Bot",
+      "Utilizzare il Servizio in qualsiasi modo che violi i Termini di servizio o le Linee guida della community di Discord",
+      "Rivendere, concedere in sublicenza o sfruttare commercialmente il Servizio senza la nostra autorizzazione scritta"
+    ],
+    "s3Title": "3. Servizi API di YouTube",
+    "s3p1": "Arken Bot utilizza la <api>YouTube Data API v3</api> per fornire notifiche di dirette YouTube. Abilitando le funzioni di YouTube in Arken Bot, accetti di essere vincolato dai <tos>Termini di servizio di YouTube</tos>.",
+    "s3p2": "Arken Bot accede solo ai metadati dei video YouTube disponibili pubblicamente (titolo del video, stato della diretta e miniatura) allo scopo di inviare notifiche ai canali Discord configurati dagli amministratori del server. Non utilizziamo i Servizi API di YouTube per caricare contenuti, accedere a dati privati o gestire account YouTube.",
+    "s3p3": "L'informativa sulla privacy di Google si applica ai dati elaborati tramite i Servizi API di YouTube: <privacy>policies.google.com/privacy</privacy>.",
+    "s4Title": "4. Reddit Data API",
+    "s4p1": "Arken Bot utilizza la <api>Reddit Data API</api> per fornire notifiche dei feed dei subreddit. Abilitando le funzioni di Reddit in Arken Bot, riconosci che questa funzionalità è soggetta ai <terms>Termini della Reddit Data API</terms> e al <agreement>Contratto utente di Reddit</agreement>.",
+    "s4p2": "Arken Bot accede solo ai metadati dei post disponibili pubblicamente (titolo del post, link e nome utente dell'autore) dai subreddit configurati dagli amministratori del server, al solo scopo di inviare notifiche ai canali Discord. Non accediamo agli account utente di Reddit, alle community private o al contenuto dei post oltre i metadati pubblici, e non archiviamo né ridistribuiamo contenuti di Reddit.",
+    "s4p3": "L'informativa sulla privacy di Reddit si applica ai dati elaborati tramite la Reddit Data API: <privacy>reddit.com/policies/privacy-policy</privacy>.",
+    "s5Title": "5. Integrazioni Monday.com e Trello",
+    "s5p1": "Arken Bot può ricevere notifiche webhook dalle board <monday>monday.com</monday> e <trello>Trello</trello> collegate dagli amministratori del server, e trasmetterle come notifiche Discord. Abilitando queste funzioni riconosci che il tuo utilizzo delle piattaforme sottostanti rimane soggetto rispettivamente ai <mondayTos>Termini di servizio di monday.com</mondayTos> e ai <atlassian>Termini di servizio di Atlassian Cloud</atlassian>.",
+    "s5p2": "Sei responsabile di assicurarti di avere il diritto di collegare una determinata board e di condividere la sua attività con i membri del tuo server Discord. I payload dei webhook vengono elaborati in modo transitorio per costruire le notifiche e non vengono memorizzati; consulta la nostra <privacy>Informativa sulla privacy</privacy> per i dettagli su quali dati di configurazione conserviamo.",
+    "s6Title": "6. Contenuti e responsabilità dell'utente",
+    "s6p1": "Sei l'unico responsabile di tutti i contenuti configurati tramite il Servizio, inclusi i messaggi personalizzati del bot, le azioni di moderazione e le configurazioni degli avvisi. Non esaminiamo né approviamo le configurazioni generate dagli utenti.",
+    "s6p2": "Gli amministratori del server che aggiungono Arken Bot al loro server Discord sono responsabili di assicurare che il loro utilizzo del Bot sia conforme alle leggi applicabili e alle politiche di Discord, incluse le regole riguardanti la moderazione, la raccolta di dati da minori e la privacy dei membri.",
+    "s7Title": "7. Disponibilità del servizio",
+    "s7p1": "Arken Bot è fornito «così com'è» e «come disponibile». Non garantiamo un funzionamento ininterrotto e privo di errori. Possiamo sospendere o interrompere il Servizio in qualsiasi momento senza preavviso per manutenzione, sicurezza o qualsiasi altro motivo.",
+    "s7p2": "Non siamo responsabili di alcuna perdita derivante da tempi di inattività, notifiche mancate (inclusi gli avvisi di live) o perdita di dati causata da interruzioni del servizio.",
+    "s8Title": "8. Cessazione",
+    "s8p1": "Ci riserviamo il diritto di rimuovere Arken Bot da qualsiasi server Discord, o di sospendere l'accesso a qualsiasi utente o server, a nostra esclusiva discrezione se stabiliamo che i presenti Termini sono stati violati. Puoi rimuovere il Bot dal tuo server in qualsiasi momento tramite le impostazioni del server di Discord.",
+    "s8p2": "Dopo la rimozione o la cessazione, puoi richiedere l'eliminazione di tutti i dati associati contattandoci all'indirizzo <email>support@arkenbot.app</email>.",
+    "s9Title": "9. Esclusione di garanzie",
+    "s9p1": "Il Servizio è fornito senza garanzie di alcun tipo, espresse o implicite, incluse ma non limitate alle garanzie di commerciabilità, idoneità a uno scopo particolare o non violazione. Non garantiamo che il Servizio soddisfi i tuoi requisiti o che sia sicuro, ininterrotto o privo di errori.",
+    "s10Title": "10. Limitazione di responsabilità",
+    "s10p1": "Nella misura massima consentita dalla legge applicabile, Arken Bot e i suoi operatori non saranno responsabili di alcun danno indiretto, incidentale, speciale, consequenziale o punitivo derivante dal tuo utilizzo o dall'impossibilità di utilizzare il Servizio, anche se avvisati della possibilità di tali danni.",
+    "s11Title": "11. Modifiche ai presenti Termini",
+    "s11p1": "Possiamo aggiornare i presenti Termini in qualsiasi momento. La data di «Ultimo aggiornamento» in cima a questa pagina riflette quando le modifiche sono state apportate più di recente. L'uso continuato del Servizio dopo la pubblicazione delle modifiche costituisce accettazione dei Termini aggiornati.",
+    "s12Title": "12. Contatti",
+    "s12p1": "Se hai domande sui presenti Termini, contattaci all'indirizzo <email>support@arkenbot.app</email> o unisciti al nostro <support>server di supporto</support>."
   }
 }
