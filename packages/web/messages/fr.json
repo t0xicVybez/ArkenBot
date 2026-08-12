@@ -1511,11 +1511,11 @@
       "Revendre, sous-licencier ou exploiter commercialement le Service sans notre autorisation écrite"
     ],
     "s3Title": "3. Services de l'API YouTube",
-    "s3p1": "Arken Bot utilise l'<api>API de données YouTube v3</api> pour fournir des notifications de live YouTube. En activant les fonctionnalités YouTube dans Arken Bot, tu acceptes d'être lié par les <tos>Conditions d'utilisation de YouTube</tos>.",
+    "s3p1": "Arken Bot utilise l''<api>API de données YouTube v3</api> pour fournir des notifications de live YouTube. En activant les fonctionnalités YouTube dans Arken Bot, tu acceptes d'être lié par les <tos>Conditions d'utilisation de YouTube</tos>.",
     "s3p2": "Arken Bot accède uniquement aux métadonnées de vidéos YouTube disponibles publiquement (titre de la vidéo, statut de live et miniature) dans le but d'envoyer des notifications aux salons Discord configurés par les administrateurs du serveur. Nous n'utilisons pas les Services de l'API YouTube pour téléverser du contenu, accéder à des données privées ou gérer des comptes YouTube.",
     "s3p3": "La politique de confidentialité de Google s'applique aux données traitées via les Services de l'API YouTube : <privacy>policies.google.com/privacy</privacy>.",
     "s4Title": "4. API de données Reddit",
-    "s4p1": "Arken Bot utilise l'<api>API de données Reddit</api> pour fournir des notifications de flux de subreddits. En activant les fonctionnalités Reddit dans Arken Bot, tu reconnais que cette fonctionnalité est soumise aux <terms>Conditions de l'API de données Reddit</terms> et à l'<agreement>Accord utilisateur Reddit</agreement>.",
+    "s4p1": "Arken Bot utilise l''<api>API de données Reddit</api> pour fournir des notifications de flux de subreddits. En activant les fonctionnalités Reddit dans Arken Bot, tu reconnais que cette fonctionnalité est soumise aux <terms>Conditions de l'API de données Reddit</terms> et à l'<agreement>Accord utilisateur Reddit</agreement>.",
     "s4p2": "Arken Bot accède uniquement aux métadonnées de publications disponibles publiquement (titre de la publication, lien et nom d'utilisateur de l'auteur) des subreddits configurés par les administrateurs du serveur, dans le seul but d'envoyer des notifications aux salons Discord. Nous n'accédons pas aux comptes utilisateurs Reddit, aux communautés privées ni au contenu des publications au-delà des métadonnées publiques, et nous n'archivons ni ne redistribuons le contenu Reddit.",
     "s4p3": "La politique de confidentialité de Reddit s'applique aux données traitées via l'API de données Reddit : <privacy>reddit.com/policies/privacy-policy</privacy>.",
     "s5Title": "5. Intégrations Monday.com et Trello",
