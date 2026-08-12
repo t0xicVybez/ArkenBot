@@ -9,6 +9,7 @@ import { SettingsSection } from '@/components/SettingsSection';
 import toast from 'react-hot-toast';
 import { useState, useEffect } from 'react';
 import { ShieldCheck, Info } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 type VerificationConfig = {
   enabled: boolean;
@@ -32,6 +33,7 @@ const DEFAULT_CONFIG: VerificationConfig = {
 
 export default function VerificationPage() {
   const { guildId } = useParams() as { guildId: string };
+  const t = useTranslations('verification');
   const queryClient = useQueryClient();
   const [config, setConfig] = useState<VerificationConfig>(DEFAULT_CONFIG);
 
@@ -58,10 +60,10 @@ export default function VerificationPage() {
   const saveMutation = useMutation({
     mutationFn: (data: Partial<VerificationConfig>) => verificationApi.update(guildId, data),
     onSuccess: () => {
-      toast.success('Verification config saved!');
+      toast.success(t('saved'));
       queryClient.invalidateQueries({ queryKey: ['verification-config', guildId] });
     },
-    onError: () => toast.error('Failed to save config'),
+    onError: () => toast.error(t('saveError')),
   });
 
   const allChannels = (channelsRes?.data as { data?: Array<{ id: string; name: string; type: number }> })?.data ?? [];
@@ -84,8 +86,8 @@ export default function VerificationPage() {
       <div className="page-head">
         <div className="page-head-icon"><ShieldCheck className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>Verification Gate</h1>
-          <div className="page-head-desc">Require new members to verify before accessing the server.</div>
+          <h1>{t('title')}</h1>
+          <div className="page-head-desc">{t('description')}</div>
         </div>
       </div>
 
@@ -93,63 +95,62 @@ export default function VerificationPage() {
       <div className="card mb-6 border border-blue-500/20 bg-blue-500/5 flex items-start gap-3">
         <Info className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
         <p className="text-sm text-blue-300">
-          When enabled, new members receive the Pending Role and can only see the verify channel.
-          Clicking Verify gives them the Member Role and access to the rest of the server.
+          {t('infoCard')}
         </p>
       </div>
 
-      <SettingsSection title="Verification Gate" description="Enable the verification system for new members.">
+      <SettingsSection title={t('gateTitle')} description={t('gateDesc')}>
         <Toggle
-          label="Enable Verification"
-          description="New members must verify before accessing server channels"
+          label={t('enableLabel')}
+          description={t('enableDesc')}
           enabled={config.enabled}
           onChange={(v) => setConfig((c) => ({ ...c, enabled: v }))}
         />
       </SettingsSection>
 
-      <SettingsSection title="Roles & Channel" description="Configure the roles and channel used for verification.">
+      <SettingsSection title={t('rolesTitle')} description={t('rolesDesc')}>
         <div className="space-y-3">
           <div>
-            <label className="label">Pending Role</label>
+            <label className="label">{t('pendingRole')}</label>
             <select
               className="input"
               value={config.pendingRoleId ?? ''}
               onChange={(e) => setConfig((c) => ({ ...c, pendingRoleId: e.target.value || null }))}
             >
-              <option value="">None</option>
+              <option value="">{t('none')}</option>
               {assignableRoles.map((r) => (
                 <option key={r.id} value={r.id}>@{r.name}</option>
               ))}
             </select>
-            <p className="text-xs text-gray-500 mt-1">Role given to new members when they join (pre-verification).</p>
+            <p className="text-xs text-gray-500 mt-1">{t('pendingRoleHelp')}</p>
           </div>
           <div>
-            <label className="label">Member Role</label>
+            <label className="label">{t('memberRole')}</label>
             <select
               className="input"
               value={config.memberRoleId ?? ''}
               onChange={(e) => setConfig((c) => ({ ...c, memberRoleId: e.target.value || null }))}
             >
-              <option value="">None</option>
+              <option value="">{t('none')}</option>
               {assignableRoles.map((r) => (
                 <option key={r.id} value={r.id}>@{r.name}</option>
               ))}
             </select>
-            <p className="text-xs text-gray-500 mt-1">Role given after a member verifies successfully.</p>
+            <p className="text-xs text-gray-500 mt-1">{t('memberRoleHelp')}</p>
           </div>
           <div>
-            <label className="label">Verify Channel</label>
+            <label className="label">{t('verifyChannel')}</label>
             <select
               className="input"
               value={config.verifyChannelId ?? ''}
               onChange={(e) => setConfig((c) => ({ ...c, verifyChannelId: e.target.value || null }))}
             >
-              <option value="">None</option>
+              <option value="">{t('none')}</option>
               {textChannels.map((ch) => (
                 <option key={ch.id} value={ch.id}>#{ch.name}</option>
               ))}
             </select>
-            <p className="text-xs text-gray-500 mt-1">Channel where the verify button panel is displayed.</p>
+            <p className="text-xs text-gray-500 mt-1">{t('verifyChannelHelp')}</p>
           </div>
         </div>
       </SettingsSection>
@@ -160,7 +161,7 @@ export default function VerificationPage() {
           disabled={saveMutation.isPending}
           className="btn-primary"
         >
-          {saveMutation.isPending ? 'Saving…' : 'Save Changes'}
+          {saveMutation.isPending ? t('saving') : t('saveChanges')}
         </button>
       </div>
     </div>

@@ -18,6 +18,7 @@ import {
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { moderationEmbed, errorEmbed } from '../../utils/embed.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 import { canModerate } from '../../utils/permissions.js';
 import { getNextCaseNumber, getGuildSettings } from '../../utils/settings.js';
 import { prisma } from '../../database.js';
@@ -37,7 +38,8 @@ const command: BotCommand = {
     const targetUser = ctxInteraction.targetUser;
 
     if (!ctxInteraction.guild) {
-      await ctxInteraction.reply({ content: 'This command must be used in a server.', flags: MessageFlags.Ephemeral });
+      const loc = await resolveUserLocale(ctxInteraction);
+      await ctxInteraction.reply({ content: t('common.notInServer', loc), flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -62,13 +64,14 @@ const command: BotCommand = {
     if (!targetUserId || !interaction.guild) return;
 
     await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+    const loc = await resolveUserLocale(interaction);
 
     const reason = interaction.fields.getTextInputValue('reason');
     const guild = interaction.guild;
 
     const targetUser = await interaction.client.users.fetch(targetUserId).catch(swallow);
     if (!targetUser) {
-      await interaction.editReply({ embeds: [errorEmbed('Not Found', 'Could not find that user.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('cmd.ctxBan.notFoundTitle', loc), t('cmd.ctxBan.notFound', loc))] });
       return;
     }
 
@@ -76,7 +79,7 @@ const command: BotCommand = {
     const targetMember = await guild.members.fetch(targetUserId).catch(swallow);
 
     if (moderator && targetMember && !canModerate(moderator, targetMember)) {
-      await interaction.editReply({ embeds: [errorEmbed('Hierarchy Error', 'You cannot ban a member with a higher or equal role.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('cmd.ctxBan.hierarchyTitle', loc), t('cmd.ctxBan.hierarchyUser', loc))] });
       return;
     }
 
@@ -100,7 +103,7 @@ const command: BotCommand = {
 
     await targetUser.send({
       embeds: [moderationEmbed({
-        action: `Banned from ${guild.name}`,
+        action: t('cmd.ctxBan.dmAction', loc, { guild: guild.name }),
         user: targetUser.tag,
         moderator: interaction.user.tag,
         reason,
@@ -119,7 +122,7 @@ const command: BotCommand = {
 
     await interaction.editReply({
       embeds: [moderationEmbed({
-        action: 'Ban',
+        action: t('cmd.ctxBan.action', loc),
         user: `${targetUser.tag} (${targetUser.id})`,
         moderator: interaction.user.tag,
         reason,

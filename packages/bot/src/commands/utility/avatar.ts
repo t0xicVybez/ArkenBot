@@ -13,6 +13,7 @@ import {
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { COLORS } from '@arkenbot/shared';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 
 const command: BotCommand = {
   data: new SlashCommandBuilder()
@@ -24,19 +25,20 @@ const command: BotCommand = {
   category: 'utility',
 
   async execute(interaction: ChatInputCommandInteraction, _client: BotClient) {
+    const loc = await resolveUserLocale(interaction);
     const targetUser = interaction.options.getUser('user') ?? interaction.user;
 
     const avatarUrl = targetUser.displayAvatarURL({ size: 4096, extension: 'png' });
 
     const embed = new EmbedBuilder()
       .setColor(COLORS.INFO)
-      .setTitle(`${targetUser.tag}'s Avatar`)
+      .setTitle(t('cmd.avatar.title', loc, { user: targetUser.tag }))
       .setImage(avatarUrl)
-      .setFooter({ text: `User ID: ${targetUser.id}` });
+      .setFooter({ text: t('cmd.avatar.footer', loc, { id: targetUser.id }) });
 
     const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
       new ButtonBuilder()
-        .setLabel('Open in Browser')
+        .setLabel(t('cmd.avatar.openBrowser', loc))
         .setStyle(ButtonStyle.Link)
         .setURL(avatarUrl),
       new ButtonBuilder()

@@ -11,6 +11,7 @@ import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { prisma } from '../../database.js';
 import { successEmbed, errorEmbed } from '../../utils/embed.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 import { generateRankCard } from '../../utils/rankCard.js';
 import { xpForLevel } from '@arkenbot/shared';
 
@@ -47,19 +48,20 @@ const command: BotCommand = {
 
   async execute(interaction: ChatInputCommandInteraction, _client: BotClient) {
     await interaction.deferReply({ ephemeral: true });
+    const loc = await resolveUserLocale(interaction);
 
     const sub = interaction.options.getSubcommand();
 
     if (sub === 'reset') {
       await prisma.userRankCardStyle.deleteMany({ where: { userId: interaction.user.id } });
-      await interaction.editReply({ embeds: [successEmbed('Reset', 'Your rank card has been reset to the default style.')] });
+      await interaction.editReply({ embeds: [successEmbed(t('cmd.rankcard.resetTitle', loc), t('cmd.rankcard.reset', loc))] });
       return;
     }
 
     if (sub === 'color') {
       const hex = interaction.options.getString('hex', true).trim();
       if (!HEX_RE.test(hex)) {
-        await interaction.editReply({ embeds: [errorEmbed('Invalid Color', 'Please provide a valid hex color code, e.g. `#ff5733` or `#f53`.')] });
+        await interaction.editReply({ embeds: [errorEmbed(t('cmd.rankcard.invalidColorTitle', loc), t('cmd.rankcard.invalidColor', loc))] });
         return;
       }
       await prisma.userRankCardStyle.upsert({
@@ -67,14 +69,14 @@ const command: BotCommand = {
         update: { accentColor: hex },
         create: { userId: interaction.user.id, accentColor: hex },
       });
-      await interaction.editReply({ embeds: [successEmbed('Color Updated', `Your rank card accent colour has been set to \`${hex}\`.`)] });
+      await interaction.editReply({ embeds: [successEmbed(t('cmd.rankcard.colorUpdatedTitle', loc), t('cmd.rankcard.colorUpdated', loc, { hex }))] });
       return;
     }
 
     if (sub === 'background') {
       const url = interaction.options.getString('url', true).trim();
       if (!URL_RE.test(url)) {
-        await interaction.editReply({ embeds: [errorEmbed('Invalid URL', 'Please provide a direct image URL ending in `.png`, `.jpg`, `.gif`, or `.webp`.')] });
+        await interaction.editReply({ embeds: [errorEmbed(t('cmd.rankcard.invalidUrlTitle', loc), t('cmd.rankcard.invalidUrl', loc))] });
         return;
       }
       await prisma.userRankCardStyle.upsert({
@@ -82,13 +84,13 @@ const command: BotCommand = {
         update: { backgroundUrl: url },
         create: { userId: interaction.user.id, backgroundUrl: url },
       });
-      await interaction.editReply({ embeds: [successEmbed('Background Updated', 'Your rank card background has been updated. Use `/rank` to see it.')] });
+      await interaction.editReply({ embeds: [successEmbed(t('cmd.rankcard.bgUpdatedTitle', loc), t('cmd.rankcard.bgUpdated', loc))] });
       return;
     }
 
     if (sub === 'preview') {
       if (!interaction.guild) {
-        await interaction.editReply({ embeds: [errorEmbed('Error', 'Use this command in a server.')] });
+        await interaction.editReply({ embeds: [errorEmbed(t('common.error', loc), t('cmd.rankcard.notInServer', loc))] });
         return;
       }
 
@@ -123,7 +125,7 @@ const command: BotCommand = {
       });
 
       const attachment = new AttachmentBuilder(cardBuffer, { name: 'preview.png' });
-      await interaction.editReply({ content: 'Here is a preview of your rank card:', files: [attachment] });
+      await interaction.editReply({ content: t('cmd.rankcard.previewContent', loc), files: [attachment] });
     }
   },
 };

@@ -8,6 +8,7 @@
 import { type GuildMember, type ButtonInteraction, type TextChannel, type Guild, type Message, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, MessageFlags } from 'discord.js';
 import { getGuildSettings } from '../../utils/settings.js';
 import { logger, swallow} from '../../logger.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 
 interface VerificationConfig {
   enabled: boolean;
@@ -30,11 +31,12 @@ export class VerificationModule {
         await member.roles.add(pendingRole, 'Verification: pending role assigned on join').catch(swallow);
       }
 
+      const loc = await resolveUserLocale({ user: member.user, guildId: member.guild.id, guildLocale: member.guild.preferredLocale });
       const channel = member.guild.channels.cache.get(config.verifyChannelId);
-      const channelName = channel?.isTextBased() ? `#${(channel as TextChannel).name}` : 'the verify channel';
+      const channelName = channel?.isTextBased() ? `#${(channel as TextChannel).name}` : t('verification.verifyChannelFallback', loc);
 
       await member.send(
-        `Welcome to **${member.guild.name}**! Please click the Verify button in ${channelName} to gain access.`
+        t('verification.dmWelcome', loc, { server: member.guild.name, channel: channelName })
       ).catch(swallow);
     } catch (err) {
       logger.error({ err, guildId: member.guild.id, userId: member.id }, 'VerificationModule.handleJoin error');
@@ -43,8 +45,9 @@ export class VerificationModule {
 
   static async handleVerifyButton(interaction: ButtonInteraction): Promise<void> {
     if (interaction.customId !== 'verify:confirm') return;
+    const loc = await resolveUserLocale(interaction);
     if (!interaction.guild || !interaction.member) {
-      await interaction.reply({ content: 'This button can only be used in a server.', flags: MessageFlags.Ephemeral });
+      await interaction.reply({ content: t('verification.serverOnly', loc), flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -54,13 +57,13 @@ export class VerificationModule {
       const config = extended.verification as Partial<VerificationConfig> | undefined;
 
       if (!config?.enabled) {
-        await interaction.reply({ content: 'Verification is not configured on this server.', flags: MessageFlags.Ephemeral });
+        await interaction.reply({ content: t('verification.notConfigured', loc), flags: MessageFlags.Ephemeral });
         return;
       }
 
       const member = await interaction.guild.members.fetch(interaction.user.id).catch(swallow);
       if (!member) {
-        await interaction.reply({ content: 'Could not fetch your member data.', flags: MessageFlags.Ephemeral });
+        await interaction.reply({ content: t('verification.fetchFailed', loc), flags: MessageFlags.Ephemeral });
         return;
       }
 
@@ -71,25 +74,26 @@ export class VerificationModule {
         await member.roles.add(config.memberRoleId, 'Verification complete').catch(swallow);
       }
 
-      await interaction.reply({ content: '✅ Verified! Welcome to the server.', flags: MessageFlags.Ephemeral });
+      await interaction.reply({ content: t('verification.verified', loc), flags: MessageFlags.Ephemeral });
     } catch (err) {
       logger.error({ err }, 'VerificationModule.handleVerifyButton error');
-      await interaction.reply({ content: 'An error occurred during verification.', flags: MessageFlags.Ephemeral }).catch(swallow);
+      await interaction.reply({ content: t('verification.error', loc), flags: MessageFlags.Ephemeral }).catch(swallow);
     }
   }
 
   static async sendVerifyPanel(channel: TextChannel, guild: Guild): Promise<Message> {
+    const loc = await resolveUserLocale({ user: { id: '' }, guildId: guild.id, guildLocale: guild.preferredLocale });
     const embed = new EmbedBuilder()
       .setColor(0x5865f2)
-      .setTitle('✅ Verify Your Account')
-      .setDescription('Click the button below to verify yourself and gain access to the server.')
+      .setTitle(t('verification.panelTitle', loc))
+      .setDescription(t('verification.panelDescription', loc))
       .setFooter({ text: guild.name, iconURL: guild.iconURL() ?? undefined })
       .setTimestamp();
 
     const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
       new ButtonBuilder()
         .setCustomId('verify:confirm')
-        .setLabel('Verify')
+        .setLabel(t('verification.buttonLabel', loc))
         .setStyle(ButtonStyle.Success)
         .setEmoji('✅'),
     );

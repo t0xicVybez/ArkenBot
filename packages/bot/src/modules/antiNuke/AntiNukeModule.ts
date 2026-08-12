@@ -11,6 +11,7 @@ import { type Guild, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 import { redis } from '../../redis.js';
 import { getGuildSettings } from '../../utils/settings.js';
 import { logger, swallow} from '../../logger.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 
 type ActionType = 'channelDelete' | 'roleDelete' | 'ban' | 'kick';
 
@@ -72,6 +73,7 @@ export class AntiNukeModule {
 
   static async punish(guild: Guild, userId: string, actionType: ActionType, config: AntiNukeConfig): Promise<void> {
     try {
+      const loc = await resolveUserLocale({ user: { id: '' }, guildId: guild.id, guildLocale: guild.preferredLocale });
       const member = guild.members.cache.get(userId) ?? await guild.members.fetch(userId).catch(swallow);
 
       // Remove all roles from the offender
@@ -88,8 +90,8 @@ export class AntiNukeModule {
       );
       const dmEmbed = new EmbedBuilder()
         .setColor(0xff0000)
-        .setTitle('🚨 Anti-Nuke Alert')
-        .setDescription(`User <@${userId}> exceeded the **${actionType}** threshold in **${guild.name}** and has been de-opped.`)
+        .setTitle(t('antiNuke.alertTitle', loc))
+        .setDescription(t('antiNuke.alertDescription', loc, { user: `<@${userId}>`, action: actionType, server: guild.name }))
         .setTimestamp();
 
       for (const [, admin] of adminMembers) {
@@ -109,11 +111,11 @@ export class AntiNukeModule {
         if (alertChannel?.isTextBased() && 'send' in alertChannel) {
           const alertEmbed = new EmbedBuilder()
             .setColor(0xff0000)
-            .setTitle('🚨 Anti-Nuke Triggered')
-            .setDescription(`<@${userId}> was punished for exceeding the **${actionType}** action threshold.`)
+            .setTitle(t('antiNuke.triggeredTitle', loc))
+            .setDescription(t('antiNuke.triggeredDescription', loc, { user: `<@${userId}>`, action: actionType }))
             .addFields(
-              { name: 'Action Taken', value: config.action === 'deop' ? 'De-opped (roles removed)' : config.action, inline: true },
-              { name: 'Trigger', value: actionType, inline: true },
+              { name: t('antiNuke.actionTaken', loc), value: config.action === 'deop' ? t('antiNuke.deopped', loc) : config.action, inline: true },
+              { name: t('antiNuke.trigger', loc), value: actionType, inline: true },
             )
             .setTimestamp();
           await (alertChannel as import('discord.js').TextChannel).send({ embeds: [alertEmbed] }).catch(swallow);

@@ -11,6 +11,7 @@ import {
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { COLORS } from '@arkenbot/shared';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 
 import { swallow } from '../../logger.js';
 const command: BotCommand = {
@@ -23,10 +24,11 @@ const command: BotCommand = {
   category: 'utility',
 
   async execute(interaction: ChatInputCommandInteraction, _client: BotClient) {
+    const loc = await resolveUserLocale(interaction);
     const targetUser = interaction.options.getUser('user') ?? interaction.user;
 
     if (!interaction.guild) {
-      await interaction.reply({ content: 'This command must be used in a server.', flags: MessageFlags.Ephemeral });
+      await interaction.reply({ content: t('common.notInServer', loc), flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -37,10 +39,10 @@ const command: BotCommand = {
       .setTitle(targetUser.tag)
       .setThumbnail(targetUser.displayAvatarURL({ size: 256 }))
       .addFields(
-        { name: '🆔 ID', value: targetUser.id, inline: true },
-        { name: '🤖 Bot', value: targetUser.bot ? 'Yes' : 'No', inline: true },
+        { name: t('cmd.userinfo.fieldId', loc), value: targetUser.id, inline: true },
+        { name: t('cmd.userinfo.fieldBot', loc), value: targetUser.bot ? t('cmd.userinfo.yes', loc) : t('cmd.userinfo.no', loc), inline: true },
         {
-          name: '📅 Account Created',
+          name: t('cmd.userinfo.fieldCreated', loc),
           value: `<t:${Math.floor(targetUser.createdTimestamp / 1000)}:D>`,
           inline: true,
         },
@@ -54,23 +56,23 @@ const command: BotCommand = {
         .slice(0, 10);
 
       embed.addFields(
-        { name: '🏷️ Nickname', value: member.nickname ?? 'None', inline: true },
+        { name: t('cmd.userinfo.fieldNickname', loc), value: member.nickname ?? t('cmd.userinfo.none', loc), inline: true },
         {
-          name: '📥 Joined Server',
+          name: t('cmd.userinfo.fieldJoined', loc),
           value: member.joinedTimestamp
             ? `<t:${Math.floor(member.joinedTimestamp / 1000)}:D>`
-            : 'Unknown',
+            : t('cmd.userinfo.unknown', loc),
           inline: true,
         },
         {
-          name: `🎭 Roles (${member.roles.cache.size - 1})`,
-          value: roles.length > 0 ? roles.join(', ') : 'None',
+          name: t('cmd.userinfo.fieldRoles', loc, { count: member.roles.cache.size - 1 }),
+          value: roles.length > 0 ? roles.join(', ') : t('cmd.userinfo.none', loc),
         },
       );
 
       if (member.premiumSince) {
         embed.addFields({
-          name: '💎 Boosting Since',
+          name: t('cmd.userinfo.fieldBoosting', loc),
           value: `<t:${Math.floor(member.premiumSinceTimestamp! / 1000)}:D>`,
           inline: true,
         });

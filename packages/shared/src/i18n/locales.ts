@@ -13,39 +13,23 @@ export interface LocaleInfo {
   native: string;
 }
 
+// Only fully-translated locales are listed here so language pickers never offer
+// a locale that would render mostly in English. `resolveLocale` still maps any
+// Discord locale (e.g. `tr`, `nl`) to the closest supported one — falling back
+// to en-US — so auto-detect degrades gracefully for everyone else. Add a locale
+// back here once its bot + web catalogs are complete.
 export const LOCALES: readonly LocaleInfo[] = [
   { code: 'en-US', name: 'English (US)', native: 'English (US)' },
-  { code: 'en-GB', name: 'English (UK)', native: 'English (UK)' },
-  { code: 'bg', name: 'Bulgarian', native: 'български' },
   { code: 'zh-CN', name: 'Chinese (Simplified)', native: '中文' },
-  { code: 'zh-TW', name: 'Chinese (Traditional)', native: '繁體中文' },
-  { code: 'hr', name: 'Croatian', native: 'Hrvatski' },
-  { code: 'cs', name: 'Czech', native: 'Čeština' },
-  { code: 'da', name: 'Danish', native: 'Dansk' },
-  { code: 'nl', name: 'Dutch', native: 'Nederlands' },
-  { code: 'fi', name: 'Finnish', native: 'Suomi' },
   { code: 'fr', name: 'French', native: 'Français' },
   { code: 'de', name: 'German', native: 'Deutsch' },
-  { code: 'el', name: 'Greek', native: 'Ελληνικά' },
-  { code: 'hi', name: 'Hindi', native: 'हिन्दी' },
-  { code: 'hu', name: 'Hungarian', native: 'Magyar' },
-  { code: 'id', name: 'Indonesian', native: 'Bahasa Indonesia' },
   { code: 'it', name: 'Italian', native: 'Italiano' },
   { code: 'ja', name: 'Japanese', native: '日本語' },
   { code: 'ko', name: 'Korean', native: '한국어' },
-  { code: 'lt', name: 'Lithuanian', native: 'Lietuvių' },
-  { code: 'no', name: 'Norwegian', native: 'Norsk' },
   { code: 'pl', name: 'Polish', native: 'Polski' },
   { code: 'pt-BR', name: 'Portuguese (Brazil)', native: 'Português do Brasil' },
-  { code: 'ro', name: 'Romanian', native: 'Română' },
   { code: 'ru', name: 'Russian', native: 'Русский' },
   { code: 'es-ES', name: 'Spanish', native: 'Español' },
-  { code: 'es-419', name: 'Spanish (LATAM)', native: 'Español (Latinoamérica)' },
-  { code: 'sv-SE', name: 'Swedish', native: 'Svenska' },
-  { code: 'th', name: 'Thai', native: 'ไทย' },
-  { code: 'tr', name: 'Turkish', native: 'Türkçe' },
-  { code: 'uk', name: 'Ukrainian', native: 'Українська' },
-  { code: 'vi', name: 'Vietnamese', native: 'Tiếng Việt' },
 ] as const;
 
 /** The default/base locale — the source language all translations derive from. */

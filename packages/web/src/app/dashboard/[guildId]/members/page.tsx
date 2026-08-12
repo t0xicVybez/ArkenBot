@@ -5,9 +5,11 @@ import { useQuery } from '@tanstack/react-query';
 import { membersApi, guildsApi } from '@/lib/api';
 import { Users } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 export default function MembersPage() {
   const { guildId } = useParams() as { guildId: string };
+  const t = useTranslations('members');
   const [search, setSearch] = useState('');
 
   const { data: membersRes, isLoading } = useQuery({
@@ -29,8 +31,8 @@ export default function MembersPage() {
       <div className="page-head">
         <div className="page-head-icon"><Users className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>Members</h1>
-          <div className="page-head-desc">Search and view tracked members</div>
+          <h1>{t('title')}</h1>
+          <div className="page-head-desc">{t('description')}</div>
         </div>
       </div>
 
@@ -38,7 +40,7 @@ export default function MembersPage() {
         <input
           type="text"
           className="input max-w-sm"
-          placeholder="Search by username..."
+          placeholder={t('searchPlaceholder')}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -49,9 +51,9 @@ export default function MembersPage() {
         <table className="w-full min-w-[500px]">
           <thead className="bg-[var(--bg-base)]">
             <tr>
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">User</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Level</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">XP</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colUser')}</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colLevel')}</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colXp')}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[var(--border-subtle)]">
@@ -66,7 +68,7 @@ export default function MembersPage() {
             ) : members.length === 0 ? (
               <tr>
                 <td colSpan={3} className="px-4 py-12 text-center text-gray-500">
-                  {search ? 'No members found matching your search.' : 'No members tracked yet.'}
+                  {search ? t('noneMatching') : t('noneTracked')}
                 </td>
               </tr>
             ) : (
@@ -79,10 +81,10 @@ export default function MembersPage() {
                     </div>
                   </td>
                   <td className="px-4 py-3">
-                    <span className="badge badge-info">Lv. {m.level}</span>
+                    <span className="badge badge-info">{t('levelBadge', { level: m.level })}</span>
                   </td>
                   <td className="px-4 py-3 text-sm text-gray-400">
-                    {m.xp.toLocaleString()} XP
+                    {t('xpValue', { xp: m.xp.toLocaleString() })}
                   </td>
                 </tr>
               ))
@@ -94,7 +96,7 @@ export default function MembersPage() {
 
       {roles.length > 0 && (
         <div className="mt-6 card">
-          <h3 className="text-sm font-medium text-gray-400 mb-3">Available Roles</h3>
+          <h3 className="text-sm font-medium text-gray-400 mb-3">{t('availableRoles')}</h3>
           <div className="flex flex-wrap gap-2">
             {roles.filter((r) => r.name !== '@everyone').map((r) => (
               <span key={r.id} className="badge badge-info text-xs">{r.name}</span>

@@ -53,6 +53,7 @@ import {
   Search,
   type LucideIcon,
 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useAuth } from '@/lib/auth';
 import { authApi } from '@/lib/api';
 import { useState, useEffect } from 'react';
@@ -67,89 +68,91 @@ interface SidebarProps {
   onClose?: () => void;
 }
 
-interface NavItem { href: string; label: string; icon: LucideIcon }
-interface NavSection { label?: string; items: NavItem[] }
+interface NavItem { href: string; key: string; icon: LucideIcon }
+interface NavSection { labelKey?: string; items: NavItem[] }
 
 /**
  * Builds the sidebar navigation tree for a guild.
  * Addon sections are only included when the corresponding addon is installed.
+ * `key` on each item resolves against the `pages` message namespace, and
+ * `labelKey` on a section resolves against the `sections` namespace.
  */
 const buildNavSections = (guildId: string, installedAddons: string[]): NavSection[] => {
   const addonItems = [
-    { href: `/dashboard/${guildId}/tickets`, label: 'Tickets', icon: Ticket, addon: 'tickets' },
-    { href: `/dashboard/${guildId}/counting`, label: 'Counting', icon: Hash, addon: 'counting' },
-    { href: `/dashboard/${guildId}/applications`, label: 'Applications', icon: ClipboardList, addon: 'applications' },
+    { href: `/dashboard/${guildId}/tickets`, key: 'tickets', icon: Ticket, addon: 'tickets' },
+    { href: `/dashboard/${guildId}/counting`, key: 'counting', icon: Hash, addon: 'counting' },
+    { href: `/dashboard/${guildId}/applications`, key: 'applications', icon: ClipboardList, addon: 'applications' },
   ].filter((item) => installedAddons.includes(item.addon));
 
   return [
     {
       items: [
-        { href: `/dashboard/${guildId}`, label: 'Overview', icon: LayoutDashboard },
-        { href: `/dashboard/${guildId}/setup`, label: 'Setup Wizard', icon: ShieldCheck },
-        { href: `/dashboard/${guildId}/analytics`, label: 'Analytics', icon: LineChart },
+        { href: `/dashboard/${guildId}`, key: 'overview', icon: LayoutDashboard },
+        { href: `/dashboard/${guildId}/setup`, key: 'setup', icon: ShieldCheck },
+        { href: `/dashboard/${guildId}/analytics`, key: 'analytics', icon: LineChart },
       ],
     },
     {
-      label: 'Moderation',
+      labelKey: 'moderation',
       items: [
-        { href: `/dashboard/${guildId}/moderation`, label: 'Moderation', icon: Shield },
-        { href: `/dashboard/${guildId}/automod`, label: 'Auto-Mod', icon: Bot },
-        { href: `/dashboard/${guildId}/slowmode`, label: 'Auto-Slowmode', icon: Timer },
-        { href: `/dashboard/${guildId}/anti-nuke`, label: 'Anti-Nuke', icon: ShieldAlert },
-        { href: `/dashboard/${guildId}/verification`, label: 'Verification Gate', icon: ShieldCheck },
-        { href: `/dashboard/${guildId}/reports`, label: 'Reports', icon: Flag },
+        { href: `/dashboard/${guildId}/moderation`, key: 'moderation', icon: Shield },
+        { href: `/dashboard/${guildId}/automod`, key: 'automod', icon: Bot },
+        { href: `/dashboard/${guildId}/slowmode`, key: 'slowmode', icon: Timer },
+        { href: `/dashboard/${guildId}/anti-nuke`, key: 'anti-nuke', icon: ShieldAlert },
+        { href: `/dashboard/${guildId}/verification`, key: 'verification', icon: ShieldCheck },
+        { href: `/dashboard/${guildId}/reports`, key: 'reports', icon: Flag },
       ],
     },
     {
-      label: 'Community',
+      labelKey: 'community',
       items: [
-        { href: `/dashboard/${guildId}/leveling`, label: 'Leveling', icon: TrendingUp },
-        { href: `/dashboard/${guildId}/leaderboard`, label: 'Leaderboard', icon: BarChart },
-        { href: `/dashboard/${guildId}/welcome`, label: 'Welcome', icon: MessageSquare },
-        { href: `/dashboard/${guildId}/reaction-roles`, label: 'Reaction Roles', icon: Smile },
-        { href: `/dashboard/${guildId}/self-roles`, label: 'Self-Roles', icon: UserCheck },
-        { href: `/dashboard/${guildId}/birthdays`, label: 'Birthdays', icon: Cake },
-        { href: `/dashboard/${guildId}/polls`, label: 'Polls', icon: BarChart },
-        { href: `/dashboard/${guildId}/suggestions`, label: 'Suggestions', icon: MessageSquarePlus },
-        { href: `/dashboard/${guildId}/giveaways`, label: 'Giveaways', icon: Gift },
-        { href: `/dashboard/${guildId}/starboard`, label: 'Starboard', icon: Star },
-        { href: `/dashboard/${guildId}/members`, label: 'Members', icon: Users },
-        { href: `/dashboard/${guildId}/invite-tracker`, label: 'Invite Tracker', icon: UserPlus },
-        { href: `/dashboard/${guildId}/voting`, label: 'Vote Rewards', icon: ThumbsUp },
+        { href: `/dashboard/${guildId}/leveling`, key: 'leveling', icon: TrendingUp },
+        { href: `/dashboard/${guildId}/leaderboard`, key: 'leaderboard', icon: BarChart },
+        { href: `/dashboard/${guildId}/welcome`, key: 'welcome', icon: MessageSquare },
+        { href: `/dashboard/${guildId}/reaction-roles`, key: 'reaction-roles', icon: Smile },
+        { href: `/dashboard/${guildId}/self-roles`, key: 'self-roles', icon: UserCheck },
+        { href: `/dashboard/${guildId}/birthdays`, key: 'birthdays', icon: Cake },
+        { href: `/dashboard/${guildId}/polls`, key: 'polls', icon: BarChart },
+        { href: `/dashboard/${guildId}/suggestions`, key: 'suggestions', icon: MessageSquarePlus },
+        { href: `/dashboard/${guildId}/giveaways`, key: 'giveaways', icon: Gift },
+        { href: `/dashboard/${guildId}/starboard`, key: 'starboard', icon: Star },
+        { href: `/dashboard/${guildId}/members`, key: 'members', icon: Users },
+        { href: `/dashboard/${guildId}/invite-tracker`, key: 'invite-tracker', icon: UserPlus },
+        { href: `/dashboard/${guildId}/voting`, key: 'voting', icon: ThumbsUp },
       ],
     },
     {
-      label: 'Content & Tools',
+      labelKey: 'contentTools',
       items: [
-        { href: `/dashboard/${guildId}/music`, label: 'Music', icon: Music },
-        { href: `/dashboard/${guildId}/stats-channels`, label: 'Stats Channels', icon: BarChart2 },
-        { href: `/dashboard/${guildId}/embeds`, label: 'Embed Builder', icon: Layout },
-        { href: `/dashboard/${guildId}/scheduled-messages`, label: 'Scheduled Messages', icon: Clock },
-        { href: `/dashboard/${guildId}/temp-voice`, label: 'Temp Voice', icon: Mic },
-        { href: `/dashboard/${guildId}/commands`, label: 'Commands', icon: Terminal },
-        { href: `/dashboard/${guildId}/forum-management`, label: 'Forum Management', icon: MessagesSquare },
+        { href: `/dashboard/${guildId}/music`, key: 'music', icon: Music },
+        { href: `/dashboard/${guildId}/stats-channels`, key: 'stats-channels', icon: BarChart2 },
+        { href: `/dashboard/${guildId}/embeds`, key: 'embeds', icon: Layout },
+        { href: `/dashboard/${guildId}/scheduled-messages`, key: 'scheduled-messages', icon: Clock },
+        { href: `/dashboard/${guildId}/temp-voice`, key: 'temp-voice', icon: Mic },
+        { href: `/dashboard/${guildId}/commands`, key: 'commands', icon: Terminal },
+        { href: `/dashboard/${guildId}/forum-management`, key: 'forum-management', icon: MessagesSquare },
       ],
     },
     {
-      label: 'Integrations',
+      labelKey: 'integrations',
       items: [
-        { href: `/dashboard/${guildId}/stream-alerts`, label: 'Stream Alerts', icon: Radio },
-        { href: `/dashboard/${guildId}/twitter-feeds`, label: 'X / Twitter Feeds', icon: AtSign },
+        { href: `/dashboard/${guildId}/stream-alerts`, key: 'stream-alerts', icon: Radio },
+        { href: `/dashboard/${guildId}/twitter-feeds`, key: 'twitter-feeds', icon: AtSign },
         // Reddit Feeds hidden pending Reddit Data API approval — restore this line to re-enable.
-        { href: `/dashboard/${guildId}/rss-feeds`, label: 'RSS Feeds', icon: Rss },
-        { href: `/dashboard/${guildId}/monday`, label: 'Monday.com', icon: ClipboardList },
-        { href: `/dashboard/${guildId}/trello`, label: 'Trello', icon: Trello },
+        { href: `/dashboard/${guildId}/rss-feeds`, key: 'rss-feeds', icon: Rss },
+        { href: `/dashboard/${guildId}/monday`, key: 'monday', icon: ClipboardList },
+        { href: `/dashboard/${guildId}/trello`, key: 'trello', icon: Trello },
       ],
     },
-    ...(addonItems.length > 0 ? [{ label: 'Addons', items: addonItems }] : []),
+    ...(addonItems.length > 0 ? [{ labelKey: 'addons', items: addonItems }] : []),
     {
-      label: 'System',
+      labelKey: 'system',
       items: [
-        { href: `/dashboard/${guildId}/logs`, label: 'Logs', icon: FileText },
-        { href: `/dashboard/${guildId}/audit-log`, label: 'Audit Log', icon: History },
-        { href: `/dashboard/${guildId}/announcements`, label: 'Announcements', icon: Megaphone },
-        { href: `/dashboard/${guildId}/addons`, label: 'Addon Manager', icon: Puzzle },
-        { href: `/dashboard/${guildId}/settings`, label: 'Settings', icon: Settings },
+        { href: `/dashboard/${guildId}/logs`, key: 'logs', icon: FileText },
+        { href: `/dashboard/${guildId}/audit-log`, key: 'audit-log', icon: History },
+        { href: `/dashboard/${guildId}/announcements`, key: 'announcements', icon: Megaphone },
+        { href: `/dashboard/${guildId}/addons`, key: 'addons', icon: Puzzle },
+        { href: `/dashboard/${guildId}/settings`, key: 'settings', icon: Settings },
       ],
     },
   ];
@@ -175,6 +178,9 @@ function loadCollapsed(): Record<string, boolean> {
 export function Sidebar({ guildId, guildName, guildIcon, memberCount, installedAddons = [], open = false, onClose }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const t = useTranslations('sidebar');
+  const tp = useTranslations('pages');
+  const ts = useTranslations('sections');
   const { user, logout } = useAuth();
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   const [pins, setPins] = useState<string[]>([]);
@@ -235,7 +241,7 @@ export function Sidebar({ guildId, guildName, guildIcon, memberCount, installedA
             <Link
               href="/dashboard"
               onClick={handleNavClick}
-              title="Switch server"
+              title={t('switchServer')}
               className="flex items-center gap-2.5 flex-1 min-w-0 p-2.5 rounded-[10px] bg-[var(--bg-card)] border border-[var(--border-subtle)] hover:border-[var(--border)] transition-colors"
             >
               {guildIcon ? (
@@ -251,10 +257,10 @@ export function Sidebar({ guildId, guildName, guildIcon, memberCount, installedA
               )}
               <div className="flex-1 min-w-0">
                 <p className="text-white font-bold text-[13px] truncate leading-tight tracking-tight">
-                  {guildName ?? 'Dashboard'}
+                  {guildName ?? t('dashboardFallback')}
                 </p>
                 <p className="text-[var(--text-muted)] text-[11px] truncate">
-                  {memberCount ? `${memberCount.toLocaleString()} members` : 'Server settings'}
+                  {memberCount ? t('memberCount', { count: memberCount }) : t('serverSettings')}
                 </p>
               </div>
               <ChevronDown className="w-3 h-3 text-[var(--text-muted)] flex-shrink-0" />
@@ -272,7 +278,7 @@ export function Sidebar({ guildId, guildName, guildIcon, memberCount, installedA
             className="mt-2 mb-1.5 w-full flex items-center gap-2 px-2.5 py-[7px] rounded-[9px] border border-[var(--border-subtle)] bg-white/[0.02] text-[12.5px] text-[var(--text-muted)] hover:border-[var(--accent)]/40 hover:text-[var(--text-secondary)] transition-colors"
           >
             <Search className="w-3 h-3" />
-            Search…
+            {t('search')}
             <kbd className="ml-auto text-[10px] font-mono border border-[var(--border)] rounded-[5px] px-1.5 py-px">Ctrl K</kbd>
           </button>
         </div>
@@ -281,7 +287,7 @@ export function Sidebar({ guildId, guildName, guildIcon, memberCount, installedA
         <nav className="flex-1 px-2 py-2 overflow-y-auto space-y-0.5">
           {pins.length > 0 && (
             <div className="mb-3">
-              <p className="section-title px-2 mb-1 select-none">★ Pinned</p>
+              <p className="section-title px-2 mb-1 select-none">★ {t('pinned')}</p>
               {sections.flatMap((s) => s.items).filter((i) => pins.includes(i.href)).map((item) => {
                 const Icon = item.icon;
                 const isActive = pathname === item.href;
@@ -289,12 +295,12 @@ export function Sidebar({ guildId, guildName, guildIcon, memberCount, installedA
                   <div key={`pin-${item.href}`} className="group/nav relative">
                     <Link href={item.href} onClick={handleNavClick} className={isActive ? 'nav-item-active' : 'nav-item'}>
                       <Icon className="w-3.5 h-3.5 flex-shrink-0" />
-                      <span className="flex-1 truncate">{item.label}</span>
+                      <span className="flex-1 truncate">{tp(item.key)}</span>
                     </Link>
                     <button
                       onClick={() => togglePin(item.href)}
                       className="absolute right-2 top-1/2 -translate-y-1/2 text-[var(--warning)] opacity-0 group-hover/nav:opacity-100 transition-opacity"
-                      title="Unpin"
+                      title={t('unpin')}
                     >
                       <Star className="w-3 h-3 fill-current" />
                     </button>
@@ -304,16 +310,16 @@ export function Sidebar({ guildId, guildName, guildIcon, memberCount, installedA
             </div>
           )}
           {sections.map((section, si) => {
-            const isCollapsed = section.label ? (collapsed[section.label] ?? false) : false;
+            const isCollapsed = section.labelKey ? (collapsed[section.labelKey] ?? false) : false;
             return (
               <div key={si} className={si > 0 ? 'mt-4' : ''}>
-                {section.label && (
+                {section.labelKey && (
                   <button
-                    onClick={() => toggleSection(section.label!)}
+                    onClick={() => toggleSection(section.labelKey!)}
                     className="w-full flex items-center justify-between px-2 mb-1 group"
                   >
                     <p className="section-title group-hover:text-[var(--text-secondary)] transition-colors select-none">
-                      {section.label}
+                      {ts(section.labelKey)}
                     </p>
                     <ChevronDown className={clsx(
                       'w-3 h-3 text-[var(--text-muted)] group-hover:text-[var(--text-secondary)] transition-all',
@@ -333,14 +339,14 @@ export function Sidebar({ guildId, guildName, guildIcon, memberCount, installedA
                         className={isActive ? 'nav-item-active' : 'nav-item'}
                       >
                         <Icon className="w-3.5 h-3.5 flex-shrink-0" />
-                        <span className="flex-1 truncate">{item.label}</span>
+                        <span className="flex-1 truncate">{tp(item.key)}</span>
                       </Link>
                       <button
                         onClick={() => togglePin(item.href)}
                         className={`absolute right-2 top-1/2 -translate-y-1/2 transition-opacity ${
                           isPinned ? 'text-[var(--warning)] opacity-100' : 'text-[var(--text-muted)] opacity-0 group-hover/nav:opacity-100'
                         }`}
-                        title={isPinned ? 'Unpin' : 'Pin to top'}
+                        title={isPinned ? t('unpin') : t('pinToTop')}
                       >
                         <Star className={`w-3 h-3 ${isPinned ? 'fill-current' : ''}`} />
                       </button>
@@ -361,7 +367,7 @@ export function Sidebar({ guildId, guildName, guildIcon, memberCount, installedA
               className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] font-medium text-purple-400 hover:text-purple-300 hover:bg-purple-500/10 transition-colors w-full"
             >
               <ShieldCheck className="w-3.5 h-3.5 flex-shrink-0" />
-              <span>Staff Portal</span>
+              <span>{t('staffPortal')}</span>
             </Link>
           )}
 
@@ -382,15 +388,15 @@ export function Sidebar({ guildId, guildName, guildIcon, memberCount, installedA
                 {user?.username}
               </p>
               {user?.isBotOwner && (
-                <p className="text-[10px] text-yellow-500/80 font-medium">Owner</p>
+                <p className="text-[10px] text-yellow-500/80 font-medium">{t('owner')}</p>
               )}
               {!user?.isBotOwner && user?.isStaff && (
-                <p className="text-[10px] text-blue-400/80 font-medium">Staff</p>
+                <p className="text-[10px] text-blue-400/80 font-medium">{t('staff')}</p>
               )}
             </div>
             <button
               onClick={handleLogout}
-              title="Logout"
+              title={t('logout')}
               className="p-1.5 rounded-md text-[var(--text-muted)] hover:text-red-400 hover:bg-red-500/10 transition-colors flex-shrink-0"
             >
               <LogOut className="w-3.5 h-3.5" />

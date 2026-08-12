@@ -6,6 +6,7 @@ import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { COLORS } from '@arkenbot/shared';
 import { prisma } from '../../database.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 
 import { swallow } from '../../logger.js';
 const MEDALS = ['🥇', '🥈', '🥉'];
@@ -18,6 +19,7 @@ const command: BotCommand = {
 
   async execute(interaction: ChatInputCommandInteraction, client: BotClient) {
     await interaction.deferReply();
+    const loc = await resolveUserLocale(interaction);
 
     const voters = await prisma.topggVoter.findMany({
       orderBy: { totalVotes: 'desc' },
@@ -26,7 +28,7 @@ const command: BotCommand = {
     });
 
     if (voters.length === 0) {
-      await interaction.editReply('No votes recorded yet — be the first with `/vote`! 🗳️');
+      await interaction.editReply(t('cmd.topvoters.noVotes', loc));
       return;
     }
 
@@ -34,17 +36,17 @@ const command: BotCommand = {
       voters.map(async (v, i) => {
         const rank = MEDALS[i] ?? `**${i + 1}.**`;
         const user = await client.users.fetch(v.userId).catch(swallow);
-        const name = user ? user.username : `User ${v.userId}`;
+        const name = user ? user.username : t('cmd.topvoters.unknownUser', loc, { id: v.userId });
         const streak = v.currentStreak > 1 ? ` · ${v.currentStreak}🔥` : '';
-        return `${rank} ${name} — **${v.totalVotes}** vote${v.totalVotes === 1 ? '' : 's'}${streak}`;
+        return t('cmd.topvoters.line', loc, { rank, name, count: v.totalVotes, streak });
       }),
     );
 
     const embed = new EmbedBuilder()
       .setColor(COLORS.INFO)
-      .setTitle('🏆 Top Voters')
+      .setTitle(t('cmd.topvoters.title', loc))
       .setDescription(lines.join('\n'))
-      .setFooter({ text: `Vote with /vote · top.gg/bot/${client.user!.id}` })
+      .setFooter({ text: t('cmd.topvoters.footer', loc, { url: `top.gg/bot/${client.user!.id}` }) })
       .setTimestamp();
 
     await interaction.editReply({ embeds: [embed] });

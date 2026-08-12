@@ -7,6 +7,7 @@ import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { prisma } from '../../database.js';
 import { getGuildSettings } from '../../utils/settings.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 
 import { swallow } from '../../logger.js';
 /**
@@ -45,6 +46,7 @@ const command: BotCommand = {
 
   async execute(interaction: ChatInputCommandInteraction, _client: BotClient) {
     const sub = interaction.options.getSubcommand();
+    const loc = await resolveUserLocale(interaction);
 
     if (sub === 'start') {
       const prize = interaction.options.getString('prize', true);
@@ -53,7 +55,7 @@ const command: BotCommand = {
       const ms = parseDuration(durationStr);
 
       if (!ms || ms < 10000) {
-        await interaction.reply({ content: 'Invalid duration.', flags: 64 });
+        await interaction.reply({ content: t('cmd.giveaway.invalidDuration', loc), flags: 64 });
         return;
       }
 
@@ -67,16 +69,16 @@ const command: BotCommand = {
         ? (parseInt(guildSettings.giveawayColor.replace('#', ''), 16) as number)
         : 0xf1c40f;
 
-      let description = `**Prize:** ${prize}\n**Winners:** ${winnersCount}\n**Ends:** <t:${Math.floor(endsAt.getTime() / 1000)}:R>`;
-      if (requiredRole) description += `\n**Required Role:** <@&${requiredRole.id}>`;
-      if (bonusRole) description += `\n**Bonus Entries:** <@&${bonusRole.id}> gets +${bonusEntries} entries`;
-      description += '\n\nReact with 🎉 to enter!';
+      let description = `${t('cmd.giveaway.fieldPrize', loc, { prize })}\n${t('cmd.giveaway.fieldWinners', loc, { count: winnersCount })}\n${t('cmd.giveaway.fieldEnds', loc, { time: `<t:${Math.floor(endsAt.getTime() / 1000)}:R>` })}`;
+      if (requiredRole) description += `\n${t('cmd.giveaway.fieldRequiredRole', loc, { role: `<@&${requiredRole.id}>` })}`;
+      if (bonusRole) description += `\n${t('cmd.giveaway.fieldBonus', loc, { role: `<@&${bonusRole.id}>`, count: bonusEntries })}`;
+      description += `\n\n${t('cmd.giveaway.enterPrompt', loc)}`;
 
       const embed = new EmbedBuilder()
-        .setTitle('🎉 Giveaway!')
+        .setTitle(t('cmd.giveaway.title', loc))
         .setDescription(description)
         .setColor(giveawayColor)
-        .setFooter({ text: `${winnersCount} winner${winnersCount > 1 ? 's' : ''}` })
+        .setFooter({ text: t('cmd.giveaway.winnersFooter', loc, { count: winnersCount }) })
         .setTimestamp(endsAt);
 
       if (!interaction.channel?.isTextBased()) return;
@@ -99,48 +101,48 @@ const command: BotCommand = {
         },
       });
 
-      await interaction.reply({ content: `Giveaway started! ID: \`${giveaway.id}\``, flags: 64 });
+      await interaction.reply({ content: t('cmd.giveaway.started', loc, { id: giveaway.id }), flags: 64 });
     }
 
     if (sub === 'end') {
       const id = interaction.options.getString('id', true);
       const giveaway = await prisma.giveaway.findFirst({ where: { id, guildId: interaction.guildId! } });
       if (!giveaway) {
-        await interaction.reply({ content: 'Giveaway not found.', flags: 64 });
+        await interaction.reply({ content: t('cmd.giveaway.notFound', loc), flags: 64 });
         return;
       }
       if (giveaway.ended) {
-        await interaction.reply({ content: 'Giveaway already ended.', flags: 64 });
+        await interaction.reply({ content: t('cmd.giveaway.alreadyEnded', loc), flags: 64 });
         return;
       }
       // Setting endsAt to now triggers the next background-job cycle to process the end.
       await prisma.giveaway.update({ where: { id }, data: { endsAt: new Date() } });
-      await interaction.reply({ content: 'Giveaway will end on the next check cycle (within 1 minute).', flags: 64 });
+      await interaction.reply({ content: t('cmd.giveaway.willEnd', loc), flags: 64 });
     }
 
     if (sub === 'reroll') {
       const id = interaction.options.getString('id', true);
       const giveaway = await prisma.giveaway.findFirst({ where: { id, guildId: interaction.guildId!, ended: true } });
       if (!giveaway || !giveaway.messageId) {
-        await interaction.reply({ content: 'Giveaway not found or not yet ended.', flags: 64 });
+        await interaction.reply({ content: t('cmd.giveaway.notEnded', loc), flags: 64 });
         return;
       }
 
       const channel = interaction.guild!.channels.cache.get(giveaway.channelId);
       if (!channel?.isTextBased()) {
-        await interaction.reply({ content: 'Could not find giveaway channel.', flags: 64 });
+        await interaction.reply({ content: t('cmd.giveaway.noChannel', loc), flags: 64 });
         return;
       }
 
       const msg = await channel.messages.fetch(giveaway.messageId).catch(swallow);
       if (!msg) {
-        await interaction.reply({ content: 'Could not find giveaway message.', flags: 64 });
+        await interaction.reply({ content: t('cmd.giveaway.noMessage', loc), flags: 64 });
         return;
       }
 
       const reaction = msg.reactions.cache.get('🎉');
       if (!reaction) {
-        await interaction.reply({ content: 'No reactions found.', flags: 64 });
+        await interaction.reply({ content: t('cmd.giveaway.noReactions', loc), flags: 64 });
         return;
       }
 
@@ -153,7 +155,7 @@ const command: BotCommand = {
       }
 
       if (eligible.size === 0) {
-        await interaction.reply({ content: 'No eligible entrants.', flags: 64 });
+        await interaction.reply({ content: t('cmd.giveaway.noEligible', loc), flags: 64 });
         return;
       }
 
@@ -173,8 +175,8 @@ const command: BotCommand = {
       const winners = entries.sort(() => Math.random() - 0.5).slice(0, giveaway.winnersCount);
       const winnerMentions = winners.map(w => `<@${w.id}>`).join(', ');
 
-      await channel.send({ content: `🎉 Reroll! New winner${winners.length > 1 ? 's' : ''}: ${winnerMentions}! Congratulations on winning **${giveaway.prize}**!` });
-      await interaction.reply({ content: 'Rerolled!', flags: 64 });
+      await channel.send({ content: t('cmd.giveaway.rerollAnnounce', loc, { winners: winnerMentions, prize: giveaway.prize }) });
+      await interaction.reply({ content: t('cmd.giveaway.rerolled', loc), flags: 64 });
     }
   },
 };

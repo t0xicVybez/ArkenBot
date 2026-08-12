@@ -24,6 +24,7 @@ import { ensureGuildExists } from '../utils/settings.js';
 import { logger, swallow} from '../logger.js';
 import { pub } from '../redis.js';
 import { config } from '../config.js';
+import { t, resolveUserLocale } from '../i18n/index.js';
 
 const DASHBOARD_URL = 'https://arkenbot.app/dashboard';
 const DOCS_URL = 'https://docs.arkenbot.app/';
@@ -35,31 +36,32 @@ const SUPPORT_URL = 'https://discord.gg/fXJnYPdHRX';
  * back to the guild's system channel or the first text channel we can post in.
  */
 async function sendWelcomeMessage(guild: Guild): Promise<void> {
+  const loc = await resolveUserLocale({ user: { id: '' }, guildId: guild.id, guildLocale: guild.preferredLocale });
   const embed = new EmbedBuilder()
     .setColor(0x5865f2)
-    .setTitle('👋 Thanks for adding ArkenBot!')
-    .setDescription(`ArkenBot just joined **${guild.name}**. Here's how to get set up in a couple of minutes:`)
+    .setTitle(t('onboarding.title', loc))
+    .setDescription(t('onboarding.description', loc, { server: guild.name }))
     .addFields(
       {
-        name: '1️⃣ Configure your server',
-        value: `Log in to the [dashboard](${DASHBOARD_URL}) with Discord, select **${guild.name}**, and enable the features you want — moderation, leveling, tickets, stream alerts, and more.`,
+        name: t('onboarding.step1Name', loc),
+        value: t('onboarding.step1Value', loc, { dashboardUrl: DASHBOARD_URL, server: guild.name }),
       },
       {
-        name: '2️⃣ Set an Announcement Channel',
-        value: 'In **Dashboard → Announcements**, pick a channel to receive updates about ArkenBot — new features, changes, and important notices land there.',
+        name: t('onboarding.step2Name', loc),
+        value: t('onboarding.step2Value', loc),
       },
       {
-        name: '3️⃣ Read the docs',
-        value: `Every feature has a guide at [docs.arkenbot.app](${DOCS_URL}).`,
+        name: t('onboarding.step3Name', loc),
+        value: t('onboarding.step3Value', loc, { docsUrl: DOCS_URL }),
       },
     )
-    .setFooter({ text: 'ArkenBot — completely free, no paywalls' })
+    .setFooter({ text: t('onboarding.footer', loc) })
     .setTimestamp();
 
   const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-    new ButtonBuilder().setStyle(ButtonStyle.Link).setLabel('Open Dashboard').setURL(DASHBOARD_URL),
-    new ButtonBuilder().setStyle(ButtonStyle.Link).setLabel('Documentation').setURL(DOCS_URL),
-    new ButtonBuilder().setStyle(ButtonStyle.Link).setLabel('Support Server').setURL(SUPPORT_URL),
+    new ButtonBuilder().setStyle(ButtonStyle.Link).setLabel(t('onboarding.buttonDashboard', loc)).setURL(DASHBOARD_URL),
+    new ButtonBuilder().setStyle(ButtonStyle.Link).setLabel(t('onboarding.buttonDocs', loc)).setURL(DOCS_URL),
+    new ButtonBuilder().setStyle(ButtonStyle.Link).setLabel(t('onboarding.buttonSupport', loc)).setURL(SUPPORT_URL),
   );
 
   const payload = { embeds: [embed], components: [row] };

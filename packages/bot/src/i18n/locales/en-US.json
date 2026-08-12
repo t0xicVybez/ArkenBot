@@ -2,7 +2,9 @@
   "common": {
     "error": "Error",
     "success": "Success",
-    "notInServer": "This command must be used in a server."
+    "notInServer": "This command must be used in a server.",
+    "enabled": "enabled",
+    "disabled": "disabled"
   },
   "language": {
     "commandDescription": "Set or view the language I use when replying to you",
@@ -24,5 +26,820 @@
     "disabled": "Moderation commands are disabled for this server.",
     "cannotBanSelfTitle": "Invalid Target",
     "cannotBanSelf": "You cannot ban yourself."
+  },
+  "welcome": {
+    "title": "👋 Welcome to {server}!",
+    "accountAge": "📅 Account Age",
+    "memberCount": "👥 Member Count"
+  },
+  "leveling": {
+    "levelUp": "Level Up!",
+    "milestoneReached": "{label} Milestone Reached!",
+    "level": "Level",
+    "achievement": "Achievement",
+    "milestones": {
+      "legendary": "🏆 Legendary",
+      "diamond": "💎 Diamond",
+      "century": "🌟 Century",
+      "elite": "⚡ Elite",
+      "veteran": "🔥 Veteran",
+      "experienced": "🥇 Experienced",
+      "rising": "🥈 Rising",
+      "newcomer": "🥉 Newcomer"
+    }
+  },
+  "counting": {
+    "ruined": "❌ {user} ruined the count at **{count}**! Start again from **1**.",
+    "twiceInRow": "❌ {user} can't count twice in a row! Count reset — start again from **1**."
+  },
+  "automod": {
+    "kickedTitle": "Kicked from {server}",
+    "filterKickDM": "You were kicked from **{server}** for repeated word filter violations (violation #{count}).",
+    "filterKick": "⛔ {user} was **kicked** for repeated word filter violations (violation #{count}).",
+    "filterWarn": "⚠️ {user} Your message was removed for containing a filtered word (violation #{count}).",
+    "removed": "{user} Your message was removed: **{reason}**",
+    "reasons": {
+      "spam": "Spam detected",
+      "link": "Blocked link detected",
+      "mention": "Mention spam",
+      "caps": "Excessive caps"
+    },
+    "phishingRemoved": "⚠️ {user} — your message was removed for containing a known phishing link.",
+    "aiFlagTitle": "🤖 AI Moderation Flag",
+    "aiFlagDescription": "Flagged a message from {user} in {channel} for review.\n\n**Category:** {category} · **Severity:** {severity}\n**Why:** {reason}\n[Jump to message]({url})",
+    "aiFlagFooter": "AI-generated · review before acting"
+  },
+  "verification": {
+    "verifyChannelFallback": "the verify channel",
+    "dmWelcome": "Welcome to **{server}**! Please click the Verify button in {channel} to gain access.",
+    "serverOnly": "This button can only be used in a server.",
+    "notConfigured": "Verification is not configured on this server.",
+    "fetchFailed": "Could not fetch your member data.",
+    "verified": "✅ Verified! Welcome to the server.",
+    "error": "An error occurred during verification.",
+    "panelTitle": "✅ Verify Your Account",
+    "panelDescription": "Click the button below to verify yourself and gain access to the server.",
+    "buttonLabel": "Verify"
+  },
+  "starboard": {
+    "unknownAuthor": "Unknown",
+    "source": "Source",
+    "jumpToMessage": "[Jump to message]({url})"
+  },
+  "reactionRoles": {
+    "addOnly": " *(add only)*",
+    "removeOnly": " *(remove only)*",
+    "noRoles": "*No roles configured yet.*",
+    "footer": "{count} roles • React to assign yourself a role"
+  },
+  "antiNuke": {
+    "alertTitle": "🚨 Anti-Nuke Alert",
+    "alertDescription": "User {user} exceeded the **{action}** threshold in **{server}** and has been de-opped.",
+    "triggeredTitle": "🚨 Anti-Nuke Triggered",
+    "triggeredDescription": "{user} was punished for exceeding the **{action}** action threshold.",
+    "actionTaken": "Action Taken",
+    "deopped": "De-opped (roles removed)",
+    "trigger": "Trigger"
+  },
+  "onboarding": {
+    "title": "👋 Thanks for adding ArkenBot!",
+    "description": "ArkenBot just joined **{server}**. Here's how to get set up in a couple of minutes:",
+    "step1Name": "1️⃣ Configure your server",
+    "step1Value": "Log in to the [dashboard]({dashboardUrl}) with Discord, select **{server}**, and enable the features you want — moderation, leveling, tickets, stream alerts, and more.",
+    "step2Name": "2️⃣ Set an Announcement Channel",
+    "step2Value": "In **Dashboard → Announcements**, pick a channel to receive updates about ArkenBot — new features, changes, and important notices land there.",
+    "step3Name": "3️⃣ Read the docs",
+    "step3Value": "Every feature has a guide at [docs.arkenbot.app]({docsUrl}).",
+    "footer": "ArkenBot — completely free, no paywalls",
+    "buttonDashboard": "Open Dashboard",
+    "buttonDocs": "Documentation",
+    "buttonSupport": "Support Server"
+  },
+  "music": {
+    "playbackFailedTitle": "⚠️ Playback Failed",
+    "playbackFailedDescription": "Could not play **{title}**.\n`{reason}`",
+    "playbackFailedFooter": "Try a different search or check that yt-dlp is up to date.",
+    "nowPlayingTitle": "🎵 Now Playing",
+    "requestedBy": "Requested by",
+    "duration": "Duration"
+  },
+  "topgg": {
+    "voteReminder": "🗳️ You can vote for **{bot}** again on top.gg!\n{url}\n\n_Turn reminders off anytime with `/vote reminders:off`._"
+  },
+  "birthday": {
+    "title": "🎂 Happy Birthday!"
+  },
+  "reminders": {
+    "deliver": "{user} Reminder: {message}"
+  },
+  "giveaway": {
+    "noEntrants": "No eligible entrants",
+    "winnerLabel": "Winner",
+    "winnersLabel": "Winners",
+    "ended": "🎉 Giveaway ended! {winnerLabel}: {winners}\nPrize: **{prize}**",
+    "endedTitle": "🎉 Giveaway Ended",
+    "endedEmbed": "**Prize:** {prize}\n**{winnerLabel}:** {winners}"
+  },
+  "streamAlert": {
+    "youtubeLive": "{streamer} is live on YouTube!",
+    "twitchLive": "{streamer} is live on Twitch!",
+    "playing": "Playing",
+    "unknownGame": "Unknown",
+    "kickLive": "{streamer} is live on Kick!",
+    "twitterPosted": "{handle} posted on X",
+    "redditPostedBy": "Posted by u/{author} in r/{subreddit}",
+    "rssNewPost": "New post from **{feed}**"
+  },
+  "announcement": {
+    "author": "ArkenBot Announcements",
+    "buttonChangelog": "Full Changelog",
+    "buttonDashboard": "Dashboard",
+    "labels": {
+      "update": "Update",
+      "feature": "New Feature",
+      "maintenance": "Maintenance",
+      "hotfix": "Hotfix"
+    }
+  },
+  "logging": {
+    "user": "User",
+    "moderator": "Moderator",
+    "reason": "Reason",
+    "noReason": "No reason provided",
+    "messageDeleted": "🗑️ Message Deleted",
+    "author": "Author",
+    "channel": "Channel",
+    "content": "Content",
+    "messageEdited": "✏️ Message Edited",
+    "before": "Before",
+    "after": "After",
+    "noContent": "*No content*",
+    "memberJoined": "📥 Member Joined",
+    "accountAge": "Account Age",
+    "memberCount": "Member Count",
+    "memberLeft": "📤 Member Left",
+    "joined": "Joined",
+    "unknown": "Unknown"
+  },
+  "cmd": {
+    "kick": {
+      "cannotSelf": "You cannot kick yourself.",
+      "cannotSelfBot": "I cannot kick myself.",
+      "notFoundTitle": "Not Found",
+      "notFound": "That user is not in this server.",
+      "hierarchyTitle": "Hierarchy Error",
+      "notKickable": "I cannot kick this member.",
+      "hierarchyUser": "You cannot kick a member with a higher or equal role.",
+      "dmAction": "Kicked from {guild}",
+      "action": "Kick",
+      "failedTitle": "Failed",
+      "failed": "I could not kick that member. Check my permissions."
+    },
+    "unban": {
+      "invalidIdTitle": "Invalid ID",
+      "invalidId": "Please provide a valid Discord user ID.",
+      "notBannedTitle": "Not Banned",
+      "notBanned": "That user is not banned from this server.",
+      "successTitle": "Unbanned",
+      "success": "Successfully unbanned **{user}** ({userId})\n**Reason:** {reason}",
+      "failedTitle": "Failed",
+      "failed": "Could not unban that user."
+    },
+    "warn": {
+      "cannotSelf": "You cannot warn yourself.",
+      "notFoundTitle": "Not Found",
+      "notFound": "That user is not in this server.",
+      "hierarchyTitle": "Hierarchy Error",
+      "hierarchyUser": "You cannot warn a member with a higher or equal role.",
+      "dmAction": "Warning in {guild}",
+      "escalationMute": "Auto-muted ({count} warnings reached threshold).",
+      "escalationTimeout": "Auto-timed out for {duration}s ({count} warnings reached threshold).",
+      "escalationBan": "Auto-banned ({count} warnings reached threshold).",
+      "escalationKick": "Auto-kicked ({count} warnings reached threshold).",
+      "action": "Warning",
+      "totalWarnings": "Total Warnings"
+    },
+    "mute": {
+      "invalidDurationTitle": "Invalid Duration",
+      "invalidDuration": "Use formats like `10m`, `1h`, `1d`. Maximum is 28 days.",
+      "tooLongTitle": "Too Long",
+      "tooLong": "Discord timeout maximum is 28 days.",
+      "notFoundTitle": "Not Found",
+      "notFound": "That user is not in this server.",
+      "hierarchyTitle": "Hierarchy Error",
+      "hierarchyUser": "You cannot mute a member with a higher or equal role.",
+      "notMutable": "I cannot mute this member.",
+      "dmAction": "Muted in {guild}",
+      "action": "Mute",
+      "failedTitle": "Failed",
+      "failed": "I could not mute that member."
+    },
+    "case": {
+      "notFoundTitle": "Not Found",
+      "notFound": "Case #{number} not found.",
+      "caseLabel": "Case #{number}",
+      "fieldUser": "User",
+      "fieldModerator": "Moderator",
+      "fieldReason": "Reason",
+      "fieldStatus": "Status",
+      "fieldDate": "Date",
+      "fieldDuration": "Duration",
+      "statusActive": "🔴 Active",
+      "statusResolved": "🟢 Resolved",
+      "noOpenTitle": "No Open Cases",
+      "noOpen": "No open cases found for {user}.",
+      "closedTitle": "Cases Closed",
+      "closed": "Closed **{count}** open case(s) for {user}.\n**Reason:** {reason}"
+    },
+    "clearwarnings": {
+      "cannotSelf": "You cannot clear your own warnings.",
+      "hierarchyTitle": "Hierarchy Error",
+      "hierarchyUser": "You cannot manage warnings for a member with a higher or equal role.",
+      "noActiveTitle": "✅ No Active Warnings",
+      "noActive": "{user} has no active warnings to clear.",
+      "dmTitle": "Warnings Cleared in {guild}",
+      "dmDesc": "Your {count} active warning(s) have been cleared by a moderator.",
+      "clearedTitle": "✅ Warnings Cleared",
+      "fieldUser": "User",
+      "fieldCleared": "Cleared",
+      "clearedValue": "{count} warning(s)",
+      "fieldModerator": "Moderator",
+      "fieldReason": "Reason"
+    },
+    "warnings": {
+      "noneTitle": "✅ No Warnings",
+      "noneAll": "{user} has no warnings.",
+      "noneActive": "{user} has no active warnings.",
+      "title": "⚠️ Warnings for {user}",
+      "lineMeta": "By {moderator} on {date}",
+      "cleared": "~~(cleared)~~",
+      "footer": "Showing {count} warning(s)"
+    },
+    "note": {
+      "addedTitle": "Note Added",
+      "added": "Note `{id}` added for **{user}**.\n\n> {content}",
+      "noNotesTitle": "No Notes",
+      "noNotes": "No notes found for **{user}**.",
+      "listTitle": "📝 Notes for {user}",
+      "listFooter": "Showing {count} most recent note(s)",
+      "fieldName": "ID: `{id}` — {date} by {staff}",
+      "notFoundTitle": "Not Found",
+      "notFound": "Note not found for that user and ID.",
+      "removedTitle": "Note Removed",
+      "removed": "Note `{id}` has been deleted.",
+      "cancelledTitle": "Cancelled",
+      "cancelled": "Set `confirm: true` to clear all notes.",
+      "clearedTitle": "Notes Cleared",
+      "cleared": "Deleted **{count}** note(s) for **{user}**."
+    },
+    "ctxBan": {
+      "notFoundTitle": "Not Found",
+      "notFound": "Could not find that user.",
+      "hierarchyTitle": "Hierarchy Error",
+      "hierarchyUser": "You cannot ban a member with a higher or equal role.",
+      "dmAction": "Banned from {guild}",
+      "action": "Ban"
+    },
+    "ctxTimeout": {
+      "invalidDurationTitle": "Invalid Duration",
+      "invalidDuration": "Duration must be between 5s and 28d (e.g. 10m, 1h, 7d).",
+      "notFoundTitle": "Not Found",
+      "notFoundUser": "Could not find that user.",
+      "notInServer": "That user is not in this server.",
+      "hierarchyTitle": "Hierarchy Error",
+      "hierarchyUser": "You cannot timeout a member with a higher or equal role.",
+      "dmAction": "Timeout in {guild}",
+      "action": "Timeout"
+    },
+    "ctxWarn": {
+      "notFoundTitle": "Not Found",
+      "notFound": "Could not find that user.",
+      "hierarchyTitle": "Hierarchy Error",
+      "hierarchyUser": "You cannot warn a member with a higher or equal role.",
+      "dmAction": "Warning in {guild}",
+      "action": "Warning",
+      "totalWarnings": "Total Warnings"
+    },
+    "purge": {
+      "textOnly": "This command can only be used in text channels.",
+      "noMatch": "No messages matched the filters (messages must be under 14 days old).",
+      "bulkTextOnly": "Bulk delete is only available in text channels.",
+      "deleted": "Deleted {count} message(s)."
+    },
+    "suggestion": {
+      "notFound": "Suggestion not found.",
+      "statusApproved": "Approved",
+      "statusDenied": "Denied",
+      "statusConsidering": "Considering",
+      "footer": "{status} by {user}",
+      "result": "Suggestion {status}."
+    },
+    "temprole": {
+      "memberNotFound": "Member not found in this server.",
+      "invalidDurationTitle": "Invalid Duration",
+      "invalidDuration": "Use a format like `30m`, `2h`, `7d`. Minimum is 60 seconds.",
+      "assignedTitle": "Temp Role Assigned",
+      "assigned": "{role} assigned to {member} until {expires}.\n**Reason:** {reason}",
+      "notFoundTitle": "Not Found",
+      "notFound": "No active temp role record found for that member and role.",
+      "removedTitle": "Temp Role Removed",
+      "removed": "{role} removed from {member}.",
+      "noneTitle": "No Active Temp Roles",
+      "none": "There are no active temporary roles in this server.",
+      "listLine": "{user} → {role} — expires {expires}",
+      "listTitle": "Active Temporary Roles"
+    },
+    "verification": {
+      "enabledTitle": "Verification Gate Enabled",
+      "enabled": "Pending role: {pending}\nMember role: {member}\nVerify channel: {channel}",
+      "disabledTitle": "Verification Disabled",
+      "disabled": "The verification gate has been disabled."
+    },
+    "invites": {
+      "notInServer": "Use this command in a server.",
+      "disabledTitle": "Disabled",
+      "disabled": "Invite tracking is not enabled for this server.",
+      "title": "Invites — {user}",
+      "totalInvites": "Total Invites",
+      "bonus": "Bonus"
+    },
+    "invitetop": {
+      "notInServer": "Use this command in a server.",
+      "disabledTitle": "Disabled",
+      "disabled": "Invite tracking is not enabled for this server.",
+      "noDataTitle": "No Data",
+      "noData": "No invite data recorded yet.",
+      "line": "{prefix} {user} — **{count}** invite(s)",
+      "title": "🏆 Top Inviters — {guild}",
+      "footer": "Top {count} inviters"
+    },
+    "vote": {
+      "statusCooldown": "⏳ You can vote again {time}",
+      "statusReady": "✅ You can vote right now!",
+      "title": "🗳️ Vote on top.gg",
+      "description": "Support us with a free vote every 12 hours — it takes 10 seconds and really helps.\n\n**[▶ Vote here]({voteUrl})**\n\n{status}",
+      "yourVotes": "Your votes",
+      "currentStreak": "Current streak",
+      "streakValue": "{count} 🔥",
+      "reminders": "Reminders",
+      "on": "On",
+      "off": "Off",
+      "perkRole": "{role} role for {hours}h",
+      "perkXp": "+{xp} XP",
+      "perkWeekend": " (2× on weekends)",
+      "rewardsHere": "🎁 Rewards here",
+      "footerOn": "Reminders on — I'll DM you when you can vote again.",
+      "footerOff": "Reminders off."
+    },
+    "topvoters": {
+      "noVotes": "No votes recorded yet — be the first with `/vote`! 🗳️",
+      "unknownUser": "User {id}",
+      "line": "{rank} {name} — **{count}** vote(s){streak}",
+      "title": "🏆 Top Voters",
+      "footer": "Vote with /vote · {url}"
+    },
+    "report": {
+      "statusPending": "Pending",
+      "statusDismissed": "Dismissed",
+      "statusReviewed": "Reviewed",
+      "embedTitle": "📋 Member Report",
+      "fieldReporter": "Reporter",
+      "fieldTarget": "Target",
+      "fieldReason": "Reason",
+      "fieldStatus": "Status",
+      "fieldReviewedBy": "Reviewed By",
+      "fieldStaffNote": "Staff Note",
+      "btnDismiss": "Dismiss",
+      "btnTakeAction": "Take Action",
+      "cannotSelf": "You cannot report yourself.",
+      "submittedTitle": "Report Submitted",
+      "submitted": "Your report has been submitted to the moderation team.",
+      "notFound": "Report not found.",
+      "markedReviewed": "Report marked as reviewed."
+    },
+    "reportSetup": {
+      "title": "Report System Configured",
+      "configured": "Reports will now be sent to {channel}."
+    },
+    "startcounting": {
+      "notInServer": "Use this command in a server.",
+      "notConfiguredTitle": "Not Configured",
+      "notConfigured": "The Counting addon is not installed or has no channel set. Configure it in the dashboard first.",
+      "channelNotFoundTitle": "Channel Not Found",
+      "channelNotFound": "The configured counting channel no longer exists.",
+      "title": "🔢 Counting Game",
+      "description": "The counting game has begun! Start counting from **1** and see how high we can go.\n\nCount one number at a time — whoever goes next must send the next number in the sequence.",
+      "fieldCurrentCount": "Current Count",
+      "fieldBestCount": "Best Count",
+      "fieldResetOnFail": "Reset on Fail",
+      "fieldSameUser": "Same User Twice",
+      "yes": "Yes",
+      "no": "No",
+      "footer": "Start at {start}",
+      "posted": "Announcement posted in {channel}!"
+    },
+    "givexp": {
+      "disabledTitle": "Leveling Disabled",
+      "disabled": "The leveling system is disabled for this server.",
+      "invalidUserTitle": "Invalid User",
+      "botTarget": "You cannot give XP to a bot.",
+      "levelUp": "They leveled up from **{old}** → **{new}**!",
+      "title": "XP Given",
+      "description": "Gave **{amount} XP** to {user}.",
+      "fieldBefore": "Before",
+      "fieldAfter": "After",
+      "statValue": "{xp} XP (Level {level})"
+    },
+    "removexp": {
+      "disabledTitle": "Leveling Disabled",
+      "disabled": "The leveling system is disabled for this server.",
+      "invalidUserTitle": "Invalid User",
+      "botTarget": "You cannot remove XP from a bot.",
+      "noDataTitle": "No Data",
+      "noData": "{user} has no XP in this server.",
+      "levelDown": "They dropped from Level **{old}** → **{new}**.",
+      "title": "XP Removed",
+      "description": "Removed **{amount} XP** from {user}.",
+      "fieldBefore": "Before",
+      "fieldAfter": "After",
+      "statValue": "{xp} XP (Level {level})"
+    },
+    "rank": {
+      "disabledTitle": "Leveling Disabled",
+      "disabled": "The leveling system is disabled for this server.",
+      "noDataTitle": "No Data",
+      "noData": "{user} has not earned any XP yet.",
+      "embedTitle": "📊 {user}'s Rank",
+      "fieldRank": "🏆 Rank",
+      "fieldLevel": "📈 Level",
+      "fieldTotalXp": "✨ Total XP",
+      "fieldMessages": "💬 Messages",
+      "fieldProgress": "Progress to Level {level}"
+    },
+    "stats": {
+      "disabledTitle": "Leveling Disabled",
+      "disabled": "The leveling system is disabled for this server.",
+      "noDataTitle": "No Data",
+      "noData": "{user} hasn't earned any XP yet.",
+      "never": "Never",
+      "title": "{user}'s Engagement Stats",
+      "fieldRank": "🏆 Rank",
+      "fieldLevel": "📈 Level",
+      "fieldTotalXp": "✨ Total XP",
+      "fieldMessages": "💬 Messages Sent",
+      "fieldDayStreak": "Day Streak",
+      "dayValue": "{count} day(s)",
+      "fieldReputation": "⭐ Reputation",
+      "fieldAchievements": "🎖️ Achievements",
+      "fieldLastActive": "🕐 Last Active"
+    },
+    "leaderboard": {
+      "disabledTitle": "Leveling Disabled",
+      "disabled": "The leveling system is disabled for this server.",
+      "emptyTitle": "Empty",
+      "empty": "No one has earned XP in this server yet.",
+      "line": "{medal} {user} — Level **{level}** | **{xp}** XP",
+      "title": "🏆 {guild} Leaderboard",
+      "footer": "Page {page} of {pages} • {total} total users",
+      "viewFull": "View Full Leaderboard"
+    },
+    "profile": {
+      "disabledTitle": "Leveling Disabled",
+      "disabled": "The leveling system is disabled for this server.",
+      "noDataTitle": "No Data",
+      "noData": "{user} hasn't earned any XP yet.",
+      "noAchievements": "*No achievements yet. Keep chatting!*",
+      "unknown": "Unknown",
+      "title": "{user}'s Profile",
+      "fieldServerRank": "🏆 Server Rank",
+      "fieldLevel": "📈 Level",
+      "fieldTotalXp": "✨ Total XP",
+      "fieldMessages": "💬 Messages",
+      "fieldJoined": "📅 Joined",
+      "fieldProgress": "Progress to Level {level}",
+      "fieldAchievements": "🎖️ Achievements ({count})"
+    },
+    "rankcard": {
+      "resetTitle": "Reset",
+      "reset": "Your rank card has been reset to the default style.",
+      "invalidColorTitle": "Invalid Color",
+      "invalidColor": "Please provide a valid hex color code, e.g. `#ff5733` or `#f53`.",
+      "colorUpdatedTitle": "Color Updated",
+      "colorUpdated": "Your rank card accent colour has been set to `{hex}`.",
+      "invalidUrlTitle": "Invalid URL",
+      "invalidUrl": "Please provide a direct image URL ending in `.png`, `.jpg`, `.gif`, or `.webp`.",
+      "bgUpdatedTitle": "Background Updated",
+      "bgUpdated": "Your rank card background has been updated. Use `/rank` to see it.",
+      "notInServer": "Use this command in a server.",
+      "previewContent": "Here is a preview of your rank card:"
+    },
+    "leveling": {
+      "rateNormal": "normal",
+      "rateMultiplied": "{value}x the",
+      "multiplierSet": "XP multiplier set to **{value}x**. Members will now earn {rate} XP per message.",
+      "keepRolesOn": "Members will now **keep all previous level roles** when they earn a higher one.",
+      "keepRolesOff": "Members will now **only keep their highest level role** (lower roles removed automatically).",
+      "syncComplete": "Role sync complete. Processed **{processed}** members, updated roles for **{updated}**."
+    },
+    "loop": {
+      "disabledTitle": "Music Disabled",
+      "disabled": "Music commands are disabled for this server.",
+      "nothingTitle": "Nothing Playing",
+      "nothing": "No music is currently playing.",
+      "modeOff": "Off",
+      "modeTrack": "Track",
+      "modeQueue": "Queue",
+      "title": "Loop",
+      "set": "Loop mode set to **{mode}**"
+    },
+    "pause": {
+      "disabledTitle": "Music Disabled",
+      "disabled": "Music commands are disabled for this server.",
+      "nothingTitle": "Nothing Playing",
+      "nothing": "No music is currently playing.",
+      "alreadyPausedTitle": "Already Paused",
+      "alreadyPaused": "The music is already paused.",
+      "title": "Paused",
+      "paused": "Paused **{title}**"
+    },
+    "resume": {
+      "disabledTitle": "Music Disabled",
+      "disabled": "Music commands are disabled for this server.",
+      "nothingTitle": "Nothing Playing",
+      "nothing": "No music is currently playing.",
+      "notPausedTitle": "Not Paused",
+      "notPaused": "The music is not paused.",
+      "title": "Resumed",
+      "resumed": "Resumed **{title}**"
+    },
+    "skip": {
+      "disabledTitle": "Music Disabled",
+      "disabled": "Music commands are disabled for this server.",
+      "nothingTitle": "Nothing Playing",
+      "nothing": "There is nothing to skip.",
+      "title": "Skipped",
+      "skipped": "Skipped **{title}**"
+    },
+    "stop": {
+      "disabledTitle": "Music Disabled",
+      "disabled": "Music commands are disabled for this server.",
+      "nothingTitle": "Nothing Playing",
+      "nothing": "There is nothing playing.",
+      "title": "Stopped",
+      "stopped": "Music stopped and queue cleared."
+    },
+    "volume": {
+      "disabledTitle": "Music Disabled",
+      "disabled": "Music commands are disabled for this server.",
+      "nothingTitle": "Nothing Playing",
+      "nothing": "No music is playing.",
+      "title": "Volume",
+      "set": "Volume set to **{level}%**"
+    },
+    "play": {
+      "disabledTitle": "Music Disabled",
+      "disabled": "Music commands are disabled for this server.",
+      "joinVcTitle": "Join a Voice Channel",
+      "joinVc": "You must be in a voice channel to play music.",
+      "wrongChannelTitle": "Wrong Channel",
+      "wrongChannel": "I'm already playing in {channel}",
+      "addedTitle": "Added to Queue",
+      "added": "**{title}** has been added to the queue.\nPosition: #{position}",
+      "nowPlayingTitle": "Now Playing",
+      "nowPlaying": "🎵 **{title}**",
+      "requestedBy": "Requested by",
+      "duration": "Duration",
+      "unknown": "Unknown",
+      "failed": "Could not play that track: {error}"
+    },
+    "queue": {
+      "disabledTitle": "Music Disabled",
+      "disabled": "Music commands are disabled for this server.",
+      "nothingTitle": "Nothing Playing",
+      "nothing": "No music is currently playing.",
+      "title": "🎵 Music Queue",
+      "nowPlaying": "**Now Playing:** {title}",
+      "empty": "_Queue is empty_",
+      "footer": "{count} song(s) in queue • Loop: {loop}"
+    },
+    "ping": {
+      "pinging": "Pinging...",
+      "pong": "🏓 Pong!",
+      "roundtrip": "Roundtrip",
+      "websocket": "WebSocket"
+    },
+    "avatar": {
+      "title": "{user}'s Avatar",
+      "footer": "User ID: {id}",
+      "openBrowser": "Open in Browser"
+    },
+    "invite": {
+      "title": "Invite ArkenBot",
+      "body": "[Click here to add ArkenBot to your server]({url})"
+    },
+    "botstatus": {
+      "title": "Bot Status",
+      "fieldServers": "Servers",
+      "fieldPing": "Ping",
+      "fieldUptime": "Uptime",
+      "fieldMemory": "Memory"
+    },
+    "resetxp": {
+      "cancelled": "Reset cancelled.",
+      "complete": "Reset complete. Deleted XP records for {count} member(s)."
+    },
+    "rep": {
+      "selfGive": "You can't give rep to yourself.",
+      "botGive": "You can't give rep to bots.",
+      "cooldown": "You already gave rep today. Try again in **{hours}h**.",
+      "gave": "⭐ {giver} gave a reputation point to {target}!\nThey now have **{total}** rep point(s).",
+      "checkTitle": "{user}'s Reputation",
+      "fieldPoints": "⭐ Rep Points",
+      "fieldRank": "🏆 Server Rank",
+      "unranked": "Unranked",
+      "topEmpty": "No reputation points have been given in this server yet.",
+      "topLine": "{medal} **{name}** — {count} rep",
+      "topTitle": "⭐ Reputation Leaderboard"
+    },
+    "suggest": {
+      "notEnabled": "Suggestions are not enabled in this server.",
+      "channelNotFound": "Suggestion channel not found.",
+      "embedTitle": "New Suggestion",
+      "footer": "Suggestion ID: {id}",
+      "submitted": "Your suggestion has been submitted!"
+    },
+    "selfassignrole": {
+      "noRole": "❌ No self-assignable role named `{name}`. Use `/selfrole list` to see available roles.",
+      "alreadyHave": "You already have the **{name}** role.",
+      "roleGone": "❌ The role for `{name}` no longer exists. Ask an admin to remove it with `/selfrole remove`.",
+      "assigned": "✅ You've been given the {role} role.",
+      "failed": "❌ Failed to assign the role. Make sure the bot's role is above {role} in the role list."
+    },
+    "selfremoverole": {
+      "noRole": "❌ No self-assignable role named `{name}`. Use `/selfrole list` to see available roles.",
+      "dontHave": "You don't have the **{name}** role.",
+      "roleGone": "❌ The role for `{name}` no longer exists.",
+      "removed": "✅ The {role} role has been removed.",
+      "failed": "❌ Failed to remove the role. Make sure the bot's role is above {role} in the role list."
+    },
+    "remind": {
+      "invalidDuration": "Invalid duration. Examples: `10m`, `2h`, `1d`, `7d`",
+      "tooLong": "Maximum reminder duration is 28 days.",
+      "set": "Reminder set! I'll remind you about \"{message}\" {time}."
+    },
+    "serverinfo": {
+      "verifNone": "None",
+      "verifLow": "Low",
+      "verifMedium": "Medium",
+      "verifHigh": "High",
+      "verifVeryHigh": "Very High",
+      "unknown": "Unknown",
+      "fieldId": "🆔 ID",
+      "fieldOwner": "👑 Owner",
+      "fieldCreated": "📅 Created",
+      "fieldMembers": "👥 Members",
+      "fieldBots": "🤖 Bots",
+      "fieldVerification": "🔒 Verification",
+      "fieldChannels": "📋 Channels",
+      "channelsValue": "💬 {text} text | 🔊 {voice} voice | 📁 {categories} categories",
+      "fieldRoles": "🎭 Roles",
+      "fieldEmojis": "😀 Emojis",
+      "fieldBoosts": "💎 Boosts",
+      "boostsValue": "Level {tier} ({count} boosts)",
+      "footer": "Server ID: {id}",
+      "featModeration": "Moderation",
+      "featAutoMod": "Auto-Mod",
+      "featLeveling": "Leveling",
+      "featWelcome": "Welcome",
+      "featLogging": "Logging",
+      "featMusic": "Music",
+      "featReactionRoles": "Reaction Roles",
+      "fieldFeatures": "⚙️ Features Enabled",
+      "noneConfigured": "None configured"
+    },
+    "userinfo": {
+      "yes": "Yes",
+      "no": "No",
+      "none": "None",
+      "unknown": "Unknown",
+      "fieldId": "🆔 ID",
+      "fieldBot": "🤖 Bot",
+      "fieldCreated": "📅 Account Created",
+      "fieldNickname": "🏷️ Nickname",
+      "fieldJoined": "📥 Joined Server",
+      "fieldRoles": "🎭 Roles ({count})",
+      "fieldBoosting": "💎 Boosting Since"
+    },
+    "birthday": {
+      "setTitle": "🎂 Birthday Set!",
+      "set": "Your birthday has been set to {date}.",
+      "removed": "Your birthday has been removed.",
+      "none": "No birthdays registered in this server yet.",
+      "listTitle": "🎂 Upcoming Birthdays",
+      "total": "{count} total",
+      "userNotSet": "{user} hasn't set their birthday.",
+      "userBirthday": "🎂 {user}'s birthday is {date}"
+    },
+    "selfrole": {
+      "needManageRoles": "❌ You need **Manage Roles** permission to use this.",
+      "roleTooHigh": "❌ The bot's role is below **{role}** in the role list. Move the bot's role above it first.",
+      "added": "✅ {role} is now self-assignable as `{name}`.\nMembers can run `/selfassignrole {name}` to claim it.",
+      "exists": "❌ A self-assignable role with that name or role already exists. Use `/selfrole list` to see current entries.",
+      "notFound": "❌ No self-assignable role named `{name}` found.",
+      "removed": "✅ `{name}` removed from the self-assignable list.",
+      "none": "No self-assignable roles configured yet. Admins can add roles with `/selfrole add`.",
+      "listTitle": "Self-Assignable Roles",
+      "listFooter": "Use /selfassignrole <name> to claim · /selfremoverole <name> to drop",
+      "roleDeleted": "role deleted"
+    },
+    "analytics": {
+      "missingPermTitle": "Missing Permission",
+      "missingPerm": "You need the **Manage Server** permission to configure analytics.",
+      "channelSetTitle": "Analytics Channel Set",
+      "channelSet": "Weekly analytics reports will be posted in {channel}.",
+      "disabledTitle": "Analytics Disabled",
+      "disabled": "Automatic weekly analytics reports have been turned off.",
+      "reportTitle": "📊 Server Analytics — Last 30 Days",
+      "messages": "Messages",
+      "commands": "Commands",
+      "joins": "Joins",
+      "leaves": "Leaves",
+      "netGrowth": "Net Growth"
+    },
+    "autoresponse": {
+      "invalidRegexTitle": "Invalid Regex",
+      "invalidRegex": "The pattern `{pattern}` with flags `{flags}` is not a valid regular expression.",
+      "addedTitle": "Auto-Response Added",
+      "added": "**ID:** `{id}`\n**Pattern:** `{pattern}` (flags: `{flags}`)\n**Response:** {response}",
+      "notFoundTitle": "Not Found",
+      "notFound": "No auto-response found with that ID in this server.",
+      "removedTitle": "Auto-Response Removed",
+      "removed": "Pattern `{pattern}` deleted.",
+      "updatedTitle": "Auto-Response Updated",
+      "updated": "Pattern `{pattern}` is now **{state}**.",
+      "noneTitle": "No Auto-Responses",
+      "none": "No auto-responses configured for this server.",
+      "listTitle": "Auto-Responses",
+      "listFooter": "Use the full ID from this list with /autoresponse remove or toggle"
+    },
+    "poll": {
+      "votes": "{count} votes",
+      "totalVotes": "{count} total votes",
+      "ends": "Ends",
+      "endPoll": "End Poll",
+      "ended": "[ENDED] {question}",
+      "optionCount": "Please provide between 2 and 10 options separated by `|`.",
+      "notFound": "Poll not found.",
+      "alreadyEnded": "This poll has ended.",
+      "cannotEnd": "Only the poll creator or a moderator can end this poll."
+    },
+    "giveaway": {
+      "invalidDuration": "Invalid duration.",
+      "fieldPrize": "**Prize:** {prize}",
+      "fieldWinners": "**Winners:** {count}",
+      "fieldEnds": "**Ends:** {time}",
+      "fieldRequiredRole": "**Required Role:** {role}",
+      "fieldBonus": "**Bonus Entries:** {role} gets +{count} entries",
+      "enterPrompt": "React with 🎉 to enter!",
+      "title": "🎉 Giveaway!",
+      "winnersFooter": "{count} winners",
+      "started": "Giveaway started! ID: `{id}`",
+      "notFound": "Giveaway not found.",
+      "alreadyEnded": "Giveaway already ended.",
+      "willEnd": "Giveaway will end on the next check cycle (within 1 minute).",
+      "notEnded": "Giveaway not found or not yet ended.",
+      "noChannel": "Could not find giveaway channel.",
+      "noMessage": "Could not find giveaway message.",
+      "noReactions": "No reactions found.",
+      "noEligible": "No eligible entrants.",
+      "rerollAnnounce": "🎉 Reroll! New winners: {winners}! Congratulations on winning **{prize}**!",
+      "rerolled": "Rerolled!"
+    },
+    "forum": {
+      "invalidChannelTitle": "Invalid Channel",
+      "invalidChannel": "Please select a Forum channel.",
+      "templateSetTitle": "Template Set",
+      "templateSet": "Template message configured for {channel}.",
+      "autoTagSetTitle": "Auto-Tag Set",
+      "autoTagSet": "Tag `{tag}` will be automatically applied in {channel}.",
+      "clearedTitle": "Config Cleared",
+      "cleared": "Forum management config for {channel} has been removed."
+    },
+    "help": {
+      "cat": {
+        "moderation": "Moderation",
+        "leveling": "Leveling",
+        "community": "Community",
+        "music": "Music",
+        "utility": "Utility"
+      },
+      "overviewTitle": "📋 Command Reference",
+      "overviewDesc": "**{commands} commands** available to you across **{categories} categories**.",
+      "overviewHint": "Use ◀ ▶ to browse, or click **Overview** to return here.",
+      "cmdCount": "{count} cmds",
+      "overview": "Overview",
+      "pageFooter": "Page {page} of {total}  ·  {commands} commands available to you",
+      "notYourMenu": "This menu belongs to someone else."
+    }
   }
 }

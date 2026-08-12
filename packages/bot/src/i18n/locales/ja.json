@@ -2,27 +2,844 @@
   "common": {
     "error": "エラー",
     "success": "成功",
-    "notInServer": "このコマンドはサーバー内で使用する必要があります。"
+    "notInServer": "このコマンドはサーバー内で使用してください。",
+    "enabled": "有効",
+    "disabled": "無効"
   },
   "language": {
-    "commandDescription": "私があなたに返信するときに使用する言語を設定または表示します",
-    "setDescription": "私の返信の言語を選択してください",
-    "clearDescription": "言語をクリアして自動検出に戻します",
+    "commandDescription": "返信に使う言語を設定または確認します",
+    "setDescription": "あなたへの返信に使う言語を選びます",
+    "clearDescription": "言語をクリアして自動判別に戻します",
     "showDescription": "現在の言語を表示します",
     "optionDescription": "使用する言語",
     "setTitle": "言語を更新しました",
-    "set": "私はあなたに **{language}** で返信します。",
+    "set": "これからは **{language}** で返信します。",
     "clearedTitle": "言語をリセットしました",
-    "cleared": "あなたの言語設定をクリアしました — 私はあなたのDiscord設定から自動的に検出します。",
+    "cleared": "言語設定をクリアしました。Discord の設定から自動的に判別します。",
     "currentTitle": "あなたの言語",
     "currentSet": "あなたの言語は **{language}** に設定されています。",
-    "currentAuto": "あなたは言語を設定していませんので、自動検出します (現在 **{language}** )。",
+    "currentAuto": "言語が設定されていないため、自動的に判別しています（現在 **{language}**）。",
     "invalid": "**{input}** はサポートされていない言語です。"
   },
   "moderation": {
-    "disabledTitle": "モデレーションを無効にしました",
+    "disabledTitle": "モデレーション無効",
     "disabled": "このサーバーではモデレーションコマンドが無効になっています。",
     "cannotBanSelfTitle": "無効な対象",
-    "cannotBanSelf": "あなた自身をBANすることはできません。"
+    "cannotBanSelf": "自分自身をBANすることはできません。"
+  },
+  "welcome": {
+    "title": "👋 {server} へようこそ！",
+    "accountAge": "📅 アカウント作成からの期間",
+    "memberCount": "👥 メンバー数"
+  },
+  "leveling": {
+    "levelUp": "レベルアップ！",
+    "milestoneReached": "{label} マイルストーン達成！",
+    "level": "レベル",
+    "achievement": "実績",
+    "milestones": {
+      "legendary": "🏆 レジェンド",
+      "diamond": "💎 ダイヤモンド",
+      "century": "🌟 センチュリー",
+      "elite": "⚡ エリート",
+      "veteran": "🔥 ベテラン",
+      "experienced": "🥇 熟練",
+      "rising": "🥈 新進気鋭",
+      "newcomer": "🥉 新人"
+    }
+  },
+  "counting": {
+    "ruined": "❌ {user} が **{count}** でカウントを台無しにしました！ **1** からやり直してください。",
+    "twiceInRow": "❌ {user} は連続してカウントできません！カウントをリセットしました。**1** からやり直してください。"
+  },
+  "automod": {
+    "kickedTitle": "{server} からキックされました",
+    "filterKickDM": "ワードフィルターへの繰り返し違反により **{server}** からキックされました（違反 #{count}）。",
+    "filterKick": "⛔ {user} はワードフィルターへの繰り返し違反により**キック**されました（違反 #{count}）。",
+    "filterWarn": "⚠️ {user} フィルター対象の単語が含まれていたため、メッセージを削除しました（違反 #{count}）。",
+    "removed": "{user} メッセージを削除しました: **{reason}**",
+    "reasons": {
+      "spam": "スパムを検出",
+      "link": "ブロック対象のリンクを検出",
+      "mention": "メンションスパム",
+      "caps": "過度な大文字の使用"
+    },
+    "phishingRemoved": "⚠️ {user} — 既知のフィッシングリンクが含まれていたため、メッセージを削除しました。",
+    "aiFlagTitle": "🤖 AIモデレーションのフラグ",
+    "aiFlagDescription": "{channel} 内の {user} のメッセージをレビュー用にフラグしました。\n\n**カテゴリ:** {category} · **深刻度:** {severity}\n**理由:** {reason}\n[メッセージへ移動]({url})",
+    "aiFlagFooter": "AI生成 · 対応前に確認してください"
+  },
+  "verification": {
+    "verifyChannelFallback": "認証チャンネル",
+    "dmWelcome": "**{server}** へようこそ！{channel} の「認証」ボタンをクリックしてアクセスを取得してください。",
+    "serverOnly": "このボタンはサーバー内でのみ使用できます。",
+    "notConfigured": "このサーバーでは認証が設定されていません。",
+    "fetchFailed": "あなたのメンバー情報を取得できませんでした。",
+    "verified": "✅ 認証されました！サーバーへようこそ。",
+    "error": "認証中にエラーが発生しました。",
+    "panelTitle": "✅ アカウントを認証",
+    "panelDescription": "下のボタンをクリックして認証し、サーバーへのアクセスを取得してください。",
+    "buttonLabel": "認証"
+  },
+  "starboard": {
+    "unknownAuthor": "不明",
+    "source": "ソース",
+    "jumpToMessage": "[メッセージへ移動]({url})"
+  },
+  "reactionRoles": {
+    "addOnly": " *(追加のみ)*",
+    "removeOnly": " *(削除のみ)*",
+    "noRoles": "*まだロールが設定されていません。*",
+    "footer": "{count} 個のロール • リアクションして自分にロールを付与"
+  },
+  "antiNuke": {
+    "alertTitle": "🚨 アンチニューク警告",
+    "alertDescription": "ユーザー {user} が **{server}** で **{action}** のしきい値を超えたため、権限を剥奪しました。",
+    "triggeredTitle": "🚨 アンチニューク作動",
+    "triggeredDescription": "{user} は **{action}** アクションのしきい値を超えたため処罰されました。",
+    "actionTaken": "実行した措置",
+    "deopped": "権限剥奪（ロール削除）",
+    "trigger": "トリガー"
+  },
+  "onboarding": {
+    "title": "👋 ArkenBot を追加していただきありがとうございます！",
+    "description": "ArkenBot が **{server}** に参加しました。数分でセットアップする方法は次のとおりです:",
+    "step1Name": "1️⃣ サーバーを設定する",
+    "step1Value": "Discord で[ダッシュボード]({dashboardUrl})にログインし、**{server}** を選択して、モデレーション・レベル・チケット・配信通知など、必要な機能を有効にしてください。",
+    "step2Name": "2️⃣ お知らせチャンネルを設定する",
+    "step2Value": "**ダッシュボード → お知らせ** で、ArkenBot の最新情報を受け取るチャンネルを選んでください。新機能・変更・重要なお知らせがそこに届きます。",
+    "step3Name": "3️⃣ ドキュメントを読む",
+    "step3Value": "各機能のガイドは [docs.arkenbot.app]({docsUrl}) にあります。",
+    "footer": "ArkenBot — 完全無料、有料の壁なし",
+    "buttonDashboard": "ダッシュボードを開く",
+    "buttonDocs": "ドキュメント",
+    "buttonSupport": "サポートサーバー"
+  },
+  "music": {
+    "playbackFailedTitle": "⚠️ 再生に失敗しました",
+    "playbackFailedDescription": "**{title}** を再生できませんでした。\n`{reason}`",
+    "playbackFailedFooter": "別の検索を試すか、yt-dlp が最新かどうか確認してください。",
+    "nowPlayingTitle": "🎵 再生中",
+    "requestedBy": "リクエスト者",
+    "duration": "長さ"
+  },
+  "topgg": {
+    "voteReminder": "🗳️ top.gg で再び **{bot}** に投票できます！\n{url}\n\n_`/vote reminders:off` でいつでもリマインダーをオフにできます。_"
+  },
+  "birthday": {
+    "title": "🎂 お誕生日おめでとう！"
+  },
+  "reminders": {
+    "deliver": "{user} リマインダー: {message}"
+  },
+  "giveaway": {
+    "noEntrants": "対象となる参加者がいません",
+    "winnerLabel": "当選者",
+    "winnersLabel": "当選者",
+    "ended": "🎉 ギブアウェイ終了！ {winnerLabel}: {winners}\n賞品: **{prize}**",
+    "endedTitle": "🎉 ギブアウェイ終了",
+    "endedEmbed": "**賞品:** {prize}\n**{winnerLabel}:** {winners}"
+  },
+  "streamAlert": {
+    "youtubeLive": "{streamer} が YouTube で配信中！",
+    "twitchLive": "{streamer} が Twitch で配信中！",
+    "playing": "プレイ中",
+    "unknownGame": "不明",
+    "kickLive": "{streamer} が Kick で配信中！",
+    "twitterPosted": "{handle} が X に投稿しました",
+    "redditPostedBy": "r/{subreddit} で u/{author} が投稿",
+    "rssNewPost": "**{feed}** の新しい投稿"
+  },
+  "announcement": {
+    "author": "ArkenBot のお知らせ",
+    "buttonChangelog": "変更履歴の全文",
+    "buttonDashboard": "ダッシュボード",
+    "labels": {
+      "update": "アップデート",
+      "feature": "新機能",
+      "maintenance": "メンテナンス",
+      "hotfix": "緊急修正"
+    }
+  },
+  "logging": {
+    "user": "ユーザー",
+    "moderator": "モデレーター",
+    "reason": "理由",
+    "noReason": "理由は指定されていません",
+    "messageDeleted": "🗑️ メッセージが削除されました",
+    "author": "投稿者",
+    "channel": "チャンネル",
+    "content": "内容",
+    "messageEdited": "✏️ メッセージが編集されました",
+    "before": "変更前",
+    "after": "変更後",
+    "noContent": "*内容なし*",
+    "memberJoined": "📥 メンバーが参加しました",
+    "accountAge": "アカウント作成からの期間",
+    "memberCount": "メンバー数",
+    "memberLeft": "📤 メンバーが退出しました",
+    "joined": "参加日",
+    "unknown": "不明"
+  },
+  "cmd": {
+    "kick": {
+      "cannotSelf": "自分自身をキックすることはできません。",
+      "cannotSelfBot": "自分自身をキックすることはできません。",
+      "notFoundTitle": "見つかりません",
+      "notFound": "そのユーザーはこのサーバーにいません。",
+      "hierarchyTitle": "階層エラー",
+      "notKickable": "このメンバーをキックできません。",
+      "hierarchyUser": "自分と同等以上のロールを持つメンバーはキックできません。",
+      "dmAction": "{guild} からキックされました",
+      "action": "キック",
+      "failedTitle": "失敗",
+      "failed": "そのメンバーをキックできませんでした。権限を確認してください。"
+    },
+    "unban": {
+      "invalidIdTitle": "無効なID",
+      "invalidId": "有効な Discord ユーザーID を入力してください。",
+      "notBannedTitle": "BANされていません",
+      "notBanned": "そのユーザーはこのサーバーでBANされていません。",
+      "successTitle": "BAN解除",
+      "success": "**{user}**（{userId}）のBANを解除しました\n**理由:** {reason}",
+      "failedTitle": "失敗",
+      "failed": "そのユーザーのBANを解除できませんでした。"
+    },
+    "warn": {
+      "cannotSelf": "自分自身に警告することはできません。",
+      "notFoundTitle": "見つかりません",
+      "notFound": "そのユーザーはこのサーバーにいません。",
+      "hierarchyTitle": "階層エラー",
+      "hierarchyUser": "自分と同等以上のロールを持つメンバーに警告することはできません。",
+      "dmAction": "{guild} での警告",
+      "escalationMute": "自動的にミュートされました（警告 {count} 件がしきい値に達しました）。",
+      "escalationTimeout": "自動的に {duration} 秒のタイムアウトになりました（警告 {count} 件がしきい値に達しました）。",
+      "escalationBan": "自動的にBANされました（警告 {count} 件がしきい値に達しました）。",
+      "escalationKick": "自動的にキックされました（警告 {count} 件がしきい値に達しました）。",
+      "action": "警告",
+      "totalWarnings": "警告の合計"
+    },
+    "mute": {
+      "invalidDurationTitle": "無効な期間",
+      "invalidDuration": "`10m`、`1h`、`1d` のような形式を使用してください。最大は28日です。",
+      "tooLongTitle": "長すぎます",
+      "tooLong": "Discord のタイムアウトの最大は28日です。",
+      "notFoundTitle": "見つかりません",
+      "notFound": "そのユーザーはこのサーバーにいません。",
+      "hierarchyTitle": "階層エラー",
+      "hierarchyUser": "自分と同等以上のロールを持つメンバーをミュートすることはできません。",
+      "notMutable": "このメンバーをミュートできません。",
+      "dmAction": "{guild} でミュートされました",
+      "action": "ミュート",
+      "failedTitle": "失敗",
+      "failed": "そのメンバーをミュートできませんでした。"
+    },
+    "case": {
+      "notFoundTitle": "見つかりません",
+      "notFound": "ケース #{number} が見つかりません。",
+      "caseLabel": "ケース #{number}",
+      "fieldUser": "ユーザー",
+      "fieldModerator": "モデレーター",
+      "fieldReason": "理由",
+      "fieldStatus": "ステータス",
+      "fieldDate": "日付",
+      "fieldDuration": "期間",
+      "statusActive": "🔴 有効",
+      "statusResolved": "🟢 解決済み",
+      "noOpenTitle": "未対応のケースはありません",
+      "noOpen": "{user} の未対応のケースは見つかりませんでした。",
+      "closedTitle": "ケースをクローズしました",
+      "closed": "{user} の未対応ケース **{count}** 件をクローズしました。\n**理由:** {reason}"
+    },
+    "clearwarnings": {
+      "cannotSelf": "自分自身の警告をクリアすることはできません。",
+      "hierarchyTitle": "階層エラー",
+      "hierarchyUser": "自分と同等以上のロールを持つメンバーの警告を管理することはできません。",
+      "noActiveTitle": "✅ 有効な警告はありません",
+      "noActive": "{user} にはクリアできる有効な警告がありません。",
+      "dmTitle": "{guild} で警告がクリアされました",
+      "dmDesc": "あなたの有効な警告 {count} 件がモデレーターによってクリアされました。",
+      "clearedTitle": "✅ 警告をクリアしました",
+      "fieldUser": "ユーザー",
+      "fieldCleared": "クリア数",
+      "clearedValue": "{count} 件の警告",
+      "fieldModerator": "モデレーター",
+      "fieldReason": "理由"
+    },
+    "warnings": {
+      "noneTitle": "✅ 警告なし",
+      "noneAll": "{user} には警告がありません。",
+      "noneActive": "{user} には有効な警告がありません。",
+      "title": "⚠️ {user} の警告",
+      "lineMeta": "{moderator} により {date}",
+      "cleared": "~~(クリア済み)~~",
+      "footer": "{count} 件の警告を表示中"
+    },
+    "note": {
+      "addedTitle": "メモを追加しました",
+      "added": "**{user}** にメモ `{id}` を追加しました。\n\n> {content}",
+      "noNotesTitle": "メモなし",
+      "noNotes": "**{user}** のメモは見つかりませんでした。",
+      "listTitle": "📝 {user} のメモ",
+      "listFooter": "最新 {count} 件のメモを表示中",
+      "fieldName": "ID: `{id}` — {date}（{staff}）",
+      "notFoundTitle": "見つかりません",
+      "notFound": "そのユーザーとIDのメモが見つかりません。",
+      "removedTitle": "メモを削除しました",
+      "removed": "メモ `{id}` を削除しました。",
+      "cancelledTitle": "キャンセルしました",
+      "cancelled": "すべてのメモをクリアするには `confirm: true` を設定してください。",
+      "clearedTitle": "メモをクリアしました",
+      "cleared": "**{user}** のメモ **{count}** 件を削除しました。"
+    },
+    "ctxBan": {
+      "notFoundTitle": "見つかりません",
+      "notFound": "そのユーザーが見つかりませんでした。",
+      "hierarchyTitle": "階層エラー",
+      "hierarchyUser": "自分と同等以上のロールを持つメンバーをBANすることはできません。",
+      "dmAction": "{guild} からBANされました",
+      "action": "BAN"
+    },
+    "ctxTimeout": {
+      "invalidDurationTitle": "無効な期間",
+      "invalidDuration": "期間は5秒から28日の間にしてください（例: 10m、1h、7d）。",
+      "notFoundTitle": "見つかりません",
+      "notFoundUser": "そのユーザーが見つかりませんでした。",
+      "notInServer": "そのユーザーはこのサーバーにいません。",
+      "hierarchyTitle": "階層エラー",
+      "hierarchyUser": "自分と同等以上のロールを持つメンバーをタイムアウトすることはできません。",
+      "dmAction": "{guild} でのタイムアウト",
+      "action": "タイムアウト"
+    },
+    "ctxWarn": {
+      "notFoundTitle": "見つかりません",
+      "notFound": "そのユーザーが見つかりませんでした。",
+      "hierarchyTitle": "階層エラー",
+      "hierarchyUser": "自分と同等以上のロールを持つメンバーに警告することはできません。",
+      "dmAction": "{guild} での警告",
+      "action": "警告",
+      "totalWarnings": "警告の合計"
+    },
+    "purge": {
+      "textOnly": "このコマンドはテキストチャンネルでのみ使用できます。",
+      "noMatch": "フィルターに一致するメッセージがありませんでした（メッセージは14日以内のものである必要があります）。",
+      "bulkTextOnly": "一括削除はテキストチャンネルでのみ利用できます。",
+      "deleted": "{count} 件のメッセージを削除しました。"
+    },
+    "suggestion": {
+      "notFound": "提案が見つかりません。",
+      "statusApproved": "承認済み",
+      "statusDenied": "却下",
+      "statusConsidering": "検討中",
+      "footer": "{user} により {status}",
+      "result": "提案を{status}しました。"
+    },
+    "temprole": {
+      "memberNotFound": "このサーバーにそのメンバーが見つかりません。",
+      "invalidDurationTitle": "無効な期間",
+      "invalidDuration": "`30m`、`2h`、`7d` のような形式を使用してください。最小は60秒です。",
+      "assignedTitle": "一時ロールを付与しました",
+      "assigned": "{role} を {expires} まで {member} に付与しました。\n**理由:** {reason}",
+      "notFoundTitle": "見つかりません",
+      "notFound": "そのメンバーとロールの有効な一時ロール記録が見つかりません。",
+      "removedTitle": "一時ロールを削除しました",
+      "removed": "{member} から {role} を削除しました。",
+      "noneTitle": "有効な一時ロールはありません",
+      "none": "このサーバーには有効な一時ロールがありません。",
+      "listLine": "{user} → {role} — {expires} に期限切れ",
+      "listTitle": "有効な一時ロール"
+    },
+    "verification": {
+      "enabledTitle": "認証ゲートを有効にしました",
+      "enabled": "保留ロール: {pending}\nメンバーロール: {member}\n認証チャンネル: {channel}",
+      "disabledTitle": "認証を無効にしました",
+      "disabled": "認証ゲートを無効にしました。"
+    },
+    "invites": {
+      "notInServer": "このコマンドはサーバー内で使用してください。",
+      "disabledTitle": "無効",
+      "disabled": "このサーバーでは招待トラッキングが有効になっていません。",
+      "title": "招待 — {user}",
+      "totalInvites": "招待の合計",
+      "bonus": "ボーナス"
+    },
+    "invitetop": {
+      "notInServer": "このコマンドはサーバー内で使用してください。",
+      "disabledTitle": "無効",
+      "disabled": "このサーバーでは招待トラッキングが有効になっていません。",
+      "noDataTitle": "データなし",
+      "noData": "まだ招待データが記録されていません。",
+      "line": "{prefix} {user} — **{count}** 件の招待",
+      "title": "🏆 トップ招待者 — {guild}",
+      "footer": "トップ {count} 招待者"
+    },
+    "vote": {
+      "statusCooldown": "⏳ {time} に再び投票できます",
+      "statusReady": "✅ 今すぐ投票できます！",
+      "title": "🗳️ top.gg で投票",
+      "description": "12時間ごとに無料投票で応援してください。10秒で終わり、本当に助かります。\n\n**[▶ ここで投票]({voteUrl})**\n\n{status}",
+      "yourVotes": "あなたの投票数",
+      "currentStreak": "現在の連続記録",
+      "streakValue": "{count} 🔥",
+      "reminders": "リマインダー",
+      "on": "オン",
+      "off": "オフ",
+      "perkRole": "{hours}時間の {role} ロール",
+      "perkXp": "+{xp} XP",
+      "perkWeekend": "（週末は2倍）",
+      "rewardsHere": "🎁 特典はこちら",
+      "footerOn": "リマインダー オン — 再び投票できるようになったらDMでお知らせします。",
+      "footerOff": "リマインダー オフ。"
+    },
+    "topvoters": {
+      "noVotes": "まだ投票が記録されていません — `/vote` で最初の投票者になろう！ 🗳️",
+      "unknownUser": "ユーザー {id}",
+      "line": "{rank} {name} — **{count}** 票{streak}",
+      "title": "🏆 トップ投票者",
+      "footer": "/vote で投票 · {url}"
+    },
+    "report": {
+      "statusPending": "保留中",
+      "statusDismissed": "却下",
+      "statusReviewed": "確認済み",
+      "embedTitle": "📋 メンバー通報",
+      "fieldReporter": "通報者",
+      "fieldTarget": "対象",
+      "fieldReason": "理由",
+      "fieldStatus": "ステータス",
+      "fieldReviewedBy": "確認者",
+      "fieldStaffNote": "スタッフメモ",
+      "btnDismiss": "却下",
+      "btnTakeAction": "対応する",
+      "cannotSelf": "自分自身を通報することはできません。",
+      "submittedTitle": "通報を送信しました",
+      "submitted": "通報はモデレーションチームに送信されました。",
+      "notFound": "通報が見つかりません。",
+      "markedReviewed": "通報を確認済みとしてマークしました。"
+    },
+    "reportSetup": {
+      "title": "通報システムを設定しました",
+      "configured": "通報は今後 {channel} に送信されます。"
+    },
+    "startcounting": {
+      "notInServer": "このコマンドはサーバー内で使用してください。",
+      "notConfiguredTitle": "未設定",
+      "notConfigured": "カウントアドオンがインストールされていないか、チャンネルが設定されていません。まずダッシュボードで設定してください。",
+      "channelNotFoundTitle": "チャンネルが見つかりません",
+      "channelNotFound": "設定されたカウントチャンネルはもう存在しません。",
+      "title": "🔢 カウントゲーム",
+      "description": "カウントゲームが始まりました！ **1** から数え始めて、どこまで到達できるか見てみましょう。\n\n一度に1つの数字を数えてください。次の人が続きの数字を送信します。",
+      "fieldCurrentCount": "現在のカウント",
+      "fieldBestCount": "最高カウント",
+      "fieldResetOnFail": "失敗時にリセット",
+      "fieldSameUser": "同じユーザーが2回",
+      "yes": "はい",
+      "no": "いいえ",
+      "footer": "{start} から開始",
+      "posted": "{channel} にお知らせを投稿しました！"
+    },
+    "givexp": {
+      "disabledTitle": "レベル機能は無効",
+      "disabled": "このサーバーではレベルシステムが無効になっています。",
+      "invalidUserTitle": "無効なユーザー",
+      "botTarget": "ボットにXPを付与することはできません。",
+      "levelUp": "レベル **{old}** → **{new}** に上がりました！",
+      "title": "XPを付与しました",
+      "description": "{user} に **{amount} XP** を付与しました。",
+      "fieldBefore": "変更前",
+      "fieldAfter": "変更後",
+      "statValue": "{xp} XP（レベル {level}）"
+    },
+    "removexp": {
+      "disabledTitle": "レベル機能は無効",
+      "disabled": "このサーバーではレベルシステムが無効になっています。",
+      "invalidUserTitle": "無効なユーザー",
+      "botTarget": "ボットからXPを削除することはできません。",
+      "noDataTitle": "データなし",
+      "noData": "{user} はこのサーバーでXPを持っていません。",
+      "levelDown": "レベル **{old}** → **{new}** に下がりました。",
+      "title": "XPを削除しました",
+      "description": "{user} から **{amount} XP** を削除しました。",
+      "fieldBefore": "変更前",
+      "fieldAfter": "変更後",
+      "statValue": "{xp} XP（レベル {level}）"
+    },
+    "rank": {
+      "disabledTitle": "レベル機能は無効",
+      "disabled": "このサーバーではレベルシステムが無効になっています。",
+      "noDataTitle": "データなし",
+      "noData": "{user} はまだXPを獲得していません。",
+      "embedTitle": "📊 {user} のランク",
+      "fieldRank": "🏆 ランク",
+      "fieldLevel": "📈 レベル",
+      "fieldTotalXp": "✨ 合計XP",
+      "fieldMessages": "💬 メッセージ",
+      "fieldProgress": "レベル {level} までの進捗"
+    },
+    "stats": {
+      "disabledTitle": "レベル機能は無効",
+      "disabled": "このサーバーではレベルシステムが無効になっています。",
+      "noDataTitle": "データなし",
+      "noData": "{user} はまだXPを獲得していません。",
+      "never": "なし",
+      "title": "{user} のアクティビティ統計",
+      "fieldRank": "🏆 ランク",
+      "fieldLevel": "📈 レベル",
+      "fieldTotalXp": "✨ 合計XP",
+      "fieldMessages": "💬 送信メッセージ数",
+      "fieldDayStreak": "連続日数",
+      "dayValue": "{count} 日",
+      "fieldReputation": "⭐ 評価",
+      "fieldAchievements": "🎖️ 実績",
+      "fieldLastActive": "🕐 最終アクティブ"
+    },
+    "leaderboard": {
+      "disabledTitle": "レベル機能は無効",
+      "disabled": "このサーバーではレベルシステムが無効になっています。",
+      "emptyTitle": "空",
+      "empty": "このサーバーではまだ誰もXPを獲得していません。",
+      "line": "{medal} {user} — レベル **{level}** | **{xp}** XP",
+      "title": "🏆 {guild} リーダーボード",
+      "footer": "ページ {page}/{pages} • 合計 {total} 人のユーザー",
+      "viewFull": "リーダーボード全体を表示"
+    },
+    "profile": {
+      "disabledTitle": "レベル機能は無効",
+      "disabled": "このサーバーではレベルシステムが無効になっています。",
+      "noDataTitle": "データなし",
+      "noData": "{user} はまだXPを獲得していません。",
+      "noAchievements": "*まだ実績がありません。チャットを続けよう！*",
+      "unknown": "不明",
+      "title": "{user} のプロフィール",
+      "fieldServerRank": "🏆 サーバーランク",
+      "fieldLevel": "📈 レベル",
+      "fieldTotalXp": "✨ 合計XP",
+      "fieldMessages": "💬 メッセージ",
+      "fieldJoined": "📅 参加日",
+      "fieldProgress": "レベル {level} までの進捗",
+      "fieldAchievements": "🎖️ 実績（{count}）"
+    },
+    "rankcard": {
+      "resetTitle": "リセット",
+      "reset": "ランクカードをデフォルトのスタイルにリセットしました。",
+      "invalidColorTitle": "無効な色",
+      "invalidColor": "有効な16進数のカラーコードを入力してください（例: `#ff5733` または `#f53`）。",
+      "colorUpdatedTitle": "色を更新しました",
+      "colorUpdated": "ランクカードのアクセントカラーを `{hex}` に設定しました。",
+      "invalidUrlTitle": "無効なURL",
+      "invalidUrl": "`.png`、`.jpg`、`.gif`、`.webp` で終わる直接の画像URLを入力してください。",
+      "bgUpdatedTitle": "背景を更新しました",
+      "bgUpdated": "ランクカードの背景を更新しました。`/rank` で確認できます。",
+      "notInServer": "このコマンドはサーバー内で使用してください。",
+      "previewContent": "ランクカードのプレビューはこちらです:"
+    },
+    "leveling": {
+      "rateNormal": "通常の",
+      "rateMultiplied": "{value}倍の",
+      "multiplierSet": "XP倍率を **{value}x** に設定しました。メンバーはメッセージごとに{rate}XPを獲得します。",
+      "keepRolesOn": "メンバーは今後、より上位のレベルロールを獲得しても**以前のレベルロールをすべて保持**します。",
+      "keepRolesOff": "メンバーは今後、**最も高いレベルロールのみを保持**します（下位のロールは自動的に削除されます）。",
+      "syncComplete": "ロールの同期が完了しました。**{processed}** 人のメンバーを処理し、**{updated}** 人のロールを更新しました。"
+    },
+    "loop": {
+      "disabledTitle": "音楽機能は無効",
+      "disabled": "このサーバーでは音楽コマンドが無効になっています。",
+      "nothingTitle": "再生中の曲はありません",
+      "nothing": "現在、音楽は再生されていません。",
+      "modeOff": "オフ",
+      "modeTrack": "曲",
+      "modeQueue": "キュー",
+      "title": "ループ",
+      "set": "ループモードを **{mode}** に設定しました"
+    },
+    "pause": {
+      "disabledTitle": "音楽機能は無効",
+      "disabled": "このサーバーでは音楽コマンドが無効になっています。",
+      "nothingTitle": "再生中の曲はありません",
+      "nothing": "現在、音楽は再生されていません。",
+      "alreadyPausedTitle": "すでに一時停止中",
+      "alreadyPaused": "音楽はすでに一時停止しています。",
+      "title": "一時停止",
+      "paused": "**{title}** を一時停止しました"
+    },
+    "resume": {
+      "disabledTitle": "音楽機能は無効",
+      "disabled": "このサーバーでは音楽コマンドが無効になっています。",
+      "nothingTitle": "再生中の曲はありません",
+      "nothing": "現在、音楽は再生されていません。",
+      "notPausedTitle": "一時停止していません",
+      "notPaused": "音楽は一時停止していません。",
+      "title": "再開",
+      "resumed": "**{title}** を再開しました"
+    },
+    "skip": {
+      "disabledTitle": "音楽機能は無効",
+      "disabled": "このサーバーでは音楽コマンドが無効になっています。",
+      "nothingTitle": "再生中の曲はありません",
+      "nothing": "スキップする曲がありません。",
+      "title": "スキップ",
+      "skipped": "**{title}** をスキップしました"
+    },
+    "stop": {
+      "disabledTitle": "音楽機能は無効",
+      "disabled": "このサーバーでは音楽コマンドが無効になっています。",
+      "nothingTitle": "再生中の曲はありません",
+      "nothing": "現在、再生中の曲はありません。",
+      "title": "停止",
+      "stopped": "音楽を停止し、キューをクリアしました。"
+    },
+    "volume": {
+      "disabledTitle": "音楽機能は無効",
+      "disabled": "このサーバーでは音楽コマンドが無効になっています。",
+      "nothingTitle": "再生中の曲はありません",
+      "nothing": "音楽は再生されていません。",
+      "title": "音量",
+      "set": "音量を **{level}%** に設定しました"
+    },
+    "play": {
+      "disabledTitle": "音楽機能は無効",
+      "disabled": "このサーバーでは音楽コマンドが無効になっています。",
+      "joinVcTitle": "ボイスチャンネルに参加してください",
+      "joinVc": "音楽を再生するにはボイスチャンネルに参加している必要があります。",
+      "wrongChannelTitle": "違うチャンネルです",
+      "wrongChannel": "すでに {channel} で再生中です",
+      "addedTitle": "キューに追加しました",
+      "added": "**{title}** をキューに追加しました。\n位置: #{position}",
+      "nowPlayingTitle": "再生中",
+      "nowPlaying": "🎵 **{title}**",
+      "requestedBy": "リクエスト者",
+      "duration": "長さ",
+      "unknown": "不明",
+      "failed": "そのトラックを再生できませんでした: {error}"
+    },
+    "queue": {
+      "disabledTitle": "音楽機能は無効",
+      "disabled": "このサーバーでは音楽コマンドが無効になっています。",
+      "nothingTitle": "再生中の曲はありません",
+      "nothing": "現在、音楽は再生されていません。",
+      "title": "🎵 音楽キュー",
+      "nowPlaying": "**再生中:** {title}",
+      "empty": "_キューは空です_",
+      "footer": "キューに {count} 曲 • ループ: {loop}"
+    },
+    "ping": {
+      "pinging": "Ping中...",
+      "pong": "🏓 ポン！",
+      "roundtrip": "往復",
+      "websocket": "WebSocket"
+    },
+    "avatar": {
+      "title": "{user} のアバター",
+      "footer": "ユーザーID: {id}",
+      "openBrowser": "ブラウザで開く"
+    },
+    "invite": {
+      "title": "ArkenBot を招待",
+      "body": "[ここをクリックして ArkenBot をサーバーに追加]({url})"
+    },
+    "botstatus": {
+      "title": "ボットのステータス",
+      "fieldServers": "サーバー数",
+      "fieldPing": "Ping",
+      "fieldUptime": "稼働時間",
+      "fieldMemory": "メモリ"
+    },
+    "resetxp": {
+      "cancelled": "リセットをキャンセルしました。",
+      "complete": "リセットが完了しました。{count} 人のメンバーのXP記録を削除しました。"
+    },
+    "rep": {
+      "selfGive": "自分自身に評価を付けることはできません。",
+      "botGive": "ボットに評価を付けることはできません。",
+      "cooldown": "今日はすでに評価を付けています。**{hours}時間**後にもう一度お試しください。",
+      "gave": "⭐ {giver} が {target} に評価ポイントを付けました！\n現在の評価は **{total}** ポイントです。",
+      "checkTitle": "{user} の評価",
+      "fieldPoints": "⭐ 評価ポイント",
+      "fieldRank": "🏆 サーバーランク",
+      "unranked": "ランク外",
+      "topEmpty": "このサーバーではまだ評価ポイントが付けられていません。",
+      "topLine": "{medal} **{name}** — {count} 評価",
+      "topTitle": "⭐ 評価リーダーボード"
+    },
+    "suggest": {
+      "notEnabled": "このサーバーでは提案が有効になっていません。",
+      "channelNotFound": "提案チャンネルが見つかりません。",
+      "embedTitle": "新しい提案",
+      "footer": "提案ID: {id}",
+      "submitted": "提案を送信しました！"
+    },
+    "selfassignrole": {
+      "noRole": "❌ `{name}` という名前の自己付与ロールはありません。`/selfrole list` で利用可能なロールを確認してください。",
+      "alreadyHave": "すでに **{name}** ロールを持っています。",
+      "roleGone": "❌ `{name}` のロールはもう存在しません。管理者に `/selfrole remove` で削除するよう依頼してください。",
+      "assigned": "✅ {role} ロールが付与されました。",
+      "failed": "❌ ロールの付与に失敗しました。ロール一覧でボットのロールが {role} より上にあることを確認してください。"
+    },
+    "selfremoverole": {
+      "noRole": "❌ `{name}` という名前の自己付与ロールはありません。`/selfrole list` で利用可能なロールを確認してください。",
+      "dontHave": "**{name}** ロールを持っていません。",
+      "roleGone": "❌ `{name}` のロールはもう存在しません。",
+      "removed": "✅ {role} ロールを削除しました。",
+      "failed": "❌ ロールの削除に失敗しました。ロール一覧でボットのロールが {role} より上にあることを確認してください。"
+    },
+    "remind": {
+      "invalidDuration": "無効な期間です。例: `10m`、`2h`、`1d`、`7d`",
+      "tooLong": "リマインダーの最大期間は28日です。",
+      "set": "リマインダーを設定しました！{time} に「{message}」についてお知らせします。"
+    },
+    "serverinfo": {
+      "verifNone": "なし",
+      "verifLow": "低",
+      "verifMedium": "中",
+      "verifHigh": "高",
+      "verifVeryHigh": "非常に高い",
+      "unknown": "不明",
+      "fieldId": "🆔 ID",
+      "fieldOwner": "👑 オーナー",
+      "fieldCreated": "📅 作成日",
+      "fieldMembers": "👥 メンバー",
+      "fieldBots": "🤖 ボット",
+      "fieldVerification": "🔒 認証レベル",
+      "fieldChannels": "📋 チャンネル",
+      "channelsValue": "💬 テキスト {text} | 🔊 ボイス {voice} | 📁 カテゴリ {categories}",
+      "fieldRoles": "🎭 ロール",
+      "fieldEmojis": "😀 絵文字",
+      "fieldBoosts": "💎 ブースト",
+      "boostsValue": "レベル {tier}（{count} ブースト）",
+      "footer": "サーバーID: {id}",
+      "featModeration": "モデレーション",
+      "featAutoMod": "自動モデレーション",
+      "featLeveling": "レベル",
+      "featWelcome": "ウェルカム",
+      "featLogging": "ログ記録",
+      "featMusic": "音楽",
+      "featReactionRoles": "リアクションロール",
+      "fieldFeatures": "⚙️ 有効な機能",
+      "noneConfigured": "設定なし"
+    },
+    "userinfo": {
+      "yes": "はい",
+      "no": "いいえ",
+      "none": "なし",
+      "unknown": "不明",
+      "fieldId": "🆔 ID",
+      "fieldBot": "🤖 ボット",
+      "fieldCreated": "📅 アカウント作成日",
+      "fieldNickname": "🏷️ ニックネーム",
+      "fieldJoined": "📥 サーバー参加日",
+      "fieldRoles": "🎭 ロール（{count}）",
+      "fieldBoosting": "💎 ブースト開始日"
+    },
+    "birthday": {
+      "setTitle": "🎂 誕生日を設定しました！",
+      "set": "誕生日を {date} に設定しました。",
+      "removed": "誕生日を削除しました。",
+      "none": "このサーバーではまだ誕生日が登録されていません。",
+      "listTitle": "🎂 近日中の誕生日",
+      "total": "合計 {count} 件",
+      "userNotSet": "{user} は誕生日を設定していません。",
+      "userBirthday": "🎂 {user} の誕生日は {date} です"
+    },
+    "selfrole": {
+      "needManageRoles": "❌ これを使用するには **ロールの管理** 権限が必要です。",
+      "roleTooHigh": "❌ ロール一覧でボットのロールが **{role}** より下にあります。先にボットのロールを上に移動してください。",
+      "added": "✅ {role} が `{name}` として自己付与可能になりました。\nメンバーは `/selfassignrole {name}` を実行して取得できます。",
+      "exists": "❌ その名前またはロールの自己付与ロールはすでに存在します。`/selfrole list` で現在のエントリを確認してください。",
+      "notFound": "❌ `{name}` という名前の自己付与ロールが見つかりません。",
+      "removed": "✅ `{name}` を自己付与ロール一覧から削除しました。",
+      "none": "自己付与ロールはまだ設定されていません。管理者は `/selfrole add` でロールを追加できます。",
+      "listTitle": "自己付与ロール",
+      "listFooter": "取得するには /selfassignrole <名前> · 外すには /selfremoverole <名前>",
+      "roleDeleted": "ロールが削除されました"
+    },
+    "analytics": {
+      "missingPermTitle": "権限がありません",
+      "missingPerm": "分析を設定するには **サーバー管理** 権限が必要です。",
+      "channelSetTitle": "分析チャンネルを設定しました",
+      "channelSet": "週次の分析レポートは {channel} に投稿されます。",
+      "disabledTitle": "分析を無効にしました",
+      "disabled": "自動の週次分析レポートを無効にしました。",
+      "reportTitle": "📊 サーバー分析 — 過去30日間",
+      "messages": "メッセージ",
+      "commands": "コマンド",
+      "joins": "参加",
+      "leaves": "退出",
+      "netGrowth": "純増減"
+    },
+    "autoresponse": {
+      "invalidRegexTitle": "無効な正規表現",
+      "invalidRegex": "パターン `{pattern}`（フラグ `{flags}`）は有効な正規表現ではありません。",
+      "addedTitle": "自動応答を追加しました",
+      "added": "**ID:** `{id}`\n**パターン:** `{pattern}`（フラグ: `{flags}`）\n**応答:** {response}",
+      "notFoundTitle": "見つかりません",
+      "notFound": "このサーバーにそのIDの自動応答は見つかりません。",
+      "removedTitle": "自動応答を削除しました",
+      "removed": "パターン `{pattern}` を削除しました。",
+      "updatedTitle": "自動応答を更新しました",
+      "updated": "パターン `{pattern}` は現在 **{state}** です。",
+      "noneTitle": "自動応答なし",
+      "none": "このサーバーには自動応答が設定されていません。",
+      "listTitle": "自動応答",
+      "listFooter": "このリストの完全なIDを /autoresponse remove または toggle で使用してください"
+    },
+    "poll": {
+      "votes": "{count} 票",
+      "totalVotes": "合計 {count} 票",
+      "ends": "終了",
+      "endPoll": "投票を終了",
+      "ended": "[終了] {question}",
+      "optionCount": "`|` で区切って2〜10個の選択肢を入力してください。",
+      "notFound": "投票が見つかりません。",
+      "alreadyEnded": "この投票は終了しています。",
+      "cannotEnd": "投票を終了できるのは作成者またはモデレーターのみです。"
+    },
+    "giveaway": {
+      "invalidDuration": "無効な期間です。",
+      "fieldPrize": "**賞品:** {prize}",
+      "fieldWinners": "**当選者数:** {count}",
+      "fieldEnds": "**終了:** {time}",
+      "fieldRequiredRole": "**必須ロール:** {role}",
+      "fieldBonus": "**ボーナス参加:** {role} は +{count} 口の参加を獲得",
+      "enterPrompt": "🎉 でリアクションして参加！",
+      "title": "🎉 ギブアウェイ！",
+      "winnersFooter": "{count} 名の当選者",
+      "started": "ギブアウェイを開始しました！ ID: `{id}`",
+      "notFound": "ギブアウェイが見つかりません。",
+      "alreadyEnded": "ギブアウェイはすでに終了しています。",
+      "willEnd": "ギブアウェイは次のチェックサイクル（1分以内）で終了します。",
+      "notEnded": "ギブアウェイが見つからないか、まだ終了していません。",
+      "noChannel": "ギブアウェイのチャンネルが見つかりませんでした。",
+      "noMessage": "ギブアウェイのメッセージが見つかりませんでした。",
+      "noReactions": "リアクションが見つかりませんでした。",
+      "noEligible": "対象となる参加者がいません。",
+      "rerollAnnounce": "🎉 再抽選！新しい当選者: {winners}！ **{prize}** の当選おめでとうございます！",
+      "rerolled": "再抽選しました！"
+    },
+    "forum": {
+      "invalidChannelTitle": "無効なチャンネル",
+      "invalidChannel": "フォーラムチャンネルを選択してください。",
+      "templateSetTitle": "テンプレートを設定しました",
+      "templateSet": "{channel} のテンプレートメッセージを設定しました。",
+      "autoTagSetTitle": "自動タグを設定しました",
+      "autoTagSet": "タグ `{tag}` は {channel} で自動的に適用されます。",
+      "clearedTitle": "設定をクリアしました",
+      "cleared": "{channel} のフォーラム管理設定を削除しました。"
+    },
+    "help": {
+      "cat": {
+        "moderation": "モデレーション",
+        "leveling": "レベル",
+        "community": "コミュニティ",
+        "music": "音楽",
+        "utility": "ユーティリティ"
+      },
+      "overviewTitle": "📋 コマンドリファレンス",
+      "overviewDesc": "**{categories} カテゴリ**にわたって、あなたが利用できる **{commands} 個のコマンド** があります。",
+      "overviewHint": "◀ ▶ で移動、または **概要** をクリックしてここに戻ります。",
+      "cmdCount": "{count} 個",
+      "overview": "概要",
+      "pageFooter": "ページ {page}/{total}  ·  あなたが利用できるコマンド {commands} 個",
+      "notYourMenu": "このメニューは他の人のものです。"
+    }
   }
 }

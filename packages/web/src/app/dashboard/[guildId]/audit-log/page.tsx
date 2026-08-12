@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { auditLogApi } from '@/lib/api';
 import { useState } from 'react';
 import { History, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 type AuditEntry = {
   id: string;
@@ -22,12 +23,6 @@ const METHOD_STYLES: Record<string, string> = {
   DELETE: 'bg-red-500/15 text-red-400 border-red-500/30',
 };
 
-const METHOD_VERBS: Record<string, string> = {
-  POST: 'Created',
-  PATCH: 'Updated',
-  DELETE: 'Deleted',
-};
-
 /** "trello-alerts" → "Trello Alerts" */
 function humanizeSection(section: string): string {
   return section
@@ -38,7 +33,10 @@ function humanizeSection(section: string): string {
 
 export default function AuditLogPage() {
   const { guildId } = useParams() as { guildId: string };
+  const t = useTranslations('auditLog');
   const [page, setPage] = useState(1);
+  const methodVerb = (m: string): string =>
+    ({ POST: t('verbCreated'), PATCH: t('verbUpdated'), DELETE: t('verbDeleted') } as Record<string, string>)[m] ?? m;
 
   const { data: res, isLoading } = useQuery({
     queryKey: ['audit-log', guildId, page],
@@ -62,16 +60,16 @@ export default function AuditLogPage() {
       <div className="page-head">
         <div className="page-head-icon"><History className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>Dashboard Audit Log</h1>
-          <div className="page-head-desc">Every change made to this server&apos;s settings through the web dashboard — who, what, and when.</div>
+          <h1>{t('title')}</h1>
+          <div className="page-head-desc">{t('description')}</div>
         </div>
       </div>
 
       {entries.length === 0 ? (
         <div className="card empty-state">
           <div className="empty-state-icon"><History className="w-6 h-6" /></div>
-          <h4>No dashboard changes yet</h4>
-          <p>Entries appear here whenever an admin saves settings, creates alerts, or deletes configuration through the dashboard.</p>
+          <h4>{t('emptyTitle')}</h4>
+          <p>{t('emptyDesc')}</p>
         </div>
       ) : (
         <>
@@ -82,8 +80,8 @@ export default function AuditLogPage() {
                 const d = new Date(entry.createdAt);
                 const today = new Date();
                 const yesterday = new Date(Date.now() - 86400000);
-                const day = d.toDateString() === today.toDateString() ? 'Today'
-                  : d.toDateString() === yesterday.toDateString() ? 'Yesterday'
+                const day = d.toDateString() === today.toDateString() ? t('today')
+                  : d.toDateString() === yesterday.toDateString() ? t('yesterday')
                   : d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
                 const g = groups[groups.length - 1];
                 if (g && g.day === day) g.items.push(entry);
@@ -102,7 +100,7 @@ export default function AuditLogPage() {
                         <div className="flex-1 min-w-0 text-[13px]">
                           <span className="font-semibold text-white">{entry.username ?? entry.userId}</span>{' '}
                           <span className={`inline-block align-middle mx-1 text-[10.5px] font-semibold px-2 py-px rounded-full border ${METHOD_STYLES[entry.method] ?? 'bg-gray-500/15 text-gray-400 border-gray-500/30'}`}>
-                            {METHOD_VERBS[entry.method] ?? entry.method}
+                            {methodVerb(entry.method)}
                           </span>{' '}
                           <span className="text-gray-300">{humanizeSection(entry.section)}</span>
                           <div className="font-mono text-[10.5px] text-[var(--text-muted)] truncate">{entry.path}</div>
@@ -125,15 +123,15 @@ export default function AuditLogPage() {
                 disabled={page <= 1}
                 className="btn-secondary flex items-center gap-1 disabled:opacity-40"
               >
-                <ChevronLeft className="w-4 h-4" /> Previous
+                <ChevronLeft className="w-4 h-4" /> {t('previous')}
               </button>
-              <span className="text-xs text-gray-500">Page {page} of {pages}</span>
+              <span className="text-xs text-gray-500">{t('pageOf', { page, pages })}</span>
               <button
                 onClick={() => setPage((p) => Math.min(pages, p + 1))}
                 disabled={page >= pages}
                 className="btn-secondary flex items-center gap-1 disabled:opacity-40"
               >
-                Next <ChevronRight className="w-4 h-4" />
+                {t('next')} <ChevronRight className="w-4 h-4" />
               </button>
             </div>
           )}
