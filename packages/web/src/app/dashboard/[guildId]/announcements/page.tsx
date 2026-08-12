@@ -7,6 +7,7 @@ import { SettingsSection } from '@/components/SettingsSection';
 import toast from 'react-hot-toast';
 import { useState, useEffect } from 'react';
 import { Megaphone } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface AnnouncementSettings {
   announcementsEnabled: boolean;
@@ -15,6 +16,7 @@ interface AnnouncementSettings {
 
 export default function AnnouncementsSettingsPage() {
   const { guildId } = useParams() as { guildId: string };
+  const t = useTranslations('announcements');
   const queryClient = useQueryClient();
   const [settings, setSettings] = useState<AnnouncementSettings>({
     announcementsEnabled: false,
@@ -40,10 +42,10 @@ export default function AnnouncementsSettingsPage() {
   const mutation = useMutation({
     mutationFn: (data: Partial<AnnouncementSettings>) => announcementsApi.updateSettings(guildId, data),
     onSuccess: () => {
-      toast.success('Announcement settings saved!');
+      toast.success(t('saved'));
       queryClient.invalidateQueries({ queryKey: ['announcement-settings', guildId] });
     },
-    onError: () => toast.error('Failed to save settings.'),
+    onError: () => toast.error(t('saveError')),
   });
 
   const channels = (channelsRes?.data?.data ?? []) as Array<{ id: string; name: string; type: number }>;
@@ -70,20 +72,20 @@ export default function AnnouncementsSettingsPage() {
       <div className="page-head">
         <div className="page-head-icon"><Megaphone className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>Bot Announcements</h1>
-          <div className="page-head-desc">Receive update announcements directly in your server</div>
+          <h1>{t('title')}</h1>
+          <div className="page-head-desc">{t('description')}</div>
         </div>
       </div>
 
       <SettingsSection
-        title="Announcement Settings"
-        description="When enabled, Arken Bot will post staff-crafted update announcements in your chosen channel. You can disable this at any time."
+        title={t('sectionTitle')}
+        description={t('sectionDesc')}
       >
         {/* Enable toggle */}
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-white font-medium text-sm">Enable announcements</p>
-            <p className="text-gray-400 text-xs mt-0.5">Receive bot update posts in this server</p>
+            <p className="text-white font-medium text-sm">{t('enableLabel')}</p>
+            <p className="text-gray-400 text-xs mt-0.5">{t('enableDesc')}</p>
           </div>
           <button
             onClick={() => handleSave({ announcementsEnabled: !settings.announcementsEnabled })}
@@ -102,20 +104,20 @@ export default function AnnouncementsSettingsPage() {
         {/* Channel picker — only shown when enabled */}
         {settings.announcementsEnabled && (
           <div>
-            <label className="label">Announcement Channel</label>
+            <label className="label">{t('channelLabel')}</label>
             <select
               className="input w-full"
               value={settings.announcementChannelId ?? ''}
               onChange={(e) => handleSave({ announcementChannelId: e.target.value || null })}
             >
-              <option value="">Select a channel…</option>
+              <option value="">{t('selectChannel')}</option>
               {textChannels.map((c) => (
                 <option key={c.id} value={c.id}>#{c.name}</option>
               ))}
             </select>
             {!settings.announcementChannelId && (
               <p className="text-yellow-400 text-xs mt-1">
-                You must select a channel to receive announcements.
+                {t('mustSelect')}
               </p>
             )}
           </div>

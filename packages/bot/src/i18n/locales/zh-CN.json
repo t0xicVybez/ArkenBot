@@ -2,27 +2,844 @@
   "common": {
     "error": "错误",
     "success": "成功",
-    "notInServer": "此命令必须在服务器中使用"
+    "notInServer": "此命令必须在服务器中使用。",
+    "enabled": "已启用",
+    "disabled": "已禁用"
   },
   "language": {
-    "commandDescription": "设置或查看我回复给你的语言",
-    "setDescription": "选择我回复给你的语言",
+    "commandDescription": "设置或查看我回复你时使用的语言",
+    "setDescription": "选择我回复你时使用的语言",
     "clearDescription": "清除你的语言并恢复自动检测",
-    "showDescription": "显示你的当前语言",
+    "showDescription": "显示你当前的语言",
     "optionDescription": "要使用的语言",
     "setTitle": "语言已更新",
-    "set": "我现在将以 **{language}** 回复你。",
+    "set": "我现在会用 **{language}** 回复你。",
     "clearedTitle": "语言已重置",
-    "cleared": "你的语言偏好已被清除 —— 我将从你的 Discord 设置中自动检测它。",
+    "cleared": "你的语言偏好已清除——我会根据你的 Discord 设置自动检测。",
     "currentTitle": "你的语言",
-    "currentSet": "你的语言设置为 **{language}**。",
-    "currentAuto": "你没有设置语言，所以我会自动检测（当前为 **{language}**）。",
-    "invalid": "**{input}** 不是支持的语言。"
+    "currentSet": "你的语言已设置为 **{language}**。",
+    "currentAuto": "你尚未设置语言，因此我会自动检测（当前为 **{language}**）。",
+    "invalid": "**{input}** 不是受支持的语言。"
   },
   "moderation": {
-    "disabledTitle": "已禁用管理",
-    "disabled": "此服务器的管理命令已被禁用。",
+    "disabledTitle": "管理功能已禁用",
+    "disabled": "此服务器已禁用管理命令。",
     "cannotBanSelfTitle": "无效目标",
-    "cannotBanSelf": "你不能禁止自己。"
+    "cannotBanSelf": "你不能封禁自己。"
+  },
+  "welcome": {
+    "title": "👋 欢迎来到 {server}！",
+    "accountAge": "📅 账号年龄",
+    "memberCount": "👥 成员数量"
+  },
+  "leveling": {
+    "levelUp": "升级了！",
+    "milestoneReached": "达成 {label} 里程碑！",
+    "level": "等级",
+    "achievement": "成就",
+    "milestones": {
+      "legendary": "🏆 传奇",
+      "diamond": "💎 钻石",
+      "century": "🌟 百级",
+      "elite": "⚡ 精英",
+      "veteran": "🔥 老兵",
+      "experienced": "🥇 资深",
+      "rising": "🥈 新星",
+      "newcomer": "🥉 新人"
+    }
+  },
+  "counting": {
+    "ruined": "❌ {user} 在 **{count}** 处破坏了计数！从 **1** 重新开始。",
+    "twiceInRow": "❌ {user} 不能连续计数两次！计数已重置——从 **1** 重新开始。"
+  },
+  "automod": {
+    "kickedTitle": "已从 {server} 踢出",
+    "filterKickDM": "由于多次违反屏蔽词过滤器，你已被从 **{server}** 踢出（第 {count} 次违规）。",
+    "filterKick": "⛔ {user} 由于多次违反屏蔽词过滤器被**踢出**（第 {count} 次违规）。",
+    "filterWarn": "⚠️ {user} 你的消息因包含屏蔽词已被删除（第 {count} 次违规）。",
+    "removed": "{user} 你的消息已被删除：**{reason}**",
+    "reasons": {
+      "spam": "检测到刷屏",
+      "link": "检测到被屏蔽的链接",
+      "mention": "提及刷屏",
+      "caps": "过度使用大写字母"
+    },
+    "phishingRemoved": "⚠️ {user} —— 你的消息因包含已知钓鱼链接已被删除。",
+    "aiFlagTitle": "🤖 AI 管理标记",
+    "aiFlagDescription": "已将 {channel} 中 {user} 的一条消息标记以供审核。\n\n**类别：**{category} · **严重程度：**{severity}\n**原因：**{reason}\n[跳转到消息]({url})",
+    "aiFlagFooter": "AI 生成 · 处理前请先审核"
+  },
+  "verification": {
+    "verifyChannelFallback": "验证频道",
+    "dmWelcome": "欢迎来到 **{server}**！请点击 {channel} 中的“验证”按钮以获得访问权限。",
+    "serverOnly": "此按钮只能在服务器中使用。",
+    "notConfigured": "此服务器尚未配置验证。",
+    "fetchFailed": "无法获取你的成员数据。",
+    "verified": "✅ 已验证！欢迎加入服务器。",
+    "error": "验证过程中发生错误。",
+    "panelTitle": "✅ 验证你的账号",
+    "panelDescription": "点击下方按钮进行验证并获得服务器访问权限。",
+    "buttonLabel": "验证"
+  },
+  "starboard": {
+    "unknownAuthor": "未知",
+    "source": "来源",
+    "jumpToMessage": "[跳转到消息]({url})"
+  },
+  "reactionRoles": {
+    "addOnly": " *(仅添加)*",
+    "removeOnly": " *(仅移除)*",
+    "noRoles": "*尚未配置任何身份组。*",
+    "footer": "{count} 个身份组 • 用表情回应来给自己分配身份组"
+  },
+  "antiNuke": {
+    "alertTitle": "🚨 反炸群警报",
+    "alertDescription": "用户 {user} 在 **{server}** 超过了 **{action}** 阈值，已被移除权限。",
+    "triggeredTitle": "🚨 反炸群已触发",
+    "triggeredDescription": "{user} 因超过 **{action}** 操作阈值而受到处罚。",
+    "actionTaken": "已采取的措施",
+    "deopped": "已移除权限（身份组已删除）",
+    "trigger": "触发条件"
+  },
+  "onboarding": {
+    "title": "👋 感谢添加 ArkenBot！",
+    "description": "ArkenBot 刚刚加入了 **{server}**。以下是几分钟内完成设置的方法：",
+    "step1Name": "1️⃣ 配置你的服务器",
+    "step1Value": "使用 Discord 登录[控制面板]({dashboardUrl})，选择 **{server}**，并启用你需要的功能——管理、等级、工单、直播提醒等。",
+    "step2Name": "2️⃣ 设置公告频道",
+    "step2Value": "在**控制面板 → 公告**中，选择一个频道以接收有关 ArkenBot 的更新——新功能、更改和重要通知都会发到那里。",
+    "step3Name": "3️⃣ 阅读文档",
+    "step3Value": "每项功能都在 [docs.arkenbot.app]({docsUrl}) 上有指南。",
+    "footer": "ArkenBot —— 完全免费，无付费墙",
+    "buttonDashboard": "打开控制面板",
+    "buttonDocs": "文档",
+    "buttonSupport": "支持服务器"
+  },
+  "music": {
+    "playbackFailedTitle": "⚠️ 播放失败",
+    "playbackFailedDescription": "无法播放 **{title}**。\n`{reason}`",
+    "playbackFailedFooter": "请尝试其他搜索，或检查 yt-dlp 是否为最新版本。",
+    "nowPlayingTitle": "🎵 正在播放",
+    "requestedBy": "点播者",
+    "duration": "时长"
+  },
+  "topgg": {
+    "voteReminder": "🗳️ 你可以再次在 top.gg 为 **{bot}** 投票了！\n{url}\n\n_随时用 `/vote reminders:off` 关闭提醒。_"
+  },
+  "birthday": {
+    "title": "🎂 生日快乐！"
+  },
+  "reminders": {
+    "deliver": "{user} 提醒：{message}"
+  },
+  "giveaway": {
+    "noEntrants": "没有符合条件的参与者",
+    "winnerLabel": "获奖者",
+    "winnersLabel": "获奖者",
+    "ended": "🎉 抽奖结束！{winnerLabel}：{winners}\n奖品：**{prize}**",
+    "endedTitle": "🎉 抽奖已结束",
+    "endedEmbed": "**奖品：**{prize}\n**{winnerLabel}：**{winners}"
+  },
+  "streamAlert": {
+    "youtubeLive": "{streamer} 正在 YouTube 直播！",
+    "twitchLive": "{streamer} 正在 Twitch 直播！",
+    "playing": "正在玩",
+    "unknownGame": "未知",
+    "kickLive": "{streamer} 正在 Kick 直播！",
+    "twitterPosted": "{handle} 在 X 上发帖了",
+    "redditPostedBy": "由 u/{author} 发布于 r/{subreddit}",
+    "rssNewPost": "**{feed}** 的新帖子"
+  },
+  "announcement": {
+    "author": "ArkenBot 公告",
+    "buttonChangelog": "完整更新日志",
+    "buttonDashboard": "控制面板",
+    "labels": {
+      "update": "更新",
+      "feature": "新功能",
+      "maintenance": "维护",
+      "hotfix": "热修复"
+    }
+  },
+  "logging": {
+    "user": "用户",
+    "moderator": "管理员",
+    "reason": "原因",
+    "noReason": "未提供原因",
+    "messageDeleted": "🗑️ 消息已删除",
+    "author": "作者",
+    "channel": "频道",
+    "content": "内容",
+    "messageEdited": "✏️ 消息已编辑",
+    "before": "之前",
+    "after": "之后",
+    "noContent": "*无内容*",
+    "memberJoined": "📥 成员加入",
+    "accountAge": "账号年龄",
+    "memberCount": "成员数量",
+    "memberLeft": "📤 成员离开",
+    "joined": "加入时间",
+    "unknown": "未知"
+  },
+  "cmd": {
+    "kick": {
+      "cannotSelf": "你不能踢出自己。",
+      "cannotSelfBot": "我不能踢出自己。",
+      "notFoundTitle": "未找到",
+      "notFound": "该用户不在此服务器中。",
+      "hierarchyTitle": "层级错误",
+      "notKickable": "我无法踢出此成员。",
+      "hierarchyUser": "你不能踢出身份组高于或等于你的成员。",
+      "dmAction": "已从 {guild} 踢出",
+      "action": "踢出",
+      "failedTitle": "失败",
+      "failed": "我无法踢出该成员。请检查我的权限。"
+    },
+    "unban": {
+      "invalidIdTitle": "无效 ID",
+      "invalidId": "请提供有效的 Discord 用户 ID。",
+      "notBannedTitle": "未被封禁",
+      "notBanned": "该用户未在此服务器被封禁。",
+      "successTitle": "已解封",
+      "success": "已成功解封 **{user}**（{userId}）\n**原因：**{reason}",
+      "failedTitle": "失败",
+      "failed": "无法解封该用户。"
+    },
+    "warn": {
+      "cannotSelf": "你不能警告自己。",
+      "notFoundTitle": "未找到",
+      "notFound": "该用户不在此服务器中。",
+      "hierarchyTitle": "层级错误",
+      "hierarchyUser": "你不能警告身份组高于或等于你的成员。",
+      "dmAction": "在 {guild} 的警告",
+      "escalationMute": "已自动禁言（{count} 次警告达到阈值）。",
+      "escalationTimeout": "已自动禁言 {duration} 秒（{count} 次警告达到阈值）。",
+      "escalationBan": "已自动封禁（{count} 次警告达到阈值）。",
+      "escalationKick": "已自动踢出（{count} 次警告达到阈值）。",
+      "action": "警告",
+      "totalWarnings": "警告总数"
+    },
+    "mute": {
+      "invalidDurationTitle": "无效时长",
+      "invalidDuration": "请使用如 `10m`、`1h`、`1d` 的格式。最长为 28 天。",
+      "tooLongTitle": "时间过长",
+      "tooLong": "Discord 禁言的最长时间为 28 天。",
+      "notFoundTitle": "未找到",
+      "notFound": "该用户不在此服务器中。",
+      "hierarchyTitle": "层级错误",
+      "hierarchyUser": "你不能禁言身份组高于或等于你的成员。",
+      "notMutable": "我无法禁言此成员。",
+      "dmAction": "在 {guild} 被禁言",
+      "action": "禁言",
+      "failedTitle": "失败",
+      "failed": "我无法禁言该成员。"
+    },
+    "case": {
+      "notFoundTitle": "未找到",
+      "notFound": "未找到案件 #{number}。",
+      "caseLabel": "案件 #{number}",
+      "fieldUser": "用户",
+      "fieldModerator": "管理员",
+      "fieldReason": "原因",
+      "fieldStatus": "状态",
+      "fieldDate": "日期",
+      "fieldDuration": "时长",
+      "statusActive": "🔴 进行中",
+      "statusResolved": "🟢 已解决",
+      "noOpenTitle": "没有未结案件",
+      "noOpen": "未找到 {user} 的未结案件。",
+      "closedTitle": "案件已关闭",
+      "closed": "已关闭 {user} 的 **{count}** 个未结案件。\n**原因：**{reason}"
+    },
+    "clearwarnings": {
+      "cannotSelf": "你不能清除自己的警告。",
+      "hierarchyTitle": "层级错误",
+      "hierarchyUser": "你不能管理身份组高于或等于你的成员的警告。",
+      "noActiveTitle": "✅ 没有有效警告",
+      "noActive": "{user} 没有可清除的有效警告。",
+      "dmTitle": "在 {guild} 的警告已清除",
+      "dmDesc": "你的 {count} 条有效警告已被管理员清除。",
+      "clearedTitle": "✅ 警告已清除",
+      "fieldUser": "用户",
+      "fieldCleared": "已清除",
+      "clearedValue": "{count} 条警告",
+      "fieldModerator": "管理员",
+      "fieldReason": "原因"
+    },
+    "warnings": {
+      "noneTitle": "✅ 没有警告",
+      "noneAll": "{user} 没有任何警告。",
+      "noneActive": "{user} 没有有效警告。",
+      "title": "⚠️ {user} 的警告",
+      "lineMeta": "由 {moderator} 于 {date}",
+      "cleared": "~~(已清除)~~",
+      "footer": "显示 {count} 条警告"
+    },
+    "note": {
+      "addedTitle": "备注已添加",
+      "added": "已为 **{user}** 添加备注 `{id}`。\n\n> {content}",
+      "noNotesTitle": "没有备注",
+      "noNotes": "未找到 **{user}** 的备注。",
+      "listTitle": "📝 {user} 的备注",
+      "listFooter": "显示最近 {count} 条备注",
+      "fieldName": "ID：`{id}` — {date} 由 {staff}",
+      "notFoundTitle": "未找到",
+      "notFound": "未找到该用户和 ID 的备注。",
+      "removedTitle": "备注已移除",
+      "removed": "备注 `{id}` 已删除。",
+      "cancelledTitle": "已取消",
+      "cancelled": "设置 `confirm: true` 以清除所有备注。",
+      "clearedTitle": "备注已清除",
+      "cleared": "已删除 **{user}** 的 **{count}** 条备注。"
+    },
+    "ctxBan": {
+      "notFoundTitle": "未找到",
+      "notFound": "找不到该用户。",
+      "hierarchyTitle": "层级错误",
+      "hierarchyUser": "你不能封禁身份组高于或等于你的成员。",
+      "dmAction": "已从 {guild} 封禁",
+      "action": "封禁"
+    },
+    "ctxTimeout": {
+      "invalidDurationTitle": "无效时长",
+      "invalidDuration": "时长必须在 5 秒到 28 天之间（例如 10m、1h、7d）。",
+      "notFoundTitle": "未找到",
+      "notFoundUser": "找不到该用户。",
+      "notInServer": "该用户不在此服务器中。",
+      "hierarchyTitle": "层级错误",
+      "hierarchyUser": "你不能禁言身份组高于或等于你的成员。",
+      "dmAction": "在 {guild} 的禁言",
+      "action": "禁言"
+    },
+    "ctxWarn": {
+      "notFoundTitle": "未找到",
+      "notFound": "找不到该用户。",
+      "hierarchyTitle": "层级错误",
+      "hierarchyUser": "你不能警告身份组高于或等于你的成员。",
+      "dmAction": "在 {guild} 的警告",
+      "action": "警告",
+      "totalWarnings": "警告总数"
+    },
+    "purge": {
+      "textOnly": "此命令只能在文字频道中使用。",
+      "noMatch": "没有消息符合筛选条件（消息必须在 14 天以内）。",
+      "bulkTextOnly": "批量删除仅在文字频道中可用。",
+      "deleted": "已删除 {count} 条消息。"
+    },
+    "suggestion": {
+      "notFound": "未找到建议。",
+      "statusApproved": "已批准",
+      "statusDenied": "已拒绝",
+      "statusConsidering": "考虑中",
+      "footer": "由 {user} {status}",
+      "result": "建议已{status}。"
+    },
+    "temprole": {
+      "memberNotFound": "在此服务器中未找到该成员。",
+      "invalidDurationTitle": "无效时长",
+      "invalidDuration": "请使用如 `30m`、`2h`、`7d` 的格式。最短为 60 秒。",
+      "assignedTitle": "临时身份组已分配",
+      "assigned": "已将 {role} 分配给 {member}，有效期至 {expires}。\n**原因：**{reason}",
+      "notFoundTitle": "未找到",
+      "notFound": "未找到该成员和身份组的有效临时身份组记录。",
+      "removedTitle": "临时身份组已移除",
+      "removed": "已从 {member} 移除 {role}。",
+      "noneTitle": "没有有效的临时身份组",
+      "none": "此服务器没有有效的临时身份组。",
+      "listLine": "{user} → {role} — 于 {expires} 到期",
+      "listTitle": "有效的临时身份组"
+    },
+    "verification": {
+      "enabledTitle": "验证门槛已启用",
+      "enabled": "待定身份组：{pending}\n成员身份组：{member}\n验证频道：{channel}",
+      "disabledTitle": "验证已禁用",
+      "disabled": "验证门槛已被禁用。"
+    },
+    "invites": {
+      "notInServer": "请在服务器中使用此命令。",
+      "disabledTitle": "已禁用",
+      "disabled": "此服务器未启用邀请追踪。",
+      "title": "邀请 — {user}",
+      "totalInvites": "邀请总数",
+      "bonus": "额外"
+    },
+    "invitetop": {
+      "notInServer": "请在服务器中使用此命令。",
+      "disabledTitle": "已禁用",
+      "disabled": "此服务器未启用邀请追踪。",
+      "noDataTitle": "无数据",
+      "noData": "尚未记录任何邀请数据。",
+      "line": "{prefix} {user} — **{count}** 个邀请",
+      "title": "🏆 顶级邀请者 — {guild}",
+      "footer": "前 {count} 名邀请者"
+    },
+    "vote": {
+      "statusCooldown": "⏳ 你可以在 {time} 再次投票",
+      "statusReady": "✅ 你现在就可以投票！",
+      "title": "🗳️ 在 top.gg 投票",
+      "description": "每 12 小时用一次免费投票支持我们吧——只需 10 秒，帮助很大。\n\n**[▶ 在此投票]({voteUrl})**\n\n{status}",
+      "yourVotes": "你的投票数",
+      "currentStreak": "当前连续记录",
+      "streakValue": "{count} 🔥",
+      "reminders": "提醒",
+      "on": "开",
+      "off": "关",
+      "perkRole": "{hours} 小时的 {role} 身份组",
+      "perkXp": "+{xp} XP",
+      "perkWeekend": "（周末双倍）",
+      "rewardsHere": "🎁 奖励在此",
+      "footerOn": "提醒已开——当你可以再次投票时我会私信你。",
+      "footerOff": "提醒已关。"
+    },
+    "topvoters": {
+      "noVotes": "尚无投票记录——用 `/vote` 成为第一个吧！🗳️",
+      "unknownUser": "用户 {id}",
+      "line": "{rank} {name} — **{count}** 票{streak}",
+      "title": "🏆 顶级投票者",
+      "footer": "用 /vote 投票 · {url}"
+    },
+    "report": {
+      "statusPending": "待处理",
+      "statusDismissed": "已驳回",
+      "statusReviewed": "已审核",
+      "embedTitle": "📋 成员举报",
+      "fieldReporter": "举报者",
+      "fieldTarget": "目标",
+      "fieldReason": "原因",
+      "fieldStatus": "状态",
+      "fieldReviewedBy": "审核者",
+      "fieldStaffNote": "工作人员备注",
+      "btnDismiss": "驳回",
+      "btnTakeAction": "采取行动",
+      "cannotSelf": "你不能举报自己。",
+      "submittedTitle": "举报已提交",
+      "submitted": "你的举报已提交给管理团队。",
+      "notFound": "未找到举报。",
+      "markedReviewed": "举报已标记为已审核。"
+    },
+    "reportSetup": {
+      "title": "举报系统已配置",
+      "configured": "举报现在将发送到 {channel}。"
+    },
+    "startcounting": {
+      "notInServer": "请在服务器中使用此命令。",
+      "notConfiguredTitle": "未配置",
+      "notConfigured": "计数插件未安装或未设置频道。请先在控制面板中配置。",
+      "channelNotFoundTitle": "未找到频道",
+      "channelNotFound": "配置的计数频道已不存在。",
+      "title": "🔢 计数游戏",
+      "description": "计数游戏开始了！从 **1** 开始计数，看看我们能数到多高。\n\n每次数一个数字——下一位必须发送序列中的下一个数字。",
+      "fieldCurrentCount": "当前计数",
+      "fieldBestCount": "最佳计数",
+      "fieldResetOnFail": "失败时重置",
+      "fieldSameUser": "同一用户连续两次",
+      "yes": "是",
+      "no": "否",
+      "footer": "从 {start} 开始",
+      "posted": "公告已发布到 {channel}！"
+    },
+    "givexp": {
+      "disabledTitle": "等级功能已禁用",
+      "disabled": "此服务器已禁用等级系统。",
+      "invalidUserTitle": "无效用户",
+      "botTarget": "你不能给机器人 XP。",
+      "levelUp": "他们从 **{old}** 级升到了 **{new}** 级！",
+      "title": "已给予 XP",
+      "description": "已给予 {user} **{amount} XP**。",
+      "fieldBefore": "之前",
+      "fieldAfter": "之后",
+      "statValue": "{xp} XP（{level} 级）"
+    },
+    "removexp": {
+      "disabledTitle": "等级功能已禁用",
+      "disabled": "此服务器已禁用等级系统。",
+      "invalidUserTitle": "无效用户",
+      "botTarget": "你不能从机器人移除 XP。",
+      "noDataTitle": "无数据",
+      "noData": "{user} 在此服务器没有 XP。",
+      "levelDown": "他们从 **{old}** 级降到了 **{new}** 级。",
+      "title": "已移除 XP",
+      "description": "已从 {user} 移除 **{amount} XP**。",
+      "fieldBefore": "之前",
+      "fieldAfter": "之后",
+      "statValue": "{xp} XP（{level} 级）"
+    },
+    "rank": {
+      "disabledTitle": "等级功能已禁用",
+      "disabled": "此服务器已禁用等级系统。",
+      "noDataTitle": "无数据",
+      "noData": "{user} 尚未获得任何 XP。",
+      "embedTitle": "📊 {user} 的排名",
+      "fieldRank": "🏆 排名",
+      "fieldLevel": "📈 等级",
+      "fieldTotalXp": "✨ 总 XP",
+      "fieldMessages": "💬 消息数",
+      "fieldProgress": "距 {level} 级的进度"
+    },
+    "stats": {
+      "disabledTitle": "等级功能已禁用",
+      "disabled": "此服务器已禁用等级系统。",
+      "noDataTitle": "无数据",
+      "noData": "{user} 尚未获得任何 XP。",
+      "never": "从不",
+      "title": "{user} 的活跃度统计",
+      "fieldRank": "🏆 排名",
+      "fieldLevel": "📈 等级",
+      "fieldTotalXp": "✨ 总 XP",
+      "fieldMessages": "💬 已发送消息",
+      "fieldDayStreak": "连续天数",
+      "dayValue": "{count} 天",
+      "fieldReputation": "⭐ 声望",
+      "fieldAchievements": "🎖️ 成就",
+      "fieldLastActive": "🕐 最后活跃"
+    },
+    "leaderboard": {
+      "disabledTitle": "等级功能已禁用",
+      "disabled": "此服务器已禁用等级系统。",
+      "emptyTitle": "空",
+      "empty": "此服务器还没有人获得 XP。",
+      "line": "{medal} {user} — **{level}** 级 | **{xp}** XP",
+      "title": "🏆 {guild} 排行榜",
+      "footer": "第 {page}/{pages} 页 • 共 {total} 名用户",
+      "viewFull": "查看完整排行榜"
+    },
+    "profile": {
+      "disabledTitle": "等级功能已禁用",
+      "disabled": "此服务器已禁用等级系统。",
+      "noDataTitle": "无数据",
+      "noData": "{user} 尚未获得任何 XP。",
+      "noAchievements": "*还没有成就。继续聊天吧！*",
+      "unknown": "未知",
+      "title": "{user} 的资料",
+      "fieldServerRank": "🏆 服务器排名",
+      "fieldLevel": "📈 等级",
+      "fieldTotalXp": "✨ 总 XP",
+      "fieldMessages": "💬 消息数",
+      "fieldJoined": "📅 加入时间",
+      "fieldProgress": "距 {level} 级的进度",
+      "fieldAchievements": "🎖️ 成就（{count}）"
+    },
+    "rankcard": {
+      "resetTitle": "已重置",
+      "reset": "你的等级卡已重置为默认样式。",
+      "invalidColorTitle": "无效颜色",
+      "invalidColor": "请提供有效的十六进制颜色代码，例如 `#ff5733` 或 `#f53`。",
+      "colorUpdatedTitle": "颜色已更新",
+      "colorUpdated": "你的等级卡强调色已设置为 `{hex}`。",
+      "invalidUrlTitle": "无效 URL",
+      "invalidUrl": "请提供以 `.png`、`.jpg`、`.gif` 或 `.webp` 结尾的直接图片 URL。",
+      "bgUpdatedTitle": "背景已更新",
+      "bgUpdated": "你的等级卡背景已更新。使用 `/rank` 查看。",
+      "notInServer": "请在服务器中使用此命令。",
+      "previewContent": "这是你的等级卡预览："
+    },
+    "leveling": {
+      "rateNormal": "正常",
+      "rateMultiplied": "{value} 倍的",
+      "multiplierSet": "XP 倍率已设置为 **{value}x**。成员现在每条消息将获得{rate} XP。",
+      "keepRolesOn": "成员在获得更高等级身份组时，现在将**保留所有之前的等级身份组**。",
+      "keepRolesOff": "成员现在**只保留其最高等级身份组**（较低的身份组会被自动移除）。",
+      "syncComplete": "身份组同步完成。已处理 **{processed}** 名成员，为 **{updated}** 名更新了身份组。"
+    },
+    "loop": {
+      "disabledTitle": "音乐功能已禁用",
+      "disabled": "此服务器已禁用音乐命令。",
+      "nothingTitle": "没有正在播放",
+      "nothing": "当前没有正在播放的音乐。",
+      "modeOff": "关闭",
+      "modeTrack": "单曲",
+      "modeQueue": "队列",
+      "title": "循环",
+      "set": "循环模式已设置为 **{mode}**"
+    },
+    "pause": {
+      "disabledTitle": "音乐功能已禁用",
+      "disabled": "此服务器已禁用音乐命令。",
+      "nothingTitle": "没有正在播放",
+      "nothing": "当前没有正在播放的音乐。",
+      "alreadyPausedTitle": "已暂停",
+      "alreadyPaused": "音乐已经暂停了。",
+      "title": "已暂停",
+      "paused": "已暂停 **{title}**"
+    },
+    "resume": {
+      "disabledTitle": "音乐功能已禁用",
+      "disabled": "此服务器已禁用音乐命令。",
+      "nothingTitle": "没有正在播放",
+      "nothing": "当前没有正在播放的音乐。",
+      "notPausedTitle": "未暂停",
+      "notPaused": "音乐没有暂停。",
+      "title": "已继续",
+      "resumed": "已继续播放 **{title}**"
+    },
+    "skip": {
+      "disabledTitle": "音乐功能已禁用",
+      "disabled": "此服务器已禁用音乐命令。",
+      "nothingTitle": "没有正在播放",
+      "nothing": "没有可跳过的内容。",
+      "title": "已跳过",
+      "skipped": "已跳过 **{title}**"
+    },
+    "stop": {
+      "disabledTitle": "音乐功能已禁用",
+      "disabled": "此服务器已禁用音乐命令。",
+      "nothingTitle": "没有正在播放",
+      "nothing": "当前没有正在播放的内容。",
+      "title": "已停止",
+      "stopped": "已停止音乐并清空队列。"
+    },
+    "volume": {
+      "disabledTitle": "音乐功能已禁用",
+      "disabled": "此服务器已禁用音乐命令。",
+      "nothingTitle": "没有正在播放",
+      "nothing": "当前没有正在播放的音乐。",
+      "title": "音量",
+      "set": "音量已设置为 **{level}%**"
+    },
+    "play": {
+      "disabledTitle": "音乐功能已禁用",
+      "disabled": "此服务器已禁用音乐命令。",
+      "joinVcTitle": "请加入语音频道",
+      "joinVc": "你必须在语音频道中才能播放音乐。",
+      "wrongChannelTitle": "频道错误",
+      "wrongChannel": "我已经在 {channel} 播放了",
+      "addedTitle": "已加入队列",
+      "added": "**{title}** 已加入队列。\n位置：#{position}",
+      "nowPlayingTitle": "正在播放",
+      "nowPlaying": "🎵 **{title}**",
+      "requestedBy": "点播者",
+      "duration": "时长",
+      "unknown": "未知",
+      "failed": "无法播放该曲目：{error}"
+    },
+    "queue": {
+      "disabledTitle": "音乐功能已禁用",
+      "disabled": "此服务器已禁用音乐命令。",
+      "nothingTitle": "没有正在播放",
+      "nothing": "当前没有正在播放的音乐。",
+      "title": "🎵 音乐队列",
+      "nowPlaying": "**正在播放：**{title}",
+      "empty": "_队列为空_",
+      "footer": "队列中有 {count} 首歌曲 • 循环：{loop}"
+    },
+    "ping": {
+      "pinging": "正在测试延迟...",
+      "pong": "🏓 Pong！",
+      "roundtrip": "往返延迟",
+      "websocket": "WebSocket"
+    },
+    "avatar": {
+      "title": "{user} 的头像",
+      "footer": "用户 ID：{id}",
+      "openBrowser": "在浏览器中打开"
+    },
+    "invite": {
+      "title": "邀请 ArkenBot",
+      "body": "[点击此处将 ArkenBot 添加到你的服务器]({url})"
+    },
+    "botstatus": {
+      "title": "机器人状态",
+      "fieldServers": "服务器数",
+      "fieldPing": "延迟",
+      "fieldUptime": "运行时间",
+      "fieldMemory": "内存"
+    },
+    "resetxp": {
+      "cancelled": "重置已取消。",
+      "complete": "重置完成。已删除 {count} 名成员的 XP 记录。"
+    },
+    "rep": {
+      "selfGive": "你不能给自己声望。",
+      "botGive": "你不能给机器人声望。",
+      "cooldown": "你今天已经给过声望了。请在 **{hours} 小时**后再试。",
+      "gave": "⭐ {giver} 给了 {target} 一个声望点！\n他们现在有 **{total}** 个声望点。",
+      "checkTitle": "{user} 的声望",
+      "fieldPoints": "⭐ 声望点",
+      "fieldRank": "🏆 服务器排名",
+      "unranked": "未排名",
+      "topEmpty": "此服务器还没有人获得声望点。",
+      "topLine": "{medal} **{name}** — {count} 声望",
+      "topTitle": "⭐ 声望排行榜"
+    },
+    "suggest": {
+      "notEnabled": "此服务器未启用建议功能。",
+      "channelNotFound": "未找到建议频道。",
+      "embedTitle": "新建议",
+      "footer": "建议 ID：{id}",
+      "submitted": "你的建议已提交！"
+    },
+    "selfassignrole": {
+      "noRole": "❌ 没有名为 `{name}` 的可自助分配身份组。使用 `/selfrole list` 查看可用身份组。",
+      "alreadyHave": "你已经拥有 **{name}** 身份组。",
+      "roleGone": "❌ `{name}` 对应的身份组已不存在。请让管理员用 `/selfrole remove` 移除它。",
+      "assigned": "✅ 你已获得 {role} 身份组。",
+      "failed": "❌ 分配身份组失败。请确保机器人的身份组在身份组列表中位于 {role} 之上。"
+    },
+    "selfremoverole": {
+      "noRole": "❌ 没有名为 `{name}` 的可自助分配身份组。使用 `/selfrole list` 查看可用身份组。",
+      "dontHave": "你没有 **{name}** 身份组。",
+      "roleGone": "❌ `{name}` 对应的身份组已不存在。",
+      "removed": "✅ 已移除 {role} 身份组。",
+      "failed": "❌ 移除身份组失败。请确保机器人的身份组在身份组列表中位于 {role} 之上。"
+    },
+    "remind": {
+      "invalidDuration": "无效时长。示例：`10m`、`2h`、`1d`、`7d`",
+      "tooLong": "提醒的最长时长为 28 天。",
+      "set": "提醒已设置！我会在 {time} 提醒你关于“{message}”。"
+    },
+    "serverinfo": {
+      "verifNone": "无",
+      "verifLow": "低",
+      "verifMedium": "中",
+      "verifHigh": "高",
+      "verifVeryHigh": "非常高",
+      "unknown": "未知",
+      "fieldId": "🆔 ID",
+      "fieldOwner": "👑 所有者",
+      "fieldCreated": "📅 创建时间",
+      "fieldMembers": "👥 成员",
+      "fieldBots": "🤖 机器人",
+      "fieldVerification": "🔒 验证等级",
+      "fieldChannels": "📋 频道",
+      "channelsValue": "💬 {text} 个文字 | 🔊 {voice} 个语音 | 📁 {categories} 个分类",
+      "fieldRoles": "🎭 身份组",
+      "fieldEmojis": "😀 表情",
+      "fieldBoosts": "💎 助力",
+      "boostsValue": "{tier} 级（{count} 次助力）",
+      "footer": "服务器 ID：{id}",
+      "featModeration": "管理",
+      "featAutoMod": "自动管理",
+      "featLeveling": "等级",
+      "featWelcome": "欢迎",
+      "featLogging": "日志",
+      "featMusic": "音乐",
+      "featReactionRoles": "反应身份组",
+      "fieldFeatures": "⚙️ 已启用的功能",
+      "noneConfigured": "未配置任何功能"
+    },
+    "userinfo": {
+      "yes": "是",
+      "no": "否",
+      "none": "无",
+      "unknown": "未知",
+      "fieldId": "🆔 ID",
+      "fieldBot": "🤖 机器人",
+      "fieldCreated": "📅 账号创建时间",
+      "fieldNickname": "🏷️ 昵称",
+      "fieldJoined": "📥 加入服务器时间",
+      "fieldRoles": "🎭 身份组（{count}）",
+      "fieldBoosting": "💎 助力起始时间"
+    },
+    "birthday": {
+      "setTitle": "🎂 生日已设置！",
+      "set": "你的生日已设置为 {date}。",
+      "removed": "你的生日已移除。",
+      "none": "此服务器还没有登记任何生日。",
+      "listTitle": "🎂 即将到来的生日",
+      "total": "共 {count} 个",
+      "userNotSet": "{user} 尚未设置生日。",
+      "userBirthday": "🎂 {user} 的生日是 {date}"
+    },
+    "selfrole": {
+      "needManageRoles": "❌ 你需要**管理身份组**权限才能使用此功能。",
+      "roleTooHigh": "❌ 机器人的身份组在身份组列表中低于 **{role}**。请先将机器人的身份组移到它之上。",
+      "added": "✅ {role} 现在可作为 `{name}` 自助分配。\n成员可运行 `/selfassignrole {name}` 来获取它。",
+      "exists": "❌ 已存在具有该名称或身份组的可自助分配身份组。使用 `/selfrole list` 查看当前条目。",
+      "notFound": "❌ 未找到名为 `{name}` 的可自助分配身份组。",
+      "removed": "✅ 已将 `{name}` 从可自助分配列表中移除。",
+      "none": "尚未配置可自助分配的身份组。管理员可用 `/selfrole add` 添加身份组。",
+      "listTitle": "可自助分配的身份组",
+      "listFooter": "用 /selfassignrole <名称> 获取 · 用 /selfremoverole <名称> 移除",
+      "roleDeleted": "身份组已删除"
+    },
+    "analytics": {
+      "missingPermTitle": "缺少权限",
+      "missingPerm": "你需要**管理服务器**权限才能配置分析。",
+      "channelSetTitle": "分析频道已设置",
+      "channelSet": "每周分析报告将发布到 {channel}。",
+      "disabledTitle": "分析已禁用",
+      "disabled": "已关闭自动每周分析报告。",
+      "reportTitle": "📊 服务器分析 —— 最近 30 天",
+      "messages": "消息",
+      "commands": "命令",
+      "joins": "加入",
+      "leaves": "离开",
+      "netGrowth": "净增长"
+    },
+    "autoresponse": {
+      "invalidRegexTitle": "无效正则表达式",
+      "invalidRegex": "带标志 `{flags}` 的模式 `{pattern}` 不是有效的正则表达式。",
+      "addedTitle": "自动回复已添加",
+      "added": "**ID：**`{id}`\n**模式：**`{pattern}`（标志：`{flags}`）\n**回复：**{response}",
+      "notFoundTitle": "未找到",
+      "notFound": "此服务器未找到该 ID 的自动回复。",
+      "removedTitle": "自动回复已移除",
+      "removed": "已删除模式 `{pattern}`。",
+      "updatedTitle": "自动回复已更新",
+      "updated": "模式 `{pattern}` 现在为 **{state}**。",
+      "noneTitle": "没有自动回复",
+      "none": "此服务器未配置任何自动回复。",
+      "listTitle": "自动回复",
+      "listFooter": "用此列表中的完整 ID 配合 /autoresponse remove 或 toggle 使用"
+    },
+    "poll": {
+      "votes": "{count} 票",
+      "totalVotes": "共 {count} 票",
+      "ends": "结束时间",
+      "endPoll": "结束投票",
+      "ended": "[已结束] {question}",
+      "optionCount": "请提供 2 到 10 个用 `|` 分隔的选项。",
+      "notFound": "未找到投票。",
+      "alreadyEnded": "此投票已结束。",
+      "cannotEnd": "只有投票的创建者或管理员才能结束它。"
+    },
+    "giveaway": {
+      "invalidDuration": "无效时长。",
+      "fieldPrize": "**奖品：**{prize}",
+      "fieldWinners": "**获奖者数：**{count}",
+      "fieldEnds": "**结束时间：**{time}",
+      "fieldRequiredRole": "**所需身份组：**{role}",
+      "fieldBonus": "**额外参与：**{role} 可获得 +{count} 次参与机会",
+      "enterPrompt": "用 🎉 回应即可参与！",
+      "title": "🎉 抽奖！",
+      "winnersFooter": "{count} 名获奖者",
+      "started": "抽奖已开始！ID：`{id}`",
+      "notFound": "未找到抽奖。",
+      "alreadyEnded": "抽奖已经结束。",
+      "willEnd": "抽奖将在下一个检查周期（1 分钟内）结束。",
+      "notEnded": "未找到抽奖或抽奖尚未结束。",
+      "noChannel": "找不到抽奖频道。",
+      "noMessage": "找不到抽奖消息。",
+      "noReactions": "未找到任何回应。",
+      "noEligible": "没有符合条件的参与者。",
+      "rerollAnnounce": "🎉 重新抽奖！新的获奖者：{winners}！恭喜赢得 **{prize}**！",
+      "rerolled": "已重新抽奖！"
+    },
+    "forum": {
+      "invalidChannelTitle": "无效频道",
+      "invalidChannel": "请选择一个论坛频道。",
+      "templateSetTitle": "模板已设置",
+      "templateSet": "已为 {channel} 配置模板消息。",
+      "autoTagSetTitle": "自动标签已设置",
+      "autoTagSet": "标签 `{tag}` 将在 {channel} 中自动应用。",
+      "clearedTitle": "配置已清除",
+      "cleared": "已移除 {channel} 的论坛管理配置。"
+    },
+    "help": {
+      "cat": {
+        "moderation": "管理",
+        "leveling": "等级",
+        "community": "社区",
+        "music": "音乐",
+        "utility": "实用工具"
+      },
+      "overviewTitle": "📋 命令参考",
+      "overviewDesc": "你可使用 **{categories} 个类别**中的 **{commands} 条命令**。",
+      "overviewHint": "使用 ◀ ▶ 浏览，或点击**概览**返回此处。",
+      "cmdCount": "{count} 条命令",
+      "overview": "概览",
+      "pageFooter": "第 {page}/{total} 页  ·  你可使用 {commands} 条命令",
+      "notYourMenu": "此菜单属于其他人。"
+    }
   }
 }

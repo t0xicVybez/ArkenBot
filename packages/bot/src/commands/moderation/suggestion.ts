@@ -6,6 +6,7 @@ import { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits, type ChatInputC
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { prisma } from '../../database.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 
 import { swallow } from '../../logger.js';
 const STATUS_COLORS: Record<string, number> = {
@@ -35,6 +36,7 @@ const command: BotCommand = {
   category: 'moderation',
   cooldown: 3,
   async execute(interaction: ChatInputCommandInteraction, _client: BotClient) {
+    const loc = await resolveUserLocale(interaction);
     const sub = interaction.options.getSubcommand();
     const id = interaction.options.getString('id', true);
     const note = interaction.options.getString('note');
@@ -43,11 +45,18 @@ const command: BotCommand = {
 
     const suggestion = await prisma.suggestion.findFirst({ where: { id, guildId: interaction.guildId! } });
     if (!suggestion) {
-      await interaction.reply({ content: 'Suggestion not found.', flags: 64 });
+      await interaction.reply({ content: t('cmd.suggestion.notFound', loc), flags: 64 });
       return;
     }
 
     await prisma.suggestion.update({ where: { id }, data: { status, staffNote: note ?? undefined } });
+
+    const statusLabels: Record<string, string> = {
+      approved: t('cmd.suggestion.statusApproved', loc),
+      denied: t('cmd.suggestion.statusDenied', loc),
+      considering: t('cmd.suggestion.statusConsidering', loc),
+    };
+    const statusLabel = statusLabels[status] ?? status;
 
     if (suggestion.messageId && suggestion.channelId) {
       const channel = interaction.guild!.channels.cache.get(suggestion.channelId);
@@ -56,13 +65,13 @@ const command: BotCommand = {
         if (msg?.editable) {
           const updatedEmbed = EmbedBuilder.from(msg.embeds[0])
             .setColor(STATUS_COLORS[status] ?? 0x5865f2)
-            .setFooter({ text: `${status.charAt(0).toUpperCase() + status.slice(1)} by ${interaction.user.username}${note ? ` · ${note}` : ''}` });
+            .setFooter({ text: `${t('cmd.suggestion.footer', loc, { status: statusLabel, user: interaction.user.username })}${note ? ` · ${note}` : ''}` });
           await msg.edit({ embeds: [updatedEmbed] });
         }
       }
     }
 
-    await interaction.reply({ content: `Suggestion ${status}.`, flags: 64 });
+    await interaction.reply({ content: t('cmd.suggestion.result', loc, { status: statusLabel }), flags: 64 });
   },
 };
 

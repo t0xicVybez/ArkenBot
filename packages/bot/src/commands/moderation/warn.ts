@@ -10,6 +10,7 @@ import {
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { moderationEmbed, errorEmbed } from '../../utils/embed.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 import { canModerate } from '../../utils/permissions.js';
 import { prisma } from '../../database.js';
 import { getNextCaseNumber, getGuildSettings } from '../../utils/settings.js';
@@ -32,10 +33,11 @@ const command: BotCommand = {
 
   async execute(interaction: ChatInputCommandInteraction, _client: BotClient) {
     await interaction.deferReply();
+    const loc = await resolveUserLocale(interaction);
 
     const settings = await getGuildSettings(interaction.guildId!);
     if (settings && !settings.moderationEnabled) {
-      await interaction.editReply({ embeds: [errorEmbed('Moderation Disabled', 'Moderation commands are disabled for this server.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('moderation.disabledTitle', loc), t('moderation.disabled', loc))] });
       return;
     }
 
@@ -43,12 +45,12 @@ const command: BotCommand = {
     const reason = interaction.options.getString('reason', true);
 
     if (!interaction.guild) {
-      await interaction.editReply({ embeds: [errorEmbed('Error', 'This command must be used in a server.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('common.error', loc), t('common.notInServer', loc))] });
       return;
     }
 
     if (targetUser.id === interaction.user.id) {
-      await interaction.editReply({ embeds: [errorEmbed('Invalid Target', 'You cannot warn yourself.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('moderation.cannotBanSelfTitle', loc), t('cmd.warn.cannotSelf', loc))] });
       return;
     }
 
@@ -56,13 +58,13 @@ const command: BotCommand = {
     const targetMember = await interaction.guild.members.fetch(targetUser.id).catch(swallow);
 
     if (!targetMember) {
-      await interaction.editReply({ embeds: [errorEmbed('Not Found', 'That user is not in this server.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('cmd.warn.notFoundTitle', loc), t('cmd.warn.notFound', loc))] });
       return;
     }
 
     if (!canModerate(moderator, targetMember)) {
       await interaction.editReply({
-        embeds: [errorEmbed('Hierarchy Error', 'You cannot warn a member with a higher or equal role.')],
+        embeds: [errorEmbed(t('cmd.warn.hierarchyTitle', loc), t('cmd.warn.hierarchyUser', loc))],
       });
       return;
     }
@@ -101,7 +103,7 @@ const command: BotCommand = {
       .send({
         embeds: [
           moderationEmbed({
-            action: `Warning in ${interaction.guild.name}`,
+            action: t('cmd.warn.dmAction', loc, { guild: interaction.guild.name }),
             user: targetUser.tag,
             moderator: interaction.user.tag,
             reason,
@@ -126,34 +128,34 @@ const command: BotCommand = {
             const role = interaction.guild.roles.cache.get(muteRoleId);
             if (role) {
               await targetMember.roles.add(role, `Auto-mute: ${warningCount} warnings`).catch(swallow);
-              escalationNote = `\nAuto-muted (${warningCount} warnings reached threshold).`;
+              escalationNote = `\n${t('cmd.warn.escalationMute', loc, { count: warningCount })}`;
             }
           } else if (matched.action === 'timeout' && matched.duration) {
             await targetMember.disableCommunicationUntil(
               Date.now() + matched.duration * 1000,
               `Auto-timeout: ${warningCount} warnings`,
             ).catch(swallow);
-            escalationNote = `\nAuto-timed out for ${matched.duration}s (${warningCount} warnings reached threshold).`;
+            escalationNote = `\n${t('cmd.warn.escalationTimeout', loc, { duration: matched.duration, count: warningCount })}`;
           } else if (matched.action === 'ban') {
             await interaction.guild.members.ban(targetUser, {
               reason: `Auto-ban: ${warningCount} warnings reached threshold`,
             }).catch(swallow);
-            escalationNote = `\nAuto-banned (${warningCount} warnings reached threshold).`;
+            escalationNote = `\n${t('cmd.warn.escalationBan', loc, { count: warningCount })}`;
           } else if (matched.action === 'kick') {
             await targetMember.kick(`Auto-kick: ${warningCount} warnings`).catch(swallow);
-            escalationNote = `\nAuto-kicked (${warningCount} warnings reached threshold).`;
+            escalationNote = `\n${t('cmd.warn.escalationKick', loc, { count: warningCount })}`;
           }
         } catch { /* escalation errors are non-fatal */ }
       }
     }
 
     const warnEmbed = moderationEmbed({
-      action: 'Warning',
+      action: t('cmd.warn.action', loc),
       user: `${targetUser.tag} (${targetUser.id})`,
       moderator: interaction.user.tag,
       reason: escalationNote ? `${reason}${escalationNote}` : reason,
       caseNumber,
-    }, settings?.moderationColor).addFields({ name: 'Total Warnings', value: `${warningCount}`, inline: true });
+    }, settings?.moderationColor).addFields({ name: t('cmd.warn.totalWarnings', loc), value: `${warningCount}`, inline: true });
 
     const replyMsg = await interaction.editReply({ embeds: [warnEmbed] });
     await prisma.moderationCase.update({

@@ -6,6 +6,7 @@ import { SlashCommandBuilder, type ChatInputCommandInteraction } from 'discord.j
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { prisma } from '../../database.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 
 /**
  * Parses a short duration string (e.g. `10m`, `2h`, `1d`) into milliseconds.
@@ -28,16 +29,17 @@ const command: BotCommand = {
   category: 'utility',
   cooldown: 5,
   async execute(interaction: ChatInputCommandInteraction, _client: BotClient) {
+    const loc = await resolveUserLocale(interaction);
     const timeStr = interaction.options.getString('time', true);
     const message = interaction.options.getString('message', true);
     const ms = parseDuration(timeStr);
 
     if (!ms || ms < 10000) {
-      await interaction.reply({ content: 'Invalid duration. Examples: `10m`, `2h`, `1d`, `7d`', flags: 64 });
+      await interaction.reply({ content: t('cmd.remind.invalidDuration', loc), flags: 64 });
       return;
     }
     if (ms > 28 * 24 * 3600000) {
-      await interaction.reply({ content: 'Maximum reminder duration is 28 days.', flags: 64 });
+      await interaction.reply({ content: t('cmd.remind.tooLong', loc), flags: 64 });
       return;
     }
 
@@ -52,7 +54,7 @@ const command: BotCommand = {
       },
     });
 
-    await interaction.reply({ content: `Reminder set! I'll remind you about "${message}" <t:${Math.floor(remindAt.getTime() / 1000)}:R>.`, flags: 64 });
+    await interaction.reply({ content: t('cmd.remind.set', loc, { message, time: `<t:${Math.floor(remindAt.getTime() / 1000)}:R>` }), flags: 64 });
   },
 };
 

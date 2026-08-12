@@ -1,0 +1,119 @@
+{
+  "common": {
+    "enabled": "enabled",
+    "disabled": "disabled"
+  },
+  "cmd": {
+    "birthday": {
+      "setTitle": "🎂 Birthday Set!",
+      "set": "Your birthday has been set to {date}.",
+      "removed": "Your birthday has been removed.",
+      "none": "No birthdays registered in this server yet.",
+      "listTitle": "🎂 Upcoming Birthdays",
+      "total": "{count} total",
+      "userNotSet": "{user} hasn't set their birthday.",
+      "userBirthday": "🎂 {user}'s birthday is {date}"
+    },
+    "selfrole": {
+      "needManageRoles": "❌ You need **Manage Roles** permission to use this.",
+      "roleTooHigh": "❌ The bot's role is below **{role}** in the role list. Move the bot's role above it first.",
+      "added": "✅ {role} is now self-assignable as `{name}`.\nMembers can run `/selfassignrole {name}` to claim it.",
+      "exists": "❌ A self-assignable role with that name or role already exists. Use `/selfrole list` to see current entries.",
+      "notFound": "❌ No self-assignable role named `{name}` found.",
+      "removed": "✅ `{name}` removed from the self-assignable list.",
+      "none": "No self-assignable roles configured yet. Admins can add roles with `/selfrole add`.",
+      "listTitle": "Self-Assignable Roles",
+      "listFooter": "Use /selfassignrole <name> to claim · /selfremoverole <name> to drop",
+      "roleDeleted": "role deleted"
+    },
+    "analytics": {
+      "missingPermTitle": "Missing Permission",
+      "missingPerm": "You need the **Manage Server** permission to configure analytics.",
+      "channelSetTitle": "Analytics Channel Set",
+      "channelSet": "Weekly analytics reports will be posted in {channel}.",
+      "disabledTitle": "Analytics Disabled",
+      "disabled": "Automatic weekly analytics reports have been turned off.",
+      "reportTitle": "📊 Server Analytics — Last 30 Days",
+      "messages": "Messages",
+      "commands": "Commands",
+      "joins": "Joins",
+      "leaves": "Leaves",
+      "netGrowth": "Net Growth"
+    },
+    "autoresponse": {
+      "invalidRegexTitle": "Invalid Regex",
+      "invalidRegex": "The pattern `{pattern}` with flags `{flags}` is not a valid regular expression.",
+      "addedTitle": "Auto-Response Added",
+      "added": "**ID:** `{id}`\n**Pattern:** `{pattern}` (flags: `{flags}`)\n**Response:** {response}",
+      "notFoundTitle": "Not Found",
+      "notFound": "No auto-response found with that ID in this server.",
+      "removedTitle": "Auto-Response Removed",
+      "removed": "Pattern `{pattern}` deleted.",
+      "updatedTitle": "Auto-Response Updated",
+      "updated": "Pattern `{pattern}` is now **{state}**.",
+      "noneTitle": "No Auto-Responses",
+      "none": "No auto-responses configured for this server.",
+      "listTitle": "Auto-Responses",
+      "listFooter": "Use the full ID from this list with /autoresponse remove or toggle"
+    },
+    "poll": {
+      "votes": "{count} votes",
+      "totalVotes": "{count} total votes",
+      "ends": "Ends",
+      "endPoll": "End Poll",
+      "ended": "[ENDED] {question}",
+      "optionCount": "Please provide between 2 and 10 options separated by `|`.",
+      "notFound": "Poll not found.",
+      "alreadyEnded": "This poll has ended.",
+      "cannotEnd": "Only the poll creator or a moderator can end this poll."
+    },
+    "giveaway": {
+      "invalidDuration": "Invalid duration.",
+      "fieldPrize": "**Prize:** {prize}",
+      "fieldWinners": "**Winners:** {count}",
+      "fieldEnds": "**Ends:** {time}",
+      "fieldRequiredRole": "**Required Role:** {role}",
+      "fieldBonus": "**Bonus Entries:** {role} gets +{count} entries",
+      "enterPrompt": "React with 🎉 to enter!",
+      "title": "🎉 Giveaway!",
+      "winnersFooter": "{count} winners",
+      "started": "Giveaway started! ID: `{id}`",
+      "notFound": "Giveaway not found.",
+      "alreadyEnded": "Giveaway already ended.",
+      "willEnd": "Giveaway will end on the next check cycle (within 1 minute).",
+      "notEnded": "Giveaway not found or not yet ended.",
+      "noChannel": "Could not find giveaway channel.",
+      "noMessage": "Could not find giveaway message.",
+      "noReactions": "No reactions found.",
+      "noEligible": "No eligible entrants.",
+      "rerollAnnounce": "🎉 Reroll! New winners: {winners}! Congratulations on winning **{prize}**!",
+      "rerolled": "Rerolled!"
+    },
+    "forum": {
+      "invalidChannelTitle": "Invalid Channel",
+      "invalidChannel": "Please select a Forum channel.",
+      "templateSetTitle": "Template Set",
+      "templateSet": "Template message configured for {channel}.",
+      "autoTagSetTitle": "Auto-Tag Set",
+      "autoTagSet": "Tag `{tag}` will be automatically applied in {channel}.",
+      "clearedTitle": "Config Cleared",
+      "cleared": "Forum management config for {channel} has been removed."
+    },
+    "help": {
+      "cat": {
+        "moderation": "Moderation",
+        "leveling": "Leveling",
+        "community": "Community",
+        "music": "Music",
+        "utility": "Utility"
+      },
+      "overviewTitle": "📋 Command Reference",
+      "overviewDesc": "**{commands} commands** available to you across **{categories} categories**.",
+      "overviewHint": "Use ◀ ▶ to browse, or click **Overview** to return here.",
+      "cmdCount": "{count} cmds",
+      "overview": "Overview",
+      "pageFooter": "Page {page} of {total}  ·  {commands} commands available to you",
+      "notYourMenu": "This menu belongs to someone else."
+    }
+  }
+}

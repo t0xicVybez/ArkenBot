@@ -6,64 +6,21 @@
  */
 import { usePathname, useRouter } from 'next/navigation';
 import { Search, Bell } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useAuth } from '@/lib/auth';
 
-const PAGE_TITLES: Record<string, string> = {
-  '': 'Overview',
-  setup: 'Setup Wizard',
-  analytics: 'Analytics',
-  moderation: 'Moderation',
-  automod: 'Auto-Mod',
-  slowmode: 'Auto-Slowmode',
-  'anti-nuke': 'Anti-Nuke',
-  verification: 'Verification Gate',
-  reports: 'Reports',
-  leveling: 'Leveling',
-  leaderboard: 'Leaderboard',
-  welcome: 'Welcome',
-  'reaction-roles': 'Reaction Roles',
-  'self-roles': 'Self-Roles',
-  birthdays: 'Birthdays',
-  polls: 'Polls',
-  suggestions: 'Suggestions',
-  giveaways: 'Giveaways',
-  starboard: 'Starboard',
-  members: 'Members',
-  'invite-tracker': 'Invite Tracker',
-  music: 'Music',
-  'stats-channels': 'Stats Channels',
-  embeds: 'Embed Builder',
-  'scheduled-messages': 'Scheduled Messages',
-  'temp-voice': 'Temp Voice',
-  commands: 'Commands',
-  'forum-management': 'Forum Management',
-  'stream-alerts': 'Stream Alerts',
-  'twitter-feeds': 'X / Twitter Feeds',
-  'reddit-feeds': 'Reddit Feeds',
-  'rss-feeds': 'RSS Feeds',
-  monday: 'Monday.com',
-  trello: 'Trello',
-  tickets: 'Tickets',
-  counting: 'Counting',
-  applications: 'Applications',
-  logs: 'Logs',
-  'audit-log': 'Audit Log',
-  announcements: 'Announcements',
-  addons: 'Addon Manager',
-  settings: 'Settings',
-  guilds: 'Guilds',
-  users: 'Users',
-  metrics: 'Metrics',
-};
-
-/** Derives the current page title from the last URL segment. */
-function titleFromPath(pathname: string, rootLabel: string): string {
+/** Derives the current page slug (a `pages` message key) from the URL. */
+function slugFromPath(pathname: string): string {
   const parts = pathname.split('/').filter(Boolean);
   const last = parts[parts.length - 1] ?? '';
-  // /dashboard/<id> and /staff roots
-  if (parts.length <= 2 && (parts[0] === 'dashboard' || parts[0] === 'staff')) return rootLabel;
-  if (PAGE_TITLES[last]) return PAGE_TITLES[last];
-  return last.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+  // /dashboard/<id> and /staff roots resolve to the Overview page
+  if (parts.length <= 2 && (parts[0] === 'dashboard' || parts[0] === 'staff')) return 'overview';
+  return last;
+}
+
+/** Title-cases an unknown slug as a fallback (e.g. `foo-bar` → `Foo Bar`). */
+function humanize(slug: string): string {
+  return slug.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 }
 
 interface TopbarProps {
@@ -75,15 +32,18 @@ interface TopbarProps {
 export function Topbar({ variant = 'guild', guildName, guildId }: TopbarProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const t = useTranslations('topbar');
+  const tp = useTranslations('pages');
   const { user } = useAuth();
-  const title = titleFromPath(pathname ?? '', 'Overview');
+  const slug = slugFromPath(pathname ?? '');
+  const title = tp.has(slug) ? tp(slug) : humanize(slug);
 
   return (
     <div className="hidden md:flex sticky top-0 z-40 items-center gap-3.5 h-[54px] px-[26px] bg-[rgba(12,14,19,0.85)] backdrop-blur-[10px] border-b border-[var(--border-subtle)]">
       <div className="text-[12.5px] text-[var(--text-muted)] truncate">
         {variant === 'staff' ? (
           <span className="inline-flex items-center gap-2">
-            <span className="text-[9.5px] font-extrabold tracking-[0.1em] px-2 py-0.5 rounded-full bg-[var(--accent-glow)] text-[var(--accent)] border border-[var(--accent)]/30">STAFF</span>
+            <span className="text-[9.5px] font-extrabold tracking-[0.1em] px-2 py-0.5 rounded-full bg-[var(--accent-glow)] text-[var(--accent)] border border-[var(--accent)]/30">{t('staffBadge')}</span>
             <b className="text-[var(--text-primary)] font-semibold">{title}</b>
           </span>
         ) : (
@@ -98,14 +58,14 @@ export function Topbar({ variant = 'guild', guildName, guildId }: TopbarProps) {
         <>
           <button
             onClick={() => window.dispatchEvent(new Event('cmdk:open'))}
-            title="Search (Ctrl K)"
+            title={t('searchTitle')}
             className="w-8 h-8 grid place-items-center rounded-lg text-[var(--text-secondary)] hover:bg-white/[0.06] transition-colors"
           >
             <Search className="w-4 h-4" />
           </button>
           <button
             onClick={() => guildId && router.push(`/dashboard/${guildId}/announcements`)}
-            title="What's new"
+            title={t('whatsNew')}
             className="w-8 h-8 grid place-items-center rounded-lg text-[var(--text-secondary)] hover:bg-white/[0.06] transition-colors"
           >
             <Bell className="w-4 h-4" />

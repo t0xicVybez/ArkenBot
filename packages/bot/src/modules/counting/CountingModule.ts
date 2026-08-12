@@ -7,6 +7,7 @@
 import type { Message } from 'discord.js';
 import { prisma } from '../../database.js';
 import { logger, swallow} from '../../logger.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = prisma as any;
@@ -66,6 +67,7 @@ export class CountingModule {
 
     const ch = message.channel as { send?: (t: string) => Promise<unknown> };
     const send = (text: string) => ch.send?.(text).catch(swallow) ?? Promise.resolve();
+    const loc = await resolveUserLocale({ user: { id: '' }, guildId: message.guild.id, guildLocale: message.guild.preferredLocale });
 
     if (isNaN(num) || num !== expected) {
       await message.react('❌').catch(swallow);
@@ -75,7 +77,7 @@ export class CountingModule {
           update: { currentCount: 0, lastUserId: null },
           create: { guildId: message.guild.id, channelId: String(settings.channelId), currentCount: 0 },
         }).catch(swallow);
-        await send(`❌ <@${message.author.id}> ruined the count at **${state?.currentCount ?? 0}**! Start again from **1**.`);
+        await send(t('counting.ruined', loc, { user: `<@${message.author.id}>`, count: state?.currentCount ?? 0 }));
       }
       return;
     }
@@ -88,7 +90,7 @@ export class CountingModule {
           update: { currentCount: 0, lastUserId: null },
           create: { guildId: message.guild.id, channelId: String(settings.channelId), currentCount: 0 },
         }).catch(swallow);
-        await send(`❌ <@${message.author.id}> can't count twice in a row! Count reset — start again from **1**.`);
+        await send(t('counting.twiceInRow', loc, { user: `<@${message.author.id}>` }));
       }
       return;
     }

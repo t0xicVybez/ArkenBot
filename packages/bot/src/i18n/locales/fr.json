@@ -1,28 +1,845 @@
 {
   "common": {
     "error": "Erreur",
-    "success": "Succès",
-    "notInServer": "Cette commande doit être utilisée dans un serveur."
+    "success": "Réussi",
+    "notInServer": "Cette commande doit être utilisée sur un serveur.",
+    "enabled": "activé",
+    "disabled": "désactivé"
   },
   "language": {
-    "commandDescription": "Définir ou afficher la langue que j'utilise pour vous répondre",
-    "setDescription": "Choisissez la langue pour mes réponses à vous",
-    "clearDescription": "Effacer votre langue et revenir à la détection automatique",
-    "showDescription": "Afficher votre langue actuelle",
+    "commandDescription": "Définir ou consulter la langue que j'utilise pour te répondre",
+    "setDescription": "Choisis la langue de mes réponses",
+    "clearDescription": "Efface ta langue et revient à la détection automatique",
+    "showDescription": "Affiche ta langue actuelle",
     "optionDescription": "La langue à utiliser",
     "setTitle": "Langue mise à jour",
-    "set": "Je vais maintenant vous répondre en **{language}**.",
-    "clearedTitle": "Réinitialisation de la langue",
-    "cleared": "Votre préférence de langue a été effacée — je vais la détecter automatiquement à partir de vos paramètres Discord.",
-    "currentTitle": "Votre langue",
-    "currentSet": "Votre langue est définie sur **{language}**.",
-    "currentAuto": "Vous n'avez pas défini de langue, donc je la détecte automatiquement (actuellement **{language}**).",
+    "set": "Je te répondrai désormais en **{language}**.",
+    "clearedTitle": "Langue réinitialisée",
+    "cleared": "Ta préférence de langue a été effacée : je la détecterai automatiquement à partir de tes paramètres Discord.",
+    "currentTitle": "Ta langue",
+    "currentSet": "Ta langue est définie sur **{language}**.",
+    "currentAuto": "Tu n'as pas défini de langue, je la détecte donc automatiquement (actuellement **{language}**).",
     "invalid": "**{input}** n'est pas une langue prise en charge."
   },
   "moderation": {
     "disabledTitle": "Modération désactivée",
-    "disabled": "Les commandes de modération sont désactivées pour ce serveur.",
+    "disabled": "Les commandes de modération sont désactivées sur ce serveur.",
     "cannotBanSelfTitle": "Cible invalide",
-    "cannotBanSelf": "Vous ne pouvez pas vous bannir vous-même."
+    "cannotBanSelf": "Tu ne peux pas te bannir toi-même."
+  },
+  "welcome": {
+    "title": "👋 Bienvenue sur {server} !",
+    "accountAge": "📅 Ancienneté du compte",
+    "memberCount": "👥 Nombre de membres"
+  },
+  "leveling": {
+    "levelUp": "Niveau supérieur !",
+    "milestoneReached": "Palier {label} atteint !",
+    "level": "Niveau",
+    "achievement": "Succès",
+    "milestones": {
+      "legendary": "🏆 Légendaire",
+      "diamond": "💎 Diamant",
+      "century": "🌟 Centenaire",
+      "elite": "⚡ Élite",
+      "veteran": "🔥 Vétéran",
+      "experienced": "🥇 Expérimenté",
+      "rising": "🥈 Prometteur",
+      "newcomer": "🥉 Nouveau venu"
+    }
+  },
+  "counting": {
+    "ruined": "❌ {user} a gâché le compte à **{count}** ! Recommencez à partir de **1**.",
+    "twiceInRow": "❌ {user} ne peut pas compter deux fois de suite ! Compte réinitialisé — recommencez à partir de **1**."
+  },
+  "automod": {
+    "kickedTitle": "Expulsé de {server}",
+    "filterKickDM": "Tu as été expulsé de **{server}** pour des violations répétées du filtre de mots (violation n°{count}).",
+    "filterKick": "⛔ {user} a été **expulsé** pour des violations répétées du filtre de mots (violation n°{count}).",
+    "filterWarn": "⚠️ {user} Ton message a été supprimé car il contenait un mot filtré (violation n°{count}).",
+    "removed": "{user} Ton message a été supprimé : **{reason}**",
+    "reasons": {
+      "spam": "Spam détecté",
+      "link": "Lien bloqué détecté",
+      "mention": "Spam de mentions",
+      "caps": "Majuscules excessives"
+    },
+    "phishingRemoved": "⚠️ {user} — ton message a été supprimé car il contenait un lien d'hameçonnage connu.",
+    "aiFlagTitle": "🤖 Signalement de modération par IA",
+    "aiFlagDescription": "Un message de {user} dans {channel} a été signalé pour examen.\n\n**Catégorie :** {category} · **Gravité :** {severity}\n**Raison :** {reason}\n[Aller au message]({url})",
+    "aiFlagFooter": "Généré par IA · vérifie avant d'agir"
+  },
+  "verification": {
+    "verifyChannelFallback": "le salon de vérification",
+    "dmWelcome": "Bienvenue sur **{server}** ! Clique sur le bouton Vérifier dans {channel} pour obtenir l'accès.",
+    "serverOnly": "Ce bouton ne peut être utilisé que sur un serveur.",
+    "notConfigured": "La vérification n'est pas configurée sur ce serveur.",
+    "fetchFailed": "Impossible de récupérer tes données de membre.",
+    "verified": "✅ Vérifié ! Bienvenue sur le serveur.",
+    "error": "Une erreur s'est produite lors de la vérification.",
+    "panelTitle": "✅ Vérifie ton compte",
+    "panelDescription": "Clique sur le bouton ci-dessous pour te vérifier et obtenir l'accès au serveur.",
+    "buttonLabel": "Vérifier"
+  },
+  "starboard": {
+    "unknownAuthor": "Inconnu",
+    "source": "Source",
+    "jumpToMessage": "[Aller au message]({url})"
+  },
+  "reactionRoles": {
+    "addOnly": " *(ajout uniquement)*",
+    "removeOnly": " *(retrait uniquement)*",
+    "noRoles": "*Aucun rôle configuré pour le moment.*",
+    "footer": "{count} rôles • Réagis pour t'attribuer un rôle"
+  },
+  "antiNuke": {
+    "alertTitle": "🚨 Alerte anti-nuke",
+    "alertDescription": "L'utilisateur {user} a dépassé le seuil de **{action}** sur **{server}** et ses permissions ont été retirées.",
+    "triggeredTitle": "🚨 Anti-nuke déclenché",
+    "triggeredDescription": "{user} a été sanctionné pour avoir dépassé le seuil de l'action **{action}**.",
+    "actionTaken": "Action effectuée",
+    "deopped": "Permissions retirées (rôles supprimés)",
+    "trigger": "Déclencheur"
+  },
+  "onboarding": {
+    "title": "👋 Merci d'avoir ajouté ArkenBot !",
+    "description": "ArkenBot vient de rejoindre **{server}**. Voici comment tout configurer en quelques minutes :",
+    "step1Name": "1️⃣ Configure ton serveur",
+    "step1Value": "Connecte-toi au [tableau de bord]({dashboardUrl}) avec Discord, sélectionne **{server}** et active les fonctionnalités souhaitées : modération, niveaux, tickets, alertes de live, et bien plus.",
+    "step2Name": "2️⃣ Définis un salon d'annonces",
+    "step2Value": "Dans **Tableau de bord → Annonces**, choisis un salon pour recevoir les nouveautés d'ArkenBot : nouvelles fonctionnalités, changements et avis importants y seront publiés.",
+    "step3Name": "3️⃣ Lis la documentation",
+    "step3Value": "Chaque fonctionnalité dispose d'un guide sur [docs.arkenbot.app]({docsUrl}).",
+    "footer": "ArkenBot — entièrement gratuit, sans abonnement payant",
+    "buttonDashboard": "Ouvrir le tableau de bord",
+    "buttonDocs": "Documentation",
+    "buttonSupport": "Serveur de support"
+  },
+  "music": {
+    "playbackFailedTitle": "⚠️ Échec de la lecture",
+    "playbackFailedDescription": "Impossible de lire **{title}**.\n`{reason}`",
+    "playbackFailedFooter": "Essaie une autre recherche ou vérifie que yt-dlp est à jour.",
+    "nowPlayingTitle": "🎵 Lecture en cours",
+    "requestedBy": "Demandé par",
+    "duration": "Durée"
+  },
+  "topgg": {
+    "voteReminder": "🗳️ Tu peux à nouveau voter pour **{bot}** sur top.gg !\n{url}\n\n_Désactive les rappels à tout moment avec `/vote reminders:off`._"
+  },
+  "birthday": {
+    "title": "🎂 Joyeux anniversaire !"
+  },
+  "reminders": {
+    "deliver": "{user} Rappel : {message}"
+  },
+  "giveaway": {
+    "noEntrants": "Aucun participant éligible",
+    "winnerLabel": "Gagnant",
+    "winnersLabel": "Gagnants",
+    "ended": "🎉 Giveaway terminé ! {winnerLabel} : {winners}\nLot : **{prize}**",
+    "endedTitle": "🎉 Giveaway terminé",
+    "endedEmbed": "**Lot :** {prize}\n**{winnerLabel} :** {winners}"
+  },
+  "streamAlert": {
+    "youtubeLive": "{streamer} est en direct sur YouTube !",
+    "twitchLive": "{streamer} est en direct sur Twitch !",
+    "playing": "Joue à",
+    "unknownGame": "Inconnu",
+    "kickLive": "{streamer} est en direct sur Kick !",
+    "twitterPosted": "{handle} a publié sur X",
+    "redditPostedBy": "Publié par u/{author} dans r/{subreddit}",
+    "rssNewPost": "Nouvelle publication de **{feed}**"
+  },
+  "announcement": {
+    "author": "Annonces ArkenBot",
+    "buttonChangelog": "Journal des modifications complet",
+    "buttonDashboard": "Tableau de bord",
+    "labels": {
+      "update": "Mise à jour",
+      "feature": "Nouvelle fonctionnalité",
+      "maintenance": "Maintenance",
+      "hotfix": "Correctif urgent"
+    }
+  },
+  "logging": {
+    "user": "Utilisateur",
+    "moderator": "Modérateur",
+    "reason": "Raison",
+    "noReason": "Aucune raison fournie",
+    "messageDeleted": "🗑️ Message supprimé",
+    "author": "Auteur",
+    "channel": "Salon",
+    "content": "Contenu",
+    "messageEdited": "✏️ Message modifié",
+    "before": "Avant",
+    "after": "Après",
+    "noContent": "*Aucun contenu*",
+    "memberJoined": "📥 Membre arrivé",
+    "accountAge": "Ancienneté du compte",
+    "memberCount": "Nombre de membres",
+    "memberLeft": "📤 Membre parti",
+    "joined": "Arrivé le",
+    "unknown": "Inconnu"
+  },
+  "cmd": {
+    "kick": {
+      "cannotSelf": "Tu ne peux pas t'expulser toi-même.",
+      "cannotSelfBot": "Je ne peux pas m'expulser moi-même.",
+      "notFoundTitle": "Introuvable",
+      "notFound": "Cet utilisateur n'est pas sur ce serveur.",
+      "hierarchyTitle": "Erreur de hiérarchie",
+      "notKickable": "Je ne peux pas expulser ce membre.",
+      "hierarchyUser": "Tu ne peux pas expulser un membre ayant un rôle supérieur ou égal au tien.",
+      "dmAction": "Expulsé de {guild}",
+      "action": "Expulsion",
+      "failedTitle": "Échec",
+      "failed": "Je n'ai pas pu expulser ce membre. Vérifie mes permissions."
+    },
+    "unban": {
+      "invalidIdTitle": "ID invalide",
+      "invalidId": "Fournis un ID d'utilisateur Discord valide.",
+      "notBannedTitle": "Non banni",
+      "notBanned": "Cet utilisateur n'est pas banni de ce serveur.",
+      "successTitle": "Débanni",
+      "success": "**{user}** ({userId}) a été débanni avec succès\n**Raison :** {reason}",
+      "failedTitle": "Échec",
+      "failed": "Impossible de débannir cet utilisateur."
+    },
+    "warn": {
+      "cannotSelf": "Tu ne peux pas t'avertir toi-même.",
+      "notFoundTitle": "Introuvable",
+      "notFound": "Cet utilisateur n'est pas sur ce serveur.",
+      "hierarchyTitle": "Erreur de hiérarchie",
+      "hierarchyUser": "Tu ne peux pas avertir un membre ayant un rôle supérieur ou égal au tien.",
+      "dmAction": "Avertissement sur {guild}",
+      "escalationMute": "Rendu muet automatiquement ({count} avertissements ont atteint le seuil).",
+      "escalationTimeout": "Exclu temporairement automatiquement pendant {duration}s ({count} avertissements ont atteint le seuil).",
+      "escalationBan": "Banni automatiquement ({count} avertissements ont atteint le seuil).",
+      "escalationKick": "Expulsé automatiquement ({count} avertissements ont atteint le seuil).",
+      "action": "Avertissement",
+      "totalWarnings": "Total des avertissements"
+    },
+    "mute": {
+      "invalidDurationTitle": "Durée invalide",
+      "invalidDuration": "Utilise des formats comme `10m`, `1h`, `1d`. Le maximum est de 28 jours.",
+      "tooLongTitle": "Trop longue",
+      "tooLong": "L'exclusion temporaire maximale de Discord est de 28 jours.",
+      "notFoundTitle": "Introuvable",
+      "notFound": "Cet utilisateur n'est pas sur ce serveur.",
+      "hierarchyTitle": "Erreur de hiérarchie",
+      "hierarchyUser": "Tu ne peux pas rendre muet un membre ayant un rôle supérieur ou égal au tien.",
+      "notMutable": "Je ne peux pas rendre muet ce membre.",
+      "dmAction": "Rendu muet sur {guild}",
+      "action": "Muet",
+      "failedTitle": "Échec",
+      "failed": "Je n'ai pas pu rendre muet ce membre."
+    },
+    "case": {
+      "notFoundTitle": "Introuvable",
+      "notFound": "Dossier n°{number} introuvable.",
+      "caseLabel": "Dossier n°{number}",
+      "fieldUser": "Utilisateur",
+      "fieldModerator": "Modérateur",
+      "fieldReason": "Raison",
+      "fieldStatus": "Statut",
+      "fieldDate": "Date",
+      "fieldDuration": "Durée",
+      "statusActive": "🔴 Actif",
+      "statusResolved": "🟢 Résolu",
+      "noOpenTitle": "Aucun dossier ouvert",
+      "noOpen": "Aucun dossier ouvert trouvé pour {user}.",
+      "closedTitle": "Dossiers clôturés",
+      "closed": "**{count}** dossier(s) ouvert(s) clôturé(s) pour {user}.\n**Raison :** {reason}"
+    },
+    "clearwarnings": {
+      "cannotSelf": "Tu ne peux pas effacer tes propres avertissements.",
+      "hierarchyTitle": "Erreur de hiérarchie",
+      "hierarchyUser": "Tu ne peux pas gérer les avertissements d'un membre ayant un rôle supérieur ou égal au tien.",
+      "noActiveTitle": "✅ Aucun avertissement actif",
+      "noActive": "{user} n'a aucun avertissement actif à effacer.",
+      "dmTitle": "Avertissements effacés sur {guild}",
+      "dmDesc": "Tes {count} avertissement(s) actif(s) ont été effacés par un modérateur.",
+      "clearedTitle": "✅ Avertissements effacés",
+      "fieldUser": "Utilisateur",
+      "fieldCleared": "Effacés",
+      "clearedValue": "{count} avertissement(s)",
+      "fieldModerator": "Modérateur",
+      "fieldReason": "Raison"
+    },
+    "warnings": {
+      "noneTitle": "✅ Aucun avertissement",
+      "noneAll": "{user} n'a aucun avertissement.",
+      "noneActive": "{user} n'a aucun avertissement actif.",
+      "title": "⚠️ Avertissements de {user}",
+      "lineMeta": "Par {moderator} le {date}",
+      "cleared": "~~(effacé)~~",
+      "footer": "Affichage de {count} avertissement(s)"
+    },
+    "note": {
+      "addedTitle": "Note ajoutée",
+      "added": "Note `{id}` ajoutée pour **{user}**.\n\n> {content}",
+      "noNotesTitle": "Aucune note",
+      "noNotes": "Aucune note trouvée pour **{user}**.",
+      "listTitle": "📝 Notes de {user}",
+      "listFooter": "Affichage des {count} note(s) les plus récentes",
+      "fieldName": "ID : `{id}` — {date} par {staff}",
+      "notFoundTitle": "Introuvable",
+      "notFound": "Note introuvable pour cet utilisateur et cet ID.",
+      "removedTitle": "Note supprimée",
+      "removed": "La note `{id}` a été supprimée.",
+      "cancelledTitle": "Annulé",
+      "cancelled": "Définis `confirm: true` pour effacer toutes les notes.",
+      "clearedTitle": "Notes effacées",
+      "cleared": "**{count}** note(s) supprimée(s) pour **{user}**."
+    },
+    "ctxBan": {
+      "notFoundTitle": "Introuvable",
+      "notFound": "Impossible de trouver cet utilisateur.",
+      "hierarchyTitle": "Erreur de hiérarchie",
+      "hierarchyUser": "Tu ne peux pas bannir un membre ayant un rôle supérieur ou égal au tien.",
+      "dmAction": "Banni de {guild}",
+      "action": "Bannissement"
+    },
+    "ctxTimeout": {
+      "invalidDurationTitle": "Durée invalide",
+      "invalidDuration": "La durée doit être comprise entre 5s et 28j (p. ex. 10m, 1h, 7d).",
+      "notFoundTitle": "Introuvable",
+      "notFoundUser": "Impossible de trouver cet utilisateur.",
+      "notInServer": "Cet utilisateur n'est pas sur ce serveur.",
+      "hierarchyTitle": "Erreur de hiérarchie",
+      "hierarchyUser": "Tu ne peux pas exclure temporairement un membre ayant un rôle supérieur ou égal au tien.",
+      "dmAction": "Exclusion temporaire sur {guild}",
+      "action": "Exclusion temporaire"
+    },
+    "ctxWarn": {
+      "notFoundTitle": "Introuvable",
+      "notFound": "Impossible de trouver cet utilisateur.",
+      "hierarchyTitle": "Erreur de hiérarchie",
+      "hierarchyUser": "Tu ne peux pas avertir un membre ayant un rôle supérieur ou égal au tien.",
+      "dmAction": "Avertissement sur {guild}",
+      "action": "Avertissement",
+      "totalWarnings": "Total des avertissements"
+    },
+    "purge": {
+      "textOnly": "Cette commande ne peut être utilisée que dans les salons textuels.",
+      "noMatch": "Aucun message ne correspond aux filtres (les messages doivent avoir moins de 14 jours).",
+      "bulkTextOnly": "La suppression en masse n'est disponible que dans les salons textuels.",
+      "deleted": "{count} message(s) supprimé(s)."
+    },
+    "suggestion": {
+      "notFound": "Suggestion introuvable.",
+      "statusApproved": "Approuvée",
+      "statusDenied": "Refusée",
+      "statusConsidering": "À l'étude",
+      "footer": "{status} par {user}",
+      "result": "Suggestion {status}."
+    },
+    "temprole": {
+      "memberNotFound": "Membre introuvable sur ce serveur.",
+      "invalidDurationTitle": "Durée invalide",
+      "invalidDuration": "Utilise un format comme `30m`, `2h`, `7d`. Le minimum est de 60 secondes.",
+      "assignedTitle": "Rôle temporaire attribué",
+      "assigned": "{role} attribué à {member} jusqu'au {expires}.\n**Raison :** {reason}",
+      "notFoundTitle": "Introuvable",
+      "notFound": "Aucun rôle temporaire actif trouvé pour ce membre et ce rôle.",
+      "removedTitle": "Rôle temporaire retiré",
+      "removed": "{role} retiré de {member}.",
+      "noneTitle": "Aucun rôle temporaire actif",
+      "none": "Il n'y a aucun rôle temporaire actif sur ce serveur.",
+      "listLine": "{user} → {role} — expire le {expires}",
+      "listTitle": "Rôles temporaires actifs"
+    },
+    "verification": {
+      "enabledTitle": "Portail de vérification activé",
+      "enabled": "Rôle en attente : {pending}\nRôle de membre : {member}\nSalon de vérification : {channel}",
+      "disabledTitle": "Vérification désactivée",
+      "disabled": "Le portail de vérification a été désactivé."
+    },
+    "invites": {
+      "notInServer": "Utilise cette commande sur un serveur.",
+      "disabledTitle": "Désactivé",
+      "disabled": "Le suivi des invitations n'est pas activé sur ce serveur.",
+      "title": "Invitations — {user}",
+      "totalInvites": "Total des invitations",
+      "bonus": "Bonus"
+    },
+    "invitetop": {
+      "notInServer": "Utilise cette commande sur un serveur.",
+      "disabledTitle": "Désactivé",
+      "disabled": "Le suivi des invitations n'est pas activé sur ce serveur.",
+      "noDataTitle": "Aucune donnée",
+      "noData": "Aucune donnée d'invitation enregistrée pour le moment.",
+      "line": "{prefix} {user} — **{count}** invitation(s)",
+      "title": "🏆 Meilleurs parrains — {guild}",
+      "footer": "Top {count} parrains"
+    },
+    "vote": {
+      "statusCooldown": "⏳ Tu peux revoter {time}",
+      "statusReady": "✅ Tu peux voter maintenant !",
+      "title": "🗳️ Vote sur top.gg",
+      "description": "Soutiens-nous avec un vote gratuit toutes les 12 heures — ça prend 10 secondes et ça aide vraiment.\n\n**[▶ Voter ici]({voteUrl})**\n\n{status}",
+      "yourVotes": "Tes votes",
+      "currentStreak": "Série actuelle",
+      "streakValue": "{count} 🔥",
+      "reminders": "Rappels",
+      "on": "Activés",
+      "off": "Désactivés",
+      "perkRole": "Rôle {role} pendant {hours}h",
+      "perkXp": "+{xp} XP",
+      "perkWeekend": " (2× le week-end)",
+      "rewardsHere": "🎁 Récompenses ici",
+      "footerOn": "Rappels activés — je t'enverrai un MP quand tu pourras revoter.",
+      "footerOff": "Rappels désactivés."
+    },
+    "topvoters": {
+      "noVotes": "Aucun vote enregistré pour le moment — sois le premier avec `/vote` ! 🗳️",
+      "unknownUser": "Utilisateur {id}",
+      "line": "{rank} {name} — **{count}** vote(s){streak}",
+      "title": "🏆 Meilleurs votants",
+      "footer": "Vote avec /vote · {url}"
+    },
+    "report": {
+      "statusPending": "En attente",
+      "statusDismissed": "Rejeté",
+      "statusReviewed": "Examiné",
+      "embedTitle": "📋 Signalement de membre",
+      "fieldReporter": "Signaleur",
+      "fieldTarget": "Cible",
+      "fieldReason": "Raison",
+      "fieldStatus": "Statut",
+      "fieldReviewedBy": "Examiné par",
+      "fieldStaffNote": "Note du staff",
+      "btnDismiss": "Rejeter",
+      "btnTakeAction": "Agir",
+      "cannotSelf": "Tu ne peux pas te signaler toi-même.",
+      "submittedTitle": "Signalement envoyé",
+      "submitted": "Ton signalement a été transmis à l'équipe de modération.",
+      "notFound": "Signalement introuvable.",
+      "markedReviewed": "Signalement marqué comme examiné."
+    },
+    "reportSetup": {
+      "title": "Système de signalement configuré",
+      "configured": "Les signalements seront désormais envoyés dans {channel}."
+    },
+    "startcounting": {
+      "notInServer": "Utilise cette commande sur un serveur.",
+      "notConfiguredTitle": "Non configuré",
+      "notConfigured": "L'extension Comptage n'est pas installée ou n'a aucun salon défini. Configure-la d'abord dans le tableau de bord.",
+      "channelNotFoundTitle": "Salon introuvable",
+      "channelNotFound": "Le salon de comptage configuré n'existe plus.",
+      "title": "🔢 Jeu de comptage",
+      "description": "Le jeu de comptage a commencé ! Commencez à compter à partir de **1** et voyons jusqu'où on peut aller.\n\nComptez un nombre à la fois — la personne suivante doit envoyer le nombre suivant de la séquence.",
+      "fieldCurrentCount": "Compte actuel",
+      "fieldBestCount": "Meilleur compte",
+      "fieldResetOnFail": "Réinitialiser en cas d'échec",
+      "fieldSameUser": "Même utilisateur deux fois",
+      "yes": "Oui",
+      "no": "Non",
+      "footer": "Commence à {start}",
+      "posted": "Annonce publiée dans {channel} !"
+    },
+    "givexp": {
+      "disabledTitle": "Niveaux désactivés",
+      "disabled": "Le système de niveaux est désactivé sur ce serveur.",
+      "invalidUserTitle": "Utilisateur invalide",
+      "botTarget": "Tu ne peux pas donner d'XP à un bot.",
+      "levelUp": "Il est passé du niveau **{old}** → **{new}** !",
+      "title": "XP attribuée",
+      "description": "**{amount} XP** attribuée à {user}.",
+      "fieldBefore": "Avant",
+      "fieldAfter": "Après",
+      "statValue": "{xp} XP (Niveau {level})"
+    },
+    "removexp": {
+      "disabledTitle": "Niveaux désactivés",
+      "disabled": "Le système de niveaux est désactivé sur ce serveur.",
+      "invalidUserTitle": "Utilisateur invalide",
+      "botTarget": "Tu ne peux pas retirer d'XP à un bot.",
+      "noDataTitle": "Aucune donnée",
+      "noData": "{user} n'a aucune XP sur ce serveur.",
+      "levelDown": "Il est descendu du niveau **{old}** → **{new}**.",
+      "title": "XP retirée",
+      "description": "**{amount} XP** retirée à {user}.",
+      "fieldBefore": "Avant",
+      "fieldAfter": "Après",
+      "statValue": "{xp} XP (Niveau {level})"
+    },
+    "rank": {
+      "disabledTitle": "Niveaux désactivés",
+      "disabled": "Le système de niveaux est désactivé sur ce serveur.",
+      "noDataTitle": "Aucune donnée",
+      "noData": "{user} n'a pas encore gagné d'XP.",
+      "embedTitle": "📊 Rang de {user}",
+      "fieldRank": "🏆 Rang",
+      "fieldLevel": "📈 Niveau",
+      "fieldTotalXp": "✨ XP totale",
+      "fieldMessages": "💬 Messages",
+      "fieldProgress": "Progression vers le niveau {level}"
+    },
+    "stats": {
+      "disabledTitle": "Niveaux désactivés",
+      "disabled": "Le système de niveaux est désactivé sur ce serveur.",
+      "noDataTitle": "Aucune donnée",
+      "noData": "{user} n'a pas encore gagné d'XP.",
+      "never": "Jamais",
+      "title": "Statistiques d'activité de {user}",
+      "fieldRank": "🏆 Rang",
+      "fieldLevel": "📈 Niveau",
+      "fieldTotalXp": "✨ XP totale",
+      "fieldMessages": "💬 Messages envoyés",
+      "fieldDayStreak": "Série de jours",
+      "dayValue": "{count} jour(s)",
+      "fieldReputation": "⭐ Réputation",
+      "fieldAchievements": "🎖️ Succès",
+      "fieldLastActive": "🕐 Dernière activité"
+    },
+    "leaderboard": {
+      "disabledTitle": "Niveaux désactivés",
+      "disabled": "Le système de niveaux est désactivé sur ce serveur.",
+      "emptyTitle": "Vide",
+      "empty": "Personne n'a encore gagné d'XP sur ce serveur.",
+      "line": "{medal} {user} — Niveau **{level}** | **{xp}** XP",
+      "title": "🏆 Classement de {guild}",
+      "footer": "Page {page} sur {pages} • {total} utilisateurs au total",
+      "viewFull": "Voir le classement complet"
+    },
+    "profile": {
+      "disabledTitle": "Niveaux désactivés",
+      "disabled": "Le système de niveaux est désactivé sur ce serveur.",
+      "noDataTitle": "Aucune donnée",
+      "noData": "{user} n'a pas encore gagné d'XP.",
+      "noAchievements": "*Aucun succès pour l'instant. Continue à discuter !*",
+      "unknown": "Inconnu",
+      "title": "Profil de {user}",
+      "fieldServerRank": "🏆 Rang sur le serveur",
+      "fieldLevel": "📈 Niveau",
+      "fieldTotalXp": "✨ XP totale",
+      "fieldMessages": "💬 Messages",
+      "fieldJoined": "📅 Arrivé le",
+      "fieldProgress": "Progression vers le niveau {level}",
+      "fieldAchievements": "🎖️ Succès ({count})"
+    },
+    "rankcard": {
+      "resetTitle": "Réinitialisée",
+      "reset": "Ta carte de rang a été réinitialisée au style par défaut.",
+      "invalidColorTitle": "Couleur invalide",
+      "invalidColor": "Fournis un code couleur hexadécimal valide, p. ex. `#ff5733` ou `#f53`.",
+      "colorUpdatedTitle": "Couleur mise à jour",
+      "colorUpdated": "La couleur d'accentuation de ta carte de rang a été définie sur `{hex}`.",
+      "invalidUrlTitle": "URL invalide",
+      "invalidUrl": "Fournis une URL d'image directe se terminant par `.png`, `.jpg`, `.gif` ou `.webp`.",
+      "bgUpdatedTitle": "Arrière-plan mis à jour",
+      "bgUpdated": "L'arrière-plan de ta carte de rang a été mis à jour. Utilise `/rank` pour le voir.",
+      "notInServer": "Utilise cette commande sur un serveur.",
+      "previewContent": "Voici un aperçu de ta carte de rang :"
+    },
+    "leveling": {
+      "rateNormal": "normale",
+      "rateMultiplied": "{value}× la",
+      "multiplierSet": "Multiplicateur d'XP défini sur **{value}x**. Les membres gagneront désormais {rate} XP par message.",
+      "keepRolesOn": "Les membres **conserveront désormais tous leurs rôles de niveau précédents** lorsqu'ils en obtiendront un supérieur.",
+      "keepRolesOff": "Les membres **ne conserveront désormais que leur rôle de niveau le plus élevé** (les rôles inférieurs sont retirés automatiquement).",
+      "syncComplete": "Synchronisation des rôles terminée. **{processed}** membres traités, rôles mis à jour pour **{updated}**."
+    },
+    "loop": {
+      "disabledTitle": "Musique désactivée",
+      "disabled": "Les commandes de musique sont désactivées sur ce serveur.",
+      "nothingTitle": "Aucune lecture en cours",
+      "nothing": "Aucune musique n'est en cours de lecture.",
+      "modeOff": "Désactivé",
+      "modeTrack": "Piste",
+      "modeQueue": "File d'attente",
+      "title": "Répétition",
+      "set": "Mode de répétition défini sur **{mode}**"
+    },
+    "pause": {
+      "disabledTitle": "Musique désactivée",
+      "disabled": "Les commandes de musique sont désactivées sur ce serveur.",
+      "nothingTitle": "Aucune lecture en cours",
+      "nothing": "Aucune musique n'est en cours de lecture.",
+      "alreadyPausedTitle": "Déjà en pause",
+      "alreadyPaused": "La musique est déjà en pause.",
+      "title": "En pause",
+      "paused": "**{title}** mis en pause"
+    },
+    "resume": {
+      "disabledTitle": "Musique désactivée",
+      "disabled": "Les commandes de musique sont désactivées sur ce serveur.",
+      "nothingTitle": "Aucune lecture en cours",
+      "nothing": "Aucune musique n'est en cours de lecture.",
+      "notPausedTitle": "Pas en pause",
+      "notPaused": "La musique n'est pas en pause.",
+      "title": "Reprise",
+      "resumed": "**{title}** repris"
+    },
+    "skip": {
+      "disabledTitle": "Musique désactivée",
+      "disabled": "Les commandes de musique sont désactivées sur ce serveur.",
+      "nothingTitle": "Aucune lecture en cours",
+      "nothing": "Il n'y a rien à passer.",
+      "title": "Passé",
+      "skipped": "**{title}** passé"
+    },
+    "stop": {
+      "disabledTitle": "Musique désactivée",
+      "disabled": "Les commandes de musique sont désactivées sur ce serveur.",
+      "nothingTitle": "Aucune lecture en cours",
+      "nothing": "Il n'y a rien en cours de lecture.",
+      "title": "Arrêté",
+      "stopped": "Musique arrêtée et file d'attente vidée."
+    },
+    "volume": {
+      "disabledTitle": "Musique désactivée",
+      "disabled": "Les commandes de musique sont désactivées sur ce serveur.",
+      "nothingTitle": "Aucune lecture en cours",
+      "nothing": "Aucune musique n'est en cours de lecture.",
+      "title": "Volume",
+      "set": "Volume réglé sur **{level}%**"
+    },
+    "play": {
+      "disabledTitle": "Musique désactivée",
+      "disabled": "Les commandes de musique sont désactivées sur ce serveur.",
+      "joinVcTitle": "Rejoins un salon vocal",
+      "joinVc": "Tu dois être dans un salon vocal pour écouter de la musique.",
+      "wrongChannelTitle": "Mauvais salon",
+      "wrongChannel": "Je joue déjà dans {channel}",
+      "addedTitle": "Ajouté à la file d'attente",
+      "added": "**{title}** a été ajouté à la file d'attente.\nPosition : n°{position}",
+      "nowPlayingTitle": "Lecture en cours",
+      "nowPlaying": "🎵 **{title}**",
+      "requestedBy": "Demandé par",
+      "duration": "Durée",
+      "unknown": "Inconnu",
+      "failed": "Impossible de lire cette piste : {error}"
+    },
+    "queue": {
+      "disabledTitle": "Musique désactivée",
+      "disabled": "Les commandes de musique sont désactivées sur ce serveur.",
+      "nothingTitle": "Aucune lecture en cours",
+      "nothing": "Aucune musique n'est en cours de lecture.",
+      "title": "🎵 File d'attente musicale",
+      "nowPlaying": "**Lecture en cours :** {title}",
+      "empty": "_La file d'attente est vide_",
+      "footer": "{count} titre(s) dans la file • Répétition : {loop}"
+    },
+    "ping": {
+      "pinging": "Ping en cours...",
+      "pong": "🏓 Pong !",
+      "roundtrip": "Aller-retour",
+      "websocket": "WebSocket"
+    },
+    "avatar": {
+      "title": "Avatar de {user}",
+      "footer": "ID utilisateur : {id}",
+      "openBrowser": "Ouvrir dans le navigateur"
+    },
+    "invite": {
+      "title": "Inviter ArkenBot",
+      "body": "[Clique ici pour ajouter ArkenBot à ton serveur]({url})"
+    },
+    "botstatus": {
+      "title": "État du bot",
+      "fieldServers": "Serveurs",
+      "fieldPing": "Ping",
+      "fieldUptime": "Temps de fonctionnement",
+      "fieldMemory": "Mémoire"
+    },
+    "resetxp": {
+      "cancelled": "Réinitialisation annulée.",
+      "complete": "Réinitialisation terminée. Enregistrements d'XP supprimés pour {count} membre(s)."
+    },
+    "rep": {
+      "selfGive": "Tu ne peux pas te donner de réputation à toi-même.",
+      "botGive": "Tu ne peux pas donner de réputation aux bots.",
+      "cooldown": "Tu as déjà donné de la réputation aujourd'hui. Réessaie dans **{hours}h**.",
+      "gave": "⭐ {giver} a donné un point de réputation à {target} !\nIl a maintenant **{total}** point(s) de réputation.",
+      "checkTitle": "Réputation de {user}",
+      "fieldPoints": "⭐ Points de réputation",
+      "fieldRank": "🏆 Rang sur le serveur",
+      "unranked": "Non classé",
+      "topEmpty": "Aucun point de réputation n'a encore été donné sur ce serveur.",
+      "topLine": "{medal} **{name}** — {count} rép",
+      "topTitle": "⭐ Classement de réputation"
+    },
+    "suggest": {
+      "notEnabled": "Les suggestions ne sont pas activées sur ce serveur.",
+      "channelNotFound": "Salon de suggestions introuvable.",
+      "embedTitle": "Nouvelle suggestion",
+      "footer": "ID de suggestion : {id}",
+      "submitted": "Ta suggestion a été envoyée !"
+    },
+    "selfassignrole": {
+      "noRole": "❌ Aucun rôle auto-attribuable nommé `{name}`. Utilise `/selfrole list` pour voir les rôles disponibles.",
+      "alreadyHave": "Tu as déjà le rôle **{name}**.",
+      "roleGone": "❌ Le rôle pour `{name}` n'existe plus. Demande à un administrateur de le retirer avec `/selfrole remove`.",
+      "assigned": "✅ Le rôle {role} t'a été attribué.",
+      "failed": "❌ Échec de l'attribution du rôle. Assure-toi que le rôle du bot est au-dessus de {role} dans la liste des rôles."
+    },
+    "selfremoverole": {
+      "noRole": "❌ Aucun rôle auto-attribuable nommé `{name}`. Utilise `/selfrole list` pour voir les rôles disponibles.",
+      "dontHave": "Tu n'as pas le rôle **{name}**.",
+      "roleGone": "❌ Le rôle pour `{name}` n'existe plus.",
+      "removed": "✅ Le rôle {role} a été retiré.",
+      "failed": "❌ Échec du retrait du rôle. Assure-toi que le rôle du bot est au-dessus de {role} dans la liste des rôles."
+    },
+    "remind": {
+      "invalidDuration": "Durée invalide. Exemples : `10m`, `2h`, `1d`, `7d`",
+      "tooLong": "La durée maximale d'un rappel est de 28 jours.",
+      "set": "Rappel défini ! Je te rappellerai « {message} » {time}."
+    },
+    "serverinfo": {
+      "verifNone": "Aucune",
+      "verifLow": "Faible",
+      "verifMedium": "Moyenne",
+      "verifHigh": "Élevée",
+      "verifVeryHigh": "Très élevée",
+      "unknown": "Inconnu",
+      "fieldId": "🆔 ID",
+      "fieldOwner": "👑 Propriétaire",
+      "fieldCreated": "📅 Créé le",
+      "fieldMembers": "👥 Membres",
+      "fieldBots": "🤖 Bots",
+      "fieldVerification": "🔒 Vérification",
+      "fieldChannels": "📋 Salons",
+      "channelsValue": "💬 {text} textuels | 🔊 {voice} vocaux | 📁 {categories} catégories",
+      "fieldRoles": "🎭 Rôles",
+      "fieldEmojis": "😀 Émojis",
+      "fieldBoosts": "💎 Boosts",
+      "boostsValue": "Niveau {tier} ({count} boosts)",
+      "footer": "ID du serveur : {id}",
+      "featModeration": "Modération",
+      "featAutoMod": "Auto-modération",
+      "featLeveling": "Niveaux",
+      "featWelcome": "Bienvenue",
+      "featLogging": "Journalisation",
+      "featMusic": "Musique",
+      "featReactionRoles": "Rôles par réaction",
+      "fieldFeatures": "⚙️ Fonctionnalités activées",
+      "noneConfigured": "Aucune configurée"
+    },
+    "userinfo": {
+      "yes": "Oui",
+      "no": "Non",
+      "none": "Aucun",
+      "unknown": "Inconnu",
+      "fieldId": "🆔 ID",
+      "fieldBot": "🤖 Bot",
+      "fieldCreated": "📅 Compte créé le",
+      "fieldNickname": "🏷️ Surnom",
+      "fieldJoined": "📥 A rejoint le serveur",
+      "fieldRoles": "🎭 Rôles ({count})",
+      "fieldBoosting": "💎 Booste depuis"
+    },
+    "birthday": {
+      "setTitle": "🎂 Anniversaire enregistré !",
+      "set": "Ton anniversaire a été défini au {date}.",
+      "removed": "Ton anniversaire a été supprimé.",
+      "none": "Aucun anniversaire enregistré sur ce serveur pour le moment.",
+      "listTitle": "🎂 Prochains anniversaires",
+      "total": "{count} au total",
+      "userNotSet": "{user} n'a pas défini son anniversaire.",
+      "userBirthday": "🎂 L'anniversaire de {user} est le {date}"
+    },
+    "selfrole": {
+      "needManageRoles": "❌ Tu as besoin de la permission **Gérer les rôles** pour utiliser ceci.",
+      "roleTooHigh": "❌ Le rôle du bot est en dessous de **{role}** dans la liste des rôles. Place d'abord le rôle du bot au-dessus.",
+      "added": "✅ {role} est désormais auto-attribuable sous le nom `{name}`.\nLes membres peuvent exécuter `/selfassignrole {name}` pour l'obtenir.",
+      "exists": "❌ Un rôle auto-attribuable avec ce nom ou ce rôle existe déjà. Utilise `/selfrole list` pour voir les entrées actuelles.",
+      "notFound": "❌ Aucun rôle auto-attribuable nommé `{name}` trouvé.",
+      "removed": "✅ `{name}` retiré de la liste des rôles auto-attribuables.",
+      "none": "Aucun rôle auto-attribuable configuré pour le moment. Les administrateurs peuvent en ajouter avec `/selfrole add`.",
+      "listTitle": "Rôles auto-attribuables",
+      "listFooter": "Utilise /selfassignrole <nom> pour l'obtenir · /selfremoverole <nom> pour le retirer",
+      "roleDeleted": "rôle supprimé"
+    },
+    "analytics": {
+      "missingPermTitle": "Permission manquante",
+      "missingPerm": "Tu as besoin de la permission **Gérer le serveur** pour configurer les analyses.",
+      "channelSetTitle": "Salon d'analyses configuré",
+      "channelSet": "Les rapports d'analyses hebdomadaires seront publiés dans {channel}.",
+      "disabledTitle": "Analyses désactivées",
+      "disabled": "Les rapports d'analyses hebdomadaires automatiques ont été désactivés.",
+      "reportTitle": "📊 Analyses du serveur — 30 derniers jours",
+      "messages": "Messages",
+      "commands": "Commandes",
+      "joins": "Arrivées",
+      "leaves": "Départs",
+      "netGrowth": "Croissance nette"
+    },
+    "autoresponse": {
+      "invalidRegexTitle": "Regex invalide",
+      "invalidRegex": "Le motif `{pattern}` avec les options `{flags}` n'est pas une expression régulière valide.",
+      "addedTitle": "Réponse automatique ajoutée",
+      "added": "**ID :** `{id}`\n**Motif :** `{pattern}` (options : `{flags}`)\n**Réponse :** {response}",
+      "notFoundTitle": "Introuvable",
+      "notFound": "Aucune réponse automatique trouvée avec cet ID sur ce serveur.",
+      "removedTitle": "Réponse automatique supprimée",
+      "removed": "Motif `{pattern}` supprimé.",
+      "updatedTitle": "Réponse automatique mise à jour",
+      "updated": "Le motif `{pattern}` est maintenant **{state}**.",
+      "noneTitle": "Aucune réponse automatique",
+      "none": "Aucune réponse automatique configurée sur ce serveur.",
+      "listTitle": "Réponses automatiques",
+      "listFooter": "Utilise l'ID complet de cette liste avec /autoresponse remove ou toggle"
+    },
+    "poll": {
+      "votes": "{count} votes",
+      "totalVotes": "{count} votes au total",
+      "ends": "Se termine",
+      "endPoll": "Terminer le sondage",
+      "ended": "[TERMINÉ] {question}",
+      "optionCount": "Fournis entre 2 et 10 options séparées par `|`.",
+      "notFound": "Sondage introuvable.",
+      "alreadyEnded": "Ce sondage est terminé.",
+      "cannotEnd": "Seul le créateur du sondage ou un modérateur peut le terminer."
+    },
+    "giveaway": {
+      "invalidDuration": "Durée invalide.",
+      "fieldPrize": "**Lot :** {prize}",
+      "fieldWinners": "**Gagnants :** {count}",
+      "fieldEnds": "**Se termine :** {time}",
+      "fieldRequiredRole": "**Rôle requis :** {role}",
+      "fieldBonus": "**Participations bonus :** {role} obtient +{count} participations",
+      "enterPrompt": "Réagis avec 🎉 pour participer !",
+      "title": "🎉 Giveaway !",
+      "winnersFooter": "{count} gagnants",
+      "started": "Giveaway lancé ! ID : `{id}`",
+      "notFound": "Giveaway introuvable.",
+      "alreadyEnded": "Le giveaway est déjà terminé.",
+      "willEnd": "Le giveaway se terminera au prochain cycle de vérification (dans moins d'1 minute).",
+      "notEnded": "Giveaway introuvable ou pas encore terminé.",
+      "noChannel": "Impossible de trouver le salon du giveaway.",
+      "noMessage": "Impossible de trouver le message du giveaway.",
+      "noReactions": "Aucune réaction trouvée.",
+      "noEligible": "Aucun participant éligible.",
+      "rerollAnnounce": "🎉 Nouveau tirage ! Nouveaux gagnants : {winners} ! Félicitations pour avoir gagné **{prize}** !",
+      "rerolled": "Tirage relancé !"
+    },
+    "forum": {
+      "invalidChannelTitle": "Salon invalide",
+      "invalidChannel": "Sélectionne un salon de forum.",
+      "templateSetTitle": "Modèle défini",
+      "templateSet": "Message modèle configuré pour {channel}.",
+      "autoTagSetTitle": "Étiquette automatique définie",
+      "autoTagSet": "L'étiquette `{tag}` sera automatiquement appliquée dans {channel}.",
+      "clearedTitle": "Configuration effacée",
+      "cleared": "La configuration de gestion du forum pour {channel} a été supprimée."
+    },
+    "help": {
+      "cat": {
+        "moderation": "Modération",
+        "leveling": "Niveaux",
+        "community": "Communauté",
+        "music": "Musique",
+        "utility": "Utilitaires"
+      },
+      "overviewTitle": "📋 Référence des commandes",
+      "overviewDesc": "**{commands} commandes** disponibles pour toi dans **{categories} catégories**.",
+      "overviewHint": "Utilise ◀ ▶ pour naviguer, ou clique sur **Aperçu** pour revenir ici.",
+      "cmdCount": "{count} cmds",
+      "overview": "Aperçu",
+      "pageFooter": "Page {page} sur {total}  ·  {commands} commandes disponibles pour toi",
+      "notYourMenu": "Ce menu appartient à quelqu'un d'autre."
+    }
   }
 }

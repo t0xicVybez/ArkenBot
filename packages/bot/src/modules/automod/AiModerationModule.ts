@@ -18,6 +18,7 @@ import { redis } from '../../redis.js';
 import { chatCompletion, isLLMAvailable } from '@arkenbot/shared';
 import type { AutoModConfig } from '@arkenbot/shared';
 import { logger, swallow} from '../../logger.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 
 /** Only scan messages within this length band — skip "lol" and copy-paste walls. */
 const MIN_LENGTH = 24;
@@ -114,16 +115,21 @@ export class AiModerationModule {
     // Post a moderator alert to the same channel when only flagging, so it is
     // visible without a separate log channel; deletions are surfaced via the log.
     if (!deleted && 'send' in message.channel) {
+      const loc = await resolveUserLocale({ user: { id: '' }, guildId: message.guild!.id, guildLocale: message.guild!.preferredLocale });
       const embed = new EmbedBuilder()
         .setColor(verdict.severity === 'high' ? 0xed4245 : 0xfee75c)
-        .setTitle('🤖 AI Moderation Flag')
+        .setTitle(t('automod.aiFlagTitle', loc))
         .setDescription(
-          `Flagged a message from ${message.author} in ${message.channel} for review.\n\n` +
-          `**Category:** ${verdict.category} · **Severity:** ${verdict.severity}\n` +
-          `**Why:** ${verdict.reason || '—'}\n` +
-          `[Jump to message](${message.url})`,
+          t('automod.aiFlagDescription', loc, {
+            user: String(message.author),
+            channel: String(message.channel),
+            category: verdict.category,
+            severity: verdict.severity,
+            reason: verdict.reason || '—',
+            url: message.url,
+          }),
         )
-        .setFooter({ text: 'AI-generated · review before acting' })
+        .setFooter({ text: t('automod.aiFlagFooter', loc) })
         .setTimestamp();
       await (message.channel as TextChannel).send({ embeds: [embed] }).catch(swallow);
     }

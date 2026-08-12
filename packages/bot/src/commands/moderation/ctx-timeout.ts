@@ -18,6 +18,7 @@ import {
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { moderationEmbed, errorEmbed } from '../../utils/embed.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 import { canModerate } from '../../utils/permissions.js';
 import { getNextCaseNumber, getGuildSettings } from '../../utils/settings.js';
 import { prisma } from '../../database.js';
@@ -45,7 +46,8 @@ const command: BotCommand = {
     const targetUser = ctxInteraction.targetUser;
 
     if (!ctxInteraction.guild) {
-      await ctxInteraction.reply({ content: 'This command must be used in a server.', flags: MessageFlags.Ephemeral });
+      const loc = await resolveUserLocale(ctxInteraction);
+      await ctxInteraction.reply({ content: t('common.notInServer', loc), flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -80,20 +82,21 @@ const command: BotCommand = {
     if (!targetUserId || !interaction.guild) return;
 
     await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+    const loc = await resolveUserLocale(interaction);
 
     const durationStr = interaction.fields.getTextInputValue('duration');
     const reason = interaction.fields.getTextInputValue('reason');
     const ms = parseDuration(durationStr);
 
     if (!ms || ms < 5000 || ms > 28 * 24 * 60 * 60 * 1000) {
-      await interaction.editReply({ embeds: [errorEmbed('Invalid Duration', 'Duration must be between 5s and 28d (e.g. 10m, 1h, 7d).')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('cmd.ctxTimeout.invalidDurationTitle', loc), t('cmd.ctxTimeout.invalidDuration', loc))] });
       return;
     }
 
     const guild = interaction.guild;
     const targetUser = await interaction.client.users.fetch(targetUserId).catch(swallow);
     if (!targetUser) {
-      await interaction.editReply({ embeds: [errorEmbed('Not Found', 'Could not find that user.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('cmd.ctxTimeout.notFoundTitle', loc), t('cmd.ctxTimeout.notFoundUser', loc))] });
       return;
     }
 
@@ -101,12 +104,12 @@ const command: BotCommand = {
     const targetMember = await guild.members.fetch(targetUserId).catch(swallow);
 
     if (!targetMember) {
-      await interaction.editReply({ embeds: [errorEmbed('Not Found', 'That user is not in this server.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('cmd.ctxTimeout.notFoundTitle', loc), t('cmd.ctxTimeout.notInServer', loc))] });
       return;
     }
 
     if (moderator && !canModerate(moderator, targetMember)) {
-      await interaction.editReply({ embeds: [errorEmbed('Hierarchy Error', 'You cannot timeout a member with a higher or equal role.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('cmd.ctxTimeout.hierarchyTitle', loc), t('cmd.ctxTimeout.hierarchyUser', loc))] });
       return;
     }
 
@@ -131,7 +134,7 @@ const command: BotCommand = {
     const durationLabel = durationStr.toLowerCase();
     await targetUser.send({
       embeds: [moderationEmbed({
-        action: `Timeout in ${guild.name}`,
+        action: t('cmd.ctxTimeout.dmAction', loc, { guild: guild.name }),
         user: targetUser.tag,
         moderator: interaction.user.tag,
         reason,
@@ -151,7 +154,7 @@ const command: BotCommand = {
 
     await interaction.editReply({
       embeds: [moderationEmbed({
-        action: 'Timeout',
+        action: t('cmd.ctxTimeout.action', loc),
         user: `${targetUser.tag} (${targetUser.id})`,
         moderator: interaction.user.tag,
         reason,

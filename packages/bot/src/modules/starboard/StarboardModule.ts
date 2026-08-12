@@ -9,6 +9,7 @@ import { EmbedBuilder } from 'discord.js';
 import type { MessageReaction, User } from 'discord.js';
 import { prisma } from '../../database.js';
 import { getGuildSettings } from '../../utils/settings.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 
 import { swallow } from '../../logger.js';
 export class StarboardModule {
@@ -63,11 +64,12 @@ export class StarboardModule {
       ? (parseInt(settings.starboardColor.replace('#', ''), 16) as number)
       : 0xf1c40f; // Default: gold
 
+    const loc = await resolveUserLocale({ user: { id: '' }, guildId, guildLocale: reaction.message.guild.preferredLocale });
     const embed = new EmbedBuilder()
       .setColor(starboardColor)
-      .setAuthor({ name: msg.author?.username ?? 'Unknown', iconURL: msg.author?.displayAvatarURL() })
+      .setAuthor({ name: msg.author?.username ?? t('starboard.unknownAuthor', loc), iconURL: msg.author?.displayAvatarURL() })
       .setDescription(msg.content || null)
-      .addFields({ name: 'Source', value: `[Jump to message](${msg.url})` })
+      .addFields({ name: t('starboard.source', loc), value: t('starboard.jumpToMessage', loc, { url: msg.url }) })
       .setTimestamp(msg.createdAt);
 
     // Attach the first image attachment so the starboard post is visually rich.

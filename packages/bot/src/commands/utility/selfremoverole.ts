@@ -7,6 +7,7 @@ import {
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { getSelfRoles } from './selfrole.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 
 const command: BotCommand = {
   data: new SlashCommandBuilder()
@@ -19,6 +20,7 @@ const command: BotCommand = {
   category: 'utility',
 
   async execute(interaction: ChatInputCommandInteraction, _client: BotClient) {
+    const loc = await resolveUserLocale(interaction);
     const guildId = interaction.guildId!;
     const name    = interaction.options.getString('name', true).toLowerCase();
 
@@ -26,27 +28,27 @@ const command: BotCommand = {
     const entry = roles.find((r) => r.name === name);
 
     if (!entry) {
-      await interaction.reply({ content: `❌ No self-assignable role named \`${name}\`. Use \`/selfrole list\` to see available roles.`, ephemeral: true });
+      await interaction.reply({ content: t('cmd.selfremoverole.noRole', loc, { name }), ephemeral: true });
       return;
     }
 
     const member = interaction.member as GuildMember;
     if (!member.roles.cache.has(entry.roleId)) {
-      await interaction.reply({ content: `You don't have the **${name}** role.`, ephemeral: true });
+      await interaction.reply({ content: t('cmd.selfremoverole.dontHave', loc, { name }), ephemeral: true });
       return;
     }
 
     const role = interaction.guild?.roles.cache.get(entry.roleId);
     if (!role) {
-      await interaction.reply({ content: `❌ The role for \`${name}\` no longer exists.`, ephemeral: true });
+      await interaction.reply({ content: t('cmd.selfremoverole.roleGone', loc, { name }), ephemeral: true });
       return;
     }
 
     try {
       await member.roles.remove(role, 'Self-removed via /selfremoverole');
-      await interaction.reply({ content: `✅ The <@&${role.id}> role has been removed.`, ephemeral: true });
+      await interaction.reply({ content: t('cmd.selfremoverole.removed', loc, { role: `<@&${role.id}>` }), ephemeral: true });
     } catch {
-      await interaction.reply({ content: `❌ Failed to remove the role. Make sure the bot's role is above <@&${role.id}> in the role list.`, ephemeral: true });
+      await interaction.reply({ content: t('cmd.selfremoverole.failed', loc, { role: `<@&${role.id}>` }), ephemeral: true });
     }
   },
 

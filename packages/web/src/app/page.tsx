@@ -7,6 +7,7 @@ import {
   BarChart2, Clock, Settings, Command, Globe, X,
   Mic, ShieldAlert, ShieldCheck, MessagesSquare, Flag, BarChart,
   Trello, Code2, Server } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
 import { LandingNav } from '@/components/LandingNav';
 import { Footer } from '@/components/Footer';
 
@@ -46,271 +47,34 @@ const SITE = {
   supportUrl: 'https://discord.gg/fXJnYPdHRX',
 };
 
+// Visual config only — title/desc text comes from the `landing.features.items`
+// message array, zipped by index.
 const FEATURES = [
-  {
-    icon: Shield,
-    color: 'text-blue-400',
-    bg: 'bg-blue-500/10',
-    border: 'border-blue-500/20',
-    title: 'Moderation',
-    desc: 'Ban, kick, mute, warn, and temp-ban with full case tracking, audit logs, and warning history — all manageable from the dashboard.',
-  },
-  {
-    icon: Bot,
-    color: 'text-red-400',
-    bg: 'bg-red-500/10',
-    border: 'border-red-500/20',
-    title: 'Auto-Mod',
-    desc: 'Anti-spam, word filters, link filters, caps detection, mention protection, and anti-raid — all configurable per-role and per-channel.',
-  },
-  {
-    icon: TrendingUp,
-    color: 'text-green-400',
-    bg: 'bg-green-500/10',
-    border: 'border-green-500/20',
-    title: 'Leveling & XP',
-    desc: 'Keep members engaged with an XP system, rank cards, public leaderboards, role rewards at any level threshold, and configurable XP multipliers.',
-  },
-  {
-    icon: Music,
-    color: 'text-purple-400',
-    bg: 'bg-purple-500/10',
-    border: 'border-purple-500/20',
-    title: 'Music',
-    desc: 'High-quality music from YouTube with queue management, volume control, loop modes, and persistent queue state.',
-  },
-  {
-    icon: Ticket,
-    color: 'text-cyan-400',
-    bg: 'bg-cyan-500/10',
-    border: 'border-cyan-500/20',
-    title: 'Support Tickets',
-    desc: 'Multi-panel ticket system with private channels or threads, form fields, SLA escalation, canned responses, transcripts, and ratings.',
-  },
-  {
-    icon: Command,
-    color: 'text-yellow-400',
-    bg: 'bg-yellow-500/10',
-    border: 'border-yellow-500/20',
-    title: 'Custom Commands',
-    desc: 'Build your own commands with aliases, embed responses, per-user cooldowns, role restrictions, DM replies, and variable substitution.',
-  },
-  {
-    icon: Smile,
-    color: 'text-orange-400',
-    bg: 'bg-orange-500/10',
-    border: 'border-orange-500/20',
-    title: 'Reaction Roles',
-    desc: 'Let members self-assign roles. Supports toggle, add-only, and remove-only modes. Panels update in Discord in real time.',
-  },
-  {
-    icon: Megaphone,
-    color: 'text-pink-400',
-    bg: 'bg-pink-500/10',
-    border: 'border-pink-500/20',
-    title: 'Welcome & Leave',
-    desc: 'Greet new members with fully customizable embed messages, DM on join, and leave notifications with member counters.',
-  },
-  {
-    icon: Gift,
-    color: 'text-emerald-400',
-    bg: 'bg-emerald-500/10',
-    border: 'border-emerald-500/20',
-    title: 'Giveaways',
-    desc: 'Run giveaways from Discord with automatic winner selection. View all active and ended giveaways with winner names in the dashboard.',
-  },
-  {
-    icon: Radio,
-    color: 'text-rose-400',
-    bg: 'bg-rose-500/10',
-    border: 'border-rose-500/20',
-    title: 'Stream Alerts',
-    desc: 'Get notified when Twitch, Kick, or YouTube channels go live, or when Twitter, Reddit, or RSS feeds update. Posts a notification embed automatically.',
-  },
-  {
-    icon: Trello,
-    color: 'text-sky-400',
-    bg: 'bg-sky-500/10',
-    border: 'border-sky-500/20',
-    title: 'monday.com & Trello Alerts',
-    desc: 'Connect your project boards to Discord. Detailed embeds when cards and items are created, moved, renamed, commented on, and more.',
-  },
-  {
-    icon: Star,
-    color: 'text-amber-400',
-    bg: 'bg-amber-500/10',
-    border: 'border-amber-500/20',
-    title: 'Starboard',
-    desc: 'Highlight the best messages in your server. Configurable reaction threshold, self-star toggle, and emoji selection.',
-  },
-  {
-    icon: Lightbulb,
-    color: 'text-violet-400',
-    bg: 'bg-violet-500/10',
-    border: 'border-violet-500/20',
-    title: 'Suggestions',
-    desc: 'Member suggestion system with staff review. Approve, deny, or mark as implemented — all from the dashboard.',
-  },
-  {
-    icon: Calendar,
-    color: 'text-sky-400',
-    bg: 'bg-sky-500/10',
-    border: 'border-sky-500/20',
-    title: 'Birthdays',
-    desc: 'Track member birthdays and automatically announce them in a channel. Optionally assign a birthday role for 24 hours.',
-  },
-  {
-    icon: BarChart2,
-    color: 'text-indigo-400',
-    bg: 'bg-indigo-500/10',
-    border: 'border-indigo-500/20',
-    title: 'Stats Channels',
-    desc: 'Live-updating voice channels that display server stats — total members, online count, boost tier, and more.',
-  },
-  {
-    icon: Clock,
-    color: 'text-teal-400',
-    bg: 'bg-teal-500/10',
-    border: 'border-teal-500/20',
-    title: 'Scheduled Messages',
-    desc: 'Schedule recurring announcements or reminders to post automatically in any channel on any interval.',
-  },
-  {
-    icon: Mic,
-    color: 'text-sky-400',
-    bg: 'bg-sky-500/10',
-    border: 'border-sky-500/20',
-    title: 'Temp Voice Channels',
-    desc: 'Members join a trigger channel to instantly get their own private voice channel, which is deleted automatically when empty. Supports multiple triggers across different categories.',
-  },
-  {
-    icon: ShieldAlert,
-    color: 'text-red-400',
-    bg: 'bg-red-500/10',
-    border: 'border-red-500/20',
-    title: 'Anti-Nuke',
-    desc: 'Detect and respond to mass channel deletions, role deletions, and mass bans in real time. Automatically de-ops, kicks, or bans the offending user before the damage spreads.',
-  },
-  {
-    icon: ShieldCheck,
-    color: 'text-emerald-400',
-    bg: 'bg-emerald-500/10',
-    border: 'border-emerald-500/20',
-    title: 'Verification Gate',
-    desc: 'Require new members to click a verify button before accessing the server. Assign a pending role on join and a member role after verification — keep bots and lurkers out.',
-  },
-  {
-    icon: MessagesSquare,
-    color: 'text-violet-400',
-    bg: 'bg-violet-500/10',
-    border: 'border-violet-500/20',
-    title: 'Forum Management',
-    desc: 'Auto-post a template message in every new forum thread and automatically apply a tag on creation. Configure independently per forum channel from the dashboard.',
-  },
-  {
-    icon: BarChart,
-    color: 'text-blue-400',
-    bg: 'bg-blue-500/10',
-    border: 'border-blue-500/20',
-    title: 'Polls',
-    desc: 'Create multi-option polls with the /poll command. Members vote via buttons and staff can close or delete polls from the dashboard.',
-  },
-  {
-    icon: Flag,
-    color: 'text-orange-400',
-    bg: 'bg-orange-500/10',
-    border: 'border-orange-500/20',
-    title: 'Member Reports',
-    desc: 'Members submit reports via /report. Staff review pending reports in the dashboard, add notes, and mark them reviewed or dismissed.',
-  },
-  {
-    icon: Puzzle,
-    color: 'text-fuchsia-400',
-    bg: 'bg-fuchsia-500/10',
-    border: 'border-fuchsia-500/20',
-    title: 'Addon System',
-    desc: 'Extend the bot with community addons or build your own using the Arken Addon SDK. Install and configure from the dashboard.',
-  },
+  { icon: Shield,         color: 'text-blue-400',    bg: 'bg-blue-500/10',    border: 'border-blue-500/20' },
+  { icon: Bot,            color: 'text-red-400',     bg: 'bg-red-500/10',     border: 'border-red-500/20' },
+  { icon: TrendingUp,     color: 'text-green-400',   bg: 'bg-green-500/10',   border: 'border-green-500/20' },
+  { icon: Music,          color: 'text-purple-400',  bg: 'bg-purple-500/10',  border: 'border-purple-500/20' },
+  { icon: Ticket,         color: 'text-cyan-400',    bg: 'bg-cyan-500/10',    border: 'border-cyan-500/20' },
+  { icon: Command,        color: 'text-yellow-400',  bg: 'bg-yellow-500/10',  border: 'border-yellow-500/20' },
+  { icon: Smile,          color: 'text-orange-400',  bg: 'bg-orange-500/10',  border: 'border-orange-500/20' },
+  { icon: Megaphone,      color: 'text-pink-400',    bg: 'bg-pink-500/10',    border: 'border-pink-500/20' },
+  { icon: Gift,           color: 'text-emerald-400', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20' },
+  { icon: Radio,          color: 'text-rose-400',    bg: 'bg-rose-500/10',    border: 'border-rose-500/20' },
+  { icon: Trello,         color: 'text-sky-400',     bg: 'bg-sky-500/10',     border: 'border-sky-500/20' },
+  { icon: Star,           color: 'text-amber-400',   bg: 'bg-amber-500/10',   border: 'border-amber-500/20' },
+  { icon: Lightbulb,      color: 'text-violet-400',  bg: 'bg-violet-500/10',  border: 'border-violet-500/20' },
+  { icon: Calendar,       color: 'text-sky-400',     bg: 'bg-sky-500/10',     border: 'border-sky-500/20' },
+  { icon: BarChart2,      color: 'text-indigo-400',  bg: 'bg-indigo-500/10',  border: 'border-indigo-500/20' },
+  { icon: Clock,          color: 'text-teal-400',    bg: 'bg-teal-500/10',    border: 'border-teal-500/20' },
+  { icon: Mic,            color: 'text-sky-400',     bg: 'bg-sky-500/10',     border: 'border-sky-500/20' },
+  { icon: ShieldAlert,    color: 'text-red-400',     bg: 'bg-red-500/10',     border: 'border-red-500/20' },
+  { icon: ShieldCheck,    color: 'text-emerald-400', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20' },
+  { icon: MessagesSquare, color: 'text-violet-400',  bg: 'bg-violet-500/10',  border: 'border-violet-500/20' },
+  { icon: BarChart,       color: 'text-blue-400',    bg: 'bg-blue-500/10',    border: 'border-blue-500/20' },
+  { icon: Flag,           color: 'text-orange-400',  bg: 'bg-orange-500/10',  border: 'border-orange-500/20' },
+  { icon: Puzzle,         color: 'text-fuchsia-400', bg: 'bg-fuchsia-500/10', border: 'border-fuchsia-500/20' },
 ];
 
-const TICKET_HIGHLIGHTS = [
-  'Private channel or thread per ticket',
-  'Multi-button panels with category routing',
-  'Custom form fields shown before ticket opens',
-  'Staff claim, transfer, and priority system',
-  'Per-user and per-button staff role overrides',
-  'Multi-level SLA escalation with ping roles',
-  'Auto-assign tickets in round-robin order',
-  'Staff notification channel on new tickets',
-  'Canned responses with Discord autocomplete',
-  'Transcripts posted to a log channel on close',
-  'User rating system (1–5 stars)',
-  'Waiting status to pause SLA timers',
-  'Webhook notifications for integrations',
-  'Full portal: filters, notes, bulk close, stats',
-];
-
-const COMPARISON = [
-  { feature: 'Moderation + Case History',     arken: true,  note: '' },
-  { feature: 'Auto-Mod (spam, words, links)',  arken: true,  note: '' },
-  { feature: 'XP Leveling + Leaderboards',    arken: true,  note: '' },
-  { feature: 'Music Playback',                arken: true,  note: '' },
-  { feature: 'Custom Commands',               arken: true,  note: '' },
-  { feature: 'Auto-Responses (regex)',          arken: true,  note: '' },
-  { feature: 'Temp Roles',                      arken: true,  note: '' },
-  { feature: 'Reaction Roles',                arken: true,  note: '' },
-  { feature: 'Support Ticket System',         arken: true,  note: '' },
-  { feature: 'Ticket Form Fields',            arken: true,  note: 'Unique to Arken' },
-  { feature: 'Multi-level SLA Escalation',    arken: true,  note: 'Unique to Arken' },
-  { feature: 'Giveaways',                     arken: true,  note: '' },
-  { feature: 'Twitch, Kick & Social Alerts',   arken: true,  note: '' },
-  { feature: 'Starboard',                     arken: true,  note: '' },
-  { feature: 'Scheduled Messages',            arken: true,  note: '' },
-  { feature: 'Stats Channels',               arken: true,  note: '' },
-  { feature: 'Temp Voice Channels',           arken: true,  note: '' },
-  { feature: 'Anti-Nuke Protection',          arken: true,  note: '' },
-  { feature: 'Verification Gate',             arken: true,  note: '' },
-  { feature: 'Forum Management',             arken: true,  note: '' },
-  { feature: 'Polls & Member Reports',        arken: true,  note: '' },
-  { feature: 'Real-time Web Dashboard',       arken: true,  note: '' },
-  { feature: 'Addon Marketplace',             arken: true,  note: 'Unique to Arken' },
-  { feature: 'Price',                         arken: true,  note: 'Free, always' },
-];
-
-const HERO_COMMANDS = [
-  {
-    cmd: '/ban @SpamUser 7d Advertising',
-    icon: Shield,
-    color: 'text-red-400',
-    bg: 'bg-red-500/10',
-    response: '🔨 Banned SpamUser · Case #47 created',
-    responseColor: 'text-red-300',
-  },
-  {
-    cmd: '!hello',
-    icon: Command,
-    color: 'text-yellow-400',
-    bg: 'bg-yellow-500/10',
-    response: '👋 Hey @Alex! Welcome to the server.',
-    responseColor: 'text-yellow-300',
-  },
-  {
-    cmd: '/rank @Alex',
-    icon: TrendingUp,
-    color: 'text-green-400',
-    bg: 'bg-green-500/10',
-    response: '⭐ Level 14 · 3,280 / 4,000 XP · Rank #3',
-    responseColor: 'text-green-300',
-  },
-  {
-    cmd: '/play Never Gonna Give You Up',
-    icon: Music,
-    color: 'text-purple-400',
-    bg: 'bg-purple-500/10',
-    response: '🎵 Added to queue · Position #1',
-    responseColor: 'text-purple-300',
-  },
-];
 
 const DISCORD_ICON = (
   <svg fill="currentColor" viewBox="0 0 24 24">
@@ -336,7 +100,15 @@ async function getStats(): Promise<{ servers: number; users: number } | null> {
 
 export default async function LandingPage() {
   const stats = await getStats();
+  const t = await getTranslations('landing');
   const fmt = (n: number) => n >= 1000 ? `${(n / 1000).toFixed(1)}k+` : `${n}+`;
+
+  const featureItems = t.raw('features.items') as Array<{ title: string; desc: string }>;
+  const heroCards = t.raw('heroCards') as Array<{ title: string; desc: string }>;
+  const trustBar = t.raw('trustBar') as string[];
+  const ticketHighlights = t.raw('ticketHighlights') as string[];
+  const comparison = t.raw('comparison.items') as Array<{ feature: string; note: string }>;
+  const dashBullets = t.raw('dashBullets') as string[];
 
   return (
     <div className="min-h-screen bg-[var(--bg-surface)] text-[var(--text-primary)] flex flex-col">
@@ -363,18 +135,18 @@ export default async function LandingPage() {
         <div className="relative z-10 max-w-4xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-discord-blurple/15 border border-discord-blurple/25 text-discord-blurple text-[13px] font-semibold mb-9">
             <Sparkles className="w-3.5 h-3.5" />
-            Free forever — no paywalls, no premium tiers
+            {t('heroBadge')}
           </div>
 
           <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-bold leading-[1.12] tracking-tight mb-6 text-white">
-            The Discord bot that
-            <br />
-            does <span className="bg-gradient-to-r from-[var(--accent)] to-[var(--accent-2)] bg-clip-text text-transparent">everything</span>, elegantly.
+            {t.rich('heroTitle', {
+              br: () => <br />,
+              hl: (c) => <span className="bg-gradient-to-r from-[var(--accent)] to-[var(--accent-2)] bg-clip-text text-transparent">{c}</span>,
+            })}
           </h1>
 
           <p className="text-lg text-[var(--text-secondary)] mb-9 max-w-xl mx-auto leading-relaxed">
-            Moderation, leveling, tickets, stream alerts, Trello &amp; Monday.com boards,
-            and a real-time dashboard — all free, all in one bot.
+            {t('heroSubtitle')}
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center mb-12">
@@ -384,20 +156,20 @@ export default async function LandingPage() {
               rel="noopener noreferrer"
               className="btn-primary text-[15px] px-8 py-3 shadow-lg shadow-discord-blurple/20"
             >
-              Add to Discord <ArrowRight className="w-4 h-4" />
+              {t('heroAddButton')} <ArrowRight className="w-4 h-4" />
             </a>
             <Link href="/auth" className="btn-secondary text-[15px] px-8 py-3">
-              Explore the dashboard
+              {t('heroExplore')}
             </Link>
           </div>
 
           {/* Stats row */}
           <div className="flex flex-wrap gap-x-12 gap-y-4 justify-center mb-16">
             {[
-              { value: stats ? fmt(stats.servers) : '30+', label: 'servers' },
-              { value: stats ? fmt(stats.users) : '18k+', label: 'members served' },
-              { value: '50+', label: 'features' },
-              { value: '$0', label: 'forever' },
+              { value: stats ? fmt(stats.servers) : '30+', label: t('statServers') },
+              { value: stats ? fmt(stats.users) : '18k+', label: t('statMembers') },
+              { value: '50+', label: t('statFeatures') },
+              { value: '$0', label: t('statForever') },
             ].map((s) => (
               <div key={s.label} className="flex flex-col items-center">
                 <span className="text-[22px] font-bold text-white leading-tight tabular">{s.value}</span>
@@ -408,12 +180,7 @@ export default async function LandingPage() {
 
           {/* Mini feature cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
-            {[
-              { icon: Shield, title: 'Moderation that scales', desc: 'Cases, escalation, anti-nuke, and a full audit trail.' },
-              { icon: Zap, title: 'Alerts for everything', desc: 'Twitch, Kick, YouTube, X, Reddit, RSS — plus Trello and Monday.com boards.' },
-              { icon: TrendingUp, title: 'Leveling & engagement', desc: 'XP, role rewards, starboard, birthdays, giveaways.' },
-              { icon: LayoutDashboard, title: "A dashboard you'll enjoy", desc: 'Everything configurable in the browser, changes live instantly.' },
-            ].map((f) => (
+            {[Shield, Zap, TrendingUp, LayoutDashboard].map((Icon, i) => ({ icon: Icon, title: heroCards[i].title, desc: heroCards[i].desc })).map((f) => (
               <div key={f.title} className="flex gap-3.5 bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl p-5">
                 <span className="w-9 h-9 rounded-[10px] bg-[var(--accent-glow)] grid place-items-center flex-shrink-0">
                   <f.icon className="w-4 h-4 text-[var(--accent)]" />
@@ -431,12 +198,7 @@ export default async function LandingPage() {
       {/* ── Trust bar ── */}
       <div className="border-y border-[var(--border-subtle)] bg-[var(--bg-card)]/30 py-4 px-6">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
-          {[
-            { icon: Check, text: 'No premium tier — everything is free' },
-            { icon: Zap, text: 'Settings apply instantly — no bot restart' },
-            { icon: Shield, text: 'Full moderation suite included' },
-            { icon: Globe, text: 'Real-time web dashboard' },
-          ].map(({ icon: Icon, text }, i) => (
+          {[Check, Zap, Shield, Globe].map((Icon, i) => ({ icon: Icon, text: trustBar[i] })).map(({ icon: Icon, text }, i) => (
             <div key={text} className="flex items-center gap-2 text-xs text-[var(--text-secondary)]">
               {i > 0 && <span className="hidden sm:block w-1 h-1 rounded-full bg-[var(--text-muted)] mr-6" />}
               <Icon className="w-3.5 h-3.5 text-discord-blurple flex-shrink-0" />
@@ -451,29 +213,30 @@ export default async function LandingPage() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-14">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-discord-blurple/10 border border-discord-blurple/20 text-discord-blurple text-xs font-semibold uppercase tracking-widest mb-4">
-              Features
+              {t('featuresBadge')}
             </div>
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight">
-              Replace 5 bots with one
+              {t('featuresHeading')}
             </h2>
             <p className="text-[var(--text-secondary)] max-w-lg mx-auto">
-              Moderation, leveling, music, tickets, custom commands, stream alerts, giveaways — and more. All in a single bot, all free.
+              {t('featuresSubtitle')}
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            {FEATURES.map((f) => {
+            {FEATURES.map((f, i) => {
               const Icon = f.icon;
+              const txt = featureItems[i];
               return (
                 <div
-                  key={f.title}
+                  key={i}
                   className="bg-[var(--bg-card)] rounded-xl border border-[var(--border)] p-5 hover:border-[var(--border-strong)] hover:-translate-y-0.5 transition-all duration-200 shadow-sm"
                 >
                   <div className={`w-10 h-10 rounded-xl ${f.bg} border ${f.border} flex items-center justify-center mb-4`}>
                     <Icon className={`w-4.5 h-4.5 ${f.color}`} />
                   </div>
-                  <h3 className="text-white font-semibold text-sm mb-1.5 tracking-tight">{f.title}</h3>
-                  <p className="text-[var(--text-muted)] text-xs leading-relaxed">{f.desc}</p>
+                  <h3 className="text-white font-semibold text-sm mb-1.5 tracking-tight">{txt.title}</h3>
+                  <p className="text-[var(--text-muted)] text-xs leading-relaxed">{txt.desc}</p>
                 </div>
               );
             })}
@@ -486,16 +249,16 @@ export default async function LandingPage() {
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
           <div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-semibold uppercase tracking-widest mb-4">
-              Ticket System
+              {t('ticketBadge')}
             </div>
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-5 tracking-tight">
-              Professional support tickets, built in
+              {t('ticketHeading')}
             </h2>
             <p className="text-[var(--text-secondary)] mb-8 leading-relaxed text-sm">
-              Most bots charge for a decent ticket system. Arken&apos;s is fully featured out of the box — from multi-button panels and custom intake forms, to SLA escalation and a full portal for your staff team.
+              {t('ticketSubtitle')}
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2.5 mb-8">
-              {TICKET_HIGHLIGHTS.map((item) => (
+              {ticketHighlights.map((item) => (
                 <div key={item} className="flex items-start gap-2.5 text-sm text-[var(--text-secondary)]">
                   <span className="w-4 h-4 rounded-full bg-cyan-500/15 border border-cyan-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
                     <Check className="w-2.5 h-2.5 text-cyan-400" />
@@ -505,7 +268,7 @@ export default async function LandingPage() {
               ))}
             </div>
             <a href={SITE.inviteUrl} target="_blank" rel="noopener noreferrer" className="btn-primary inline-flex">
-              Add to Server <ChevronRight className="w-4 h-4" />
+              {t('addToServer')} <ChevronRight className="w-4 h-4" />
             </a>
           </div>
 
@@ -513,15 +276,15 @@ export default async function LandingPage() {
           <div className="space-y-3">
             {/* Panel embed mock */}
             <div className="bg-[#1e1f22] rounded-xl border border-white/[0.06] overflow-hidden shadow-xl shadow-black/30 p-4">
-              <p className="text-[10px] text-[var(--text-muted)] uppercase tracking-wider mb-3 font-semibold">Panel embed preview</p>
+              <p className="text-[10px] text-[var(--text-muted)] uppercase tracking-wider mb-3 font-semibold">{t('mockPanelPreview')}</p>
               <div className="bg-[#2b2d31] rounded-lg overflow-hidden" style={{ borderLeft: '4px solid #00b0f4' }}>
                 <div className="p-3">
-                  <p className="text-white text-sm font-semibold mb-1">🎫 Support Center</p>
-                  <p className="text-[var(--text-secondary)] text-xs leading-relaxed">Need help? Click a button below to open a ticket. Our team will be with you shortly.</p>
+                  <p className="text-white text-sm font-semibold mb-1">🎫 {t('mockSupportCenter')}</p>
+                  <p className="text-[var(--text-secondary)] text-xs leading-relaxed">{t('mockSupportDesc')}</p>
                   <div className="flex gap-2 mt-3">
-                    <span className="bg-[#5865f2] text-white text-[11px] font-medium px-3 py-1.5 rounded">🛠️ Technical</span>
-                    <span className="bg-[#3ecf8e] text-[#111] text-[11px] font-medium px-3 py-1.5 rounded">💳 Billing</span>
-                    <span className="bg-[#4f545c] text-white text-[11px] font-medium px-3 py-1.5 rounded">📋 Report</span>
+                    <span className="bg-[#5865f2] text-white text-[11px] font-medium px-3 py-1.5 rounded">🛠️ {t('mockTechnical')}</span>
+                    <span className="bg-[#3ecf8e] text-[#111] text-[11px] font-medium px-3 py-1.5 rounded">💳 {t('mockBilling')}</span>
+                    <span className="bg-[#4f545c] text-white text-[11px] font-medium px-3 py-1.5 rounded">📋 {t('mockReport')}</span>
                   </div>
                 </div>
               </div>
@@ -529,12 +292,12 @@ export default async function LandingPage() {
 
             {/* SLA levels mock */}
             <div className="bg-[var(--bg-card)] rounded-xl border border-[var(--border)] p-4 shadow-lg shadow-black/20">
-              <p className="text-[10px] text-[var(--text-muted)] uppercase tracking-wider mb-3 font-semibold">SLA escalation levels</p>
+              <p className="text-[10px] text-[var(--text-muted)] uppercase tracking-wider mb-3 font-semibold">{t('mockSlaTitle')}</p>
               <div className="space-y-2">
                 {[
-                  { hours: '2h', role: '@Support', msg: 'Ticket needs attention', color: 'text-yellow-400 bg-yellow-500/10' },
-                  { hours: '8h', role: '@Lead', msg: 'No response — escalating', color: 'text-orange-400 bg-orange-500/10' },
-                  { hours: '24h', role: '@Manager', msg: 'URGENT: 24h without reply', color: 'text-red-400 bg-red-500/10' },
+                  { hours: '2h', role: '@Support', msg: t('mockSla1'), color: 'text-yellow-400 bg-yellow-500/10' },
+                  { hours: '8h', role: '@Lead', msg: t('mockSla2'), color: 'text-orange-400 bg-orange-500/10' },
+                  { hours: '24h', role: '@Manager', msg: t('mockSla3'), color: 'text-red-400 bg-red-500/10' },
                 ].map((l) => (
                   <div key={l.hours} className="flex items-center gap-3 text-xs">
                     <span className={`font-mono font-bold px-1.5 py-0.5 rounded ${l.color}`}>{l.hours}</span>
@@ -548,9 +311,9 @@ export default async function LandingPage() {
             {/* Ticket stats mock */}
             <div className="grid grid-cols-3 gap-2">
               {[
-                { label: 'Open', value: '8', color: 'text-discord-green' },
-                { label: 'Avg Reply', value: '14m', color: 'text-blue-400' },
-                { label: 'Rating', value: '4.8★', color: 'text-yellow-400' },
+                { label: t('mockStatOpen'), value: '8', color: 'text-discord-green' },
+                { label: t('mockStatReply'), value: '14m', color: 'text-blue-400' },
+                { label: t('mockStatRating'), value: '4.8★', color: 'text-yellow-400' },
               ].map((s) => (
                 <div key={s.label} className="bg-[var(--bg-card)] rounded-lg p-3 border border-[var(--border)] text-center">
                   <p className={`text-base font-bold ${s.color}`}>{s.value}</p>
@@ -567,24 +330,24 @@ export default async function LandingPage() {
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-14">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-discord-blurple/10 border border-discord-blurple/20 text-discord-blurple text-xs font-semibold uppercase tracking-widest mb-4">
-              Why Arken
+              {t('compareBadge')}
             </div>
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight">
-              Everything. Free. In one bot.
+              {t('compareHeading')}
             </h2>
             <p className="text-[var(--text-secondary)] max-w-md mx-auto">
-              Stop paying per-server subscriptions or running five different bots. Arken has it all — no tiers, no limits.
+              {t('compareSubtitle')}
             </p>
           </div>
 
           <div className="bg-[var(--bg-card)] rounded-2xl border border-[var(--border)] overflow-hidden shadow-xl shadow-black/20">
             {/* Header */}
             <div className="grid grid-cols-[1fr_auto] px-5 py-3 border-b border-[var(--border-subtle)] bg-black/10">
-              <span className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider">Feature</span>
-              <span className="text-xs font-semibold text-discord-blurple uppercase tracking-wider text-center w-28">Arken Bot</span>
+              <span className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider">{t('compareColFeature')}</span>
+              <span className="text-xs font-semibold text-discord-blurple uppercase tracking-wider text-center w-28">{t('compareColArken')}</span>
             </div>
             {/* Rows */}
-            {COMPARISON.map((row, i) => (
+            {comparison.map((row, i) => (
               <div
                 key={row.feature}
                 className={`grid grid-cols-[1fr_auto] items-center px-5 py-3 ${i % 2 === 0 ? 'bg-white/[0.01]' : ''} border-b border-[var(--border-subtle)] last:border-0`}
@@ -598,15 +361,9 @@ export default async function LandingPage() {
                   )}
                 </div>
                 <div className="w-28 flex justify-center">
-                  {row.arken ? (
-                    <span className="w-5 h-5 rounded-full bg-discord-green/15 border border-discord-green/30 flex items-center justify-center">
-                      <Check className="w-3 h-3 text-discord-green" />
-                    </span>
-                  ) : (
-                    <span className="w-5 h-5 rounded-full bg-discord-red/10 border border-discord-red/20 flex items-center justify-center">
-                      <X className="w-3 h-3 text-discord-red" />
-                    </span>
-                  )}
+                  <span className="w-5 h-5 rounded-full bg-discord-green/15 border border-discord-green/30 flex items-center justify-center">
+                    <Check className="w-3 h-3 text-discord-green" />
+                  </span>
                 </div>
               </div>
             ))}
@@ -622,20 +379,13 @@ export default async function LandingPage() {
               Web Dashboard
             </div>
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-5 tracking-tight">
-              Manage everything from your browser
+              {t('dashHeading')}
             </h2>
             <p className="text-[var(--text-secondary)] mb-8 leading-relaxed text-sm">
-              No more typing commands to configure your bot. Every setting is in the dashboard — changes apply to the bot the moment you hit Save, with no restart required.
+              {t('dashSubtitle')}
             </p>
             <ul className="space-y-2.5 mb-8">
-              {[
-                'Real-time settings via WebSocket — zero bot restarts',
-                'Moderation case history and warning management',
-                'Full ticket portal with filters, notes, and bulk actions',
-                'XP leaderboards, level role management, and analytics',
-                'Custom command builder with embed previews',
-                'Addon marketplace — install, configure, and manage plugins',
-              ].map((item) => (
+              {dashBullets.map((item) => (
                 <li key={item} className="flex items-center gap-3 text-sm text-[var(--text-secondary)]">
                   <span className="w-4 h-4 rounded-full bg-discord-green/15 border border-discord-green/20 flex items-center justify-center flex-shrink-0">
                     <Check className="w-2.5 h-2.5 text-discord-green" />
@@ -645,7 +395,7 @@ export default async function LandingPage() {
               ))}
             </ul>
             <Link href="/auth" className="btn-primary inline-flex">
-              Open Dashboard <ChevronRight className="w-4 h-4" />
+              {t('dashOpenButton')} <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
 
@@ -668,15 +418,15 @@ export default async function LandingPage() {
                   </div>
                 </div>
                 {[
-                  { label: 'Overview', active: true },
-                  { label: 'Moderation', section: 'MODERATION' },
-                  { label: 'Auto-Mod' },
-                  { label: 'Leveling', section: 'COMMUNITY' },
-                  { label: 'Welcome' },
-                  { label: 'Commands' },
-                  { label: 'Tickets', section: 'TOOLS' },
-                  { label: 'Music' },
-                  { label: 'Addons', section: 'ADDONS' },
+                  { label: t('dashMockOverview'), active: true },
+                  { label: t('dashMockModeration'), section: t('dashSecModeration') },
+                  { label: t('dashMockAutomod') },
+                  { label: t('dashMockLeveling'), section: t('dashSecCommunity') },
+                  { label: t('dashMockWelcome') },
+                  { label: t('dashMockCommands') },
+                  { label: t('dashMockTickets'), section: t('dashSecTools') },
+                  { label: t('dashMockMusic') },
+                  { label: t('dashMockAddons'), section: t('dashSecAddons') },
                 ].map((item, idx) => (
                   <div key={idx}>
                     {item.section && <p className="px-2 text-[8px] text-[var(--text-muted)] font-semibold uppercase tracking-widest mt-2 mb-0.5">{item.section}</p>}
@@ -689,7 +439,7 @@ export default async function LandingPage() {
               {/* Content */}
               <div className="flex-1 p-3 space-y-2 bg-[var(--bg-surface)]">
                 <div className="grid grid-cols-2 gap-1.5">
-                  {['Mod Actions', 'New Members', 'Open Tickets', 'Log Events'].map((label) => (
+                  {[t('dashStatMod'), t('dashStatMembers'), t('dashStatTickets'), t('dashStatEvents')].map((label) => (
                     <div key={label} className="bg-[var(--bg-card)] rounded-lg px-2.5 py-2 border border-[var(--border-subtle)]">
                       <p className="text-[9px] text-[var(--text-muted)]">{label}</p>
                       <p className="text-base font-bold text-white">—</p>
@@ -697,7 +447,7 @@ export default async function LandingPage() {
                   ))}
                 </div>
                 <div className="bg-[var(--bg-card)] rounded-lg p-2.5 border border-[var(--border-subtle)]">
-                  <p className="text-[9px] text-[var(--text-muted)] mb-2">Message Activity (7d)</p>
+                  <p className="text-[9px] text-[var(--text-muted)] mb-2">{t('dashActivity')}</p>
                   <div className="flex items-end gap-0.5 h-10">
                     {[3, 6, 4, 8, 5, 9, 7, 12, 6, 10, 8, 11, 9, 14].map((h, i) => (
                       <div key={i} className="flex-1 bg-discord-blurple/40 rounded-sm" style={{ height: `${h * 6}%` }} />
@@ -706,7 +456,7 @@ export default async function LandingPage() {
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Settings className="w-3 h-3 text-[var(--text-muted)]" />
-                  <span className="text-[10px] text-[var(--text-muted)]">Settings update instantly · no restart required</span>
+                  <span className="text-[10px] text-[var(--text-muted)]">{t('dashInstant')}</span>
                 </div>
               </div>
             </div>
@@ -720,14 +470,13 @@ export default async function LandingPage() {
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold uppercase tracking-widest mb-4">
               <Code2 className="w-3.5 h-3.5" />
-              Open Source
+              {t('osBadge')}
             </div>
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight">
-              We build our own tools
+              {t('osHeading')}
             </h2>
             <p className="text-[var(--text-secondary)] max-w-xl mx-auto">
-              Arken Bot isn&apos;t glued together from other people&apos;s libraries. When we needed
-              something better, we wrote it — and released it for everyone.
+              {t('osSubtitle')}
             </p>
           </div>
 
@@ -741,22 +490,22 @@ export default async function LandingPage() {
                   <div>
                     <h3 className="text-white font-bold text-xl tracking-tight">GameQuery</h3>
                     <p className="text-[var(--text-secondary)] text-xs">
-                      Powers the Game Server Status addon
+                      {t('osTagline')}
                     </p>
                   </div>
                 </div>
 
                 <p className="text-[var(--text-secondary)] text-sm leading-relaxed mb-5">
-                  A dependency-free game server query library for PHP and Node/TypeScript. It reads
-                  player counts, map, ping and rules from one server or hundreds at once — and it&apos;s
-                  what Arken Bot uses every time you run <code className="text-emerald-400">/server status</code>.
+                  {t.rich('osDesc', {
+                    code: (c) => <code className="text-emerald-400">{c}</code>,
+                  })}
                 </p>
 
                 <div className="grid grid-cols-3 gap-3 mb-6 max-w-sm">
                   {[
-                    { n: '53', l: 'Games' },
-                    { n: '23', l: 'Protocols' },
-                    { n: '0', l: 'Dependencies' },
+                    { n: '53', l: t('osStatGames') },
+                    { n: '23', l: t('osStatProtocols') },
+                    { n: '0', l: t('osStatDeps') },
                   ].map((s) => (
                     <div
                       key={s.l}
@@ -775,7 +524,7 @@ export default async function LandingPage() {
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-[#05231a] font-semibold text-sm transition-colors"
                   >
-                    Try it live
+                    {t('osTryLive')}
                     <ArrowRight className="w-4 h-4" />
                   </a>
                   <a
@@ -784,7 +533,7 @@ export default async function LandingPage() {
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-[var(--border-subtle)] hover:border-emerald-500/40 text-white font-semibold text-sm transition-colors"
                   >
-                    View source
+                    {t('osViewSource')}
                     <ExternalLink className="w-3.5 h-3.5" />
                   </a>
                 </div>
@@ -798,7 +547,7 @@ export default async function LandingPage() {
                   <div className="text-[#c3e88d]">composer require t0xicvybez/gamequery</div>
                 </div>
                 <p className="text-[var(--text-secondary)] text-[11px] mt-3 text-center">
-                  AGPL-3.0 · free forever
+                  {t('osLicense')}
                 </p>
               </div>
             </div>
@@ -816,12 +565,12 @@ export default async function LandingPage() {
             <span className="w-8 h-8 text-white">{DISCORD_ICON}</span>
           </div>
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight">
-            Ready to upgrade your server?
+            {t('ctaHeading')}
           </h2>
           <p className="text-[var(--text-secondary)] mb-3 text-sm max-w-lg mx-auto">
-            Join the servers already running on Arken Bot. Free forever — no subscriptions, no per-server fees, no feature gates.
+            {t('ctaSubtitle')}
           </p>
-          <p className="text-[var(--text-muted)] text-xs mb-10">Works alongside your existing bots, or replace them entirely.</p>
+          <p className="text-[var(--text-muted)] text-xs mb-10">{t('ctaNote')}</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <a
               href={SITE.inviteUrl}
@@ -829,7 +578,7 @@ export default async function LandingPage() {
               rel="noopener noreferrer"
               className="btn-primary text-[15px] px-10 py-3.5 shadow-lg shadow-discord-blurple/25"
             >
-              Add Arken Bot — Free <ArrowRight className="w-4 h-4" />
+              {t('ctaAddButton')} <ArrowRight className="w-4 h-4" />
             </a>
             <a
               href={SITE.supportUrl}
@@ -837,7 +586,7 @@ export default async function LandingPage() {
               rel="noopener noreferrer"
               className="btn-secondary text-[15px] px-10 py-3.5"
             >
-              Join Support Server
+              {t('ctaSupport')}
             </a>
           </div>
         </div>

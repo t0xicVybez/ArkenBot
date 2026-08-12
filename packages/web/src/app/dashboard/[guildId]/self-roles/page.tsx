@@ -7,12 +7,14 @@ import { SettingsSection } from '@/components/SettingsSection';
 import toast from 'react-hot-toast';
 import { useState } from 'react';
 import { UserCheck, Plus, Trash2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface SelfRole { id: string; roleId: string; name: string }
 interface GuildRole { id: string; name: string }
 
 export default function SelfRolesPage() {
   const { guildId } = useParams() as { guildId: string };
+  const t = useTranslations('selfRoles');
   const queryClient = useQueryClient();
 
   const [form, setForm] = useState({ roleId: '', name: '' });
@@ -33,12 +35,12 @@ export default function SelfRolesPage() {
   const addRole = useMutation({
     mutationFn: () => selfRolesApi.create(guildId, { roleId: form.roleId, name: form.name }),
     onSuccess: () => {
-      toast.success('Role added to self-assignable list.');
+      toast.success(t('added'));
       setForm({ roleId: '', name: '' });
       queryClient.invalidateQueries({ queryKey: ['self-roles', guildId] });
     },
     onError: (err: any) => {
-      const msg = err?.response?.data?.error ?? 'Failed to add role.';
+      const msg = err?.response?.data?.error ?? t('addError');
       toast.error(msg);
     },
   });
@@ -46,10 +48,10 @@ export default function SelfRolesPage() {
   const removeRole = useMutation({
     mutationFn: (id: string) => selfRolesApi.delete(guildId, id),
     onSuccess: () => {
-      toast.success('Role removed.');
+      toast.success(t('removed'));
       queryClient.invalidateQueries({ queryKey: ['self-roles', guildId] });
     },
-    onError: () => toast.error('Failed to remove role.'),
+    onError: () => toast.error(t('removeError')),
   });
 
   const handleRoleSelect = (roleId: string) => {
@@ -72,25 +74,27 @@ export default function SelfRolesPage() {
       <div className="page-head">
         <div className="page-head-icon"><UserCheck className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>Self-Assignable Roles</h1>
-          <div className="page-head-desc">Members can claim roles themselves with <code className="bg-gray-700 px-1 rounded text-xs">/selfassignrole</code> and drop them with{' '}
-            <code className="bg-gray-700 px-1 rounded text-xs">/selfremoverole</code>.</div>
+          <h1>{t('title')}</h1>
+          <div className="page-head-desc">{t.rich('description', {
+            assign: (c) => <code className="bg-gray-700 px-1 rounded text-xs">{c}</code>,
+            remove: (c) => <code className="bg-gray-700 px-1 rounded text-xs">{c}</code>,
+          })}</div>
         </div>
       </div>
 
       <SettingsSection
-        title="Add a Role"
-        description="Select a server role and give it a short name that members will type in the command."
+        title={t('addTitle')}
+        description={t('addDesc')}
       >
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label className="label">Role</label>
+            <label className="label">{t('roleLabel')}</label>
             <select
               className="input"
               value={form.roleId}
               onChange={(e) => handleRoleSelect(e.target.value)}
             >
-              <option value="">Select a role</option>
+              <option value="">{t('selectRole')}</option>
               {guildRoles
                 .filter((r) => !selfRoles.some((sr) => sr.roleId === r.id))
                 .map((r) => (
@@ -99,14 +103,17 @@ export default function SelfRolesPage() {
             </select>
           </div>
           <div>
-            <label className="label">Command name</label>
+            <label className="label">{t('commandNameLabel')}</label>
             <input
               className="input"
-              placeholder="e.g. fighter"
+              placeholder={t('commandNamePlaceholder')}
               value={form.name}
               onChange={(e) => setForm((f) => ({ ...f, name: e.target.value.toLowerCase().replace(/\s+/g, '-') }))}
             />
-            <p className="text-xs text-gray-500 mt-1">Members will run <code className="bg-gray-700 px-1 rounded">/selfassignrole {form.name || 'name'}</code></p>
+            <p className="text-xs text-gray-500 mt-1">{t.rich('willRun', {
+              code: (c) => <code className="bg-gray-700 px-1 rounded">{c}</code>,
+              name: form.name || t('namePlaceholder'),
+            })}</p>
           </div>
         </div>
         <button
@@ -115,12 +122,12 @@ export default function SelfRolesPage() {
           onClick={() => addRole.mutate()}
         >
           <Plus className="w-4 h-4" />
-          {addRole.isPending ? 'Adding…' : 'Add Role'}
+          {addRole.isPending ? t('adding') : t('addButton')}
         </button>
       </SettingsSection>
 
       {selfRoles.length > 0 && (
-        <SettingsSection title="Current Self-Assignable Roles" description="Members can claim any of these roles at any time.">
+        <SettingsSection title={t('currentTitle')} description={t('currentDesc')}>
           <div className="space-y-2">
             {selfRoles.map((sr) => {
               const roleName = guildRoles.find((r) => r.id === sr.roleId)?.name;
@@ -135,7 +142,7 @@ export default function SelfRolesPage() {
                       {roleName ? (
                         <span className="text-gray-300">@{roleName}</span>
                       ) : (
-                        <span className="text-red-400 line-through text-xs">{sr.roleId} (deleted)</span>
+                        <span className="text-red-400 line-through text-xs">{t('deletedRole', { roleId: sr.roleId })}</span>
                       )}
                     </p>
                     <p className="text-gray-500 text-xs mt-0.5">/selfassignrole {sr.name}</p>
@@ -143,7 +150,7 @@ export default function SelfRolesPage() {
                   <button
                     className="text-gray-500 hover:text-red-400 transition-colors p-1"
                     onClick={() => removeRole.mutate(sr.id)}
-                    title="Remove"
+                    title={t('remove')}
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -155,7 +162,7 @@ export default function SelfRolesPage() {
       )}
 
       {selfRoles.length === 0 && (
-        <p className="text-gray-500 text-sm">No self-assignable roles yet. Add one above.</p>
+        <p className="text-gray-500 text-sm">{t('empty')}</p>
       )}
     </div>
   );

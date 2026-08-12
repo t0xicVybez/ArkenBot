@@ -13,6 +13,7 @@ import type { BotClient } from '../../client.js';
 import { COLORS, xpForLevel } from '@arkenbot/shared';
 import { prisma } from '../../database.js';
 import { errorEmbed } from '../../utils/embed.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 import { getGuildSettings } from '../../utils/settings.js';
 import { generateRankCard } from '../../utils/rankCard.js';
 import { logger } from '../../logger.js';
@@ -28,15 +29,16 @@ const command: BotCommand = {
 
   async execute(interaction: ChatInputCommandInteraction, _client: BotClient) {
     await interaction.deferReply();
+    const loc = await resolveUserLocale(interaction);
 
     if (!interaction.guild) {
-      await interaction.editReply({ embeds: [errorEmbed('Error', 'This command must be used in a server.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('common.error', loc), t('common.notInServer', loc))] });
       return;
     }
 
     const settings = await getGuildSettings(interaction.guild.id);
     if (settings && !settings.levelingEnabled) {
-      await interaction.editReply({ embeds: [errorEmbed('Leveling Disabled', 'The leveling system is disabled for this server.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('cmd.rank.disabledTitle', loc), t('cmd.rank.disabled', loc))] });
       return;
     }
 
@@ -48,7 +50,7 @@ const command: BotCommand = {
 
     if (!userLevel) {
       await interaction.editReply({
-        embeds: [errorEmbed('No Data', `${targetUser.tag} has not earned any XP yet.`)],
+        embeds: [errorEmbed(t('cmd.rank.noDataTitle', loc), t('cmd.rank.noData', loc, { user: targetUser.tag }))],
       });
       return;
     }
@@ -94,15 +96,15 @@ const command: BotCommand = {
 
       const embed = new EmbedBuilder()
         .setColor(COLORS.INFO)
-        .setTitle(`📊 ${targetUser.tag}'s Rank`)
+        .setTitle(t('cmd.rank.embedTitle', loc, { user: targetUser.tag }))
         .setThumbnail(targetUser.displayAvatarURL())
         .addFields(
-          { name: '🏆 Rank', value: `#${rank + 1}`, inline: true },
-          { name: '📈 Level', value: `${currentLevel}`, inline: true },
-          { name: '✨ Total XP', value: `${currentXp.toLocaleString()}`, inline: true },
-          { name: '💬 Messages', value: `${userLevel.totalMessages.toLocaleString()}`, inline: true },
+          { name: t('cmd.rank.fieldRank', loc), value: `#${rank + 1}`, inline: true },
+          { name: t('cmd.rank.fieldLevel', loc), value: `${currentLevel}`, inline: true },
+          { name: t('cmd.rank.fieldTotalXp', loc), value: `${currentXp.toLocaleString()}`, inline: true },
+          { name: t('cmd.rank.fieldMessages', loc), value: `${userLevel.totalMessages.toLocaleString()}`, inline: true },
           {
-            name: `Progress to Level ${currentLevel + 1}`,
+            name: t('cmd.rank.fieldProgress', loc, { level: currentLevel + 1 }),
             value: `\`${progressBar}\`\n${xpInLevel.toLocaleString()} / ${xpNeeded.toLocaleString()} XP`,
           },
         )

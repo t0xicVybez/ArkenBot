@@ -11,9 +11,11 @@ import {
 import type { BotClient } from '../../client.js';
 import type { BotCommand } from '../../types.js';
 import { prisma } from '../../database.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 
-const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December'];
+/** Localized long month name (1-12) for the given BCP-47 locale. */
+const monthName = (month: number, loc: string): string =>
+  new Intl.DateTimeFormat(loc, { month: 'long', timeZone: 'UTC' }).format(new Date(Date.UTC(2000, month - 1, 1)));
 
 const command: BotCommand = {
   data: new SlashCommandBuilder()
@@ -42,6 +44,7 @@ const command: BotCommand = {
   async execute(interaction: ChatInputCommandInteraction, _client: BotClient) {
     const sub = interaction.options.getSubcommand();
     const guildId = interaction.guildId!;
+    const loc = await resolveUserLocale(interaction);
 
     if (sub === 'set') {
       const month = interaction.options.getInteger('month', true);
@@ -56,15 +59,15 @@ const command: BotCommand = {
       void interaction.reply({
         embeds: [new EmbedBuilder()
           .setColor(0x57f287)
-          .setTitle('🎂 Birthday Set!')
-          .setDescription(`Your birthday has been set to **${MONTH_NAMES[month - 1]} ${day}**.`)],
+          .setTitle(t('cmd.birthday.setTitle', loc))
+          .setDescription(t('cmd.birthday.set', loc, { date: `**${monthName(month, loc)} ${day}**` }))],
         flags: MessageFlags.Ephemeral,
       });
     }
 
     if (sub === 'remove') {
       await prisma.birthday.deleteMany({ where: { guildId, userId: interaction.user.id } });
-      void interaction.reply({ content: 'Your birthday has been removed.', flags: MessageFlags.Ephemeral });
+      void interaction.reply({ content: t('cmd.birthday.removed', loc), flags: MessageFlags.Ephemeral });
     }
 
     if (sub === 'list') {
@@ -78,7 +81,7 @@ const command: BotCommand = {
       });
 
       if (!birthdays.length) {
-        void interaction.reply({ content: 'No birthdays registered in this server yet.', flags: MessageFlags.Ephemeral });
+        void interaction.reply({ content: t('cmd.birthday.none', loc), flags: MessageFlags.Ephemeral });
         return;
       }
 
@@ -92,14 +95,14 @@ const command: BotCommand = {
         return a.day - b.day;
       });
 
-      const lines = sorted.slice(0, 20).map((b) => `<@${b.userId}> — **${MONTH_NAMES[b.month - 1]} ${b.day}**`);
+      const lines = sorted.slice(0, 20).map((b) => `<@${b.userId}> — **${monthName(b.month, loc)} ${b.day}**`);
 
       void interaction.reply({
         embeds: [new EmbedBuilder()
           .setColor(0x5865f2)
-          .setTitle('🎂 Upcoming Birthdays')
+          .setTitle(t('cmd.birthday.listTitle', loc))
           .setDescription(lines.join('\n'))
-          .setFooter({ text: `${birthdays.length} total` })],
+          .setFooter({ text: t('cmd.birthday.total', loc, { count: birthdays.length }) })],
       });
     }
 
@@ -107,13 +110,13 @@ const command: BotCommand = {
       const user = interaction.options.getUser('user', true);
       const record = await prisma.birthday.findUnique({ where: { guildId_userId: { guildId, userId: user.id } } });
       if (!record) {
-        void interaction.reply({ content: `${user.username} hasn't set their birthday.`, flags: MessageFlags.Ephemeral });
+        void interaction.reply({ content: t('cmd.birthday.userNotSet', loc, { user: user.username }), flags: MessageFlags.Ephemeral });
         return;
       }
       void interaction.reply({
         embeds: [new EmbedBuilder()
           .setColor(0x5865f2)
-          .setDescription(`🎂 ${user}'s birthday is **${MONTH_NAMES[record.month - 1]} ${record.day}**`)],
+          .setDescription(t('cmd.birthday.userBirthday', loc, { user: user.toString(), date: `**${monthName(record.month, loc)} ${record.day}**` }))],
       });
     }
   },

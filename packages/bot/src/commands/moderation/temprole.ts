@@ -13,6 +13,7 @@ import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { prisma } from '../../database.js';
 import { errorEmbed, successEmbed } from '../../utils/embed.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 
 import { swallow } from '../../logger.js';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -55,9 +56,10 @@ const command: BotCommand = {
 
   async execute(interaction: ChatInputCommandInteraction, _client: BotClient) {
     await interaction.deferReply();
+    const loc = await resolveUserLocale(interaction);
 
     if (!interaction.guild) {
-      await interaction.editReply({ embeds: [errorEmbed('Error', 'This command must be used in a server.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('common.error', loc), t('common.notInServer', loc))] });
       return;
     }
 
@@ -70,7 +72,7 @@ const command: BotCommand = {
       const reason = interaction.options.getString('reason') ?? 'No reason provided';
 
       if (!target || !('roles' in target)) {
-        await interaction.editReply({ embeds: [errorEmbed('Error', 'Member not found in this server.')] });
+        await interaction.editReply({ embeds: [errorEmbed(t('common.error', loc), t('cmd.temprole.memberNotFound', loc))] });
         return;
       }
       const member = target as GuildMember;
@@ -78,7 +80,7 @@ const command: BotCommand = {
       const seconds = parseDuration(durationStr);
       if (!seconds || seconds < 60) {
         await interaction.editReply({
-          embeds: [errorEmbed('Invalid Duration', 'Use a format like `30m`, `2h`, `7d`. Minimum is 60 seconds.')],
+          embeds: [errorEmbed(t('cmd.temprole.invalidDurationTitle', loc), t('cmd.temprole.invalidDuration', loc))],
         });
         return;
       }
@@ -103,8 +105,8 @@ const command: BotCommand = {
       await interaction.editReply({
         embeds: [
           successEmbed(
-            'Temp Role Assigned',
-            `${role} assigned to ${member} until <t:${Math.floor(expiresAt.getTime() / 1000)}:F>.\n**Reason:** ${reason}`,
+            t('cmd.temprole.assignedTitle', loc),
+            t('cmd.temprole.assigned', loc, { role: String(role), member: String(member), expires: `<t:${Math.floor(expiresAt.getTime() / 1000)}:F>`, reason }),
           ),
         ],
       });
@@ -116,7 +118,7 @@ const command: BotCommand = {
       const role = interaction.options.getRole('role', true);
 
       if (!target || !('roles' in target)) {
-        await interaction.editReply({ embeds: [errorEmbed('Error', 'Member not found in this server.')] });
+        await interaction.editReply({ embeds: [errorEmbed(t('common.error', loc), t('cmd.temprole.memberNotFound', loc))] });
         return;
       }
       const member = target as GuildMember;
@@ -126,14 +128,14 @@ const command: BotCommand = {
       });
 
       if (!record || record.removed) {
-        await interaction.editReply({ embeds: [errorEmbed('Not Found', 'No active temp role record found for that member and role.')] });
+        await interaction.editReply({ embeds: [errorEmbed(t('cmd.temprole.notFoundTitle', loc), t('cmd.temprole.notFound', loc))] });
         return;
       }
 
       await member.roles.remove(role.id, `Temp role removed early by ${interaction.user.tag}`).catch(swallow);
       await db.tempRole.update({ where: { id: record.id }, data: { removed: true } });
 
-      await interaction.editReply({ embeds: [successEmbed('Temp Role Removed', `${role} removed from ${member}.`)] });
+      await interaction.editReply({ embeds: [successEmbed(t('cmd.temprole.removedTitle', loc), t('cmd.temprole.removed', loc, { role: String(role), member: String(member) }))] });
       return;
     }
 
@@ -145,17 +147,17 @@ const command: BotCommand = {
       });
 
       if (records.length === 0) {
-        await interaction.editReply({ embeds: [errorEmbed('No Active Temp Roles', 'There are no active temporary roles in this server.')] });
+        await interaction.editReply({ embeds: [errorEmbed(t('cmd.temprole.noneTitle', loc), t('cmd.temprole.none', loc))] });
         return;
       }
 
       const lines: string[] = records.map(
         (r: { userId: string; roleId: string; expiresAt: Date }) =>
-          `<@${r.userId}> → <@&${r.roleId}> — expires <t:${Math.floor(new Date(r.expiresAt).getTime() / 1000)}:R>`,
+          t('cmd.temprole.listLine', loc, { user: `<@${r.userId}>`, role: `<@&${r.roleId}>`, expires: `<t:${Math.floor(new Date(r.expiresAt).getTime() / 1000)}:R>` }),
       );
 
       const embed = new EmbedBuilder()
-        .setTitle('Active Temporary Roles')
+        .setTitle(t('cmd.temprole.listTitle', loc))
         .setDescription(lines.join('\n'))
         .setColor(0x5865f2);
 

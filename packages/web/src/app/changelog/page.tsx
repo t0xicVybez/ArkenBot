@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import { LandingNav } from '@/components/LandingNav';
 import { Footer } from '@/components/Footer';
 
@@ -30,11 +31,11 @@ type ChangelogEntry = {
   sentAt: string;
 };
 
-const TYPE_BADGES: Record<string, { label: string; classes: string }> = {
-  update:      { label: 'Update',      classes: 'bg-discord-blurple/15 text-discord-blurple border-discord-blurple/30' },
-  feature:     { label: 'New Feature', classes: 'bg-green-500/15 text-green-400 border-green-500/30' },
-  maintenance: { label: 'Maintenance', classes: 'bg-yellow-500/15 text-yellow-400 border-yellow-500/30' },
-  hotfix:      { label: 'Hotfix',      classes: 'bg-red-500/15 text-red-400 border-red-500/30' },
+const TYPE_BADGES: Record<string, { labelKey: string; classes: string }> = {
+  update:      { labelKey: 'badgeUpdate',      classes: 'bg-discord-blurple/15 text-discord-blurple border-discord-blurple/30' },
+  feature:     { labelKey: 'badgeFeature', classes: 'bg-green-500/15 text-green-400 border-green-500/30' },
+  maintenance: { labelKey: 'badgeMaintenance', classes: 'bg-yellow-500/15 text-yellow-400 border-yellow-500/30' },
+  hotfix:      { labelKey: 'badgeHotfix',      classes: 'bg-red-500/15 text-red-400 border-red-500/30' },
 };
 
 async function getEntries(): Promise<ChangelogEntry[]> {
@@ -54,6 +55,7 @@ function formatDate(iso: string): string {
 
 export default async function ChangelogPage() {
   const entries = await getEntries();
+  const t = await getTranslations('changelogPage');
 
   return (
     <div className="min-h-screen bg-[var(--bg-base)] text-[var(--text-primary)]">
@@ -61,16 +63,16 @@ export default async function ChangelogPage() {
 
       <main className="max-w-3xl mx-auto px-6 py-16">
         <div className="mb-10">
-          <h1 className="text-3xl font-bold text-white mb-2">Changelog</h1>
+          <h1 className="text-3xl font-bold text-white mb-2">{t('title')}</h1>
           <p className="text-sm text-[var(--text-secondary)]">
-            Every update, feature, and fix we announce — posted here the moment the team sends it out.
-            Want these in your own server? Enable announcements in{' '}
-            <span className="text-white">Dashboard → Announcements</span>.
+            {t.rich('intro', {
+              highlight: (c) => <span className="text-white">{c}</span>,
+            })}
           </p>
         </div>
 
         {entries.length === 0 ? (
-          <p className="text-sm text-[var(--text-muted)]">No announcements yet — check back soon.</p>
+          <p className="text-sm text-[var(--text-muted)]">{t('empty')}</p>
         ) : (
           <div className="relative border-l border-[var(--border-subtle)] ml-2 space-y-10">
             {entries.map((entry) => {
@@ -80,7 +82,7 @@ export default async function ChangelogPage() {
                   <span className="absolute -left-[5px] top-2 w-2.5 h-2.5 rounded-full bg-discord-blurple" aria-hidden />
                   <div className="flex flex-wrap items-center gap-3 mb-2">
                     <span className={`text-[11px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full border ${badge.classes}`}>
-                      {badge.label}
+                      {t(badge.labelKey)}
                     </span>
                     <time dateTime={entry.sentAt} className="text-xs text-[var(--text-muted)]">
                       {formatDate(entry.sentAt)}

@@ -14,6 +14,7 @@ import type { BotClient } from '../../client.js';
 import { prisma } from '../../database.js';
 import { redis } from '../../redis.js';
 import { errorEmbed, successEmbed } from '../../utils/embed.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 
 import { swallow } from '../../logger.js';
 /** Invalidates the guild's cached auto-response list so the next message picks up the change. */
@@ -57,9 +58,10 @@ const command: BotCommand = {
 
   async execute(interaction: ChatInputCommandInteraction, _client: BotClient) {
     await interaction.deferReply();
+    const loc = await resolveUserLocale(interaction);
 
     if (!interaction.guild) {
-      await interaction.editReply({ embeds: [errorEmbed('Error', 'This command must be used in a server.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('common.error', loc), t('common.notInServer', loc))] });
       return;
     }
 
@@ -78,7 +80,7 @@ const command: BotCommand = {
         new RegExp(pattern, flags);
       } catch {
         await interaction.editReply({
-          embeds: [errorEmbed('Invalid Regex', `The pattern \`${pattern}\` with flags \`${flags}\` is not valid.`)],
+          embeds: [errorEmbed(t('cmd.autoresponse.invalidRegexTitle', loc), t('cmd.autoresponse.invalidRegex', loc, { pattern, flags }))],
         });
         return;
       }
@@ -101,8 +103,8 @@ const command: BotCommand = {
       await interaction.editReply({
         embeds: [
           successEmbed(
-            'Auto-Response Added',
-            `**ID:** \`${row.id}\`\n**Pattern:** \`${pattern}\` (flags: \`${flags}\`)\n**Response:** ${response}`,
+            t('cmd.autoresponse.addedTitle', loc),
+            t('cmd.autoresponse.added', loc, { id: row.id, pattern, flags, response }),
           ),
         ],
       });
@@ -114,14 +116,14 @@ const command: BotCommand = {
 
       const row = await prisma.autoResponse.findUnique({ where: { id } });
       if (!row || row.guildId !== interaction.guildId) {
-        await interaction.editReply({ embeds: [errorEmbed('Not Found', 'No auto-response found with that ID in this server.')] });
+        await interaction.editReply({ embeds: [errorEmbed(t('cmd.autoresponse.notFoundTitle', loc), t('cmd.autoresponse.notFound', loc))] });
         return;
       }
 
       await prisma.autoResponse.delete({ where: { id } });
       await bustCache(interaction.guildId!);
 
-      await interaction.editReply({ embeds: [successEmbed('Auto-Response Removed', `Pattern \`${row.pattern}\` deleted.`)] });
+      await interaction.editReply({ embeds: [successEmbed(t('cmd.autoresponse.removedTitle', loc), t('cmd.autoresponse.removed', loc, { pattern: row.pattern }))] });
       return;
     }
 
@@ -131,7 +133,7 @@ const command: BotCommand = {
 
       const row = await prisma.autoResponse.findUnique({ where: { id } });
       if (!row || row.guildId !== interaction.guildId) {
-        await interaction.editReply({ embeds: [errorEmbed('Not Found', 'No auto-response found with that ID in this server.')] });
+        await interaction.editReply({ embeds: [errorEmbed(t('cmd.autoresponse.notFoundTitle', loc), t('cmd.autoresponse.notFound', loc))] });
         return;
       }
 
@@ -139,7 +141,7 @@ const command: BotCommand = {
       await bustCache(interaction.guildId!);
 
       await interaction.editReply({
-        embeds: [successEmbed('Auto-Response Updated', `Pattern \`${row.pattern}\` is now **${enabled ? 'enabled' : 'disabled'}**.`)],
+        embeds: [successEmbed(t('cmd.autoresponse.updatedTitle', loc), t('cmd.autoresponse.updated', loc, { pattern: row.pattern, state: enabled ? t('common.enabled', loc) : t('common.disabled', loc) }))],
       });
       return;
     }
@@ -152,7 +154,7 @@ const command: BotCommand = {
       });
 
       if (rows.length === 0) {
-        await interaction.editReply({ embeds: [errorEmbed('No Auto-Responses', 'No auto-responses configured for this server.')] });
+        await interaction.editReply({ embeds: [errorEmbed(t('cmd.autoresponse.noneTitle', loc), t('cmd.autoresponse.none', loc))] });
         return;
       }
 
@@ -162,9 +164,9 @@ const command: BotCommand = {
       });
 
       const embed = new EmbedBuilder()
-        .setTitle('Auto-Responses')
+        .setTitle(t('cmd.autoresponse.listTitle', loc))
         .setDescription(lines.join('\n'))
-        .setFooter({ text: 'Use the full ID from this list with /autoresponse remove or toggle' })
+        .setFooter({ text: t('cmd.autoresponse.listFooter', loc) })
         .setColor(0x5865f2);
 
       await interaction.editReply({ embeds: [embed] });

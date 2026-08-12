@@ -6,9 +6,11 @@ import { countingApi, addonsApi } from '@/lib/api';
 import { SettingsSection } from '@/components/SettingsSection';
 import toast from 'react-hot-toast';
 import { Hash, RotateCcw, Trophy } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 export default function CountingPage() {
   const { guildId } = useParams() as { guildId: string };
+  const t = useTranslations('counting');
   const queryClient = useQueryClient();
 
   const { data: res, isLoading } = useQuery({
@@ -19,10 +21,10 @@ export default function CountingPage() {
   const resetMutation = useMutation({
     mutationFn: () => countingApi.reset(guildId),
     onSuccess: () => {
-      toast.success('Count reset to 0.');
+      toast.success(t('resetSuccess'));
       queryClient.invalidateQueries({ queryKey: ['counting', guildId] });
     },
-    onError: () => toast.error('Failed to reset count.'),
+    onError: () => toast.error(t('resetError')),
   });
 
   const data = res?.data?.data as {
@@ -50,15 +52,15 @@ export default function CountingPage() {
         <div className="page-head">
         <div className="page-head-icon"><Hash className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>Counting</h1>
-          <div className="page-head-desc">One number at a time — keep the chain alive.</div>
+          <h1>{t('title')}</h1>
+          <div className="page-head-desc">{t('description')}</div>
         </div>
       </div>
         <div className="card text-center py-12">
           <Hash className="w-12 h-12 text-gray-600 mx-auto mb-3" />
-          <p className="text-gray-400 mb-1">The Counting addon is not installed.</p>
+          <p className="text-gray-400 mb-1">{t('notInstalled')}</p>
           <p className="text-gray-500 text-sm">
-            Go to <span className="text-discord-blurple">Addon Manager</span> to install it, then configure the counting channel here.
+            {t.rich('notInstalledHelp', { manager: (chunks) => <span className="text-discord-blurple">{chunks}</span> })}
           </p>
         </div>
       </div>
@@ -70,31 +72,31 @@ export default function CountingPage() {
       <div className="page-head">
         <div className="page-head-icon"><Hash className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>Counting</h1>
-          <div className="page-head-desc">One number at a time — keep the chain alive.</div>
+          <h1>{t('title')}</h1>
+          <div className="page-head-desc">{t('description')}</div>
         </div>
       </div>
 
-      <SettingsSection title="Live Stats" description="Current state of the counting game in this server.">
+      <SettingsSection title={t('liveStatsTitle')} description={t('liveStatsDesc')}>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
           <div className="rounded-lg bg-white/[0.03] border border-white/[0.06] p-4 text-center">
-            <p className="text-gray-400 text-xs mb-1">Current Count</p>
+            <p className="text-gray-400 text-xs mb-1">{t('currentCount')}</p>
             <p className="text-white text-3xl font-bold">{data.currentCount.toLocaleString()}</p>
           </div>
           <div className="rounded-lg bg-white/[0.03] border border-white/[0.06] p-4 text-center">
-            <p className="text-gray-400 text-xs mb-1 flex items-center justify-center gap-1"><Trophy className="w-3 h-3" /> Best Count</p>
+            <p className="text-gray-400 text-xs mb-1 flex items-center justify-center gap-1"><Trophy className="w-3 h-3" /> {t('bestCount')}</p>
             <p className="text-yellow-400 text-3xl font-bold">{data.bestCount.toLocaleString()}</p>
           </div>
         </div>
       </SettingsSection>
 
-      <SettingsSection title="Configuration" description="Settings are managed via the Addon Manager. Use the Reset button to restart the count.">
+      <SettingsSection title={t('configTitle')} description={t('configDesc')}>
         <div className="space-y-2 text-sm text-gray-400">
           {data.settings.channelId && (
-            <p>Counting channel: <span className="text-white font-mono">#{data.settings.channelId}</span></p>
+            <p>{t('countingChannel')} <span className="text-white font-mono">#{data.settings.channelId}</span></p>
           )}
-          <p>Allow same user twice in a row: <span className="text-white">{data.settings.allowSameUser ? 'Yes' : 'No'}</span></p>
-          <p>Reset count on fail: <span className="text-white">{data.settings.resetOnFail !== false ? 'Yes' : 'No'}</span></p>
+          <p>{t('allowSameUser')} <span className="text-white">{data.settings.allowSameUser ? t('yes') : t('no')}</span></p>
+          <p>{t('resetOnFail')} <span className="text-white">{data.settings.resetOnFail !== false ? t('yes') : t('no')}</span></p>
         </div>
 
         <div className="pt-2">
@@ -104,7 +106,7 @@ export default function CountingPage() {
             className="btn-danger flex items-center gap-2 text-sm"
           >
             <RotateCcw className="w-4 h-4" />
-            {resetMutation.isPending ? 'Resetting…' : 'Reset Count to 0'}
+            {resetMutation.isPending ? t('resetting') : t('resetButton')}
           </button>
         </div>
       </SettingsSection>

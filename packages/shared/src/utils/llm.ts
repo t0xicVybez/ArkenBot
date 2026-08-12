@@ -29,6 +29,8 @@ export interface LLMOptions {
   timeoutMs?: number;
   /** Caller-provided abort signal, combined with the timeout. */
   signal?: AbortSignal;
+  /** Explicit API key, overriding `GROQ_API_KEY` (used to rotate across keys). */
+  apiKey?: string;
 }
 
 /** Raised when no `GROQ_API_KEY` is configured — callers should treat AI as disabled. */
@@ -50,7 +52,7 @@ export function isLLMAvailable(): boolean {
  * network/HTTP/timeout failure.
  */
 export async function chatCompletion(messages: LLMMessage[], opts: LLMOptions = {}): Promise<string> {
-  const key = process.env.GROQ_API_KEY;
+  const key = opts.apiKey ?? process.env.GROQ_API_KEY;
   if (!key) throw new LLMUnavailableError();
 
   const {

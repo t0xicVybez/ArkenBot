@@ -2,27 +2,844 @@
   "common": {
     "error": "Erro",
     "success": "Sucesso",
-    "notInServer": "Este comando deve ser usado em um servidor."
+    "notInServer": "Este comando precisa ser usado em um servidor.",
+    "enabled": "ativado",
+    "disabled": "desativado"
   },
   "language": {
-    "commandDescription": "Definir ou visualizar o idioma que uso ao responder a você",
-    "setDescription": "Escolha o idioma para minhas respostas a você",
-    "clearDescription": "Limpar seu idioma e voltar à detecção automática",
-    "showDescription": "Mostrar seu idioma atual",
+    "commandDescription": "Defina ou veja o idioma que uso para responder a você",
+    "setDescription": "Escolha o idioma das minhas respostas a você",
+    "clearDescription": "Limpe seu idioma e volte à detecção automática",
+    "showDescription": "Mostra seu idioma atual",
     "optionDescription": "O idioma a ser usado",
-    "setTitle": "Idioma Atualizado",
-    "set": "Agora vou responder a você em **{language}**.",
-    "clearedTitle": "Idioma Reiniciado",
-    "cleared": "Sua preferência de idioma foi reiniciada — vou detectá-lo automaticamente a partir de suas configurações do Discord.",
-    "currentTitle": "Seu Idioma",
+    "setTitle": "Idioma atualizado",
+    "set": "A partir de agora responderei a você em **{language}**.",
+    "clearedTitle": "Idioma redefinido",
+    "cleared": "Sua preferência de idioma foi limpa — vou detectá-lo automaticamente pelas suas configurações do Discord.",
+    "currentTitle": "Seu idioma",
     "currentSet": "Seu idioma está definido como **{language}**.",
-    "currentAuto": "Você não definiu um idioma, então vou detectá-lo automaticamente (atualmente **{language}**).",
-    "invalid": "**{input}** não é um idioma suportado."
+    "currentAuto": "Você não definiu um idioma, então eu o detecto automaticamente (atualmente **{language}**).",
+    "invalid": "**{input}** não é um idioma compatível."
   },
   "moderation": {
-    "disabledTitle": "Moderação Desativada",
-    "disabled": "Comandos de moderação estão desativados para este servidor.",
-    "cannotBanSelfTitle": "Alvo Inválido",
-    "cannotBanSelf": "Você não pode se banir."
+    "disabledTitle": "Moderação desativada",
+    "disabled": "Os comandos de moderação estão desativados neste servidor.",
+    "cannotBanSelfTitle": "Alvo inválido",
+    "cannotBanSelf": "Você não pode banir a si mesmo."
+  },
+  "welcome": {
+    "title": "👋 Bem-vindo(a) ao {server}!",
+    "accountAge": "📅 Idade da conta",
+    "memberCount": "👥 Número de membros"
+  },
+  "leveling": {
+    "levelUp": "Subiu de nível!",
+    "milestoneReached": "Marco {label} alcançado!",
+    "level": "Nível",
+    "achievement": "Conquista",
+    "milestones": {
+      "legendary": "🏆 Lendário",
+      "diamond": "💎 Diamante",
+      "century": "🌟 Centenário",
+      "elite": "⚡ Elite",
+      "veteran": "🔥 Veterano",
+      "experienced": "🥇 Experiente",
+      "rising": "🥈 Em ascensão",
+      "newcomer": "🥉 Recém-chegado"
+    }
+  },
+  "counting": {
+    "ruined": "❌ {user} estragou a contagem em **{count}**! Comecem de novo a partir de **1**.",
+    "twiceInRow": "❌ {user} não pode contar duas vezes seguidas! Contagem reiniciada — comecem de novo a partir de **1**."
+  },
+  "automod": {
+    "kickedTitle": "Expulso de {server}",
+    "filterKickDM": "Você foi expulso de **{server}** por violações repetidas do filtro de palavras (violação nº {count}).",
+    "filterKick": "⛔ {user} foi **expulso** por violações repetidas do filtro de palavras (violação nº {count}).",
+    "filterWarn": "⚠️ {user} Sua mensagem foi removida por conter uma palavra filtrada (violação nº {count}).",
+    "removed": "{user} Sua mensagem foi removida: **{reason}**",
+    "reasons": {
+      "spam": "Spam detectado",
+      "link": "Link bloqueado detectado",
+      "mention": "Spam de menções",
+      "caps": "Excesso de letras maiúsculas"
+    },
+    "phishingRemoved": "⚠️ {user} — sua mensagem foi removida por conter um link de phishing conhecido.",
+    "aiFlagTitle": "🤖 Sinalização de moderação por IA",
+    "aiFlagDescription": "Uma mensagem de {user} em {channel} foi sinalizada para revisão.\n\n**Categoria:** {category} · **Gravidade:** {severity}\n**Motivo:** {reason}\n[Ir para a mensagem]({url})",
+    "aiFlagFooter": "Gerado por IA · revise antes de agir"
+  },
+  "verification": {
+    "verifyChannelFallback": "o canal de verificação",
+    "dmWelcome": "Bem-vindo(a) ao **{server}**! Clique no botão Verificar em {channel} para obter acesso.",
+    "serverOnly": "Este botão só pode ser usado em um servidor.",
+    "notConfigured": "A verificação não está configurada neste servidor.",
+    "fetchFailed": "Não foi possível obter seus dados de membro.",
+    "verified": "✅ Verificado! Bem-vindo(a) ao servidor.",
+    "error": "Ocorreu um erro durante a verificação.",
+    "panelTitle": "✅ Verifique sua conta",
+    "panelDescription": "Clique no botão abaixo para se verificar e obter acesso ao servidor.",
+    "buttonLabel": "Verificar"
+  },
+  "starboard": {
+    "unknownAuthor": "Desconhecido",
+    "source": "Fonte",
+    "jumpToMessage": "[Ir para a mensagem]({url})"
+  },
+  "reactionRoles": {
+    "addOnly": " *(somente adicionar)*",
+    "removeOnly": " *(somente remover)*",
+    "noRoles": "*Nenhum cargo configurado ainda.*",
+    "footer": "{count} cargos • Reaja para atribuir um cargo a si mesmo"
+  },
+  "antiNuke": {
+    "alertTitle": "🚨 Alerta anti-nuke",
+    "alertDescription": "O usuário {user} excedeu o limite de **{action}** em **{server}** e teve as permissões removidas.",
+    "triggeredTitle": "🚨 Anti-nuke acionado",
+    "triggeredDescription": "{user} foi punido por exceder o limite da ação **{action}**.",
+    "actionTaken": "Ação tomada",
+    "deopped": "Permissões removidas (cargos removidos)",
+    "trigger": "Gatilho"
+  },
+  "onboarding": {
+    "title": "👋 Obrigado por adicionar o ArkenBot!",
+    "description": "O ArkenBot acabou de entrar em **{server}**. Veja como configurar tudo em alguns minutos:",
+    "step1Name": "1️⃣ Configure seu servidor",
+    "step1Value": "Faça login no [painel]({dashboardUrl}) com o Discord, selecione **{server}** e ative os recursos que quiser — moderação, níveis, tickets, alertas de live e muito mais.",
+    "step2Name": "2️⃣ Defina um canal de anúncios",
+    "step2Value": "Em **Painel → Anúncios**, escolha um canal para receber novidades sobre o ArkenBot — novos recursos, mudanças e avisos importantes chegam lá.",
+    "step3Name": "3️⃣ Leia a documentação",
+    "step3Value": "Cada recurso tem um guia em [docs.arkenbot.app]({docsUrl}).",
+    "footer": "ArkenBot — totalmente gratuito, sem barreiras de pagamento",
+    "buttonDashboard": "Abrir painel",
+    "buttonDocs": "Documentação",
+    "buttonSupport": "Servidor de suporte"
+  },
+  "music": {
+    "playbackFailedTitle": "⚠️ Falha na reprodução",
+    "playbackFailedDescription": "Não foi possível reproduzir **{title}**.\n`{reason}`",
+    "playbackFailedFooter": "Tente outra busca ou verifique se o yt-dlp está atualizado.",
+    "nowPlayingTitle": "🎵 Tocando agora",
+    "requestedBy": "Solicitado por",
+    "duration": "Duração"
+  },
+  "topgg": {
+    "voteReminder": "🗳️ Você já pode votar novamente em **{bot}** no top.gg!\n{url}\n\n_Desative os lembretes quando quiser com `/vote reminders:off`._"
+  },
+  "birthday": {
+    "title": "🎂 Feliz aniversário!"
+  },
+  "reminders": {
+    "deliver": "{user} Lembrete: {message}"
+  },
+  "giveaway": {
+    "noEntrants": "Nenhum participante elegível",
+    "winnerLabel": "Vencedor",
+    "winnersLabel": "Vencedores",
+    "ended": "🎉 Sorteio encerrado! {winnerLabel}: {winners}\nPrêmio: **{prize}**",
+    "endedTitle": "🎉 Sorteio encerrado",
+    "endedEmbed": "**Prêmio:** {prize}\n**{winnerLabel}:** {winners}"
+  },
+  "streamAlert": {
+    "youtubeLive": "{streamer} está ao vivo no YouTube!",
+    "twitchLive": "{streamer} está ao vivo na Twitch!",
+    "playing": "Jogando",
+    "unknownGame": "Desconhecido",
+    "kickLive": "{streamer} está ao vivo no Kick!",
+    "twitterPosted": "{handle} publicou no X",
+    "redditPostedBy": "Publicado por u/{author} em r/{subreddit}",
+    "rssNewPost": "Nova publicação de **{feed}**"
+  },
+  "announcement": {
+    "author": "Anúncios do ArkenBot",
+    "buttonChangelog": "Registro de alterações completo",
+    "buttonDashboard": "Painel",
+    "labels": {
+      "update": "Atualização",
+      "feature": "Novo recurso",
+      "maintenance": "Manutenção",
+      "hotfix": "Correção urgente"
+    }
+  },
+  "logging": {
+    "user": "Usuário",
+    "moderator": "Moderador",
+    "reason": "Motivo",
+    "noReason": "Nenhum motivo fornecido",
+    "messageDeleted": "🗑️ Mensagem excluída",
+    "author": "Autor",
+    "channel": "Canal",
+    "content": "Conteúdo",
+    "messageEdited": "✏️ Mensagem editada",
+    "before": "Antes",
+    "after": "Depois",
+    "noContent": "*Sem conteúdo*",
+    "memberJoined": "📥 Membro entrou",
+    "accountAge": "Idade da conta",
+    "memberCount": "Número de membros",
+    "memberLeft": "📤 Membro saiu",
+    "joined": "Entrou",
+    "unknown": "Desconhecido"
+  },
+  "cmd": {
+    "kick": {
+      "cannotSelf": "Você não pode expulsar a si mesmo.",
+      "cannotSelfBot": "Não posso expulsar a mim mesmo.",
+      "notFoundTitle": "Não encontrado",
+      "notFound": "Esse usuário não está neste servidor.",
+      "hierarchyTitle": "Erro de hierarquia",
+      "notKickable": "Não posso expulsar este membro.",
+      "hierarchyUser": "Você não pode expulsar um membro com um cargo superior ou igual ao seu.",
+      "dmAction": "Expulso de {guild}",
+      "action": "Expulsão",
+      "failedTitle": "Falha",
+      "failed": "Não consegui expulsar esse membro. Verifique minhas permissões."
+    },
+    "unban": {
+      "invalidIdTitle": "ID inválido",
+      "invalidId": "Forneça um ID de usuário do Discord válido.",
+      "notBannedTitle": "Não banido",
+      "notBanned": "Esse usuário não está banido deste servidor.",
+      "successTitle": "Desbanido",
+      "success": "**{user}** ({userId}) foi desbanido com sucesso\n**Motivo:** {reason}",
+      "failedTitle": "Falha",
+      "failed": "Não foi possível desbanir esse usuário."
+    },
+    "warn": {
+      "cannotSelf": "Você não pode advertir a si mesmo.",
+      "notFoundTitle": "Não encontrado",
+      "notFound": "Esse usuário não está neste servidor.",
+      "hierarchyTitle": "Erro de hierarquia",
+      "hierarchyUser": "Você não pode advertir um membro com um cargo superior ou igual ao seu.",
+      "dmAction": "Advertência em {guild}",
+      "escalationMute": "Silenciado automaticamente ({count} advertências atingiram o limite).",
+      "escalationTimeout": "Colocado em pausa automaticamente por {duration}s ({count} advertências atingiram o limite).",
+      "escalationBan": "Banido automaticamente ({count} advertências atingiram o limite).",
+      "escalationKick": "Expulso automaticamente ({count} advertências atingiram o limite).",
+      "action": "Advertência",
+      "totalWarnings": "Total de advertências"
+    },
+    "mute": {
+      "invalidDurationTitle": "Duração inválida",
+      "invalidDuration": "Use formatos como `10m`, `1h`, `1d`. O máximo é 28 dias.",
+      "tooLongTitle": "Muito longa",
+      "tooLong": "O tempo máximo de pausa do Discord é de 28 dias.",
+      "notFoundTitle": "Não encontrado",
+      "notFound": "Esse usuário não está neste servidor.",
+      "hierarchyTitle": "Erro de hierarquia",
+      "hierarchyUser": "Você não pode silenciar um membro com um cargo superior ou igual ao seu.",
+      "notMutable": "Não posso silenciar este membro.",
+      "dmAction": "Silenciado em {guild}",
+      "action": "Silenciar",
+      "failedTitle": "Falha",
+      "failed": "Não consegui silenciar esse membro."
+    },
+    "case": {
+      "notFoundTitle": "Não encontrado",
+      "notFound": "Caso nº {number} não encontrado.",
+      "caseLabel": "Caso nº {number}",
+      "fieldUser": "Usuário",
+      "fieldModerator": "Moderador",
+      "fieldReason": "Motivo",
+      "fieldStatus": "Status",
+      "fieldDate": "Data",
+      "fieldDuration": "Duração",
+      "statusActive": "🔴 Ativo",
+      "statusResolved": "🟢 Resolvido",
+      "noOpenTitle": "Nenhum caso aberto",
+      "noOpen": "Nenhum caso aberto encontrado para {user}.",
+      "closedTitle": "Casos encerrados",
+      "closed": "**{count}** caso(s) aberto(s) encerrado(s) para {user}.\n**Motivo:** {reason}"
+    },
+    "clearwarnings": {
+      "cannotSelf": "Você não pode limpar suas próprias advertências.",
+      "hierarchyTitle": "Erro de hierarquia",
+      "hierarchyUser": "Você não pode gerenciar as advertências de um membro com um cargo superior ou igual ao seu.",
+      "noActiveTitle": "✅ Nenhuma advertência ativa",
+      "noActive": "{user} não tem advertências ativas para limpar.",
+      "dmTitle": "Advertências limpas em {guild}",
+      "dmDesc": "Suas {count} advertência(s) ativa(s) foram limpas por um moderador.",
+      "clearedTitle": "✅ Advertências limpas",
+      "fieldUser": "Usuário",
+      "fieldCleared": "Limpas",
+      "clearedValue": "{count} advertência(s)",
+      "fieldModerator": "Moderador",
+      "fieldReason": "Motivo"
+    },
+    "warnings": {
+      "noneTitle": "✅ Nenhuma advertência",
+      "noneAll": "{user} não tem advertências.",
+      "noneActive": "{user} não tem advertências ativas.",
+      "title": "⚠️ Advertências de {user}",
+      "lineMeta": "Por {moderator} em {date}",
+      "cleared": "~~(limpa)~~",
+      "footer": "Mostrando {count} advertência(s)"
+    },
+    "note": {
+      "addedTitle": "Nota adicionada",
+      "added": "Nota `{id}` adicionada para **{user}**.\n\n> {content}",
+      "noNotesTitle": "Nenhuma nota",
+      "noNotes": "Nenhuma nota encontrada para **{user}**.",
+      "listTitle": "📝 Notas de {user}",
+      "listFooter": "Mostrando as {count} nota(s) mais recentes",
+      "fieldName": "ID: `{id}` — {date} por {staff}",
+      "notFoundTitle": "Não encontrada",
+      "notFound": "Nota não encontrada para esse usuário e ID.",
+      "removedTitle": "Nota removida",
+      "removed": "A nota `{id}` foi excluída.",
+      "cancelledTitle": "Cancelado",
+      "cancelled": "Defina `confirm: true` para limpar todas as notas.",
+      "clearedTitle": "Notas limpas",
+      "cleared": "Excluídas **{count}** nota(s) de **{user}**."
+    },
+    "ctxBan": {
+      "notFoundTitle": "Não encontrado",
+      "notFound": "Não foi possível encontrar esse usuário.",
+      "hierarchyTitle": "Erro de hierarquia",
+      "hierarchyUser": "Você não pode banir um membro com um cargo superior ou igual ao seu.",
+      "dmAction": "Banido de {guild}",
+      "action": "Banimento"
+    },
+    "ctxTimeout": {
+      "invalidDurationTitle": "Duração inválida",
+      "invalidDuration": "A duração deve estar entre 5s e 28d (ex.: 10m, 1h, 7d).",
+      "notFoundTitle": "Não encontrado",
+      "notFoundUser": "Não foi possível encontrar esse usuário.",
+      "notInServer": "Esse usuário não está neste servidor.",
+      "hierarchyTitle": "Erro de hierarquia",
+      "hierarchyUser": "Você não pode pausar um membro com um cargo superior ou igual ao seu.",
+      "dmAction": "Pausa em {guild}",
+      "action": "Pausa"
+    },
+    "ctxWarn": {
+      "notFoundTitle": "Não encontrado",
+      "notFound": "Não foi possível encontrar esse usuário.",
+      "hierarchyTitle": "Erro de hierarquia",
+      "hierarchyUser": "Você não pode advertir um membro com um cargo superior ou igual ao seu.",
+      "dmAction": "Advertência em {guild}",
+      "action": "Advertência",
+      "totalWarnings": "Total de advertências"
+    },
+    "purge": {
+      "textOnly": "Este comando só pode ser usado em canais de texto.",
+      "noMatch": "Nenhuma mensagem correspondeu aos filtros (as mensagens devem ter menos de 14 dias).",
+      "bulkTextOnly": "A exclusão em massa só está disponível em canais de texto.",
+      "deleted": "{count} mensagem(ns) excluída(s)."
+    },
+    "suggestion": {
+      "notFound": "Sugestão não encontrada.",
+      "statusApproved": "Aprovada",
+      "statusDenied": "Recusada",
+      "statusConsidering": "Em análise",
+      "footer": "{status} por {user}",
+      "result": "Sugestão {status}."
+    },
+    "temprole": {
+      "memberNotFound": "Membro não encontrado neste servidor.",
+      "invalidDurationTitle": "Duração inválida",
+      "invalidDuration": "Use um formato como `30m`, `2h`, `7d`. O mínimo é 60 segundos.",
+      "assignedTitle": "Cargo temporário atribuído",
+      "assigned": "{role} atribuído a {member} até {expires}.\n**Motivo:** {reason}",
+      "notFoundTitle": "Não encontrado",
+      "notFound": "Nenhum registro de cargo temporário ativo encontrado para esse membro e cargo.",
+      "removedTitle": "Cargo temporário removido",
+      "removed": "{role} removido de {member}.",
+      "noneTitle": "Nenhum cargo temporário ativo",
+      "none": "Não há cargos temporários ativos neste servidor.",
+      "listLine": "{user} → {role} — expira em {expires}",
+      "listTitle": "Cargos temporários ativos"
+    },
+    "verification": {
+      "enabledTitle": "Portão de verificação ativado",
+      "enabled": "Cargo pendente: {pending}\nCargo de membro: {member}\nCanal de verificação: {channel}",
+      "disabledTitle": "Verificação desativada",
+      "disabled": "O portão de verificação foi desativado."
+    },
+    "invites": {
+      "notInServer": "Use este comando em um servidor.",
+      "disabledTitle": "Desativado",
+      "disabled": "O rastreamento de convites não está ativado neste servidor.",
+      "title": "Convites — {user}",
+      "totalInvites": "Total de convites",
+      "bonus": "Bônus"
+    },
+    "invitetop": {
+      "notInServer": "Use este comando em um servidor.",
+      "disabledTitle": "Desativado",
+      "disabled": "O rastreamento de convites não está ativado neste servidor.",
+      "noDataTitle": "Sem dados",
+      "noData": "Nenhum dado de convite registrado ainda.",
+      "line": "{prefix} {user} — **{count}** convite(s)",
+      "title": "🏆 Maiores convidadores — {guild}",
+      "footer": "Top {count} convidadores"
+    },
+    "vote": {
+      "statusCooldown": "⏳ Você pode votar novamente {time}",
+      "statusReady": "✅ Você pode votar agora mesmo!",
+      "title": "🗳️ Vote no top.gg",
+      "description": "Apoie-nos com um voto grátis a cada 12 horas — leva 10 segundos e ajuda muito.\n\n**[▶ Vote aqui]({voteUrl})**\n\n{status}",
+      "yourVotes": "Seus votos",
+      "currentStreak": "Sequência atual",
+      "streakValue": "{count} 🔥",
+      "reminders": "Lembretes",
+      "on": "Ligados",
+      "off": "Desligados",
+      "perkRole": "Cargo {role} por {hours}h",
+      "perkXp": "+{xp} XP",
+      "perkWeekend": " (2× nos fins de semana)",
+      "rewardsHere": "🎁 Recompensas aqui",
+      "footerOn": "Lembretes ligados — vou te mandar uma DM quando puder votar de novo.",
+      "footerOff": "Lembretes desligados."
+    },
+    "topvoters": {
+      "noVotes": "Nenhum voto registrado ainda — seja o primeiro com `/vote`! 🗳️",
+      "unknownUser": "Usuário {id}",
+      "line": "{rank} {name} — **{count}** voto(s){streak}",
+      "title": "🏆 Maiores votantes",
+      "footer": "Vote com /vote · {url}"
+    },
+    "report": {
+      "statusPending": "Pendente",
+      "statusDismissed": "Descartado",
+      "statusReviewed": "Revisado",
+      "embedTitle": "📋 Denúncia de membro",
+      "fieldReporter": "Denunciante",
+      "fieldTarget": "Alvo",
+      "fieldReason": "Motivo",
+      "fieldStatus": "Status",
+      "fieldReviewedBy": "Revisado por",
+      "fieldStaffNote": "Nota da equipe",
+      "btnDismiss": "Descartar",
+      "btnTakeAction": "Tomar providências",
+      "cannotSelf": "Você não pode denunciar a si mesmo.",
+      "submittedTitle": "Denúncia enviada",
+      "submitted": "Sua denúncia foi enviada à equipe de moderação.",
+      "notFound": "Denúncia não encontrada.",
+      "markedReviewed": "Denúncia marcada como revisada."
+    },
+    "reportSetup": {
+      "title": "Sistema de denúncias configurado",
+      "configured": "As denúncias agora serão enviadas para {channel}."
+    },
+    "startcounting": {
+      "notInServer": "Use este comando em um servidor.",
+      "notConfiguredTitle": "Não configurado",
+      "notConfigured": "O complemento de Contagem não está instalado ou não tem um canal definido. Configure-o primeiro no painel.",
+      "channelNotFoundTitle": "Canal não encontrado",
+      "channelNotFound": "O canal de contagem configurado não existe mais.",
+      "title": "🔢 Jogo de contagem",
+      "description": "O jogo de contagem começou! Comecem a contar a partir de **1** e vejam até onde conseguimos chegar.\n\nContem um número de cada vez — quem for o próximo deve enviar o próximo número da sequência.",
+      "fieldCurrentCount": "Contagem atual",
+      "fieldBestCount": "Melhor contagem",
+      "fieldResetOnFail": "Reiniciar ao falhar",
+      "fieldSameUser": "Mesmo usuário duas vezes",
+      "yes": "Sim",
+      "no": "Não",
+      "footer": "Comece em {start}",
+      "posted": "Anúncio publicado em {channel}!"
+    },
+    "givexp": {
+      "disabledTitle": "Níveis desativados",
+      "disabled": "O sistema de níveis está desativado neste servidor.",
+      "invalidUserTitle": "Usuário inválido",
+      "botTarget": "Você não pode dar XP a um bot.",
+      "levelUp": "Ele(a) subiu do nível **{old}** → **{new}**!",
+      "title": "XP concedido",
+      "description": "Concedidos **{amount} XP** a {user}.",
+      "fieldBefore": "Antes",
+      "fieldAfter": "Depois",
+      "statValue": "{xp} XP (Nível {level})"
+    },
+    "removexp": {
+      "disabledTitle": "Níveis desativados",
+      "disabled": "O sistema de níveis está desativado neste servidor.",
+      "invalidUserTitle": "Usuário inválido",
+      "botTarget": "Você não pode remover XP de um bot.",
+      "noDataTitle": "Sem dados",
+      "noData": "{user} não tem XP neste servidor.",
+      "levelDown": "Ele(a) caiu do nível **{old}** → **{new}**.",
+      "title": "XP removido",
+      "description": "Removidos **{amount} XP** de {user}.",
+      "fieldBefore": "Antes",
+      "fieldAfter": "Depois",
+      "statValue": "{xp} XP (Nível {level})"
+    },
+    "rank": {
+      "disabledTitle": "Níveis desativados",
+      "disabled": "O sistema de níveis está desativado neste servidor.",
+      "noDataTitle": "Sem dados",
+      "noData": "{user} ainda não ganhou nenhum XP.",
+      "embedTitle": "📊 Rank de {user}",
+      "fieldRank": "🏆 Rank",
+      "fieldLevel": "📈 Nível",
+      "fieldTotalXp": "✨ XP total",
+      "fieldMessages": "💬 Mensagens",
+      "fieldProgress": "Progresso até o nível {level}"
+    },
+    "stats": {
+      "disabledTitle": "Níveis desativados",
+      "disabled": "O sistema de níveis está desativado neste servidor.",
+      "noDataTitle": "Sem dados",
+      "noData": "{user} ainda não ganhou nenhum XP.",
+      "never": "Nunca",
+      "title": "Estatísticas de engajamento de {user}",
+      "fieldRank": "🏆 Rank",
+      "fieldLevel": "📈 Nível",
+      "fieldTotalXp": "✨ XP total",
+      "fieldMessages": "💬 Mensagens enviadas",
+      "fieldDayStreak": "Sequência de dias",
+      "dayValue": "{count} dia(s)",
+      "fieldReputation": "⭐ Reputação",
+      "fieldAchievements": "🎖️ Conquistas",
+      "fieldLastActive": "🕐 Última atividade"
+    },
+    "leaderboard": {
+      "disabledTitle": "Níveis desativados",
+      "disabled": "O sistema de níveis está desativado neste servidor.",
+      "emptyTitle": "Vazio",
+      "empty": "Ninguém ganhou XP neste servidor ainda.",
+      "line": "{medal} {user} — Nível **{level}** | **{xp}** XP",
+      "title": "🏆 Ranking de {guild}",
+      "footer": "Página {page} de {pages} • {total} usuários no total",
+      "viewFull": "Ver ranking completo"
+    },
+    "profile": {
+      "disabledTitle": "Níveis desativados",
+      "disabled": "O sistema de níveis está desativado neste servidor.",
+      "noDataTitle": "Sem dados",
+      "noData": "{user} ainda não ganhou nenhum XP.",
+      "noAchievements": "*Nenhuma conquista ainda. Continue conversando!*",
+      "unknown": "Desconhecido",
+      "title": "Perfil de {user}",
+      "fieldServerRank": "🏆 Rank no servidor",
+      "fieldLevel": "📈 Nível",
+      "fieldTotalXp": "✨ XP total",
+      "fieldMessages": "💬 Mensagens",
+      "fieldJoined": "📅 Entrou",
+      "fieldProgress": "Progresso até o nível {level}",
+      "fieldAchievements": "🎖️ Conquistas ({count})"
+    },
+    "rankcard": {
+      "resetTitle": "Redefinido",
+      "reset": "Seu cartão de rank foi redefinido para o estilo padrão.",
+      "invalidColorTitle": "Cor inválida",
+      "invalidColor": "Forneça um código de cor hexadecimal válido, ex.: `#ff5733` ou `#f53`.",
+      "colorUpdatedTitle": "Cor atualizada",
+      "colorUpdated": "A cor de destaque do seu cartão de rank foi definida como `{hex}`.",
+      "invalidUrlTitle": "URL inválida",
+      "invalidUrl": "Forneça uma URL de imagem direta terminando em `.png`, `.jpg`, `.gif` ou `.webp`.",
+      "bgUpdatedTitle": "Plano de fundo atualizado",
+      "bgUpdated": "O plano de fundo do seu cartão de rank foi atualizado. Use `/rank` para vê-lo.",
+      "notInServer": "Use este comando em um servidor.",
+      "previewContent": "Aqui está uma prévia do seu cartão de rank:"
+    },
+    "leveling": {
+      "rateNormal": "normal",
+      "rateMultiplied": "{value}x o",
+      "multiplierSet": "Multiplicador de XP definido como **{value}x**. Os membros agora ganharão {rate} XP por mensagem.",
+      "keepRolesOn": "Os membros agora **manterão todos os cargos de nível anteriores** ao conquistarem um superior.",
+      "keepRolesOff": "Os membros agora **manterão apenas o cargo de nível mais alto** (cargos inferiores são removidos automaticamente).",
+      "syncComplete": "Sincronização de cargos concluída. **{processed}** membros processados, cargos atualizados para **{updated}**."
+    },
+    "loop": {
+      "disabledTitle": "Música desativada",
+      "disabled": "Os comandos de música estão desativados neste servidor.",
+      "nothingTitle": "Nada tocando",
+      "nothing": "Nenhuma música está tocando no momento.",
+      "modeOff": "Desligado",
+      "modeTrack": "Faixa",
+      "modeQueue": "Fila",
+      "title": "Repetição",
+      "set": "Modo de repetição definido como **{mode}**"
+    },
+    "pause": {
+      "disabledTitle": "Música desativada",
+      "disabled": "Os comandos de música estão desativados neste servidor.",
+      "nothingTitle": "Nada tocando",
+      "nothing": "Nenhuma música está tocando no momento.",
+      "alreadyPausedTitle": "Já pausada",
+      "alreadyPaused": "A música já está pausada.",
+      "title": "Pausada",
+      "paused": "**{title}** pausada"
+    },
+    "resume": {
+      "disabledTitle": "Música desativada",
+      "disabled": "Os comandos de música estão desativados neste servidor.",
+      "nothingTitle": "Nada tocando",
+      "nothing": "Nenhuma música está tocando no momento.",
+      "notPausedTitle": "Não pausada",
+      "notPaused": "A música não está pausada.",
+      "title": "Retomada",
+      "resumed": "**{title}** retomada"
+    },
+    "skip": {
+      "disabledTitle": "Música desativada",
+      "disabled": "Os comandos de música estão desativados neste servidor.",
+      "nothingTitle": "Nada tocando",
+      "nothing": "Não há nada para pular.",
+      "title": "Pulada",
+      "skipped": "**{title}** pulada"
+    },
+    "stop": {
+      "disabledTitle": "Música desativada",
+      "disabled": "Os comandos de música estão desativados neste servidor.",
+      "nothingTitle": "Nada tocando",
+      "nothing": "Não há nada tocando.",
+      "title": "Parada",
+      "stopped": "Música parada e fila limpa."
+    },
+    "volume": {
+      "disabledTitle": "Música desativada",
+      "disabled": "Os comandos de música estão desativados neste servidor.",
+      "nothingTitle": "Nada tocando",
+      "nothing": "Nenhuma música está tocando.",
+      "title": "Volume",
+      "set": "Volume ajustado para **{level}%**"
+    },
+    "play": {
+      "disabledTitle": "Música desativada",
+      "disabled": "Os comandos de música estão desativados neste servidor.",
+      "joinVcTitle": "Entre em um canal de voz",
+      "joinVc": "Você precisa estar em um canal de voz para tocar música.",
+      "wrongChannelTitle": "Canal errado",
+      "wrongChannel": "Já estou tocando em {channel}",
+      "addedTitle": "Adicionada à fila",
+      "added": "**{title}** foi adicionada à fila.\nPosição: nº {position}",
+      "nowPlayingTitle": "Tocando agora",
+      "nowPlaying": "🎵 **{title}**",
+      "requestedBy": "Solicitado por",
+      "duration": "Duração",
+      "unknown": "Desconhecido",
+      "failed": "Não foi possível tocar essa faixa: {error}"
+    },
+    "queue": {
+      "disabledTitle": "Música desativada",
+      "disabled": "Os comandos de música estão desativados neste servidor.",
+      "nothingTitle": "Nada tocando",
+      "nothing": "Nenhuma música está tocando no momento.",
+      "title": "🎵 Fila de música",
+      "nowPlaying": "**Tocando agora:** {title}",
+      "empty": "_A fila está vazia_",
+      "footer": "{count} música(s) na fila • Repetição: {loop}"
+    },
+    "ping": {
+      "pinging": "Verificando...",
+      "pong": "🏓 Pong!",
+      "roundtrip": "Ida e volta",
+      "websocket": "WebSocket"
+    },
+    "avatar": {
+      "title": "Avatar de {user}",
+      "footer": "ID do usuário: {id}",
+      "openBrowser": "Abrir no navegador"
+    },
+    "invite": {
+      "title": "Convidar o ArkenBot",
+      "body": "[Clique aqui para adicionar o ArkenBot ao seu servidor]({url})"
+    },
+    "botstatus": {
+      "title": "Status do bot",
+      "fieldServers": "Servidores",
+      "fieldPing": "Ping",
+      "fieldUptime": "Tempo ativo",
+      "fieldMemory": "Memória"
+    },
+    "resetxp": {
+      "cancelled": "Redefinição cancelada.",
+      "complete": "Redefinição concluída. Registros de XP excluídos de {count} membro(s)."
+    },
+    "rep": {
+      "selfGive": "Você não pode dar reputação a si mesmo.",
+      "botGive": "Você não pode dar reputação a bots.",
+      "cooldown": "Você já deu reputação hoje. Tente novamente em **{hours}h**.",
+      "gave": "⭐ {giver} deu um ponto de reputação a {target}!\nAgora ele(a) tem **{total}** ponto(s) de reputação.",
+      "checkTitle": "Reputação de {user}",
+      "fieldPoints": "⭐ Pontos de reputação",
+      "fieldRank": "🏆 Rank no servidor",
+      "unranked": "Sem classificação",
+      "topEmpty": "Nenhum ponto de reputação foi dado neste servidor ainda.",
+      "topLine": "{medal} **{name}** — {count} rep",
+      "topTitle": "⭐ Ranking de reputação"
+    },
+    "suggest": {
+      "notEnabled": "As sugestões não estão ativadas neste servidor.",
+      "channelNotFound": "Canal de sugestões não encontrado.",
+      "embedTitle": "Nova sugestão",
+      "footer": "ID da sugestão: {id}",
+      "submitted": "Sua sugestão foi enviada!"
+    },
+    "selfassignrole": {
+      "noRole": "❌ Nenhum cargo autoatribuível chamado `{name}`. Use `/selfrole list` para ver os cargos disponíveis.",
+      "alreadyHave": "Você já tem o cargo **{name}**.",
+      "roleGone": "❌ O cargo de `{name}` não existe mais. Peça a um administrador para removê-lo com `/selfrole remove`.",
+      "assigned": "✅ Você recebeu o cargo {role}.",
+      "failed": "❌ Falha ao atribuir o cargo. Verifique se o cargo do bot está acima de {role} na lista de cargos."
+    },
+    "selfremoverole": {
+      "noRole": "❌ Nenhum cargo autoatribuível chamado `{name}`. Use `/selfrole list` para ver os cargos disponíveis.",
+      "dontHave": "Você não tem o cargo **{name}**.",
+      "roleGone": "❌ O cargo de `{name}` não existe mais.",
+      "removed": "✅ O cargo {role} foi removido.",
+      "failed": "❌ Falha ao remover o cargo. Verifique se o cargo do bot está acima de {role} na lista de cargos."
+    },
+    "remind": {
+      "invalidDuration": "Duração inválida. Exemplos: `10m`, `2h`, `1d`, `7d`",
+      "tooLong": "A duração máxima de um lembrete é de 28 dias.",
+      "set": "Lembrete definido! Vou te lembrar sobre \"{message}\" {time}."
+    },
+    "serverinfo": {
+      "verifNone": "Nenhuma",
+      "verifLow": "Baixa",
+      "verifMedium": "Média",
+      "verifHigh": "Alta",
+      "verifVeryHigh": "Muito alta",
+      "unknown": "Desconhecido",
+      "fieldId": "🆔 ID",
+      "fieldOwner": "👑 Dono",
+      "fieldCreated": "📅 Criado",
+      "fieldMembers": "👥 Membros",
+      "fieldBots": "🤖 Bots",
+      "fieldVerification": "🔒 Verificação",
+      "fieldChannels": "📋 Canais",
+      "channelsValue": "💬 {text} de texto | 🔊 {voice} de voz | 📁 {categories} categorias",
+      "fieldRoles": "🎭 Cargos",
+      "fieldEmojis": "😀 Emojis",
+      "fieldBoosts": "💎 Impulsos",
+      "boostsValue": "Nível {tier} ({count} impulsos)",
+      "footer": "ID do servidor: {id}",
+      "featModeration": "Moderação",
+      "featAutoMod": "Automod",
+      "featLeveling": "Níveis",
+      "featWelcome": "Boas-vindas",
+      "featLogging": "Registros",
+      "featMusic": "Música",
+      "featReactionRoles": "Cargos por reação",
+      "fieldFeatures": "⚙️ Recursos ativados",
+      "noneConfigured": "Nenhum configurado"
+    },
+    "userinfo": {
+      "yes": "Sim",
+      "no": "Não",
+      "none": "Nenhum",
+      "unknown": "Desconhecido",
+      "fieldId": "🆔 ID",
+      "fieldBot": "🤖 Bot",
+      "fieldCreated": "📅 Conta criada",
+      "fieldNickname": "🏷️ Apelido",
+      "fieldJoined": "📥 Entrou no servidor",
+      "fieldRoles": "🎭 Cargos ({count})",
+      "fieldBoosting": "💎 Impulsionando desde"
+    },
+    "birthday": {
+      "setTitle": "🎂 Aniversário salvo!",
+      "set": "Seu aniversário foi definido para {date}.",
+      "removed": "Seu aniversário foi removido.",
+      "none": "Nenhum aniversário registrado neste servidor ainda.",
+      "listTitle": "🎂 Próximos aniversários",
+      "total": "{count} no total",
+      "userNotSet": "{user} não definiu o aniversário.",
+      "userBirthday": "🎂 O aniversário de {user} é em {date}"
+    },
+    "selfrole": {
+      "needManageRoles": "❌ Você precisa da permissão **Gerenciar Cargos** para usar isto.",
+      "roleTooHigh": "❌ O cargo do bot está abaixo de **{role}** na lista de cargos. Mova o cargo do bot para cima dele primeiro.",
+      "added": "✅ {role} agora é autoatribuível como `{name}`.\nOs membros podem executar `/selfassignrole {name}` para obtê-lo.",
+      "exists": "❌ Já existe um cargo autoatribuível com esse nome ou cargo. Use `/selfrole list` para ver as entradas atuais.",
+      "notFound": "❌ Nenhum cargo autoatribuível chamado `{name}` encontrado.",
+      "removed": "✅ `{name}` removido da lista de cargos autoatribuíveis.",
+      "none": "Nenhum cargo autoatribuível configurado ainda. Administradores podem adicionar cargos com `/selfrole add`.",
+      "listTitle": "Cargos autoatribuíveis",
+      "listFooter": "Use /selfassignrole <nome> para obter · /selfremoverole <nome> para remover",
+      "roleDeleted": "cargo excluído"
+    },
+    "analytics": {
+      "missingPermTitle": "Permissão ausente",
+      "missingPerm": "Você precisa da permissão **Gerenciar Servidor** para configurar as análises.",
+      "channelSetTitle": "Canal de análises definido",
+      "channelSet": "Os relatórios de análises semanais serão publicados em {channel}.",
+      "disabledTitle": "Análises desativadas",
+      "disabled": "Os relatórios de análises semanais automáticos foram desativados.",
+      "reportTitle": "📊 Análises do servidor — últimos 30 dias",
+      "messages": "Mensagens",
+      "commands": "Comandos",
+      "joins": "Entradas",
+      "leaves": "Saídas",
+      "netGrowth": "Crescimento líquido"
+    },
+    "autoresponse": {
+      "invalidRegexTitle": "Regex inválida",
+      "invalidRegex": "O padrão `{pattern}` com as flags `{flags}` não é uma expressão regular válida.",
+      "addedTitle": "Resposta automática adicionada",
+      "added": "**ID:** `{id}`\n**Padrão:** `{pattern}` (flags: `{flags}`)\n**Resposta:** {response}",
+      "notFoundTitle": "Não encontrada",
+      "notFound": "Nenhuma resposta automática encontrada com esse ID neste servidor.",
+      "removedTitle": "Resposta automática removida",
+      "removed": "Padrão `{pattern}` excluído.",
+      "updatedTitle": "Resposta automática atualizada",
+      "updated": "O padrão `{pattern}` agora está **{state}**.",
+      "noneTitle": "Nenhuma resposta automática",
+      "none": "Nenhuma resposta automática configurada neste servidor.",
+      "listTitle": "Respostas automáticas",
+      "listFooter": "Use o ID completo desta lista com /autoresponse remove ou toggle"
+    },
+    "poll": {
+      "votes": "{count} votos",
+      "totalVotes": "{count} votos no total",
+      "ends": "Termina",
+      "endPoll": "Encerrar enquete",
+      "ended": "[ENCERRADA] {question}",
+      "optionCount": "Forneça entre 2 e 10 opções separadas por `|`.",
+      "notFound": "Enquete não encontrada.",
+      "alreadyEnded": "Esta enquete já foi encerrada.",
+      "cannotEnd": "Apenas o criador da enquete ou um moderador pode encerrá-la."
+    },
+    "giveaway": {
+      "invalidDuration": "Duração inválida.",
+      "fieldPrize": "**Prêmio:** {prize}",
+      "fieldWinners": "**Vencedores:** {count}",
+      "fieldEnds": "**Termina:** {time}",
+      "fieldRequiredRole": "**Cargo obrigatório:** {role}",
+      "fieldBonus": "**Participações bônus:** {role} recebe +{count} participações",
+      "enterPrompt": "Reaja com 🎉 para participar!",
+      "title": "🎉 Sorteio!",
+      "winnersFooter": "{count} vencedores",
+      "started": "Sorteio iniciado! ID: `{id}`",
+      "notFound": "Sorteio não encontrado.",
+      "alreadyEnded": "Sorteio já encerrado.",
+      "willEnd": "O sorteio será encerrado no próximo ciclo de verificação (em até 1 minuto).",
+      "notEnded": "Sorteio não encontrado ou ainda não encerrado.",
+      "noChannel": "Não foi possível encontrar o canal do sorteio.",
+      "noMessage": "Não foi possível encontrar a mensagem do sorteio.",
+      "noReactions": "Nenhuma reação encontrada.",
+      "noEligible": "Nenhum participante elegível.",
+      "rerollAnnounce": "🎉 Novo sorteio! Novos vencedores: {winners}! Parabéns por ganhar **{prize}**!",
+      "rerolled": "Sorteado novamente!"
+    },
+    "forum": {
+      "invalidChannelTitle": "Canal inválido",
+      "invalidChannel": "Selecione um canal de Fórum.",
+      "templateSetTitle": "Modelo definido",
+      "templateSet": "Mensagem de modelo configurada para {channel}.",
+      "autoTagSetTitle": "Tag automática definida",
+      "autoTagSet": "A tag `{tag}` será aplicada automaticamente em {channel}.",
+      "clearedTitle": "Configuração limpa",
+      "cleared": "A configuração de gerenciamento do fórum para {channel} foi removida."
+    },
+    "help": {
+      "cat": {
+        "moderation": "Moderação",
+        "leveling": "Níveis",
+        "community": "Comunidade",
+        "music": "Música",
+        "utility": "Utilidades"
+      },
+      "overviewTitle": "📋 Referência de comandos",
+      "overviewDesc": "**{commands} comandos** disponíveis para você em **{categories} categorias**.",
+      "overviewHint": "Use ◀ ▶ para navegar ou clique em **Visão geral** para voltar aqui.",
+      "cmdCount": "{count} cmds",
+      "overview": "Visão geral",
+      "pageFooter": "Página {page} de {total}  ·  {commands} comandos disponíveis para você",
+      "notYourMenu": "Este menu pertence a outra pessoa."
+    }
   }
 }

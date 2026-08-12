@@ -9,9 +9,11 @@ import toast from 'react-hot-toast';
 import { useState, useEffect } from 'react';
 import type { GuildSettings } from '@arkenbot/shared';
 import { Music } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 export default function MusicPage() {
   const { guildId } = useParams() as { guildId: string };
+  const t = useTranslations('music');
   const queryClient = useQueryClient();
   const [settings, setSettings] = useState<Partial<GuildSettings>>({});
 
@@ -27,10 +29,10 @@ export default function MusicPage() {
   const mutation = useMutation({
     mutationFn: (data: Partial<GuildSettings>) => settingsApi.update(guildId, data),
     onSuccess: () => {
-      toast.success('Music settings saved!');
+      toast.success(t('saved'));
       queryClient.invalidateQueries({ queryKey: ['settings', guildId] });
     },
-    onError: () => toast.error('Failed to save music settings.'),
+    onError: () => toast.error(t('saveError')),
   });
 
   const handleSave = (partial: Partial<GuildSettings>) => mutation.mutate(partial);
@@ -48,30 +50,30 @@ export default function MusicPage() {
       <div className="page-head">
         <div className="page-head-icon"><Music className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>Music</h1>
-          <div className="page-head-desc">High-quality playback with a persistent queue.</div>
+          <h1>{t('title')}</h1>
+          <div className="page-head-desc">{t('description')}</div>
         </div>
       </div>
 
-      <SettingsSection title="Music Player" description="Control music playback settings for this server.">
+      <SettingsSection title={t('playerTitle')} description={t('playerDesc')}>
         <Toggle
-          label="Enable Music"
-          description="Allow the bot to play music in voice channels via /play, /skip, /queue, etc."
+          label={t('enableLabel')}
+          description={t('enableDesc')}
           enabled={settings.musicEnabled ?? true}
           onChange={(v) => { setSettings((s) => ({ ...s, musicEnabled: v })); handleSave({ musicEnabled: v }); }}
         />
       </SettingsSection>
 
-      <SettingsSection title="How to use" description="Music is controlled via Discord slash commands.">
+      <SettingsSection title={t('howToTitle')} description={t('howToDesc')}>
         <div className="space-y-2 text-sm text-gray-400">
           {[
-            ['/play <url or search>', 'Play a song from YouTube, Spotify, or SoundCloud'],
-            ['/skip', 'Skip the current song'],
-            ['/queue', 'View the current queue'],
-            ['/pause / /resume', 'Pause or resume playback'],
-            ['/volume <1-100>', 'Adjust the volume'],
-            ['/stop', 'Stop playback and clear the queue'],
-            ['/nowplaying', 'Show the currently playing track'],
+            ['/play <url or search>', t('cmdPlay')],
+            ['/skip', t('cmdSkip')],
+            ['/queue', t('cmdQueue')],
+            ['/pause / /resume', t('cmdPause')],
+            ['/volume <1-100>', t('cmdVolume')],
+            ['/stop', t('cmdStop')],
+            ['/nowplaying', t('cmdNowplaying')],
           ].map(([cmd, desc]) => (
             <div key={cmd} className="flex gap-3">
               <code className="text-discord-blurple font-mono w-52 flex-shrink-0">{cmd}</code>
