@@ -9,13 +9,1534 @@
   "nav": {
     "overview": "概要",
     "moderation": "モデレーション",
-    "leveling": "レベルシステム",
+    "leveling": "レベル",
     "settings": "設定",
-    "integrations": "統合"
+    "integrations": "連携"
   },
   "language": {
     "label": "言語",
-    "description": "ダッシュボードの言語を選択します。これは、ボットがあなたに返信する方法も設定します。",
+    "description": "ダッシュボードの言語を選びます。これはボットがあなたに返信する言語も設定します。",
     "saved": "言語を更新しました"
+  },
+  "music": {
+    "title": "音楽",
+    "description": "永続的なキューによる高品質な再生。",
+    "saved": "音楽設定を保存しました！",
+    "saveError": "音楽設定の保存に失敗しました。",
+    "playerTitle": "音楽プレーヤー",
+    "playerDesc": "このサーバーの音楽再生設定を管理します。",
+    "enableLabel": "音楽を有効にする",
+    "enableDesc": "/play、/skip、/queue などでボイスチャンネルで音楽を再生することをボットに許可します。",
+    "howToTitle": "使い方",
+    "howToDesc": "音楽は Discord のスラッシュコマンドで操作します。",
+    "cmdPlay": "YouTube、Spotify、SoundCloud から曲を再生します",
+    "cmdSkip": "現在の曲をスキップします",
+    "cmdQueue": "現在のキューを表示します",
+    "cmdPause": "再生を一時停止または再開します",
+    "cmdVolume": "音量を調整します",
+    "cmdStop": "再生を停止しキューをクリアします",
+    "cmdNowplaying": "現在再生中のトラックを表示します"
+  },
+  "redditFeeds": {
+    "title": "Reddit フィード — 近日公開",
+    "description": "Reddit のデータ API の承認を完了する間、Reddit 通知は一時的に利用できません。アクセスが許可され次第、この機能は自動的に復帰します。"
+  },
+  "rssFeeds": {
+    "title": "RSS フィード",
+    "description": "RSS またはポッドキャストのフィードが新しいアイテムを公開するたびに、Discord に通知を投稿します。5分ごとに確認します。API キーは不要です。",
+    "usernameLabel": "フィード URL"
+  },
+  "twitterFeeds": {
+    "title": "X / Twitter フィード",
+    "description": "追跡中のアカウントが新しいツイートを投稿するたびに、Discord に通知を投稿します。5分ごとに確認します。",
+    "usernameLabel": "ユーザー名",
+    "notice": "X/Twitter アラートには、ボットの .env ファイルに設定された Bearer Token（TWITTER_BEARER_TOKEN）が必要です。Basic アプリを持つ無料の X 開発者アカウントで十分です。これがないと、Twitter アラートは静かにスキップされます。"
+  },
+  "streamAlerts": {
+    "title": "配信アラート",
+    "description": "クリエイターがライブ配信を開始したり投稿したりしたときにコミュニティに通知します — Twitch、Kick、YouTube、X、RSS。",
+    "channelUsername": "チャンネルのユーザー名",
+    "channelHandle": "チャンネルのハンドル"
+  },
+  "counting": {
+    "title": "カウント",
+    "description": "一度に1つの数字 — チェーンを途切れさせないで。",
+    "resetSuccess": "カウントを0にリセットしました。",
+    "resetError": "カウントのリセットに失敗しました。",
+    "notInstalled": "カウントアドオンがインストールされていません。",
+    "notInstalledHelp": "<manager>アドオンマネージャー</manager>でインストールし、ここでカウントチャンネルを設定してください。",
+    "liveStatsTitle": "ライブ統計",
+    "liveStatsDesc": "このサーバーのカウントゲームの現在の状態。",
+    "currentCount": "現在のカウント",
+    "bestCount": "最高カウント",
+    "configTitle": "構成",
+    "configDesc": "設定はアドオンマネージャーで管理します。リセットボタンでカウントを再スタートします。",
+    "countingChannel": "カウントチャンネル：",
+    "allowSameUser": "同じユーザーを2回連続で許可：",
+    "resetOnFail": "失敗時にカウントをリセット：",
+    "yes": "はい",
+    "no": "いいえ",
+    "resetting": "リセット中…",
+    "resetButton": "カウントを0にリセット"
+  },
+  "members": {
+    "title": "メンバー",
+    "description": "追跡中のメンバーを検索・表示します",
+    "searchPlaceholder": "ユーザー名で検索...",
+    "colUser": "ユーザー",
+    "colLevel": "レベル",
+    "colXp": "XP",
+    "noneMatching": "検索に一致するメンバーが見つかりませんでした。",
+    "noneTracked": "まだ追跡中のメンバーはいません。",
+    "levelBadge": "Lv. {level}",
+    "xpValue": "{xp} XP",
+    "availableRoles": "利用可能なロール"
+  },
+  "polls": {
+    "title": "投票",
+    "description": "サーバーで作成された投票を表示・管理します。",
+    "closed": "投票を終了しました",
+    "closeError": "投票の終了に失敗しました",
+    "deleted": "投票を削除しました",
+    "deleteError": "投票の削除に失敗しました",
+    "createdVia": "投票は Discord で <cmd>/poll</cmd> スラッシュコマンドを使って作成します。",
+    "empty": "このサーバーの投票が見つかりませんでした。",
+    "statusClosed": "終了",
+    "statusOpen": "受付中",
+    "optionCount": "{count, plural, other {# 個の選択肢}}",
+    "voteCount": "{count, plural, other {# 票}}",
+    "createdOn": "{date} に作成",
+    "alreadyClosed": "投票はすでに終了しています",
+    "closePollTitle": "投票を終了",
+    "closePoll": "投票を終了",
+    "deletePollTitle": "投票を削除",
+    "delete": "削除"
+  },
+  "announcements": {
+    "saved": "お知らせ設定を保存しました！",
+    "saveError": "設定の保存に失敗しました。",
+    "title": "ボットのお知らせ",
+    "description": "更新のお知らせをサーバーで直接受け取ります",
+    "sectionTitle": "お知らせ設定",
+    "sectionDesc": "有効にすると、Arken Bot が選択したチャンネルにチームが作成した更新のお知らせを投稿します。いつでも無効にできます。",
+    "enableLabel": "お知らせを有効にする",
+    "enableDesc": "このサーバーでボットの更新投稿を受け取ります",
+    "channelLabel": "お知らせチャンネル",
+    "selectChannel": "チャンネルを選択…",
+    "mustSelect": "お知らせを受け取るにはチャンネルを選択する必要があります。"
+  },
+  "analytics": {
+    "title": "分析",
+    "description": "サーバーの成長、アクティビティ、エンゲージメント。",
+    "newMembers24h": "新規メンバー（24時間）",
+    "leftMembers24h": "退出したメンバー（24時間）",
+    "modActions24h": "モデレーション操作（24時間）",
+    "empty": "まだ履歴データがありません。分析データは毎日収集され、最初の1日が完了した後にここに表示されます。",
+    "memberGrowth": "メンバーの増加（30日間）",
+    "activity": "アクティビティ（30日間）",
+    "memberFlow": "メンバーの流れ（30日間）",
+    "seriesMembers": "メンバー",
+    "seriesMessages": "メッセージ",
+    "seriesCommands": "コマンド",
+    "seriesJoins": "参加",
+    "seriesLeaves": "退出"
+  },
+  "auditLog": {
+    "title": "ダッシュボード監査ログ",
+    "description": "ウェブダッシュボードを通じてこのサーバーの設定に加えられたすべての変更 — 誰が、何を、いつ。",
+    "verbCreated": "作成",
+    "verbUpdated": "更新",
+    "verbDeleted": "削除",
+    "emptyTitle": "まだダッシュボードの変更はありません",
+    "emptyDesc": "管理者が設定を保存したり、アラートを作成したり、ダッシュボードで構成を削除したりするたびに、エントリがここに表示されます。",
+    "today": "今日",
+    "yesterday": "昨日",
+    "previous": "前へ",
+    "next": "次へ",
+    "pageOf": "{pages} ページ中 {page} ページ"
+  },
+  "inviteTracker": {
+    "title": "招待トラッカー",
+    "description": "誰が誰を招待したかを正確に把握します。",
+    "updateError": "設定の更新に失敗しました。",
+    "settingsTitle": "設定",
+    "settingsDesc": "各ユーザーが何人のメンバーをサーバーに招待したかを追跡します。",
+    "enableLabel": "招待トラッカーを有効にする",
+    "enableHelp": "招待トラッキングを有効にして、招待データの記録を開始します。ボットの既存の招待権限を使用します。",
+    "leaderboardTitle": "トップ招待者ランキング",
+    "leaderboardDesc": "行をクリックすると、その人の招待で参加したメンバーが表示されます。",
+    "noData": "まだ招待データがありません。",
+    "noDataEnable": "開始するには上で招待トラッキングを有効にしてください。",
+    "memberCount": "{count, plural, other {# 人のメンバー}}",
+    "inviteCount": "{count, plural, other {# 件の招待}}",
+    "bonus": "{bonus} ボーナス",
+    "total": "合計 {total}",
+    "invitedMembers": "招待したメンバー — {stillHere} 人が在籍中 · {left} 人が退出",
+    "leftBadge": "退出",
+    "joinedOn": "{date} に参加"
+  },
+  "selfRoles": {
+    "added": "ロールを自己付与リストに追加しました。",
+    "addError": "ロールの追加に失敗しました。",
+    "removed": "ロールを削除しました。",
+    "removeError": "ロールの削除に失敗しました。",
+    "title": "自己付与ロール",
+    "description": "メンバーは <assign>/selfassignrole</assign> で自分でロールを取得し、<remove>/selfremoverole</remove> で外すことができます。",
+    "addTitle": "ロールを追加",
+    "addDesc": "サーバーのロールを選び、メンバーがコマンドに入力する短い名前を付けます。",
+    "roleLabel": "ロール",
+    "selectRole": "ロールを選択",
+    "commandNameLabel": "コマンド名",
+    "commandNamePlaceholder": "例: fighter",
+    "willRun": "メンバーは <code>/selfassignrole {name}</code> を実行します",
+    "namePlaceholder": "名前",
+    "adding": "追加中…",
+    "addButton": "ロールを追加",
+    "currentTitle": "現在の自己付与ロール",
+    "currentDesc": "メンバーはこれらのロールをいつでも取得できます。",
+    "deletedRole": "{roleId}（削除済み）",
+    "remove": "削除",
+    "empty": "まだ自己付与ロールはありません。上で追加してください。"
+  },
+  "verification": {
+    "saved": "認証設定を保存しました！",
+    "saveError": "設定の保存に失敗しました",
+    "title": "認証ゲート",
+    "description": "新しいメンバーがサーバーにアクセスする前に認証を求めます。",
+    "infoCard": "有効にすると、新しいメンバーは保留ロールを受け取り、認証チャンネルのみを表示できます。認証をクリックすると、メンバーロールとサーバーの残りへのアクセスが付与されます。",
+    "gateTitle": "認証ゲート",
+    "gateDesc": "新しいメンバーの認証システムを有効にします。",
+    "enableLabel": "認証を有効にする",
+    "enableDesc": "新しいメンバーはサーバーチャンネルにアクセスする前に認証する必要があります",
+    "rolesTitle": "ロールとチャンネル",
+    "rolesDesc": "認証に使用するロールとチャンネルを構成します。",
+    "pendingRole": "保留ロール",
+    "pendingRoleHelp": "参加時に新しいメンバーに付与されるロール（認証前）。",
+    "memberRole": "メンバーロール",
+    "memberRoleHelp": "メンバーが正常に認証された後に付与されるロール。",
+    "verifyChannel": "認証チャンネル",
+    "verifyChannelHelp": "認証ボタンのパネルが表示されるチャンネル。",
+    "none": "なし",
+    "saving": "保存中…",
+    "saveChanges": "変更を保存"
+  },
+  "pages": {
+    "overview": "概要",
+    "setup": "セットアップウィザード",
+    "analytics": "分析",
+    "moderation": "モデレーション",
+    "automod": "自動モデレーション",
+    "slowmode": "自動低速モード",
+    "anti-nuke": "アンチニューク",
+    "verification": "認証ゲート",
+    "reports": "通報",
+    "leveling": "レベル",
+    "leaderboard": "リーダーボード",
+    "welcome": "ウェルカム",
+    "reaction-roles": "リアクションロール",
+    "self-roles": "自己付与ロール",
+    "birthdays": "誕生日",
+    "polls": "投票",
+    "suggestions": "提案",
+    "giveaways": "ギブアウェイ",
+    "starboard": "スターボード",
+    "members": "メンバー",
+    "invite-tracker": "招待トラッカー",
+    "voting": "投票報酬",
+    "music": "音楽",
+    "stats-channels": "統計チャンネル",
+    "embeds": "埋め込みビルダー",
+    "scheduled-messages": "予約メッセージ",
+    "temp-voice": "一時ボイス",
+    "commands": "コマンド",
+    "forum-management": "フォーラム管理",
+    "stream-alerts": "配信アラート",
+    "twitter-feeds": "X / Twitter フィード",
+    "reddit-feeds": "Reddit フィード",
+    "rss-feeds": "RSS フィード",
+    "monday": "Monday.com",
+    "trello": "Trello",
+    "tickets": "チケット",
+    "counting": "カウント",
+    "applications": "応募",
+    "logs": "ログ",
+    "audit-log": "監査ログ",
+    "announcements": "お知らせ",
+    "addons": "アドオンマネージャー",
+    "settings": "設定",
+    "guilds": "サーバー",
+    "users": "ユーザー",
+    "metrics": "メトリクス"
+  },
+  "sections": {
+    "general": "一般",
+    "moderation": "モデレーション",
+    "community": "コミュニティ",
+    "contentTools": "コンテンツとツール",
+    "tools": "ツール",
+    "integrations": "連携",
+    "addons": "アドオン",
+    "system": "システム"
+  },
+  "footer": {
+    "changelog": "変更履歴",
+    "status": "ステータス",
+    "privacy": "プライバシーポリシー",
+    "terms": "利用規約",
+    "brandDesc": "20以上の機能とリアルタイムのウェブダッシュボードを備えた、完全無料の Discord ボット。有料の壁は一切ありません。",
+    "links": "リンク",
+    "features": "機能",
+    "addons": "アドオン",
+    "dashboard": "ダッシュボード",
+    "docs": "ドキュメント",
+    "community": "コミュニティ",
+    "supportServer": "サポートサーバー",
+    "addToServer": "サーバーに追加",
+    "rights": "© {year} {siteName}. All rights reserved.",
+    "madeWith": "Discord コミュニティのために心を込めて作りました。",
+    "support": "サポート"
+  },
+  "landingNav": {
+    "features": "機能",
+    "addons": "アドオン",
+    "docs": "ドキュメント",
+    "support": "サポート",
+    "dashboard": "ダッシュボード",
+    "login": "ログイン",
+    "addToServer": "サーバーに追加",
+    "addBot": "ボットを追加",
+    "homeAria": "Arken Bot ホーム",
+    "toggleMenu": "メニューを切り替え"
+  },
+  "sidebar": {
+    "switchServer": "サーバーを切り替え",
+    "dashboardFallback": "ダッシュボード",
+    "memberCount": "{count, number} 人のメンバー",
+    "serverSettings": "サーバー設定",
+    "search": "検索…",
+    "pinned": "ピン留め済み",
+    "unpin": "ピンを外す",
+    "pinToTop": "上部にピン留め",
+    "staffPortal": "スタッフポータル",
+    "owner": "オーナー",
+    "staff": "スタッフ",
+    "logout": "ログアウト"
+  },
+  "topbar": {
+    "staffBadge": "スタッフ",
+    "searchTitle": "検索（Ctrl K）",
+    "whatsNew": "新着情報"
+  },
+  "commandPalette": {
+    "placeholder": "ページへジャンプ…",
+    "noMatch": "「{query}」に一致するページはありません",
+    "navigate": "↑↓ 移動",
+    "openHint": "↵ 開く",
+    "closeHint": "esc 閉じる"
+  },
+  "auth": {
+    "errInvalidRequest": "ログインの開始中に問題が発生しました。もう一度お試しください。",
+    "errInvalidState": "ログインセッションの有効期限が切れました。もう一度お試しください。",
+    "errOauthFailed": "Discord でのサインインに失敗しました。もう一度お試しください。",
+    "errDefault": "ログインに失敗しました。もう一度お試しください。",
+    "welcomeBack": "おかえりなさい",
+    "subtitle": "Discord アカウントでサインインしてサーバーを管理します。",
+    "redirecting": "リダイレクト中...",
+    "loginWithDiscord": "Discord でログイン"
+  },
+  "statusPage": {
+    "title": "システムステータス",
+    "subtitle": "Arken Bot サービスのライブ状態。このページは30秒ごとに自動的に更新されます。",
+    "checking": "確認中…",
+    "operational": "稼働中",
+    "down": "停止中",
+    "bannerChecking": "システムを確認中…",
+    "bannerAllUp": "✓ すべてのシステムが稼働中",
+    "bannerApiDown": "⚠ API に到達できません — 一部のサービスが停止している可能性があります",
+    "bannerPartial": "⚠ 部分的な障害 — 1つ以上のコンポーネントが劣化しています",
+    "serviceBot": "Discord ボット",
+    "serviceApi": "API",
+    "serviceWeb": "ウェブダッシュボード",
+    "serviceDatabase": "データベース",
+    "serviceCache": "キャッシュ",
+    "serversWord": "サーバー",
+    "gatewayWord": "ゲートウェイ",
+    "lastSeen": "最終確認 {time}",
+    "upFor": "稼働時間 {uptime}",
+    "lookingAtIt": "今ご覧になっているものです",
+    "lastChecked": "最終確認 {time}",
+    "reportIssue": "ここに反映されていない問題を見つけましたか？次の場所で報告してください：",
+    "supportServerLink": "サポートサーバー"
+  },
+  "leaderboardPage": {
+    "loading": "リーダーボードを読み込み中…",
+    "unavailable": "このサーバーではリーダーボードを利用できません。",
+    "unavailableHint": "レベル機能が無効になっているか、サーバーが存在しない可能性があります。",
+    "rankedMembers": "{count, number} 人のランク付けメンバー",
+    "empty": "まだランク付けされたメンバーはいません。チャットを始めよう！",
+    "level": "レベル {level}",
+    "pageInfo": "{page} ページ • 合計 {total}",
+    "previous": "前へ",
+    "next": "次へ",
+    "poweredBy": "Powered by Arken Bot • リーダーボードはリアルタイムで更新されます"
+  },
+  "staffNav": {
+    "dashboard": "ダッシュボード",
+    "guilds": "サーバー",
+    "users": "ユーザー",
+    "addons": "アドオン",
+    "auditLogs": "監査ログ",
+    "serviceLogs": "サービスログ",
+    "metrics": "メトリクス",
+    "announcements": "お知らせ",
+    "settings": "設定",
+    "hq": "ArkenBot 本部",
+    "staffPortalUser": "スタッフポータル · {username}",
+    "serverDashboard": "サーバーダッシュボード",
+    "logout": "ログアウト",
+    "openMenu": "メニューを開く",
+    "staffPortal": "スタッフポータル"
+  },
+  "staffDashboard": {
+    "title": "フリート概要",
+    "subtitle": "ArkenBot のすべてのサーバー、ユーザー、可動部分。",
+    "servers": "サーバー",
+    "activeServers": "アクティブなサーバー",
+    "totalUsers": "総ユーザー数",
+    "modCases": "モデレーションケース",
+    "activeWarnings": "有効な警告",
+    "addons": "アドオン",
+    "uptime": "稼働時間",
+    "memory": "メモリ",
+    "quickActions": "クイックアクション",
+    "browseGuilds": "サーバーを閲覧",
+    "browseGuildsSub": "ArkenBot が参加しているすべてのサーバー",
+    "manageUsers": "ユーザーを管理",
+    "manageUsersSub": "スタッフのロールとダッシュボードアクセス",
+    "addonRegistry": "アドオンレジストリ",
+    "addonRegistrySub": "アドオンの公開と保守",
+    "systemLogs": "システムログ",
+    "systemLogsSub": "ボットおよび API レベルのイベント",
+    "systemHealth": "システムの健全性",
+    "operational": "稼働中",
+    "healthBot": "Discord ボット",
+    "healthApi": "API",
+    "healthVersion": "バージョン",
+    "healthMemory": "メモリ",
+    "healthEnvironment": "環境",
+    "serversValue": "{count, number} サーバー",
+    "upValue": "稼働時間 {uptime}",
+    "memoryHeap": "{mb} MB ヒープ"
+  },
+  "staffAddons": {
+    "registered": "アドオンを登録しました！",
+    "registerError": "アドオンの登録に失敗しました。",
+    "updated": "アドオンを更新しました！",
+    "updateError": "アドオンの更新に失敗しました。",
+    "title": "アドオンレジストリ",
+    "subtitle": "アドオンパッケージの公開と保守。",
+    "registerAddon": "アドオンを登録",
+    "registerNew": "新しいアドオンを登録",
+    "packageName": "パッケージ名（一意）",
+    "displayName": "表示名",
+    "version": "バージョン",
+    "author": "作者",
+    "authorPlaceholder": "作者名",
+    "description": "説明",
+    "descriptionPlaceholder": "短い説明...",
+    "register": "登録",
+    "cancel": "キャンセル",
+    "enabled": "有効",
+    "disabled": "無効",
+    "byAuthor": "作者: {author}",
+    "disable": "無効にする",
+    "enable": "有効にする",
+    "unverify": "検証を解除",
+    "verify": "検証"
+  },
+  "staffAnnouncements": {
+    "title": "お知らせ",
+    "subtitle": "オプトインしたすべてのサーバーに更新を配信します",
+    "compose": "作成",
+    "draftTooltip": "最近の git コミットから自動下書き",
+    "drafting": "下書き中…",
+    "draftFromCommits": "コミットから下書き",
+    "typeLabel": "タイプ",
+    "typeName_update": "アップデート",
+    "typeName_feature": "新機能",
+    "typeName_maintenance": "メンテナンス",
+    "typeName_hotfix": "緊急修正",
+    "typeDesc_update": "ボットの一般的なアップデートまたは変更",
+    "typeDesc_feature": "新機能が追加されました",
+    "typeDesc_maintenance": "予定されたダウンタイムまたはメンテナンス",
+    "typeDesc_hotfix": "重大なバグ修正をデプロイしました",
+    "titleLabel": "タイトル",
+    "titlePlaceholder": "v2.3.0 — 新しいチケット機能",
+    "messageLabel": "メッセージ",
+    "messagePlaceholder": "変更内容を平易な言葉で説明してください。送信前に自動下書きを編集できます。",
+    "untitled": "無題",
+    "previewFooter": "Arken Bot — {type}",
+    "sending": "送信中…",
+    "sendAnnouncement": "お知らせを送信",
+    "history": "履歴",
+    "noneSent": "まだお知らせは送信されていません。",
+    "sentToast": "{count, plural, other {# 個のサーバーにお知らせを送信しました！}}",
+    "sendError": "お知らせの送信に失敗しました。",
+    "draftGenerated": "下書きを生成しました — 送信前に確認・編集してください！",
+    "draftError": "下書きを生成できませんでした。",
+    "serverCount": "{count, plural, other {# サーバー}}",
+    "justNow": "たった今",
+    "minsAgo": "{mins}分前",
+    "hrsAgo": "{hrs}時間前",
+    "daysAgo": "{days}日前"
+  },
+  "staffGuilds": {
+    "title": "すべてのサーバー",
+    "total": "合計: {total} サーバー",
+    "searchPlaceholder": "サーバーを検索...",
+    "allStatus": "すべてのステータス",
+    "active": "アクティブ",
+    "inactive": "非アクティブ",
+    "colGuild": "サーバー",
+    "colId": "ID",
+    "colStatus": "ステータス",
+    "colJoined": "参加日",
+    "colActions": "操作",
+    "noGuilds": "サーバーが見つかりません",
+    "view": "表示",
+    "deleteConfirm": "非アクティブなサーバー {name} を削除しますか？その設定が削除され、スタッフポータルから除外されます。",
+    "delete": "削除",
+    "pageInfo": "{page} ページ • 合計 {total} サーバー",
+    "previous": "前へ",
+    "next": "次へ"
+  },
+  "staffLogs": {
+    "title": "システムログ",
+    "total": "合計: {total} 件",
+    "filterGuild": "サーバー ID でフィルター...",
+    "allTypes": "すべてのタイプ",
+    "typeMemberJoin": "メンバー参加",
+    "typeMemberLeave": "メンバー退出",
+    "typeMessageDelete": "メッセージ削除",
+    "typeMessageEdit": "メッセージ編集",
+    "typeBan": "BAN",
+    "typeKick": "キック",
+    "typeWarning": "警告",
+    "typeAutomod": "自動モデレーション",
+    "noLogs": "ログが見つかりません",
+    "pageOf": "{pages} ページ中 {page} ページ",
+    "previous": "前へ",
+    "next": "次へ"
+  },
+  "staffMetrics": {
+    "title": "システムメトリクス",
+    "subtitle": "フリート全体の使用状況とパフォーマンス。",
+    "memoryChart": "メモリ使用量（MB）",
+    "currentStats": "現在の統計",
+    "totalGuilds": "総サーバー数",
+    "activeGuilds": "アクティブなサーバー",
+    "totalUsers": "総ユーザー数",
+    "memoryUsage": "メモリ使用量",
+    "uptime": "稼働時間",
+    "updatesEvery": "30秒ごとに更新",
+    "prometheusTitle": "Prometheus メトリクス",
+    "prometheusDesc": "Grafana または Prometheus でスクレイプするための生の Prometheus メトリクス。",
+    "loading": "読み込み中…",
+    "viewRaw": "生のメトリクスを表示 →",
+    "rawModalTitle": "生の Prometheus メトリクス"
+  },
+  "staffServiceLogs": {
+    "title": "サービスログ",
+    "subtitle": "ボット、API、ウェブサービスからのライブ出力",
+    "refreshing": " · 更新中…",
+    "allServices": "すべてのサービス",
+    "serviceBot": "ボット",
+    "serviceApi": "API",
+    "serviceWeb": "ウェブ",
+    "allLevels": "すべてのレベル",
+    "levelInfo": "Info 以上",
+    "levelWarn": "警告とエラー",
+    "levelError": "エラーのみ",
+    "allStreams": "すべてのストリーム",
+    "searchPlaceholder": "メッセージを検索…",
+    "noEntries": "一致するログエントリがありません",
+    "category_permissions": "権限がありません",
+    "category_access": "アクセスがありません",
+    "category_not-found": "見つかりません",
+    "category_dm-blocked": "DM がブロックされています",
+    "category_rate-limit": "レート制限",
+    "category_validation": "無効なリクエスト",
+    "category_network": "ネットワーク",
+    "category_timeout": "タイムアウト",
+    "category_interaction": "インタラクション",
+    "category_unknown": "エラー",
+    "hint": "ヒント：",
+    "guild": "サーバー：",
+    "unknown": "不明",
+    "channel": "チャンネル：",
+    "unknownDeleted": "不明 / 削除済み",
+    "message": "メッセージ：",
+    "type": "タイプ：",
+    "code": "コード：",
+    "footer": "現在のログ末尾から最新の最大300件のエントリを表示しています。15秒ごとに更新されます。"
+  },
+  "staffSettings": {
+    "presenceUpdated": "ボットのプレゼンスを更新しました！",
+    "presenceError": "ボットのプレゼンスの更新に失敗しました。",
+    "title": "ボット設定",
+    "subtitle": "ArkenBot スタッフ向けのグローバル構成。",
+    "presenceTitle": "ボットのプレゼンス",
+    "presenceDesc": "ボットが Discord で名前の下に表示する内容を制御します。<servers></servers> と <users></users> の変数をサポートします。",
+    "loading": "読み込み中...",
+    "statusLabel": "ステータス",
+    "status_online": "オンライン",
+    "status_idle": "退席中",
+    "status_dnd": "取り込み中",
+    "status_invisible": "オフライン表示",
+    "activityTypeLabel": "アクティビティタイプ",
+    "activity_Playing": "プレイ中",
+    "activity_Listening": "再生中",
+    "activity_Watching": "視聴中",
+    "activity_Competing": "参加中",
+    "activity_Custom": "カスタム",
+    "activityTextLabel": "アクティビティテキスト",
+    "preview": "プレビュー",
+    "saving": "保存中...",
+    "saveApply": "保存して適用"
+  },
+  "staffUsers": {
+    "userUpdated": "ユーザーを更新しました！",
+    "updateError": "ユーザーの更新に失敗しました。",
+    "title": "ポータルユーザー",
+    "subtitle": "スタッフのロールとダッシュボードアクセス。",
+    "searchPlaceholder": "ユーザー名で検索...",
+    "colUser": "ユーザー",
+    "colId": "ID",
+    "colRole": "ロール",
+    "colJoined": "参加日",
+    "colActions": "操作",
+    "roleOwner": "オーナー",
+    "roleStaff": "スタッフ",
+    "roleUser": "ユーザー",
+    "removeStaff": "スタッフから外す",
+    "makeStaff": "スタッフにする"
+  },
+  "feedAlerts": {
+    "created": "フィードアラートを作成しました！",
+    "createError": "フィードアラートの作成に失敗しました",
+    "updateError": "アラートの更新に失敗しました",
+    "updated": "アラートを更新しました！",
+    "deleted": "アラートを削除しました",
+    "deleteError": "アラートの削除に失敗しました",
+    "channelRequired": "Discord チャンネルは必須です",
+    "sourceRequired": "ソース / URL は必須です",
+    "newAlert": "新しいアラート",
+    "newAlertTitle": "新しいアラート",
+    "newAlertDesc": "このフィードに新しいアクティビティがあるたびに、Discord に通知を投稿します。",
+    "platform": "プラットフォーム",
+    "discordChannel": "Discord チャンネル",
+    "selectChannel": "チャンネルを選択",
+    "customMessage": "カスタムメッセージ",
+    "optional": "（任意）",
+    "variables": "変数：",
+    "creating": "作成中…",
+    "createButton": "アラートを作成",
+    "all": "すべて",
+    "noAlertsTitle": "まだアラートはありません",
+    "noAlertsDesc": "新しいものがあった瞬間にサーバーで通知を受け取れます — 設定は1分未満で完了します。",
+    "createFirst": "最初のアラートを作成",
+    "alertCount": "{count, plural, other {# 件のアラート}}",
+    "postsTo": "投稿先",
+    "autoDisabled": "自動的に無効化: {error}",
+    "liveNow": "現在ライブ",
+    "edit": "編集",
+    "delete": "削除",
+    "editAlert": "アラートを編集",
+    "sourceUrl": "ソース / URL",
+    "saving": "保存中…"
+  },
+  "changelogPage": {
+    "title": "変更履歴",
+    "intro": "私たちが発表するすべてのアップデート、機能、修正 — チームが送信した瞬間にここに投稿されます。あなた自身のサーバーで受け取りたいですか？<highlight>ダッシュボード → お知らせ</highlight>でお知らせを有効にしてください。",
+    "empty": "まだお知らせはありません — また後で確認してください。",
+    "badgeUpdate": "アップデート",
+    "badgeFeature": "新機能",
+    "badgeMaintenance": "メンテナンス",
+    "badgeHotfix": "緊急修正"
+  },
+  "landing": {
+    "heroBadge": "永久無料 — 有料の壁なし、プレミアム階層なし",
+    "heroTitle": "すべてを、優雅に<br></br><hl>こなす</hl> Discord ボット。",
+    "heroSubtitle": "モデレーション、レベル、チケット、配信アラート、Trello と Monday.com のボード、そしてリアルタイムのダッシュボード — すべて無料、すべて1つのボットで。",
+    "heroAddButton": "Discord に追加",
+    "heroExplore": "ダッシュボードを見る",
+    "statServers": "サーバー",
+    "statMembers": "対応したメンバー",
+    "statFeatures": "機能",
+    "statForever": "永久に",
+    "heroCards": [
+      {
+        "title": "スケールするモデレーション",
+        "desc": "ケース、エスカレーション、アンチニューク、完全な監査証跡。"
+      },
+      {
+        "title": "あらゆるものへのアラート",
+        "desc": "Twitch、Kick、YouTube、X、Reddit、RSS — さらに Trello と Monday.com のボード。"
+      },
+      {
+        "title": "レベルとエンゲージメント",
+        "desc": "XP、ロール報酬、スターボード、誕生日、ギブアウェイ。"
+      },
+      {
+        "title": "楽しめるダッシュボード",
+        "desc": "すべてブラウザで設定でき、変更は即座に反映されます。"
+      }
+    ],
+    "trustBar": [
+      "プレミアム階層なし — すべて無料",
+      "設定は即座に適用 — ボットの再起動不要",
+      "完全なモデレーションスイート付属",
+      "リアルタイムのウェブダッシュボード"
+    ],
+    "featuresBadge": "機能",
+    "featuresHeading": "5つのボットを1つに置き換え",
+    "featuresSubtitle": "モデレーション、レベル、音楽、チケット、カスタムコマンド、配信アラート、ギブアウェイ — そしてもっと。すべて1つのボットで、すべて無料。",
+    "features": {
+      "items": [
+        {
+          "title": "モデレーション",
+          "desc": "完全なケース追跡、監査ログ、警告履歴で BAN、キック、ミュート、警告、一時 BAN — すべてダッシュボードから管理できます。"
+        },
+        {
+          "title": "自動モデレーション",
+          "desc": "アンチスパム、単語フィルター、リンクフィルター、大文字検出、メンション保護、アンチレイド — すべてロール別・チャンネル別に構成可能。"
+        },
+        {
+          "title": "レベルと XP",
+          "desc": "XP システム、ランクカード、公開リーダーボード、任意のレベルしきい値でのロール報酬、構成可能な XP 倍率でメンバーのエンゲージメントを維持します。"
+        },
+        {
+          "title": "音楽",
+          "desc": "キュー管理、音量調整、ループモード、永続的なキュー状態を備えた YouTube からの高品質な音楽。"
+        },
+        {
+          "title": "サポートチケット",
+          "desc": "プライベートチャンネルまたはスレッド、フォームフィールド、SLA エスカレーション、定型返信、トランスクリプト、評価を備えたマルチパネルのチケットシステム。"
+        },
+        {
+          "title": "カスタムコマンド",
+          "desc": "エイリアス、埋め込み応答、ユーザーごとのクールダウン、ロール制限、DM 返信、変数置換で独自のコマンドを作成します。"
+        },
+        {
+          "title": "リアクションロール",
+          "desc": "メンバーが自分でロールを付与できるようにします。トグル、追加のみ、削除のみのモードをサポート。パネルは Discord でリアルタイムに更新されます。"
+        },
+        {
+          "title": "ウェルカムと退出",
+          "desc": "完全にカスタマイズ可能な埋め込みメッセージ、参加時の DM、メンバーカウンター付きの退出通知で新しいメンバーを迎えます。"
+        },
+        {
+          "title": "ギブアウェイ",
+          "desc": "自動当選者選出で Discord からギブアウェイを実行します。ダッシュボードで当選者名とともにすべてのアクティブおよび終了したギブアウェイを表示します。"
+        },
+        {
+          "title": "配信アラート",
+          "desc": "Twitch、Kick、YouTube チャンネルがライブになったとき、または Twitter、Reddit、RSS フィードが更新されたときに通知を受け取ります。自動的に通知埋め込みを投稿します。"
+        },
+        {
+          "title": "monday.com と Trello のアラート",
+          "desc": "プロジェクトボードを Discord に接続します。カードやアイテムが作成、移動、名前変更、コメントされたときなどに詳細な埋め込みが届きます。"
+        },
+        {
+          "title": "スターボード",
+          "desc": "サーバーで最高のメッセージを目立たせます。構成可能なリアクションしきい値、セルフスターの切り替え、絵文字の選択。"
+        },
+        {
+          "title": "提案",
+          "desc": "スタッフレビュー付きのメンバー提案システム。承認、却下、実装済みとしてマーク — すべてダッシュボードから。"
+        },
+        {
+          "title": "誕生日",
+          "desc": "メンバーの誕生日を追跡し、チャンネルで自動的に告知します。任意で24時間の誕生日ロールを割り当てます。"
+        },
+        {
+          "title": "統計チャンネル",
+          "desc": "サーバー統計を表示するライブ更新のボイスチャンネル — 総メンバー数、オンライン数、ブースト階層など。"
+        },
+        {
+          "title": "予約メッセージ",
+          "desc": "任意のチャンネルに任意の間隔で自動投稿される定期的な告知やリマインダーをスケジュールします。"
+        },
+        {
+          "title": "一時ボイスチャンネル",
+          "desc": "メンバーがトリガーチャンネルに参加すると、自分専用のプライベートボイスチャンネルを即座に取得し、空になると自動的に削除されます。異なるカテゴリの複数のトリガーをサポートします。"
+        },
+        {
+          "title": "アンチニューク",
+          "desc": "チャンネルの大量削除、ロールの削除、大量 BAN をリアルタイムで検出して対応します。被害が広がる前に、違反ユーザーの権限を自動的に剥奪、キック、または BAN します。"
+        },
+        {
+          "title": "認証ゲート",
+          "desc": "新しいメンバーがサーバーにアクセスする前に認証ボタンをクリックすることを求めます。参加時に保留ロール、認証後にメンバーロールを割り当て — ボットや傍観者を締め出します。"
+        },
+        {
+          "title": "フォーラム管理",
+          "desc": "すべての新しいフォーラムスレッドにテンプレートメッセージを自動投稿し、作成時に自動的にタグを適用します。ダッシュボードからフォーラムチャンネルごとに個別に構成します。"
+        },
+        {
+          "title": "投票",
+          "desc": "/poll コマンドで複数選択肢の投票を作成します。メンバーはボタンで投票し、スタッフはダッシュボードから投票を終了または削除できます。"
+        },
+        {
+          "title": "メンバー通報",
+          "desc": "メンバーは /report で通報を送信します。スタッフはダッシュボードで保留中の通報を確認し、メモを追加し、確認済みまたは却下としてマークします。"
+        },
+        {
+          "title": "アドオンシステム",
+          "desc": "コミュニティのアドオンでボットを拡張したり、Arken Addon SDK を使って独自のものを構築したりします。ダッシュボードからインストールして構成します。"
+        }
+      ]
+    },
+    "ticketBadge": "チケットシステム",
+    "ticketHeading": "本格的なサポートチケット、組み込み済み",
+    "ticketSubtitle": "ほとんどのボットはまともなチケットシステムに課金します。Arken のものは最初からフル機能 — マルチボタンパネルやカスタム受付フォームから、SLA エスカレーション、スタッフチーム向けの完全なポータルまで。",
+    "ticketHighlights": [
+      "チケットごとのプライベートチャンネルまたはスレッド",
+      "カテゴリルーティング付きのマルチボタンパネル",
+      "チケットが開く前に表示されるカスタムフォームフィールド",
+      "スタッフの担当、転送、優先度システム",
+      "ユーザーごと・ボタンごとのスタッフロールの上書き",
+      "ping ロール付きの多段階 SLA エスカレーション",
+      "ラウンドロビン順の自動チケット割り当て",
+      "新しいチケットのスタッフ通知チャンネル",
+      "Discord オートコンプリート付きの定型返信",
+      "終了時にログチャンネルへ投稿されるトランスクリプト",
+      "ユーザー評価システム（1〜5つ星）",
+      "SLA タイマーを一時停止する待機ステータス",
+      "連携用の Webhook 通知",
+      "完全なポータル: フィルター、メモ、一括終了、統計"
+    ],
+    "addToServer": "サーバーに追加",
+    "mockPanelPreview": "パネル埋め込みのプレビュー",
+    "mockSupportCenter": "サポートセンター",
+    "mockSupportDesc": "お困りですか？下のボタンをクリックしてチケットを開いてください。まもなくチームが対応します。",
+    "mockTechnical": "技術",
+    "mockBilling": "請求",
+    "mockReport": "通報",
+    "mockSlaTitle": "SLA エスカレーションレベル",
+    "mockSla1": "チケットに対応が必要です",
+    "mockSla2": "応答なし — エスカレーション中",
+    "mockSla3": "緊急: 24時間応答なし",
+    "mockStatOpen": "オープン",
+    "mockStatReply": "平均応答",
+    "mockStatRating": "評価",
+    "compareBadge": "Arken を選ぶ理由",
+    "compareHeading": "すべて。無料。1つのボットで。",
+    "compareSubtitle": "サーバーごとのサブスクリプションを払ったり、5つの異なるボットを動かしたりするのはもうやめましょう。Arken にはすべてがあります — 階層なし、制限なし。",
+    "compareColFeature": "機能",
+    "compareColArken": "Arken Bot",
+    "comparison": {
+      "items": [
+        {
+          "feature": "モデレーション + ケース履歴",
+          "note": ""
+        },
+        {
+          "feature": "自動モデレーション（スパム、単語、リンク）",
+          "note": ""
+        },
+        {
+          "feature": "XP レベル + リーダーボード",
+          "note": ""
+        },
+        {
+          "feature": "音楽再生",
+          "note": ""
+        },
+        {
+          "feature": "カスタムコマンド",
+          "note": ""
+        },
+        {
+          "feature": "自動応答（正規表現）",
+          "note": ""
+        },
+        {
+          "feature": "一時ロール",
+          "note": ""
+        },
+        {
+          "feature": "リアクションロール",
+          "note": ""
+        },
+        {
+          "feature": "サポートチケットシステム",
+          "note": ""
+        },
+        {
+          "feature": "チケットフォームフィールド",
+          "note": "Arken 独自"
+        },
+        {
+          "feature": "多段階 SLA エスカレーション",
+          "note": "Arken 独自"
+        },
+        {
+          "feature": "ギブアウェイ",
+          "note": ""
+        },
+        {
+          "feature": "Twitch、Kick、ソーシャルアラート",
+          "note": ""
+        },
+        {
+          "feature": "スターボード",
+          "note": ""
+        },
+        {
+          "feature": "予約メッセージ",
+          "note": ""
+        },
+        {
+          "feature": "統計チャンネル",
+          "note": ""
+        },
+        {
+          "feature": "一時ボイスチャンネル",
+          "note": ""
+        },
+        {
+          "feature": "アンチニューク保護",
+          "note": ""
+        },
+        {
+          "feature": "認証ゲート",
+          "note": ""
+        },
+        {
+          "feature": "フォーラム管理",
+          "note": ""
+        },
+        {
+          "feature": "投票とメンバー通報",
+          "note": ""
+        },
+        {
+          "feature": "リアルタイムのウェブダッシュボード",
+          "note": ""
+        },
+        {
+          "feature": "アドオンマーケットプレイス",
+          "note": "Arken 独自"
+        },
+        {
+          "feature": "価格",
+          "note": "無料、常に"
+        }
+      ]
+    },
+    "dashBadge": "ウェブダッシュボード",
+    "dashHeading": "ブラウザからすべてを管理",
+    "dashSubtitle": "ボットを構成するためにコマンドを入力する必要はもうありません。すべての設定はダッシュボードにあり、保存を押した瞬間に変更がボットに適用され、再起動は不要です。",
+    "dashBullets": [
+      "WebSocket によるリアルタイム設定 — ボットの再起動ゼロ",
+      "モデレーションのケース履歴と警告管理",
+      "フィルター、メモ、一括操作付きの完全なチケットポータル",
+      "XP リーダーボード、レベルロール管理、分析",
+      "埋め込みプレビュー付きのカスタムコマンドビルダー",
+      "アドオンマーケットプレイス — プラグインのインストール、構成、管理"
+    ],
+    "dashOpenButton": "ダッシュボードを開く",
+    "dashMockOverview": "概要",
+    "dashMockModeration": "モデレーション",
+    "dashMockAutomod": "自動モデレーション",
+    "dashMockLeveling": "レベル",
+    "dashMockWelcome": "ウェルカム",
+    "dashMockCommands": "コマンド",
+    "dashMockTickets": "チケット",
+    "dashMockMusic": "音楽",
+    "dashMockAddons": "アドオン",
+    "dashSecModeration": "モデレーション",
+    "dashSecCommunity": "コミュニティ",
+    "dashSecTools": "ツール",
+    "dashSecAddons": "アドオン",
+    "dashStatMod": "モデレーション操作",
+    "dashStatMembers": "新規メンバー",
+    "dashStatTickets": "オープンチケット",
+    "dashStatEvents": "ログイベント",
+    "dashActivity": "メッセージアクティビティ（7日）",
+    "dashInstant": "設定は即座に更新 · 再起動不要",
+    "osBadge": "オープンソース",
+    "osHeading": "私たちは自分たちのツールを作ります",
+    "osSubtitle": "Arken Bot は他人のライブラリを寄せ集めたものではありません。もっと良いものが必要になったとき、私たちはそれを書き — そして皆のために公開しました。",
+    "osTagline": "ゲームサーバーステータスアドオンを支えています",
+    "osDesc": "PHP と Node/TypeScript 向けの依存関係のないゲームサーバー照会ライブラリ。1つのサーバーから数百までのプレイヤー数、マップ、ping、ルールを一度に読み取り — <code>/server status</code> を実行するたびに Arken Bot が使用しているものです。",
+    "osStatGames": "ゲーム",
+    "osStatProtocols": "プロトコル",
+    "osStatDeps": "依存関係",
+    "osTryLive": "ライブで試す",
+    "osViewSource": "ソースを見る",
+    "osLicense": "AGPL-3.0 · 永久無料",
+    "ctaHeading": "サーバーをアップグレードする準備はできましたか？",
+    "ctaSubtitle": "すでに Arken Bot で稼働しているサーバーに加わりましょう。永久無料 — サブスクリプションなし、サーバーごとの料金なし、機能ゲートなし。",
+    "ctaNote": "既存のボットと併用したり、完全に置き換えたりできます。",
+    "ctaAddButton": "Arken Bot を追加 — 無料",
+    "ctaSupport": "サポートサーバーに参加"
+  },
+  "featuresPage": {
+    "heroBadge": "永久無料 · 有料の壁なし · プレミアム階層なし",
+    "heroTitle": "すべての機能を、<hl>完全にドキュメント化</hl>",
+    "heroSubtitle": "Arken Bot には20の組み込み機能モジュールが付属し、増え続けています。もっと必要ですか？アドオンシステムはチケット、サーバー監視、コードレビューなどを追加します — すべてダッシュボードからインストール可能。すべて無料 — 階層なし、有料の壁なし。",
+    "calloutEyebrow": "さらに欲しいですか？",
+    "calloutHeading": "アドオンで Arken を拡張",
+    "calloutSubtitle": "アドオンシステムはチケット、ゲームサーバーステータス、コードレビューを追加します — すべてダッシュボードからインストール可能。または TypeScript SDK で独自のものを構築します。",
+    "browseAddons": "アドオンを閲覧",
+    "ctaHeading": "Arken Bot をサーバーに追加する準備はできましたか？",
+    "ctaSubtitle": "すべての機能は招待後すぐに利用可能 — 始めるための構成は不要です。",
+    "ctaAddButton": "サーバーに追加 — 無料です",
+    "ctaOpenDashboard": "ダッシュボードを開く",
+    "footHome": "ホーム",
+    "footFeatures": "機能",
+    "footDashboard": "ダッシュボード",
+    "footDocs": "ドキュメント",
+    "footSupport": "サポート",
+    "footPrivacy": "プライバシー",
+    "footTerms": "利用規約",
+    "sections": {
+      "moderation": {
+        "title": "モデレーション",
+        "tagline": "完全なモデレーションツールキットでサーバーを安全に保ちます。",
+        "description": "完全なケース追跡と監査ログでメンバーを BAN、キック、ミュート、警告、一時 BAN します。すべての操作はケース ID、理由、モデレーターとともに記録され — すべてダッシュボードから確認できます。",
+        "bullets": [
+          "BAN、キック、タイムアウト（ミュート）、警告、一時 BAN コマンド",
+          "ケース ID とモデレーターの帰属を持つ完全なケース履歴",
+          "メンバーごとの警告蓄積の追跡",
+          "ウェブダッシュボードからすべてのケースを確認・管理",
+          "サーバーの透明性のための監査ログ連携",
+          "誰がモデレートできるかのロールベースの権限制御",
+          "一時ロール: Discord ロールを固定期間割り当て、有効期限で自動的に削除",
+          "一括ケース終了: ユーザーのすべてのオープンケースを1回の操作で終了"
+        ]
+      },
+      "automod": {
+        "title": "自動モデレーション",
+        "tagline": "24時間体制で機能する自動保護。",
+        "description": "スパムを防ぎ、不要なコンテンツをフィルタリングし、レイドが発生する前に阻止します — すべて指1本動かさずに。ルールはロール別・チャンネル別に構成可能なので、正当なユーザーが網にかかることはありません。",
+        "bullets": [
+          "アンチスパム: メッセージのレート制限と超過分の自動削除",
+          "ワイルドカード対応の単語・フレーズフィルター",
+          "ドメイン許可/ブロックリスト付きのリンクフィルター",
+          "大文字乱用を抑える大文字検出",
+          "メンションスパム保護（大量 ping の防止）",
+          "アンチレイドモード: 攻撃中にチャンネルをロックまたは新規参加をキック",
+          "ロール別・チャンネル別のルール例外"
+        ]
+      },
+      "leveling": {
+        "title": "レベルと XP",
+        "tagline": "アクティブなメンバーに報酬を与え、活気あるコミュニティを築きます。",
+        "description": "メンバーは送信するすべてのメッセージで XP を獲得します。レベルアップすると特別なロールをアンロックし、公開リーダーボードが健全な競争を促します。XP 倍率、ロールのスタック、非アクティブユーザーの減衰、日次連続記録の追跡を含め、すべての面が調整可能です。",
+        "bullets": [
+          "構成可能なレートで、すべてのメッセージで自動的に XP を獲得",
+          "ダッシュボードからのチャンネルごとの XP 倍率",
+          "カスタムアクセントカラーと背景でレベル、XP、リーダーボード順位を表示するランクカード",
+          "ログインせずにアクセスできる公開リーダーボードページ",
+          "レベルロール: 任意のレベルしきい値でロールを自動的に付与",
+          "メンバーがランクアップしたときに以前のレベルロールを保持または削除",
+          "一括ロール同期: 既存のすべてのメンバーに正しいロールを一度に適用",
+          "マイルストーン画像（レベル 5、10、25、50+）付きのリッチな埋め込みレベルアップ告知",
+          "プロフィールで追跡・表示される日次メッセージ連続記録",
+          "XP 減衰: しきい値を超えて非アクティブなメンバーの XP を自動的に減少",
+          "サーバーごとの構成可能な減衰率と非アクティブ期間",
+          "ユーザーごとの詳細な内訳のための /profile と /stats コマンド"
+        ]
+      },
+      "customization": {
+        "title": "カスタマイズ",
+        "tagline": "ボットをサーバーとプロフィールになじませます。",
+        "description": "サーバーでボットにカスタムニックネームを設定して、コミュニティのブランディングに合わせます。メンバーも自分のランクカードをカスタムアクセントカラーと背景画像でパーソナライズできます — スタッフの操作は不要です。",
+        "bullets": [
+          "サーバーごとのカスタムボットニックネーム — ダッシュボードの設定ページから設定",
+          "ニックネームは再起動なしでボットを介して即座に適用",
+          "/rankcard color — ランクカードにカスタム hex アクセントカラーを設定",
+          "/rankcard background — カスタム背景画像 URL を設定",
+          "/rankcard preview — 他の誰かが見る前にスタイルをプレビュー",
+          "/rankcard reset — デフォルトのランクカードスタイルに戻す",
+          "ランクカードのスタイルはユーザーごとで、すべてのサーバーに引き継がれます"
+        ]
+      },
+      "achievements": {
+        "title": "実績",
+        "tagline": "リーダーボードを超えて努力する目標をメンバーに与えます。",
+        "description": "実績はメンバーがマイルストーンに達すると自動的に付与されます — スタッフからのコマンドは不要。バッジは /profile カードに表示され、連続記録、アクティビティ、レベル目標を通じて長期的なエンゲージメントを促します。",
+        "bullets": [
+          "メンバーが対象のマイルストーンに達すると自動的に付与",
+          "レベルマイルストーン: ライジングスター（5）、ベテラン（25）、レジェンド（100）など",
+          "アクティビティマイルストーン: ファーストステップ（初メッセージ）、ディディケイテッド（1,000 メッセージ）",
+          "連続記録マイルストーン: ウィークウォリアー（7日）、マンスレジェンド（30）、センチュリーストリーク（100）",
+          "絵文字と名前付きで /profile コマンドに表示されるバッジ",
+          "/stats コマンドに表示される実績数",
+          "構成不要 — 最初から機能します"
+        ]
+      },
+      "reputation": {
+        "title": "評価",
+        "tagline": "コミュニティが最も役立つメンバーを認められるようにします。",
+        "description": "メンバーは互いに評価ポイントを付与して、助けや前向きな貢献を強調できます。ユーザーごとの24時間クールダウンがシステムを公正に保ち、サーバー全体のリーダーボードが最も価値のあるコミュニティメンバーを浮き彫りにします。",
+        "bullets": [
+          "/rep give <ユーザー> — 任意のメンバーに評価ポイントを付与",
+          "/rep check <ユーザー> — メンバーの合計評価を表示",
+          "/rep top — サーバー全体の評価リーダーボード",
+          "Redis で強制される付与者ごとの24時間クールダウン",
+          "/stats と /profile に表示される評価数",
+          "完全無料 — 投票サイト連携は不要"
+        ]
+      },
+      "analytics": {
+        "title": "サーバー分析",
+        "tagline": "サーバーがどのように成長しアクティブを保つかを理解します。",
+        "description": "Arken Bot はバックグラウンドで日次アクティビティカウンターを追跡し、30日間のローリング履歴に保存します。ダッシュボードはインタラクティブなチャートを描画するので、傾向を見つけ、イベントの影響を測定し、アクティビティの低下を早期に捉えられます。",
+        "bullets": [
+          "サーバー全体で追跡される日次メッセージ数",
+          "日次コマンド使用状況の追跡",
+          "日ごとのメンバー参加・退出カウンター",
+          "データベースに保存される30日間のローリング履歴",
+          "ダッシュボードの分析ページのインタラクティブな折れ線・棒グラフ",
+          "メンバー増加チャート（参加 vs. 退出）",
+          "アクティビティチャート（時間経過に伴うメッセージ + コマンド）",
+          "追加のセットアップ不要 — 追跡は自動的に開始"
+        ]
+      },
+      "invite-tracker": {
+        "title": "招待トラッカー",
+        "tagline": "誰があなたのコミュニティを成長させているかを正確に見ます。",
+        "description": "Arken Bot は各新規メンバーが参加時にどの招待リンクを使用したかを追跡します。サーバー全体のリーダーボードが、連れてきた人数でメンバーをランク付けし、健全なコミュニティの成長を促します。",
+        "bullets": [
+          "新規メンバーが使用した招待コードを自動的に検出",
+          "/invites — 自分または他のメンバーの招待数を確認",
+          "/invitetop — メダル付きのトップ招待者のサーバーリーダーボード",
+          "ボーナス招待: スタッフがメンバーの招待数を手動で調整可能",
+          "招待トラッカーダッシュボードページからサーバーごとに有効/無効化",
+          "「サーバー管理」を超える追加のボット権限は不要"
+        ]
+      },
+      "counting": {
+        "title": "カウントゲーム",
+        "tagline": "シンプルなコミュニティゲーム — 連続を途切れさせずに一緒に数えます。",
+        "description": "チャンネルを指定すると、メンバーが順番に次の数字を送信します。間違った数字で連続を破ると、全員のカウントがリセットされます。マイルストーンリアクションが大きな数字を祝います。アドオンマネージャーからインストールします。",
+        "bullets": [
+          "任意のテキストチャンネルをカウントチャンネルに指定",
+          "ボットは正しいカウントに ✅、100 ごとに 🎉 でリアクション",
+          "間違った数字はカウントを 1 にリセット",
+          "同じユーザーが2回連続で数えるのを防止（構成可能）",
+          "よりリラックスしたモードのために失敗時リセットをオフに切り替え可能",
+          "ダッシュボードで追跡・表示される最高カウント記録",
+          "/startcounting — カウントチャンネルにゲーム告知の埋め込みを投稿",
+          "アドオンとしてインストール — 使用しないサーバーには影響なし"
+        ]
+      },
+      "music": {
+        "title": "音楽",
+        "tagline": "ボイスチャンネルで直接、高品質な音楽。",
+        "description": "スラッシュコマンドで YouTube から音楽を再生します。キューを管理し、音量を制御し、トラックをループし、パーティーを続けます — すべてアプリを離れずに Discord で。",
+        "bullets": [
+          "スラッシュコマンドによる YouTube オーディオ再生",
+          "キュー管理: トラックの追加、スキップ、削除、表示",
+          "音量制御",
+          "ループモード: 1つのトラックまたはキュー全体を繰り返し",
+          "セッション間の永続的なキュー状態",
+          "Discord コマンドからの再生制御"
+        ]
+      },
+      "custom-commands": {
+        "title": "カスタムコマンド",
+        "tagline": "サーバー独自のコマンドを構築します。",
+        "description": "リッチな埋め込み応答、カスタムロジック、ロールベースの制限で独自のコマンドを作成します — コーディング不要。ダッシュボードから完全に無制限の数のコマンドを構築します。",
+        "bullets": [
+          "スラッシュまたはプレフィックス形式のカスタムコマンドを作成",
+          "タイトル、説明、フィールド、色を持つリッチな埋め込み応答",
+          "変数置換: ユーザーメンション、サーバー名、メンバー数など",
+          "スパムを防ぐユーザーごとのクールダウン",
+          "ロール制限: コマンドを特定のロールに限定",
+          "DM 返信オプション: 呼び出したユーザーに非公開で応答",
+          "代替トリガー名のためのコマンドエイリアス",
+          "無制限のコマンド — 上限なし"
+        ]
+      },
+      "auto-responses": {
+        "title": "自動応答",
+        "tagline": "正規表現パターンに一致するメッセージに自動的に応答します。",
+        "description": "メッセージがパターンに一致するたびに自動応答をトリガーするルールを作成します。ルールは構成可能なフラグ付きの正規表現、プレーンテキストまたは埋め込み応答、任意のメッセージ削除、ロールベースの制限をサポートします。ダッシュボードまたは /autoresponse コマンドからすべてを管理します。",
+        "bullets": [
+          "すべての受信メッセージでの正規表現パターンマッチング",
+          "構成可能な正規表現フラグ（デフォルトで大文字小文字を区別しない）",
+          "ルールごとのプレーンテキストまたはリッチ埋め込み応答",
+          "埋め込み応答用のカスタム hex カラー",
+          "一致時にトリガーとなったメッセージを任意で削除",
+          "削除せずに個々のルールを有効/無効化",
+          "ダッシュボードでルールごとの使用カウンター付きの完全なルールリスト",
+          "ほぼゼロのレイテンシのための Redis キャッシュルールリスト",
+          "/autoresponse またはダッシュボードのコマンドページでルールを管理",
+          "サーバーごとに無制限のルール"
+        ]
+      },
+      "reaction-roles": {
+        "title": "リアクションロール",
+        "tagline": "メンバーがワンクリックで自分にロールを付与できるようにします。",
+        "description": "メンバーが操作できるボタンパネルを使ってロールメニューを作成します。トグル、追加のみ、削除のみのモードをサポート。ダッシュボードから編集すると、パネルは Discord でリアルタイムに変更を反映します。",
+        "bullets": [
+          "ボタンベースのロールパネル（絵文字リアクション不要）",
+          "トグルモード: クリックで追加、再クリックで削除",
+          "追加のみモード: メンバーはロールを取得のみ可能",
+          "削除のみモード: メンバーはロールを削除のみ可能",
+          "異なる構成でサーバーごとに複数のパネル",
+          "リアルタイムの Discord プレビュー更新付きのダッシュボードエディター"
+        ]
+      },
+      "self-roles": {
+        "title": "自己付与ロール",
+        "tagline": "メンバーはシンプルなスラッシュコマンドで自分のロールを選びます。",
+        "description": "管理者は自己付与ロールのリストを定義し、それぞれに短い名前を付けます。メンバーはいつでも /selfassignrole または /selfremoverole を実行できます — リアクションパネルは不要。オートコンプリートで発見が簡単になります。ダッシュボードまたは /selfrole でリストを管理します。",
+        "bullets": [
+          "/selfassignrole <名前> — 即座にロールを取得",
+          "/selfremoverole <名前> — 即座にロールを外す",
+          "オートコンプリートはメンバーが追加または削除できるロールのみを表示",
+          "管理者は /selfrole add / remove / list でリストを管理",
+          "完全なダッシュボードエディター — コマンドなしでエントリを追加または削除",
+          "ボットのロール階層チェックが管理不能なロールの割り当てを防止",
+          "ほぼゼロのレイテンシのための Redis キャッシュロールリスト",
+          "サーバーごとに無制限の自己付与ロール"
+        ]
+      },
+      "welcome": {
+        "title": "ウェルカムと退出",
+        "tagline": "すべての新規メンバーに素晴らしい第一印象を与えます。",
+        "description": "任意のチャンネルで完全にカスタマイズ可能な埋め込みメッセージで新規メンバーを迎え、参加時に任意で DM を送信します。更新されたメンバー数付きの退出通知を受け取り、サーバーの規模を常に把握します。",
+        "bullets": [
+          "カスタマイズ可能なウェルカム埋め込み: タイトル、説明、色、画像",
+          "変数置換: ユーザー名、メンション、サーバー名、メンバー数",
+          "参加時に新規メンバーへ送信される任意の DM",
+          "別チャンネルの退出通知埋め込み",
+          "参加と退出でメンバーカウンターが更新",
+          "ダッシュボードから個別に有効/無効化"
+        ]
+      },
+      "giveaways": {
+        "title": "ギブアウェイ",
+        "tagline": "コミュニティのために公正で自動化されたギブアウェイを実行します。",
+        "description": "Discord で直接ギブアウェイを開始します。タイマーが終了すると、Arken Bot が自動的に当選者を選び、チャンネルで告知します。ダッシュボードで当選者名とともにすべてのアクティブおよび終了したギブアウェイを表示します。",
+        "bullets": [
+          "Discord からスラッシュコマンドでギブアウェイを作成",
+          "構成可能な期間と当選者数",
+          "タイマー終了時の自動当選者選出",
+          "ギブアウェイチャンネルに投稿される当選者告知",
+          "ダッシュボードがすべてのアクティブおよび過去のギブアウェイを表示",
+          "ポータルで当選者名とエントリーを表示"
+        ]
+      },
+      "stream-alerts": {
+        "title": "配信アラート",
+        "tagline": "何かがライブになったり投稿されたりした瞬間にコミュニティに通知します。",
+        "description": "Twitch、Kick、YouTube、X（Twitter）、Reddit、RSS/ポッドキャストのフィードを監視し、新しいコンテンツがあるときに任意の Discord チャンネルに通知埋め込みを自動的に投稿します。手動の告知なしでコミュニティのエンゲージメントを維持します。",
+        "bullets": [
+          "Twitch: チャンネルがライブになったときのアラート",
+          "Kick: Kick.com チャンネルがライブになったときのアラート",
+          "YouTube: チャンネルがライブ配信を開始したときのアラート",
+          "X（Twitter）: ユーザーが新しいツイートを投稿したときのアラート",
+          "Reddit: サブレディットに新しい投稿があったときのアラート",
+          "RSS / ポッドキャスト: フィードが新しいエピソードや投稿を公開したときのアラート",
+          "アラートごとに構成可能なアラートチャンネルとカスタムメッセージ",
+          "プラットフォームをまたいで同時に追跡される複数のアラート"
+        ]
+      },
+      "board-alerts": {
+        "title": "monday.com と Trello のアラート",
+        "tagline": "プロジェクトボードを Discord に取り込みます。",
+        "description": "monday.com と Trello のボードを Discord に接続し、何かが変わった瞬間に詳細な埋め込みを受け取ります — カードやアイテムの作成、移動、名前変更、コメントなど。Discord で調整するチームに最適です。",
+        "bullets": [
+          "monday.com: アイテムの作成/名前変更/移動、列の変更、コメント、アーカイブなどを webhook 経由で",
+          "Trello: カードの作成/移動/名前変更/更新、コメント、ラベル、添付、メンバー、チェックリストの変更",
+          "Trello の webhook は自動的に登録 — 手動の API 呼び出しは不要",
+          "任意の monday.com API トークンが埋め込み内でユーザー ID を実際の表示名に解決",
+          "アラートごとのイベントフィルター — 必要なイベントだけを正確に購読",
+          "埋め込みはカード、アイテム、ボードに直接リンク"
+        ]
+      },
+      "starboard": {
+        "title": "スターボード",
+        "tagline": "サーバーの最高のメッセージを称えます。",
+        "description": "メッセージがリアクションのしきい値に達すると、専用のスターボードチャンネルに自動的にピン留めされます。面白い、役立つ、記憶に残る瞬間を目立たせる素晴らしい方法です。",
+        "bullets": [
+          "構成可能なリアクション絵文字（デフォルト ⭐）",
+          "ボードの対象となる構成可能なリアクションしきい値",
+          "セルフスターの切り替え: 作者が自分の投稿にスターを付けるのを許可または防止",
+          "埋め込み再投稿付きの専用スターボードチャンネル",
+          "ダッシュボードから有効/無効化"
+        ]
+      },
+      "suggestions": {
+        "title": "提案",
+        "tagline": "メンバーにサーバーでの構造化された声を与えます。",
+        "description": "メンバーはスラッシュコマンドで提案を送信します。スタッフはダッシュボードから直接、承認、却下、実装済みとしてマークできます。受理・却下された提案はコミュニティに明確にフィードバックされます。",
+        "bullets": [
+          "メンバーはスラッシュコマンドで提案を送信",
+          "提案は専用チャンネルに埋め込みとして投稿",
+          "スタッフは承認、却下、実装済みとしてマーク可能",
+          "保留中および解決済みのすべての提案のダッシュボードビュー",
+          "ステータス更新は提案チャンネルに再投稿"
+        ]
+      },
+      "birthdays": {
+        "title": "誕生日",
+        "tagline": "メンバーの誕生日を二度と見逃しません。",
+        "description": "メンバーは一度誕生日を登録します。当日、Arken Bot が選択したチャンネルに誕生日の告知を投稿し、任意でちょうど24時間の特別な誕生日ロールを割り当てます。",
+        "bullets": [
+          "メンバーはスラッシュコマンドで誕生日を設定",
+          "正しい日付での自動誕生日告知",
+          "構成可能な告知チャンネル",
+          "当日24時間割り当てられる任意の誕生日ロール",
+          "ダッシュボードが近日中の誕生日を表示"
+        ]
+      },
+      "stats-channels": {
+        "title": "統計チャンネル",
+        "tagline": "ライブのサーバー統計をチャンネルリストに直接表示します。",
+        "description": "名前がライブのサーバー統計を反映して自動的に更新されるボイスチャンネルを作成します。メンバーはコマンドなしで、総メンバー数、ブースト階層などを一目で確認できます。",
+        "bullets": [
+          "自動更新される名前を持つボイスチャンネル",
+          "総メンバー数を表示",
+          "オンラインメンバー数を表示",
+          "サーバーのブースト階層と数を表示",
+          "複数の統計チャンネルを同時に構成",
+          "ダッシュボードで管理される更新間隔"
+        ]
+      },
+      "scheduled-messages": {
+        "title": "予約メッセージ",
+        "tagline": "定期的な告知やリマインダーを自動化します。",
+        "description": "任意のチャンネルに任意の繰り返し間隔で投稿されるメッセージをスケジュールします。週次の告知、サーバールールのリマインダー、イベント通知、あらゆる定期的なコンテンツに最適です。",
+        "bullets": [
+          "任意のチャンネルへの定期的なメッセージをスケジュール",
+          "構成可能な繰り返し間隔（毎時、毎日、毎週、カスタム）",
+          "プレーンテキストまたはリッチ埋め込みメッセージをサポート",
+          "同時にアクティブな複数の予約メッセージ",
+          "ダッシュボードからスケジュールを管理・一時停止"
+        ]
+      },
+      "temp-voice": {
+        "title": "一時ボイスチャンネル",
+        "tagline": "メンバーは必要に応じて自分のボイスチャンネルを取得 — 散らからない。",
+        "description": "1つ以上の参加して作成トリガーチャンネルを構成します。メンバーがトリガーに参加すると、ボットが即座にプライベートボイスチャンネルを作成して移動させます。最後の人が退出すると、チャンネルは自動的に削除されます。",
+        "bullets": [
+          "サーバーごとに複数のトリガーチャンネル — 必要な数だけ構成",
+          "各トリガーは作成されたチャンネルを特定のカテゴリにルーティング可能",
+          "作成されたチャンネルは自動的にメンバーにちなんで命名",
+          "メンバーはオーナー権限を取得: 名前変更、ユーザー制限の設定、権限の管理",
+          "デフォルトで他の全員がチャンネルを表示して参加可能",
+          "最後のメンバーが退出した瞬間に空のチャンネルを削除",
+          "孤立したチャンネルなし — 完全に自動のライフサイクル",
+          "ダッシュボード → 一時ボイスからすべてのトリガーを管理"
+        ]
+      },
+      "anti-nuke": {
+        "title": "アンチニューク",
+        "tagline": "被害が出る前にサーバーのニュークを阻止します。",
+        "description": "アンチニュークは急速な破壊的操作 — チャンネルの大量削除、ロールの大量削除、大量 BAN — を監視し、しきい値を超えた瞬間に違反ユーザーに対して自動的に対処します。",
+        "bullets": [
+          "構成可能なしきい値を超えるチャンネルの大量削除を検出",
+          "構成可能なしきい値を超えるロールの大量削除を検出",
+          "構成可能なしきい値を超える大量 BAN を検出",
+          "対応オプション: 権限剥奪（すべてのロールを削除）、キック、または BAN",
+          "ニューク通知用の構成可能なアラートチャンネル",
+          "すべてのしきい値をダッシュボードから個別に調整可能",
+          "リアルタイムで機能 — 検出と操作の間に遅延なし",
+          "永久 BAN なしで攻撃を阻止するために権限剥奪モードを推奨"
+        ]
+      },
+      "verification": {
+        "title": "認証ゲート",
+        "tagline": "ボットやサブアカウントがコミュニティに到達する前にフィルタリングします。",
+        "description": "新規メンバーは参加時に保留ロールを受け取り、指定された認証チャンネルのみを表示できます。認証ボタンをクリックするとメンバーロールと完全なサーバーアクセスが付与されます。シンプルで効果的、そして完全に自動化されています。",
+        "bullets": [
+          "新規メンバーには参加時に自動的に保留ロールが割り当て",
+          "保留ロールは認証チャンネルを除くすべてのチャンネルへのアクセスを制限",
+          "選択したチャンネルに投稿されるワンクリック認証ボタン",
+          "認証時にメンバーロールが割り当てられ、即座に完全なアクセスを付与",
+          "ダッシュボードから単一のトグルで有効/無効化",
+          "任意のロール階層で機能 — 完全にカスタマイズ可能なロールとチャンネル",
+          "認証後にメンバーを迎えるウェルカムメッセージと互換",
+          "スタッフからのコマンド不要 — 設定後は完全にハンズオフ"
+        ]
+      },
+      "forum-management": {
+        "title": "フォーラム管理",
+        "tagline": "Discord フォーラムチャンネルでテンプレートとタグ付けを自動化します。",
+        "description": "新しいスレッドが作成されたときに自動テンプレートメッセージを受け取り、すべての投稿に自動的にタグを適用するよう、任意の数のフォーラムチャンネルを構成します。各チャンネルは個別に構成されます。",
+        "bullets": [
+          "すべての新しいスレッドの最初の返信としてテンプレートメッセージを自動投稿",
+          "すべての新しい投稿にフォーラムタグを自動適用",
+          "複数のフォーラムチャンネルを個別に構成",
+          "テンプレートメッセージは Discord のマークダウンをすべてサポート",
+          "自動タグ付けはタグ ID を使用 — Discord で任意のタグを右クリックしてコピー",
+          "いつでもフォーラムチャンネルを管理に追加または削除",
+          "変更は新しいスレッドのみに適用 — 既存のスレッドは影響なし",
+          "ボットは各フォーラムチャンネルで「メッセージを送信」と「スレッドを管理」が必要"
+        ]
+      },
+      "polls": {
+        "title": "投票",
+        "tagline": "ボタンベースの投票でコミュニティのフィードバックを集めます。",
+        "description": "/poll コマンドで Discord に直接投票を作成します。メンバーはインタラクティブなボタンで投票し、ダッシュボードはスタッフに結果の表示、投票の終了、投票の削除のための中心的な場所を提供します。",
+        "bullets": [
+          "/poll スラッシュコマンド — 2〜4 個の選択肢で投票を作成",
+          "メンバーは Discord ボタンで投票 — メンバーごとに1票を強制",
+          "サーバー内のすべてのアクティブおよび終了した投票のダッシュボードビュー",
+          "削除せずに新しい投票の受付を停止するために投票を終了",
+          "投票データを削除するためにダッシュボードから投票を削除",
+          "各投票カードは総投票数、選択肢数、作成日を表示",
+          "オープン/終了ステータスが一目でわかる"
+        ]
+      },
+      "reports": {
+        "title": "メンバー通報",
+        "tagline": "メンバーがルール違反者を報告するための構造化されたチャンネル。",
+        "description": "メンバーはモデレーターに DM を送る必要なく /report で通報を送信します。スタッフはダッシュボードですべての保留中の通報を確認し、内部メモを追加し、確認済みまたは却下としてマークします — モデレーションを整理され監査可能に保ちます。",
+        "bullets": [
+          "メンバーが任意のユーザーを報告するための /report スラッシュコマンド",
+          "スタッフアラート用の構成可能な通報通知チャンネル",
+          "ダッシュボードは通報者、対象、理由付きですべての保留中の通報を表示",
+          "スタッフは通報を確認済みとしてマークまたはメモ付きで却下可能",
+          "スタッフのメモは内部的に記録され通報履歴に表示",
+          "保留中と確認済みの通報用の別々のタブ",
+          "保留中の通報は30秒ごとに自動更新",
+          "保留数はすばやく確認できるようタブにバッジとして表示"
+        ]
+      }
+    }
+  },
+  "addonsPage": {
+    "heroBadge": "ファーストパーティおよびコミュニティのアドオン",
+    "heroTitle": "アドオンで <hl>Arken Bot を拡張</hl>",
+    "heroSubtitle": "Arken は、高度なチケット、ゲームサーバーステータス、開発者ツールをカバーする公式のファーストパーティアドオンを提供します。ダッシュボードから任意のアドオンをインストール — または TypeScript SDK で独自のものを構築します。",
+    "buildYourOwn": "独自に構築",
+    "official": "公式",
+    "sdkBadge": "アドオン SDK",
+    "sdkHeading": "独自のアドオンを構築",
+    "sdkDescription": "Arken Addon SDK は、スラッシュコマンド、イベントリスナー、サーバーごとの永続ストレージ、型付き設定、ライフサイクルフックでボットを拡張するために必要なすべてを提供します — すべて TypeScript で。アドオンを構築し、コンパイル済みの dist/ を addons フォルダーに置き、ボットを再起動すると、ランタイムが自動的に登録してすぐにダッシュボードに表示します。",
+    "readSdkDocs": "SDK ドキュメントを読む",
+    "sdkFeatures": [
+      "defineAddon() — 完全な型推論を備えた TypeScript ファーストのエントリーポイント。クラスのボイラープレートは不要",
+      "任意のオートコンプリートハンドラーを組み込んだスラッシュおよびコンテキストメニューコマンド",
+      "once サポート付きの Discord ゲートウェイイベントリスナー。ctx.client は完全な discord.js Client を公開",
+      "PostgreSQL に支えられたサーバーごとに分離されたキー・バリューストレージ — データは常にサーバーごとにスコープ",
+      "アドオン名でタグ付けされた構造化ロガーと、アドオン間メッセージング用の型付きアドオン間イベントバス",
+      "ライフサイクルフック: onLoad、onUnload、onSettingsUpdate、onGuildInstall、onGuildUninstall"
+    ],
+    "ctaHeading": "サーバーを強化する準備はできましたか？",
+    "ctaSubtitle": "Arken Bot を追加し、ダッシュボードから任意のアドオンを有効にします — 無料、永久に。",
+    "ctaAddButton": "サーバーに追加 — 無料です",
+    "viewAllFeatures": "すべての機能を見る",
+    "footHome": "ホーム",
+    "footFeatures": "機能",
+    "footAddons": "アドオン",
+    "footDashboard": "ダッシュボード",
+    "footDocs": "ドキュメント",
+    "footSupport": "サポート",
+    "footPrivacy": "プライバシー",
+    "footTerms": "利用規約",
+    "addons": {
+      "tickets": {
+        "title": "チケットシステム",
+        "tagline": "SLA、トランスクリプト、スタッフポータルを備えたフル機能のサポートデスク。",
+        "description": "Discord 内の完全なカスタマーサポート体験。マルチパネルルーティング、カスタム受付フォーム、ラウンドロビンのスタッフ割り当て、SLA エスカレーション、定型返信、ウェブスタッフポータル — すべて付属。",
+        "bullets": [
+          "異なるチケットカテゴリにルーティングするマルチボタンパネル",
+          "チケットごとのプライベートチャンネルまたはスレッド",
+          "チケットを開くときに収集されるカスタムフォームフィールド",
+          "スタッフの担当、転送、優先度制御",
+          "構成可能な ping ロール付きの多段階 SLA エスカレーション",
+          "スタッフ向けのラウンドロビン自動割り当て",
+          "Discord オートコンプリート付きの定型返信",
+          "終了時にログチャンネルへ投稿される HTML トランスクリプト",
+          "チケット終了時のユーザー1〜5つ星評価",
+          "サードパーティ連携用の Webhook 通知",
+          "完全なスタッフポータル: フィルター、メモ、一括終了、統計"
+        ]
+      },
+      "gameservers": {
+        "title": "ゲームサーバーステータス",
+        "tagline": "任意のゲームサーバーのステータスを Discord から確認・監視します。",
+        "description": "40 以上のゲームタイプのライブプレイヤー数、マップ名、ping、サーバー情報を Discord から直接照会します。オートコンプリートによる素早い検索のためにサーバーをサーバーごとに保存します。サーバーへの管理者アクセスは不要 — 読み取り専用のステータス照会のみ。",
+        "bullets": [
+          "/server status で IP とポートによって任意のゲームサーバーを照会",
+          "40 以上のゲームタイプをサポート: Minecraft（Java + Bedrock）、Rust、ARK、Valheim、CS2、DayZ、FiveM など",
+          "プレイヤー数、マップ、ping、サーバー名を表示",
+          "オートコンプリートによる素早い検索のために名前付きサーバーをサーバーごとに保存",
+          "/server remove と /server list で保存したサーバーを削除または一覧表示",
+          "管理者の認証情報は不要 — ステータス照会のみ",
+          "Minecraft Java はネイティブ SLP を使用。その他はすべて Gamedig を使用"
+        ]
+      },
+      "code-review": {
+        "title": "コードレビュー",
+        "tagline": "Discord 内での即座の静的解析と AI 駆動のコードレビュー。",
+        "description": "/reviewcode を実行し、スニペットをモーダルに貼り付けて即座にフィードバックを得ます — エラーと警告の数、具体的な問題のリスト、フォーマット済み/修正済みのコードバージョン。結果は一時的なので、送信者だけが見られます。任意でより賢い AI 駆動の解析のために Groq API キーを構成します。",
+        "bullets": [
+          "/reviewcode を実行し、Discord モーダルにコードを貼り付け",
+          "結果は一時的 — 送信者だけがフィードバックを見られる",
+          "問題ごとの説明付きのエラー、警告、情報の問題数",
+          "後続のコードブロックとして送信されるフォーマット済み/修正済みコード",
+          "より賢い解析と要約のための Groq API キー経由の AI 駆動モード",
+          "静的解析のフォールバック: JavaScript、TypeScript、Python、JSON、CSS、HTML",
+          "言語の自動検出または言語オプションで手動指定",
+          "サーバーごとの構成可能な最大コード長（500〜4000 文字）"
+        ]
+      }
+    }
+  },
+  "termsPage": {
+    "title": "利用規約",
+    "lastUpdated": "最終更新: {date}",
+    "intro": "本利用規約（「規約」）は、Arken Bot（「本ボット」）および <site>arkenbot.app</site> のウェブダッシュボード（「本サービス」）の利用を規定します。本サービスは Arken Bot（「当社」）が運営します。本ボットを Discord サーバーに追加するか本サービスを利用することにより、あなたは本規約に同意したものとみなされます。同意しない場合は、本サービスを利用しないでください。",
+    "s1Title": "1. 利用資格",
+    "s1p1": "本サービスを利用するには、13歳以上（またはあなたの管轄区域で必要な最低年齢）である必要があります。本サービスを利用することにより、あなたはこの要件を満たしていることを表明します。本サービスの利用は Discord の<tos>利用規約</tos>にも従います。あなたは本規約とは別に Discord のポリシーを遵守する責任を負います。",
+    "s2Title": "2. 許可される利用",
+    "s2p1": "あなたは本規約およびすべての適用法に従って、Discord サーバーを管理するために Arken Bot を利用できます。あなたは以下を行わないことに同意します:",
+    "s2list": [
+      "本サービスを利用していかなる人物を嫌がらせ、虐待、脅迫、または危害を加えること",
+      "本サービスのセキュリティ機能を回避、無効化、または妨害しようとすること",
+      "本サービスを利用してスパム、マルウェア、または迷惑な商業メッセージを配布すること",
+      "本ボットをリバースエンジニアリング、逆コンパイル、またはソースコードを抽出しようとすること",
+      "Discord の利用規約またはコミュニティガイドラインに違反する方法で本サービスを利用すること",
+      "当社の書面による許可なく本サービスを再販、サブライセンス、または商業的に利用すること"
+    ],
+    "s3Title": "3. YouTube API サービス",
+    "s3p1": "Arken Bot は YouTube ライブ配信通知を提供するために <api>YouTube Data API v3</api> を使用します。Arken Bot で YouTube 機能を有効にすることにより、あなたは <tos>YouTube 利用規約</tos>に拘束されることに同意します。",
+    "s3p2": "Arken Bot は、サーバー管理者が構成した Discord チャンネルに通知を送信する目的で、公開されている YouTube 動画のメタデータ（動画のタイトル、ライブ状態、サムネイル）にのみアクセスします。当社はコンテンツのアップロード、非公開データへのアクセス、または YouTube アカウントの管理のために YouTube API サービスを使用しません。",
+    "s3p3": "Google のプライバシーポリシーは、YouTube API サービスを通じて処理されるデータに適用されます: <privacy>policies.google.com/privacy</privacy>。",
+    "s4Title": "4. Reddit Data API",
+    "s4p1": "Arken Bot はサブレディットフィード通知を提供するために <api>Reddit Data API</api> を使用します。Arken Bot で Reddit 機能を有効にすることにより、あなたはこの機能が <terms>Reddit Data API 規約</terms>および <agreement>Reddit ユーザー契約</agreement>に従うことを認めます。",
+    "s4p2": "Arken Bot は、Discord チャンネルに通知を送信する目的のみのために、サーバー管理者が構成したサブレディットから公開されている投稿のメタデータ（投稿のタイトル、リンク、投稿者のユーザー名）にのみアクセスします。当社は Reddit ユーザーアカウント、非公開コミュニティ、または公開メタデータを超える投稿内容にアクセスせず、Reddit コンテンツをアーカイブまたは再配布しません。",
+    "s4p3": "Reddit のプライバシーポリシーは、Reddit Data API を通じて処理されるデータに適用されます: <privacy>reddit.com/policies/privacy-policy</privacy>。",
+    "s5Title": "5. Monday.com および Trello 連携",
+    "s5p1": "Arken Bot は、サーバー管理者が接続した <monday>monday.com</monday> および <trello>Trello</trello> ボードから webhook 通知を受信し、それらを Discord 通知として中継できます。これらの機能を有効にすることにより、あなたは基盤となるプラットフォームの利用がそれぞれ <mondayTos>monday.com 利用規約</mondayTos>および <atlassian>Atlassian Cloud 利用規約</atlassian>に引き続き従うことを認めます。",
+    "s5p2": "あなたは、特定のボードを接続し、そのアクティビティを Discord サーバーのメンバーと共有する権利を有していることを確認する責任を負います。webhook ペイロードは通知を構築するために一時的に処理され、保存されません。当社が保持する構成データの詳細については、<privacy>プライバシーポリシー</privacy>をご覧ください。",
+    "s6Title": "6. ユーザーコンテンツと責任",
+    "s6p1": "あなたは、カスタムボットメッセージ、モデレーション操作、アラート構成を含め、本サービスを通じて構成されたすべてのコンテンツについて単独で責任を負います。当社はユーザーが生成した構成を審査または承認しません。",
+    "s6p2": "Arken Bot を Discord サーバーに追加するサーバー管理者は、モデレーション、未成年者からのデータ収集、メンバーのプライバシーに関する規則を含め、本ボットの利用が適用法および Discord のポリシーに準拠することを保証する責任を負います。",
+    "s7Title": "7. サービスの可用性",
+    "s7p1": "Arken Bot は「現状のまま」および「利用可能な範囲で」提供されます。当社は中断のない、エラーのない動作を保証しません。当社はメンテナンス、セキュリティ、その他の理由により、いつでも予告なく本サービスを停止または中止することがあります。",
+    "s7p2": "当社は、ダウンタイム、見逃された通知（配信アラートを含む）、またはサービスの中断によって生じたデータ損失に起因するいかなる損失についても責任を負いません。",
+    "s8Title": "8. 終了",
+    "s8p1": "当社は、本規約に違反したと判断した場合、当社の単独の裁量により、任意の Discord サーバーから Arken Bot を削除するか、任意のユーザーまたはサーバーのアクセスを停止する権利を留保します。あなたは Discord のサーバー設定を通じていつでもサーバーから本ボットを削除できます。",
+    "s8p2": "削除または終了後、あなたは <email>support@arkenbot.app</email> までご連絡いただくことで、関連するすべてのデータの削除を要求できます。",
+    "s9Title": "9. 保証の否認",
+    "s9p1": "本サービスは、商品性、特定目的への適合性、非侵害の保証を含むがこれらに限定されない、明示または黙示のいかなる種類の保証もなく提供されます。当社は、本サービスがあなたの要件を満たすこと、または安全で中断がなくエラーがないことを保証しません。",
+    "s10Title": "10. 責任の制限",
+    "s10p1": "適用法で許容される最大限の範囲で、Arken Bot およびその運営者は、そのような損害の可能性について通知されていた場合であっても、あなたの本サービスの利用または利用不能から生じる間接的、付随的、特別、結果的、または懲罰的損害について責任を負いません。",
+    "s11Title": "11. 本規約の変更",
+    "s11p1": "当社はいつでも本規約を更新することがあります。このページ上部の「最終更新」日は、変更が最後に行われた時点を反映します。変更が掲載された後も本サービスを継続して利用することは、更新された規約の受諾を構成します。",
+    "s12Title": "12. お問い合わせ",
+    "s12p1": "本規約についてご質問がある場合は、<email>support@arkenbot.app</email> までご連絡いただくか、当社の<support>サポートサーバー</support>に参加してください。"
   }
 }
