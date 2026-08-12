@@ -18,6 +18,7 @@ import {
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { errorEmbed, successEmbed } from '../../utils/embed.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 import { prisma } from '../../database.js';
 import { getGuildSettings } from '../../utils/settings.js';
 
@@ -28,44 +29,49 @@ function buildReportEmbed(report: {
   reason: string; status: string;
   reviewerTag?: string | null; staffNote?: string | null;
   createdAt: Date;
-}, disabled = false): EmbedBuilder {
+}, loc: string, disabled = false): EmbedBuilder {
   const statusColors: Record<string, number> = {
     pending: 0xf1c40f,
     dismissed: 0x95a5a6,
     reviewed: 0x2ecc71,
   };
+  const statusLabels: Record<string, string> = {
+    pending: t('cmd.report.statusPending', loc),
+    dismissed: t('cmd.report.statusDismissed', loc),
+    reviewed: t('cmd.report.statusReviewed', loc),
+  };
   const embed = new EmbedBuilder()
     .setColor(statusColors[report.status] ?? 0xf1c40f)
-    .setTitle('📋 Member Report')
+    .setTitle(t('cmd.report.embedTitle', loc))
     .addFields(
-      { name: 'Reporter', value: `<@${report.reporterId}> (${report.reporterTag})`, inline: true },
-      { name: 'Target', value: `<@${report.targetId}> (${report.targetTag})`, inline: true },
-      { name: 'Reason', value: report.reason },
-      { name: 'Status', value: report.status.charAt(0).toUpperCase() + report.status.slice(1), inline: true },
+      { name: t('cmd.report.fieldReporter', loc), value: `<@${report.reporterId}> (${report.reporterTag})`, inline: true },
+      { name: t('cmd.report.fieldTarget', loc), value: `<@${report.targetId}> (${report.targetTag})`, inline: true },
+      { name: t('cmd.report.fieldReason', loc), value: report.reason },
+      { name: t('cmd.report.fieldStatus', loc), value: statusLabels[report.status] ?? report.status, inline: true },
     )
     .setTimestamp(report.createdAt);
 
   if (report.reviewerTag) {
-    embed.addFields({ name: 'Reviewed By', value: report.reviewerTag, inline: true });
+    embed.addFields({ name: t('cmd.report.fieldReviewedBy', loc), value: report.reviewerTag, inline: true });
   }
   if (report.staffNote) {
-    embed.addFields({ name: 'Staff Note', value: report.staffNote });
+    embed.addFields({ name: t('cmd.report.fieldStaffNote', loc), value: report.staffNote });
   }
 
   return embed;
 }
 
-function buildReportButtons(reportId: string, disabled = false): ActionRowBuilder<ButtonBuilder> {
+function buildReportButtons(reportId: string, loc: string, disabled = false): ActionRowBuilder<ButtonBuilder> {
   return new ActionRowBuilder<ButtonBuilder>().addComponents(
     new ButtonBuilder()
       .setCustomId(`report:dismiss:${reportId}`)
-      .setLabel('Dismiss')
+      .setLabel(t('cmd.report.btnDismiss', loc))
       .setStyle(ButtonStyle.Secondary)
       .setEmoji('🚫')
       .setDisabled(disabled),
     new ButtonBuilder()
       .setCustomId(`report:action:${reportId}`)
-      .setLabel('Take Action')
+      .setLabel(t('cmd.report.btnTakeAction', loc))
       .setStyle(ButtonStyle.Danger)
       .setEmoji('⚠️')
       .setDisabled(disabled),
@@ -82,9 +88,10 @@ const command: BotCommand = {
 
   async execute(interaction: ChatInputCommandInteraction, _client: BotClient) {
     await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+    const loc = await resolveUserLocale(interaction);
 
     if (!interaction.guild) {
-      await interaction.editReply({ embeds: [errorEmbed('Error', 'This command must be used in a server.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('common.error', loc), t('common.notInServer', loc))] });
       return;
     }
 
@@ -92,7 +99,7 @@ const command: BotCommand = {
     const reason = interaction.options.getString('reason', true);
 
     if (targetUser.id === interaction.user.id) {
-      await interaction.editReply({ embeds: [errorEmbed('Invalid Target', 'You cannot report yourself.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('moderation.cannotBanSelfTitle', loc), t('cmd.report.cannotSelf', loc))] });
       return;
     }
 
@@ -123,8 +130,8 @@ const command: BotCommand = {
           reason: report.reason,
           status: report.status,
           createdAt: report.createdAt,
-        });
-        const row = buildReportButtons(report.id);
+        }, loc);
+        const row = buildReportButtons(report.id, loc);
 
         const msg = await (reportChannel as import('discord.js').TextChannel).send({
           embeds: [embed],
@@ -138,7 +145,7 @@ const command: BotCommand = {
       }
     }
 
-    await interaction.editReply({ embeds: [successEmbed('Report Submitted', 'Your report has been submitted to the moderation team.')] });
+    await interaction.editReply({ embeds: [successEmbed(t('cmd.report.submittedTitle', loc), t('cmd.report.submitted', loc))] });
   },
 
   async handleButton(interaction: ButtonInteraction, _client: BotClient) {
@@ -149,6 +156,7 @@ const command: BotCommand = {
     if (!reportId || !interaction.guild) return;
 
     if (action === 'dismiss') {
+      const loc = await resolveUserLocale(interaction);
       const report = await prisma.report.findUnique({ where: { id: reportId } });
       if (!report || report.guildId !== interaction.guild.id) return;
 
@@ -175,9 +183,9 @@ const command: BotCommand = {
         reviewerTag: updatedReport.reviewerTag,
         staffNote: updatedReport.staffNote,
         createdAt: updatedReport.createdAt,
-      }, true);
+      }, loc, true);
 
-      await interaction.update({ embeds: [embed], components: [buildReportButtons(reportId, true)] });
+      await interaction.update({ embeds: [embed], components: [buildReportButtons(reportId, loc, true)] });
     }
 
     if (action === 'action') {
@@ -203,6 +211,7 @@ const command: BotCommand = {
     const reportId = parts[2];
     if (!reportId || !interaction.guild) return;
 
+    const loc = await resolveUserLocale(interaction);
     const staffNote = interaction.fields.getTextInputValue('staffNote') || null;
 
     await prisma.report.update({
@@ -218,7 +227,7 @@ const command: BotCommand = {
 
     const updatedReport = await prisma.report.findUnique({ where: { id: reportId } });
     if (!updatedReport) {
-      await interaction.reply({ content: 'Report not found.', flags: MessageFlags.Ephemeral });
+      await interaction.reply({ content: t('cmd.report.notFound', loc), flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -232,7 +241,7 @@ const command: BotCommand = {
       reviewerTag: updatedReport.reviewerTag,
       staffNote: updatedReport.staffNote,
       createdAt: updatedReport.createdAt,
-    }, true);
+    }, loc, true);
 
     // ModalSubmitInteraction has no .update(); fetch the original report message and edit it
     if (updatedReport.messageId && updatedReport.reviewChannelId && interaction.guild) {
@@ -241,11 +250,11 @@ const command: BotCommand = {
         const originalMsg = await (reportChannel as import('discord.js').TextChannel).messages
           .fetch(updatedReport.messageId).catch(swallow);
         if (originalMsg) {
-          await originalMsg.edit({ embeds: [embed], components: [buildReportButtons(reportId, true)] }).catch(swallow);
+          await originalMsg.edit({ embeds: [embed], components: [buildReportButtons(reportId, loc, true)] }).catch(swallow);
         }
       }
     }
-    await interaction.reply({ content: 'Report marked as reviewed.', flags: MessageFlags.Ephemeral });
+    await interaction.reply({ content: t('cmd.report.markedReviewed', loc), flags: MessageFlags.Ephemeral });
   },
 };
 

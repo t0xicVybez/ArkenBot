@@ -9,6 +9,7 @@ import { SettingsSection } from '@/components/SettingsSection';
 import toast from 'react-hot-toast';
 import { useState, type ComponentType } from 'react';
 import { Plus, Trash2, Pencil, X } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 export interface PlatformConfig {
   value: string;
@@ -57,6 +58,8 @@ const LIVE_PLATFORMS = new Set(['twitch', 'kick', 'youtube']);
 export function FeedAlertsPage({ title, description, icon: Icon, platforms, notice }: FeedAlertsPageProps) {
   const { guildId } = useParams() as { guildId: string };
   const queryClient = useQueryClient();
+  const t = useTranslations('feedAlerts');
+  const tc = useTranslations('common');
 
   const platformValues = platforms.map((p) => p.value);
   const defaultPlatform = platforms[0].value;
@@ -90,45 +93,45 @@ export function FeedAlertsPage({ title, description, icon: Icon, platforms, noti
   const createMutation = useMutation({
     mutationFn: (data: object) => streamAlertsApi.create(guildId, data),
     onSuccess: () => {
-      toast.success('Feed alert created!');
+      toast.success(t('created'));
       queryClient.invalidateQueries({ queryKey });
       setShowForm(false);
       setForm({ platform: defaultPlatform, username: '', discordChannelId: '', message: '' });
     },
-    onError: () => toast.error('Failed to create feed alert'),
+    onError: () => toast.error(t('createError')),
   });
 
   const toggleMutation = useMutation({
     mutationFn: ({ id, enabled }: { id: string; enabled: boolean }) =>
       streamAlertsApi.update(guildId, id, { enabled }),
     onSuccess: () => queryClient.invalidateQueries({ queryKey }),
-    onError: () => toast.error('Failed to update alert'),
+    onError: () => toast.error(t('updateError')),
   });
 
   const editMutation = useMutation({
     mutationFn: ({ id, payload }: { id: string; payload: object }) =>
       streamAlertsApi.update(guildId, id, payload),
     onSuccess: () => {
-      toast.success('Alert updated!');
+      toast.success(t('updated'));
       queryClient.invalidateQueries({ queryKey });
       setEditingId(null);
     },
-    onError: () => toast.error('Failed to update alert'),
+    onError: () => toast.error(t('updateError')),
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => streamAlertsApi.delete(guildId, id),
     onSuccess: () => {
-      toast.success('Alert deleted');
+      toast.success(t('deleted'));
       queryClient.invalidateQueries({ queryKey });
     },
-    onError: () => toast.error('Failed to delete alert'),
+    onError: () => toast.error(t('deleteError')),
   });
 
   const handleCreate = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.discordChannelId) return toast.error('Discord channel is required');
-    if (!form.username.trim()) return toast.error('Source / URL is required');
+    if (!form.discordChannelId) return toast.error(t('channelRequired'));
+    if (!form.username.trim()) return toast.error(t('sourceRequired'));
     createMutation.mutate({
       platform: form.platform,
       channelUsername: form.username.trim(),
@@ -176,7 +179,7 @@ export function FeedAlertsPage({ title, description, icon: Icon, platforms, noti
         <div className="page-head-actions">
           <button onClick={() => setShowForm((v) => !v)} className="btn-primary">
             <Plus className="w-4 h-4" />
-            New alert
+            {t('newAlert')}
           </button>
         </div>
       </div>
@@ -188,7 +191,7 @@ export function FeedAlertsPage({ title, description, icon: Icon, platforms, noti
       {/* Platform filter chips */}
       {platforms.length > 1 && alerts.length > 0 && (
         <div className="flex flex-wrap gap-2">
-          {[{ value: 'all', label: 'All' }, ...platforms].map((p) => (
+          {[{ value: 'all', label: t('all') }, ...platforms].map((p) => (
             <button
               key={p.value}
               onClick={() => setFilter(p.value)}
@@ -205,12 +208,12 @@ export function FeedAlertsPage({ title, description, icon: Icon, platforms, noti
       )}
 
       {showForm && (
-        <SettingsSection title="New Alert" description="Post a notification in Discord whenever this feed has new activity.">
+        <SettingsSection title={t('newAlertTitle')} description={t('newAlertDesc')}>
           <form onSubmit={handleCreate} className="space-y-4">
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {platforms.length > 1 && (
                 <div>
-                  <label className="label">Platform</label>
+                  <label className="label">{t('platform')}</label>
                   <select
                     className="input"
                     value={form.platform}
@@ -233,13 +236,13 @@ export function FeedAlertsPage({ title, description, icon: Icon, platforms, noti
                 />
               </div>
               <div>
-                <label className="label">Discord Channel</label>
+                <label className="label">{t('discordChannel')}</label>
                 <select
                   className="input"
                   value={form.discordChannelId}
                   onChange={(e) => setForm((f) => ({ ...f, discordChannelId: e.target.value }))}
                 >
-                  <option value="">Select a channel</option>
+                  <option value="">{t('selectChannel')}</option>
                   {textChannels.map((ch) => (
                     <option key={ch.id} value={ch.id}>#{ch.name}</option>
                   ))}
@@ -247,7 +250,7 @@ export function FeedAlertsPage({ title, description, icon: Icon, platforms, noti
               </div>
             </div>
             <div>
-              <label className="label">Custom Message <span className="text-gray-500 font-normal">(optional)</span></label>
+              <label className="label">{t('customMessage')} <span className="text-gray-500 font-normal">{t('optional')}</span></label>
               <input
                 type="text"
                 className="input"
@@ -255,13 +258,13 @@ export function FeedAlertsPage({ title, description, icon: Icon, platforms, noti
                 value={form.message}
                 onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))}
               />
-              <p className="text-xs text-gray-500 mt-1">Variables: {currentPlatformConfig.variables}</p>
+              <p className="text-xs text-gray-500 mt-1">{t('variables')} {currentPlatformConfig.variables}</p>
             </div>
             <div className="flex gap-2">
               <button type="submit" disabled={createMutation.isPending} className="btn-primary">
-                {createMutation.isPending ? 'Creating…' : 'Create Alert'}
+                {createMutation.isPending ? t('creating') : t('createButton')}
               </button>
-              <button type="button" onClick={() => setShowForm(false)} className="btn-secondary">Cancel</button>
+              <button type="button" onClick={() => setShowForm(false)} className="btn-secondary">{tc('cancel')}</button>
             </div>
           </form>
         </SettingsSection>
@@ -270,9 +273,9 @@ export function FeedAlertsPage({ title, description, icon: Icon, platforms, noti
       {alerts.length === 0 && !showForm && (
         <div className="card empty-state">
           <div className="empty-state-icon"><Plus className="w-6 h-6" /></div>
-          <h4>No alerts yet</h4>
-          <p>Get a notification in your server the moment there&apos;s something new — takes under a minute to set up.</p>
-          <button onClick={() => setShowForm(true)} className="btn-primary">Create your first alert</button>
+          <h4>{t('noAlertsTitle')}</h4>
+          <p>{t('noAlertsDesc')}</p>
+          <button onClick={() => setShowForm(true)} className="btn-primary">{t('createFirst')}</button>
         </div>
       )}
 
@@ -281,7 +284,7 @@ export function FeedAlertsPage({ title, description, icon: Icon, platforms, noti
         <div className="card p-0 overflow-hidden">
           <div className="px-4 py-3 border-b border-[var(--border-subtle)]">
             <span className="text-[13px] font-bold text-white">
-              {visibleAlerts.length} alert{visibleAlerts.length === 1 ? '' : 's'}
+              {t('alertCount', { count: visibleAlerts.length })}
             </span>
           </div>
           {visibleAlerts.map((alert) => {
@@ -301,18 +304,18 @@ export function FeedAlertsPage({ title, description, icon: Icon, platforms, noti
                   <div className="flex-1 min-w-0">
                     <p className="text-[13.5px] font-semibold text-white truncate">{alert.channelUsername}</p>
                     <p className="text-[12px] text-[var(--text-muted)] truncate">
-                      {pc?.label ?? alert.platform} · posts to {ch ? `#${ch.name}` : alert.discordChannelId}
+                      {pc?.label ?? alert.platform} · {t('postsTo')} {ch ? `#${ch.name}` : alert.discordChannelId}
                     </p>
                     {!alert.enabled && alert.lastError && (
                       <p className="text-[11px] text-red-400/90 truncate mt-0.5" title={alert.lastError}>
-                        Auto-disabled: {alert.lastError}
+                        {t('autoDisabled', { error: alert.lastError })}
                       </p>
                     )}
                   </div>
                   {isLive && (
                     <span className="badge-success flex-shrink-0">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                      Live now
+                      {t('liveNow')}
                     </span>
                   )}
                   <Toggle
@@ -321,10 +324,10 @@ export function FeedAlertsPage({ title, description, icon: Icon, platforms, noti
                     disabled={toggleMutation.isPending}
                   />
                   <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button onClick={() => handleEditOpen(alert)} className="p-1.5 rounded-md text-gray-400 hover:text-white hover:bg-white/[0.06]" title="Edit">
+                    <button onClick={() => handleEditOpen(alert)} className="p-1.5 rounded-md text-gray-400 hover:text-white hover:bg-white/[0.06]" title={t('edit')}>
                       <Pencil className="w-3.5 h-3.5" />
                     </button>
-                    <button onClick={() => deleteMutation.mutate(alert.id)} disabled={deleteMutation.isPending} className="p-1.5 rounded-md text-gray-500 hover:text-red-400 hover:bg-red-500/10" title="Delete">
+                    <button onClick={() => deleteMutation.mutate(alert.id)} disabled={deleteMutation.isPending} className="p-1.5 rounded-md text-gray-500 hover:text-red-400 hover:bg-red-500/10" title={t('delete')}>
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
                   </div>
@@ -334,24 +337,24 @@ export function FeedAlertsPage({ title, description, icon: Icon, platforms, noti
                   <div className="px-4 py-4 bg-[var(--bg-base)]/60 border-t border-[var(--border-subtle)]">
                     <form onSubmit={handleUpdate} className="space-y-3">
                       <div className="flex items-center justify-between mb-1">
-                        <p className="text-sm font-semibold text-white">Edit Alert</p>
+                        <p className="text-sm font-semibold text-white">{t('editAlert')}</p>
                         <button type="button" onClick={() => setEditingId(null)} className="text-gray-500 hover:text-white">
                           <X className="w-4 h-4" />
                         </button>
                       </div>
                       <div className="grid gap-3 sm:grid-cols-2">
                         <div>
-                          <label className="label">Source / URL</label>
+                          <label className="label">{t('sourceUrl')}</label>
                           <input type="text" className="input" value={editForm.username} onChange={(e) => setEditForm((f) => ({ ...f, username: e.target.value }))} />
                         </div>
                         <div>
-                          <label className="label">Custom Message</label>
+                          <label className="label">{t('customMessage')}</label>
                           <input type="text" className="input" value={editForm.message} onChange={(e) => setEditForm((f) => ({ ...f, message: e.target.value }))} />
                         </div>
                       </div>
                       <div className="flex gap-2">
-                        <button type="submit" disabled={editMutation.isPending} className="btn-primary">{editMutation.isPending ? 'Saving…' : 'Save'}</button>
-                        <button type="button" onClick={() => setEditingId(null)} className="btn-secondary">Cancel</button>
+                        <button type="submit" disabled={editMutation.isPending} className="btn-primary">{editMutation.isPending ? t('saving') : tc('save')}</button>
+                        <button type="button" onClick={() => setEditingId(null)} className="btn-secondary">{tc('cancel')}</button>
                       </div>
                     </form>
                   </div>

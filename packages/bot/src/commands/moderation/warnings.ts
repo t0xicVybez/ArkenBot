@@ -11,6 +11,7 @@ import {
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { errorEmbed } from '../../utils/embed.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 import { prisma } from '../../database.js';
 import { getGuildSettings } from '../../utils/settings.js';
 import { COLORS } from '@arkenbot/shared';
@@ -30,10 +31,11 @@ const command: BotCommand = {
 
   async execute(interaction: ChatInputCommandInteraction, _client: BotClient) {
     await interaction.deferReply();
+    const loc = await resolveUserLocale(interaction);
 
     const settings = await getGuildSettings(interaction.guildId!);
     if (settings && !settings.moderationEnabled) {
-      await interaction.editReply({ embeds: [errorEmbed('Moderation Disabled', 'Moderation commands are disabled for this server.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('moderation.disabledTitle', loc), t('moderation.disabled', loc))] });
       return;
     }
 
@@ -41,7 +43,7 @@ const command: BotCommand = {
     const includeCleared = interaction.options.getBoolean('include_cleared') ?? false;
 
     if (!interaction.guild) {
-      await interaction.editReply({ embeds: [errorEmbed('Error', 'This command must be used in a server.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('common.error', loc), t('common.notInServer', loc))] });
       return;
     }
 
@@ -60,8 +62,8 @@ const command: BotCommand = {
         embeds: [
           new EmbedBuilder()
             .setColor(COLORS.SUCCESS)
-            .setTitle('✅ No Warnings')
-            .setDescription(`${targetUser.tag} has no ${includeCleared ? '' : 'active '}warnings.`),
+            .setTitle(t('cmd.warnings.noneTitle', loc))
+            .setDescription(includeCleared ? t('cmd.warnings.noneAll', loc, { user: targetUser.tag }) : t('cmd.warnings.noneActive', loc, { user: targetUser.tag })),
         ],
       });
       return;
@@ -69,19 +71,19 @@ const command: BotCommand = {
 
     const embed = new EmbedBuilder()
       .setColor(COLORS.WARNING)
-      .setTitle(`⚠️ Warnings for ${targetUser.tag}`)
+      .setTitle(t('cmd.warnings.title', loc, { user: targetUser.tag }))
       .setThumbnail(targetUser.displayAvatarURL())
       .setDescription(
         warnings
           .map(
             (w, i) =>
-              `**${i + 1}.** ${w.reason}\n> By <@${w.moderatorId}> on <t:${Math.floor(w.createdAt.getTime() / 1000)}:d>${
-                !w.active ? ' ~~(cleared)~~' : ''
+              `**${i + 1}.** ${w.reason}\n> ${t('cmd.warnings.lineMeta', loc, { moderator: `<@${w.moderatorId}>`, date: `<t:${Math.floor(w.createdAt.getTime() / 1000)}:d>` })}${
+                !w.active ? ` ${t('cmd.warnings.cleared', loc)}` : ''
               }`
           )
           .join('\n\n')
       )
-      .setFooter({ text: `Showing ${warnings.length} warning(s)` });
+      .setFooter({ text: t('cmd.warnings.footer', loc, { count: warnings.length }) });
 
     await interaction.editReply({ embeds: [embed] });
   },

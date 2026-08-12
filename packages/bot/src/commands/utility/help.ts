@@ -18,14 +18,15 @@ import type { BotClient } from '../../client.js';
 import { COLORS, ADDON_CATEGORY_PREFIX } from '@arkenbot/shared';
 import { prisma } from '../../database.js';
 import { isAddonEnabledForGuild } from '../../utils/settings.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 
 import { swallow } from '../../logger.js';
-const CATEGORY_META: Record<string, { emoji: string; label: string }> = {
-  moderation: { emoji: '🛡️', label: 'Moderation' },
-  leveling:   { emoji: '📈', label: 'Leveling'   },
-  community:  { emoji: '🌐', label: 'Community'  },
-  music:      { emoji: '🎵', label: 'Music'       },
-  utility:    { emoji: '🔧', label: 'Utility'     },
+const CATEGORY_META: Record<string, { emoji: string; labelKey: string }> = {
+  moderation: { emoji: '🛡️', labelKey: 'cmd.help.cat.moderation' },
+  leveling:   { emoji: '📈', labelKey: 'cmd.help.cat.leveling'   },
+  community:  { emoji: '🌐', labelKey: 'cmd.help.cat.community'  },
+  music:      { emoji: '🎵', labelKey: 'cmd.help.cat.music'      },
+  utility:    { emoji: '🔧', labelKey: 'cmd.help.cat.utility'    },
 };
 
 interface CmdOption { type: number; name: string; description: string; options?: CmdOption[] }
@@ -40,8 +41,8 @@ const SUB_COMMAND_GROUP = 2;
  * Addon categories (prefixed with `addon:`) receive a generic puzzle-piece emoji
  * and a title-cased label derived from the addon name.
  */
-function getCategoryMeta(cat: string): { emoji: string; label: string } {
-  if (CATEGORY_META[cat]) return CATEGORY_META[cat]!;
+function getCategoryMeta(cat: string, loc: string): { emoji: string; label: string } {
+  if (CATEGORY_META[cat]) return { emoji: CATEGORY_META[cat]!.emoji, label: t(CATEGORY_META[cat]!.labelKey, loc) };
   const label = cat.replace(/^addon:/i, '').replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
   return { emoji: '🧩', label };
 }
@@ -59,6 +60,7 @@ async function buildPages(
   client: BotClient,
   member: GuildMember | null,
   guildId: string | null,
+  loc: string,
 ): Promise<EmbedBuilder[]> {
   const [disabledRows, rolePerms] = await Promise.all([
     guildId ? prisma.disabledCommand.findMany({ where: { guildId }, select: { commandName: true } }) : Promise.resolve([]),
@@ -125,20 +127,20 @@ async function buildPages(
   const overview = new EmbedBuilder()
     .setColor(COLORS.INFO)
     .setAuthor({ name: botName, iconURL: botAvatar })
-    .setTitle('📋 Command Reference')
+    .setTitle(t('cmd.help.overviewTitle', loc))
     .setDescription(
-      `**${totalCmds} commands** available to you across **${sortedCats.length} categories**.\n` +
-      `Use ◀ ▶ to browse, or click **Overview** to return here.\n​`,
+      t('cmd.help.overviewDesc', loc, { commands: totalCmds, categories: sortedCats.length }) + '\n' +
+      t('cmd.help.overviewHint', loc) + '\n​',
     );
 
   for (const cat of sortedCats) {
     const cmds = grouped.get(cat)!;
-    const meta = getCategoryMeta(cat);
+    const meta = getCategoryMeta(cat, loc);
     const names = cmds
       .map((c) => `\`/${(c.data as { name: string }).name}\``)
       .sort()
       .join('  ');
-    overview.addFields({ name: `${meta.emoji} ${meta.label}  ·  ${cmds.length} cmd${cmds.length !== 1 ? 's' : ''}`, value: names, inline: false });
+    overview.addFields({ name: `${meta.emoji} ${meta.label}  ·  ${t('cmd.help.cmdCount', loc, { count: cmds.length })}`, value: names, inline: false });
   }
 
   pages.push(overview);
@@ -149,7 +151,7 @@ async function buildPages(
       const bn = (b.data as { name: string }).name;
       return an.localeCompare(bn);
     });
-    const meta = getCategoryMeta(cat);
+    const meta = getCategoryMeta(cat, loc);
 
     const embed = new EmbedBuilder()
       .setColor(COLORS.INFO)
@@ -174,7 +176,7 @@ async function buildPages(
   }
 
   pages.forEach((p, i) =>
-    p.setFooter({ text: `Page ${i + 1} of ${pages.length}  ·  ${totalCmds} commands available to you` }),
+    p.setFooter({ text: t('cmd.help.pageFooter', loc, { page: i + 1, total: pages.length, commands: totalCmds }) }),
   );
 
   return pages;
@@ -184,7 +186,7 @@ async function buildPages(
  * Constructs the navigation button row for the help paginator.
  * Previous and next buttons are disabled at the boundary pages.
  */
-function makeRow(page: number, total: number) {
+function makeRow(page: number, total: number, loc: string) {
   return new ActionRowBuilder<ButtonBuilder>().addComponents(
     new ButtonBuilder()
       .setCustomId('help_prev')
@@ -193,7 +195,7 @@ function makeRow(page: number, total: number) {
       .setDisabled(page === 0),
     new ButtonBuilder()
       .setCustomId('help_home')
-      .setLabel('Overview')
+      .setLabel(t('cmd.help.overview', loc))
       .setStyle(ButtonStyle.Primary)
       .setDisabled(page === 0),
     new ButtonBuilder()
@@ -213,16 +215,17 @@ const command: BotCommand = {
   async execute(interaction: ChatInputCommandInteraction, client: BotClient) {
     await interaction.deferReply({ ephemeral: true });
 
+    const loc = await resolveUserLocale(interaction);
     const member = interaction.guild
       ? await interaction.guild.members.fetch(interaction.user.id).catch(swallow)
       : null;
 
-    const pages = await buildPages(client, member, interaction.guildId);
+    const pages = await buildPages(client, member, interaction.guildId, loc);
     let page = 0;
 
     const msg = await interaction.editReply({
       embeds:     [pages[0]!],
-      components: [makeRow(0, pages.length)],
+      components: [makeRow(0, pages.length, loc)],
     });
 
     const collector = msg.createMessageComponentCollector({
@@ -232,19 +235,19 @@ const command: BotCommand = {
 
     collector.on('collect', async (i) => {
       if (i.user.id !== interaction.user.id) {
-        await i.reply({ content: 'This menu belongs to someone else.', ephemeral: true });
+        await i.reply({ content: t('cmd.help.notYourMenu', loc), ephemeral: true });
         return;
       }
       if (i.customId === 'help_prev') page = Math.max(0, page - 1);
       else if (i.customId === 'help_next') page = Math.min(pages.length - 1, page + 1);
       else if (i.customId === 'help_home') page = 0;
-      await i.update({ embeds: [pages[page]!], components: [makeRow(page, pages.length)] });
+      await i.update({ embeds: [pages[page]!], components: [makeRow(page, pages.length, loc)] });
     });
 
     collector.on('end', async () => {
       const disabled = new ActionRowBuilder<ButtonBuilder>().addComponents(
         new ButtonBuilder().setCustomId('help_prev').setEmoji('◀').setStyle(ButtonStyle.Secondary).setDisabled(true),
-        new ButtonBuilder().setCustomId('help_home').setLabel('Overview').setStyle(ButtonStyle.Primary).setDisabled(true),
+        new ButtonBuilder().setCustomId('help_home').setLabel(t('cmd.help.overview', loc)).setStyle(ButtonStyle.Primary).setDisabled(true),
         new ButtonBuilder().setCustomId('help_next').setEmoji('▶').setStyle(ButtonStyle.Secondary).setDisabled(true),
       );
       await interaction.editReply({ components: [disabled] }).catch(swallow);

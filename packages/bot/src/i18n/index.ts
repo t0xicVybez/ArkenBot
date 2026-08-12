@@ -26,7 +26,7 @@ const messages: Record<string, Messages> = {};
 
 try {
   for (const file of readdirSync(localesDir)) {
-    if (!file.endsWith('.json')) continue;
+    if (!file.endsWith('.json') || file.startsWith('_')) continue; // skip _meta.json
     const code = file.slice(0, -'.json'.length);
     messages[code] = JSON.parse(readFileSync(join(localesDir, file), 'utf8')) as Messages;
   }

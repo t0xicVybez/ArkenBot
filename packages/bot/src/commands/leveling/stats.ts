@@ -12,6 +12,7 @@ import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { prisma } from '../../database.js';
 import { errorEmbed } from '../../utils/embed.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 import { getGuildSettings } from '../../utils/settings.js';
 
 const command: BotCommand = {
@@ -25,15 +26,16 @@ const command: BotCommand = {
 
   async execute(interaction: ChatInputCommandInteraction, _client: BotClient) {
     await interaction.deferReply();
+    const loc = await resolveUserLocale(interaction);
 
     if (!interaction.guild) {
-      await interaction.editReply({ embeds: [errorEmbed('Error', 'This command must be used in a server.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('common.error', loc), t('common.notInServer', loc))] });
       return;
     }
 
     const settings = await getGuildSettings(interaction.guild.id);
     if (settings && !settings.levelingEnabled) {
-      await interaction.editReply({ embeds: [errorEmbed('Leveling Disabled', 'The leveling system is disabled for this server.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('cmd.stats.disabledTitle', loc), t('cmd.stats.disabled', loc))] });
       return;
     }
 
@@ -45,7 +47,7 @@ const command: BotCommand = {
 
     if (!userLevel) {
       await interaction.editReply({
-        embeds: [errorEmbed('No Data', `${targetUser.username} hasn't earned any XP yet.`)],
+        embeds: [errorEmbed(t('cmd.stats.noDataTitle', loc), t('cmd.stats.noData', loc, { user: targetUser.username }))],
       });
       return;
     }
@@ -68,21 +70,21 @@ const command: BotCommand = {
 
     const lastActive = userLevel.updatedAt
       ? `<t:${Math.floor(userLevel.updatedAt.getTime() / 1000)}:R>`
-      : 'Never';
+      : t('cmd.stats.never', loc);
 
     const embed = new EmbedBuilder()
       .setColor(streak >= 7 ? Colors.Orange : Colors.Blurple)
-      .setTitle(`${targetUser.username}'s Engagement Stats`)
+      .setTitle(t('cmd.stats.title', loc, { user: targetUser.username }))
       .setThumbnail(targetUser.displayAvatarURL({ size: 128 }))
       .addFields(
-        { name: '🏆 Rank', value: `#${rank}`, inline: true },
-        { name: '📈 Level', value: `${userLevel.level}`, inline: true },
-        { name: '✨ Total XP', value: `${userLevel.xp.toLocaleString()}`, inline: true },
-        { name: '💬 Messages Sent', value: `${userLevel.totalMessages.toLocaleString()}`, inline: true },
-        { name: `${streakEmoji} Day Streak`, value: `${streak} day${streak === 1 ? '' : 's'}`, inline: true },
-        { name: '⭐ Reputation', value: `${repReceived}`, inline: true },
-        { name: '🎖️ Achievements', value: `${achievementCount}`, inline: true },
-        { name: '🕐 Last Active', value: lastActive, inline: true },
+        { name: t('cmd.stats.fieldRank', loc), value: `#${rank}`, inline: true },
+        { name: t('cmd.stats.fieldLevel', loc), value: `${userLevel.level}`, inline: true },
+        { name: t('cmd.stats.fieldTotalXp', loc), value: `${userLevel.xp.toLocaleString()}`, inline: true },
+        { name: t('cmd.stats.fieldMessages', loc), value: `${userLevel.totalMessages.toLocaleString()}`, inline: true },
+        { name: `${streakEmoji} ${t('cmd.stats.fieldDayStreak', loc)}`, value: t('cmd.stats.dayValue', loc, { count: streak }), inline: true },
+        { name: t('cmd.stats.fieldReputation', loc), value: `${repReceived}`, inline: true },
+        { name: t('cmd.stats.fieldAchievements', loc), value: `${achievementCount}`, inline: true },
+        { name: t('cmd.stats.fieldLastActive', loc), value: lastActive, inline: true },
       )
       .setFooter({ text: interaction.guild.name, iconURL: interaction.guild.iconURL() ?? undefined })
       .setTimestamp();

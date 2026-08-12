@@ -8,6 +8,7 @@ import type { BotClient } from '../../client.js';
 import { COLORS } from '@arkenbot/shared';
 import { InviteTrackerModule } from '../../modules/inviteTracker/InviteTrackerModule.js';
 import { errorEmbed } from '../../utils/embed.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 import { getGuildSettings } from '../../utils/settings.js';
 
 const command: BotCommand = {
@@ -21,15 +22,16 @@ const command: BotCommand = {
 
   async execute(interaction: ChatInputCommandInteraction, _client: BotClient) {
     await interaction.deferReply();
+    const loc = await resolveUserLocale(interaction);
     if (!interaction.guild) {
-      await interaction.editReply({ embeds: [errorEmbed('Error', 'Use this command in a server.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('common.error', loc), t('cmd.invites.notInServer', loc))] });
       return;
     }
 
     const settings = await getGuildSettings(interaction.guild.id);
     const extended = (settings?.extended ?? {}) as Record<string, unknown>;
     if (!extended.inviteTrackerEnabled) {
-      await interaction.editReply({ embeds: [errorEmbed('Disabled', 'Invite tracking is not enabled for this server.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('cmd.invites.disabledTitle', loc), t('cmd.invites.disabled', loc))] });
       return;
     }
 
@@ -39,11 +41,11 @@ const command: BotCommand = {
 
     const embed = new EmbedBuilder()
       .setColor(COLORS.INFO)
-      .setTitle(`Invites — ${target.username}`)
+      .setTitle(t('cmd.invites.title', loc, { user: target.username }))
       .setThumbnail(target.displayAvatarURL())
       .addFields(
-        { name: 'Total Invites', value: `${total}`, inline: true },
-        { name: 'Bonus',         value: `${row?.bonus ?? 0}`, inline: true },
+        { name: t('cmd.invites.totalInvites', loc), value: `${total}`, inline: true },
+        { name: t('cmd.invites.bonus', loc),        value: `${row?.bonus ?? 0}`, inline: true },
       )
       .setFooter({ text: interaction.guild.name });
 

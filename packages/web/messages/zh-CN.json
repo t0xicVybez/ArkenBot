@@ -15,7 +15,1528 @@
   },
   "language": {
     "label": "语言",
-    "description": "选择仪表板的语言。这也设置了机器人如何回复你。",
+    "description": "选择控制面板的语言。这也会设置机器人回复你时使用的语言。",
     "saved": "语言已更新"
+  },
+  "music": {
+    "title": "音乐",
+    "description": "带持久队列的高质量播放。",
+    "saved": "音乐设置已保存！",
+    "saveError": "保存音乐设置失败。",
+    "playerTitle": "音乐播放器",
+    "playerDesc": "控制此服务器的音乐播放设置。",
+    "enableLabel": "启用音乐",
+    "enableDesc": "允许机器人通过 /play、/skip、/queue 等在语音频道播放音乐。",
+    "howToTitle": "使用方法",
+    "howToDesc": "音乐通过 Discord 斜杠命令控制。",
+    "cmdPlay": "从 YouTube、Spotify 或 SoundCloud 播放歌曲",
+    "cmdSkip": "跳过当前歌曲",
+    "cmdQueue": "查看当前队列",
+    "cmdPause": "暂停或恢复播放",
+    "cmdVolume": "调整音量",
+    "cmdStop": "停止播放并清空队列",
+    "cmdNowplaying": "显示当前播放的曲目"
+  },
+  "redditFeeds": {
+    "title": "Reddit 订阅 — 即将推出",
+    "description": "在我们完成 Reddit 数据 API 审批期间，Reddit 通知暂时不可用。一旦获得访问权限，此功能将自动恢复。"
+  },
+  "rssFeeds": {
+    "title": "RSS 订阅",
+    "description": "每当 RSS 或播客订阅源发布新条目时，在 Discord 发布通知。每 5 分钟检查一次。无需 API 密钥。",
+    "usernameLabel": "订阅源 URL"
+  },
+  "twitterFeeds": {
+    "title": "X / Twitter 订阅",
+    "description": "每当被跟踪的账号发布新推文时，在 Discord 发布通知。每 5 分钟检查一次。",
+    "usernameLabel": "用户名",
+    "notice": "X/Twitter 提醒需要在机器人的 .env 文件中设置 Bearer Token（TWITTER_BEARER_TOKEN）。一个带 Basic 应用的免费 X 开发者账号即可。没有它，Twitter 提醒将被静默跳过。"
+  },
+  "streamAlerts": {
+    "title": "直播提醒",
+    "description": "当创作者开播或发帖时通知社区 — Twitch、Kick、YouTube、X、RSS。",
+    "channelUsername": "频道用户名",
+    "channelHandle": "频道句柄"
+  },
+  "counting": {
+    "title": "计数",
+    "description": "一次一个数字 — 让接龙延续下去。",
+    "resetSuccess": "计数已重置为 0。",
+    "resetError": "重置计数失败。",
+    "notInstalled": "计数插件未安装。",
+    "notInstalledHelp": "前往<manager>插件管理器</manager>安装它，然后在此处配置计数频道。",
+    "liveStatsTitle": "实时统计",
+    "liveStatsDesc": "此服务器计数游戏的当前状态。",
+    "currentCount": "当前计数",
+    "bestCount": "最佳计数",
+    "configTitle": "配置",
+    "configDesc": "设置通过插件管理器管理。使用重置按钮重新开始计数。",
+    "countingChannel": "计数频道：",
+    "allowSameUser": "允许同一用户连续两次：",
+    "resetOnFail": "失败时重置计数：",
+    "yes": "是",
+    "no": "否",
+    "resetting": "重置中…",
+    "resetButton": "将计数重置为 0"
+  },
+  "members": {
+    "title": "成员",
+    "description": "搜索并查看被跟踪的成员",
+    "searchPlaceholder": "按用户名搜索...",
+    "colUser": "用户",
+    "colLevel": "等级",
+    "colXp": "XP",
+    "noneMatching": "未找到与你的搜索匹配的成员。",
+    "noneTracked": "尚未跟踪任何成员。",
+    "levelBadge": "Lv. {level}",
+    "xpValue": "{xp} XP",
+    "availableRoles": "可用身份组"
+  },
+  "polls": {
+    "title": "投票",
+    "description": "查看和管理你服务器中创建的投票。",
+    "closed": "投票已关闭",
+    "closeError": "关闭投票失败",
+    "deleted": "投票已删除",
+    "deleteError": "删除投票失败",
+    "createdVia": "投票在 Discord 中使用 <cmd>/poll</cmd> 斜杠命令创建。",
+    "empty": "未找到此服务器的投票。",
+    "statusClosed": "已关闭",
+    "statusOpen": "进行中",
+    "optionCount": "{count, plural, other {# 个选项}}",
+    "voteCount": "{count, plural, other {# 票}}",
+    "createdOn": "创建于 {date}",
+    "alreadyClosed": "投票已关闭",
+    "closePollTitle": "关闭投票",
+    "closePoll": "关闭投票",
+    "deletePollTitle": "删除投票",
+    "delete": "删除"
+  },
+  "announcements": {
+    "saved": "公告设置已保存！",
+    "saveError": "保存设置失败。",
+    "title": "机器人公告",
+    "description": "直接在你的服务器接收更新公告",
+    "sectionTitle": "公告设置",
+    "sectionDesc": "启用后，Arken Bot 将在你选择的频道发布团队撰写的更新公告。你可以随时禁用它。",
+    "enableLabel": "启用公告",
+    "enableDesc": "在此服务器接收机器人更新帖子",
+    "channelLabel": "公告频道",
+    "selectChannel": "选择一个频道…",
+    "mustSelect": "你必须选择一个频道才能接收公告。"
+  },
+  "analytics": {
+    "title": "分析",
+    "description": "你服务器的增长、活动和参与度。",
+    "newMembers24h": "新成员（24 小时）",
+    "leftMembers24h": "离开的成员（24 小时）",
+    "modActions24h": "管理操作（24 小时）",
+    "empty": "尚无历史数据。分析数据每天收集，将在第一个完整的一天后显示在此处。",
+    "memberGrowth": "成员增长（30 天）",
+    "activity": "活动（30 天）",
+    "memberFlow": "成员流动（30 天）",
+    "seriesMembers": "成员",
+    "seriesMessages": "消息",
+    "seriesCommands": "命令",
+    "seriesJoins": "加入",
+    "seriesLeaves": "离开"
+  },
+  "auditLog": {
+    "title": "控制面板审计日志",
+    "description": "通过网页控制面板对此服务器设置所做的每一项更改 — 谁、什么、何时。",
+    "verbCreated": "创建了",
+    "verbUpdated": "更新了",
+    "verbDeleted": "删除了",
+    "emptyTitle": "尚无控制面板更改",
+    "emptyDesc": "每当管理员通过控制面板保存设置、创建提醒或删除配置时，条目都会显示在此处。",
+    "today": "今天",
+    "yesterday": "昨天",
+    "previous": "上一页",
+    "next": "下一页",
+    "pageOf": "第 {page}/{pages} 页"
+  },
+  "inviteTracker": {
+    "title": "邀请追踪器",
+    "description": "准确了解谁邀请了谁。",
+    "updateError": "更新设置失败。",
+    "settingsTitle": "设置",
+    "settingsDesc": "追踪每位用户邀请了多少成员加入服务器。",
+    "enableLabel": "启用邀请追踪器",
+    "enableHelp": "启用邀请追踪以开始记录邀请数据。使用你机器人现有的邀请权限。",
+    "leaderboardTitle": "顶级邀请者排行榜",
+    "leaderboardDesc": "点击一行以查看哪些成员通过该人的邀请加入。",
+    "noData": "尚无邀请数据。",
+    "noDataEnable": "在上方启用邀请追踪以开始。",
+    "memberCount": "{count, plural, other {# 名成员}}",
+    "inviteCount": "{count, plural, other {# 个邀请}}",
+    "bonus": "{bonus} 额外",
+    "total": "共 {total}",
+    "invitedMembers": "已邀请的成员 — {stillHere} 名仍在 · {left} 名已离开",
+    "leftBadge": "已离开",
+    "joinedOn": "加入于 {date}"
+  },
+  "selfRoles": {
+    "added": "身份组已添加到可自助分配列表。",
+    "addError": "添加身份组失败。",
+    "removed": "身份组已移除。",
+    "removeError": "移除身份组失败。",
+    "title": "可自助分配的身份组",
+    "description": "成员可以用 <assign>/selfassignrole</assign> 自行获取身份组，并用 <remove>/selfremoverole</remove> 移除它们。",
+    "addTitle": "添加身份组",
+    "addDesc": "选择一个服务器身份组，并给它一个成员将在命令中输入的短名称。",
+    "roleLabel": "身份组",
+    "selectRole": "选择一个身份组",
+    "commandNameLabel": "命令名称",
+    "commandNamePlaceholder": "例如 fighter",
+    "willRun": "成员将运行 <code>/selfassignrole {name}</code>",
+    "namePlaceholder": "名称",
+    "adding": "添加中…",
+    "addButton": "添加身份组",
+    "currentTitle": "当前可自助分配的身份组",
+    "currentDesc": "成员可以随时获取这些身份组中的任何一个。",
+    "deletedRole": "{roleId}（已删除）",
+    "remove": "移除",
+    "empty": "尚无可自助分配的身份组。在上方添加一个。"
+  },
+  "verification": {
+    "saved": "验证配置已保存！",
+    "saveError": "保存配置失败",
+    "title": "验证门槛",
+    "description": "要求新成员在访问服务器前进行验证。",
+    "infoCard": "启用后，新成员会收到待定身份组，只能看到验证频道。点击“验证”会给他们成员身份组以及对服务器其余部分的访问权限。",
+    "gateTitle": "验证门槛",
+    "gateDesc": "为新成员启用验证系统。",
+    "enableLabel": "启用验证",
+    "enableDesc": "新成员必须先验证才能访问服务器频道",
+    "rolesTitle": "身份组和频道",
+    "rolesDesc": "配置用于验证的身份组和频道。",
+    "pendingRole": "待定身份组",
+    "pendingRoleHelp": "新成员加入时（验证前）获得的身份组。",
+    "memberRole": "成员身份组",
+    "memberRoleHelp": "成员成功验证后获得的身份组。",
+    "verifyChannel": "验证频道",
+    "verifyChannelHelp": "显示验证按钮面板的频道。",
+    "none": "无",
+    "saving": "保存中…",
+    "saveChanges": "保存更改"
+  },
+  "pages": {
+    "overview": "概览",
+    "setup": "设置向导",
+    "analytics": "分析",
+    "moderation": "管理",
+    "automod": "自动管理",
+    "slowmode": "自动慢速模式",
+    "anti-nuke": "反炸群",
+    "verification": "验证门槛",
+    "reports": "举报",
+    "leveling": "等级",
+    "leaderboard": "排行榜",
+    "welcome": "欢迎",
+    "reaction-roles": "反应身份组",
+    "self-roles": "可自助分配的身份组",
+    "birthdays": "生日",
+    "polls": "投票",
+    "suggestions": "建议",
+    "giveaways": "抽奖",
+    "starboard": "星标板",
+    "members": "成员",
+    "invite-tracker": "邀请追踪器",
+    "voting": "投票奖励",
+    "music": "音乐",
+    "stats-channels": "统计频道",
+    "embeds": "嵌入构建器",
+    "scheduled-messages": "定时消息",
+    "temp-voice": "临时语音",
+    "commands": "命令",
+    "forum-management": "论坛管理",
+    "stream-alerts": "直播提醒",
+    "twitter-feeds": "X / Twitter 订阅",
+    "reddit-feeds": "Reddit 订阅",
+    "rss-feeds": "RSS 订阅",
+    "monday": "Monday.com",
+    "trello": "Trello",
+    "tickets": "工单",
+    "counting": "计数",
+    "applications": "申请",
+    "logs": "日志",
+    "audit-log": "审计日志",
+    "announcements": "公告",
+    "addons": "插件管理器",
+    "settings": "设置",
+    "guilds": "服务器",
+    "users": "用户",
+    "metrics": "指标"
+  },
+  "sections": {
+    "general": "常规",
+    "moderation": "管理",
+    "community": "社区",
+    "contentTools": "内容和工具",
+    "tools": "工具",
+    "integrations": "集成",
+    "addons": "插件",
+    "system": "系统"
+  },
+  "footer": {
+    "changelog": "更新日志",
+    "status": "状态",
+    "privacy": "隐私政策",
+    "terms": "服务条款",
+    "brandDesc": "一个完全免费的 Discord 机器人，拥有 20+ 项功能和实时网页控制面板。永不设付费墙。",
+    "links": "链接",
+    "features": "功能",
+    "addons": "插件",
+    "dashboard": "控制面板",
+    "docs": "文档",
+    "community": "社区",
+    "supportServer": "支持服务器",
+    "addToServer": "添加到服务器",
+    "rights": "© {year} {siteName}。保留所有权利。",
+    "madeWith": "用心为 Discord 社区打造。",
+    "support": "支持"
+  },
+  "landingNav": {
+    "features": "功能",
+    "addons": "插件",
+    "docs": "文档",
+    "support": "支持",
+    "dashboard": "控制面板",
+    "login": "登录",
+    "addToServer": "添加到服务器",
+    "addBot": "添加机器人",
+    "homeAria": "Arken Bot 首页",
+    "toggleMenu": "切换菜单"
+  },
+  "sidebar": {
+    "switchServer": "切换服务器",
+    "dashboardFallback": "控制面板",
+    "memberCount": "{count, number} 名成员",
+    "serverSettings": "服务器设置",
+    "search": "搜索…",
+    "pinned": "已置顶",
+    "unpin": "取消置顶",
+    "pinToTop": "置顶",
+    "staffPortal": "员工门户",
+    "owner": "所有者",
+    "staff": "员工",
+    "logout": "登出"
+  },
+  "topbar": {
+    "staffBadge": "员工",
+    "searchTitle": "搜索（Ctrl K）",
+    "whatsNew": "新功能"
+  },
+  "commandPalette": {
+    "placeholder": "跳转到页面…",
+    "noMatch": "没有页面匹配“{query}”",
+    "navigate": "↑↓ 导航",
+    "openHint": "↵ 打开",
+    "closeHint": "esc 关闭"
+  },
+  "auth": {
+    "errInvalidRequest": "开始登录时出现问题。请重试。",
+    "errInvalidState": "你的登录会话已过期。请重试。",
+    "errOauthFailed": "Discord 登录失败。请重试。",
+    "errDefault": "登录失败。请重试。",
+    "welcomeBack": "欢迎回来",
+    "subtitle": "使用你的 Discord 账号登录以管理你的服务器。",
+    "redirecting": "正在重定向...",
+    "loginWithDiscord": "使用 Discord 登录"
+  },
+  "statusPage": {
+    "title": "系统状态",
+    "subtitle": "Arken Bot 服务的实时健康状况。此页面每 30 秒自动刷新一次。",
+    "checking": "检查中…",
+    "operational": "运行正常",
+    "down": "宕机",
+    "bannerChecking": "正在检查系统…",
+    "bannerAllUp": "✓ 所有系统运行正常",
+    "bannerApiDown": "⚠ API 无法访问 — 部分服务可能已宕机",
+    "bannerPartial": "⚠ 部分中断 — 一个或多个组件已降级",
+    "serviceBot": "Discord 机器人",
+    "serviceApi": "API",
+    "serviceWeb": "网页控制面板",
+    "serviceDatabase": "数据库",
+    "serviceCache": "缓存",
+    "serversWord": "服务器",
+    "gatewayWord": "网关",
+    "lastSeen": "最后一次出现于 {time}",
+    "upFor": "已运行 {uptime}",
+    "lookingAtIt": "你正在看的就是它",
+    "lastChecked": "最后检查于 {time}",
+    "reportIssue": "发现此处未反映的问题？请在我们的",
+    "supportServerLink": "支持服务器"
+  },
+  "leaderboardPage": {
+    "loading": "加载排行榜中…",
+    "unavailable": "此服务器的排行榜不可用。",
+    "unavailableHint": "等级功能可能已禁用，或服务器可能不存在。",
+    "rankedMembers": "{count, number} 名已排名的成员",
+    "empty": "尚无成员排名。开始聊天吧！",
+    "level": "等级 {level}",
+    "pageInfo": "第 {page} 页 • 共 {total}",
+    "previous": "上一页",
+    "next": "下一页",
+    "poweredBy": "由 Arken Bot 提供支持 • 排行榜实时更新"
+  },
+  "staffNav": {
+    "dashboard": "控制面板",
+    "guilds": "服务器",
+    "users": "用户",
+    "addons": "插件",
+    "auditLogs": "审计日志",
+    "serviceLogs": "服务日志",
+    "metrics": "指标",
+    "announcements": "公告",
+    "settings": "设置",
+    "hq": "ArkenBot 总部",
+    "staffPortalUser": "员工门户 · {username}",
+    "serverDashboard": "服务器控制面板",
+    "logout": "登出",
+    "openMenu": "打开菜单",
+    "staffPortal": "员工门户"
+  },
+  "staffDashboard": {
+    "title": "机群概览",
+    "subtitle": "ArkenBot 的每一个服务器、用户和运转部分。",
+    "servers": "服务器",
+    "activeServers": "活跃服务器",
+    "totalUsers": "总用户数",
+    "modCases": "管理案件",
+    "activeWarnings": "有效警告",
+    "addons": "插件",
+    "uptime": "运行时间",
+    "memory": "内存",
+    "quickActions": "快速操作",
+    "browseGuilds": "浏览服务器",
+    "browseGuildsSub": "ArkenBot 所在的每一个服务器",
+    "manageUsers": "管理用户",
+    "manageUsersSub": "员工身份组和控制面板访问",
+    "addonRegistry": "插件注册表",
+    "addonRegistrySub": "发布和维护插件",
+    "systemLogs": "系统日志",
+    "systemLogsSub": "机器人和 API 级别的事件",
+    "systemHealth": "系统健康",
+    "operational": "运行正常",
+    "healthBot": "Discord 机器人",
+    "healthApi": "API",
+    "healthVersion": "版本",
+    "healthMemory": "内存",
+    "healthEnvironment": "环境",
+    "serversValue": "{count, number} 服务器",
+    "upValue": "已运行 {uptime}",
+    "memoryHeap": "{mb} MB 堆内存"
+  },
+  "staffAddons": {
+    "registered": "插件已注册！",
+    "registerError": "注册插件失败。",
+    "updated": "插件已更新！",
+    "updateError": "更新插件失败。",
+    "title": "插件注册表",
+    "subtitle": "发布和维护插件包。",
+    "registerAddon": "注册插件",
+    "registerNew": "注册新插件",
+    "packageName": "包名（唯一）",
+    "displayName": "显示名称",
+    "version": "版本",
+    "author": "作者",
+    "authorPlaceholder": "作者姓名",
+    "description": "描述",
+    "descriptionPlaceholder": "简短描述...",
+    "register": "注册",
+    "cancel": "取消",
+    "enabled": "已启用",
+    "disabled": "已禁用",
+    "byAuthor": "作者：{author}",
+    "disable": "禁用",
+    "enable": "启用",
+    "unverify": "取消验证",
+    "verify": "验证"
+  },
+  "staffAnnouncements": {
+    "title": "公告",
+    "subtitle": "向所有已选择加入的服务器广播更新",
+    "compose": "撰写",
+    "draftTooltip": "根据最近的 git 提交自动起草",
+    "drafting": "起草中…",
+    "draftFromCommits": "根据提交起草",
+    "typeLabel": "类型",
+    "typeName_update": "更新",
+    "typeName_feature": "新功能",
+    "typeName_maintenance": "维护",
+    "typeName_hotfix": "热修复",
+    "typeDesc_update": "机器人的常规更新或更改",
+    "typeDesc_feature": "已添加新功能",
+    "typeDesc_maintenance": "计划停机或维护",
+    "typeDesc_hotfix": "已部署关键错误修复",
+    "titleLabel": "标题",
+    "titlePlaceholder": "v2.3.0 — 新工单功能",
+    "messageLabel": "消息",
+    "messagePlaceholder": "用平实的语言描述更改内容。你可以在发送前编辑自动草稿。",
+    "untitled": "无标题",
+    "previewFooter": "Arken Bot — {type}",
+    "sending": "发送中…",
+    "sendAnnouncement": "发送公告",
+    "history": "历史",
+    "noneSent": "尚未发送任何公告。",
+    "sentToast": "{count, plural, other {公告已发送到 # 个服务器！}}",
+    "sendError": "发送公告失败。",
+    "draftGenerated": "草稿已生成 — 发送前请检查并编辑！",
+    "draftError": "无法生成草稿。",
+    "serverCount": "{count, plural, other {# 个服务器}}",
+    "justNow": "刚刚",
+    "minsAgo": "{mins} 分钟前",
+    "hrsAgo": "{hrs} 小时前",
+    "daysAgo": "{days} 天前"
+  },
+  "staffGuilds": {
+    "title": "所有服务器",
+    "total": "共计：{total} 个服务器",
+    "searchPlaceholder": "搜索服务器...",
+    "allStatus": "所有状态",
+    "active": "活跃",
+    "inactive": "不活跃",
+    "colGuild": "服务器",
+    "colId": "ID",
+    "colStatus": "状态",
+    "colJoined": "加入时间",
+    "colActions": "操作",
+    "noGuilds": "未找到服务器",
+    "view": "查看",
+    "deleteConfirm": "删除不活跃的服务器 {name}？这将移除其设置并将其从员工门户中移除。",
+    "delete": "删除",
+    "pageInfo": "第 {page} 页 • 共 {total} 个服务器",
+    "previous": "上一页",
+    "next": "下一页"
+  },
+  "staffLogs": {
+    "title": "系统日志",
+    "total": "共计：{total} 条",
+    "filterGuild": "按服务器 ID 过滤...",
+    "allTypes": "所有类型",
+    "typeMemberJoin": "成员加入",
+    "typeMemberLeave": "成员离开",
+    "typeMessageDelete": "消息删除",
+    "typeMessageEdit": "消息编辑",
+    "typeBan": "封禁",
+    "typeKick": "踢出",
+    "typeWarning": "警告",
+    "typeAutomod": "自动管理",
+    "noLogs": "未找到日志",
+    "pageOf": "第 {page}/{pages} 页",
+    "previous": "上一页",
+    "next": "下一页"
+  },
+  "staffMetrics": {
+    "title": "系统指标",
+    "subtitle": "整个机群的使用情况和性能。",
+    "memoryChart": "内存使用量（MB）",
+    "currentStats": "当前统计",
+    "totalGuilds": "总服务器数",
+    "activeGuilds": "活跃服务器",
+    "totalUsers": "总用户数",
+    "memoryUsage": "内存使用量",
+    "uptime": "运行时间",
+    "updatesEvery": "每 30 秒更新一次",
+    "prometheusTitle": "Prometheus 指标",
+    "prometheusDesc": "用于通过 Grafana 或 Prometheus 抓取的原始 Prometheus 指标。",
+    "loading": "加载中…",
+    "viewRaw": "查看原始指标 →",
+    "rawModalTitle": "原始 Prometheus 指标"
+  },
+  "staffServiceLogs": {
+    "title": "服务日志",
+    "subtitle": "来自机器人、API 和网页服务的实时输出",
+    "refreshing": " · 刷新中…",
+    "allServices": "所有服务",
+    "serviceBot": "机器人",
+    "serviceApi": "API",
+    "serviceWeb": "网页",
+    "allLevels": "所有级别",
+    "levelInfo": "Info 及以上",
+    "levelWarn": "警告和错误",
+    "levelError": "仅错误",
+    "allStreams": "所有流",
+    "searchPlaceholder": "搜索消息…",
+    "noEntries": "没有匹配的日志条目",
+    "category_permissions": "缺少权限",
+    "category_access": "缺少访问权限",
+    "category_not-found": "未找到",
+    "category_dm-blocked": "私信被屏蔽",
+    "category_rate-limit": "速率受限",
+    "category_validation": "无效请求",
+    "category_network": "网络",
+    "category_timeout": "超时",
+    "category_interaction": "交互",
+    "category_unknown": "错误",
+    "hint": "提示：",
+    "guild": "服务器：",
+    "unknown": "未知",
+    "channel": "频道：",
+    "unknownDeleted": "未知 / 已删除",
+    "message": "消息：",
+    "type": "类型：",
+    "code": "代码：",
+    "footer": "显示当前日志末尾最多 300 条最新条目。每 15 秒刷新一次。"
+  },
+  "staffSettings": {
+    "presenceUpdated": "机器人状态已更新！",
+    "presenceError": "更新机器人状态失败。",
+    "title": "机器人设置",
+    "subtitle": "ArkenBot 员工的全局配置。",
+    "presenceTitle": "机器人状态",
+    "presenceDesc": "控制机器人在 Discord 中名称下方显示的内容。支持 <servers></servers> 和 <users></users> 变量。",
+    "loading": "加载中...",
+    "statusLabel": "状态",
+    "status_online": "在线",
+    "status_idle": "闲置",
+    "status_dnd": "请勿打扰",
+    "status_invisible": "隐身",
+    "activityTypeLabel": "活动类型",
+    "activity_Playing": "正在玩",
+    "activity_Listening": "正在听",
+    "activity_Watching": "正在看",
+    "activity_Competing": "正在参与",
+    "activity_Custom": "自定义",
+    "activityTextLabel": "活动文本",
+    "preview": "预览",
+    "saving": "保存中...",
+    "saveApply": "保存并应用"
+  },
+  "staffUsers": {
+    "userUpdated": "用户已更新！",
+    "updateError": "更新用户失败。",
+    "title": "门户用户",
+    "subtitle": "员工身份组和控制面板访问。",
+    "searchPlaceholder": "按用户名搜索...",
+    "colUser": "用户",
+    "colId": "ID",
+    "colRole": "身份组",
+    "colJoined": "加入时间",
+    "colActions": "操作",
+    "roleOwner": "所有者",
+    "roleStaff": "员工",
+    "roleUser": "用户",
+    "removeStaff": "移除员工",
+    "makeStaff": "设为员工"
+  },
+  "feedAlerts": {
+    "created": "订阅提醒已创建！",
+    "createError": "创建订阅提醒失败",
+    "updateError": "更新提醒失败",
+    "updated": "提醒已更新！",
+    "deleted": "提醒已删除",
+    "deleteError": "删除提醒失败",
+    "channelRequired": "Discord 频道为必填项",
+    "sourceRequired": "来源 / URL 为必填项",
+    "newAlert": "新提醒",
+    "newAlertTitle": "新提醒",
+    "newAlertDesc": "每当此订阅源有新活动时，在 Discord 发布通知。",
+    "platform": "平台",
+    "discordChannel": "Discord 频道",
+    "selectChannel": "选择一个频道",
+    "customMessage": "自定义消息",
+    "optional": "（可选）",
+    "variables": "变量：",
+    "creating": "创建中…",
+    "createButton": "创建提醒",
+    "all": "全部",
+    "noAlertsTitle": "尚无提醒",
+    "noAlertsDesc": "在有新内容的那一刻就在你的服务器收到通知 — 设置只需不到一分钟。",
+    "createFirst": "创建你的第一个提醒",
+    "alertCount": "{count, plural, other {# 个提醒}}",
+    "postsTo": "发布到",
+    "autoDisabled": "已自动禁用：{error}",
+    "liveNow": "正在直播",
+    "edit": "编辑",
+    "delete": "删除",
+    "editAlert": "编辑提醒",
+    "sourceUrl": "来源 / URL",
+    "saving": "保存中…"
+  },
+  "changelogPage": {
+    "title": "更新日志",
+    "intro": "我们发布的每一次更新、功能和修复 — 在团队发出的那一刻就发布在此处。想在你自己的服务器里收到这些吗？在<highlight>控制面板 → 公告</highlight>中启用公告。",
+    "empty": "尚无公告 — 请稍后再来查看。",
+    "badgeUpdate": "更新",
+    "badgeFeature": "新功能",
+    "badgeMaintenance": "维护",
+    "badgeHotfix": "热修复"
+  },
+  "landing": {
+    "heroBadge": "永久免费 — 无付费墙，无高级层级",
+    "heroTitle": "把一切都<br></br>做得<hl>优雅</hl>的 Discord 机器人。",
+    "heroSubtitle": "管理、等级、工单、直播提醒、Trello 和 Monday.com 看板，以及实时控制面板 — 全部免费，全部集于一个机器人。",
+    "heroAddButton": "添加到 Discord",
+    "heroExplore": "探索控制面板",
+    "statServers": "服务器",
+    "statMembers": "已服务成员",
+    "statFeatures": "功能",
+    "statForever": "永久",
+    "heroCards": [
+      {
+        "title": "可扩展的管理",
+        "desc": "案件、升级、反炸群，以及完整的审计跟踪。"
+      },
+      {
+        "title": "面向一切的提醒",
+        "desc": "Twitch、Kick、YouTube、X、Reddit、RSS — 加上 Trello 和 Monday.com 看板。"
+      },
+      {
+        "title": "等级与参与",
+        "desc": "XP、身份组奖励、星标板、生日、抽奖。"
+      },
+      {
+        "title": "你会喜欢的控制面板",
+        "desc": "一切都可在浏览器中配置，更改即时生效。"
+      }
+    ],
+    "trustBar": [
+      "无高级层级 — 一切都免费",
+      "设置即时应用 — 无需重启机器人",
+      "包含完整的管理套件",
+      "实时网页控制面板"
+    ],
+    "featuresBadge": "功能",
+    "featuresHeading": "用一个机器人替代 5 个",
+    "featuresSubtitle": "管理、等级、音乐、工单、自定义命令、直播提醒、抽奖 — 以及更多。全部集于一个机器人，全部免费。",
+    "features": {
+      "items": [
+        {
+          "title": "管理",
+          "desc": "封禁、踢出、禁言、警告和临时封禁，具有完整的案件追踪、审计日志和警告历史 — 全部可从控制面板管理。"
+        },
+        {
+          "title": "自动管理",
+          "desc": "反刷屏、单词过滤、链接过滤、大写检测、提及保护和反突袭 — 全部可按身份组和按频道配置。"
+        },
+        {
+          "title": "等级与 XP",
+          "desc": "通过 XP 系统、等级卡、公开排行榜、任意等级阈值的身份组奖励和可配置的 XP 倍率保持成员参与。"
+        },
+        {
+          "title": "音乐",
+          "desc": "来自 YouTube 的高质量音乐，具有队列管理、音量控制、循环模式和持久的队列状态。"
+        },
+        {
+          "title": "支持工单",
+          "desc": "多面板工单系统，具有私密频道或话题、表单字段、SLA 升级、预设回复、记录和评分。"
+        },
+        {
+          "title": "自定义命令",
+          "desc": "使用别名、嵌入回复、每用户冷却、身份组限制、私信回复和变量替换构建你自己的命令。"
+        },
+        {
+          "title": "反应身份组",
+          "desc": "让成员自助分配身份组。支持切换、仅添加和仅移除模式。面板在 Discord 中实时更新。"
+        },
+        {
+          "title": "欢迎与离开",
+          "desc": "用完全可自定义的嵌入消息、加入时的私信以及带成员计数器的离开通知来迎接新成员。"
+        },
+        {
+          "title": "抽奖",
+          "desc": "从 Discord 运行抽奖，自动选择获奖者。在控制面板中查看所有活跃和已结束的抽奖以及获奖者姓名。"
+        },
+        {
+          "title": "直播提醒",
+          "desc": "当 Twitch、Kick 或 YouTube 频道开播，或当 Twitter、Reddit 或 RSS 订阅更新时收到通知。自动发布一个通知嵌入。"
+        },
+        {
+          "title": "monday.com 和 Trello 提醒",
+          "desc": "将你的项目看板连接到 Discord。当卡片和条目被创建、移动、重命名、评论等时提供详细的嵌入。"
+        },
+        {
+          "title": "星标板",
+          "desc": "突出显示你服务器中最好的消息。可配置的反应阈值、自我加星切换和表情选择。"
+        },
+        {
+          "title": "建议",
+          "desc": "带员工审核的成员建议系统。批准、拒绝或标记为已实现 — 全部从控制面板完成。"
+        },
+        {
+          "title": "生日",
+          "desc": "追踪成员生日并在频道中自动宣布。可选择性地分配一个持续 24 小时的生日身份组。"
+        },
+        {
+          "title": "统计频道",
+          "desc": "实时更新的语音频道，显示服务器统计 — 总成员数、在线数、助力等级等。"
+        },
+        {
+          "title": "定时消息",
+          "desc": "安排定期的公告或提醒，以任意间隔在任意频道自动发布。"
+        },
+        {
+          "title": "临时语音频道",
+          "desc": "成员加入一个触发频道即可立即获得自己的私密语音频道，空了会自动删除。支持不同分类下的多个触发器。"
+        },
+        {
+          "title": "反炸群",
+          "desc": "实时检测并响应大量频道删除、身份组删除和大量封禁。在破坏蔓延之前自动移除权限、踢出或封禁违规用户。"
+        },
+        {
+          "title": "验证门槛",
+          "desc": "要求新成员在访问服务器前点击验证按钮。加入时分配待定身份组，验证后分配成员身份组 — 将机器人和潜水者挡在外面。"
+        },
+        {
+          "title": "论坛管理",
+          "desc": "在每个新论坛话题中自动发布模板消息，并在创建时自动应用标签。从控制面板对每个论坛频道独立配置。"
+        },
+        {
+          "title": "投票",
+          "desc": "使用 /poll 命令创建多选项投票。成员通过按钮投票，员工可从控制面板关闭或删除投票。"
+        },
+        {
+          "title": "成员举报",
+          "desc": "成员通过 /report 提交举报。员工在控制面板中审核待处理的举报、添加备注，并将其标记为已审核或已驳回。"
+        },
+        {
+          "title": "插件系统",
+          "desc": "用社区插件扩展机器人，或使用 Arken 插件 SDK 构建你自己的插件。从控制面板安装和配置。"
+        }
+      ]
+    },
+    "ticketBadge": "工单系统",
+    "ticketHeading": "内置的专业支持工单",
+    "ticketSubtitle": "大多数机器人为像样的工单系统收费。Arken 的工单开箱即用、功能齐全 — 从多按钮面板和自定义受理表单，到 SLA 升级和为你的员工团队提供的完整门户。",
+    "ticketHighlights": [
+      "每个工单一个私密频道或话题",
+      "带分类路由的多按钮面板",
+      "工单打开前显示的自定义表单字段",
+      "员工认领、转移和优先级系统",
+      "按用户和按按钮的员工身份组覆盖",
+      "带 ping 身份组的多级 SLA 升级",
+      "按轮询顺序自动分配工单",
+      "新工单时的员工通知频道",
+      "带 Discord 自动补全的预设回复",
+      "关闭时发布到日志频道的记录",
+      "用户评分系统（1–5 星）",
+      "暂停 SLA 计时器的等待状态",
+      "用于集成的 Webhook 通知",
+      "完整门户：过滤器、备注、批量关闭、统计"
+    ],
+    "addToServer": "添加到服务器",
+    "mockPanelPreview": "面板嵌入预览",
+    "mockSupportCenter": "支持中心",
+    "mockSupportDesc": "需要帮助吗？点击下方按钮打开工单。我们的团队将很快为你服务。",
+    "mockTechnical": "技术",
+    "mockBilling": "账单",
+    "mockReport": "举报",
+    "mockSlaTitle": "SLA 升级级别",
+    "mockSla1": "工单需要关注",
+    "mockSla2": "无响应 — 正在升级",
+    "mockSla3": "紧急：24 小时无回复",
+    "mockStatOpen": "打开",
+    "mockStatReply": "平均回复",
+    "mockStatRating": "评分",
+    "compareBadge": "为什么选 Arken",
+    "compareHeading": "一切。免费。集于一个机器人。",
+    "compareSubtitle": "别再为每个服务器付订阅费或运行五个不同的机器人了。Arken 拥有一切 — 无层级，无限制。",
+    "compareColFeature": "功能",
+    "compareColArken": "Arken Bot",
+    "comparison": {
+      "items": [
+        {
+          "feature": "管理 + 案件历史",
+          "note": ""
+        },
+        {
+          "feature": "自动管理（刷屏、单词、链接）",
+          "note": ""
+        },
+        {
+          "feature": "XP 等级 + 排行榜",
+          "note": ""
+        },
+        {
+          "feature": "音乐播放",
+          "note": ""
+        },
+        {
+          "feature": "自定义命令",
+          "note": ""
+        },
+        {
+          "feature": "自动回复（正则）",
+          "note": ""
+        },
+        {
+          "feature": "临时身份组",
+          "note": ""
+        },
+        {
+          "feature": "反应身份组",
+          "note": ""
+        },
+        {
+          "feature": "支持工单系统",
+          "note": ""
+        },
+        {
+          "feature": "工单表单字段",
+          "note": "Arken 独有"
+        },
+        {
+          "feature": "多级 SLA 升级",
+          "note": "Arken 独有"
+        },
+        {
+          "feature": "抽奖",
+          "note": ""
+        },
+        {
+          "feature": "Twitch、Kick 和社交提醒",
+          "note": ""
+        },
+        {
+          "feature": "星标板",
+          "note": ""
+        },
+        {
+          "feature": "定时消息",
+          "note": ""
+        },
+        {
+          "feature": "统计频道",
+          "note": ""
+        },
+        {
+          "feature": "临时语音频道",
+          "note": ""
+        },
+        {
+          "feature": "反炸群保护",
+          "note": ""
+        },
+        {
+          "feature": "验证门槛",
+          "note": ""
+        },
+        {
+          "feature": "论坛管理",
+          "note": ""
+        },
+        {
+          "feature": "投票和成员举报",
+          "note": ""
+        },
+        {
+          "feature": "实时网页控制面板",
+          "note": ""
+        },
+        {
+          "feature": "插件市场",
+          "note": "Arken 独有"
+        },
+        {
+          "feature": "价格",
+          "note": "免费，永远"
+        }
+      ]
+    },
+    "dashBadge": "网页控制面板",
+    "dashHeading": "从浏览器管理一切",
+    "dashSubtitle": "不再需要输入命令来配置你的机器人。每一项设置都在控制面板中 — 更改在你点击保存的那一刻应用到机器人，无需重启。",
+    "dashBullets": [
+      "通过 WebSocket 的实时设置 — 零机器人重启",
+      "管理案件历史和警告管理",
+      "带过滤器、备注和批量操作的完整工单门户",
+      "XP 排行榜、等级身份组管理和分析",
+      "带嵌入预览的自定义命令构建器",
+      "插件市场 — 安装、配置和管理插件"
+    ],
+    "dashOpenButton": "打开控制面板",
+    "dashMockOverview": "概览",
+    "dashMockModeration": "管理",
+    "dashMockAutomod": "自动管理",
+    "dashMockLeveling": "等级",
+    "dashMockWelcome": "欢迎",
+    "dashMockCommands": "命令",
+    "dashMockTickets": "工单",
+    "dashMockMusic": "音乐",
+    "dashMockAddons": "插件",
+    "dashSecModeration": "管理",
+    "dashSecCommunity": "社区",
+    "dashSecTools": "工具",
+    "dashSecAddons": "插件",
+    "dashStatMod": "管理操作",
+    "dashStatMembers": "新成员",
+    "dashStatTickets": "打开的工单",
+    "dashStatEvents": "日志事件",
+    "dashActivity": "消息活动（7 天）",
+    "dashInstant": "设置即时更新 · 无需重启",
+    "osBadge": "开源",
+    "osHeading": "我们打造自己的工具",
+    "osSubtitle": "Arken Bot 不是用别人的库拼凑起来的。当我们需要更好的东西时，我们把它写出来 — 并向所有人发布。",
+    "osTagline": "为游戏服务器状态插件提供支持",
+    "osDesc": "一个面向 PHP 和 Node/TypeScript 的无依赖游戏服务器查询库。它可以一次从一个服务器或数百个服务器读取玩家数、地图、ping 和规则 — 这正是每次你运行 <code>/server status</code> 时 Arken Bot 所使用的。",
+    "osStatGames": "游戏",
+    "osStatProtocols": "协议",
+    "osStatDeps": "依赖",
+    "osTryLive": "在线试用",
+    "osViewSource": "查看源码",
+    "osLicense": "AGPL-3.0 · 永久免费",
+    "ctaHeading": "准备好升级你的服务器了吗？",
+    "ctaSubtitle": "加入已经在 Arken Bot 上运行的服务器。永久免费 — 无订阅，无每服务器费用，无功能门槛。",
+    "ctaNote": "可与你现有的机器人并存，或完全替换它们。",
+    "ctaAddButton": "添加 Arken Bot — 免费",
+    "ctaSupport": "加入支持服务器"
+  },
+  "featuresPage": {
+    "heroBadge": "永久免费 · 无付费墙 · 无高级层级",
+    "heroTitle": "每一项功能，<hl>完整记录</hl>",
+    "heroSubtitle": "Arken Bot 附带 20 个内置功能模块，并在不断增加。需要更多？插件系统增加了工单、服务器监控、代码审查等 — 全部可从控制面板安装。一切都免费 — 无层级，无付费墙。",
+    "calloutEyebrow": "想要更多？",
+    "calloutHeading": "用插件扩展 Arken",
+    "calloutSubtitle": "插件系统增加了工单、游戏服务器状态和代码审查 — 全部可从控制面板安装。或使用 TypeScript SDK 构建你自己的插件。",
+    "browseAddons": "浏览插件",
+    "ctaHeading": "准备好把 Arken Bot 添加到你的服务器了吗？",
+    "ctaSubtitle": "所有功能在邀请后立即可用 — 无需配置即可开始。",
+    "ctaAddButton": "添加到服务器 — 免费",
+    "ctaOpenDashboard": "打开控制面板",
+    "footHome": "首页",
+    "footFeatures": "功能",
+    "footDashboard": "控制面板",
+    "footDocs": "文档",
+    "footSupport": "支持",
+    "footPrivacy": "隐私",
+    "footTerms": "条款",
+    "sections": {
+      "moderation": {
+        "title": "管理",
+        "tagline": "用完整的管理工具包保障你服务器的安全。",
+        "description": "以完整的案件追踪和审计日志封禁、踢出、禁言、警告和临时封禁成员。每个操作都会记录案件 ID、原因和管理员 — 全部可从控制面板查看。",
+        "bullets": [
+          "封禁、踢出、超时（禁言）、警告和临时封禁命令",
+          "带案件 ID 和管理员归属的完整案件历史",
+          "按成员追踪警告累积",
+          "从网页控制面板审核和管理所有案件",
+          "为服务器透明度提供审计日志集成",
+          "基于身份组的权限控制，决定谁可以管理",
+          "临时身份组：为固定时长分配一个 Discord 身份组，到期时自动移除",
+          "批量关闭案件：一次操作即可关闭某用户的所有未结案件"
+        ]
+      },
+      "automod": {
+        "title": "自动管理",
+        "tagline": "全天候运作的自动保护。",
+        "description": "防止刷屏、过滤不需要的内容，并在突袭发生前将其阻止 — 全部无需动手。规则可按身份组和按频道配置，因此正当用户永远不会落入网中。",
+        "bullets": [
+          "反刷屏：限制消息速率并自动删除多余内容",
+          "带通配符支持的单词和短语过滤",
+          "带域名允许/阻止列表的链接过滤",
+          "大写检测以抑制全大写滥用",
+          "提及刷屏保护（防止大量 ping）",
+          "反突袭模式：在攻击期间锁定频道或踢出新加入者",
+          "按身份组和按频道的规则例外"
+        ]
+      },
+      "leveling": {
+        "title": "等级与 XP",
+        "tagline": "奖励活跃成员，打造蓬勃发展的社区。",
+        "description": "成员每发送一条消息就会获得 XP。随着升级，他们会解锁特殊身份组，公开排行榜鼓励健康的竞争。每个方面都可调整 — 包括 XP 倍率、身份组叠加、非活跃用户的衰减和每日连续记录追踪。",
+        "bullets": [
+          "以可配置的速率在每条消息上自动获得 XP",
+          "从控制面板设置的按频道 XP 倍率",
+          "显示等级、XP 和排行榜位置的等级卡，带自定义强调色和背景",
+          "无需登录即可访问的公开排行榜页面",
+          "等级身份组：在任意等级阈值自动授予身份组",
+          "成员升级时保留或移除之前的等级身份组",
+          "批量身份组同步：一次性将正确的身份组应用于所有现有成员",
+          "带里程碑图片的丰富嵌入升级公告（等级 5、10、25、50+）",
+          "在个人资料中追踪并显示的每日消息连续记录",
+          "XP 衰减：自动减少超过阈值不活跃成员的 XP",
+          "每个服务器可配置的衰减百分比和不活跃窗口",
+          "用于按用户详细细分的 /profile 和 /stats 命令"
+        ]
+      },
+      "customization": {
+        "title": "自定义",
+        "tagline": "让机器人在你的服务器和个人资料中感觉像原生的。",
+        "description": "在你的服务器为机器人设置自定义昵称，使其与你社区的品牌相匹配。成员还可以用自定义强调色和背景图片个性化自己的等级卡 — 无需员工操作。",
+        "bullets": [
+          "每个服务器的自定义机器人昵称 — 从控制面板设置页面设置",
+          "昵称通过机器人即时应用，无需重启",
+          "/rankcard color — 在你的等级卡上设置自定义 hex 强调色",
+          "/rankcard background — 设置自定义背景图片 URL",
+          "/rankcard preview — 在其他人看到之前预览你的样式",
+          "/rankcard reset — 恢复默认的等级卡样式",
+          "等级卡样式按用户设置，并在所有服务器间通用"
+        ]
+      },
+      "achievements": {
+        "title": "成就",
+        "tagline": "给成员一个超越排行榜的努力目标。",
+        "description": "成就在成员达到里程碑时自动授予 — 员工无需命令。徽章会显示在 /profile 卡片上，并通过连续记录、活动和等级目标鼓励长期参与。",
+        "bullets": [
+          "成员达到符合条件的里程碑时自动授予",
+          "等级里程碑：新星（5）、老兵（25）、传奇（100）等",
+          "活动里程碑：初出茅庐（第 1 条消息）、勤奋（1,000 条消息）",
+          "连续记录里程碑：一周勇士（7 天）、月度传奇（30）、百日连续（100）",
+          "在 /profile 命令中以表情和名称显示的徽章",
+          "在 /stats 命令中显示的成就数量",
+          "无需配置 — 开箱即用"
+        ]
+      },
+      "reputation": {
+        "title": "声望",
+        "tagline": "让社区认可其最乐于助人的成员。",
+        "description": "成员可以互相给予声望点，以突出乐于助人和积极贡献。每用户 24 小时的冷却让系统保持公平，而全服务器排行榜则突显你最受重视的社区成员。",
+        "bullets": [
+          "/rep give <用户> — 给任意成员授予一个声望点",
+          "/rep check <用户> — 查看某成员的总声望",
+          "/rep top — 全服务器声望排行榜",
+          "通过 Redis 强制执行的每位给予者 24 小时冷却",
+          "在 /stats 和 /profile 中显示的声望数量",
+          "完全免费 — 无需投票网站集成"
+        ]
+      },
+      "analytics": {
+        "title": "服务器分析",
+        "tagline": "了解你的服务器如何增长并保持活跃。",
+        "description": "Arken Bot 在后台追踪每日活动计数器，并将其存储在 30 天的滚动历史中。控制面板呈现交互式图表，让你能够发现趋势、衡量事件的影响并及早捕捉活动下降。",
+        "bullets": [
+          "在整个服务器追踪每日消息数",
+          "每日命令使用情况追踪",
+          "每天的成员加入和离开计数器",
+          "存储在数据库中的 30 天滚动历史",
+          "控制面板分析页面中的交互式折线图和柱状图",
+          "成员增长图表（加入 vs. 离开）",
+          "活动图表（随时间的消息 + 命令）",
+          "无需额外设置 — 追踪自动开始"
+        ]
+      },
+      "invite-tracker": {
+        "title": "邀请追踪器",
+        "tagline": "准确查看谁在壮大你的社区。",
+        "description": "Arken Bot 追踪每位新成员加入时使用的邀请链接。全服务器排行榜按成员带来的人数对其排名，鼓励健康的社区增长。",
+        "bullets": [
+          "自动检测新成员使用了哪个邀请码",
+          "/invites — 查看你自己或另一位成员的邀请数",
+          "/invitetop — 带奖牌的顶级邀请者服务器排行榜",
+          "额外邀请：员工可手动调整某成员的邀请数",
+          "从邀请追踪器控制面板页面按服务器启用或禁用",
+          "除“管理服务器”外无需额外的机器人权限"
+        ]
+      },
+      "counting": {
+        "title": "计数游戏",
+        "tagline": "一个简单的社区游戏 — 一起数数而不打断连续记录。",
+        "description": "指定一个频道，成员轮流发送序列中的下一个数字。用错误的数字打断连续记录，计数就会为所有人重置。里程碑反应庆祝大数字。通过插件管理器安装。",
+        "bullets": [
+          "将任意文字频道指定为计数频道",
+          "机器人对正确的计数回应 ✅，每 100 个数字回应 🎉",
+          "错误的数字会将计数重置回 1",
+          "防止同一用户连续两次计数（可配置）",
+          "可关闭失败时重置以获得更轻松的模式",
+          "在控制面板中追踪并可见的最佳计数记录",
+          "/startcounting — 在计数频道发布游戏公告嵌入",
+          "作为插件安装 — 对不使用它的服务器无影响"
+        ]
+      },
+      "music": {
+        "title": "音乐",
+        "tagline": "直接在你的语音频道中播放高质量音乐。",
+        "description": "使用斜杠命令从 YouTube 播放音乐。管理队列、控制音量、循环曲目并让派对继续 — 全部通过 Discord 完成，无需离开应用。",
+        "bullets": [
+          "通过斜杠命令播放 YouTube 音频",
+          "队列管理：添加、跳过、移除和查看曲目",
+          "音量控制",
+          "循环模式：重复一首曲目或整个队列",
+          "跨会话的持久队列状态",
+          "从 Discord 命令控制播放"
+        ]
+      },
+      "custom-commands": {
+        "title": "自定义命令",
+        "tagline": "构建你服务器独有的命令。",
+        "description": "用丰富的嵌入回复、自定义逻辑和基于身份组的限制创建你自己的命令 — 无需编码。完全从控制面板构建无限数量的命令。",
+        "bullets": [
+          "创建斜杠或前缀风格的自定义命令",
+          "带标题、描述、字段和颜色的丰富嵌入回复",
+          "变量替换：用户提及、服务器名称、成员数等",
+          "防止刷屏的每用户冷却",
+          "身份组限制：将命令限于特定身份组",
+          "私信回复选项：私密地回复调用的用户",
+          "用于替代触发名称的命令别名",
+          "无限命令 — 无上限"
+        ]
+      },
+      "auto-responses": {
+        "title": "自动回复",
+        "tagline": "自动回复匹配正则表达式模式的消息。",
+        "description": "创建规则，每当消息匹配某个模式时触发自动回复。规则支持带可配置标志的正则、纯文本或嵌入回复、可选的消息删除和基于身份组的限制。从控制面板或通过 /autoresponse 命令管理一切。",
+        "bullets": [
+          "对每条传入消息进行正则模式匹配",
+          "可配置的正则标志（默认不区分大小写）",
+          "每条规则的纯文本或丰富嵌入回复",
+          "嵌入回复的自定义 hex 颜色",
+          "可选地在匹配时删除触发消息",
+          "启用或禁用单条规则而不删除它们",
+          "控制面板中带每条规则使用计数器的完整规则列表",
+          "为几乎零延迟而使用 Redis 缓存的规则列表",
+          "通过 /autoresponse 或控制面板命令页面管理规则",
+          "每个服务器无限规则"
+        ]
+      },
+      "reaction-roles": {
+        "title": "反应身份组",
+        "tagline": "让成员一键自助分配身份组。",
+        "description": "使用成员可以交互的按钮面板创建身份组菜单。支持切换、仅添加和仅移除模式。通过控制面板编辑时，面板会在 Discord 中实时反映更改。",
+        "bullets": [
+          "基于按钮的身份组面板（无需表情反应）",
+          "切换模式：点击添加，再次点击移除",
+          "仅添加模式：成员只能获得身份组",
+          "仅移除模式：成员只能移除身份组",
+          "每个服务器有多个不同配置的面板",
+          "带实时 Discord 预览更新的控制面板编辑器"
+        ]
+      },
+      "self-roles": {
+        "title": "可自助分配的身份组",
+        "tagline": "成员用一个简单的斜杠命令选择自己的身份组。",
+        "description": "管理员定义一个可自助分配身份组的列表，并给每个一个短名称。成员随后可以随时运行 /selfassignrole 或 /selfremoverole — 无需反应面板。自动补全让发现毫不费力。从控制面板或用 /selfrole 管理列表。",
+        "bullets": [
+          "/selfassignrole <名称> — 即时获取身份组",
+          "/selfremoverole <名称> — 即时移除身份组",
+          "自动补全只显示成员可以添加或移除的身份组",
+          "管理员用 /selfrole add / remove / list 管理列表",
+          "完整的控制面板编辑器 — 无需命令即可添加或移除条目",
+          "机器人身份组层级检查可防止分配无法管理的身份组",
+          "为几乎零延迟而使用 Redis 缓存的身份组列表",
+          "每个服务器无限可自助分配的身份组"
+        ]
+      },
+      "welcome": {
+        "title": "欢迎与离开",
+        "tagline": "给每位新成员留下极佳的第一印象。",
+        "description": "在任意频道用完全可自定义的嵌入消息迎接新成员，并可在他们加入时向其发送私信。收到带更新成员数的离开通知，让你始终了解服务器的规模。",
+        "bullets": [
+          "可自定义的欢迎嵌入：标题、描述、颜色、图片",
+          "变量替换：用户名、提及、服务器名称、成员数",
+          "加入时向新成员发送的可选私信",
+          "在单独频道的离开通知嵌入",
+          "成员计数器在加入和离开时更新",
+          "从控制面板单独启用或禁用"
+        ]
+      },
+      "giveaways": {
+        "title": "抽奖",
+        "tagline": "为你的社区运行公平、自动化的抽奖。",
+        "description": "直接在 Discord 中开始抽奖。当计时器结束时，Arken Bot 自动选择获奖者并在频道中宣布。在控制面板中查看所有活跃和已结束的抽奖以及获奖者姓名。",
+        "bullets": [
+          "从 Discord 用斜杠命令创建抽奖",
+          "可配置的时长和获奖者数量",
+          "计时器结束时自动选择获奖者",
+          "在抽奖频道发布获奖者公告",
+          "控制面板显示所有活跃和过往的抽奖",
+          "在门户中可见获奖者姓名和参与情况"
+        ]
+      },
+      "stream-alerts": {
+        "title": "直播提醒",
+        "tagline": "在任何东西开播或发布的那一刻通知你的社区。",
+        "description": "监控 Twitch、Kick、YouTube、X（Twitter）、Reddit 和 RSS/播客订阅源，并在有新内容时自动在任意 Discord 频道发布通知嵌入。无需手动公告即可保持社区参与。",
+        "bullets": [
+          "Twitch：频道开播时的提醒",
+          "Kick：Kick.com 频道开播时的提醒",
+          "YouTube：频道开始直播时的提醒",
+          "X（Twitter）：用户发布新推文时的提醒",
+          "Reddit：子版块有新帖子时的提醒",
+          "RSS / 播客：订阅源发布新剧集或帖子时的提醒",
+          "每个提醒可配置的提醒频道和自定义消息",
+          "跨平台同时追踪多个提醒"
+        ]
+      },
+      "board-alerts": {
+        "title": "monday.com 和 Trello 提醒",
+        "tagline": "把你的项目看板带入 Discord。",
+        "description": "将 monday.com 和 Trello 看板连接到 Discord，并在任何东西变化的那一刻收到详细的嵌入 — 卡片和条目被创建、移动、重命名、评论等。非常适合在 Discord 协调的团队。",
+        "bullets": [
+          "monday.com：条目创建/重命名/移动、列变更、评论、归档等，通过 webhook 实现",
+          "Trello：卡片创建/移动/重命名/更新、评论、标签、附件、成员和清单变更",
+          "Trello webhook 自动注册 — 无需手动 API 调用",
+          "可选的 monday.com API 令牌会在嵌入中将用户 ID 解析为真实显示名称",
+          "每个提醒的事件过滤器 — 精确订阅你想要的事件",
+          "嵌入直接链接到卡片、条目和看板"
+        ]
+      },
+      "starboard": {
+        "title": "星标板",
+        "tagline": "庆祝你服务器最好的消息。",
+        "description": "当一条消息达到反应阈值时，它会自动被固定到专门的星标板频道。这是突出有趣、有用或难忘时刻的好方法。",
+        "bullets": [
+          "可配置的反应表情（默认 ⭐）",
+          "可配置的进入看板的反应阈值",
+          "切换自我加星：允许或阻止作者给自己的帖子加星",
+          "带嵌入转发的专门星标板频道",
+          "通过控制面板启用或禁用"
+        ]
+      },
+      "suggestions": {
+        "title": "建议",
+        "tagline": "在你的服务器给成员一个有条理的发声渠道。",
+        "description": "成员通过斜杠命令提交建议。员工可以直接从控制面板批准、拒绝或将其标记为已实现。被接受和被拒绝的建议会清晰地反馈给社区。",
+        "bullets": [
+          "成员用斜杠命令提交建议",
+          "建议以嵌入形式发布在专门频道",
+          "员工可以批准、拒绝或标记为已实现",
+          "所有待处理和已解决建议的控制面板视图",
+          "状态更新会被发布回建议频道"
+        ]
+      },
+      "birthdays": {
+        "title": "生日",
+        "tagline": "再也不会错过成员的生日。",
+        "description": "成员登记一次生日。当天，Arken Bot 会在你选择的频道发布生日公告，并可选择性地分配一个恰好持续 24 小时的特殊生日身份组。",
+        "bullets": [
+          "成员用斜杠命令设置生日",
+          "在正确日期的自动生日公告",
+          "可配置的公告频道",
+          "当天分配持续 24 小时的可选生日身份组",
+          "控制面板显示即将到来的生日"
+        ]
+      },
+      "stats-channels": {
+        "title": "统计频道",
+        "tagline": "实时服务器统计直接显示在你的频道列表中。",
+        "description": "创建名称自动更新以反映实时服务器统计的语音频道。成员无需任何命令即可一目了然地看到总成员数、助力等级等。",
+        "bullets": [
+          "带自动更新名称的语音频道",
+          "显示总成员数",
+          "显示在线成员数",
+          "显示服务器助力等级和数量",
+          "同时配置多个统计频道",
+          "由控制面板管理的更新间隔"
+        ]
+      },
+      "scheduled-messages": {
+        "title": "定时消息",
+        "tagline": "自动化定期的公告和提醒。",
+        "description": "安排消息以任意重复间隔在任意频道发布。非常适合每周公告、服务器规则提醒、事件通知或任何定期内容。",
+        "bullets": [
+          "向任意频道安排定期消息",
+          "可配置的重复间隔（每小时、每天、每周、自定义）",
+          "支持纯文本或丰富嵌入消息",
+          "同时激活多个定时消息",
+          "从控制面板管理和暂停计划"
+        ]
+      },
+      "temp-voice": {
+        "title": "临时语音频道",
+        "tagline": "成员按需获得自己的语音频道 — 不杂乱。",
+        "description": "配置一个或多个加入即创建的触发频道。当成员加入触发器时，机器人会立即为其创建一个私密语音频道并将其移入。当最后一人离开时，频道会自动删除。",
+        "bullets": [
+          "每个服务器有多个触发频道 — 需要多少就配置多少",
+          "每个触发器都可将创建的频道路由到特定分类",
+          "创建的频道会自动以成员命名",
+          "成员获得所有者权限：重命名、设置用户上限、管理权限",
+          "默认情况下其他所有人都可查看并加入该频道",
+          "最后一个成员离开的那一刻空频道即被删除",
+          "无孤立频道 — 完全自动的生命周期",
+          "从控制面板 → 临时语音管理所有触发器"
+        ]
+      },
+      "anti-nuke": {
+        "title": "反炸群",
+        "tagline": "在造成破坏之前阻止服务器炸群。",
+        "description": "反炸群监控快速的破坏性操作 — 大量频道删除、大量身份组删除和大量封禁 — 并在超过阈值的那一刻自动对违规用户采取行动。",
+        "bullets": [
+          "检测超过可配置阈值的大量频道删除",
+          "检测超过可配置阈值的大量身份组删除",
+          "检测超过可配置阈值的大量封禁",
+          "响应选项：移除权限（移除所有身份组）、踢出或封禁",
+          "用于炸群通知的可配置提醒频道",
+          "所有阈值均可从控制面板独立调整",
+          "实时运作 — 检测与行动之间无延迟",
+          "推荐使用移除权限模式，在不永久封禁的情况下阻止攻击"
+        ]
+      },
+      "verification": {
+        "title": "验证门槛",
+        "tagline": "在机器人和小号到达你的社区之前将其过滤。",
+        "description": "新成员加入时会收到待定身份组，只能看到指定的验证频道。点击验证按钮会给他们成员身份组和完整的服务器访问权限。简单、有效且完全自动化。",
+        "bullets": [
+          "新成员加入时自动分配待定身份组",
+          "待定身份组将访问限制在除验证频道之外的所有频道",
+          "在你选择的频道发布的一键验证按钮",
+          "验证时分配成员身份组，立即授予完整访问权限",
+          "从控制面板用单个开关启用或禁用",
+          "适用于任何身份组层级 — 完全可自定义的身份组和频道",
+          "与欢迎消息兼容，在成员验证后迎接他们",
+          "无需员工命令 — 设置后完全无需干预"
+        ]
+      },
+      "forum-management": {
+        "title": "论坛管理",
+        "tagline": "在 Discord 论坛频道中自动化模板和标签。",
+        "description": "配置任意数量的论坛频道，使其在创建新话题时收到自动模板消息，并自动对每个帖子应用标签。每个频道都独立配置。",
+        "bullets": [
+          "在每个新话题的首条回复中自动发布模板消息",
+          "对每个新帖子自动应用论坛标签",
+          "独立配置多个论坛频道",
+          "模板消息支持完整的 Discord Markdown",
+          "自动标签使用标签 ID — 在 Discord 中右键点击任意标签即可复制",
+          "随时将论坛频道加入或移出管理",
+          "更改仅适用于新话题 — 现有话题不受影响",
+          "机器人在每个论坛频道需要“发送消息”和“管理话题”权限"
+        ]
+      },
+      "polls": {
+        "title": "投票",
+        "tagline": "用基于按钮的投票收集社区反馈。",
+        "description": "使用 /poll 命令直接在 Discord 中创建投票。成员通过交互式按钮投票，控制面板为员工提供一个查看结果、关闭投票或删除投票的中心场所。",
+        "bullets": [
+          "/poll 斜杠命令 — 创建带 2–4 个选项的投票",
+          "成员通过 Discord 按钮投票 — 强制每位成员一票",
+          "服务器中所有活跃和已关闭投票的控制面板视图",
+          "关闭投票以停止接受新投票而不删除它",
+          "从控制面板删除投票以移除投票数据",
+          "每张投票卡显示总票数、选项数和创建日期",
+          "打开/关闭状态一目了然"
+        ]
+      },
+      "reports": {
+        "title": "成员举报",
+        "tagline": "供成员标记违规者的有条理渠道。",
+        "description": "成员通过 /report 提交举报，无需私信管理员。员工在控制面板中审核所有待处理的举报、添加内部备注，并将其标记为已审核或已驳回 — 让管理保持有序且可审计。",
+        "bullets": [
+          "供成员标记任意用户的 /report 斜杠命令",
+          "用于员工提醒的可配置举报通知频道",
+          "控制面板显示所有待处理举报，含举报者、目标和原因",
+          "员工可将举报标记为已审核或带备注驳回",
+          "员工备注内部记录并在举报历史中可见",
+          "待处理和已审核举报的单独标签页",
+          "待处理举报每 30 秒自动刷新",
+          "待处理数量以徽章形式显示在标签页上以便快速查看"
+        ]
+      }
+    }
+  },
+  "addonsPage": {
+    "heroBadge": "第一方和社区插件",
+    "heroTitle": "用<hl>插件</hl>扩展 Arken Bot",
+    "heroSubtitle": "Arken 附带涵盖高级工单、游戏服务器状态和开发者工具的官方第一方插件。从控制面板安装任意插件 — 或使用 TypeScript SDK 构建你自己的插件。",
+    "buildYourOwn": "构建你自己的",
+    "official": "官方",
+    "sdkBadge": "插件 SDK",
+    "sdkHeading": "构建你自己的插件",
+    "sdkDescription": "Arken 插件 SDK 为你提供扩展机器人所需的一切 — 斜杠命令、事件监听器、按服务器的持久存储、类型化设置和生命周期钩子 — 全部使用 TypeScript。构建你的插件，将编译后的 dist/ 放入 addons 文件夹，重启机器人，运行时会自动注册它，使其立即出现在控制面板中。",
+    "readSdkDocs": "阅读 SDK 文档",
+    "sdkFeatures": [
+      "defineAddon() — 具有完整类型推断的 TypeScript 优先入口点；无需类样板代码",
+      "带可选内置自动补全处理器的斜杠和上下文菜单命令",
+      "带 once 支持的 Discord 网关事件监听器；ctx.client 暴露完整的 discord.js Client",
+      "由 PostgreSQL 支持的按服务器隔离的键值存储 — 数据始终按服务器划分范围",
+      "带你插件名称标记的结构化日志器，加上用于跨插件消息传递的类型化插件间事件总线",
+      "生命周期钩子：onLoad、onUnload、onSettingsUpdate、onGuildInstall 和 onGuildUninstall"
+    ],
+    "ctaHeading": "准备好为你的服务器增添动力了吗？",
+    "ctaSubtitle": "添加 Arken Bot 并从控制面板启用任意插件 — 免费，永久。",
+    "ctaAddButton": "添加到服务器 — 免费",
+    "viewAllFeatures": "查看所有功能",
+    "footHome": "首页",
+    "footFeatures": "功能",
+    "footAddons": "插件",
+    "footDashboard": "控制面板",
+    "footDocs": "文档",
+    "footSupport": "支持",
+    "footPrivacy": "隐私",
+    "footTerms": "条款",
+    "addons": {
+      "tickets": {
+        "title": "工单系统",
+        "tagline": "带 SLA、记录和员工门户的全功能支持台。",
+        "description": "Discord 内的完整客户支持体验。多面板路由、自定义受理表单、轮询员工分配、SLA 升级、预设回复和网页员工门户 — 全部包含。",
+        "bullets": [
+          "路由到不同工单分类的多按钮面板",
+          "每个工单一个私密频道或话题",
+          "在工单打开时收集的自定义表单字段",
+          "员工认领、转移和优先级控制",
+          "带可配置 ping 身份组的多级 SLA 升级",
+          "供员工使用的轮询自动分配",
+          "带 Discord 自动补全的预设回复",
+          "关闭时发布到日志频道的 HTML 记录",
+          "工单关闭时的用户 1–5 星评分",
+          "用于第三方集成的 Webhook 通知",
+          "完整的员工门户：过滤器、备注、批量关闭、统计"
+        ]
+      },
+      "gameservers": {
+        "title": "游戏服务器状态",
+        "tagline": "从 Discord 检查和监控任意游戏服务器的状态。",
+        "description": "直接从 Discord 查询 40+ 种游戏类型的实时玩家数、地图名称、ping 和服务器信息。按服务器保存服务器，以便通过自动补全快速查找。无需对服务器的管理员访问权限 — 仅只读状态查询。",
+        "bullets": [
+          "用 /server status 按 IP 和端口查询任意游戏服务器",
+          "支持 40+ 种游戏类型：Minecraft（Java + 基岩版）、Rust、ARK、Valheim、CS2、DayZ、FiveM 等",
+          "显示玩家数、地图、ping 和服务器名称",
+          "按服务器保存命名服务器，以便通过自动补全快速查找",
+          "用 /server remove 和 /server list 移除或列出已保存的服务器",
+          "无需管理员凭据 — 仅状态查询",
+          "Minecraft Java 使用原生 SLP；其他全部使用 Gamedig"
+        ]
+      },
+      "code-review": {
+        "title": "代码审查",
+        "tagline": "Discord 内的即时静态分析和 AI 驱动的代码审查。",
+        "description": "运行 /reviewcode，将你的代码片段粘贴到弹窗中，即可获得即时反馈 — 错误和警告计数、具体问题列表以及格式化/修正后的代码版本。结果是临时的，因此只有提交者能看到。可选择性地配置 Groq API 密钥以进行更智能的 AI 驱动分析。",
+        "bullets": [
+          "运行 /reviewcode 并将代码粘贴到 Discord 弹窗中",
+          "结果是临时的 — 只有提交者能看到反馈",
+          "带每个问题描述的错误、警告和信息问题计数",
+          "作为后续代码块发送的格式化/修正后代码",
+          "通过 Groq API 密钥的 AI 驱动模式，用于更智能的分析和摘要",
+          "静态分析回退：JavaScript、TypeScript、Python、JSON、CSS 和 HTML",
+          "自动检测语言或用语言选项手动指定",
+          "每个服务器可配置的最大代码长度（500–4000 个字符）"
+        ]
+      }
+    }
+  },
+  "termsPage": {
+    "title": "服务条款",
+    "lastUpdated": "最后更新：{date}",
+    "intro": "本服务条款（“条款”）规范你对 Arken Bot（“机器人”）以及位于 <site>arkenbot.app</site> 的网页控制面板（“服务”）的使用，该服务由 Arken Bot（“我们”“我们的”或“本公司”）运营。将机器人添加到你的 Discord 服务器或使用本服务，即表示你同意本条款。如果你不同意，请勿使用本服务。",
+    "s1Title": "1. 资格",
+    "s1p1": "你必须年满 13 岁（或你所在司法辖区要求的最低年龄）才能使用本服务。使用本服务即表示你声明你满足此要求。本服务的使用还受 Discord 的<tos>服务条款</tos>约束；你有责任独立于本条款遵守 Discord 的政策。",
+    "s2Title": "2. 允许的使用",
+    "s2p1": "你可以根据本条款和所有适用法律使用 Arken Bot 来管理你的 Discord 服务器。你同意不：",
+    "s2list": [
+      "使用本服务骚扰、辱骂、威胁或伤害任何人",
+      "试图规避、禁用或干扰本服务的安全功能",
+      "使用本服务分发垃圾信息、恶意软件或未经请求的商业消息",
+      "对机器人进行逆向工程、反编译或试图提取源代码",
+      "以任何违反 Discord 服务条款或社区准则的方式使用本服务",
+      "未经我们书面许可转售、再许可或商业利用本服务"
+    ],
+    "s3Title": "3. YouTube API 服务",
+    "s3p1": "Arken Bot 使用 <api>YouTube Data API v3</api> 提供 YouTube 直播通知。在 Arken Bot 中启用 YouTube 功能，即表示你同意受 <tos>YouTube 服务条款</tos>约束。",
+    "s3p2": "Arken Bot 仅访问公开可用的 YouTube 视频元数据（视频标题、直播状态和缩略图），目的是向服务器管理员配置的 Discord 频道发送通知。我们不使用 YouTube API 服务上传内容、访问私密数据或管理 YouTube 账号。",
+    "s3p3": "Google 的隐私政策适用于通过 YouTube API 服务处理的数据：<privacy>policies.google.com/privacy</privacy>。",
+    "s4Title": "4. Reddit 数据 API",
+    "s4p1": "Arken Bot 使用 <api>Reddit 数据 API</api> 提供子版块订阅通知。在 Arken Bot 中启用 Reddit 功能，即表示你承认此功能受 <terms>Reddit 数据 API 条款</terms>和 <agreement>Reddit 用户协议</agreement>约束。",
+    "s4p2": "Arken Bot 仅访问服务器管理员配置的子版块中公开可用的帖子元数据（帖子标题、链接和作者用户名），唯一目的是向 Discord 频道发送通知。我们不访问 Reddit 用户账号、私密社区或超出公开元数据的帖子内容，也不归档或再分发 Reddit 内容。",
+    "s4p3": "Reddit 的隐私政策适用于通过 Reddit 数据 API 处理的数据：<privacy>reddit.com/policies/privacy-policy</privacy>。",
+    "s5Title": "5. Monday.com 和 Trello 集成",
+    "s5p1": "Arken Bot 可以接收来自服务器管理员连接的 <monday>monday.com</monday> 和 <trello>Trello</trello> 看板的 webhook 通知，并将其中继为 Discord 通知。启用这些功能，即表示你承认你对底层平台的使用仍分别受 <mondayTos>monday.com 服务条款</mondayTos>和 <atlassian>Atlassian Cloud 服务条款</atlassian>约束。",
+    "s5p2": "你有责任确保你有权连接给定的看板并与你的 Discord 服务器成员分享其活动。Webhook 负载会被临时处理以构建通知，不会被存储；有关我们保留哪些配置数据的详情，请参阅我们的<privacy>隐私政策</privacy>。",
+    "s6Title": "6. 用户内容和责任",
+    "s6p1": "你对通过本服务配置的所有内容负全部责任，包括自定义机器人消息、管理操作和提醒配置。我们不审查或认可用户生成的配置。",
+    "s6p2": "将 Arken Bot 添加到其 Discord 服务器的服务器管理员有责任确保其对机器人的使用符合适用法律和 Discord 的政策，包括有关管理、从未成年人收集数据和成员隐私的规则。",
+    "s7Title": "7. 服务可用性",
+    "s7p1": "Arken Bot 按“现状”和“可用”基础提供。我们不保证不间断、无错误的运行。我们可能出于维护、安全或任何其他原因，随时在不通知的情况下暂停或停止本服务。",
+    "s7p2": "对于因停机、错过的通知（包括直播提醒）或由服务中断导致的数据丢失所造成的任何损失，我们概不负责。",
+    "s8Title": "8. 终止",
+    "s8p1": "如果我们确定本条款已被违反，我们保留自行酌情从任意 Discord 服务器移除 Arken Bot，或暂停任意用户或服务器访问权限的权利。你可以随时通过 Discord 的服务器设置从你的服务器移除机器人。",
+    "s8p2": "移除或终止后，你可以通过 <email>support@arkenbot.app</email> 与我们联系，请求删除所有相关数据。",
+    "s9Title": "9. 免责声明",
+    "s9p1": "本服务不提供任何明示或暗示的任何形式的保证，包括但不限于适销性、特定用途适用性或不侵权的保证。我们不保证本服务将满足你的要求，或它将是安全的、不间断的或无错误的。",
+    "s10Title": "10. 责任限制",
+    "s10p1": "在适用法律允许的最大范围内，即使已被告知此类损害的可能性，Arken Bot 及其运营者也不对因你使用或无法使用本服务而产生的任何间接、附带、特殊、后果性或惩罚性损害负责。",
+    "s11Title": "11. 本条款的变更",
+    "s11p1": "我们可能随时更新本条款。本页顶部的“最后更新”日期反映了变更最近一次进行的时间。在变更发布后继续使用本服务即构成对更新条款的接受。",
+    "s12Title": "12. 联系方式",
+    "s12p1": "如果你对本条款有疑问，请通过 <email>support@arkenbot.app</email> 与我们联系，或加入我们的<support>支持服务器</support>。"
   }
 }

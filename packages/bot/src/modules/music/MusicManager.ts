@@ -22,6 +22,7 @@ import { YouTube } from 'youtube-sr';
 import { prisma } from '../../database.js';
 import { logger, swallow} from '../../logger.js';
 import { getGuildSettings } from '../../utils/settings.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 
 interface SerializedTrack {
   title: string;
@@ -176,27 +177,31 @@ export class MusicQueue {
 
   private notifyError(track: Track, reason: string): void {
     if (!this.textChannel) return;
-    const embed = new EmbedBuilder()
-      .setColor(Colors.Red)
-      .setTitle('⚠️ Playback Failed')
-      .setDescription(`Could not play **${track.title}**.\n\`${reason.slice(0, 200)}\``)
-      .setFooter({ text: 'Try a different search or check that yt-dlp is up to date.' });
-    this.textChannel.send({ embeds: [embed] }).catch(swallow);
+    const channel = this.textChannel;
+    void resolveUserLocale({ user: { id: '' }, guildId: this.guildId }).then((loc) => {
+      const embed = new EmbedBuilder()
+        .setColor(Colors.Red)
+        .setTitle(t('music.playbackFailedTitle', loc))
+        .setDescription(t('music.playbackFailedDescription', loc, { title: track.title, reason: reason.slice(0, 200) }))
+        .setFooter({ text: t('music.playbackFailedFooter', loc) });
+      channel.send({ embeds: [embed] }).catch(swallow);
+    });
   }
 
   private notifyNowPlaying(track: Track): void {
     if (!this.textChannel) return;
     void getGuildSettings(this.guildId).then(async (settings) => {
+      const loc = await resolveUserLocale({ user: { id: '' }, guildId: this.guildId });
       const color = settings?.musicColor
         ? parseInt(settings.musicColor.replace('#', ''), 16)
         : Colors.Blurple;
       const embed = new EmbedBuilder()
         .setColor(color)
-        .setTitle('🎵 Now Playing')
+        .setTitle(t('music.nowPlayingTitle', loc))
         .setDescription(`**${track.title}**`)
         .addFields(
-          { name: 'Requested by', value: `<@${track.requestedBy.id}>`, inline: true },
-          ...(track.duration ? [{ name: 'Duration', value: track.duration, inline: true }] : []),
+          { name: t('music.requestedBy', loc), value: `<@${track.requestedBy.id}>`, inline: true },
+          ...(track.duration ? [{ name: t('music.duration', loc), value: track.duration, inline: true }] : []),
         )
         .setThumbnail(track.thumbnail ?? null);
       const msg = await this.textChannel?.send({ embeds: [embed] }).catch(swallow);

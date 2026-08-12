@@ -19,6 +19,7 @@ import { prisma } from '../../database.js';
 import { getGuildSettings } from '../../utils/settings.js';
 import { logger, swallow} from '../../logger.js';
 import { pub } from '../../redis.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 
 export class LoggingModule {
   /**
@@ -80,13 +81,14 @@ export class LoggingModule {
       mute: COLORS.WARNING, unmute: COLORS.SUCCESS, unban: COLORS.SUCCESS, warn: 0xffa500,
     };
 
+    const loc = await resolveUserLocale({ user: { id: '' }, guildId: guild.id, guildLocale: guild.preferredLocale });
     const embed = new EmbedBuilder()
       .setColor(typeColors[action.type] ?? COLORS.NEUTRAL)
       .setTitle(`${typeEmojis[action.type] ?? '📋'} ${action.type.toUpperCase()}`)
       .addFields(
-        { name: 'User', value: `${action.userTag} (${action.userId})`, inline: true },
-        { name: 'Moderator', value: `${action.moderatorTag}`, inline: true },
-        { name: 'Reason', value: action.reason ?? 'No reason provided' },
+        { name: t('logging.user', loc), value: `${action.userTag} (${action.userId})`, inline: true },
+        { name: t('logging.moderator', loc), value: `${action.moderatorTag}`, inline: true },
+        { name: t('logging.reason', loc), value: action.reason ?? t('logging.noReason', loc) },
       )
       .setTimestamp();
 
@@ -111,17 +113,18 @@ export class LoggingModule {
   static async logMessageDelete(guild: Guild, message: Message): Promise<void> {
     if (message.author.bot) return;
 
+    const loc = await resolveUserLocale({ user: { id: '' }, guildId: guild.id, guildLocale: guild.preferredLocale });
     const embed = new EmbedBuilder()
       .setColor(COLORS.ERROR)
-      .setTitle('🗑️ Message Deleted')
+      .setTitle(t('logging.messageDeleted', loc))
       .addFields(
-        { name: 'Author', value: `${message.author.tag} (${message.author.id})`, inline: true },
-        { name: 'Channel', value: `<#${message.channelId}>`, inline: true },
+        { name: t('logging.author', loc), value: `${message.author.tag} (${message.author.id})`, inline: true },
+        { name: t('logging.channel', loc), value: `<#${message.channelId}>`, inline: true },
       )
       .setTimestamp();
 
     if (message.content) {
-      embed.addFields({ name: 'Content', value: message.content.slice(0, 1024) });
+      embed.addFields({ name: t('logging.content', loc), value: message.content.slice(0, 1024) });
     }
 
     await this.log(guild, LOG_TYPES.MESSAGE_DELETE, embed, {
@@ -136,15 +139,16 @@ export class LoggingModule {
     if (newMessage.author.bot) return;
     if (oldMessage.content === newMessage.content) return;
 
+    const loc = await resolveUserLocale({ user: { id: '' }, guildId: guild.id, guildLocale: guild.preferredLocale });
     const embed = new EmbedBuilder()
       .setColor(COLORS.WARNING)
-      .setTitle('✏️ Message Edited')
+      .setTitle(t('logging.messageEdited', loc))
       .setURL(newMessage.url)
       .addFields(
-        { name: 'Author', value: `${newMessage.author.tag} (${newMessage.author.id})`, inline: true },
-        { name: 'Channel', value: `<#${newMessage.channelId}>`, inline: true },
-        { name: 'Before', value: (oldMessage.content ?? '*No content*').slice(0, 512) },
-        { name: 'After', value: (newMessage.content ?? '*No content*').slice(0, 512) },
+        { name: t('logging.author', loc), value: `${newMessage.author.tag} (${newMessage.author.id})`, inline: true },
+        { name: t('logging.channel', loc), value: `<#${newMessage.channelId}>`, inline: true },
+        { name: t('logging.before', loc), value: (oldMessage.content ?? t('logging.noContent', loc)).slice(0, 512) },
+        { name: t('logging.after', loc), value: (newMessage.content ?? t('logging.noContent', loc)).slice(0, 512) },
       )
       .setTimestamp();
 
@@ -158,14 +162,15 @@ export class LoggingModule {
   }
 
   static async logMemberJoin(guild: Guild, member: GuildMember): Promise<void> {
+    const loc = await resolveUserLocale({ user: { id: '' }, guildId: guild.id, guildLocale: guild.preferredLocale });
     const embed = new EmbedBuilder()
       .setColor(COLORS.SUCCESS)
-      .setTitle('📥 Member Joined')
+      .setTitle(t('logging.memberJoined', loc))
       .setThumbnail(member.user.displayAvatarURL())
       .addFields(
-        { name: 'User', value: `${member.user.tag} (${member.id})`, inline: true },
-        { name: 'Account Age', value: `<t:${Math.floor(member.user.createdTimestamp / 1000)}:R>`, inline: true },
-        { name: 'Member Count', value: `${guild.memberCount}`, inline: true },
+        { name: t('logging.user', loc), value: `${member.user.tag} (${member.id})`, inline: true },
+        { name: t('logging.accountAge', loc), value: `<t:${Math.floor(member.user.createdTimestamp / 1000)}:R>`, inline: true },
+        { name: t('logging.memberCount', loc), value: `${guild.memberCount}`, inline: true },
       )
       .setTimestamp();
 
@@ -185,14 +190,15 @@ export class LoggingModule {
   }
 
   static async logMemberLeave(guild: Guild, member: GuildMember): Promise<void> {
+    const loc = await resolveUserLocale({ user: { id: '' }, guildId: guild.id, guildLocale: guild.preferredLocale });
     const embed = new EmbedBuilder()
       .setColor(COLORS.ERROR)
-      .setTitle('📤 Member Left')
+      .setTitle(t('logging.memberLeft', loc))
       .setThumbnail(member.user.displayAvatarURL())
       .addFields(
-        { name: 'User', value: `${member.user.tag} (${member.id})`, inline: true },
-        { name: 'Joined', value: member.joinedAt ? `<t:${Math.floor(member.joinedAt.getTime() / 1000)}:R>` : 'Unknown', inline: true },
-        { name: 'Member Count', value: `${guild.memberCount}`, inline: true },
+        { name: t('logging.user', loc), value: `${member.user.tag} (${member.id})`, inline: true },
+        { name: t('logging.joined', loc), value: member.joinedAt ? `<t:${Math.floor(member.joinedAt.getTime() / 1000)}:R>` : t('logging.unknown', loc), inline: true },
+        { name: t('logging.memberCount', loc), value: `${guild.memberCount}`, inline: true },
       )
       .setTimestamp();
 

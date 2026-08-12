@@ -8,6 +8,7 @@ import {
 import type { BotCommand } from '../../types.js';
 import { prisma } from '../../database.js';
 import { redis } from '../../redis.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 
 export const CACHE_KEY = (guildId: string) => `sr:list:${guildId}`;
 const CACHE_TTL = 120;
@@ -68,10 +69,11 @@ const command: BotCommand = {
   async execute(interaction: ChatInputCommandInteraction) {
     const guildId = interaction.guildId!;
     const sub = interaction.options.getSubcommand();
+    const loc = await resolveUserLocale(interaction);
 
     if (sub === 'add' || sub === 'remove') {
       if (!interaction.memberPermissions?.has(PermissionFlagsBits.ManageRoles)) {
-        await interaction.reply({ content: '❌ You need **Manage Roles** permission to use this.', ephemeral: true });
+        await interaction.reply({ content: t('cmd.selfrole.needManageRoles', loc), ephemeral: true });
         return;
       }
     }
@@ -85,7 +87,7 @@ const command: BotCommand = {
       const botMember = interaction.guild?.members.me;
       if (botMember && role.position >= botMember.roles.highest.position) {
         await interaction.reply({
-          content: `❌ The bot's role is below **${role.name}** in the role list. Move the bot's role above it first.`,
+          content: t('cmd.selfrole.roleTooHigh', loc, { role: role.name }),
           ephemeral: true,
         });
         return;
@@ -95,12 +97,12 @@ const command: BotCommand = {
         await prisma.selfRole.create({ data: { guildId, roleId: role.id, name } });
         await bustSelfRoleCache(guildId);
         await interaction.reply({
-          content: `✅ <@&${role.id}> is now self-assignable as \`${name}\`.\nMembers can run \`/selfassignrole ${name}\` to claim it.`,
+          content: t('cmd.selfrole.added', loc, { role: `<@&${role.id}>`, name }),
           ephemeral: true,
         });
       } catch {
         await interaction.reply({
-          content: `❌ A self-assignable role with that name or role already exists. Use \`/selfrole list\` to see current entries.`,
+          content: t('cmd.selfrole.exists', loc),
           ephemeral: true,
         });
       }
@@ -113,12 +115,12 @@ const command: BotCommand = {
       const deleted = await prisma.selfRole.deleteMany({ where: { guildId, name } });
 
       if (!deleted.count) {
-        await interaction.reply({ content: `❌ No self-assignable role named \`${name}\` found.`, ephemeral: true });
+        await interaction.reply({ content: t('cmd.selfrole.notFound', loc, { name }), ephemeral: true });
         return;
       }
 
       await bustSelfRoleCache(guildId);
-      await interaction.reply({ content: `✅ \`${name}\` removed from the self-assignable list.`, ephemeral: true });
+      await interaction.reply({ content: t('cmd.selfrole.removed', loc, { name }), ephemeral: true });
       return;
     }
 
@@ -128,7 +130,7 @@ const command: BotCommand = {
 
       if (!roles.length) {
         await interaction.reply({
-          content: 'No self-assignable roles configured yet. Admins can add roles with `/selfrole add`.',
+          content: t('cmd.selfrole.none', loc),
           ephemeral: true,
         });
         return;
@@ -138,14 +140,14 @@ const command: BotCommand = {
         const discordRole = interaction.guild?.roles.cache.get(r.roleId);
         return discordRole
           ? `\`${r.name}\` → <@&${r.roleId}>`
-          : `\`${r.name}\` → ~~${r.roleId}~~ *(role deleted)*`;
+          : `\`${r.name}\` → ~~${r.roleId}~~ *(${t('cmd.selfrole.roleDeleted', loc)})*`;
       });
 
       const embed = new EmbedBuilder()
-        .setTitle('Self-Assignable Roles')
+        .setTitle(t('cmd.selfrole.listTitle', loc))
         .setColor(0x5865f2)
         .setDescription(lines.join('\n'))
-        .setFooter({ text: 'Use /selfassignrole <name> to claim · /selfremoverole <name> to drop' });
+        .setFooter({ text: t('cmd.selfrole.listFooter', loc) });
 
       await interaction.reply({ embeds: [embed], ephemeral: true });
     }

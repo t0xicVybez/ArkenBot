@@ -13,6 +13,7 @@ import type { BotClient } from '../../client.js';
 import { COLORS, levelFromXp } from '@arkenbot/shared';
 import { prisma } from '../../database.js';
 import { errorEmbed } from '../../utils/embed.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 import { getGuildSettings } from '../../utils/settings.js';
 
 const command: BotCommand = {
@@ -30,15 +31,16 @@ const command: BotCommand = {
 
   async execute(interaction: ChatInputCommandInteraction, _client: BotClient) {
     await interaction.deferReply();
+    const loc = await resolveUserLocale(interaction);
 
     if (!interaction.guild) {
-      await interaction.editReply({ embeds: [errorEmbed('Error', 'This command must be used in a server.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('common.error', loc), t('common.notInServer', loc))] });
       return;
     }
 
     const settings = await getGuildSettings(interaction.guild.id);
     if (settings && !settings.levelingEnabled) {
-      await interaction.editReply({ embeds: [errorEmbed('Leveling Disabled', 'The leveling system is disabled for this server.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('cmd.removexp.disabledTitle', loc), t('cmd.removexp.disabled', loc))] });
       return;
     }
 
@@ -46,7 +48,7 @@ const command: BotCommand = {
     const amount = interaction.options.getInteger('amount', true);
 
     if (target.bot) {
-      await interaction.editReply({ embeds: [errorEmbed('Invalid User', 'You cannot remove XP from a bot.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('cmd.removexp.invalidUserTitle', loc), t('cmd.removexp.botTarget', loc))] });
       return;
     }
 
@@ -55,7 +57,7 @@ const command: BotCommand = {
     });
 
     if (!existing) {
-      await interaction.editReply({ embeds: [errorEmbed('No Data', `<@${target.id}> has no XP in this server.`)] });
+      await interaction.editReply({ embeds: [errorEmbed(t('cmd.removexp.noDataTitle', loc), t('cmd.removexp.noData', loc, { user: `<@${target.id}>` }))] });
       return;
     }
 
@@ -70,18 +72,18 @@ const command: BotCommand = {
     });
 
     const levelDownText = newLevel < oldLevel
-      ? `\n> They dropped from Level **${oldLevel}** → **${newLevel}**.`
+      ? `\n> ${t('cmd.removexp.levelDown', loc, { old: oldLevel, new: newLevel })}`
       : '';
 
     const actualRemoved = oldXp - newXp;
 
     const embed = new EmbedBuilder()
       .setColor(COLORS.WARNING)
-      .setTitle('XP Removed')
-      .setDescription(`Removed **${actualRemoved.toLocaleString()} XP** from <@${target.id}>.${levelDownText}`)
+      .setTitle(t('cmd.removexp.title', loc))
+      .setDescription(`${t('cmd.removexp.description', loc, { amount: actualRemoved.toLocaleString(), user: `<@${target.id}>` })}${levelDownText}`)
       .addFields(
-        { name: 'Before', value: `${oldXp.toLocaleString()} XP (Level ${oldLevel})`, inline: true },
-        { name: 'After', value: `${newXp.toLocaleString()} XP (Level ${newLevel})`, inline: true },
+        { name: t('cmd.removexp.fieldBefore', loc), value: t('cmd.removexp.statValue', loc, { xp: oldXp.toLocaleString(), level: oldLevel }), inline: true },
+        { name: t('cmd.removexp.fieldAfter', loc), value: t('cmd.removexp.statValue', loc, { xp: newXp.toLocaleString(), level: newLevel }), inline: true },
       )
       .setTimestamp();
 

@@ -10,6 +10,7 @@ import {
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { moderationEmbed, errorEmbed } from '../../utils/embed.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 import { canModerate } from '../../utils/permissions.js';
 import { prisma } from '../../database.js';
 import { getNextCaseNumber, getGuildSettings } from '../../utils/settings.js';
@@ -33,10 +34,11 @@ const command: BotCommand = {
 
   async execute(interaction: ChatInputCommandInteraction, client: BotClient) {
     await interaction.deferReply();
+    const loc = await resolveUserLocale(interaction);
 
     const settings = await getGuildSettings(interaction.guildId!);
     if (settings && !settings.moderationEnabled) {
-      await interaction.editReply({ embeds: [errorEmbed('Moderation Disabled', 'Moderation commands are disabled for this server.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('moderation.disabledTitle', loc), t('moderation.disabled', loc))] });
       return;
     }
 
@@ -44,17 +46,17 @@ const command: BotCommand = {
     const reason = interaction.options.getString('reason') ?? 'No reason provided';
 
     if (!interaction.guild) {
-      await interaction.editReply({ embeds: [errorEmbed('Error', 'This command must be used in a server.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('common.error', loc), t('common.notInServer', loc))] });
       return;
     }
 
     if (targetUser.id === interaction.user.id) {
-      await interaction.editReply({ embeds: [errorEmbed('Invalid Target', 'You cannot kick yourself.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('moderation.cannotBanSelfTitle', loc), t('cmd.kick.cannotSelf', loc))] });
       return;
     }
 
     if (targetUser.id === client.user?.id) {
-      await interaction.editReply({ embeds: [errorEmbed('Invalid Target', 'I cannot kick myself.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('moderation.cannotBanSelfTitle', loc), t('cmd.kick.cannotSelfBot', loc))] });
       return;
     }
 
@@ -62,18 +64,18 @@ const command: BotCommand = {
     const targetMember = await interaction.guild.members.fetch(targetUser.id).catch(swallow);
 
     if (!targetMember) {
-      await interaction.editReply({ embeds: [errorEmbed('Not Found', 'That user is not in this server.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('cmd.kick.notFoundTitle', loc), t('cmd.kick.notFound', loc))] });
       return;
     }
 
     if (!targetMember.kickable) {
-      await interaction.editReply({ embeds: [errorEmbed('Hierarchy Error', 'I cannot kick this member.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('cmd.kick.hierarchyTitle', loc), t('cmd.kick.notKickable', loc))] });
       return;
     }
 
     if (!canModerate(moderator, targetMember)) {
       await interaction.editReply({
-        embeds: [errorEmbed('Hierarchy Error', 'You cannot kick a member with a higher or equal role.')],
+        embeds: [errorEmbed(t('cmd.kick.hierarchyTitle', loc), t('cmd.kick.hierarchyUser', loc))],
       });
       return;
     }
@@ -83,7 +85,7 @@ const command: BotCommand = {
         .send({
           embeds: [
             moderationEmbed({
-              action: `Kicked from ${interaction.guild.name}`,
+              action: t('cmd.kick.dmAction', loc, { guild: interaction.guild.name }),
               user: targetUser.tag,
               moderator: interaction.user.tag,
               reason,
@@ -110,7 +112,7 @@ const command: BotCommand = {
       });
 
       const embed = moderationEmbed({
-        action: 'Kick',
+        action: t('cmd.kick.action', loc),
         user: `${targetUser.tag} (${targetUser.id})`,
         moderator: interaction.user.tag,
         reason,
@@ -134,7 +136,7 @@ const command: BotCommand = {
       });
     } catch {
       await interaction.editReply({
-        embeds: [errorEmbed('Failed', 'I could not kick that member. Check my permissions.')],
+        embeds: [errorEmbed(t('cmd.kick.failedTitle', loc), t('cmd.kick.failed', loc))],
       });
     }
   },

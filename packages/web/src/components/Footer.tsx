@@ -12,15 +12,16 @@
  * server and client pages (mirrors how `LandingNav` receives them).
  */
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 const SITE_NAME = 'Arken Bot';
 
 /** Operational + legal links shown in the utility row of every footer. */
 const UTILITY_LINKS = [
-  { label: 'Changelog', href: '/changelog' },
-  { label: 'Status', href: '/status' },
-  { label: 'Privacy Policy', href: '/privacy' },
-  { label: 'Terms of Service', href: '/terms' },
+  { key: 'changelog', href: '/changelog' },
+  { key: 'status', href: '/status' },
+  { key: 'privacy', href: '/privacy' },
+  { key: 'terms', href: '/terms' },
 ];
 
 const DISCORD_ICON = (
@@ -41,11 +42,12 @@ interface FooterProps {
 }
 
 function UtilityLinks({ className }: { className: string }) {
+  const t = useTranslations('footer');
   return (
     <>
       {UTILITY_LINKS.map((link) => (
         <Link key={link.href} href={link.href} className={className}>
-          {link.label}
+          {t(link.key)}
         </Link>
       ))}
     </>
@@ -59,6 +61,7 @@ export function Footer({
   docsUrl,
   inviteUrl,
 }: FooterProps) {
+  const t = useTranslations('footer');
   const year = new Date().getFullYear();
 
   if (variant === 'full') {
@@ -76,34 +79,34 @@ export function Footer({
                 <span className="font-semibold text-white text-sm tracking-tight">{SITE_NAME}</span>
               </div>
               <p className="text-[var(--text-muted)] text-xs leading-relaxed max-w-xs">
-                A completely free Discord bot with 20+ features and a real-time web dashboard. No paywalls, ever.
+                {t('brandDesc')}
               </p>
             </div>
 
             <div>
-              <p className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-widest mb-3">Links</p>
+              <p className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-widest mb-3">{t('links')}</p>
               <div className="space-y-2">
-                <Link href="/features" className={columnLink}>Features</Link>
-                <Link href="/addons" className={columnLink}>Addons</Link>
-                <Link href="/auth" className={columnLink}>Dashboard</Link>
-                <a href={docsUrl} target="_blank" rel="noopener noreferrer" className={columnLink}>Docs</a>
+                <Link href="/features" className={columnLink}>{t('features')}</Link>
+                <Link href="/addons" className={columnLink}>{t('addons')}</Link>
+                <Link href="/auth" className={columnLink}>{t('dashboard')}</Link>
+                <a href={docsUrl} target="_blank" rel="noopener noreferrer" className={columnLink}>{t('docs')}</a>
               </div>
             </div>
 
             <div>
-              <p className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-widest mb-3">Community</p>
+              <p className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-widest mb-3">{t('community')}</p>
               <div className="space-y-2">
-                <a href={supportUrl} target="_blank" rel="noopener noreferrer" className={columnLink}>Support Server</a>
-                <a href={inviteUrl} target="_blank" rel="noopener noreferrer" className={columnLink}>Add to Server</a>
+                <a href={supportUrl} target="_blank" rel="noopener noreferrer" className={columnLink}>{t('supportServer')}</a>
+                <a href={inviteUrl} target="_blank" rel="noopener noreferrer" className={columnLink}>{t('addToServer')}</a>
               </div>
             </div>
           </div>
 
           <div className="border-t border-[var(--border-subtle)] pt-6 flex flex-col sm:flex-row items-center justify-between gap-2">
-            <span className="text-[var(--text-muted)] text-xs">© {year} {SITE_NAME}. All rights reserved.</span>
+            <span className="text-[var(--text-muted)] text-xs">{t('rights', { year, siteName: SITE_NAME })}</span>
             <div className="flex items-center gap-4">
               <UtilityLinks className="text-[var(--text-muted)] text-xs hover:text-[var(--text-secondary)] transition-colors" />
-              <span className="text-[var(--text-muted)] text-xs">Made with care for Discord communities.</span>
+              <span className="text-[var(--text-muted)] text-xs">{t('madeWith')}</span>
             </div>
           </div>
         </div>
@@ -115,11 +118,11 @@ export function Footer({
   return (
     <footer className="border-t border-[var(--border)] py-8 px-6 bg-[var(--bg-base)]">
       <div className={`${maxWidthClass} mx-auto flex flex-col sm:flex-row items-center justify-between gap-2`}>
-        <span className="text-[var(--text-muted)] text-xs">© {year} {SITE_NAME}. All rights reserved.</span>
+        <span className="text-[var(--text-muted)] text-xs">{t('rights', { year, siteName: SITE_NAME })}</span>
         <div className="flex items-center gap-4 text-xs">
           <UtilityLinks className={rowLink} />
           {supportUrl && (
-            <a href={supportUrl} target="_blank" rel="noopener noreferrer" className={rowLink}>Support</a>
+            <a href={supportUrl} target="_blank" rel="noopener noreferrer" className={rowLink}>{t('support')}</a>
           )}
         </div>
       </div>

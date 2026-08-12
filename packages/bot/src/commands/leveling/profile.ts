@@ -12,6 +12,7 @@ import type { BotClient } from '../../client.js';
 import { COLORS, xpForLevel } from '@arkenbot/shared';
 import { prisma } from '../../database.js';
 import { errorEmbed } from '../../utils/embed.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 import { getGuildSettings } from '../../utils/settings.js';
 import { AchievementsModule } from '../../modules/leveling/AchievementsModule.js';
 
@@ -26,15 +27,16 @@ const command: BotCommand = {
 
   async execute(interaction: ChatInputCommandInteraction, _client: BotClient) {
     await interaction.deferReply();
+    const loc = await resolveUserLocale(interaction);
 
     if (!interaction.guild) {
-      await interaction.editReply({ embeds: [errorEmbed('Error', 'This command must be used in a server.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('common.error', loc), t('common.notInServer', loc))] });
       return;
     }
 
     const settings = await getGuildSettings(interaction.guild.id);
     if (settings && !settings.levelingEnabled) {
-      await interaction.editReply({ embeds: [errorEmbed('Leveling Disabled', 'The leveling system is disabled for this server.')] });
+      await interaction.editReply({ embeds: [errorEmbed(t('cmd.profile.disabledTitle', loc), t('cmd.profile.disabled', loc))] });
       return;
     }
 
@@ -46,7 +48,7 @@ const command: BotCommand = {
 
     if (!userLevel) {
       await interaction.editReply({
-        embeds: [errorEmbed('No Data', `${targetUser.username} hasn't earned any XP yet.`)],
+        embeds: [errorEmbed(t('cmd.profile.noDataTitle', loc), t('cmd.profile.noData', loc, { user: targetUser.username }))],
       });
       return;
     }
@@ -74,25 +76,25 @@ const command: BotCommand = {
 
     const achievementText = achievements.length > 0
       ? achievements.map((a) => `${a.emoji} **${a.name}** — ${a.description}`).join('\n')
-      : '*No achievements yet. Keep chatting!*';
+      : t('cmd.profile.noAchievements', loc);
 
     const member = interaction.guild.members.cache.get(targetUser.id);
     const joinedAt = member?.joinedAt
       ? `<t:${Math.floor(member.joinedAt.getTime() / 1000)}:R>`
-      : 'Unknown';
+      : t('cmd.profile.unknown', loc);
 
     const embed = new EmbedBuilder()
       .setColor(COLORS.INFO)
-      .setTitle(`${targetUser.username}'s Profile`)
+      .setTitle(t('cmd.profile.title', loc, { user: targetUser.username }))
       .setThumbnail(targetUser.displayAvatarURL({ size: 256 }))
       .addFields(
-        { name: '🏆 Server Rank', value: `#${rank + 1}`, inline: true },
-        { name: '📈 Level', value: `${currentLevel}`, inline: true },
-        { name: '✨ Total XP', value: `${currentXp.toLocaleString()}`, inline: true },
-        { name: '💬 Messages', value: `${userLevel.totalMessages.toLocaleString()}`, inline: true },
-        { name: '📅 Joined', value: joinedAt, inline: true },
-        { name: `Progress to Level ${currentLevel + 1}`, value: `\`${progressBar}\`\n${xpInLevel.toLocaleString()} / ${xpNeeded.toLocaleString()} XP` },
-        { name: `🎖️ Achievements (${achievements.length})`, value: achievementText },
+        { name: t('cmd.profile.fieldServerRank', loc), value: `#${rank + 1}`, inline: true },
+        { name: t('cmd.profile.fieldLevel', loc), value: `${currentLevel}`, inline: true },
+        { name: t('cmd.profile.fieldTotalXp', loc), value: `${currentXp.toLocaleString()}`, inline: true },
+        { name: t('cmd.profile.fieldMessages', loc), value: `${userLevel.totalMessages.toLocaleString()}`, inline: true },
+        { name: t('cmd.profile.fieldJoined', loc), value: joinedAt, inline: true },
+        { name: t('cmd.profile.fieldProgress', loc, { level: currentLevel + 1 }), value: `\`${progressBar}\`\n${xpInLevel.toLocaleString()} / ${xpNeeded.toLocaleString()} XP` },
+        { name: t('cmd.profile.fieldAchievements', loc, { count: achievements.length }), value: achievementText },
       )
       .setFooter({ text: interaction.guild.name, iconURL: interaction.guild.iconURL() ?? undefined })
       .setTimestamp();

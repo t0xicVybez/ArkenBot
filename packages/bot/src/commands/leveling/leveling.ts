@@ -13,6 +13,7 @@ import type { BotClient } from '../../client.js';
 import { prisma } from '../../database.js';
 import { LevelingModule } from '../../modules/leveling/LevelingModule.js';
 import { getGuildSettings } from '../../utils/settings.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 
 const command: BotCommand = {
   data: (new SlashCommandBuilder()
@@ -58,6 +59,7 @@ const command: BotCommand = {
     if (!interaction.isChatInputCommand()) return;
     if (!interaction.guild) return;
 
+    const loc = await resolveUserLocale(interaction);
     const sub = interaction.options.getSubcommand();
 
     if (sub === 'multiplier') {
@@ -69,8 +71,9 @@ const command: BotCommand = {
         create: { guildId: interaction.guild.id, xpMultiplier: value },
       });
 
+      const rate = value === 1 ? t('cmd.leveling.rateNormal', loc) : t('cmd.leveling.rateMultiplied', loc, { value });
       await interaction.reply({
-        content: `XP multiplier set to **${value}x**. Members will now earn ${value === 1 ? 'normal' : `${value}x the`} XP per message.`,
+        content: t('cmd.leveling.multiplierSet', loc, { value, rate }),
         flags: MessageFlags.Ephemeral,
       });
       return;
@@ -87,8 +90,8 @@ const command: BotCommand = {
 
       await interaction.reply({
         content: enabled
-          ? 'Members will now **keep all previous level roles** when they earn a higher one.'
-          : 'Members will now **only keep their highest level role** (lower roles removed automatically).',
+          ? t('cmd.leveling.keepRolesOn', loc)
+          : t('cmd.leveling.keepRolesOff', loc),
         flags: MessageFlags.Ephemeral,
       });
       return;
@@ -106,7 +109,7 @@ const command: BotCommand = {
       );
 
       await interaction.editReply(
-        `Role sync complete. Processed **${processed}** members, updated roles for **${updated}**.`,
+        t('cmd.leveling.syncComplete', loc, { processed, updated }),
       );
     }
   },
