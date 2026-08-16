@@ -7,6 +7,7 @@ import { SettingsSection } from '@/components/SettingsSection';
 import toast from 'react-hot-toast';
 import { useState } from 'react';
 import { Smile, Plus, Trash2, ChevronDown, ChevronUp, CheckCircle, Clock } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface PanelRole {
   id: string;
@@ -27,13 +28,14 @@ interface Panel {
 interface GuildRole { id: string; name: string }
 interface GuildChannel { id: string; name: string; type: number }
 
-const emptyPanelForm = { channelId: '', title: '🎭 Self-Roles', description: 'React below to assign yourself a role.' };
 const emptyRoleForm = { emoji: '', roleId: '', type: 'toggle' };
 
 export default function ReactionRolesPage() {
   const { guildId } = useParams() as { guildId: string };
+  const t = useTranslations('reactionRolesPage');
   const queryClient = useQueryClient();
 
+  const emptyPanelForm = { channelId: '', title: t('defaultTitle'), description: t('defaultDescription') };
   const [panelForm, setPanelForm] = useState(emptyPanelForm);
   const [showNewPanel, setShowNewPanel] = useState(false);
   const [expandedPanels, setExpandedPanels] = useState<Set<string>>(new Set());
@@ -57,54 +59,54 @@ export default function ReactionRolesPage() {
   const createPanel = useMutation({
     mutationFn: () => settingsApi.createPanel(guildId, panelForm),
     onSuccess: (res) => {
-      toast.success('Panel created! The bot is deploying the message…');
+      toast.success(t('panelCreated'));
       setPanelForm(emptyPanelForm);
       setShowNewPanel(false);
       const newPanel = (res as { data: { data: Panel } }).data?.data;
       if (newPanel) setExpandedPanels((s) => new Set([...s, newPanel.id]));
       queryClient.invalidateQueries({ queryKey: ['reaction-role-panels', guildId] });
     },
-    onError: () => toast.error('Failed to create panel.'),
+    onError: () => toast.error(t('createError')),
   });
 
   const updatePanel = useMutation({
     mutationFn: ({ panelId, data }: { panelId: string; data: { title?: string; description?: string } }) =>
       settingsApi.updatePanel(guildId, panelId, data),
     onSuccess: () => {
-      toast.success('Panel updated!');
+      toast.success(t('panelUpdated'));
       queryClient.invalidateQueries({ queryKey: ['reaction-role-panels', guildId] });
     },
-    onError: () => toast.error('Failed to update panel.'),
+    onError: () => toast.error(t('updateError')),
   });
 
   const deletePanel = useMutation({
     mutationFn: (panelId: string) => settingsApi.deletePanel(guildId, panelId),
     onSuccess: () => {
-      toast.success('Panel deleted.');
+      toast.success(t('panelDeleted'));
       queryClient.invalidateQueries({ queryKey: ['reaction-role-panels', guildId] });
     },
-    onError: () => toast.error('Failed to delete panel.'),
+    onError: () => toast.error(t('deleteError')),
   });
 
   const addRole = useMutation({
     mutationFn: ({ panelId, data }: { panelId: string; data: typeof emptyRoleForm }) =>
       settingsApi.addPanelRole(guildId, panelId, data),
     onSuccess: (_, vars) => {
-      toast.success('Role added! Embed is updating…');
+      toast.success(t('roleAdded'));
       setRoleForms((f) => ({ ...f, [vars.panelId]: emptyRoleForm }));
       queryClient.invalidateQueries({ queryKey: ['reaction-role-panels', guildId] });
     },
-    onError: () => toast.error('Failed to add role.'),
+    onError: () => toast.error(t('roleAddError')),
   });
 
   const removeRole = useMutation({
     mutationFn: ({ panelId, roleId }: { panelId: string; roleId: string }) =>
       settingsApi.removePanelRole(guildId, panelId, roleId),
     onSuccess: () => {
-      toast.success('Role removed. Embed is updating…');
+      toast.success(t('roleRemoved'));
       queryClient.invalidateQueries({ queryKey: ['reaction-role-panels', guildId] });
     },
-    onError: () => toast.error('Failed to remove role.'),
+    onError: () => toast.error(t('roleRemoveError')),
   });
 
   const panels = (panelsRes?.data?.data ?? []) as Panel[];
@@ -135,8 +137,8 @@ export default function ReactionRolesPage() {
       <div className="page-head">
         <div className="page-head-icon"><Smile className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>Reaction Roles</h1>
-          <div className="page-head-desc">Members grab roles by reacting to a panel.</div>
+          <h1>{t('title')}</h1>
+          <div className="page-head-desc">{t('subtitle')}</div>
         </div>
         <div className="page-head-actions">
           <button
@@ -144,32 +146,32 @@ export default function ReactionRolesPage() {
           onClick={() => setShowNewPanel((v) => !v)}
         >
           <Plus className="w-4 h-4" />
-          New Panel
+          {t('newPanel')}
         </button>
         </div>
       </div>
 
       {showNewPanel && (
         <SettingsSection
-          title="New Panel"
-          description="The bot will post an embed in the chosen channel and add emoji reactions automatically."
+          title={t('newPanel')}
+          description={t('newPanelDesc')}
         >
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label className="label">Channel</label>
+              <label className="label">{t('channel')}</label>
               <select
                 className="input"
                 value={panelForm.channelId}
                 onChange={(e) => setPanelForm((f) => ({ ...f, channelId: e.target.value }))}
               >
-                <option value="">Select a channel</option>
+                <option value="">{t('selectChannel')}</option>
                 {textChannels.map((ch) => (
                   <option key={ch.id} value={ch.id}>#{ch.name}</option>
                 ))}
               </select>
             </div>
             <div>
-              <label className="label">Title</label>
+              <label className="label">{t('titleLabel')}</label>
               <input
                 className="input"
                 value={panelForm.title}
@@ -178,7 +180,7 @@ export default function ReactionRolesPage() {
             </div>
           </div>
           <div>
-            <label className="label">Description</label>
+            <label className="label">{t('descriptionLabel')}</label>
             <textarea
               className="input min-h-[60px] resize-y"
               value={panelForm.description}
@@ -191,10 +193,10 @@ export default function ReactionRolesPage() {
               disabled={!panelForm.channelId || createPanel.isPending}
               onClick={() => createPanel.mutate()}
             >
-              {createPanel.isPending ? 'Creating…' : 'Create & Deploy'}
+              {createPanel.isPending ? t('creating') : t('createDeploy')}
             </button>
             <button className="btn-secondary" onClick={() => setShowNewPanel(false)}>
-              Cancel
+              {t('cancel')}
             </button>
           </div>
         </SettingsSection>
@@ -202,7 +204,7 @@ export default function ReactionRolesPage() {
 
       {panels.length === 0 && !showNewPanel && (
         <p className="text-gray-500 text-sm mt-4">
-          No panels yet. Click <strong className="text-gray-300">New Panel</strong> to get started.
+          {t.rich('noPanels', { b: (c) => <strong className="text-gray-300">{c}</strong> })}
         </p>
       )}
 
@@ -220,16 +222,16 @@ export default function ReactionRolesPage() {
               >
                 <div className="flex items-center gap-3 min-w-0">
                   {panel.messageId ? (
-                    <span title="Deployed"><CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0" /></span>
+                    <span title={t('deployed')}><CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0" /></span>
                   ) : (
-                    <span title="Pending deployment"><Clock className="w-4 h-4 text-yellow-400 flex-shrink-0" /></span>
+                    <span title={t('pendingDeployment')}><Clock className="w-4 h-4 text-yellow-400 flex-shrink-0" /></span>
                   )}
                   <div className="min-w-0">
                     <p className="text-white font-semibold truncate">{panel.title}</p>
                     <p className="text-gray-400 text-xs">
                       #{getChannelName(panel.channelId)} •{' '}
-                      {panel.roles.length} role{panel.roles.length !== 1 ? 's' : ''}
-                      {!panel.messageId && ' • pending deployment'}
+                      {t('rolesCount', { count: panel.roles.length })}
+                      {!panel.messageId && t('pendingSuffix')}
                     </p>
                   </div>
                 </div>
@@ -237,7 +239,7 @@ export default function ReactionRolesPage() {
                   <button
                     className="text-red-400 hover:text-red-300 p-1 transition-colors"
                     onClick={(e) => { e.stopPropagation(); deletePanel.mutate(panel.id); }}
-                    title="Delete panel"
+                    title={t('deletePanel')}
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -251,7 +253,7 @@ export default function ReactionRolesPage() {
                 <div className="px-4 pb-4 space-y-4 border-t border-[var(--border-subtle)] pt-4">
                   <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <div>
-                      <label className="label">Title</label>
+                      <label className="label">{t('titleLabel')}</label>
                       <input
                         className="input"
                         defaultValue={panel.title}
@@ -262,7 +264,7 @@ export default function ReactionRolesPage() {
                       />
                     </div>
                     <div>
-                      <label className="label">Description</label>
+                      <label className="label">{t('descriptionLabel')}</label>
                       <input
                         className="input"
                         defaultValue={panel.description}
@@ -276,7 +278,7 @@ export default function ReactionRolesPage() {
 
                   {panel.roles.length > 0 && (
                     <div className="space-y-2">
-                      <p className="text-xs text-gray-500 uppercase tracking-wide font-medium">Roles on this panel</p>
+                      <p className="text-xs text-gray-500 uppercase tracking-wide font-medium">{t('rolesOnPanel')}</p>
                       {panel.roles.map((r) => (
                         <div
                           key={r.id}
@@ -286,7 +288,7 @@ export default function ReactionRolesPage() {
                             <span className="text-xl leading-none">{r.emoji}</span>
                             <div>
                               <p className="text-white text-sm font-medium">@{getRoleName(r.roleId)}</p>
-                              <p className="text-gray-500 text-xs">{r.type}</p>
+                              <p className="text-gray-500 text-xs">{['toggle', 'add', 'remove'].includes(r.type) ? t(`rtype_${r.type}`) : r.type}</p>
                             </div>
                           </div>
                           <button
@@ -301,13 +303,13 @@ export default function ReactionRolesPage() {
                   )}
 
                   <div>
-                    <p className="text-xs text-gray-500 uppercase tracking-wide font-medium mb-2">Add a role</p>
+                    <p className="text-xs text-gray-500 uppercase tracking-wide font-medium mb-2">{t('addRole')}</p>
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                       <div>
-                        <label className="label">Emoji</label>
+                        <label className="label">{t('emoji')}</label>
                         <input
                           className="input"
-                          placeholder="e.g. ✅"
+                          placeholder={t('emojiPlaceholder')}
                           value={roleForm.emoji}
                           onChange={(e) =>
                             setRoleForms((f) => ({ ...f, [panel.id]: { ...roleForm, emoji: e.target.value } }))
@@ -315,7 +317,7 @@ export default function ReactionRolesPage() {
                         />
                       </div>
                       <div>
-                        <label className="label">Role</label>
+                        <label className="label">{t('role')}</label>
                         <select
                           className="input"
                           value={roleForm.roleId}
@@ -323,14 +325,14 @@ export default function ReactionRolesPage() {
                             setRoleForms((f) => ({ ...f, [panel.id]: { ...roleForm, roleId: e.target.value } }))
                           }
                         >
-                          <option value="">Select a role</option>
+                          <option value="">{t('selectRole')}</option>
                           {roles.map((r) => (
                             <option key={r.id} value={r.id}>{r.name}</option>
                           ))}
                         </select>
                       </div>
                       <div>
-                        <label className="label">Behaviour</label>
+                        <label className="label">{t('behaviour')}</label>
                         <select
                           className="input"
                           value={roleForm.type}
@@ -338,9 +340,9 @@ export default function ReactionRolesPage() {
                             setRoleForms((f) => ({ ...f, [panel.id]: { ...roleForm, type: e.target.value } }))
                           }
                         >
-                          <option value="toggle">Toggle (add + remove)</option>
-                          <option value="add">Add only</option>
-                          <option value="remove">Remove only</option>
+                          <option value="toggle">{t('typeToggle')}</option>
+                          <option value="add">{t('typeAdd')}</option>
+                          <option value="remove">{t('typeRemove')}</option>
                         </select>
                       </div>
                     </div>
@@ -350,7 +352,7 @@ export default function ReactionRolesPage() {
                       onClick={() => addRole.mutate({ panelId: panel.id, data: roleForm })}
                     >
                       <Plus className="w-4 h-4" />
-                      {addRole.isPending ? 'Adding…' : 'Add Role'}
+                      {addRole.isPending ? t('adding') : t('addRoleBtn')}
                     </button>
                   </div>
                 </div>
