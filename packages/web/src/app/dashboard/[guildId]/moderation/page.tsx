@@ -9,12 +9,14 @@ import { Toggle } from '@/components/Toggle';
 import { SettingsSection } from '@/components/SettingsSection';
 import toast from 'react-hot-toast';
 import type { GuildSettings } from '@arkenbot/shared';
+import { useTranslations } from 'next-intl';
 
 type Tab = 'cases' | 'warnings' | 'escalation';
 type EscalationRule = { count: number; action: string; duration?: number };
 
 export default function ModerationPage() {
   const { guildId } = useParams() as { guildId: string };
+  const t = useTranslations('moderationPage');
   const queryClient = useQueryClient();
   const [tab, setTab] = useState<Tab>('cases');
   const [modSettings, setModSettings] = useState<Partial<GuildSettings>>({});
@@ -31,10 +33,10 @@ export default function ModerationPage() {
   const settingsMutation = useMutation({
     mutationFn: (data: Partial<GuildSettings>) => settingsApi.update(guildId, data),
     onSuccess: () => {
-      toast.success('Saved!');
+      toast.success(t('saved'));
       queryClient.invalidateQueries({ queryKey: ['settings', guildId] });
     },
-    onError: () => toast.error('Failed to save.'),
+    onError: () => toast.error(t('saveError')),
   });
 
   const [page, setPage] = useState(1);
@@ -73,10 +75,10 @@ export default function ModerationPage() {
   const saveEscalationMutation = useMutation({
     mutationFn: (rules: EscalationRule[]) => warningEscalationApi.update(guildId, rules),
     onSuccess: () => {
-      toast.success('Escalation rules saved!');
+      toast.success(t('escSaved'));
       queryClient.invalidateQueries({ queryKey: ['warn-escalation', guildId] });
     },
-    onError: () => toast.error('Failed to save escalation rules'),
+    onError: () => toast.error(t('escSaveError')),
   });
 
   const { data: warningsRes, isLoading: warningsLoading } = useQuery({
@@ -99,20 +101,20 @@ export default function ModerationPage() {
   const clearOneMutation = useMutation({
     mutationFn: (id: string) => moderationApi.clearWarning(guildId, id),
     onSuccess: () => {
-      toast.success('Warning cleared');
+      toast.success(t('warnCleared'));
       queryClient.invalidateQueries({ queryKey: ['warnings', guildId] });
     },
-    onError: () => toast.error('Failed to clear warning'),
+    onError: () => toast.error(t('warnClearError')),
   });
 
   const clearAllMutation = useMutation({
     mutationFn: (userId: string) => moderationApi.clearAllWarnings(guildId, userId),
     onSuccess: (res) => {
       const count = (res as { data?: { data?: { cleared?: number } } }).data?.data?.cleared ?? 0;
-      toast.success(`Cleared ${count} warning(s)`);
+      toast.success(t('cleared', { count }));
       queryClient.invalidateQueries({ queryKey: ['warnings', guildId] });
     },
-    onError: () => toast.error('Failed to clear warnings'),
+    onError: () => toast.error(t('warnsClearError')),
   });
 
   // Group warnings by userId for "Clear all" per user
@@ -138,14 +140,14 @@ export default function ModerationPage() {
       <div className="page-head">
         <div className="page-head-icon"><Shield className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>Moderation</h1>
-          <div className="page-head-desc">View and manage moderation cases and warnings.</div>
+          <h1>{t('title')}</h1>
+          <div className="page-head-desc">{t('subtitle')}</div>
         </div>
       </div>
 
-      <SettingsSection title="Moderation Commands" description="Enable or disable all moderation commands (ban, kick, mute, warn, etc.).">
+      <SettingsSection title={t('cmdTitle')} description={t('cmdDesc')}>
         <Toggle
-          label="Enable Moderation"
+          label={t('enable')}
           enabled={modSettings.moderationEnabled ?? true}
           onChange={(v) => {
             setModSettings((s) => ({ ...s, moderationEnabled: v }));
@@ -164,7 +166,7 @@ export default function ModerationPage() {
               : 'border-transparent text-gray-400 hover:text-white'
           }`}
         >
-          Cases
+          {t('tabCases')}
           {total > 0 && <span className="ml-2 text-xs text-gray-500">({total})</span>}
         </button>
         <button
@@ -175,7 +177,7 @@ export default function ModerationPage() {
               : 'border-transparent text-gray-400 hover:text-white'
           }`}
         >
-          Active Warnings
+          {t('tabWarnings')}
           {warnings.length > 0 && <span className="ml-2 text-xs text-red-400">({warnings.length})</span>}
         </button>
         <button
@@ -186,7 +188,7 @@ export default function ModerationPage() {
               : 'border-transparent text-gray-400 hover:text-white'
           }`}
         >
-          Auto-Actions
+          {t('tabAutoActions')}
         </button>
       </div>
 
@@ -198,7 +200,7 @@ export default function ModerationPage() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input
                 type="text"
-                placeholder="Search by user ID..."
+                placeholder={t('searchCases')}
                 className="input pl-9"
               />
             </div>
@@ -207,13 +209,13 @@ export default function ModerationPage() {
               onChange={(e) => { setTypeFilter(e.target.value); setPage(1); }}
               className="input sm:w-48"
             >
-              <option value="">All Types</option>
-              <option value="ban">Ban</option>
-              <option value="kick">Kick</option>
-              <option value="mute">Mute</option>
-              <option value="warn">Warn</option>
-              <option value="clearwarn">Clear Warn</option>
-              <option value="unban">Unban</option>
+              <option value="">{t('allTypes')}</option>
+              <option value="ban">{t('typeBan')}</option>
+              <option value="kick">{t('typeKick')}</option>
+              <option value="mute">{t('typeMute')}</option>
+              <option value="warn">{t('typeWarn')}</option>
+              <option value="clearwarn">{t('typeClearWarn')}</option>
+              <option value="unban">{t('typeUnban')}</option>
             </select>
           </div>
 
@@ -223,11 +225,11 @@ export default function ModerationPage() {
               <thead className="bg-[var(--bg-base)]">
                 <tr>
                   <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">#</th>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Type</th>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">User</th>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Moderator</th>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Reason</th>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Date</th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colType')}</th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colUser')}</th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colModerator')}</th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colReason')}</th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colDate')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[var(--border-subtle)]">
@@ -242,7 +244,7 @@ export default function ModerationPage() {
                 ) : cases.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
-                      No cases found
+                      {t('noCases')}
                     </td>
                   </tr>
                 ) : (
@@ -279,7 +281,7 @@ export default function ModerationPage() {
             {total > 20 && (
               <div className="px-4 py-3 border-t border-[var(--border-subtle)] flex items-center justify-between">
                 <p className="text-xs text-gray-400">
-                  Showing {Math.min((page - 1) * 20 + 1, total)}–{Math.min(page * 20, total)} of {total}
+                  {t('showing', { from: Math.min((page - 1) * 20 + 1, total), to: Math.min(page * 20, total), total })}
                 </p>
                 <div className="flex gap-2">
                   <button
@@ -287,14 +289,14 @@ export default function ModerationPage() {
                     disabled={page <= 1}
                     className="btn-secondary text-xs py-1 px-3"
                   >
-                    Previous
+                    {t('previous')}
                   </button>
                   <button
                     onClick={() => setPage((p) => p + 1)}
                     disabled={!hasMore}
                     className="btn-secondary text-xs py-1 px-3"
                   >
-                    Next
+                    {t('next')}
                   </button>
                 </div>
               </div>
@@ -311,7 +313,7 @@ export default function ModerationPage() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input
                 type="text"
-                placeholder="Filter by user ID (leave blank for all)..."
+                placeholder={t('filterWarnings')}
                 value={warningUserId}
                 onChange={(e) => setWarningUserId(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && setWarningSearch(warningUserId)}
@@ -319,7 +321,7 @@ export default function ModerationPage() {
               />
             </div>
             <button onClick={() => setWarningSearch(warningUserId)} className="btn-secondary">
-              Search
+              {t('search')}
             </button>
           </div>
 
@@ -332,7 +334,7 @@ export default function ModerationPage() {
           ) : warnings.length === 0 ? (
             <div className="card text-center py-12 text-gray-500">
               <AlertTriangle className="w-8 h-8 mx-auto mb-2 opacity-50" />
-              <p>No active warnings found</p>
+              <p>{t('noWarnings')}</p>
             </div>
           ) : (
             <div className="space-y-4">
@@ -344,14 +346,14 @@ export default function ModerationPage() {
                         {userWarnings[0].userTag || userId}
                       </p>
                       <p className="text-xs text-gray-500 font-mono">{userId}</p>
-                      <p className="text-xs text-gray-400">{userWarnings.length} active warning(s)</p>
+                      <p className="text-xs text-gray-400">{t('activeCount', { count: userWarnings.length })}</p>
                     </div>
                     <button
                       onClick={() => clearAllMutation.mutate(userId)}
                       disabled={clearAllMutation.isPending}
                       className="btn-secondary text-xs py-1 px-3 text-red-400 hover:text-red-300 border-red-700/50"
                     >
-                      Clear All
+                      {t('clearAll')}
                     </button>
                   </div>
                   <div className="divide-y divide-[var(--border-subtle)]">
@@ -360,7 +362,7 @@ export default function ModerationPage() {
                         <div className="flex-1 min-w-0">
                           <p className="text-sm text-gray-200 truncate">{w.reason}</p>
                           <p className="text-xs text-gray-500 mt-0.5">
-                            By <span className="text-gray-400">{w.moderatorTag || w.moderatorId}</span> ·{' '}
+                            {t('by')} <span className="text-gray-400">{w.moderatorTag || w.moderatorId}</span> ·{' '}
                             {new Date(w.createdAt).toLocaleDateString()}
                           </p>
                         </div>
@@ -368,7 +370,7 @@ export default function ModerationPage() {
                           onClick={() => clearOneMutation.mutate(w.id)}
                           disabled={clearOneMutation.isPending}
                           className="text-gray-500 hover:text-red-400 transition-colors flex-shrink-0"
-                          title="Clear this warning"
+                          title={t('clearThis')}
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -386,10 +388,9 @@ export default function ModerationPage() {
       {tab === 'escalation' && (
         <div className="space-y-4">
           <div className="card">
-            <h3 className="text-base font-semibold text-white mb-1">Warning Auto-Actions</h3>
+            <h3 className="text-base font-semibold text-white mb-1">{t('escTitle')}</h3>
             <p className="text-sm text-gray-400 mb-4">
-              Automatically mute, timeout, kick, or ban members when they reach a warning threshold.
-              Rules are checked each time a warning is issued.
+              {t('escDesc')}
             </p>
 
             {escalations.length > 0 ? (
@@ -397,8 +398,8 @@ export default function ModerationPage() {
                 {[...escalations].sort((a, b) => a.count - b.count).map((rule, i) => (
                   <div key={i} className="flex items-center justify-between bg-white/[0.04] rounded-lg px-3 py-2">
                     <span className="text-sm text-gray-200">
-                      At <strong className="text-white">{rule.count}</strong> warnings → <strong className="text-discord-blurple capitalize">{rule.action}</strong>
-                      {rule.duration ? <span className="text-gray-400"> ({rule.duration}s)</span> : null}
+                      {t('ruleAtPrefix')} <strong className="text-white">{rule.count}</strong> {t('ruleWarningsArrow')} <strong className="text-discord-blurple capitalize">{rule.action}</strong>
+                      {rule.duration ? <span className="text-gray-400"> {t('ruleDuration', { duration: rule.duration })}</span> : null}
                     </span>
                     <button
                       onClick={() => {
@@ -414,14 +415,14 @@ export default function ModerationPage() {
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-gray-500 mb-4">No auto-action rules configured.</p>
+              <p className="text-sm text-gray-500 mb-4">{t('noRules')}</p>
             )}
 
             <form
               onSubmit={(e) => {
                 e.preventDefault();
                 const count = parseInt(newEscCount);
-                if (!count || count < 1) return toast.error('Enter a valid warning count');
+                if (!count || count < 1) return toast.error(t('invalidCount'));
                 const rule: EscalationRule = {
                   count,
                   action: newEscAction,
@@ -434,27 +435,27 @@ export default function ModerationPage() {
               className="flex flex-wrap items-end gap-3 border-t border-[var(--border-subtle)] pt-4"
             >
               <div className="w-24">
-                <label className="label">At # warnings</label>
+                <label className="label">{t('atWarningsLabel')}</label>
                 <input type="number" min="1" className="input" value={newEscCount} onChange={(e) => setNewEscCount(e.target.value)} required />
               </div>
               <div>
-                <label className="label">Action</label>
+                <label className="label">{t('actionLabel')}</label>
                 <select className="input" value={newEscAction} onChange={(e) => setNewEscAction(e.target.value)}>
-                  <option value="mute">Mute (via mute role)</option>
-                  <option value="timeout">Timeout</option>
-                  <option value="kick">Kick</option>
-                  <option value="ban">Ban</option>
+                  <option value="mute">{t('optMute')}</option>
+                  <option value="timeout">{t('optTimeout')}</option>
+                  <option value="kick">{t('optKick')}</option>
+                  <option value="ban">{t('optBan')}</option>
                 </select>
               </div>
               {['mute', 'timeout'].includes(newEscAction) && (
                 <div className="w-36">
-                  <label className="label">Duration (seconds)</label>
+                  <label className="label">{t('durationLabel')}</label>
                   <input type="number" min="60" className="input" value={newEscDuration} onChange={(e) => setNewEscDuration(e.target.value)} />
                 </div>
               )}
               <button type="submit" disabled={saveEscalationMutation.isPending} className="btn-primary flex items-center gap-1.5">
                 <Plus className="w-4 h-4" />
-                Add Rule
+                {t('addRule')}
               </button>
             </form>
           </div>
