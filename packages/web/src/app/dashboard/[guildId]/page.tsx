@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { useWebSocket } from '@/lib/socket';
 import { useState, useEffect, useRef } from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
+import { useTranslations } from 'next-intl';
 
 /** Mock-pattern stat tile: uppercase label, big tabular value, optional delta and sparkline. */
 function StatTile({ label, value, delta, spark }: {
@@ -45,6 +46,7 @@ function StatTile({ label, value, delta, spark }: {
 
 export default function GuildOverviewPage() {
   const { guildId } = useParams() as { guildId: string };
+  const t = useTranslations('overviewPage');
   const { user } = useAuth();
   const [checklistDismissed, setChecklistDismissed] = useState(false);
   useEffect(() => {
@@ -101,7 +103,7 @@ export default function GuildOverviewPage() {
   useWebSocket('member:join', (event) => {
     if (event.guildId === guildId) {
       const id = ++eventIdRef.current;
-      setLiveEvents((prev) => [{ id, label: `${(event.data as { userTag: string }).userTag} joined`, type: 'member', ts: Date.now() }, ...prev.slice(0, 19)]);
+      setLiveEvents((prev) => [{ id, label: t('eventJoined', { user: (event.data as { userTag: string }).userTag }), type: 'member', ts: Date.now() }, ...prev.slice(0, 19)]);
     }
   });
 
@@ -109,7 +111,7 @@ export default function GuildOverviewPage() {
     if (event.guildId === guildId) {
       const d = event.data as { type: string; userTag: string };
       const id = ++eventIdRef.current;
-      setLiveEvents((prev) => [{ id, label: `${d.type} — ${d.userTag}`, type: 'mod', ts: Date.now() }, ...prev.slice(0, 19)]);
+      setLiveEvents((prev) => [{ id, label: t('eventMod', { type: d.type, user: d.userTag }), type: 'mod', ts: Date.now() }, ...prev.slice(0, 19)]);
     }
   });
 
@@ -119,12 +121,12 @@ export default function GuildOverviewPage() {
   const isNewGuild = guild && !guild.settings?.moderationEnabled && !guild.settings?.levelingEnabled && !guild.welcomeConfig?.welcomeEnabled && !autoModOn;
 
   const features = [
-    { label: 'Moderation', icon: Shield, enabled: !!guild?.settings?.moderationEnabled },
-    { label: 'Auto-Mod', icon: Bot, enabled: autoModOn },
-    { label: 'Leveling', icon: TrendingUp, enabled: !!guild?.settings?.levelingEnabled },
-    { label: 'Welcome', icon: MessageSquare, enabled: !!guild?.welcomeConfig?.welcomeEnabled },
-    { label: 'Logging', icon: Zap, enabled: !!guild?.settings?.loggingEnabled },
-    { label: 'Music', icon: Music, enabled: !!guild?.settings?.musicEnabled },
+    { label: t('feature_moderation'), icon: Shield, enabled: !!guild?.settings?.moderationEnabled },
+    { label: t('feature_automod'), icon: Bot, enabled: autoModOn },
+    { label: t('feature_leveling'), icon: TrendingUp, enabled: !!guild?.settings?.levelingEnabled },
+    { label: t('feature_welcome'), icon: MessageSquare, enabled: !!guild?.welcomeConfig?.welcomeEnabled },
+    { label: t('feature_logging'), icon: Zap, enabled: !!guild?.settings?.loggingEnabled },
+    { label: t('feature_music'), icon: Music, enabled: !!guild?.settings?.musicEnabled },
   ];
 
   const installedAddons = guild?.guildAddons ?? [];
@@ -134,20 +136,20 @@ export default function GuildOverviewPage() {
       <div className="page-head">
         <div className="page-head-icon"><Sparkles className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>{(() => { const h = new Date().getHours(); const t = h < 12 ? 'morning' : h < 18 ? 'afternoon' : 'evening'; return `Good ${t}${user?.username ? `, ${user.username}` : ''}`; })()}</h1>
-          <div className="page-head-desc">Here&apos;s what happened in {guild?.name ?? 'your server'} over the last 24 hours.</div>
+          <h1>{(() => { const h = new Date().getHours(); const period = h < 12 ? 'morning' : h < 18 ? 'afternoon' : 'evening'; return `${t(`greet_${period}`)}${user?.username ? t('greetName', { name: user.username }) : ''}`; })()}</h1>
+          <div className="page-head-desc">{t('subtitle', { server: guild?.name ?? t('yourServer') })}</div>
         </div>
         <div className="page-head-actions">
-          <Link href={`/dashboard/${guildId}/setup`} className="btn-secondary">✦ Setup Wizard</Link>
+          <Link href={`/dashboard/${guildId}/setup`} className="btn-secondary">✦ {t('setupWizard')}</Link>
         </div>
       </div>
 
       {(() => {
         const steps = [
-          { label: 'Enable moderation', done: !!guild?.settings?.moderationEnabled, href: 'moderation' },
-          { label: 'Welcome messages', done: !!guild?.welcomeConfig?.welcomeEnabled, href: 'welcome' },
-          { label: 'Turn on Auto-Mod', done: autoModOn, href: 'automod' },
-          { label: 'Configure leveling', done: !!guild?.settings?.levelingEnabled, href: 'leveling' },
+          { label: t('step_moderation'), done: !!guild?.settings?.moderationEnabled, href: 'moderation' },
+          { label: t('step_welcome'), done: !!guild?.welcomeConfig?.welcomeEnabled, href: 'welcome' },
+          { label: t('step_automod'), done: autoModOn, href: 'automod' },
+          { label: t('step_leveling'), done: !!guild?.settings?.levelingEnabled, href: 'leveling' },
         ];
         const doneCount = steps.filter((st) => st.done).length;
         const pct = Math.round((doneCount / steps.length) * 100);
@@ -163,7 +165,7 @@ export default function GuildOverviewPage() {
                 <text x="18" y="21.5" textAnchor="middle" fill="var(--text-primary)" fontSize="9" fontWeight="800">{pct}%</text>
               </svg>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold text-white">Finish setting up your server</p>
+                <p className="text-sm font-bold text-white">{t('finishSetup')}</p>
                 <div className="flex flex-wrap gap-x-6 gap-y-1.5 mt-2">
                   {steps.map((st) => (
                     <Link key={st.label} href={`/dashboard/${guildId}/${st.href}`} className="flex items-center gap-2 text-[12.5px] group">
@@ -179,7 +181,7 @@ export default function GuildOverviewPage() {
                 onClick={() => { localStorage.setItem(`checklist_dismissed_${guildId}`, '1'); setChecklistDismissed(true); }}
                 className="btn-ghost text-xs flex-shrink-0"
               >
-                Dismiss
+                {t('dismiss')}
               </button>
             </div>
           </div>
@@ -187,11 +189,11 @@ export default function GuildOverviewPage() {
       })()}
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 mb-6">
-        <StatTile label="Messages · 24h" value={msgToday} delta={msgDelta} spark={msgSeries} />
-        <StatTile label="New Members" value={analytics?.newMembers24h ?? 0} />
-        <StatTile label="Mod Actions" value={analytics?.moderationActions24h ?? 0} />
+        <StatTile label={t('stat_messages24h')} value={msgToday} delta={msgDelta} spark={msgSeries} />
+        <StatTile label={t('stat_newMembers')} value={analytics?.newMembers24h ?? 0} />
+        <StatTile label={t('stat_modActions')} value={analytics?.moderationActions24h ?? 0} />
         <StatTile
-          label="Log Events"
+          label={t('stat_logEvents')}
           value={analytics?.logEvents?.reduce((a: number, b: { _count: { type: number } }) => a + b._count.type, 0) ?? 0}
         />
       </div>
@@ -199,15 +201,15 @@ export default function GuildOverviewPage() {
       <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl mb-6">
         <div className="flex items-center px-5 py-4 border-b border-[var(--border-subtle)]">
           <div>
-            <h2 className="text-[13.5px] font-bold text-white">Message activity</h2>
-            <p className="text-[11.5px] text-[var(--text-muted)]">Last 14 days</p>
+            <h2 className="text-[13.5px] font-bold text-white">{t('messageActivity')}</h2>
+            <p className="text-[11.5px] text-[var(--text-muted)]">{t('last14days')}</p>
           </div>
           <span className="ml-auto badge bg-[var(--accent-glow)] text-[var(--accent)] ring-1 ring-[var(--accent)]/30">14d</span>
         </div>
         <div className="p-5 pt-4">
         {activityData.length === 0 ? (
           <div className="flex items-center justify-center h-32 text-gray-600 text-sm">
-            No activity yet — messages will be tracked automatically
+            {t('noActivity')}
           </div>
         ) : (
           <ResponsiveContainer width="100%" height={160}>
@@ -235,24 +237,24 @@ export default function GuildOverviewPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
         <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl p-0 overflow-hidden">
           <div className="flex items-center px-[18px] py-[13px] border-b border-[var(--border-subtle)]">
-            <h2 className="text-[13.5px] font-bold text-white">Live activity</h2>
+            <h2 className="text-[13.5px] font-bold text-white">{t('liveActivity')}</h2>
             <span className="ml-auto flex items-center gap-1.5 text-[11px] text-[var(--success)] font-medium">
               <span className="w-1.5 h-1.5 rounded-full bg-[var(--success)] animate-pulse" />
-              Live
+              {t('live')}
             </span>
           </div>
           <div className="p-[18px] pt-3">
             {liveEvents.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-28 text-[var(--text-muted)] text-[12.5px] gap-2">
                 <Zap className="w-6 h-6 opacity-40" />
-                <p>Waiting for activity — joins and mod actions appear here in real time.</p>
+                <p>{t('waitingActivity')}</p>
               </div>
             ) : (
               <div>
                 {liveEvents.map((event) => {
                   const age = Date.now() - event.ts;
                   const mins = Math.floor(age / 60000);
-                  const timeLabel = mins === 0 ? 'just now' : `${mins}m`;
+                  const timeLabel = mins === 0 ? t('justNow') : t('minutesAgo', { mins });
                   return (
                     <div key={event.id} className="flex items-center gap-3 py-2.5 border-b border-[var(--border-subtle)] last:border-0 animate-fade-in">
                       <span className="w-[30px] h-[30px] rounded-[9px] bg-[var(--bg-elevated)] grid place-items-center flex-shrink-0">
@@ -262,7 +264,7 @@ export default function GuildOverviewPage() {
                       </span>
                       <div className="flex-1 min-w-0">
                         <p className="text-[13px] text-gray-200 truncate">{event.label}</p>
-                        <p className="text-[11px] text-[var(--text-muted)]">{event.type === 'mod' ? 'moderation' : 'member join'}</p>
+                        <p className="text-[11px] text-[var(--text-muted)]">{event.type === 'mod' ? t('typeModeration') : t('typeMemberJoin')}</p>
                       </div>
                       <span className="text-[11px] text-[var(--text-muted)] tabular flex-shrink-0">{timeLabel}</span>
                     </div>
@@ -275,9 +277,9 @@ export default function GuildOverviewPage() {
 
         <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl p-5">
           <div className="flex items-baseline gap-2 mb-3">
-            <h2 className="text-[13.5px] font-bold text-white">Feature health</h2>
+            <h2 className="text-[13.5px] font-bold text-white">{t('featureHealth')}</h2>
             <span className="text-[11.5px] text-[var(--text-muted)]">
-              {features.filter((f) => f.enabled).length} of {features.length} core features enabled
+              {t('featuresEnabled', { enabled: features.filter((f) => f.enabled).length, total: features.length })}
             </span>
           </div>
           <div className="grid grid-cols-2 gap-x-5">
@@ -285,20 +287,20 @@ export default function GuildOverviewPage() {
               <div key={f.label} className="flex items-center gap-2.5 py-2 border-b border-[var(--border-subtle)] last:border-0 text-[13px]">
                 <span className={`w-[7px] h-[7px] rounded-full flex-shrink-0 ${f.enabled ? 'bg-[var(--success)]' : 'bg-[var(--text-muted)]'}`} />
                 <span className="text-gray-300 flex-1 truncate">{f.label}</span>
-                <span className="text-[11px] text-[var(--text-muted)]">{f.enabled ? 'On' : 'Off'}</span>
+                <span className="text-[11px] text-[var(--text-muted)]">{f.enabled ? t('on') : t('off')}</span>
               </div>
             ))}
           </div>
 
           {installedAddons.length > 0 && (
             <>
-              <p className="text-[10px] font-semibold uppercase tracking-widest text-gray-600 mt-4 mb-2">Addons</p>
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-gray-600 mt-4 mb-2">{t('addons')}</p>
               <div className="grid grid-cols-2 gap-2">
                 {installedAddons.map((ga) => (
                   <div key={ga.addon.displayName} className="flex items-center gap-2.5 py-2 border-b border-[var(--border-subtle)] last:border-0 text-[13px]">
                     <span className="w-[7px] h-[7px] rounded-full bg-[var(--accent)] flex-shrink-0" />
                     <span className="text-gray-300 flex-1 truncate">{ga.addon.displayName}</span>
-                    <span className="text-[11px] text-[var(--text-muted)]">On</span>
+                    <span className="text-[11px] text-[var(--text-muted)]">{t('on')}</span>
                   </div>
                 ))}
               </div>
