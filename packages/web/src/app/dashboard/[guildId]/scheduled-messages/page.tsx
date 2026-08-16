@@ -7,6 +7,7 @@ import { Clock, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useState } from 'react';
 import { Toggle } from '@/components/Toggle';
+import { useTranslations } from 'next-intl';
 
 type ScheduledMessage = {
   id: string;
@@ -20,15 +21,11 @@ type ScheduledMessage = {
   lastError?: string | null;
 };
 
-const REPEAT_OPTIONS = [
-  { value: 'none', label: 'No repeat' },
-  { value: 'hourly', label: 'Hourly' },
-  { value: 'daily', label: 'Daily' },
-  { value: 'weekly', label: 'Weekly' },
-];
+const REPEAT_VALUES = ['none', 'hourly', 'daily', 'weekly'] as const;
 
 export default function ScheduledMessagesPage() {
   const { guildId } = useParams() as { guildId: string };
+  const t = useTranslations('scheduledMessagesPage');
   const queryClient = useQueryClient();
 
   const [newChannelId, setNewChannelId] = useState('');
@@ -60,10 +57,10 @@ export default function ScheduledMessagesPage() {
   const deleteMutation = useMutation({
     mutationFn: (id: string) => scheduledMessagesApi.delete(guildId, id),
     onSuccess: () => {
-      toast.success('Scheduled message deleted');
+      toast.success(t('deleted'));
       queryClient.invalidateQueries({ queryKey: ['scheduled-messages', guildId] });
     },
-    onError: () => toast.error('Failed to delete scheduled message'),
+    onError: () => toast.error(t('deleteError')),
   });
 
   const toggleMutation = useMutation({
@@ -72,13 +69,13 @@ export default function ScheduledMessagesPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['scheduled-messages', guildId] });
     },
-    onError: () => toast.error('Failed to update scheduled message'),
+    onError: () => toast.error(t('updateError')),
   });
 
   const createMutation = useMutation({
     mutationFn: (data: object) => scheduledMessagesApi.create(guildId, data),
     onSuccess: () => {
-      toast.success('Scheduled message created');
+      toast.success(t('created'));
       queryClient.invalidateQueries({ queryKey: ['scheduled-messages', guildId] });
       setNewChannelId('');
       setNewContent('');
@@ -86,14 +83,14 @@ export default function ScheduledMessagesPage() {
       setNewRepeat('none');
       setNewRoleMentionId('');
     },
-    onError: () => toast.error('Failed to create scheduled message'),
+    onError: () => toast.error(t('createError')),
   });
 
   const handleCreate = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newChannelId) return toast.error('Please select a channel');
-    if (!newContent.trim()) return toast.error('Please enter a message');
-    if (!newScheduledAt) return toast.error('Please select a date and time');
+    if (!newChannelId) return toast.error(t('selectChannelError'));
+    if (!newContent.trim()) return toast.error(t('enterMessageError'));
+    if (!newScheduledAt) return toast.error(t('selectDateError'));
     createMutation.mutate({
       channelId: newChannelId,
       content: newContent,
@@ -113,14 +110,14 @@ export default function ScheduledMessagesPage() {
       <div className="page-head">
         <div className="page-head-icon"><Clock className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>Scheduled Messages</h1>
-          <div className="page-head-desc">Automatically send messages at specified times.</div>
+          <h1>{t('title')}</h1>
+          <div className="page-head-desc">{t('subtitle')}</div>
         </div>
       </div>
 
       <div className="card mb-6 p-0 overflow-hidden">
         <div className="px-4 py-3 border-b border-[var(--border-subtle)]">
-          <h2 className="text-lg font-semibold text-white">Scheduled Messages</h2>
+          <h2 className="text-lg font-semibold text-white">{t('title')}</h2>
         </div>
         {isLoading ? (
           <div className="p-4 space-y-3">
@@ -131,18 +128,18 @@ export default function ScheduledMessagesPage() {
         ) : messages.length === 0 ? (
           <div className="p-8 text-center text-gray-500">
             <Clock className="w-8 h-8 mx-auto mb-2 opacity-40" />
-            <p className="text-sm">No scheduled messages yet.</p>
+            <p className="text-sm">{t('noMessages')}</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
           <table className="w-full min-w-[600px]">
             <thead className="bg-[var(--bg-base)]">
               <tr>
-                <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Channel</th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Content</th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Scheduled</th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Repeat</th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Enabled</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colChannel')}</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colContent')}</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colScheduled')}</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colRepeat')}</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colEnabled')}</th>
                 <th className="px-4 py-3" />
               </tr>
             </thead>
@@ -156,7 +153,7 @@ export default function ScheduledMessagesPage() {
                   <td className="px-4 py-3 text-sm text-gray-400 whitespace-nowrap">
                     {new Date(msg.scheduledAt).toLocaleString()}
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-400 capitalize">{msg.repeat}</td>
+                  <td className="px-4 py-3 text-sm text-gray-400">{t(`repeat_${msg.repeat}`)}</td>
                   <td className="px-4 py-3">
                     <Toggle
                       enabled={msg.enabled}
@@ -165,7 +162,7 @@ export default function ScheduledMessagesPage() {
                     />
                     {!msg.enabled && msg.lastError && (
                       <p className="text-[11px] text-red-400/90 mt-1 max-w-[200px]" title={msg.lastError}>
-                        Auto-disabled: {msg.lastError}
+                        {t('autoDisabled', { error: msg.lastError })}
                       </p>
                     )}
                   </td>
@@ -174,7 +171,7 @@ export default function ScheduledMessagesPage() {
                       onClick={() => deleteMutation.mutate(msg.id)}
                       disabled={deleteMutation.isPending}
                       className="text-gray-500 hover:text-red-400 transition-colors"
-                      title="Delete scheduled message"
+                      title={t('deleteMessage')}
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -188,35 +185,35 @@ export default function ScheduledMessagesPage() {
       </div>
 
       <div className="card">
-        <h2 className="text-lg font-semibold text-white mb-4">Create Scheduled Message</h2>
+        <h2 className="text-lg font-semibold text-white mb-4">{t('createTitle')}</h2>
         <form onSubmit={handleCreate} className="space-y-4">
           <div>
-            <label className="label">Channel</label>
+            <label className="label">{t('channel')}</label>
             <select
               className="input"
               value={newChannelId}
               onChange={(e) => setNewChannelId(e.target.value)}
               required
             >
-              <option value="">Select a channel</option>
+              <option value="">{t('selectChannel')}</option>
               {textChannels.map((ch) => (
                 <option key={ch.id} value={ch.id}>#{ch.name}</option>
               ))}
             </select>
           </div>
           <div>
-            <label className="label">Message Content</label>
+            <label className="label">{t('messageContent')}</label>
             <textarea
               className="input min-h-[100px] resize-y"
               value={newContent}
               onChange={(e) => setNewContent(e.target.value)}
-              placeholder="Enter your message here..."
+              placeholder={t('messagePlaceholder')}
               required
             />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="label">Schedule Date & Time</label>
+              <label className="label">{t('scheduleDateTime')}</label>
               <input
                 type="datetime-local"
                 className="input"
@@ -226,38 +223,38 @@ export default function ScheduledMessagesPage() {
               />
             </div>
             <div>
-              <label className="label">Repeat</label>
+              <label className="label">{t('repeat')}</label>
               <select
                 className="input"
                 value={newRepeat}
                 onChange={(e) => setNewRepeat(e.target.value as typeof newRepeat)}
               >
-                {REPEAT_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                {REPEAT_VALUES.map((v) => (
+                  <option key={v} value={v}>{t(`repeat_${v}`)}</option>
                 ))}
               </select>
             </div>
           </div>
           <div>
-            <label className="label">Ping Role (optional)</label>
+            <label className="label">{t('pingRole')}</label>
             <select
               className="input"
               value={newRoleMentionId}
               onChange={(e) => setNewRoleMentionId(e.target.value)}
             >
-              <option value="">No role ping</option>
+              <option value="">{t('noRolePing')}</option>
               {roles.filter((r) => r.name !== '@everyone').map((r) => (
                 <option key={r.id} value={r.id}>@{r.name}</option>
               ))}
             </select>
-            <p className="text-xs text-gray-500 mt-1">The selected role will be mentioned when this message is sent.</p>
+            <p className="text-xs text-gray-500 mt-1">{t('pingRoleHelp')}</p>
           </div>
           <button
             type="submit"
             disabled={createMutation.isPending}
             className="btn-primary"
           >
-            {createMutation.isPending ? 'Scheduling...' : 'Schedule Message'}
+            {createMutation.isPending ? t('scheduling') : t('scheduleMessage')}
           </button>
         </form>
       </div>
