@@ -10,6 +10,7 @@ import type { ReactNode } from 'react';
 import toast from 'react-hot-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { leaderboardApi } from '@/lib/api';
+import { useTranslations } from 'next-intl';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
 type Period = 'all' | 'weekly' | 'monthly';
@@ -61,6 +62,7 @@ const TOP3_STYLES: Record<number, { icon: ReactNode; ring: string; bg: string }>
 
 export default function LeaderboardDashboardPage() {
   const { guildId } = useParams() as { guildId: string };
+  const t = useTranslations('leaderboardDashboardPage');
   const queryClient = useQueryClient();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
@@ -78,11 +80,11 @@ export default function LeaderboardDashboardPage() {
     mutationFn: () => leaderboardApi.resetInactive(guildId),
     onSuccess: (res) => {
       const count = (res.data as { data?: { reset?: number } })?.data?.reset ?? 0;
-      toast.success(`Reset XP for ${count} inactive member${count !== 1 ? 's' : ''}.`);
+      toast.success(t('resetSuccess', { count }));
       queryClient.invalidateQueries({ queryKey: ['dashboard-leaderboard', guildId] });
       setConfirmReset(false);
     },
-    onError: () => { toast.error('Failed to reset inactive members.'); setConfirmReset(false); },
+    onError: () => { toast.error(t('resetError')); setConfirmReset(false); },
   });
 
   const allEntries = data?.entries ?? [];
@@ -100,8 +102,8 @@ export default function LeaderboardDashboardPage() {
       <div className="page-head">
         <div className="page-head-icon"><TrendingUp className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>Leaderboard</h1>
-          <div className="page-head-desc">{total > 0 ? `${total.toLocaleString()} ranked members` : 'Member XP rankings'}</div>
+          <h1>{t('title')}</h1>
+          <div className="page-head-desc">{total > 0 ? t('rankedMembers', { count: total }) : t('subtitleDefault')}</div>
         </div>
         <div className="page-head-actions">
           <Link
@@ -110,7 +112,7 @@ export default function LeaderboardDashboardPage() {
             className="btn-secondary text-xs flex items-center gap-1.5"
           >
             <ExternalLink className="w-3.5 h-3.5" />
-            Public View
+            {t('publicView')}
           </Link>
         </div>
       </div>
@@ -124,21 +126,21 @@ export default function LeaderboardDashboardPage() {
               onClick={() => { setPeriod(p); setPage(1); }}
               className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${period === p ? 'bg-discord-blurple text-white' : 'text-gray-400 hover:text-white'}`}
             >
-              {p === 'all' ? 'All Time' : p === 'weekly' ? 'This Week' : 'This Month'}
+              {t(`period_${p}`)}
             </button>
           ))}
         </div>
         {confirmReset ? (
           <div className="flex items-center gap-2">
-            <span className="text-sm text-red-400">Reset XP for 90+ day inactive members?</span>
+            <span className="text-sm text-red-400">{t('confirmResetQuestion')}</span>
             <button
               onClick={() => resetMutation.mutate()}
               disabled={resetMutation.isPending}
               className="px-3 py-1.5 text-xs bg-red-500/20 border border-red-500/30 text-red-400 hover:bg-red-500/30 rounded-lg transition-colors"
             >
-              {resetMutation.isPending ? 'Resetting…' : 'Confirm'}
+              {resetMutation.isPending ? t('resetting') : t('confirm')}
             </button>
-            <button onClick={() => setConfirmReset(false)} className="px-3 py-1.5 text-xs btn-secondary">Cancel</button>
+            <button onClick={() => setConfirmReset(false)} className="px-3 py-1.5 text-xs btn-secondary">{t('cancel')}</button>
           </div>
         ) : (
           <button
@@ -146,7 +148,7 @@ export default function LeaderboardDashboardPage() {
             className="flex items-center gap-1.5 px-3 py-1.5 text-xs bg-white/[0.06] text-gray-400 hover:text-red-400 rounded-lg transition-colors"
           >
             <RotateCcw className="w-3 h-3" />
-            Reset Inactive (90+ days)
+            {t('resetInactive')}
           </button>
         )}
       </div>
@@ -157,7 +159,7 @@ export default function LeaderboardDashboardPage() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input
             type="text"
-            placeholder="Search by username..."
+            placeholder={t('searchPlaceholder')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="input pl-9"
@@ -180,8 +182,8 @@ export default function LeaderboardDashboardPage() {
       {isError && (
         <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl text-center py-12">
           <Trophy className="w-10 h-10 text-gray-600 mx-auto mb-3" />
-          <p className="text-gray-400">Leaderboard unavailable.</p>
-          <p className="text-gray-600 text-sm mt-1">Leveling may be disabled for this server.</p>
+          <p className="text-gray-400">{t('unavailable')}</p>
+          <p className="text-gray-600 text-sm mt-1">{t('unavailableHint')}</p>
         </div>
       )}
 
@@ -189,8 +191,8 @@ export default function LeaderboardDashboardPage() {
       {!isLoading && !isError && allEntries.length === 0 && (
         <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl text-center py-12">
           <Star className="w-10 h-10 text-gray-600 mx-auto mb-3" />
-          <p className="text-gray-400">No ranked members yet.</p>
-          <p className="text-gray-600 text-sm mt-1">Members earn XP by chatting in the server.</p>
+          <p className="text-gray-400">{t('noRanked')}</p>
+          <p className="text-gray-600 text-sm mt-1">{t('noRankedHint')}</p>
         </div>
       )}
 
@@ -201,9 +203,9 @@ export default function LeaderboardDashboardPage() {
           {/* Table header */}
           <div className="grid grid-cols-[2rem_1fr_6rem_5rem] gap-4 px-4 py-2.5 bg-[var(--bg-base)] border-b border-white/[0.06] min-w-[340px]">
             <span className="text-xs font-medium text-gray-400 uppercase">#</span>
-            <span className="text-xs font-medium text-gray-400 uppercase">Member</span>
-            <span className="text-xs font-medium text-gray-400 uppercase text-right">Level</span>
-            <span className="text-xs font-medium text-gray-400 uppercase text-right">Messages</span>
+            <span className="text-xs font-medium text-gray-400 uppercase">{t('colMember')}</span>
+            <span className="text-xs font-medium text-gray-400 uppercase text-right">{t('colLevel')}</span>
+            <span className="text-xs font-medium text-gray-400 uppercase text-right">{t('colMessages')}</span>
           </div>
 
           <div className="divide-y divide-white/[0.04] min-w-[340px]">
@@ -238,15 +240,15 @@ export default function LeaderboardDashboardPage() {
                         />
                       </div>
                       <span className="text-[10px] text-gray-500 flex-shrink-0">
-                        {entry.xpIntoLevel.toLocaleString()} / {entry.xpForNext.toLocaleString()} XP
+                        {t('xpProgress', { into: entry.xpIntoLevel.toLocaleString(), forNext: entry.xpForNext.toLocaleString() })}
                       </span>
                     </div>
                   </div>
 
                   {/* Level */}
                   <div className="text-right">
-                    <span className="text-sm font-semibold text-discord-blurple">Lv. {entry.level}</span>
-                    <p className="text-[10px] text-gray-500 mt-0.5">{entry.xp.toLocaleString()} total XP</p>
+                    <span className="text-sm font-semibold text-discord-blurple">{t('levelPrefix', { level: entry.level })}</span>
+                    <p className="text-[10px] text-gray-500 mt-0.5">{t('totalXp', { xp: entry.xp.toLocaleString() })}</p>
                   </div>
 
                   {/* Messages */}
@@ -255,7 +257,7 @@ export default function LeaderboardDashboardPage() {
                       <MessageSquare className="w-3 h-3 text-gray-500" />
                       <span className="text-sm">{entry.totalMessages.toLocaleString()}</span>
                     </div>
-                    <p className="text-[10px] text-gray-600 mt-0.5">messages</p>
+                    <p className="text-[10px] text-gray-600 mt-0.5">{t('messagesLabel')}</p>
                   </div>
                 </div>
               );
@@ -267,7 +269,7 @@ export default function LeaderboardDashboardPage() {
           {(page > 1 || hasMore) && (
             <div className="px-4 py-3 border-t border-white/[0.06] flex items-center justify-between">
               <p className="text-xs text-gray-400">
-                Showing {pageStart.toLocaleString()}–{pageEnd.toLocaleString()} of {total.toLocaleString()}
+                {t('showing', { from: pageStart.toLocaleString(), to: pageEnd.toLocaleString(), total: total.toLocaleString() })}
               </p>
               <div className="flex gap-2">
                 <button
@@ -275,14 +277,14 @@ export default function LeaderboardDashboardPage() {
                   disabled={page === 1}
                   className="btn-secondary text-xs py-1 px-3 disabled:opacity-40"
                 >
-                  Previous
+                  {t('previous')}
                 </button>
                 <button
                   onClick={() => setPage((p) => p + 1)}
                   disabled={!hasMore}
                   className="btn-secondary text-xs py-1 px-3 disabled:opacity-40"
                 >
-                  Next
+                  {t('next')}
                 </button>
               </div>
             </div>
@@ -294,7 +296,7 @@ export default function LeaderboardDashboardPage() {
       {!isLoading && !isError && allEntries.length > 0 && entries.length === 0 && (
         <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl text-center py-12">
           <Search className="w-8 h-8 text-gray-600 mx-auto mb-2" />
-          <p className="text-gray-400">No members match &ldquo;{search}&rdquo;</p>
+          <p className="text-gray-400">{t('noMatch', { search })}</p>
         </div>
       )}
     </div>
