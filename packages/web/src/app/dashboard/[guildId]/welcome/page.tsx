@@ -9,9 +9,11 @@ import toast from 'react-hot-toast';
 import { useState, useEffect } from 'react';
 import type { WelcomeConfig } from '@arkenbot/shared';
 import { MessageSquare } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 export default function WelcomePage() {
   const { guildId } = useParams() as { guildId: string };
+  const t = useTranslations('welcomePage');
   const queryClient = useQueryClient();
   const [config, setConfig] = useState<Partial<WelcomeConfig>>({});
 
@@ -32,10 +34,10 @@ export default function WelcomePage() {
   const mutation = useMutation({
     mutationFn: (data: Partial<WelcomeConfig>) => settingsApi.updateWelcome(guildId, data),
     onSuccess: () => {
-      toast.success('Welcome settings saved!');
+      toast.success(t('saved'));
       queryClient.invalidateQueries({ queryKey: ['welcome', guildId] });
     },
-    onError: () => toast.error('Failed to save welcome settings.'),
+    onError: () => toast.error(t('saveError')),
   });
 
   const handleSave = (partial: Partial<WelcomeConfig>) => mutation.mutate(partial);
@@ -56,74 +58,74 @@ export default function WelcomePage() {
       <div className="page-head">
         <div className="page-head-icon"><MessageSquare className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>Welcome & Leave</h1>
-          <div className="page-head-desc">First impressions, automated.</div>
+          <h1>{t('title')}</h1>
+          <div className="page-head-desc">{t('subtitle')}</div>
         </div>
       </div>
 
-      <SettingsSection title="Welcome" description="Send a message when a member joins the server.">
+      <SettingsSection title={t('welcomeTitle')} description={t('welcomeDesc')}>
         <Toggle
-          label="Enable Welcome Messages"
-          description="Post a message in the welcome channel when someone joins"
+          label={t('enableWelcome')}
+          description={t('enableWelcomeDesc')}
           enabled={config.welcomeEnabled ?? false}
           onChange={(v) => { setConfig((c) => ({ ...c, welcomeEnabled: v })); handleSave({ welcomeEnabled: v }); }}
         />
         <div>
-          <label className="label">Welcome Channel</label>
+          <label className="label">{t('welcomeChannel')}</label>
           <select
             className="input"
             value={config.welcomeChannelId ?? ''}
             onChange={(e) => setConfig((c) => ({ ...c, welcomeChannelId: e.target.value || undefined }))}
             onBlur={() => handleSave({ welcomeChannelId: config.welcomeChannelId })}
           >
-            <option value="">Select a channel</option>
+            <option value="">{t('selectChannel')}</option>
             {textChannels.map((ch) => (
               <option key={ch.id} value={ch.id}>#{ch.name}</option>
             ))}
           </select>
         </div>
         <div>
-          <label className="label">Welcome Message</label>
+          <label className="label">{t('welcomeMessage')}</label>
           <textarea
             className="input min-h-[80px] resize-y"
             value={config.welcomeMessage ?? ''}
-            placeholder="Welcome {user} to {server}!"
+            placeholder={t('welcomePlaceholder')}
             onChange={(e) => setConfig((c) => ({ ...c, welcomeMessage: e.target.value }))}
             onBlur={() => handleSave({ welcomeMessage: config.welcomeMessage })}
           />
           <p className="text-xs text-gray-500 mt-1">
-            Variables: {'{user}'}, {'{username}'}, {'{server}'}
+            {t('variables')}
           </p>
         </div>
       </SettingsSection>
 
-      <SettingsSection title="Leave Messages" description="Send a message when a member leaves the server.">
+      <SettingsSection title={t('leaveTitle')} description={t('leaveDesc')}>
         <Toggle
-          label="Enable Leave Messages"
-          description="Post a message when someone leaves or is kicked"
+          label={t('enableLeave')}
+          description={t('enableLeaveDesc')}
           enabled={config.leaveEnabled ?? false}
           onChange={(v) => { setConfig((c) => ({ ...c, leaveEnabled: v })); handleSave({ leaveEnabled: v }); }}
         />
         <div>
-          <label className="label">Leave Channel</label>
+          <label className="label">{t('leaveChannel')}</label>
           <select
             className="input"
             value={config.leaveChannelId ?? ''}
             onChange={(e) => setConfig((c) => ({ ...c, leaveChannelId: e.target.value || undefined }))}
             onBlur={() => handleSave({ leaveChannelId: config.leaveChannelId })}
           >
-            <option value="">Same as welcome channel</option>
+            <option value="">{t('sameAsWelcome')}</option>
             {textChannels.map((ch) => (
               <option key={ch.id} value={ch.id}>#{ch.name}</option>
             ))}
           </select>
         </div>
         <div>
-          <label className="label">Leave Message</label>
+          <label className="label">{t('leaveMessage')}</label>
           <textarea
             className="input min-h-[80px] resize-y"
             value={config.leaveMessage ?? ''}
-            placeholder="Goodbye {username}, we hope to see you again!"
+            placeholder={t('leavePlaceholder')}
             onChange={(e) => setConfig((c) => ({ ...c, leaveMessage: e.target.value }))}
             onBlur={() => handleSave({ leaveMessage: config.leaveMessage })}
           />
