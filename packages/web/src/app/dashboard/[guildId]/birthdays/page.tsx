@@ -8,6 +8,7 @@ import { Toggle } from '@/components/Toggle';
 import { Cake, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 
 type BirthdayConfig = {
   enabled?: boolean;
@@ -24,6 +25,7 @@ type Birthday = {
 
 export default function BirthdaysPage() {
   const { guildId } = useParams() as { guildId: string };
+  const t = useTranslations('birthdaysPage');
   const queryClient = useQueryClient();
   const [config, setConfig] = useState<BirthdayConfig>({});
 
@@ -62,19 +64,19 @@ export default function BirthdaysPage() {
   const configMutation = useMutation({
     mutationFn: (data: Partial<BirthdayConfig>) => birthdayApi.updateConfig(guildId, data),
     onSuccess: () => {
-      toast.success('Birthday settings saved!');
+      toast.success(t('saved'));
       queryClient.invalidateQueries({ queryKey: ['birthdays-config', guildId] });
     },
-    onError: () => toast.error('Failed to save birthday settings'),
+    onError: () => toast.error(t('saveError')),
   });
 
   const deleteMutation = useMutation({
     mutationFn: (userId: string) => birthdayApi.delete(guildId, userId),
     onSuccess: () => {
-      toast.success('Birthday removed');
+      toast.success(t('removed'));
       queryClient.invalidateQueries({ queryKey: ['birthdays', guildId] });
     },
-    onError: () => toast.error('Failed to remove birthday'),
+    onError: () => toast.error(t('removeError')),
   });
 
   const handleConfigChange = (partial: Partial<BirthdayConfig>) => {
@@ -82,11 +84,6 @@ export default function BirthdaysPage() {
     setConfig(updated);
     configMutation.mutate(partial);
   };
-
-  const MONTHS = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December',
-  ];
 
   if (configLoading) {
     return (
@@ -103,49 +100,49 @@ export default function BirthdaysPage() {
       <div className="page-head">
         <div className="page-head-icon"><Cake className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>Birthday Tracker</h1>
-          <div className="page-head-desc">Celebrate server members&apos; birthdays automatically.</div>
+          <h1>{t('title')}</h1>
+          <div className="page-head-desc">{t('subtitle')}</div>
         </div>
       </div>
 
-      <SettingsSection title="Birthday Configuration" description="Set up automatic birthday announcements and role assignments.">
+      <SettingsSection title={t('configTitle')} description={t('configDesc')}>
         <Toggle
-          label="Enable Birthday Tracker"
-          description="Announce birthdays and assign the birthday role on member birthdays"
+          label={t('enable')}
+          description={t('enableDesc')}
           enabled={config.enabled ?? false}
           onChange={(v) => handleConfigChange({ enabled: v })}
         />
         <div>
-          <label className="label">Birthday Announcement Channel</label>
+          <label className="label">{t('channel')}</label>
           <select
             className="input"
             value={config.channelId ?? ''}
             onChange={(e) => handleConfigChange({ channelId: e.target.value || undefined })}
           >
-            <option value="">Select a channel</option>
+            <option value="">{t('selectChannel')}</option>
             {textChannels.map((ch) => (
               <option key={ch.id} value={ch.id}>#{ch.name}</option>
             ))}
           </select>
         </div>
         <div>
-          <label className="label">Birthday Role</label>
+          <label className="label">{t('role')}</label>
           <select
             className="input"
             value={config.roleId ?? ''}
             onChange={(e) => handleConfigChange({ roleId: e.target.value || undefined })}
           >
-            <option value="">No birthday role</option>
+            <option value="">{t('noRole')}</option>
             {roles.map((r) => (
               <option key={r.id} value={r.id}>@{r.name}</option>
             ))}
           </select>
-          <p className="text-xs text-gray-500 mt-1">This role will be assigned to members on their birthday.</p>
+          <p className="text-xs text-gray-500 mt-1">{t('roleHelp')}</p>
         </div>
       </SettingsSection>
 
       <div className="card">
-        <h2 className="text-lg font-semibold text-white mb-4">Member Birthdays</h2>
+        <h2 className="text-lg font-semibold text-white mb-4">{t('listTitle')}</h2>
         {birthdaysLoading ? (
           <div className="space-y-2">
             {[...Array(5)].map((_, i) => (
@@ -154,7 +151,7 @@ export default function BirthdaysPage() {
           </div>
         ) : birthdays.length === 0 ? (
           <p className="text-gray-500 text-sm text-center py-8">
-            No birthdays recorded yet. Members can set their birthday using the /birthday command.
+            {t('noBirthdays')}
           </p>
         ) : (
           <div className="overflow-hidden rounded-lg border border-[var(--border-subtle)]">
@@ -162,9 +159,9 @@ export default function BirthdaysPage() {
             <table className="w-full min-w-[500px]">
               <thead className="bg-[var(--bg-base)]">
                 <tr>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">User</th>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Month</th>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Day</th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colUser')}</th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colMonth')}</th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colDay')}</th>
                   <th className="px-4 py-3" />
                 </tr>
               </thead>
@@ -172,14 +169,14 @@ export default function BirthdaysPage() {
                 {birthdays.map((b) => (
                   <tr key={b.userId} className="hover:bg-white/[0.02] transition-colors">
                     <td className="px-4 py-3 text-sm text-gray-300">{b.username}</td>
-                    <td className="px-4 py-3 text-sm text-gray-200">{MONTHS[b.month - 1] ?? b.month}</td>
+                    <td className="px-4 py-3 text-sm text-gray-200">{b.month >= 1 && b.month <= 12 ? t(`month_${b.month}`) : b.month}</td>
                     <td className="px-4 py-3 text-sm text-gray-200">{b.day}</td>
                     <td className="px-4 py-3 text-right">
                       <button
                         onClick={() => deleteMutation.mutate(b.userId)}
                         disabled={deleteMutation.isPending}
                         className="text-gray-500 hover:text-red-400 transition-colors"
-                        title="Remove birthday"
+                        title={t('removeBirthday')}
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
