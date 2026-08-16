@@ -10,19 +10,21 @@ import { useState, useEffect } from 'react';
 import type { AutoModConfig } from '@arkenbot/shared';
 import { Bot, X, BarChart2 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
+import { useTranslations } from 'next-intl';
 
-// ─── Filter-type label map ────────────────────────────────────────────────────
+// ─── Filter-type label map (backend reason → i18n key) ────────────────────────
 const FILTER_LABELS: Record<string, string> = {
-  'Word filter violation': 'Word Filter',
-  'Spam detected':         'Anti-Spam',
-  'Link detected':         'Anti-Link',
-  'Mention spam':          'Anti-Mention',
-  'Caps spam':             'Anti-Caps',
-  'Raid detected':         'Anti-Raid',
+  'Word filter violation': 'labelWordFilter',
+  'Spam detected':         'labelAntiSpam',
+  'Link detected':         'labelAntiLink',
+  'Mention spam':          'labelAntiMention',
+  'Caps spam':             'labelAntiCaps',
+  'Raid detected':         'labelAntiRaid',
 };
 
 // ─── Automod analytics panel ──────────────────────────────────────────────────
 function AutoModStats({ guildId }: { guildId: string }) {
+  const t = useTranslations('automodPage');
   const [days, setDays] = useState(14);
 
   const { data: res, isLoading } = useQuery({
@@ -57,27 +59,27 @@ function AutoModStats({ guildId }: { guildId: string }) {
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-2">
           <BarChart2 className="w-4 h-4 text-discord-blurple" />
-          <h2 className="text-sm font-semibold text-white">Hit Rate Analytics</h2>
-          <span className="text-xs text-gray-500 font-normal">· {analytics.total} actions total</span>
+          <h2 className="text-sm font-semibold text-white">{t('statsTitle')}</h2>
+          <span className="text-xs text-gray-500 font-normal">· {t('actionsTotal', { total: analytics.total })}</span>
         </div>
         <select
           className="input text-xs py-1 w-28"
           value={days}
           onChange={(e) => setDays(Number(e.target.value))}
         >
-          <option value={7}>Last 7 days</option>
-          <option value={14}>Last 14 days</option>
-          <option value={30}>Last 30 days</option>
+          <option value={7}>{t('last7')}</option>
+          <option value={14}>{t('last14')}</option>
+          <option value={30}>{t('last30')}</option>
         </select>
       </div>
 
       {analytics.total === 0 ? (
-        <p className="text-gray-500 text-sm text-center py-4">No automod actions in this period.</p>
+        <p className="text-gray-500 text-sm text-center py-4">{t('noActions')}</p>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Time-series chart */}
           <div>
-            <p className="text-xs text-gray-500 mb-2">Actions per day</p>
+            <p className="text-xs text-gray-500 mb-2">{t('actionsPerDay')}</p>
             <ResponsiveContainer width="100%" height={120}>
               <BarChart data={chartData} margin={{ top: 0, right: 0, left: -28, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#ffffff08" vertical={false} />
@@ -94,10 +96,10 @@ function AutoModStats({ guildId }: { guildId: string }) {
 
           {/* Filter breakdown */}
           <div>
-            <p className="text-xs text-gray-500 mb-2">By filter type</p>
+            <p className="text-xs text-gray-500 mb-2">{t('byFilterType')}</p>
             <div className="space-y-1.5">
               {filterRows.map(([reason, count]) => {
-                const label = FILTER_LABELS[reason] ?? reason;
+                const label = FILTER_LABELS[reason] ? t(FILTER_LABELS[reason]) : reason;
                 const pct = Math.round((count / analytics.total) * 100);
                 return (
                   <div key={reason} className="flex items-center gap-2">
@@ -125,6 +127,7 @@ interface GuildChannel { id: string; name: string; type: number }
 
 export default function AutoModPage() {
   const { guildId } = useParams() as { guildId: string };
+  const t = useTranslations('automodPage');
   const queryClient = useQueryClient();
   const [config, setConfig] = useState<Partial<AutoModConfig>>({});
   const [wordInput, setWordInput] = useState('');
@@ -156,10 +159,10 @@ export default function AutoModPage() {
   const mutation = useMutation({
     mutationFn: (data: Partial<AutoModConfig>) => settingsApi.updateAutoMod(guildId, data),
     onSuccess: () => {
-      toast.success('Auto-Mod settings saved!');
+      toast.success(t('saved'));
       queryClient.invalidateQueries({ queryKey: ['automod', guildId] });
     },
-    onError: () => toast.error('Failed to save settings.'),
+    onError: () => toast.error(t('saveError')),
   });
 
   const handleToggle = (key: keyof AutoModConfig, value: boolean) => {
@@ -175,7 +178,7 @@ export default function AutoModPage() {
     const trimmed = wordInput.trim().toLowerCase();
     if (!trimmed) return;
     if ((config.filteredWords ?? []).includes(trimmed)) {
-      toast.error(`"${trimmed}" is already in the filter`);
+      toast.error(t('wordExists', { word: trimmed }));
       setWordInput('');
       return;
     }
@@ -210,23 +213,23 @@ export default function AutoModPage() {
       <div className="page-head">
         <div className="page-head-icon"><Bot className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>Auto-Mod</h1>
-          <div className="page-head-desc">Filters that act before your mods have to.</div>
+          <h1>{t('title')}</h1>
+          <div className="page-head-desc">{t('subtitle')}</div>
         </div>
       </div>
 
       <AutoModStats guildId={guildId} />
 
-      <SettingsSection title="Anti-Spam" description="Prevent message spam automatically.">
+      <SettingsSection title={t('spamTitle')} description={t('spamDesc')}>
         <Toggle
-          label="Enable Anti-Spam"
+          label={t('enableSpam')}
           enabled={config.antiSpamEnabled ?? false}
           onChange={(v) => handleToggle('antiSpamEnabled', v)}
         />
         {config.antiSpamEnabled && (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
             <div>
-              <label className="label">Messages Threshold</label>
+              <label className="label">{t('msgThreshold')}</label>
               <input
                 type="number"
                 className="input"
@@ -238,7 +241,7 @@ export default function AutoModPage() {
               />
             </div>
             <div>
-              <label className="label">Interval (ms)</label>
+              <label className="label">{t('intervalMs')}</label>
               <input
                 type="number"
                 className="input"
@@ -255,11 +258,11 @@ export default function AutoModPage() {
       </SettingsSection>
 
       <SettingsSection
-        title="Word Filter"
-        description="Block specific words or phrases. Messages are deleted and the user is warned — with escalation to timeout then kick on repeat violations."
+        title={t('wordTitle')}
+        description={t('wordDesc')}
       >
         <Toggle
-          label="Enable Word Filter"
+          label={t('enableWord')}
           enabled={config.filterEnabled ?? false}
           onChange={(v) => handleToggle('filterEnabled', v)}
         />
@@ -271,12 +274,12 @@ export default function AutoModPage() {
                 <input
                   type="text"
                   className="input flex-1"
-                  placeholder="Add a word..."
+                  placeholder={t('addWord')}
                   value={wordInput}
                   onChange={(e) => setWordInput(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && addWord()}
                 />
-                <button onClick={addWord} className="btn-primary">Add</button>
+                <button onClick={addWord} className="btn-primary">{t('add')}</button>
               </div>
               <div className="flex flex-wrap gap-2">
                 {(config.filteredWords ?? []).map((word, i) => (
@@ -289,20 +292,20 @@ export default function AutoModPage() {
                   </span>
                 ))}
                 {(config.filteredWords?.length ?? 0) === 0 && (
-                  <p className="text-gray-500 text-xs">No words in filter</p>
+                  <p className="text-gray-500 text-xs">{t('noWords')}</p>
                 )}
               </div>
             </div>
 
             {/* Escalation thresholds */}
             <div className="border-t border-[var(--border-subtle)] pt-4">
-              <p className="text-sm font-medium text-white mb-3">Escalation</p>
+              <p className="text-sm font-medium text-white mb-3">{t('escalation')}</p>
               <p className="text-xs text-gray-500 mb-3">
-                Violations are tracked per-user over 24 hours. Each offense creates a warning.
+                {t('escalationDesc')}
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="label">Violations before timeout</label>
+                  <label className="label">{t('beforeTimeout')}</label>
                   <input
                     type="number"
                     className="input"
@@ -316,7 +319,7 @@ export default function AutoModPage() {
                   />
                 </div>
                 <div>
-                  <label className="label">Timeout duration (seconds)</label>
+                  <label className="label">{t('timeoutDuration')}</label>
                   <input
                     type="number"
                     className="input"
@@ -330,11 +333,11 @@ export default function AutoModPage() {
                     onBlur={() => handleSave({ filterTimeoutDuration: config.filterTimeoutDuration })}
                   />
                   <p className="text-xs text-gray-500 mt-1">
-                    {Math.ceil((config.filterTimeoutDuration ?? 300) / 60)} min
+                    {t('minSuffix', { min: Math.ceil((config.filterTimeoutDuration ?? 300) / 60) })}
                   </p>
                 </div>
                 <div>
-                  <label className="label">Violations before kick</label>
+                  <label className="label">{t('beforeKick')}</label>
                   <input
                     type="number"
                     className="input"
@@ -351,47 +354,47 @@ export default function AutoModPage() {
 
               {/* Summary */}
               <div className="mt-3 p-3 rounded bg-[var(--bg-card)] text-xs text-gray-400 space-y-1">
-                <p>① 1–{(config.filterWarnBeforeTimeout ?? 3) - 1} violations → <span className="text-yellow-400">delete + warn</span></p>
-                <p>② {config.filterWarnBeforeTimeout ?? 3}–{(config.filterWarnBeforeKick ?? 5) - 1} violations → <span className="text-orange-400">timeout ({Math.ceil((config.filterTimeoutDuration ?? 300) / 60)} min)</span></p>
-                <p>③ {config.filterWarnBeforeKick ?? 5}+ violations → <span className="text-red-400">kick</span></p>
+                <p>{t('sum1Prefix', { max: (config.filterWarnBeforeTimeout ?? 3) - 1 })} <span className="text-yellow-400">{t('deleteWarn')}</span></p>
+                <p>{t('sum2Prefix', { from: config.filterWarnBeforeTimeout ?? 3, to: (config.filterWarnBeforeKick ?? 5) - 1 })} <span className="text-orange-400">{t('timeoutLabel', { min: Math.ceil((config.filterTimeoutDuration ?? 300) / 60) })}</span></p>
+                <p>{t('sum3Prefix', { n: config.filterWarnBeforeKick ?? 5 })} <span className="text-red-400">{t('kickLabel')}</span></p>
               </div>
             </div>
 
             {/* Custom messages */}
             <div className="border-t border-[var(--border-subtle)] pt-4 space-y-4">
-              <p className="text-sm font-medium text-white">Messages</p>
+              <p className="text-sm font-medium text-white">{t('messages')}</p>
               <p className="text-xs text-gray-500 -mt-2">
-                Variables: <code className="text-gray-400">{'{user}'}</code> <code className="text-gray-400">{'{count}'}</code> <code className="text-gray-400">{'{server}'}</code>
+                {t('variablesLabel')} <code className="text-gray-400">{'{user}'}</code> <code className="text-gray-400">{'{count}'}</code> <code className="text-gray-400">{'{server}'}</code>
               </p>
               <div>
-                <label className="label">Warning / Timeout Message</label>
-                <p className="text-xs text-gray-500 mb-1">Sent in channel when a violation is detected (warn or timeout stage)</p>
+                <label className="label">{t('warnMsgLabel')}</label>
+                <p className="text-xs text-gray-500 mb-1">{t('warnMsgDesc')}</p>
                 <textarea
                   className="input min-h-[60px] resize-y font-mono text-sm"
                   value={config.filterWarnMessage ?? ''}
-                  placeholder="⚠️ {user} Your message was removed for containing a filtered word (violation #{count})."
+                  placeholder={t('warnMsgPlaceholder')}
                   onChange={(e) => setConfig((c) => ({ ...c, filterWarnMessage: e.target.value }))}
                   onBlur={() => handleSave({ filterWarnMessage: config.filterWarnMessage })}
                 />
               </div>
               <div>
-                <label className="label">Kick Message</label>
-                <p className="text-xs text-gray-500 mb-1">Sent in channel when a user is kicked for violations</p>
+                <label className="label">{t('kickMsgLabel')}</label>
+                <p className="text-xs text-gray-500 mb-1">{t('kickMsgDesc')}</p>
                 <textarea
                   className="input min-h-[60px] resize-y font-mono text-sm"
                   value={config.filterKickMessage ?? ''}
-                  placeholder="⛔ {user} was **kicked** for repeated word filter violations (violation #{count})."
+                  placeholder={t('kickMsgPlaceholder')}
                   onChange={(e) => setConfig((c) => ({ ...c, filterKickMessage: e.target.value }))}
                   onBlur={() => handleSave({ filterKickMessage: config.filterKickMessage })}
                 />
               </div>
               <div>
-                <label className="label">Kick DM Message</label>
-                <p className="text-xs text-gray-500 mb-1">Sent via DM to the kicked user (<code className="text-gray-400">{'{user}'}</code> not available here)</p>
+                <label className="label">{t('kickDMLabel')}</label>
+                <p className="text-xs text-gray-500 mb-1">{t('kickDMDescPre')}<code className="text-gray-400">{'{user}'}</code>{t('kickDMDescPost')}</p>
                 <textarea
                   className="input min-h-[60px] resize-y font-mono text-sm"
                   value={config.filterKickDMMessage ?? ''}
-                  placeholder="You were kicked from **{server}** for repeated word filter violations (violation #{count})."
+                  placeholder={t('kickDMPlaceholder')}
                   onChange={(e) => setConfig((c) => ({ ...c, filterKickDMMessage: e.target.value }))}
                   onBlur={() => handleSave({ filterKickDMMessage: config.filterKickDMMessage })}
                 />
@@ -401,15 +404,15 @@ export default function AutoModPage() {
         )}
       </SettingsSection>
 
-      <SettingsSection title="Anti-Mention Spam" description="Prevent mass pinging.">
+      <SettingsSection title={t('mentionTitle')} description={t('mentionDesc')}>
         <Toggle
-          label="Enable Anti-Mention"
+          label={t('enableMention')}
           enabled={config.antiMentionEnabled ?? false}
           onChange={(v) => handleToggle('antiMentionEnabled', v)}
         />
         {config.antiMentionEnabled && (
           <div className="pt-2">
-            <label className="label">Max Mentions per Message</label>
+            <label className="label">{t('maxMentions')}</label>
             <input
               type="number"
               className="input w-full sm:w-32"
@@ -423,16 +426,16 @@ export default function AutoModPage() {
         )}
       </SettingsSection>
 
-      <SettingsSection title="Anti-Raid" description="Protect against coordinated join raids.">
+      <SettingsSection title={t('raidTitle')} description={t('raidDesc')}>
         <Toggle
-          label="Enable Anti-Raid"
+          label={t('enableRaid')}
           enabled={config.antiRaidEnabled ?? false}
           onChange={(v) => handleToggle('antiRaidEnabled', v)}
         />
         {config.antiRaidEnabled && (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
             <div>
-              <label className="label">Join Threshold</label>
+              <label className="label">{t('joinThreshold')}</label>
               <input
                 type="number"
                 className="input"
@@ -444,7 +447,7 @@ export default function AutoModPage() {
               />
             </div>
             <div>
-              <label className="label">Interval (ms)</label>
+              <label className="label">{t('intervalMs')}</label>
               <input
                 type="number"
                 className="input"
@@ -461,18 +464,18 @@ export default function AutoModPage() {
       </SettingsSection>
 
       <SettingsSection
-        title="Anti-Phishing"
-        description="Detect and remove known phishing and scam links. Domain blocklist is refreshed hourly from a public feed."
+        title={t('phishTitle')}
+        description={t('phishDesc')}
       >
         <Toggle
-          label="Enable Anti-Phishing"
-          description="Automatically delete messages containing known phishing links"
+          label={t('enablePhish')}
+          description={t('enablePhishDesc')}
           enabled={config.antiPhishingEnabled ?? false}
           onChange={(v) => handleToggle('antiPhishingEnabled', v)}
         />
         {config.antiPhishingEnabled && (
           <div className="mt-3">
-            <label className="label">Action</label>
+            <label className="label">{t('actionLabel')}</label>
             <select
               className="input w-auto"
               value={config.antiPhishingAction ?? 'delete_mute'}
@@ -481,26 +484,26 @@ export default function AutoModPage() {
                 handleSave({ antiPhishingAction: e.target.value });
               }}
             >
-              <option value="delete">Delete message only</option>
-              <option value="delete_mute">Delete message + timeout user (10 min)</option>
+              <option value="delete">{t('phishDelete')}</option>
+              <option value="delete_mute">{t('phishDeleteMute')}</option>
             </select>
           </div>
         )}
       </SettingsSection>
 
       <SettingsSection
-        title="AI Moderation"
-        description="Uses AI to catch subtle harassment, hate, threats, and scams that keyword filters miss. Opt-in, rate-limited, and conservative by design. Requires an AI key on the bot."
+        title={t('aiTitle')}
+        description={t('aiDesc')}
       >
         <Toggle
-          label="Enable AI Moderation"
-          description="Have the AI review messages and flag genuinely harmful ones for your moderators"
+          label={t('enableAi')}
+          description={t('enableAiDesc')}
           enabled={config.aiModEnabled ?? false}
           onChange={(v) => handleToggle('aiModEnabled', v)}
         />
         {config.aiModEnabled && (
           <div className="mt-3">
-            <label className="label">Action on a confident violation</label>
+            <label className="label">{t('aiActionLabel')}</label>
             <select
               className="input w-auto"
               value={config.aiModAction ?? 'flag'}
@@ -509,16 +512,16 @@ export default function AutoModPage() {
                 handleSave({ aiModAction: e.target.value });
               }}
             >
-              <option value="flag">Flag only — post an alert for moderators (recommended)</option>
-              <option value="delete">Delete the message and log it</option>
+              <option value="flag">{t('aiFlag')}</option>
+              <option value="delete">{t('aiDelete')}</option>
             </select>
           </div>
         )}
       </SettingsSection>
 
       <SettingsSection
-        title="Exempt Roles"
-        description="Members with any of these roles are never moderated by Auto-Mod. Administrators are always exempt."
+        title={t('exemptRolesTitle')}
+        description={t('exemptRolesDesc')}
       >
         <div className="space-y-3">
           <select
@@ -526,7 +529,7 @@ export default function AutoModPage() {
             value=""
             onChange={(e) => { if (e.target.value) toggleExemptRole(e.target.value); }}
           >
-            <option value="">Add an exempt role…</option>
+            <option value="">{t('addExemptRole')}</option>
             {allRoles
               .filter((r) => !(config.exemptRoles ?? []).includes(r.id))
               .map((r) => (
@@ -535,7 +538,7 @@ export default function AutoModPage() {
           </select>
           <div className="flex flex-wrap gap-2">
             {(config.exemptRoles ?? []).length === 0 && (
-              <p className="text-gray-500 text-xs">No exempt roles</p>
+              <p className="text-gray-500 text-xs">{t('noExemptRoles')}</p>
             )}
             {(config.exemptRoles ?? []).map((roleId) => {
               const role = allRoles.find((r) => r.id === roleId);
@@ -554,8 +557,8 @@ export default function AutoModPage() {
       </SettingsSection>
 
       <SettingsSection
-        title="Exempt Channels"
-        description="Auto-Mod is disabled in these channels. Useful for bot or staff channels."
+        title={t('exemptChannelsTitle')}
+        description={t('exemptChannelsDesc')}
       >
         <div className="space-y-3">
           <select
@@ -563,7 +566,7 @@ export default function AutoModPage() {
             value=""
             onChange={(e) => { if (e.target.value) toggleExemptChannel(e.target.value); }}
           >
-            <option value="">Add an exempt channel…</option>
+            <option value="">{t('addExemptChannel')}</option>
             {textChannels
               .filter((c) => !(config.exemptChannels ?? []).includes(c.id))
               .map((c) => (
@@ -572,7 +575,7 @@ export default function AutoModPage() {
           </select>
           <div className="flex flex-wrap gap-2">
             {(config.exemptChannels ?? []).length === 0 && (
-              <p className="text-gray-500 text-xs">No exempt channels</p>
+              <p className="text-gray-500 text-xs">{t('noExemptChannels')}</p>
             )}
             {(config.exemptChannels ?? []).map((channelId) => {
               const channel = textChannels.find((c) => c.id === channelId);
