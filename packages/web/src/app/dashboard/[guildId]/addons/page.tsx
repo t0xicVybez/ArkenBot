@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 import { Puzzle, Plus, Trash2, Settings, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import type { AddonSettingSchema } from '@arkenbot/shared';
+import { useTranslations } from 'next-intl';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -35,6 +36,7 @@ function AddonSettingsModal({
   guildId: string;
   onClose: () => void;
 }) {
+  const t = useTranslations('addonsDashboardPage');
   const schema = addon.manifest?.settings ?? [];
   const [values, setValues] = useState<Record<string, unknown>>({});
   const [loaded, setLoaded] = useState(false);
@@ -78,8 +80,8 @@ function AddonSettingsModal({
 
   const saveMutation = useMutation({
     mutationFn: () => addonsApi.updateSettings(guildId, addon.id, values),
-    onSuccess: () => { toast.success('Settings saved!'); onClose(); },
-    onError:   () => toast.error('Failed to save settings.'),
+    onSuccess: () => { toast.success(t('saved')); onClose(); },
+    onError:   () => toast.error(t('saveError')),
   });
 
   const set = (key: string, value: unknown) =>
@@ -89,7 +91,7 @@ function AddonSettingsModal({
     return (
       <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
         <div className="card w-full max-w-md p-6">
-          <p className="text-gray-400 text-center">Loading settings...</p>
+          <p className="text-gray-400 text-center">{t('loadingSettings')}</p>
         </div>
       </div>
     );
@@ -100,10 +102,10 @@ function AddonSettingsModal({
       <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50" onClick={onClose}>
         <div className="card w-full max-w-md p-6" onClick={(e) => e.stopPropagation()}>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-white font-semibold">{addon.displayName} — Settings</h2>
+            <h2 className="text-white font-semibold">{t('settingsTitle', { name: addon.displayName })}</h2>
             <button onClick={onClose}><X className="w-5 h-5 text-gray-400 hover:text-white" /></button>
           </div>
-          <p className="text-gray-400 text-sm">This addon has no configurable settings.</p>
+          <p className="text-gray-400 text-sm">{t('noSettings')}</p>
         </div>
       </div>
     );
@@ -119,7 +121,7 @@ function AddonSettingsModal({
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-white font-semibold text-lg">{addon.displayName}</h2>
-            <p className="text-gray-400 text-xs">Configure addon settings for this server</p>
+            <p className="text-gray-400 text-xs">{t('configureDesc')}</p>
           </div>
           <button onClick={onClose}>
             <X className="w-5 h-5 text-gray-400 hover:text-white" />
@@ -172,7 +174,7 @@ function AddonSettingsModal({
                     />
                   </div>
                   <span className="text-gray-300 text-sm">
-                    {values[field.key] ? 'Enabled' : 'Disabled'}
+                    {values[field.key] ? t('enabled') : t('disabled')}
                   </span>
                 </label>
               )}
@@ -183,7 +185,7 @@ function AddonSettingsModal({
                   value={String(values[field.key] ?? '')}
                   onChange={(e) => set(field.key, e.target.value)}
                 >
-                  <option value="">— Select a channel —</option>
+                  <option value="">{t('selectChannel')}</option>
                   {channels
                     .filter((c) => c.type === 0)
                     .map((c) => (
@@ -198,7 +200,7 @@ function AddonSettingsModal({
                   value={String(values[field.key] ?? '')}
                   onChange={(e) => set(field.key, e.target.value)}
                 >
-                  <option value="">— Select a role —</option>
+                  <option value="">{t('selectRole')}</option>
                   {roles.map((r) => (
                     <option key={r.id} value={r.id}>@{r.name}</option>
                   ))}
@@ -228,7 +230,7 @@ function AddonSettingsModal({
                   value={String(values[field.key] ?? '')}
                   onChange={(e) => set(field.key, e.target.value)}
                 >
-                  <option value="">— Select —</option>
+                  <option value="">{t('selectOption')}</option>
                   {field.options.map((opt) => (
                     <option key={opt.value} value={opt.value}>{opt.label}</option>
                   ))}
@@ -245,9 +247,9 @@ function AddonSettingsModal({
             disabled={saveMutation.isPending}
             className="btn-primary flex-1"
           >
-            {saveMutation.isPending ? 'Saving...' : 'Save Settings'}
+            {saveMutation.isPending ? t('saving') : t('saveSettings')}
           </button>
-          <button onClick={onClose} className="btn-secondary">Cancel</button>
+          <button onClick={onClose} className="btn-secondary">{t('cancel')}</button>
         </div>
       </div>
     </div>
@@ -258,6 +260,7 @@ function AddonSettingsModal({
 
 export default function AddonsPage() {
   const { guildId } = useParams() as { guildId: string };
+  const t = useTranslations('addonsDashboardPage');
   const queryClient = useQueryClient();
   const [configuring, setConfiguring] = useState<AddonRecord | null>(null);
 
@@ -274,19 +277,19 @@ export default function AddonsPage() {
   const installMutation = useMutation({
     mutationFn: (addonId: string) => addonsApi.install(guildId, addonId),
     onSuccess: () => {
-      toast.success('Addon installed!');
+      toast.success(t('installed'));
       queryClient.invalidateQueries({ queryKey: ['addons-guild', guildId] });
     },
-    onError: () => toast.error('Failed to install addon.'),
+    onError: () => toast.error(t('installError')),
   });
 
   const uninstallMutation = useMutation({
     mutationFn: (addonId: string) => addonsApi.uninstall(guildId, addonId),
     onSuccess: () => {
-      toast.success('Addon uninstalled.');
+      toast.success(t('uninstalled'));
       queryClient.invalidateQueries({ queryKey: ['addons-guild', guildId] });
     },
-    onError: () => toast.error('Failed to uninstall addon.'),
+    onError: () => toast.error(t('uninstallError')),
   });
 
   const allAddons = (allAddonsRes?.data?.data ?? []) as AddonRecord[];
@@ -309,8 +312,8 @@ export default function AddonsPage() {
         <div className="page-head">
         <div className="page-head-icon"><Puzzle className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>Addons Marketplace</h1>
-          <div className="page-head-desc">{installedIds.size} installed</div>
+          <h1>{t('title')}</h1>
+          <div className="page-head-desc">{t('installedCount', { count: installedIds.size })}</div>
         </div>
       </div>
 
@@ -324,13 +327,13 @@ export default function AddonsPage() {
                     <div className="flex items-center gap-2">
                       <h3 className="text-white font-semibold">{addon.displayName}</h3>
                       {addon.verified && (
-                        <span className="badge-info text-xs">✓ Verified</span>
+                        <span className="badge-info text-xs">{t('verified')}</span>
                       )}
                     </div>
-                    <p className="text-xs text-gray-500">v{addon.version} by {addon.author}</p>
+                    <p className="text-xs text-gray-500">{t('versionBy', { version: addon.version, author: addon.author })}</p>
                   </div>
                   {installed && (
-                    <span className="badge-success text-xs">Installed</span>
+                    <span className="badge-success text-xs">{t('installedBadge')}</span>
                   )}
                 </div>
 
@@ -344,12 +347,12 @@ export default function AddonsPage() {
                         className="btn-secondary flex-1 text-xs py-1.5"
                       >
                         <Settings className="w-3 h-3" />
-                        Configure
+                        {t('configure')}
                       </button>
                       <button
                         onClick={() => uninstallMutation.mutate(addon.id)}
                         className="btn-danger text-xs py-1.5 px-3"
-                        title="Uninstall"
+                        title={t('uninstall')}
                       >
                         <Trash2 className="w-3 h-3" />
                       </button>
@@ -360,7 +363,7 @@ export default function AddonsPage() {
                       className="btn-primary flex-1 text-xs py-1.5"
                     >
                       <Plus className="w-3 h-3" />
-                      Install
+                      {t('install')}
                     </button>
                   )}
                 </div>
@@ -371,7 +374,7 @@ export default function AddonsPage() {
           {allAddons.length === 0 && (
             <div className="col-span-full text-center py-12">
               <Puzzle className="w-12 h-12 text-gray-600 mx-auto mb-3" />
-              <p className="text-gray-400">No addons available yet.</p>
+              <p className="text-gray-400">{t('noAddons')}</p>
             </div>
           )}
         </div>
