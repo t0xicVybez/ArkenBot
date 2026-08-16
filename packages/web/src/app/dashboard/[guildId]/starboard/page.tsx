@@ -9,6 +9,7 @@ import { Toggle } from '@/components/Toggle';
 import toast from 'react-hot-toast';
 import { useState, useEffect } from 'react';
 import api from '@/lib/api';
+import { useTranslations } from 'next-intl';
 
 type StarboardConfig = {
   enabled?: boolean;
@@ -35,6 +36,7 @@ const starboardApi = {
 
 export default function StarboardPage() {
   const { guildId } = useParams() as { guildId: string };
+  const t = useTranslations('starboardPage');
   const queryClient = useQueryClient();
   const [config, setConfig] = useState<StarboardConfig>({});
 
@@ -67,10 +69,10 @@ export default function StarboardPage() {
   const configMutation = useMutation({
     mutationFn: (data: Partial<StarboardConfig>) => starboardApi.updateConfig(guildId, data),
     onSuccess: () => {
-      toast.success('Starboard settings saved!');
+      toast.success(t('saved'));
       queryClient.invalidateQueries({ queryKey: ['starboard-config', guildId] });
     },
-    onError: () => toast.error('Failed to save starboard settings'),
+    onError: () => toast.error(t('saveError')),
   });
 
   const handleConfigChange = (partial: Partial<StarboardConfig>) => {
@@ -93,35 +95,35 @@ export default function StarboardPage() {
       <div className="page-head">
         <div className="page-head-icon"><Star className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>Starboard</h1>
-          <div className="page-head-desc">Highlight popular messages when they receive enough star reactions.</div>
+          <h1>{t('title')}</h1>
+          <div className="page-head-desc">{t('subtitle')}</div>
         </div>
       </div>
 
-      <SettingsSection title="Starboard Configuration" description="Set up how the starboard works in your server.">
+      <SettingsSection title={t('configTitle')} description={t('configDesc')}>
         <Toggle
-          label="Enable Starboard"
-          description="Automatically repost highly-starred messages to the starboard channel"
+          label={t('enable')}
+          description={t('enableDesc')}
           enabled={config.enabled ?? false}
           onChange={(v) => handleConfigChange({ enabled: v })}
         />
         <div>
-          <label className="label">Starboard Channel</label>
+          <label className="label">{t('channel')}</label>
           <select
             className="input"
             value={config.channelId ?? ''}
             onChange={(e) => handleConfigChange({ channelId: e.target.value || undefined })}
           >
-            <option value="">Select a channel</option>
+            <option value="">{t('selectChannel')}</option>
             {textChannels.map((ch) => (
               <option key={ch.id} value={ch.id}>#{ch.name}</option>
             ))}
           </select>
-          <p className="text-xs text-gray-500 mt-1">Starred messages will be reposted to this channel.</p>
+          <p className="text-xs text-gray-500 mt-1">{t('channelHelp')}</p>
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="label">Star Threshold</label>
+            <label className="label">{t('threshold')}</label>
             <input
               type="number"
               className="input"
@@ -131,10 +133,10 @@ export default function StarboardPage() {
               onChange={(e) => setConfig((c) => ({ ...c, threshold: parseInt(e.target.value) }))}
               onBlur={() => handleConfigChange({ threshold: config.threshold })}
             />
-            <p className="text-xs text-gray-500 mt-1">Minimum stars required (1–50)</p>
+            <p className="text-xs text-gray-500 mt-1">{t('thresholdHelp')}</p>
           </div>
           <div>
-            <label className="label">Star Emoji</label>
+            <label className="label">{t('emoji')}</label>
             <input
               type="text"
               className="input"
@@ -143,19 +145,19 @@ export default function StarboardPage() {
               onChange={(e) => setConfig((c) => ({ ...c, emoji: e.target.value }))}
               onBlur={() => handleConfigChange({ emoji: config.emoji })}
             />
-            <p className="text-xs text-gray-500 mt-1">Emoji to watch for reactions</p>
+            <p className="text-xs text-gray-500 mt-1">{t('emojiHelp')}</p>
           </div>
         </div>
         <Toggle
-          label="Allow Self-Starring"
-          description="Allow users to star their own messages"
+          label={t('selfStar')}
+          description={t('selfStarDesc')}
           enabled={config.selfStar ?? false}
           onChange={(v) => handleConfigChange({ selfStar: v })}
         />
       </SettingsSection>
 
       <div className="card">
-        <h2 className="text-lg font-semibold text-white mb-4">Top Starred Messages</h2>
+        <h2 className="text-lg font-semibold text-white mb-4">{t('topTitle')}</h2>
         {entriesLoading ? (
           <div className="space-y-3">
             {[...Array(5)].map((_, i) => (
@@ -164,7 +166,7 @@ export default function StarboardPage() {
           </div>
         ) : entries.length === 0 ? (
           <p className="text-gray-500 text-sm text-center py-10">
-            No starred messages yet. Enable the starboard and let your members start starring messages!
+            {t('noEntries')}
           </p>
         ) : (
           <div className="overflow-hidden rounded-lg border border-[var(--border-subtle)]">
@@ -172,9 +174,9 @@ export default function StarboardPage() {
             <table className="w-full min-w-[600px]">
               <thead className="bg-[var(--bg-base)]">
                 <tr>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Stars</th>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Author</th>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Message</th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colStars')}</th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colAuthor')}</th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colMessage')}</th>
                   <th className="px-4 py-3" />
                 </tr>
               </thead>
@@ -194,7 +196,7 @@ export default function StarboardPage() {
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-gray-500 hover:text-discord-blurple transition-colors"
-                        title="Jump to message"
+                        title={t('jumpToMessage')}
                       >
                         <ExternalLink className="w-4 h-4" />
                       </a>
