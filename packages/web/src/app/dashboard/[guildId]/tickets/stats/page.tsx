@@ -11,6 +11,7 @@ import { ticketsApi } from '@/lib/api';
 import { TrendingUp, Ticket, Star, Users, Clock, AlertTriangle, CheckCircle, Hourglass } from 'lucide-react';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -60,6 +61,7 @@ function CustomTooltip({ active, payload, label }: { active?: boolean; payload?:
 
 export default function TicketStatsPage() {
   const { guildId } = useParams() as { guildId: string };
+  const t = useTranslations('ticketStatsPage');
   const [days, setDays] = useState(30);
 
   const { data: statsRes } = useQuery({
@@ -83,10 +85,10 @@ export default function TicketStatsPage() {
   // Pie data: status breakdown
   const pieStatus = stats
     ? [
-        { name: 'Open',    value: stats.open,    color: '#57f287' },
-        { name: 'Claimed', value: stats.claimed, color: '#5865f2' },
-        { name: 'Waiting', value: stats.waiting, color: '#fee75c' },
-        { name: 'Closed',  value: stats.closed,  color: '#ed4245' },
+        { name: t('statusOpen'),    value: stats.open,    color: '#57f287' },
+        { name: t('statusClaimed'), value: stats.claimed, color: '#5865f2' },
+        { name: t('statusWaiting'), value: stats.waiting, color: '#fee75c' },
+        { name: t('statusClosed'),  value: stats.closed,  color: '#ed4245' },
       ].filter((d) => d.value > 0)
     : [];
 
@@ -110,8 +112,8 @@ export default function TicketStatsPage() {
         <div className="flex items-center gap-3">
           <TrendingUp className="w-6 h-6 text-discord-blurple" />
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-white">Ticket Statistics</h1>
-            <p className="text-gray-400 text-sm">All-time metrics and trends</p>
+            <h1 className="text-xl sm:text-2xl font-bold text-white">{t('title')}</h1>
+            <p className="text-gray-400 text-sm">{t('subtitle')}</p>
           </div>
         </div>
       </div>
@@ -120,24 +122,24 @@ export default function TicketStatsPage() {
       {stats && (
         <>
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-            <StatCard icon={<Ticket className="w-5 h-5 text-discord-blurple" />}   label="Total Tickets"   value={stats.total} />
-            <StatCard icon={<div className="w-3 h-3 rounded-full bg-green-400" />} label="Open"            value={stats.open} />
-            <StatCard icon={<div className="w-3 h-3 rounded-full bg-yellow-400" />} label="Waiting"        value={stats.waiting} />
-            <StatCard icon={<div className="w-3 h-3 rounded-full bg-red-400" />}   label="Closed"          value={stats.closed} />
+            <StatCard icon={<Ticket className="w-5 h-5 text-discord-blurple" />}   label={t('totalTickets')}   value={stats.total} />
+            <StatCard icon={<div className="w-3 h-3 rounded-full bg-green-400" />} label={t('statusOpen')}            value={stats.open} />
+            <StatCard icon={<div className="w-3 h-3 rounded-full bg-yellow-400" />} label={t('statusWaiting')}        value={stats.waiting} />
+            <StatCard icon={<div className="w-3 h-3 rounded-full bg-red-400" />}   label={t('statusClosed')}          value={stats.closed} />
           </div>
           {/* Summary cards — row 2 */}
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-            <StatCard icon={<Star className="w-5 h-5 text-yellow-400" />}           label="Avg Rating"       value={stats.avgRating != null ? `${stats.avgRating.toFixed(1)} / 5` : '—'} />
-            <StatCard icon={<Clock className="w-5 h-5 text-blue-400" />}            label="Avg Response"     value={fmtMinutes(stats.avgResponseMinutes)} />
-            <StatCard icon={<CheckCircle className="w-5 h-5 text-green-400" />}     label="Avg Close Time"   value={fmtMinutes(stats.avgCloseMinutes)} />
-            <StatCard icon={<AlertTriangle className="w-5 h-5 text-red-400" />}     label="SLA Breaches"     value={stats.slaBreaches} accent={stats.slaBreaches > 0 ? 'red' : undefined} />
+            <StatCard icon={<Star className="w-5 h-5 text-yellow-400" />}           label={t('avgRating')}       value={stats.avgRating != null ? `${stats.avgRating.toFixed(1)} / 5` : '—'} />
+            <StatCard icon={<Clock className="w-5 h-5 text-blue-400" />}            label={t('avgResponse')}     value={fmtMinutes(stats.avgResponseMinutes)} />
+            <StatCard icon={<CheckCircle className="w-5 h-5 text-green-400" />}     label={t('avgCloseTime')}   value={fmtMinutes(stats.avgCloseMinutes)} />
+            <StatCard icon={<AlertTriangle className="w-5 h-5 text-red-400" />}     label={t('slaBreaches')}     value={stats.slaBreaches} accent={stats.slaBreaches > 0 ? 'red' : undefined} />
           </div>
           {/* Row 3: extra context */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-            <StatCard icon={<Hourglass className="w-5 h-5 text-purple-400" />}      label="Claimed"          value={stats.claimed} />
-            <StatCard icon={<TrendingUp className="w-5 h-5 text-green-400" />}      label="Closed (7 days)"  value={stats.recentlyClosed} />
-            <StatCard icon={<Users className="w-5 h-5 text-gray-400" />}            label="Panels"           value={stats.panels} />
-            <StatCard icon={<Users className="w-5 h-5 text-red-400" />}             label="Blacklisted"      value={stats.blacklistedUsers} />
+            <StatCard icon={<Hourglass className="w-5 h-5 text-purple-400" />}      label={t('statusClaimed')}          value={stats.claimed} />
+            <StatCard icon={<TrendingUp className="w-5 h-5 text-green-400" />}      label={t('closed7days')}  value={stats.recentlyClosed} />
+            <StatCard icon={<Users className="w-5 h-5 text-gray-400" />}            label={t('panels')}           value={stats.panels} />
+            <StatCard icon={<Users className="w-5 h-5 text-red-400" />}             label={t('blacklisted')}      value={stats.blacklistedUsers} />
           </div>
         </>
       )}
@@ -145,7 +147,7 @@ export default function TicketStatsPage() {
       {/* Time-series bar chart */}
       <div className="card space-y-4">
         <div className="flex items-center justify-between flex-wrap gap-3">
-          <h2 className="text-white font-semibold">Tickets Over Time</h2>
+          <h2 className="text-white font-semibold">{t('ticketsOverTime')}</h2>
           <div className="flex gap-2 flex-wrap">
             {[7, 30, 90, 365].map((d) => (
               <button
@@ -155,16 +157,16 @@ export default function TicketStatsPage() {
                   days === d ? 'bg-discord-blurple text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
                 }`}
               >
-                {d === 365 ? 'Year' : `${d}d`}
+                {d === 365 ? t('year') : `${d}d`}
               </button>
             ))}
           </div>
         </div>
 
         {tsLoading ? (
-          <div className="h-64 flex items-center justify-center text-gray-400">Loading...</div>
+          <div className="h-64 flex items-center justify-center text-gray-400">{t('loading')}</div>
         ) : chartData.length === 0 ? (
-          <div className="h-64 flex items-center justify-center text-gray-500">No data yet</div>
+          <div className="h-64 flex items-center justify-center text-gray-500">{t('noDataYet')}</div>
         ) : (
           <ResponsiveContainer width="100%" height={280}>
             <BarChart data={chartData} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
@@ -180,8 +182,8 @@ export default function TicketStatsPage() {
               <YAxis tick={{ fill: '#9ca3af', fontSize: 11 }} allowDecimals={false} />
               <Tooltip content={<CustomTooltip />} />
               <Legend wrapperStyle={{ color: '#9ca3af', fontSize: 12 }} />
-              <Bar dataKey="opened" name="Opened" fill="#5865f2" radius={[3, 3, 0, 0]} />
-              <Bar dataKey="closed" name="Closed"  fill="#57f287" radius={[3, 3, 0, 0]} />
+              <Bar dataKey="opened" name={t('opened')} fill="#5865f2" radius={[3, 3, 0, 0]} />
+              <Bar dataKey="closed" name={t('statusClosed')}  fill="#57f287" radius={[3, 3, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         )}
@@ -191,9 +193,9 @@ export default function TicketStatsPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Status breakdown */}
         <div className="card space-y-4">
-          <h2 className="text-white font-semibold">Status Breakdown</h2>
+          <h2 className="text-white font-semibold">{t('statusBreakdown')}</h2>
           {pieStatus.length === 0 ? (
-            <div className="h-48 flex items-center justify-center text-gray-500">No ticket data</div>
+            <div className="h-48 flex items-center justify-center text-gray-500">{t('noTicketData')}</div>
           ) : (
             <div className="flex items-center gap-6">
               <ResponsiveContainer width={160} height={160}>
@@ -220,9 +222,9 @@ export default function TicketStatsPage() {
 
         {/* Per-panel breakdown */}
         <div className="card space-y-4">
-          <h2 className="text-white font-semibold">By Panel</h2>
+          <h2 className="text-white font-semibold">{t('byPanel')}</h2>
           {piePanel.length === 0 ? (
-            <div className="h-48 flex items-center justify-center text-gray-500">No panel data</div>
+            <div className="h-48 flex items-center justify-center text-gray-500">{t('noPanelData')}</div>
           ) : (
             <div className="flex items-center gap-6">
               <ResponsiveContainer width={160} height={160}>
@@ -251,14 +253,14 @@ export default function TicketStatsPage() {
       {/* Rating distribution */}
       {stats && Object.values(stats.ratingDistribution).some((v) => v > 0) && (
         <div className="card space-y-4">
-          <h2 className="text-white font-semibold">Rating Distribution</h2>
+          <h2 className="text-white font-semibold">{t('ratingDistribution')}</h2>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={ratingData} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
               <XAxis dataKey="star" tick={{ fill: '#9ca3af', fontSize: 13 }} />
               <YAxis tick={{ fill: '#9ca3af', fontSize: 11 }} allowDecimals={false} />
               <Tooltip content={<CustomTooltip />} />
-              <Bar dataKey="count" name="Ratings" fill="#fee75c" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="count" name={t('ratings')} fill="#fee75c" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -268,19 +270,19 @@ export default function TicketStatsPage() {
       {stats && stats.byPanel.length > 0 && (
         <div className="card overflow-hidden p-0">
           <div className="px-4 py-3 border-b border-[var(--border-subtle)]">
-            <h2 className="text-white font-semibold">Panel Details</h2>
+            <h2 className="text-white font-semibold">{t('panelDetails')}</h2>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full min-w-[600px]">
               <thead className="text-left text-xs text-gray-500 uppercase tracking-wider border-b border-[var(--border-subtle)]">
                 <tr>
-                  <th className="px-4 py-3">Panel</th>
-                  <th className="px-4 py-3">Total</th>
-                  <th className="px-4 py-3">Open</th>
-                  <th className="px-4 py-3">Closed</th>
-                  <th className="px-4 py-3">Avg Rating</th>
-                  <th className="px-4 py-3">Avg Close</th>
-                  <th className="px-4 py-3">Close rate</th>
+                  <th className="px-4 py-3">{t('colPanel')}</th>
+                  <th className="px-4 py-3">{t('colTotal')}</th>
+                  <th className="px-4 py-3">{t('statusOpen')}</th>
+                  <th className="px-4 py-3">{t('statusClosed')}</th>
+                  <th className="px-4 py-3">{t('colAvgRating')}</th>
+                  <th className="px-4 py-3">{t('colAvgClose')}</th>
+                  <th className="px-4 py-3">{t('colCloseRate')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-700/30">
