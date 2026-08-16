@@ -25,6 +25,10 @@ export class BackgroundJobs {
   // Suppress the "Reddit alert skipped — no OAuth token" warning after the first
   // occurrence so it doesn't flood logs every polling cycle while creds are unset.
   private redditSkipWarned = false;
+  // Same idea for Twitter/X: once the handle→ID lookup starts failing (expired
+  // token, depleted API credits, rate limit), log one line with the HTTP status
+  // and suppress the rest so it doesn't flood logs every 5-minute cycle.
+  private twitterSkipWarned = false;
 
   constructor(client: BotClient) {
     this.client = client;
@@ -973,8 +977,19 @@ export class BackgroundJobs {
           resolvedUserId = userData.data?.id ?? null;
           if (resolvedUserId) {
             await prisma.streamAlert.update({ where: { id: alert.id }, data: { channelId: resolvedUserId } });
+            this.twitterSkipWarned = false; // recovered — allow future warnings again
           } else {
-            logger.warn({ channelUsername: alert.channelUsername }, 'Could not resolve Twitter user ID — skipping');
+            if (!this.twitterSkipWarned) {
+              const reason = userRes.status === 402 ? ' — API credits depleted'
+                : userRes.status === 401 ? ' — invalid/expired bearer token'
+                : userRes.status === 429 ? ' — rate limited'
+                : '';
+              logger.warn(
+                { status: userRes.status, channelUsername: alert.channelUsername },
+                `Twitter alert lookup failed (HTTP ${userRes.status}${reason}) — could not resolve user ID. Suppressing further warnings until it recovers.`,
+              );
+              this.twitterSkipWarned = true;
+            }
             return;
           }
         }
