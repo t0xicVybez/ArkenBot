@@ -7,6 +7,7 @@ import api from '@/lib/api';
 import toast from 'react-hot-toast';
 import { useState, useEffect } from 'react';
 import { Flag } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 type Report = {
   id: string;
@@ -35,6 +36,7 @@ type Tab = 'pending' | 'reviewed';
 
 export default function ReportsPage() {
   const { guildId } = useParams() as { guildId: string };
+  const t = useTranslations('reportsPage');
   const queryClient = useQueryClient();
   const [tab, setTab] = useState<Tab>('pending');
   const [staffNotes, setStaffNotes] = useState<Record<string, string>>({});
@@ -71,20 +73,20 @@ export default function ReportsPage() {
   const saveConfigMutation = useMutation({
     mutationFn: (data: object) => reportsApi.updateConfig(guildId, data),
     onSuccess: () => {
-      toast.success('Report config saved!');
+      toast.success(t('configSaved'));
       queryClient.invalidateQueries({ queryKey: ['report-config', guildId] });
     },
-    onError: () => toast.error('Failed to save config'),
+    onError: () => toast.error(t('configError')),
   });
 
   const updateReportMutation = useMutation({
     mutationFn: ({ id, data }: { id: string; data: object }) => reportsApi.update(guildId, id, data),
     onSuccess: () => {
-      toast.success('Report updated!');
+      toast.success(t('reportUpdated'));
       setExpandedNote(null);
       queryClient.invalidateQueries({ queryKey: ['reports', guildId] });
     },
-    onError: () => toast.error('Failed to update report'),
+    onError: () => toast.error(t('updateError')),
   });
 
   const allChannels = (channelsRes?.data as { data?: Array<{ id: string; name: string; type: number }> })?.data ?? [];
@@ -108,14 +110,14 @@ export default function ReportsPage() {
       <div className="page-head">
         <div className="page-head-icon"><Flag className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>Reports</h1>
-          <div className="page-head-desc">Review member reports submitted in this server.</div>
+          <h1>{t('title')}</h1>
+          <div className="page-head-desc">{t('subtitle')}</div>
         </div>
       </div>
 
       {/* Config */}
       <div className="card mb-6">
-        <h3 className="text-base font-semibold text-white mb-3">Report Channel</h3>
+        <h3 className="text-base font-semibold text-white mb-3">{t('reportChannel')}</h3>
         <div className="flex gap-3 items-end">
           <div className="flex-1">
             <select
@@ -123,19 +125,19 @@ export default function ReportsPage() {
               value={reportChannelId}
               onChange={(e) => setReportChannelId(e.target.value)}
             >
-              <option value="">None</option>
+              <option value="">{t('none')}</option>
               {textChannels.map((ch) => (
                 <option key={ch.id} value={ch.id}>#{ch.name}</option>
               ))}
             </select>
-            <p className="text-xs text-gray-500 mt-1">Channel where report notifications are sent.</p>
+            <p className="text-xs text-gray-500 mt-1">{t('reportChannelHelp')}</p>
           </div>
           <button
             onClick={() => saveConfigMutation.mutate({ reportChannelId: reportChannelId || null })}
             disabled={saveConfigMutation.isPending}
             className="btn-primary"
           >
-            {saveConfigMutation.isPending ? 'Saving…' : 'Save'}
+            {saveConfigMutation.isPending ? t('saving') : t('save')}
           </button>
         </div>
       </div>
@@ -150,7 +152,7 @@ export default function ReportsPage() {
               : 'border-transparent text-gray-400 hover:text-white'
           }`}
         >
-          Pending Reports
+          {t('pendingTab')}
           {pendingReports.length > 0 && (
             <span className="ml-2 text-xs text-red-400">({pendingReports.length})</span>
           )}
@@ -163,7 +165,7 @@ export default function ReportsPage() {
               : 'border-transparent text-gray-400 hover:text-white'
           }`}
         >
-          Reviewed Reports
+          {t('reviewedTab')}
         </button>
       </div>
 
@@ -177,7 +179,7 @@ export default function ReportsPage() {
         <div className="card text-center py-10">
           <Flag className="w-8 h-8 mx-auto mb-2 opacity-40 text-gray-500" />
           <p className="text-gray-500 text-sm">
-            {tab === 'pending' ? 'No pending reports.' : 'No reviewed reports yet.'}
+            {tab === 'pending' ? t('noPending') : t('noReviewed')}
           </p>
         </div>
       ) : (
@@ -188,10 +190,10 @@ export default function ReportsPage() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap mb-1">
                     <span className="text-sm font-semibold text-white">{report.targetTag}</span>
-                    <span className="text-xs text-gray-500">reported by</span>
+                    <span className="text-xs text-gray-500">{t('reportedBy')}</span>
                     <span className="text-sm text-gray-300">{report.reporterTag}</span>
                     <span className={`badge ${statusColors[report.status] ?? 'badge-info'}`}>
-                      {report.status}
+                      {t(`status_${report.status}`)}
                     </span>
                   </div>
                   <p className="text-sm text-gray-300 mb-1">{report.reason}</p>
@@ -200,7 +202,7 @@ export default function ReportsPage() {
                   </p>
                   {report.staffNote && (
                     <p className="text-xs text-gray-400 mt-1 border-t border-[var(--border-subtle)] pt-1">
-                      Staff note: {report.staffNote}
+                      {t('staffNotePrefix')} {report.staffNote}
                     </p>
                   )}
                 </div>
@@ -209,7 +211,7 @@ export default function ReportsPage() {
                     onClick={() => setExpandedNote(expandedNote === report.id ? null : report.id)}
                     className="text-xs text-gray-400 hover:text-white transition-colors px-2 py-1 rounded border border-gray-600 hover:border-gray-400 flex-shrink-0"
                   >
-                    {expandedNote === report.id ? 'Cancel' : 'Mark Reviewed'}
+                    {expandedNote === report.id ? t('cancel') : t('markReviewed')}
                   </button>
                 )}
               </div>
@@ -218,7 +220,7 @@ export default function ReportsPage() {
                 <div className="mt-3 border-t border-[var(--border-subtle)] pt-3 space-y-2">
                   <textarea
                     className="input min-h-[60px] resize-none"
-                    placeholder="Optional staff note..."
+                    placeholder={t('staffNotePlaceholder')}
                     value={staffNotes[report.id] ?? ''}
                     onChange={(e) => setStaffNotes((prev) => ({ ...prev, [report.id]: e.target.value }))}
                   />
@@ -233,7 +235,7 @@ export default function ReportsPage() {
                       disabled={updateReportMutation.isPending}
                       className="btn-primary text-sm py-1.5"
                     >
-                      {updateReportMutation.isPending ? 'Saving…' : 'Mark Reviewed'}
+                      {updateReportMutation.isPending ? t('saving') : t('markReviewed')}
                     </button>
                     <button
                       onClick={() =>
@@ -245,7 +247,7 @@ export default function ReportsPage() {
                       disabled={updateReportMutation.isPending}
                       className="btn-secondary text-sm py-1.5"
                     >
-                      Dismiss
+                      {t('dismiss')}
                     </button>
                   </div>
                 </div>
