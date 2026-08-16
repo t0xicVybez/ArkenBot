@@ -9,6 +9,7 @@ import { SettingsSection } from '@/components/SettingsSection';
 import toast from 'react-hot-toast';
 import { useState, useEffect } from 'react';
 import { ShieldAlert, Info } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 type AntiNukeConfig = {
   enabled: boolean;
@@ -36,6 +37,7 @@ const DEFAULT_CONFIG: AntiNukeConfig = {
 
 export default function AntiNukePage() {
   const { guildId } = useParams() as { guildId: string };
+  const t = useTranslations('antiNukePage');
   const queryClient = useQueryClient();
   const [config, setConfig] = useState<AntiNukeConfig>(DEFAULT_CONFIG);
 
@@ -57,10 +59,10 @@ export default function AntiNukePage() {
   const saveMutation = useMutation({
     mutationFn: (data: Partial<AntiNukeConfig>) => antiNukeApi.update(guildId, data),
     onSuccess: () => {
-      toast.success('Anti-Nuke config saved!');
+      toast.success(t('saved'));
       queryClient.invalidateQueries({ queryKey: ['anti-nuke-config', guildId] });
     },
-    onError: () => toast.error('Failed to save config'),
+    onError: () => toast.error(t('saveError')),
   });
 
   const allChannels = (channelsRes?.data as { data?: Array<{ id: string; name: string; type: number }> })?.data ?? [];
@@ -81,8 +83,8 @@ export default function AntiNukePage() {
       <div className="page-head">
         <div className="page-head-icon"><ShieldAlert className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>Anti-Nuke</h1>
-          <div className="page-head-desc">Protect your server from rapid destructive actions.</div>
+          <h1>{t('title')}</h1>
+          <div className="page-head-desc">{t('subtitle')}</div>
         </div>
       </div>
 
@@ -90,24 +92,23 @@ export default function AntiNukePage() {
       <div className="card mb-6 border border-blue-500/20 bg-blue-500/5 flex items-start gap-3">
         <Info className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
         <p className="text-sm text-blue-300">
-          Anti-Nuke monitors for rapid destructive actions (mass channel/role deletions, mass bans) and
-          automatically removes roles from or bans the offending user.
+          {t('infoText')}
         </p>
       </div>
 
-      <SettingsSection title="Anti-Nuke" description="Enable detection and response to nuke-style attacks.">
+      <SettingsSection title={t('title')} description={t('sectionDesc')}>
         <Toggle
-          label="Enable Anti-Nuke"
-          description="Monitor for and respond to rapid destructive actions"
+          label={t('enable')}
+          description={t('enableDesc')}
           enabled={config.enabled}
           onChange={(v) => setConfig((c) => ({ ...c, enabled: v }))}
         />
       </SettingsSection>
 
-      <SettingsSection title="Thresholds" description="Number of actions within a short window to trigger a response.">
+      <SettingsSection title={t('thresholdsTitle')} description={t('thresholdsDesc')}>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
-            <label className="label">Channel Delete Threshold</label>
+            <label className="label">{t('channelDeleteThreshold')}</label>
             <input
               type="number"
               className="input"
@@ -116,10 +117,10 @@ export default function AntiNukePage() {
               value={config.channelDeleteThreshold}
               onChange={(e) => setConfig((c) => ({ ...c, channelDeleteThreshold: parseInt(e.target.value) || 3 }))}
             />
-            <p className="text-xs text-gray-500 mt-1">Channels deleted (1–20)</p>
+            <p className="text-xs text-gray-500 mt-1">{t('channelsDeleted')}</p>
           </div>
           <div>
-            <label className="label">Role Delete Threshold</label>
+            <label className="label">{t('roleDeleteThreshold')}</label>
             <input
               type="number"
               className="input"
@@ -128,10 +129,10 @@ export default function AntiNukePage() {
               value={config.roleDeleteThreshold}
               onChange={(e) => setConfig((c) => ({ ...c, roleDeleteThreshold: parseInt(e.target.value) || 3 }))}
             />
-            <p className="text-xs text-gray-500 mt-1">Roles deleted (1–20)</p>
+            <p className="text-xs text-gray-500 mt-1">{t('rolesDeleted')}</p>
           </div>
           <div>
-            <label className="label">Mass Ban Threshold</label>
+            <label className="label">{t('massBanThreshold')}</label>
             <input
               type="number"
               className="input"
@@ -140,39 +141,39 @@ export default function AntiNukePage() {
               value={config.banThreshold}
               onChange={(e) => setConfig((c) => ({ ...c, banThreshold: parseInt(e.target.value) || 5 }))}
             />
-            <p className="text-xs text-gray-500 mt-1">Bans issued (1–20)</p>
+            <p className="text-xs text-gray-500 mt-1">{t('bansIssued')}</p>
           </div>
         </div>
       </SettingsSection>
 
-      <SettingsSection title="Response" description="What to do when a nuke is detected.">
+      <SettingsSection title={t('responseTitle')} description={t('responseDesc')}>
         <div className="space-y-3">
           <div>
-            <label className="label">Action on Trigger</label>
+            <label className="label">{t('actionOnTrigger')}</label>
             <select
               className="input"
               value={config.action}
               onChange={(e) => setConfig((c) => ({ ...c, action: e.target.value as AntiNukeConfig['action'] }))}
             >
-              <option value="deop">De-op (remove all roles)</option>
-              <option value="kick">Kick</option>
-              <option value="ban">Ban</option>
+              <option value="deop">{t('actionDeop')}</option>
+              <option value="kick">{t('actionKick')}</option>
+              <option value="ban">{t('actionBan')}</option>
             </select>
-            <p className="text-xs text-gray-500 mt-1">Action taken against the offending user.</p>
+            <p className="text-xs text-gray-500 mt-1">{t('actionHelp')}</p>
           </div>
           <div>
-            <label className="label">Alert Channel (optional)</label>
+            <label className="label">{t('alertChannel')}</label>
             <select
               className="input"
               value={config.alertChannelId ?? ''}
               onChange={(e) => setConfig((c) => ({ ...c, alertChannelId: e.target.value || null }))}
             >
-              <option value="">None</option>
+              <option value="">{t('none')}</option>
               {textChannels.map((ch) => (
                 <option key={ch.id} value={ch.id}>#{ch.name}</option>
               ))}
             </select>
-            <p className="text-xs text-gray-500 mt-1">Channel to send nuke alerts to.</p>
+            <p className="text-xs text-gray-500 mt-1">{t('alertChannelHelp')}</p>
           </div>
         </div>
       </SettingsSection>
@@ -183,7 +184,7 @@ export default function AntiNukePage() {
           disabled={saveMutation.isPending}
           className="btn-primary"
         >
-          {saveMutation.isPending ? 'Saving…' : 'Save Changes'}
+          {saveMutation.isPending ? t('saving') : t('saveChanges')}
         </button>
       </div>
     </div>
