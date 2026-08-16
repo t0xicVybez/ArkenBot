@@ -7,6 +7,7 @@ import { ticketsApi } from '@/lib/api';
 import toast from 'react-hot-toast';
 import { Plus, Trash2, Edit, X, ChevronDown, ChevronUp, LayoutTemplate } from 'lucide-react';
 import { randomUUID } from 'crypto'; // available client-side via Next.js/webpack polyfill
+import { useTranslations } from 'next-intl';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -60,6 +61,7 @@ const DEFAULT_DRAFT: PanelDraft = {
 // ─── Staff Roles Input ────────────────────────────────────────────────────────
 
 function StaffRolesInput({ roles, onChange }: { roles: string[]; onChange: (roles: string[]) => void }) {
+  const t = useTranslations('ticketPanelsPage');
   const [input, setInput] = useState('');
 
   const add = () => {
@@ -74,12 +76,12 @@ function StaffRolesInput({ roles, onChange }: { roles: string[]; onChange: (role
       <div className="flex gap-2">
         <input
           className="input flex-1 text-sm font-mono"
-          placeholder="Paste a Role ID and press Add"
+          placeholder={t('pasteRoleId')}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); add(); } }}
         />
-        <button type="button" onClick={add} className="btn-secondary text-sm px-3">Add</button>
+        <button type="button" onClick={add} className="btn-secondary text-sm px-3">{t('add')}</button>
       </div>
       {roles.length > 0 && (
         <div className="flex flex-wrap gap-1.5">
@@ -91,7 +93,7 @@ function StaffRolesInput({ roles, onChange }: { roles: string[]; onChange: (role
           ))}
         </div>
       )}
-      <p className="text-gray-600 text-xs">Enable Developer Mode in Discord (Settings → Advanced) to copy Role IDs.</p>
+      <p className="text-gray-600 text-xs">{t('devModeHint')}</p>
     </div>
   );
 }
@@ -99,9 +101,10 @@ function StaffRolesInput({ roles, onChange }: { roles: string[]; onChange: (role
 // ─── Embed Preview ────────────────────────────────────────────────────────────
 
 function EmbedPreview({ draft }: { draft: PanelDraft }) {
+  const t = useTranslations('ticketPanelsPage');
   const color = draft.embedColor ?? '#5865F2';
   const activeButtons = draft.buttons && draft.buttons.length > 0 ? draft.buttons : [{
-    id: 'default', label: draft.buttonLabel || 'Open a Ticket',
+    id: 'default', label: draft.buttonLabel || t('openTicketFallback'),
     emoji: draft.emoji || '', color: draft.buttonColor || 'primary',
   }];
 
@@ -119,10 +122,10 @@ function EmbedPreview({ draft }: { draft: PanelDraft }) {
             <p className="text-[#dcddde] text-xs font-semibold mb-1">{draft.embedAuthorName}</p>
           )}
           <p className="text-white font-bold text-sm mb-1">
-            {draft.emoji ? `${draft.emoji} ` : ''}{draft.name || 'Panel Name'}
+            {draft.emoji ? `${draft.emoji} ` : ''}{draft.name || t('panelNameFallback')}
           </p>
           <p className="text-[#dcddde] text-xs leading-relaxed whitespace-pre-wrap break-words">
-            {draft.description || 'Panel description goes here.'}
+            {draft.description || t('descFallback')}
           </p>
           {draft.embedImageUrl && (
             <img src={draft.embedImageUrl} alt="embed" className="mt-2 max-w-full rounded max-h-48 object-cover" />
@@ -157,6 +160,7 @@ function EmbedPreview({ draft }: { draft: PanelDraft }) {
 // ─── Button Editor Row ────────────────────────────────────────────────────────
 
 function ButtonStaffRoles({ roles, onChange }: { roles: string[]; onChange: (r: string[]) => void }) {
+  const t = useTranslations('ticketPanelsPage');
   const [input, setInput] = useState('');
   const add = () => {
     const id = input.trim().replace(/\D/g, '');
@@ -175,7 +179,7 @@ function ButtonStaffRoles({ roles, onChange }: { roles: string[]; onChange: (r: 
       <div className="flex gap-1">
         <input
           className="input text-xs py-0.5 font-mono"
-          placeholder="Role ID"
+          placeholder={t('roleId')}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); add(); } }}
@@ -190,19 +194,20 @@ function ButtonStaffRoles({ roles, onChange }: { roles: string[]; onChange: (r: 
 function ButtonRow({
   btn, onChange, onDelete,
 }: { btn: PanelButton; onChange: (b: PanelButton) => void; onDelete: () => void }) {
+  const t = useTranslations('ticketPanelsPage');
   return (
     <div className="bg-gray-700/30 rounded-lg p-2 space-y-2">
       <div className="flex items-center gap-2">
         <input
           className="input flex-1 text-sm py-1.5"
-          placeholder="Emoji"
+          placeholder={t('emoji')}
           value={btn.emoji}
           onChange={(e) => onChange({ ...btn, emoji: e.target.value })}
           style={{ width: 60, flex: 'none' }}
         />
         <input
           className="input flex-1 text-sm py-1.5"
-          placeholder="Button label"
+          placeholder={t('buttonLabelPlaceholder')}
           value={btn.label}
           onChange={(e) => onChange({ ...btn, label: e.target.value })}
         />
@@ -212,11 +217,11 @@ function ButtonRow({
           onChange={(e) => onChange({ ...btn, color: e.target.value })}
           style={{ width: 110, flex: 'none' }}
         >
-          {BUTTON_COLORS.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}
+          {BUTTON_COLORS.map((c) => <option key={c.value} value={c.value}>{t(`color_${c.value}`)}</option>)}
         </select>
         <input
           className="input text-sm py-1.5"
-          placeholder="Category tag"
+          placeholder={t('categoryTag')}
           value={btn.categoryTag ?? ''}
           onChange={(e) => onChange({ ...btn, categoryTag: e.target.value || undefined })}
           style={{ width: 130, flex: 'none' }}
@@ -226,7 +231,7 @@ function ButtonRow({
         </button>
       </div>
       <div className="pl-1">
-        <p className="text-gray-500 text-xs mb-0.5">Staff roles for this button (overrides panel roles):</p>
+        <p className="text-gray-500 text-xs mb-0.5">{t('staffRolesForButton')}</p>
         <ButtonStaffRoles
           roles={btn.staffRoles ?? []}
           onChange={(r) => onChange({ ...btn, staffRoles: r.length > 0 ? r : undefined })}
@@ -239,12 +244,13 @@ function ButtonRow({
 // ─── Field Editor ─────────────────────────────────────────────────────────────
 
 function FieldRow({ field, onChange, onDelete }: { field: PanelField; onChange: (f: PanelField) => void; onDelete: () => void }) {
+  const t = useTranslations('ticketPanelsPage');
   return (
     <div className="bg-gray-700/30 rounded-lg p-3 space-y-2">
       <div className="flex items-center gap-2">
         <input
           className="input flex-1 text-sm py-1.5"
-          placeholder="Field label *"
+          placeholder={t('fieldLabel')}
           value={field.label}
           onChange={(e) => onChange({ ...field, label: e.target.value })}
           maxLength={45}
@@ -255,8 +261,8 @@ function FieldRow({ field, onChange, onDelete }: { field: PanelField; onChange: 
           onChange={(e) => onChange({ ...field, style: e.target.value as 'short' | 'paragraph' })}
           style={{ width: 120, flex: 'none' }}
         >
-          <option value="short">Short</option>
-          <option value="paragraph">Paragraph</option>
+          <option value="short">{t('styleShort')}</option>
+          <option value="paragraph">{t('styleParagraph')}</option>
         </select>
         <label className="flex items-center gap-1 text-xs text-gray-400 flex-shrink-0 cursor-pointer select-none">
           <input
@@ -265,7 +271,7 @@ function FieldRow({ field, onChange, onDelete }: { field: PanelField; onChange: 
             onChange={(e) => onChange({ ...field, required: e.target.checked })}
             className="accent-discord-blurple"
           />
-          Required
+          {t('required')}
         </label>
         <button onClick={onDelete} className="text-red-400 hover:text-red-300 flex-shrink-0 p-1">
           <Trash2 className="w-3.5 h-3.5" />
@@ -274,14 +280,14 @@ function FieldRow({ field, onChange, onDelete }: { field: PanelField; onChange: 
       <div className="grid grid-cols-2 gap-2">
         <input
           className="input text-sm py-1.5"
-          placeholder="Placeholder text (optional)"
+          placeholder={t('placeholderTextOptional')}
           value={field.placeholder ?? ''}
           onChange={(e) => onChange({ ...field, placeholder: e.target.value || undefined })}
         />
         <input
           type="number"
           className="input text-sm py-1.5"
-          placeholder="Max length (optional)"
+          placeholder={t('maxLengthOptional')}
           min={1}
           max={4000}
           value={field.maxLength ?? ''}
@@ -299,6 +305,7 @@ function PanelForm({
   initial,
   onDone,
 }: { guildId: string; initial?: TicketPanel; onDone: () => void }) {
+  const t = useTranslations('ticketPanelsPage');
   const [draft, setDraft] = useState<PanelDraft>(initial ? { ...initial } : { ...DEFAULT_DRAFT });
   const [section, setSection] = useState<'embed' | 'buttons' | 'fields' | 'settings'>('embed');
   const queryClient = useQueryClient();
@@ -312,13 +319,13 @@ function PanelForm({
         ? ticketsApi.updatePanel(guildId, initial.id, draft)
         : ticketsApi.createPanel(guildId, draft),
     onSuccess: () => {
-      toast.success(initial ? 'Panel updated!' : 'Panel created!');
+      toast.success(initial ? t('panelUpdated') : t('panelCreated'));
       queryClient.invalidateQueries({ queryKey: ['tickets-panels', guildId] });
       onDone();
     },
     onError: (err: unknown) => {
       const msg = (err as { response?: { data?: { error?: string } } })?.response?.data?.error;
-      toast.error(msg ?? 'Failed to save panel.');
+      toast.error(msg ?? t('savePanelError'));
     },
   });
 
@@ -335,7 +342,7 @@ function PanelForm({
     set('buttons', (draft.buttons ?? []).filter((b) => b.id !== id));
 
   const addField = () => {
-    if ((draft.fields ?? []).length >= 5) { toast.error('Maximum 5 fields per panel'); return; }
+    if ((draft.fields ?? []).length >= 5) { toast.error(t('max5Fields')); return; }
     set('fields', [
       ...(draft.fields ?? []),
       { id: crypto.randomUUID(), label: '', placeholder: undefined, required: false, style: 'short' as const },
@@ -354,17 +361,17 @@ function PanelForm({
       <div className="flex-1 min-w-0 space-y-4 overflow-y-auto pr-1">
         {/* Tab bar */}
         <div className="flex gap-1 border-b border-[var(--border-subtle)] pb-0">
-          {tabs.map((t) => (
+          {tabs.map((tab) => (
             <button
-              key={t}
-              onClick={() => setSection(t)}
-              className={`px-4 py-2 text-sm font-medium capitalize transition-colors border-b-2 -mb-px ${
-                section === t
+              key={tab}
+              onClick={() => setSection(tab)}
+              className={`px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px ${
+                section === tab
                   ? 'border-discord-blurple text-white'
                   : 'border-transparent text-gray-400 hover:text-gray-200'
               }`}
             >
-              {t}
+              {t(`tab_${tab}`)}
             </button>
           ))}
         </div>
@@ -372,13 +379,13 @@ function PanelForm({
         {/* ── Embed tab ── */}
         {section === 'embed' && (
           <div className="space-y-3">
-            <Row label="Panel Name *">
-              <input className="input" placeholder="e.g. Support" value={draft.name} onChange={(e) => set('name', e.target.value)} maxLength={50} />
+            <Row label={t('panelNameLabel')}>
+              <input className="input" placeholder={t('panelNamePlaceholder')} value={draft.name} onChange={(e) => set('name', e.target.value)} maxLength={50} />
             </Row>
-            <Row label="Description *">
+            <Row label={t('descriptionLabel')}>
               <textarea
                 className="input h-20 resize-none"
-                placeholder="Text shown inside the panel embed"
+                placeholder={t('descriptionPlaceholder')}
                 value={draft.description}
                 onChange={(e) => set('description', e.target.value)}
                 maxLength={1024}
@@ -386,7 +393,7 @@ function PanelForm({
               <p className="text-gray-600 text-xs text-right">{draft.description.length}/1024</p>
             </Row>
             <div className="grid grid-cols-2 gap-3">
-              <Row label="Embed Color">
+              <Row label={t('embedColor')}>
                 <div className="flex gap-2 items-center">
                   <input
                     type="color"
@@ -402,26 +409,26 @@ function PanelForm({
                   />
                 </div>
               </Row>
-              <Row label="Emoji">
+              <Row label={t('emojiLabel')}>
                 <input className="input" placeholder="🎫" value={draft.emoji} onChange={(e) => set('emoji', e.target.value)} maxLength={10} />
               </Row>
             </div>
-            <Row label="Author Name">
-              <input className="input" placeholder="Optional author line above title" value={draft.embedAuthorName ?? ''} onChange={(e) => set('embedAuthorName', e.target.value || undefined)} />
+            <Row label={t('authorName')}>
+              <input className="input" placeholder={t('authorNamePlaceholder')} value={draft.embedAuthorName ?? ''} onChange={(e) => set('embedAuthorName', e.target.value || undefined)} />
             </Row>
-            <Row label="Author Icon URL">
+            <Row label={t('authorIconUrl')}>
               <input className="input" placeholder="https://..." value={draft.embedAuthorIconUrl ?? ''} onChange={(e) => set('embedAuthorIconUrl', e.target.value || undefined)} />
             </Row>
-            <Row label="Thumbnail URL">
-              <input className="input" placeholder="https://... (small image top-right)" value={draft.embedThumbnailUrl ?? ''} onChange={(e) => set('embedThumbnailUrl', e.target.value || undefined)} />
+            <Row label={t('thumbnailUrl')}>
+              <input className="input" placeholder={t('thumbnailPlaceholder')} value={draft.embedThumbnailUrl ?? ''} onChange={(e) => set('embedThumbnailUrl', e.target.value || undefined)} />
             </Row>
-            <Row label="Image URL">
-              <input className="input" placeholder="https://... (large image below description)" value={draft.embedImageUrl ?? ''} onChange={(e) => set('embedImageUrl', e.target.value || undefined)} />
+            <Row label={t('imageUrl')}>
+              <input className="input" placeholder={t('imagePlaceholder')} value={draft.embedImageUrl ?? ''} onChange={(e) => set('embedImageUrl', e.target.value || undefined)} />
             </Row>
-            <Row label="Footer Text">
-              <input className="input" placeholder="Optional footer text" value={draft.embedFooterText ?? ''} onChange={(e) => set('embedFooterText', e.target.value || undefined)} />
+            <Row label={t('footerText')}>
+              <input className="input" placeholder={t('footerPlaceholder')} value={draft.embedFooterText ?? ''} onChange={(e) => set('embedFooterText', e.target.value || undefined)} />
             </Row>
-            <Row label="Footer Icon URL">
+            <Row label={t('footerIconUrl')}>
               <input className="input" placeholder="https://..." value={draft.embedFooterIconUrl ?? ''} onChange={(e) => set('embedFooterIconUrl', e.target.value || undefined)} />
             </Row>
           </div>
@@ -431,19 +438,19 @@ function PanelForm({
         {section === 'buttons' && (
           <div className="space-y-3">
             <p className="text-gray-400 text-sm">
-              Add multiple buttons to the panel. Each button can have a different category tag applied to tickets it opens. Leave empty to use a single default button.
+              {t('buttonsDesc')}
             </p>
 
             {(draft.buttons ?? []).length === 0 && (
               <div className="space-y-3 border border-[var(--border-subtle)] rounded-lg p-3">
-                <p className="text-gray-500 text-xs uppercase tracking-wider">Default Button</p>
+                <p className="text-gray-500 text-xs uppercase tracking-wider">{t('defaultButton')}</p>
                 <div className="grid grid-cols-2 gap-3">
-                  <Row label="Button Label">
+                  <Row label={t('buttonLabelLabel')}>
                     <input className="input text-sm" value={draft.buttonLabel} onChange={(e) => set('buttonLabel', e.target.value)} maxLength={80} />
                   </Row>
-                  <Row label="Button Color">
+                  <Row label={t('buttonColor')}>
                     <select className="input text-sm" value={draft.buttonColor} onChange={(e) => set('buttonColor', e.target.value)}>
-                      {BUTTON_COLORS.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}
+                      {BUTTON_COLORS.map((c) => <option key={c.value} value={c.value}>{t(`color_${c.value}`)}</option>)}
                     </select>
                   </Row>
                 </div>
@@ -463,7 +470,7 @@ function PanelForm({
 
             {(draft.buttons ?? []).length < 25 && (
               <button onClick={addButton} className="btn-secondary text-sm flex items-center gap-2 w-full justify-center">
-                <Plus className="w-3.5 h-3.5" /> Add Button
+                <Plus className="w-3.5 h-3.5" /> {t('addButton')}
               </button>
             )}
           </div>
@@ -473,11 +480,11 @@ function PanelForm({
         {section === 'fields' && (
           <div className="space-y-3">
             <p className="text-gray-400 text-sm">
-              When a user opens a ticket via this panel, they'll be shown a modal with these fields to fill in. Up to 5 fields. Responses are saved to the ticket and shown in the transcript.
+              {t('fieldsDesc')}
             </p>
             {(draft.fields ?? []).length === 0 && (
               <div className="text-center py-6 border border-dashed border-gray-700 rounded-lg text-gray-500 text-sm">
-                No fields yet — users just click the button and the ticket opens.
+                {t('noFields')}
               </div>
             )}
             <div className="space-y-2">
@@ -492,7 +499,7 @@ function PanelForm({
             </div>
             {(draft.fields ?? []).length < 5 && (
               <button onClick={addField} className="btn-secondary text-sm flex items-center gap-2 w-full justify-center">
-                <Plus className="w-3.5 h-3.5" /> Add Field
+                <Plus className="w-3.5 h-3.5" /> {t('addField')}
               </button>
             )}
           </div>
@@ -501,45 +508,45 @@ function PanelForm({
         {/* ── Settings tab ── */}
         {section === 'settings' && (
           <div className="space-y-3">
-            <Row label="Staff Roles">
+            <Row label={t('staffRoles')}>
               <StaffRolesInput
                 roles={draft.staffRoles}
                 onChange={(roles) => set('staffRoles', roles)}
               />
             </Row>
-            <Row label="Welcome Message">
+            <Row label={t('welcomeMessage')}>
               <textarea
                 className="input h-20 resize-none text-sm"
-                placeholder="Welcome {user}! Placeholders: {user}, {username}, {number}"
+                placeholder={t('welcomePlaceholder')}
                 value={draft.welcomeMessage}
                 onChange={(e) => set('welcomeMessage', e.target.value)}
                 maxLength={1024}
               />
             </Row>
             <div className="grid grid-cols-2 gap-3">
-              <Row label="Ticket Mode">
+              <Row label={t('ticketMode')}>
                 <select className="input" value={draft.ticketMode} onChange={(e) => set('ticketMode', e.target.value as 'channel' | 'thread')}>
-                  <option value="channel">Private Channel</option>
-                  <option value="thread">Private Thread</option>
+                  <option value="channel">{t('privateChannel')}</option>
+                  <option value="thread">{t('privateThread')}</option>
                 </select>
               </Row>
-              <Row label="Max Tickets / User">
+              <Row label={t('maxTicketsUser')}>
                 <input type="number" className="input" min={1} max={10} value={draft.maxTicketsPerUser} onChange={(e) => set('maxTicketsPerUser', Number(e.target.value))} />
               </Row>
-              <Row label="Auto-close (hours, 0 = off)">
+              <Row label={t('autoCloseLabel')}>
                 <input type="number" className="input" min={0} max={720} value={draft.autoCloseHours} onChange={(e) => set('autoCloseHours', Number(e.target.value))} />
               </Row>
-              <Row label="Channel Naming Pattern">
+              <Row label={t('namingPattern')}>
                 <input className="input text-sm" placeholder="ticket-{number}" value={draft.namingPattern} onChange={(e) => set('namingPattern', e.target.value)} />
               </Row>
-              <Row label="Close Action">
+              <Row label={t('closeAction')}>
                 <select className="input" value={draft.closeAction} onChange={(e) => set('closeAction', e.target.value)}>
-                  <option value="delete">Delete channel</option>
-                  <option value="archive">Archive channel</option>
+                  <option value="delete">{t('deleteChannel')}</option>
+                  <option value="archive">{t('archiveChannel')}</option>
                 </select>
               </Row>
             </div>
-            <Row label="Require Reason">
+            <Row label={t('requireReason')}>
               <label className="flex items-center gap-3 cursor-pointer">
                 <div
                   className={`w-11 h-6 rounded-full transition-colors ${draft.requireReason ? 'bg-discord-blurple' : 'bg-gray-600'} relative`}
@@ -547,10 +554,10 @@ function PanelForm({
                 >
                   <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${draft.requireReason ? 'translate-x-6' : 'translate-x-1'}`} />
                 </div>
-                <span className="text-gray-300 text-sm">{draft.requireReason ? 'Yes — ask for reason' : 'No'}</span>
+                <span className="text-gray-300 text-sm">{draft.requireReason ? t('yesAskReason') : t('no')}</span>
               </label>
             </Row>
-            <Row label="Enabled">
+            <Row label={t('enabledLabel')}>
               <label className="flex items-center gap-3 cursor-pointer">
                 <div
                   className={`w-11 h-6 rounded-full transition-colors ${draft.enabled ? 'bg-discord-blurple' : 'bg-gray-600'} relative`}
@@ -558,20 +565,20 @@ function PanelForm({
                 >
                   <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${draft.enabled ? 'translate-x-6' : 'translate-x-1'}`} />
                 </div>
-                <span className="text-gray-300 text-sm">{draft.enabled ? 'Enabled' : 'Disabled'}</span>
+                <span className="text-gray-300 text-sm">{draft.enabled ? t('enabledOn') : t('disabledOff')}</span>
               </label>
             </Row>
             <div className="pt-2 border-t border-[var(--border-subtle)]">
-              <p className="text-gray-500 text-xs mb-2">Discord IDs — leave blank if managing via slash commands</p>
+              <p className="text-gray-500 text-xs mb-2">{t('discordIdsHint')}</p>
               <div className="grid grid-cols-1 gap-2">
                 {[
-                  { key: 'categoryId', label: 'Category ID (for ticket channels)' },
-                  { key: 'logChannelId', label: 'Log Channel ID' },
+                  { key: 'categoryId', label: t('categoryIdLabel') },
+                  { key: 'logChannelId', label: t('logChannelIdLabel') },
                 ] .map(({ key, label }) => (
                   <Row key={key} label={label}>
                     <input
                       className="input text-sm font-mono"
-                      placeholder="Discord channel/category ID"
+                      placeholder={t('discordIdPlaceholder')}
                       value={(draft as Record<string, unknown>)[key] as string ?? ''}
                       onChange={(e) => set(key as keyof PanelDraft, e.target.value || undefined as never)}
                     />
@@ -589,19 +596,19 @@ function PanelForm({
             disabled={saveMutation.isPending || !draft.name.trim() || !draft.description.trim()}
             className="btn-primary flex-1 disabled:opacity-50"
           >
-            {saveMutation.isPending ? 'Saving...' : initial ? 'Save Changes' : 'Create Panel'}
+            {saveMutation.isPending ? t('saving') : initial ? t('saveChanges') : t('createPanel')}
           </button>
-          <button onClick={onDone} className="btn-secondary">Cancel</button>
+          <button onClick={onDone} className="btn-secondary">{t('cancel')}</button>
         </div>
       </div>
 
       {/* Right: live preview */}
       <div className="w-80 flex-shrink-0 space-y-3 hidden lg:block">
-        <p className="text-gray-400 text-xs uppercase tracking-wider font-medium">Live Preview</p>
+        <p className="text-gray-400 text-xs uppercase tracking-wider font-medium">{t('livePreview')}</p>
         <EmbedPreview draft={draft} />
         <div className="card text-xs text-gray-500 space-y-1">
-          <p>✅ Changes are saved to the portal database.</p>
-          <p>📌 To post this panel in Discord, use:</p>
+          <p>{t('previewNote1')}</p>
+          <p>{t('previewNote2')}</p>
           <code className="block bg-gray-700/40 rounded px-2 py-1 text-discord-blurple font-mono">/ticket-setup panel send</code>
         </div>
       </div>
@@ -622,6 +629,7 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
 
 export default function PanelsPage() {
   const { guildId } = useParams() as { guildId: string };
+  const t = useTranslations('ticketPanelsPage');
   const queryClient  = useQueryClient();
   const [editing, setEditing] = useState<TicketPanel | null | 'new'>(null);
 
@@ -633,10 +641,10 @@ export default function PanelsPage() {
   const deleteMutation = useMutation({
     mutationFn: (id: string) => ticketsApi.deletePanel(guildId, id),
     onSuccess: () => {
-      toast.success('Panel deleted.');
+      toast.success(t('panelDeleted'));
       queryClient.invalidateQueries({ queryKey: ['tickets-panels', guildId] });
     },
-    onError: () => toast.error('Failed to delete panel.'),
+    onError: () => toast.error(t('deletePanelError')),
   });
 
   const panels = (panelsRes?.data?.data ?? []) as TicketPanel[];
@@ -650,7 +658,7 @@ export default function PanelsPage() {
             <X className="w-5 h-5" />
           </button>
           <h1 className="text-xl font-bold text-white">
-            {editing === 'new' ? 'Create Panel' : `Edit — ${(editing as TicketPanel).name}`}
+            {editing === 'new' ? t('createPanel') : t('editTitle', { name: (editing as TicketPanel).name })}
           </h1>
         </div>
         <div className="flex-1 overflow-hidden">
@@ -671,24 +679,24 @@ export default function PanelsPage() {
         <div className="page-head">
         <div className="page-head-icon"><LayoutTemplate className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>Ticket Panels</h1>
-          <div className="page-head-desc">{panels.length} panel{panels.length !== 1 ? 's' : ''}</div>
+          <h1>{t('ticketPanels')}</h1>
+          <div className="page-head-desc">{t('panelCount', { count: panels.length })}</div>
         </div>
       </div>
         <button onClick={() => setEditing('new')} className="btn-primary flex items-center gap-2 text-sm">
-          <Plus className="w-4 h-4" /> New Panel
+          <Plus className="w-4 h-4" /> {t('newPanel')}
         </button>
       </div>
 
       {isLoading ? (
-        <div className="text-center py-12 text-gray-400">Loading panels...</div>
+        <div className="text-center py-12 text-gray-400">{t('loadingPanels')}</div>
       ) : panels.length === 0 ? (
         <div className="card text-center py-16">
           <LayoutTemplate className="w-12 h-12 text-gray-600 mx-auto mb-3" />
-          <p className="text-white font-semibold mb-1">No panels yet</p>
-          <p className="text-gray-400 text-sm mb-4">Create your first ticket panel to get started.</p>
+          <p className="text-white font-semibold mb-1">{t('noPanels')}</p>
+          <p className="text-gray-400 text-sm mb-4">{t('noPanelsHint')}</p>
           <button onClick={() => setEditing('new')} className="btn-primary text-sm mx-auto">
-            <Plus className="w-4 h-4" /> Create Panel
+            <Plus className="w-4 h-4" /> {t('createPanel')}
           </button>
         </div>
       ) : (
@@ -699,7 +707,7 @@ export default function PanelsPage() {
               panel={panel}
               onEdit={() => setEditing(panel)}
               onDelete={() => {
-                if (confirm(`Delete panel "${panel.name}"?`)) deleteMutation.mutate(panel.id);
+                if (confirm(t('confirmDeletePanel', { name: panel.name }))) deleteMutation.mutate(panel.id);
               }}
             />
           ))}
@@ -708,8 +716,8 @@ export default function PanelsPage() {
 
       {/* Slash command reminder */}
       <div className="card border-gray-700/30 bg-gray-700/10 text-sm text-gray-400 space-y-1">
-        <p className="text-gray-300 font-medium">After creating or editing a panel:</p>
-        <p>Use <code className="bg-gray-700/60 px-1.5 rounded text-discord-blurple font-mono">/ticket-setup panel send #channel panel-name</code> in Discord to post it.</p>
+        <p className="text-gray-300 font-medium">{t('reminderTitle')}</p>
+        <p>{t.rich('reminderText', { code: (c) => <code className="bg-gray-700/60 px-1.5 rounded text-discord-blurple font-mono">{c}</code> })}</p>
       </div>
     </div>
   );
@@ -718,6 +726,7 @@ export default function PanelsPage() {
 // ─── Panel Card ───────────────────────────────────────────────────────────────
 
 function PanelCard({ panel, onEdit, onDelete }: { panel: TicketPanel; onEdit: () => void; onDelete: () => void }) {
+  const t = useTranslations('ticketPanelsPage');
   const [open, setOpen] = useState(false);
   const buttonCount = panel.buttons?.length ?? 0;
 
@@ -730,8 +739,8 @@ function PanelCard({ panel, onEdit, onDelete }: { panel: TicketPanel; onEdit: ()
           <div className="flex items-center gap-2">
             <h3 className="text-white font-semibold truncate">{panel.name}</h3>
             {panel.enabled
-              ? <span className="badge-success text-xs">Active</span>
-              : <span className="badge-secondary text-xs">Disabled</span>}
+              ? <span className="badge-success text-xs">{t('active')}</span>
+              : <span className="badge-secondary text-xs">{t('disabledOff')}</span>}
           </div>
           <p className="text-gray-400 text-xs line-clamp-2 mt-0.5">{panel.description}</p>
         </div>
@@ -739,10 +748,10 @@ function PanelCard({ panel, onEdit, onDelete }: { panel: TicketPanel; onEdit: ()
 
       {/* Stats row */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-        <Chip label="Mode" value={panel.ticketMode === 'thread' ? 'Thread' : 'Channel'} />
-        <Chip label="Buttons"  value={buttonCount > 0 ? String(buttonCount) : '1 (default)'} />
-        <Chip label="Auto-close" value={panel.autoCloseHours > 0 ? `${panel.autoCloseHours}h` : 'Off'} />
-        <Chip label="Max/user" value={String(panel.maxTicketsPerUser)} />
+        <Chip label={t('chipMode')} value={panel.ticketMode === 'thread' ? t('chipThread') : t('chipChannel')} />
+        <Chip label={t('chipButtons')}  value={buttonCount > 0 ? String(buttonCount) : t('chipOneDefault')} />
+        <Chip label={t('chipAutoClose')} value={panel.autoCloseHours > 0 ? `${panel.autoCloseHours}h` : t('chipOff')} />
+        <Chip label={t('chipMaxUser')} value={String(panel.maxTicketsPerUser)} />
       </div>
 
       {/* Embed preview toggle */}
@@ -751,7 +760,7 @@ function PanelCard({ panel, onEdit, onDelete }: { panel: TicketPanel; onEdit: ()
         className="text-gray-500 text-xs flex items-center gap-1 hover:text-gray-300 transition-colors"
       >
         {open ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-        {open ? 'Hide preview' : 'Show embed preview'}
+        {open ? t('hidePreview') : t('showPreview')}
       </button>
 
       {open && (
@@ -761,7 +770,7 @@ function PanelCard({ panel, onEdit, onDelete }: { panel: TicketPanel; onEdit: ()
       {/* Actions */}
       <div className="flex gap-2 pt-1 border-t border-[var(--border-subtle)]">
         <button onClick={onEdit} className="btn-secondary flex-1 text-xs py-1.5 flex items-center justify-center gap-1.5">
-          <Edit className="w-3 h-3" /> Edit
+          <Edit className="w-3 h-3" /> {t('edit')}
         </button>
         <button onClick={onDelete} className="btn-danger text-xs py-1.5 px-3">
           <Trash2 className="w-3 h-3" />
