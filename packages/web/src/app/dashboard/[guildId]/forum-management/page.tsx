@@ -7,6 +7,7 @@ import api from '@/lib/api';
 import toast from 'react-hot-toast';
 import { useState, useEffect } from 'react';
 import { MessagesSquare, Plus, Trash2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 type ForumChannelConfig = {
   templateMessage: string | null;
@@ -30,6 +31,7 @@ const DEFAULT_CHANNEL_CONFIG: ForumChannelConfig = {
 
 export default function ForumManagementPage() {
   const { guildId } = useParams() as { guildId: string };
+  const t = useTranslations('forumManagementPage');
   const queryClient = useQueryClient();
 
   const [channelConfigs, setChannelConfigs] = useState<Record<string, ForumChannelConfig>>({});
@@ -54,10 +56,10 @@ export default function ForumManagementPage() {
   const saveMutation = useMutation({
     mutationFn: (data: Partial<ForumManagementConfig>) => forumManagementApi.update(guildId, data),
     onSuccess: () => {
-      toast.success('Forum management config saved!');
+      toast.success(t('saved'));
       queryClient.invalidateQueries({ queryKey: ['forum-management-config', guildId] });
     },
-    onError: () => toast.error('Failed to save config'),
+    onError: () => toast.error(t('saveError')),
   });
 
   const allChannels = (channelsRes?.data as { data?: Array<{ id: string; name: string; type: number }> })?.data ?? [];
@@ -80,11 +82,11 @@ export default function ForumManagementPage() {
 
   const handleAddChannel = () => {
     if (!newChannelId) {
-      toast.error('Select a forum channel');
+      toast.error(t('selectForumError'));
       return;
     }
     if (channelConfigs[newChannelId]) {
-      toast.error('This channel is already configured');
+      toast.error(t('alreadyConfigured'));
       return;
     }
     const updated = {
@@ -115,32 +117,32 @@ export default function ForumManagementPage() {
       <div className="page-head">
         <div className="page-head-icon"><MessagesSquare className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>Forum Management</h1>
-          <div className="page-head-desc">Configure auto-templates and tags for forum channels.</div>
+          <h1>{t('title')}</h1>
+          <div className="page-head-desc">{t('subtitle')}</div>
         </div>
       </div>
 
       {/* Add forum channel */}
       <div className="card mb-6">
-        <h3 className="text-base font-semibold text-white mb-4">Add Forum Channel</h3>
+        <h3 className="text-base font-semibold text-white mb-4">{t('addTitle')}</h3>
         <div className="space-y-3">
           <div>
-            <label className="label">Forum Channel</label>
+            <label className="label">{t('forumChannel')}</label>
             <select className="input" value={newChannelId} onChange={(e) => setNewChannelId(e.target.value)}>
-              <option value="">Select a forum channel...</option>
+              <option value="">{t('selectForum')}</option>
               {availableForumChannels.map((ch) => (
                 <option key={ch.id} value={ch.id}>#{ch.name}</option>
               ))}
               {forumChannels.length === 0 && (
-                <option value="" disabled>No forum channels found in this server</option>
+                <option value="" disabled>{t('noForumChannels')}</option>
               )}
             </select>
           </div>
           <div>
-            <label className="label">Initial Template Message (optional)</label>
+            <label className="label">{t('initialTemplate')}</label>
             <textarea
               className="input min-h-[80px] resize-none"
-              placeholder="Template message posted when a new thread is created..."
+              placeholder={t('templatePlaceholder')}
               value={newTemplate}
               onChange={(e) => setNewTemplate(e.target.value)}
             />
@@ -151,7 +153,7 @@ export default function ForumManagementPage() {
             className="btn-primary flex items-center gap-1.5"
           >
             <Plus className="w-4 h-4" />
-            Add Channel
+            {t('addChannel')}
           </button>
         </div>
       </div>
@@ -160,7 +162,7 @@ export default function ForumManagementPage() {
       {configuredChannelIds.length === 0 ? (
         <div className="card text-center py-10 text-gray-500">
           <MessagesSquare className="w-8 h-8 mx-auto mb-2 opacity-40" />
-          <p>No forum channels configured yet.</p>
+          <p>{t('noConfigured')}</p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -180,17 +182,17 @@ export default function ForumManagementPage() {
                     onClick={() => handleRemoveChannel(channelId)}
                     disabled={saveMutation.isPending}
                     className="text-gray-500 hover:text-red-400 transition-colors"
-                    title="Remove channel"
+                    title={t('removeChannel')}
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
                 <div className="space-y-3">
                   <div>
-                    <label className="label">Template Message</label>
+                    <label className="label">{t('templateMessage')}</label>
                     <textarea
                       className="input min-h-[80px] resize-none"
-                      placeholder="Template message posted when a new thread is created..."
+                      placeholder={t('templatePlaceholder')}
                       value={channelCfg.templateMessage ?? ''}
                       onChange={(e) =>
                         setChannelConfigs((prev) => ({
@@ -201,11 +203,11 @@ export default function ForumManagementPage() {
                     />
                   </div>
                   <div>
-                    <label className="label">Auto-Tag ID (optional)</label>
+                    <label className="label">{t('autoTagId')}</label>
                     <input
                       type="text"
                       className="input"
-                      placeholder="Forum tag ID to auto-apply..."
+                      placeholder={t('autoTagPlaceholder')}
                       value={channelCfg.autoTagId ?? ''}
                       onChange={(e) =>
                         setChannelConfigs((prev) => ({
@@ -215,7 +217,7 @@ export default function ForumManagementPage() {
                       }
                     />
                     <p className="text-xs text-gray-500 mt-1">
-                      Right-click a forum tag in Discord and copy its ID.
+                      {t('autoTagHelp')}
                     </p>
                   </div>
                   <button
@@ -223,7 +225,7 @@ export default function ForumManagementPage() {
                     disabled={saveMutation.isPending}
                     className="btn-primary text-sm"
                   >
-                    {saveMutation.isPending ? 'Saving…' : 'Save'}
+                    {saveMutation.isPending ? t('saving') : t('save')}
                   </button>
                 </div>
               </div>
