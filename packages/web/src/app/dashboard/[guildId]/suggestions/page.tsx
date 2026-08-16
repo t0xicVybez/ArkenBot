@@ -9,6 +9,7 @@ import { Toggle } from '@/components/Toggle';
 import toast from 'react-hot-toast';
 import { useState, useEffect } from 'react';
 import api from '@/lib/api';
+import { useTranslations } from 'next-intl';
 
 type SuggestionsConfig = {
   enabled?: boolean;
@@ -36,11 +37,11 @@ const suggestionsApi = {
 };
 
 const STATUS_TABS = [
-  { key: 'all', label: 'All' },
-  { key: 'pending', label: 'Pending' },
-  { key: 'approved', label: 'Approved' },
-  { key: 'denied', label: 'Denied' },
-  { key: 'considering', label: 'Considering' },
+  { key: 'all' },
+  { key: 'pending' },
+  { key: 'approved' },
+  { key: 'denied' },
+  { key: 'considering' },
 ] as const;
 
 type StatusTab = typeof STATUS_TABS[number]['key'];
@@ -54,6 +55,7 @@ const STATUS_BADGE: Record<string, string> = {
 
 export default function SuggestionsPage() {
   const { guildId } = useParams() as { guildId: string };
+  const t = useTranslations('suggestionsPage');
   const queryClient = useQueryClient();
   const [config, setConfig] = useState<SuggestionsConfig>({});
   const [activeTab, setActiveTab] = useState<StatusTab>('all');
@@ -87,10 +89,10 @@ export default function SuggestionsPage() {
   const configMutation = useMutation({
     mutationFn: (data: Partial<SuggestionsConfig>) => suggestionsApi.updateConfig(guildId, data),
     onSuccess: () => {
-      toast.success('Suggestions settings saved!');
+      toast.success(t('saved'));
       queryClient.invalidateQueries({ queryKey: ['suggestions-config', guildId] });
     },
-    onError: () => toast.error('Failed to save suggestions settings'),
+    onError: () => toast.error(t('saveError')),
   });
 
   const handleConfigChange = (partial: Partial<SuggestionsConfig>) => {
@@ -113,35 +115,35 @@ export default function SuggestionsPage() {
       <div className="page-head">
         <div className="page-head-icon"><MessageSquarePlus className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>Suggestions</h1>
-          <div className="page-head-desc">Let members submit ideas and vote on them.</div>
+          <h1>{t('title')}</h1>
+          <div className="page-head-desc">{t('subtitle')}</div>
         </div>
       </div>
 
-      <SettingsSection title="Configuration" description="Set up the suggestions system for this server.">
+      <SettingsSection title={t('configTitle')} description={t('configDesc')}>
         <Toggle
-          label="Enable Suggestions"
-          description="Allow members to submit suggestions using the /suggest command"
+          label={t('enable')}
+          description={t('enableDesc')}
           enabled={config.enabled ?? false}
           onChange={(v) => handleConfigChange({ enabled: v })}
         />
         <div>
-          <label className="label">Announcement Channel</label>
+          <label className="label">{t('channel')}</label>
           <select
             className="input"
             value={config.channelId ?? ''}
             onChange={(e) => handleConfigChange({ channelId: e.target.value || undefined })}
           >
-            <option value="">Select a channel</option>
+            <option value="">{t('selectChannel')}</option>
             {textChannels.map((ch) => (
               <option key={ch.id} value={ch.id}>#{ch.name}</option>
             ))}
           </select>
-          <p className="text-xs text-gray-500 mt-1">New suggestions will be posted in this channel for members to see and vote on.</p>
+          <p className="text-xs text-gray-500 mt-1">{t('channelHelp')}</p>
         </div>
         <Toggle
-          label="Allow Voting"
-          description="Members can upvote or downvote suggestions with emoji reactions"
+          label={t('allowVoting')}
+          description={t('allowVotingDesc')}
           enabled={config.allowVoting ?? true}
           onChange={(v) => handleConfigChange({ allowVoting: v })}
         />
@@ -149,7 +151,7 @@ export default function SuggestionsPage() {
 
       <div className="card">
         <div className="mb-4">
-          <h2 className="text-lg font-semibold text-white mb-3">Suggestions</h2>
+          <h2 className="text-lg font-semibold text-white mb-3">{t('title')}</h2>
           <div className="flex gap-1 flex-wrap">
             {STATUS_TABS.map((tab) => (
               <button
@@ -161,7 +163,7 @@ export default function SuggestionsPage() {
                     : 'bg-[var(--bg-base)] text-gray-400 hover:text-gray-200'
                 }`}
               >
-                {tab.label}
+                {tab.key === 'all' ? t('tab_all') : t(`status_${tab.key}`)}
               </button>
             ))}
           </div>
@@ -175,7 +177,7 @@ export default function SuggestionsPage() {
           </div>
         ) : suggestions.length === 0 ? (
           <p className="text-gray-500 text-sm text-center py-10">
-            No suggestions found{activeTab !== 'all' ? ` with status "${activeTab}"` : ''}.
+            {activeTab !== 'all' ? t('noneFiltered', { status: t(`status_${activeTab}`) }) : t('noneAll')}
           </p>
         ) : (
           <div className="space-y-3">
@@ -185,9 +187,9 @@ export default function SuggestionsPage() {
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-gray-100 leading-relaxed">{s.content}</p>
                     <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2">
-                      <span className="text-xs text-gray-500">Author: {s.username ?? s.userId}</span>
+                      <span className="text-xs text-gray-500">{t('author', { name: s.username ?? s.userId })}</span>
                       <span className={`text-[11px] font-medium px-2 py-0.5 rounded-full ${STATUS_BADGE[s.status] ?? 'bg-gray-700 text-gray-400'}`}>
-                        {s.status.charAt(0).toUpperCase() + s.status.slice(1)}
+                        {t(`status_${s.status}`)}
                       </span>
                       <span className="flex items-center gap-1 text-xs text-green-400">
                         <ThumbsUp className="w-3 h-3" />
@@ -200,7 +202,7 @@ export default function SuggestionsPage() {
                     </div>
                     {s.staffNote && (
                       <div className="mt-2 px-3 py-1.5 rounded-md bg-blue-500/10 border border-blue-500/20">
-                        <p className="text-xs text-blue-300"><span className="font-semibold">Staff note:</span> {s.staffNote}</p>
+                        <p className="text-xs text-blue-300"><span className="font-semibold">{t('staffNote')}</span> {s.staffNote}</p>
                       </div>
                     )}
                   </div>
