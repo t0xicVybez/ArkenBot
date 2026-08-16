@@ -8,9 +8,11 @@ import { guildsApi } from '@/lib/api';
 import type { GuildOverview } from '@arkenbot/shared';
 import Link from 'next/link';
 import { Bot, Search } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 export default function DashboardPage() {
   const { status, isAuthenticated, user } = useAuth();
+  const t = useTranslations('serverSelectPage');
   const router = useRouter();
 
   // Redirect only once the initial `/auth/me` check has resolved.
@@ -45,7 +47,7 @@ export default function DashboardPage() {
         <p className="text-white font-semibold truncate group-hover:text-discord-blurple transition-colors">
           {guild.name}
         </p>
-        <p className="text-gray-400 text-xs">{guild.memberCount?.toLocaleString() ?? '—'} members</p>
+        <p className="text-gray-400 text-xs">{t('membersCount', { count: guild.memberCount?.toLocaleString() ?? '—' })}</p>
       </div>
     </div>
   );
@@ -55,16 +57,16 @@ export default function DashboardPage() {
       <header className="bg-[var(--bg-card)] border-b border-[var(--border-subtle)] px-6 py-4">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold text-white">Select a Server</h1>
-            <p className="text-gray-400 text-sm">Choose a server to manage its settings</p>
+            <h1 className="text-xl font-bold text-white">{t('selectServer')}</h1>
+            <p className="text-gray-400 text-sm">{t('selectServerDesc')}</p>
           </div>
           <div className="flex items-center gap-2">
             <Link href="/dashboard/account" className="btn-secondary text-sm">
-              Account &amp; Security
+              {t('accountSecurity')}
             </Link>
             {user?.isStaff && (
               <Link href="/staff" className="btn-secondary text-sm">
-                Staff Portal
+                {t('staffPortal')}
               </Link>
             )}
           </div>
@@ -77,7 +79,7 @@ export default function DashboardPage() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input
             type="text"
-            placeholder="Search servers..."
+            placeholder={t('searchServers')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="input pl-9 w-full"
@@ -101,9 +103,9 @@ export default function DashboardPage() {
         ) : allGuilds.length === 0 ? (
           <div className="text-center py-20">
             <Bot className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-            <h2 className="text-xl font-semibold text-white mb-2">No servers found</h2>
+            <h2 className="text-xl font-semibold text-white mb-2">{t('noServers')}</h2>
             <p className="text-gray-400 mb-6">
-              You don&apos;t have admin permissions in any server with the bot.
+              {t('noServersDesc')}
             </p>
             <a
               href={`https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&permissions=8824675416665207&integration_type=0&scope=bot%20applications.commands`}
@@ -111,7 +113,7 @@ export default function DashboardPage() {
               rel="noreferrer"
               className="btn-primary"
             >
-              Invite Bot to Your Server
+              {t('inviteBot')}
             </a>
           </div>
         ) : (
@@ -126,7 +128,7 @@ export default function DashboardPage() {
                     className="card hover:border-discord-blurple/50 transition-colors group cursor-pointer"
                   >
                     <GuildCard guild={guild} />
-                    <span className="badge-success">● Bot Active</span>
+                    <span className="badge-success">{t('botActive')}</span>
                   </Link>
                 ))}
               </div>
@@ -136,7 +138,7 @@ export default function DashboardPage() {
             {inactiveGuilds.length > 0 && (
               <>
                 <p className="text-xs font-semibold uppercase tracking-widest text-gray-500 mb-3">
-                  Invite bot to manage
+                  {t('inviteToManage')}
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 opacity-60">
                   {inactiveGuilds.map((guild) => (
@@ -148,7 +150,7 @@ export default function DashboardPage() {
                         rel="noreferrer"
                         className="btn-primary text-xs py-1"
                       >
-                        Invite Bot
+                        {t('inviteBotShort')}
                       </a>
                     </div>
                   ))}
@@ -157,7 +159,7 @@ export default function DashboardPage() {
             )}
 
             {filtered.length === 0 && (
-              <div className="text-center py-16 text-gray-500">No servers match &quot;{search}&quot;</div>
+              <div className="text-center py-16 text-gray-500">{t('noMatch', { search })}</div>
             )}
           </>
         )}
