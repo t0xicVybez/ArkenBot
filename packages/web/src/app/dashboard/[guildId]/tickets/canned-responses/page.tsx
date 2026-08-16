@@ -7,6 +7,7 @@ import { ticketsApi } from '@/lib/api';
 import { ArrowLeft, Plus, Pencil, Trash2, MessageSquare, X, Check } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '@/lib/auth';
+import { useTranslations } from 'next-intl';
 
 interface CannedResponse {
   id: string;
@@ -18,6 +19,7 @@ interface CannedResponse {
 
 export default function CannedResponsesPage() {
   const { guildId } = useParams() as { guildId: string };
+  const t = useTranslations('cannedResponsesPage');
   const queryClient = useQueryClient();
   const { user } = useAuth();
   const userTag = user ? (user.discriminator === '0' ? user.username : `${user.username}#${user.discriminator}`) : 'Portal';
@@ -41,7 +43,7 @@ export default function CannedResponsesPage() {
     mutationFn: () => ticketsApi.createCannedResponse(guildId, { name: name.trim(), content: content.trim(), createdBy: user?.id ?? '', createdByTag: userTag }),
     onSuccess: () => { invalidate(); resetForm(); },
     onError: (err: unknown) => {
-      const msg = (err as { response?: { data?: { error?: string } } })?.response?.data?.error ?? 'Failed to create';
+      const msg = (err as { response?: { data?: { error?: string } } })?.response?.data?.error ?? t('failedCreate');
       setError(msg);
     },
   });
@@ -50,7 +52,7 @@ export default function CannedResponsesPage() {
     mutationFn: (id: string) => ticketsApi.updateCannedResponse(guildId, id, { name: name.trim(), content: content.trim() }),
     onSuccess: () => { invalidate(); resetForm(); },
     onError: (err: unknown) => {
-      const msg = (err as { response?: { data?: { error?: string } } })?.response?.data?.error ?? 'Failed to update';
+      const msg = (err as { response?: { data?: { error?: string } } })?.response?.data?.error ?? t('failedUpdate');
       setError(msg);
     },
   });
@@ -77,8 +79,8 @@ export default function CannedResponsesPage() {
   }
 
   function handleSubmit() {
-    if (!name.trim()) { setError('Name is required'); return; }
-    if (!content.trim()) { setError('Content is required'); return; }
+    if (!name.trim()) { setError(t('nameRequired')); return; }
+    if (!content.trim()) { setError(t('contentRequired')); return; }
     setError('');
     if (editingId) {
       updateMut.mutate(editingId);
@@ -99,15 +101,15 @@ export default function CannedResponsesPage() {
         <div className="flex-1">
           <h1 className="text-2xl font-bold text-white flex items-center gap-2">
             <MessageSquare className="w-6 h-6 text-discord-blurple" />
-            Canned Responses
+            {t('title')}
           </h1>
           <p className="text-gray-400 text-sm mt-0.5">
-            Pre-written responses staff can send with <code className="text-gray-300">/ticket respond</code>
+            {t.rich('subtitle', { code: (c) => <code className="text-gray-300">{c}</code> })}
           </p>
         </div>
         {!showForm && (
           <button onClick={() => { setShowForm(true); setEditingId(null); setName(''); setContent(''); setError(''); }} className="btn-primary flex items-center gap-2 text-sm">
-            <Plus className="w-4 h-4" /> New Response
+            <Plus className="w-4 h-4" /> {t('newResponse')}
           </button>
         )}
       </div>
@@ -116,54 +118,54 @@ export default function CannedResponsesPage() {
       {showForm && (
         <div className="card space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-white font-semibold">{editingId ? 'Edit Response' : 'New Canned Response'}</h2>
+            <h2 className="text-white font-semibold">{editingId ? t('editResponse') : t('newCannedResponse')}</h2>
             <button onClick={resetForm} className="text-gray-400 hover:text-white"><X className="w-4 h-4" /></button>
           </div>
 
           {error && <p className="text-red-400 text-sm">{error}</p>}
 
           <div className="space-y-1">
-            <label className="text-gray-400 text-xs uppercase tracking-wider">Name</label>
+            <label className="text-gray-400 text-xs uppercase tracking-wider">{t('nameLabel')}</label>
             <input
               className="input w-full"
-              placeholder="e.g. greeting, billing-issue, resolved"
+              placeholder={t('namePlaceholder')}
               value={name}
               onChange={(e) => setName(e.target.value)}
               maxLength={50}
             />
-            <p className="text-gray-600 text-xs">This is the autocomplete name used in /ticket respond</p>
+            <p className="text-gray-600 text-xs">{t('nameHelp')}</p>
           </div>
 
           <div className="space-y-1">
-            <label className="text-gray-400 text-xs uppercase tracking-wider">Content</label>
+            <label className="text-gray-400 text-xs uppercase tracking-wider">{t('contentLabel')}</label>
             <textarea
               className="input w-full min-h-[120px] resize-y"
-              placeholder="Hello! Thank you for reaching out. A staff member will be with you shortly..."
+              placeholder={t('contentPlaceholder')}
               value={content}
               onChange={(e) => setContent(e.target.value)}
               maxLength={2000}
             />
-            <p className="text-gray-600 text-xs">{content.length}/2000 characters</p>
+            <p className="text-gray-600 text-xs">{t('charCount', { count: content.length })}</p>
           </div>
 
           <div className="flex gap-2">
             <button onClick={handleSubmit} disabled={saving} className="btn-primary flex items-center gap-2 text-sm">
               <Check className="w-4 h-4" />
-              {saving ? 'Saving...' : editingId ? 'Save Changes' : 'Create Response'}
+              {saving ? t('saving') : editingId ? t('saveChanges') : t('createResponse')}
             </button>
-            <button onClick={resetForm} className="btn-secondary text-sm">Cancel</button>
+            <button onClick={resetForm} className="btn-secondary text-sm">{t('cancel')}</button>
           </div>
         </div>
       )}
 
       {/* Response List */}
       {isLoading ? (
-        <div className="text-center text-gray-400 py-8">Loading...</div>
+        <div className="text-center text-gray-400 py-8">{t('loading')}</div>
       ) : responses.length === 0 ? (
         <div className="card text-center py-10">
           <MessageSquare className="w-10 h-10 text-gray-600 mx-auto mb-3" />
-          <p className="text-gray-400 mb-1">No canned responses yet.</p>
-          <p className="text-gray-600 text-sm">Create one to let staff send quick replies in ticket channels.</p>
+          <p className="text-gray-400 mb-1">{t('noResponses')}</p>
+          <p className="text-gray-600 text-sm">{t('noResponsesHint')}</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -177,22 +179,22 @@ export default function CannedResponsesPage() {
                   </div>
                   <p className="text-gray-400 text-sm mt-1 whitespace-pre-wrap break-words line-clamp-3">{r.content}</p>
                   <p className="text-gray-600 text-xs mt-1">
-                    Created {new Date(r.createdAt).toLocaleDateString()}
-                    {r.createdByTag && ` by ${r.createdByTag}`}
+                    {t('created', { date: new Date(r.createdAt).toLocaleDateString() })}
+                    {r.createdByTag && t('byTag', { tag: r.createdByTag })}
                   </p>
                 </div>
                 <div className="flex gap-1 flex-shrink-0">
                   <button
                     onClick={() => startEdit(r)}
                     className="text-gray-400 hover:text-white p-1.5 rounded hover:bg-gray-700/50 transition-colors"
-                    title="Edit"
+                    title={t('edit')}
                   >
                     <Pencil className="w-4 h-4" />
                   </button>
                   <button
-                    onClick={() => { if (confirm(`Delete "${r.name}"?`)) deleteMut.mutate(r.id); }}
+                    onClick={() => { if (confirm(t('confirmDelete', { name: r.name }))) deleteMut.mutate(r.id); }}
                     className="text-gray-400 hover:text-red-400 p-1.5 rounded hover:bg-gray-700/50 transition-colors"
-                    title="Delete"
+                    title={t('delete')}
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -207,9 +209,8 @@ export default function CannedResponsesPage() {
       {responses.length > 0 && (
         <div className="card border border-discord-blurple/20 bg-discord-blurple/5">
           <p className="text-gray-400 text-sm">
-            <span className="text-white font-medium">How to use:</span> In any ticket channel, run{' '}
-            <code className="text-gray-300">/ticket respond</code> and start typing a response name — Discord will
-            autocomplete from this list.
+            <span className="text-white font-medium">{t('howToUseLabel')}</span>{' '}
+            {t.rich('howToUse', { code: (c) => <code className="text-gray-300">{c}</code> })}
           </p>
         </div>
       )}
