@@ -15,40 +15,44 @@ import { ArrowLeft, Loader2, LogOut, Monitor, ShieldCheck, Trash2 } from 'lucide
 import { authApi, type ActiveSession } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { useTranslations } from 'next-intl';
+
+type Translate = (key: string, values?: Record<string, string | number>) => string;
 
 /** Derives a coarse, human-readable device label from a User-Agent string. */
-function deviceLabel(ua: string | null): string {
-  if (!ua) return 'Unknown device';
+function deviceLabel(ua: string | null, t: Translate): string {
+  if (!ua) return t('unknownDevice');
   const browser =
     /Edg\//.test(ua) ? 'Edge'
     : /OPR\//.test(ua) ? 'Opera'
     : /Chrome\//.test(ua) ? 'Chrome'
     : /Firefox\//.test(ua) ? 'Firefox'
     : /Safari\//.test(ua) ? 'Safari'
-    : 'Browser';
+    : t('browserGeneric');
   const os =
     /Windows/.test(ua) ? 'Windows'
     : /Mac OS X|Macintosh/.test(ua) ? 'macOS'
     : /Android/.test(ua) ? 'Android'
     : /iPhone|iPad|iOS/.test(ua) ? 'iOS'
     : /Linux/.test(ua) ? 'Linux'
-    : 'Unknown OS';
-  return `${browser} on ${os}`;
+    : t('unknownOs');
+  return t('deviceOn', { browser, os });
 }
 
-function formatWhen(iso: string): string {
+function formatWhen(iso: string, t: Translate): string {
   const d = new Date(iso);
   const diffMs = Date.now() - d.getTime();
   const mins = Math.floor(diffMs / 60000);
-  if (mins < 1) return 'just now';
-  if (mins < 60) return `${mins} min ago`;
+  if (mins < 1) return t('justNow');
+  if (mins < 60) return t('minAgo', { mins });
   const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs} hr ago`;
+  if (hrs < 24) return t('hrAgo', { hrs });
   return d.toLocaleDateString();
 }
 
 export default function AccountPage() {
   const { status } = useAuth();
+  const t = useTranslations('accountPage');
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -65,10 +69,10 @@ export default function AccountPage() {
   const revoke = useMutation({
     mutationFn: (id: string) => authApi.revokeSession(id),
     onSuccess: () => {
-      toast.success('Session revoked');
+      toast.success(t('sessionRevoked'));
       queryClient.invalidateQueries({ queryKey: ['auth', 'sessions'] });
     },
-    onError: () => toast.error('Failed to revoke session'),
+    onError: () => toast.error(t('revokeError')),
   });
 
   const logoutAll = useMutation({
@@ -77,7 +81,7 @@ export default function AccountPage() {
       useAuth.getState().logout();
       router.push('/auth');
     },
-    onError: () => toast.error('Failed to log out everywhere'),
+    onError: () => toast.error(t('logoutAllError')),
   });
 
   if (status !== 'authenticated') return null;
@@ -92,8 +96,8 @@ export default function AccountPage() {
             <ArrowLeft className="w-5 h-5" />
           </Link>
           <div>
-            <h1 className="text-xl font-bold text-white">Account &amp; Security</h1>
-            <p className="text-gray-400 text-sm">Manage the devices signed in to your account</p>
+            <h1 className="text-xl font-bold text-white">{t('accountSecurity')}</h1>
+            <p className="text-gray-400 text-sm">{t('manageDevices')}</p>
           </div>
         </div>
       </header>
@@ -105,14 +109,14 @@ export default function AccountPage() {
 
         <div className="flex items-center justify-between mb-4">
           <h2 className="flex items-center gap-2 text-lg font-semibold text-white">
-            <ShieldCheck className="w-5 h-5 text-discord-blurple" /> Active sessions
+            <ShieldCheck className="w-5 h-5 text-discord-blurple" /> {t('activeSessions')}
           </h2>
           <button
             onClick={() => logoutAll.mutate()}
             disabled={logoutAll.isPending}
             className="btn-secondary text-sm flex items-center gap-2"
           >
-            <LogOut className="w-4 h-4" /> Log out everywhere
+            <LogOut className="w-4 h-4" /> {t('logoutEverywhere')}
           </button>
         </div>
 
@@ -121,7 +125,7 @@ export default function AccountPage() {
             <Loader2 className="w-6 h-6 animate-spin text-discord-blurple" />
           </div>
         ) : sessions.length === 0 ? (
-          <p className="text-gray-400 text-center py-16">No active sessions.</p>
+          <p className="text-gray-400 text-center py-16">{t('noSessions')}</p>
         ) : (
           <ul className="space-y-3">
             {sessions.map((s) => (
@@ -133,15 +137,15 @@ export default function AccountPage() {
                   <Monitor className="w-5 h-5 text-gray-400 shrink-0" />
                   <div className="min-w-0">
                     <p className="text-white font-medium truncate">
-                      {deviceLabel(s.userAgent)}
+                      {deviceLabel(s.userAgent, t)}
                       {s.current && (
                         <span className="ml-2 text-xs px-2 py-0.5 rounded-full bg-discord-blurple/20 text-discord-blurple align-middle">
-                          This device
+                          {t('thisDevice')}
                         </span>
                       )}
                     </p>
                     <p className="text-gray-400 text-sm truncate">
-                      {s.ipAddress ?? 'Unknown IP'} · active {formatWhen(s.lastUsedAt)}
+                      {t('sessionLine', { ip: s.ipAddress ?? t('unknownIp'), when: formatWhen(s.lastUsedAt, t) })}
                     </p>
                   </div>
                 </div>
@@ -150,7 +154,7 @@ export default function AccountPage() {
                     onClick={() => revoke.mutate(s.id)}
                     disabled={revoke.isPending}
                     className="text-gray-400 hover:text-red-400 shrink-0"
-                    title="Revoke this session"
+                    title={t('revokeSession')}
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
