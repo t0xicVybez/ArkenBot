@@ -8,6 +8,7 @@ import { ticketsApi, guildsApi } from '@/lib/api';
 import toast from 'react-hot-toast';
 import { Settings, ArrowLeft, Plus, Trash2 } from 'lucide-react';
 import { Toggle } from '@/components/Toggle';
+import { useTranslations } from 'next-intl';
 
 interface SlaLevel { hours: number; pingRoleId?: string; message?: string; }
 
@@ -34,6 +35,7 @@ function Row({ label, hint, children }: { label: string; hint?: string; children
 }
 
 function BlacklistInput({ users, onChange }: { users: string[]; onChange: (u: string[]) => void }) {
+  const t = useTranslations('ticketSettingsPage');
   const [input, setInput] = useState('');
   const add = () => {
     const id = input.trim().replace(/\D/g, '');
@@ -44,9 +46,9 @@ function BlacklistInput({ users, onChange }: { users: string[]; onChange: (u: st
   return (
     <div className="space-y-2">
       <div className="flex gap-2">
-        <input className="input flex-1 text-sm font-mono" placeholder="Paste a User ID and press Add" value={input}
+        <input className="input flex-1 text-sm font-mono" placeholder={t('pasteUserId')} value={input}
           onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); add(); } }} />
-        <button type="button" onClick={add} className="btn-secondary text-sm px-3">Add</button>
+        <button type="button" onClick={add} className="btn-secondary text-sm px-3">{t('add')}</button>
       </div>
       {users.length > 0 && (
         <div className="flex flex-wrap gap-1.5">
@@ -63,14 +65,15 @@ function BlacklistInput({ users, onChange }: { users: string[]; onChange: (u: st
 }
 
 function SlaLevelsEditor({ levels, roles, onChange }: { levels: SlaLevel[]; roles: { id: string; name: string }[]; onChange: (l: SlaLevel[]) => void }) {
+  const t = useTranslations('ticketSettingsPage');
   const [newHours, setNewHours] = useState('');
   const [newRole, setNewRole] = useState('');
   const [newMsg, setNewMsg] = useState('');
 
   const add = () => {
     const h = parseInt(newHours);
-    if (!h || h <= 0) { toast.error('Enter valid hours'); return; }
-    if (levels.some((l) => l.hours === h)) { toast.error('Level already exists'); return; }
+    if (!h || h <= 0) { toast.error(t('enterValidHours')); return; }
+    if (levels.some((l) => l.hours === h)) { toast.error(t('levelExists')); return; }
     onChange([...levels, { hours: h, pingRoleId: newRole || undefined, message: newMsg.trim() || undefined }].sort((a, b) => a.hours - b.hours));
     setNewHours(''); setNewRole(''); setNewMsg('');
   };
@@ -83,9 +86,9 @@ function SlaLevelsEditor({ levels, roles, onChange }: { levels: SlaLevel[]; role
           <table className="w-full min-w-[500px] text-sm">
             <thead className="bg-[var(--bg-base)]">
               <tr>
-                <th className="text-left px-3 py-2 text-xs text-gray-400 uppercase">Hours</th>
-                <th className="text-left px-3 py-2 text-xs text-gray-400 uppercase">Ping Role</th>
-                <th className="text-left px-3 py-2 text-xs text-gray-400 uppercase">Custom Message</th>
+                <th className="text-left px-3 py-2 text-xs text-gray-400 uppercase">{t('colHours')}</th>
+                <th className="text-left px-3 py-2 text-xs text-gray-400 uppercase">{t('colPingRole')}</th>
+                <th className="text-left px-3 py-2 text-xs text-gray-400 uppercase">{t('colCustomMessage')}</th>
                 <th className="px-3 py-2" />
               </tr>
             </thead>
@@ -109,23 +112,23 @@ function SlaLevelsEditor({ levels, roles, onChange }: { levels: SlaLevel[]; role
       )}
       <div className="grid grid-cols-3 gap-2">
         <div>
-          <label className="label text-xs">Hours</label>
-          <input type="number" min={1} className="input text-sm" placeholder="e.g. 6" value={newHours} onChange={(e) => setNewHours(e.target.value)} />
+          <label className="label text-xs">{t('colHours')}</label>
+          <input type="number" min={1} className="input text-sm" placeholder={t('eg6')} value={newHours} onChange={(e) => setNewHours(e.target.value)} />
         </div>
         <div>
-          <label className="label text-xs">Ping Role (optional)</label>
+          <label className="label text-xs">{t('pingRoleOptional')}</label>
           <select className="input text-sm" value={newRole} onChange={(e) => setNewRole(e.target.value)}>
-            <option value="">None</option>
+            <option value="">{t('none')}</option>
             {roles.map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
           </select>
         </div>
         <div>
-          <label className="label text-xs">Custom Message (optional)</label>
-          <input className="input text-sm" placeholder="Leave blank for default" value={newMsg} onChange={(e) => setNewMsg(e.target.value)} />
+          <label className="label text-xs">{t('customMessageOptional')}</label>
+          <input className="input text-sm" placeholder={t('leaveBlankDefault')} value={newMsg} onChange={(e) => setNewMsg(e.target.value)} />
         </div>
       </div>
       <button type="button" onClick={add} className="flex items-center gap-1.5 text-sm text-discord-blurple hover:text-blue-400 transition-colors">
-        <Plus className="w-4 h-4" /> Add SLA Level
+        <Plus className="w-4 h-4" /> {t('addSlaLevel')}
       </button>
     </div>
   );
@@ -133,6 +136,7 @@ function SlaLevelsEditor({ levels, roles, onChange }: { levels: SlaLevel[]; role
 
 export default function TicketSettingsPage() {
   const { guildId } = useParams() as { guildId: string };
+  const t = useTranslations('ticketSettingsPage');
   const queryClient = useQueryClient();
 
   const { data: configRes, isLoading } = useQuery({ queryKey: ['tickets-config', guildId], queryFn: () => ticketsApi.getConfig(guildId) });
@@ -182,11 +186,11 @@ export default function TicketSettingsPage() {
       slaHours: draft.slaHours ?? 0,
       ratingWindowMinutes: draft.ratingWindowMinutes ?? 5,
     }),
-    onSuccess: () => { toast.success('Settings saved!'); queryClient.invalidateQueries({ queryKey: ['tickets-config', guildId] }); },
-    onError: () => toast.error('Failed to save settings.'),
+    onSuccess: () => { toast.success(t('saved')); queryClient.invalidateQueries({ queryKey: ['tickets-config', guildId] }); },
+    onError: () => toast.error(t('saveError')),
   });
 
-  if (isLoading) return <div className="p-3 sm:p-6 text-gray-400">Loading...</div>;
+  if (isLoading) return <div className="p-3 sm:p-6 text-gray-400">{t('loading')}</div>;
 
   return (
     <div className="p-3 sm:p-6 max-w-2xl space-y-6">
@@ -196,45 +200,45 @@ export default function TicketSettingsPage() {
         </Link>
         <div className="page-head-icon"><Settings className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>Ticket Settings</h1>
-          <div className="page-head-desc">Panels, categories, and behaviour for support tickets.</div>
+          <h1>{t('title')}</h1>
+          <div className="page-head-desc">{t('subtitle')}</div>
         </div>
       </div>
 
       {/* General */}
       <div className="card space-y-5">
-        <h2 className="text-white font-semibold border-b border-[var(--border-subtle)] pb-2">General</h2>
-        <Row label="Transcript Channel" hint="Ticket transcripts are posted here when a ticket closes.">
+        <h2 className="text-white font-semibold border-b border-[var(--border-subtle)] pb-2">{t('general')}</h2>
+        <Row label={t('transcriptChannel')} hint={t('transcriptHint')}>
           <select className="input" value={draft.transcriptChannelId ?? ''} onChange={(e) => set('transcriptChannelId', e.target.value)}>
-            <option value="">— Disabled —</option>
+            <option value="">{t('disabled')}</option>
             {textChannels.map((c) => <option key={c.id} value={c.id}>#{c.name}</option>)}
           </select>
         </Row>
-        <Row label="Webhook URL" hint="POST requests are sent here when a ticket opens or closes.">
+        <Row label={t('webhookUrl')} hint={t('webhookHint')}>
           <input className="input text-sm" placeholder="https://your-webhook.com/tickets" value={draft.webhookUrl ?? ''} onChange={(e) => set('webhookUrl', e.target.value)} />
         </Row>
-        <Row label="Rating Window (minutes)" hint="How long users have to rate their experience after a ticket closes. Default: 5.">
+        <Row label={t('ratingWindow')} hint={t('ratingWindowHint')}>
           <input type="number" min={1} max={1440} className="input w-28" value={draft.ratingWindowMinutes ?? 5} onChange={(e) => set('ratingWindowMinutes', Math.max(1, parseInt(e.target.value) || 5))} />
         </Row>
       </div>
 
       {/* Staff Notifications */}
       <div className="card space-y-5">
-        <h2 className="text-white font-semibold border-b border-[var(--border-subtle)] pb-2">Staff Notifications</h2>
-        <p className="text-gray-400 text-sm">When a new ticket is opened, the bot will ping staff in this channel.</p>
-        <Row label="Notification Channel">
+        <h2 className="text-white font-semibold border-b border-[var(--border-subtle)] pb-2">{t('staffNotifications')}</h2>
+        <p className="text-gray-400 text-sm">{t('staffNotifyDesc')}</p>
+        <Row label={t('notificationChannel')}>
           <select className="input" value={draft.staffNotifyChannelId ?? ''} onChange={(e) => set('staffNotifyChannelId', e.target.value)}>
-            <option value="">— Disabled —</option>
+            <option value="">{t('disabled')}</option>
             {textChannels.map((c) => <option key={c.id} value={c.id}>#{c.name}</option>)}
           </select>
         </Row>
-        <Row label="Ping Role" hint="Optional role to ping in the notification channel.">
+        <Row label={t('pingRole')} hint={t('pingRoleHint')}>
           <select className="input" value={draft.staffNotifyRoleId ?? ''} onChange={(e) => set('staffNotifyRoleId', e.target.value)}>
-            <option value="">— No ping —</option>
+            <option value="">{t('noPing')}</option>
             {roles.filter((r) => r.name !== '@everyone').map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
           </select>
         </Row>
-        <Row label="Auto-Assign Tickets" hint="Automatically claim new tickets and assign them to staff members in round-robin order.">
+        <Row label={t('autoAssign')} hint={t('autoAssignHint')}>
           <div className="mt-1">
             <Toggle enabled={draft.autoAssign ?? false} onChange={(v) => set('autoAssign', v)} />
           </div>
@@ -243,26 +247,26 @@ export default function TicketSettingsPage() {
 
       {/* SLA */}
       <div className="card space-y-5">
-        <h2 className="text-white font-semibold border-b border-[var(--border-subtle)] pb-2">SLA Escalation</h2>
-        <p className="text-gray-400 text-sm">Set multiple warning thresholds. Each level fires once if a ticket has no staff response after the specified hours.</p>
-        <Row label="Legacy Single SLA (hours)" hint="Simple single-level SLA. Set to 0 to use the multi-level system above instead.">
+        <h2 className="text-white font-semibold border-b border-[var(--border-subtle)] pb-2">{t('slaEscalation')}</h2>
+        <p className="text-gray-400 text-sm">{t('slaEscalationDesc')}</p>
+        <Row label={t('legacySla')} hint={t('legacySlaHint')}>
           <input type="number" min={0} max={720} className="input w-28" value={draft.slaHours ?? 0} onChange={(e) => set('slaHours', Number(e.target.value))} />
         </Row>
         <div>
-          <label className="label">SLA Levels</label>
+          <label className="label">{t('slaLevels')}</label>
           <SlaLevelsEditor levels={draft.slaLevels ?? []} roles={roles.filter((r) => r.name !== '@everyone')} onChange={(l) => set('slaLevels', l)} />
         </div>
       </div>
 
       {/* Blacklist */}
       <div className="card space-y-5">
-        <h2 className="text-white font-semibold border-b border-[var(--border-subtle)] pb-2">Blacklisted Users</h2>
-        <p className="text-gray-400 text-sm">These users cannot open tickets in any panel on this server.</p>
+        <h2 className="text-white font-semibold border-b border-[var(--border-subtle)] pb-2">{t('blacklistedUsers')}</h2>
+        <p className="text-gray-400 text-sm">{t('blacklistDesc')}</p>
         <BlacklistInput users={draft.blacklistedUsers} onChange={(u) => set('blacklistedUsers', u)} />
       </div>
 
       <button onClick={() => saveMutation.mutate()} disabled={saveMutation.isPending} className="btn-primary disabled:opacity-50">
-        {saveMutation.isPending ? 'Saving...' : 'Save Settings'}
+        {saveMutation.isPending ? t('saving') : t('saveSettings')}
       </button>
     </div>
   );
