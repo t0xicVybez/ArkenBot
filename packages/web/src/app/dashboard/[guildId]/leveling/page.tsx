@@ -10,6 +10,7 @@ import { useState, useEffect } from 'react';
 import type { GuildSettings } from '@arkenbot/shared';
 import { TrendingUp, Plus, Trash2, AlertTriangle, Info } from 'lucide-react';
 import api from '@/lib/api';
+import { useTranslations } from 'next-intl';
 
 type LevelRole = {
   id: string;
@@ -58,6 +59,7 @@ const xpChannelMultipliersApi = {
 
 export default function LevelingPage() {
   const { guildId } = useParams() as { guildId: string };
+  const t = useTranslations('levelingPage');
   const queryClient = useQueryClient();
   const [settings, setSettings] = useState<Partial<GuildSettings>>({});
   const [newLevel, setNewLevel] = useState('');
@@ -105,81 +107,81 @@ export default function LevelingPage() {
   const mutation = useMutation({
     mutationFn: (data: Partial<GuildSettings>) => settingsApi.update(guildId, data),
     onSuccess: () => {
-      toast.success('Leveling settings saved!');
+      toast.success(t('saved'));
       queryClient.invalidateQueries({ queryKey: ['settings', guildId] });
     },
-    onError: () => toast.error('Failed to save leveling settings.'),
+    onError: () => toast.error(t('saveError')),
   });
 
   const createLevelRoleMutation = useMutation({
     mutationFn: (data: { level: number; roleId: string }) => levelRolesApi.create(guildId, data),
     onSuccess: () => {
-      toast.success('Level role added!');
+      toast.success(t('roleAdded'));
       queryClient.invalidateQueries({ queryKey: ['level-roles', guildId] });
       setNewLevel('');
       setNewRoleId('');
     },
-    onError: () => toast.error('Failed to add level role'),
+    onError: () => toast.error(t('roleAddError')),
   });
 
   const deleteLevelRoleMutation = useMutation({
     mutationFn: (id: string) => levelRolesApi.delete(guildId, id),
     onSuccess: () => {
-      toast.success('Level role removed');
+      toast.success(t('roleRemoved'));
       queryClient.invalidateQueries({ queryKey: ['level-roles', guildId] });
     },
-    onError: () => toast.error('Failed to remove level role'),
+    onError: () => toast.error(t('roleRemoveError')),
   });
 
   const createMultiplierMutation = useMutation({
     mutationFn: (data: { roleId: string; multiplier: number }) => xpMultipliersApi.create(guildId, data),
     onSuccess: () => {
-      toast.success('XP multiplier added!');
+      toast.success(t('multAdded'));
       queryClient.invalidateQueries({ queryKey: ['xp-multipliers', guildId] });
       setNewMultiplierRoleId('');
       setNewMultiplierValue('1.5');
     },
-    onError: () => toast.error('Failed to add XP multiplier'),
+    onError: () => toast.error(t('multAddError')),
   });
 
   const deleteMultiplierMutation = useMutation({
     mutationFn: (roleId: string) => xpMultipliersApi.delete(guildId, roleId),
     onSuccess: () => {
-      toast.success('Multiplier removed');
+      toast.success(t('multRemoved'));
       queryClient.invalidateQueries({ queryKey: ['xp-multipliers', guildId] });
     },
-    onError: () => toast.error('Failed to remove multiplier'),
+    onError: () => toast.error(t('multRemoveError')),
   });
 
   const createChannelMultiplierMutation = useMutation({
     mutationFn: (data: { channelId: string; multiplier: number }) =>
       xpChannelMultipliersApi.create(guildId, data),
     onSuccess: () => {
-      toast.success('Channel XP multiplier added!');
+      toast.success(t('chanMultAdded'));
       queryClient.invalidateQueries({ queryKey: ['xp-channel-multipliers', guildId] });
       setNewChannelMultiplierChannelId('');
       setNewChannelMultiplierValue('1.5');
     },
-    onError: () => toast.error('Failed to add channel XP multiplier'),
+    onError: () => toast.error(t('chanMultAddError')),
   });
 
   const deleteChannelMultiplierMutation = useMutation({
     mutationFn: (channelId: string) => xpChannelMultipliersApi.delete(guildId, channelId),
     onSuccess: () => {
-      toast.success('Channel multiplier removed');
+      toast.success(t('chanMultRemoved'));
       queryClient.invalidateQueries({ queryKey: ['xp-channel-multipliers', guildId] });
     },
-    onError: () => toast.error('Failed to remove channel multiplier'),
+    onError: () => toast.error(t('chanMultRemoveError')),
   });
 
   const resetXpMutation = useMutation({
     mutationFn: () => leaderboardApi.reset(guildId),
     onSuccess: () => {
-      toast.success('All XP has been reset!');
+      toast.success(t('xpReset'));
       setShowResetConfirm(false);
       queryClient.invalidateQueries({ queryKey: ['leaderboard', guildId] });
     },
-    onError: () => toast.error('Failed to reset XP'),
+    onError: () => toast.error(t('xpResetError')),
   });
 
   const handleSave = (partial: Partial<GuildSettings>) => mutation.mutate(partial);
@@ -197,7 +199,7 @@ export default function LevelingPage() {
     e.preventDefault();
     const level = parseInt(newLevel);
     if (!level || level < 1 || !newRoleId) {
-      toast.error('Please enter a valid level and select a role');
+      toast.error(t('invalidLevelRole'));
       return;
     }
     createLevelRoleMutation.mutate({ level, roleId: newRoleId });
@@ -216,21 +218,21 @@ export default function LevelingPage() {
       <div className="page-head">
         <div className="page-head-icon"><TrendingUp className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>Leveling</h1>
-          <div className="page-head-desc">XP, level-ups, and role rewards.</div>
+          <h1>{t('title')}</h1>
+          <div className="page-head-desc">{t('subtitle')}</div>
         </div>
       </div>
 
-      <SettingsSection title="XP System" description="Configure how users earn XP by chatting.">
+      <SettingsSection title={t('xpSystemTitle')} description={t('xpSystemDesc')}>
         <Toggle
-          label="Enable Leveling"
-          description="Users earn XP for sending messages and level up over time"
+          label={t('enable')}
+          description={t('enableDesc')}
           enabled={settings.levelingEnabled ?? true}
           onChange={(v) => { setSettings((s) => ({ ...s, levelingEnabled: v })); handleSave({ levelingEnabled: v }); }}
         />
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="label">XP Per Message</label>
+            <label className="label">{t('xpPerMsg')}</label>
             <input
               type="number"
               className="input"
@@ -240,10 +242,10 @@ export default function LevelingPage() {
               onChange={(e) => setSettings((s) => ({ ...s, xpPerMessage: parseInt(e.target.value) }))}
               onBlur={() => handleSave({ xpPerMessage: settings.xpPerMessage })}
             />
-            <p className="text-xs text-gray-500 mt-1">XP awarded per eligible message (1–100)</p>
+            <p className="text-xs text-gray-500 mt-1">{t('xpPerMsgHelp')}</p>
           </div>
           <div>
-            <label className="label">XP Cooldown (seconds)</label>
+            <label className="label">{t('xpCooldown')}</label>
             <input
               type="number"
               className="input"
@@ -253,41 +255,41 @@ export default function LevelingPage() {
               onChange={(e) => setSettings((s) => ({ ...s, xpCooldown: parseInt(e.target.value) }))}
               onBlur={() => handleSave({ xpCooldown: settings.xpCooldown })}
             />
-            <p className="text-xs text-gray-500 mt-1">Minimum seconds between XP awards per user</p>
+            <p className="text-xs text-gray-500 mt-1">{t('xpCooldownHelp')}</p>
           </div>
         </div>
       </SettingsSection>
 
-      <SettingsSection title="Level-Up Notifications" description="Announce when a user levels up.">
+      <SettingsSection title={t('notifTitle')} description={t('notifDesc')}>
         <Toggle
-          label="Rich Embed Notifications"
-          description="Send level-up announcements as styled embeds with milestone badges (Gold for milestone levels, Blue/Purple for higher levels)"
+          label={t('richEmbed')}
+          description={t('richEmbedDesc')}
           enabled={settings.levelUpEmbed ?? true}
           onChange={(v) => { setSettings((s) => ({ ...s, levelUpEmbed: v })); handleSave({ levelUpEmbed: v }); }}
         />
         <div>
-          <label className="label">Level-Up Message</label>
+          <label className="label">{t('levelUpMsg')}</label>
           <input
             type="text"
             className="input"
             value={settings.levelUpMessage ?? ''}
-            placeholder="Congratulations {user}, you reached level {level}!"
+            placeholder={t('levelUpPlaceholder')}
             onChange={(e) => setSettings((s) => ({ ...s, levelUpMessage: e.target.value }))}
             onBlur={() => handleSave({ levelUpMessage: settings.levelUpMessage })}
           />
           <p className="text-xs text-gray-500 mt-1">
-            Variables: {'{user}'}, {'{username}'}, {'{level}'}, {'{server}'}
+            {t('variables')}
           </p>
         </div>
         <div>
-          <label className="label">Level-Up Channel</label>
+          <label className="label">{t('levelUpChannel')}</label>
           <select
             className="input"
             value={settings.levelUpChannelId ?? ''}
             onChange={(e) => setSettings((s) => ({ ...s, levelUpChannelId: e.target.value || undefined }))}
             onBlur={() => handleSave({ levelUpChannelId: settings.levelUpChannelId })}
           >
-            <option value="">Same channel as message</option>
+            <option value="">{t('sameChannel')}</option>
             {textChannels.map((ch) => (
               <option key={ch.id} value={ch.id}>#{ch.name}</option>
             ))}
@@ -298,14 +300,14 @@ export default function LevelingPage() {
       {/* Level Roles */}
       <div className="card mb-6">
         <div className="mb-4">
-          <h3 className="text-lg font-semibold text-white">Level Roles</h3>
-          <p className="text-sm text-gray-400 mt-1">Automatically assign roles when members reach a certain level.</p>
+          <h3 className="text-lg font-semibold text-white">{t('levelRolesTitle')}</h3>
+          <p className="text-sm text-gray-400 mt-1">{t('levelRolesDesc')}</p>
         </div>
 
         <div className="mb-4">
           <Toggle
-            label="Keep Previous Roles"
-            description="When disabled, members lose lower-level roles when they earn a higher one"
+            label={t('keepRoles')}
+            description={t('keepRolesDesc')}
             enabled={settings.keepPreviousRoles ?? false}
             onChange={(v) => { setSettings((s) => ({ ...s, keepPreviousRoles: v })); handleSave({ keepPreviousRoles: v }); }}
           />
@@ -314,11 +316,11 @@ export default function LevelingPage() {
         {/* Add level role form */}
         <form onSubmit={handleAddLevelRole} className="flex gap-3 mb-5 items-end">
           <div className="w-28">
-            <label className="label">Level</label>
+            <label className="label">{t('levelLabel')}</label>
             <input
               type="number"
               className="input"
-              placeholder="e.g. 10"
+              placeholder={t('levelPlaceholder')}
               min={1}
               max={1000}
               value={newLevel}
@@ -326,13 +328,13 @@ export default function LevelingPage() {
             />
           </div>
           <div className="flex-1">
-            <label className="label">Role</label>
+            <label className="label">{t('roleLabel')}</label>
             <select
               className="input"
               value={newRoleId}
               onChange={(e) => setNewRoleId(e.target.value)}
             >
-              <option value="">Select a role</option>
+              <option value="">{t('selectRoleOpt')}</option>
               {roles.map((r) => (
                 <option key={r.id} value={r.id}>@{r.name}</option>
               ))}
@@ -344,7 +346,7 @@ export default function LevelingPage() {
             className="flex items-center gap-1.5 px-3 py-2 rounded-md bg-discord-blurple hover:bg-discord-blurple/80 text-white text-sm font-medium transition-colors disabled:opacity-50 flex-shrink-0"
           >
             <Plus className="w-4 h-4" />
-            Add
+            {t('add')}
           </button>
         </form>
 
@@ -356,7 +358,7 @@ export default function LevelingPage() {
           </div>
         ) : sortedLevelRoles.length === 0 ? (
           <p className="text-gray-500 text-sm text-center py-6">
-            No level roles configured. Add one above to get started.
+            {t('noLevelRoles')}
           </p>
         ) : (
           <div className="overflow-hidden rounded-lg border border-[var(--border-subtle)]">
@@ -364,8 +366,8 @@ export default function LevelingPage() {
             <table className="w-full min-w-[500px]">
               <thead className="bg-[var(--bg-base)]">
                 <tr>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Level</th>
-                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Role</th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('levelLabel')}</th>
+                  <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('roleLabel')}</th>
                   <th className="px-4 py-3" />
                 </tr>
               </thead>
@@ -374,7 +376,7 @@ export default function LevelingPage() {
                   const role = roles.find((r) => r.id === lr.roleId);
                   return (
                     <tr key={lr.id} className="hover:bg-white/[0.02] transition-colors">
-                      <td className="px-4 py-3 text-sm font-semibold text-gray-200">Level {lr.level}</td>
+                      <td className="px-4 py-3 text-sm font-semibold text-gray-200">{t('levelValue', { level: lr.level })}</td>
                       <td className="px-4 py-3 text-sm text-gray-300">
                         {role ? `@${role.name}` : <span className="font-mono text-gray-600 text-xs">{lr.roleId}</span>}
                       </td>
@@ -383,7 +385,7 @@ export default function LevelingPage() {
                           onClick={() => deleteLevelRoleMutation.mutate(lr.id)}
                           disabled={deleteLevelRoleMutation.isPending}
                           className="text-gray-500 hover:text-red-400 transition-colors"
-                          title="Remove level role"
+                          title={t('removeLevelRole')}
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -400,8 +402,8 @@ export default function LevelingPage() {
 
       {/* XP Role Multipliers */}
       <div className="card">
-        <h3 className="text-lg font-semibold text-white mb-1">XP Role Multipliers</h3>
-        <p className="text-sm text-gray-400 mb-4">Give members with specific roles a bonus XP multiplier. The highest matching multiplier applies.</p>
+        <h3 className="text-lg font-semibold text-white mb-1">{t('roleMultTitle')}</h3>
+        <p className="text-sm text-gray-400 mb-4">{t('roleMultDesc')}</p>
         {xpMultipliers.length > 0 ? (
           <div className="space-y-2 mb-4">
             {xpMultipliers.map((m) => {
@@ -423,29 +425,29 @@ export default function LevelingPage() {
             })}
           </div>
         ) : (
-          <p className="text-sm text-gray-500 mb-4">No XP multipliers configured.</p>
+          <p className="text-sm text-gray-500 mb-4">{t('noRoleMult')}</p>
         )}
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            if (!newMultiplierRoleId) return toast.error('Select a role');
+            if (!newMultiplierRoleId) return toast.error(t('selectRoleToast'));
             const val = parseFloat(newMultiplierValue);
-            if (isNaN(val) || val <= 0) return toast.error('Enter a valid multiplier');
+            if (isNaN(val) || val <= 0) return toast.error(t('invalidMult'));
             createMultiplierMutation.mutate({ roleId: newMultiplierRoleId, multiplier: val });
           }}
           className="flex flex-wrap items-end gap-3"
         >
           <div>
-            <label className="label">Role</label>
+            <label className="label">{t('roleLabel')}</label>
             <select className="input" value={newMultiplierRoleId} onChange={(e) => setNewMultiplierRoleId(e.target.value)} required>
-              <option value="">Select role…</option>
+              <option value="">{t('selectRoleDots')}</option>
               {roles.filter((r) => r.name !== '@everyone' && !xpMultipliers.some((m) => m.roleId === r.id)).map((r) => (
                 <option key={r.id} value={r.id}>@{r.name}</option>
               ))}
             </select>
           </div>
           <div className="w-28">
-            <label className="label">Multiplier</label>
+            <label className="label">{t('multLabel')}</label>
             <input
               type="number"
               step="0.1"
@@ -459,15 +461,15 @@ export default function LevelingPage() {
           </div>
           <button type="submit" disabled={createMultiplierMutation.isPending} className="btn-primary flex items-center gap-1.5">
             <Plus className="w-4 h-4" />
-            Add
+            {t('add')}
           </button>
         </form>
       </div>
 
       {/* XP Channel Multipliers */}
       <div className="card">
-        <h3 className="text-lg font-semibold text-white mb-1">XP Channel Multipliers</h3>
-        <p className="text-sm text-gray-400 mb-4">Give bonus XP for messages sent in specific channels. The highest matching multiplier applies.</p>
+        <h3 className="text-lg font-semibold text-white mb-1">{t('chanMultTitle')}</h3>
+        <p className="text-sm text-gray-400 mb-4">{t('chanMultDesc')}</p>
         {xpChannelMultipliers.length > 0 ? (
           <div className="space-y-2 mb-4">
             {xpChannelMultipliers.map((m) => {
@@ -489,27 +491,27 @@ export default function LevelingPage() {
             })}
           </div>
         ) : (
-          <p className="text-sm text-gray-500 mb-4">No channel XP multipliers configured.</p>
+          <p className="text-sm text-gray-500 mb-4">{t('noChanMult')}</p>
         )}
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            if (!newChannelMultiplierChannelId) return toast.error('Select a channel');
+            if (!newChannelMultiplierChannelId) return toast.error(t('selectChannelToast'));
             const val = parseFloat(newChannelMultiplierValue);
-            if (isNaN(val) || val <= 0) return toast.error('Enter a valid multiplier');
+            if (isNaN(val) || val <= 0) return toast.error(t('invalidMult'));
             createChannelMultiplierMutation.mutate({ channelId: newChannelMultiplierChannelId, multiplier: val });
           }}
           className="flex flex-wrap items-end gap-3"
         >
           <div>
-            <label className="label">Channel</label>
+            <label className="label">{t('channelLabel')}</label>
             <select
               className="input"
               value={newChannelMultiplierChannelId}
               onChange={(e) => setNewChannelMultiplierChannelId(e.target.value)}
               required
             >
-              <option value="">Select channel…</option>
+              <option value="">{t('selectChannelDots')}</option>
               {textChannels
                 .filter((c) => !xpChannelMultipliers.some((m) => m.channelId === c.id))
                 .map((c) => (
@@ -518,7 +520,7 @@ export default function LevelingPage() {
             </select>
           </div>
           <div className="w-28">
-            <label className="label">Multiplier</label>
+            <label className="label">{t('multLabel')}</label>
             <input
               type="number"
               step="0.1"
@@ -536,22 +538,22 @@ export default function LevelingPage() {
             className="btn-primary flex items-center gap-1.5"
           >
             <Plus className="w-4 h-4" />
-            Add
+            {t('add')}
           </button>
         </form>
       </div>
 
       {/* XP Decay */}
-      <SettingsSection title="XP Decay" description="Automatically reduce XP for inactive members over time.">
+      <SettingsSection title={t('decayTitle')} description={t('decayDesc')}>
         <Toggle
-          label="Enable XP Decay"
-          description="Members who haven't chatted recently will slowly lose XP"
+          label={t('enableDecay')}
+          description={t('enableDecayDesc')}
           enabled={settings.xpDecayEnabled ?? false}
           onChange={(v) => { setSettings((s) => ({ ...s, xpDecayEnabled: v })); handleSave({ xpDecayEnabled: v }); }}
         />
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="label">Inactivity Threshold (days)</label>
+            <label className="label">{t('inactivityThreshold')}</label>
             <input
               type="number"
               className="input"
@@ -561,10 +563,10 @@ export default function LevelingPage() {
               onChange={(e) => setSettings((s) => ({ ...s, xpDecayDays: parseInt(e.target.value) }))}
               onBlur={() => handleSave({ xpDecayDays: settings.xpDecayDays })}
             />
-            <p className="text-xs text-gray-500 mt-1">Days of inactivity before decay begins (7–365)</p>
+            <p className="text-xs text-gray-500 mt-1">{t('inactivityHelp')}</p>
           </div>
           <div>
-            <label className="label">Decay Amount (%)</label>
+            <label className="label">{t('decayAmount')}</label>
             <input
               type="number"
               className="input"
@@ -574,7 +576,7 @@ export default function LevelingPage() {
               onChange={(e) => setSettings((s) => ({ ...s, xpDecayPercent: parseInt(e.target.value) }))}
               onBlur={() => handleSave({ xpDecayPercent: settings.xpDecayPercent })}
             />
-            <p className="text-xs text-gray-500 mt-1">% of XP lost per day of continued inactivity (1–50)</p>
+            <p className="text-xs text-gray-500 mt-1">{t('decayAmountHelp')}</p>
           </div>
         </div>
       </SettingsSection>
@@ -584,21 +586,21 @@ export default function LevelingPage() {
         <div className="flex items-start gap-3">
           <AlertTriangle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
           <div className="flex-1">
-            <h3 className="text-base font-semibold text-red-400">Danger Zone</h3>
+            <h3 className="text-base font-semibold text-red-400">{t('dangerTitle')}</h3>
             <p className="text-sm text-gray-400 mt-1 mb-4">
-              Permanently delete all XP and level data for every member in this server. This cannot be undone.
+              {t('dangerDesc')}
             </p>
             {!showResetConfirm ? (
               <button
                 onClick={() => setShowResetConfirm(true)}
                 className="px-4 py-2 rounded-md border border-red-500/50 text-red-400 hover:bg-red-500/10 text-sm font-medium transition-colors"
               >
-                Reset All XP
+                {t('resetAllXp')}
               </button>
             ) : (
               <div className="p-4 rounded-lg bg-red-900/20 border border-red-500/30 space-y-3">
                 <p className="text-sm font-semibold text-red-300">
-                  Are you sure? This will wipe all XP and levels for every member in this server. This action is irreversible.
+                  {t('confirmReset')}
                 </p>
                 <div className="flex gap-2">
                   <button
@@ -606,14 +608,14 @@ export default function LevelingPage() {
                     disabled={resetXpMutation.isPending}
                     className="px-4 py-1.5 rounded-md bg-red-600 hover:bg-red-700 text-white text-sm font-medium transition-colors disabled:opacity-50"
                   >
-                    {resetXpMutation.isPending ? 'Resetting…' : 'Yes, reset all XP'}
+                    {resetXpMutation.isPending ? t('resetting') : t('yesReset')}
                   </button>
                   <button
                     onClick={() => setShowResetConfirm(false)}
                     disabled={resetXpMutation.isPending}
                     className="px-4 py-1.5 rounded-md bg-gray-700 hover:bg-gray-600 text-gray-200 text-sm font-medium transition-colors"
                   >
-                    Cancel
+                    {t('cancel')}
                   </button>
                 </div>
               </div>
