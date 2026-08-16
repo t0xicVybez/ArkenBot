@@ -8,6 +8,7 @@ import { ticketsApi } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 import toast from 'react-hot-toast';
 import { ArrowLeft, RefreshCw, AlertTriangle, Clock, Tag, StickyNote, UserCheck, ArrowRightLeft, Trash2, Send, Download } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -77,20 +78,21 @@ const STATUS_BADGE: Record<string, string> = {
 // ─── Status Timeline ──────────────────────────────────────────────────────────
 
 function Timeline({ ticket }: { ticket: TicketRecord }) {
+  const t = useTranslations('ticketDetailPage');
   const events: { time: string; label: string; color: string }[] = [
-    { time: ticket.createdAt, label: `Opened by ${ticket.username}`, color: 'bg-green-400' },
+    { time: ticket.createdAt, label: t('openedByUser', { user: ticket.username }), color: 'bg-green-400' },
   ];
   if (ticket.firstResponseAt) {
-    events.push({ time: ticket.firstResponseAt, label: `First staff response`, color: 'bg-blue-400' });
+    events.push({ time: ticket.firstResponseAt, label: t('firstStaffResponse'), color: 'bg-blue-400' });
   }
   if (ticket.claimedByTag) {
     // We don't store claimed timestamp separately, so skip if no data
   }
   if (ticket.transferredToTag) {
-    events.push({ time: ticket.lastActivity, label: `Transferred to ${ticket.transferredToTag}`, color: 'bg-purple-400' });
+    events.push({ time: ticket.lastActivity, label: t('transferredToTag', { tag: ticket.transferredToTag }), color: 'bg-purple-400' });
   }
   if (ticket.closedAt) {
-    events.push({ time: ticket.closedAt, label: `Closed by ${ticket.closedByTag ?? 'staff'}`, color: 'bg-red-400' });
+    events.push({ time: ticket.closedAt, label: t('closedByTag', { tag: ticket.closedByTag ?? t('staff') }), color: 'bg-red-400' });
   }
 
   events.sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime());
@@ -117,6 +119,7 @@ function Timeline({ ticket }: { ticket: TicketRecord }) {
 
 export default function TicketDetailPage() {
   const { guildId, ticketId } = useParams() as { guildId: string; ticketId: string };
+  const t = useTranslations('ticketDetailPage');
   const queryClient = useQueryClient();
   const { user } = useAuth();
   const userTag = user ? (user.discriminator === '0' ? user.username : `${user.username}#${user.discriminator}`) : 'Staff Portal';
@@ -140,7 +143,7 @@ export default function TicketDetailPage() {
       a.click();
       URL.revokeObjectURL(url);
     } catch {
-      toast.error('Failed to download transcript.');
+      toast.error(t('transcriptError'));
     } finally {
       setDownloadingTranscript(false);
     }
@@ -163,11 +166,11 @@ export default function TicketDetailPage() {
     mutationFn: () => ticketsApi.replyTicket(guildId, ticketId, { content: replyInput.trim(), authorTag: userTag }),
     onSuccess: () => {
       setReplyInput('');
-      toast.success('Message sent to ticket channel.');
+      toast.success(t('messageSent'));
       // Refresh transcript after a short delay so the bot has time to append it
       setTimeout(() => invalidate(), 1500);
     },
-    onError: () => toast.error('Failed to send message.'),
+    onError: () => toast.error(t('messageError')),
   });
 
   const reopenMut = useMutation({
@@ -186,58 +189,58 @@ export default function TicketDetailPage() {
       queryClient.invalidateQueries({ queryKey: ['tickets-stats', guildId] });
       window.location.href = `/dashboard/${guildId}/tickets`;
     },
-    onError: () => toast.error('Failed to delete ticket.'),
+    onError: () => toast.error(t('deleteError')),
   });
 
   const claimMut = useMutation({
     mutationFn: (unclaim: boolean) => unclaim
       ? ticketsApi.unclaimTicket(guildId, ticketId)
       : ticketsApi.claimTicket(guildId, ticketId, { userId: user?.id ?? 'portal', userTag }),
-    onSuccess: () => { invalidate(); toast.success('Ticket updated.'); },
-    onError: () => toast.error('Action failed.'),
+    onSuccess: () => { invalidate(); toast.success(t('ticketUpdated')); },
+    onError: () => toast.error(t('actionFailed')),
   });
 
   const priorityMut = useMutation({
     mutationFn: (priority: string) => ticketsApi.setPriority(guildId, ticketId, priority),
-    onSuccess: () => { invalidate(); toast.success('Priority updated.'); },
-    onError: () => toast.error('Failed to update priority.'),
+    onSuccess: () => { invalidate(); toast.success(t('priorityUpdated')); },
+    onError: () => toast.error(t('priorityError')),
   });
 
   const addTagMut = useMutation({
     mutationFn: (tag: string) => ticketsApi.addTag(guildId, ticketId, tag),
     onSuccess: () => { invalidate(); setTagInput(''); },
-    onError: () => toast.error('Failed to add tag.'),
+    onError: () => toast.error(t('tagError')),
   });
 
   const removeTagMut = useMutation({
     mutationFn: (tag: string) => ticketsApi.removeTag(guildId, ticketId, tag),
     onSuccess: () => invalidate(),
-    onError: () => toast.error('Failed to remove tag.'),
+    onError: () => toast.error(t('tagRemoveError')),
   });
 
   const addNoteMut = useMutation({
     mutationFn: () => ticketsApi.addNote(guildId, ticketId, { content: noteInput.trim(), authorTag: userTag }),
-    onSuccess: () => { invalidate(); setNoteInput(''); toast.success('Note added.'); },
-    onError: () => toast.error('Failed to add note.'),
+    onSuccess: () => { invalidate(); setNoteInput(''); toast.success(t('noteAdded')); },
+    onError: () => toast.error(t('noteError')),
   });
 
   const transferMut = useMutation({
     mutationFn: () => ticketsApi.transferTicket(guildId, ticketId, { userId: transferInput.trim(), userTag: transferTagInput.trim() }),
-    onSuccess: () => { invalidate(); setTransferInput(''); setTransferTagInput(''); toast.success('Ticket transferred.'); },
-    onError: () => toast.error('Failed to transfer ticket.'),
+    onSuccess: () => { invalidate(); setTransferInput(''); setTransferTagInput(''); toast.success(t('transferred')); },
+    onError: () => toast.error(t('transferError')),
   });
 
   const data = res?.data?.data as { ticket: TicketRecord; messages: TicketMessage[]; panel: TicketPanel | null } | undefined;
 
   if (isLoading) {
-    return <div className="p-3 sm:p-6 text-center text-gray-400"><p>Loading ticket...</p></div>;
+    return <div className="p-3 sm:p-6 text-center text-gray-400"><p>{t('loadingTicket')}</p></div>;
   }
 
   if (isError || !data) {
     return (
       <div className="p-3 sm:p-6 text-center">
-        <p className="text-red-400 mb-3">Failed to load ticket.</p>
-        <Link href={`/dashboard/${guildId}/tickets`} className="btn-secondary text-sm">Back to Tickets</Link>
+        <p className="text-red-400 mb-3">{t('loadError')}</p>
+        <Link href={`/dashboard/${guildId}/tickets`} className="btn-secondary text-sm">{t('backToTickets')}</Link>
       </div>
     );
   }
@@ -259,18 +262,18 @@ export default function TicketDetailPage() {
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-3 flex-wrap">
             <h1 className="text-[21px] font-bold tracking-tight text-white">
-              {panel ? `${panel.emoji} ` : ''}Ticket #{ticket.number}
+              {panel ? `${panel.emoji} ` : ''}{t('ticketNumber', { number: ticket.number })}
             </h1>
             <span className={`badge ${STATUS_BADGE[ticket.status] ?? 'badge-secondary'} text-xs`}>
-              {ticket.status.charAt(0).toUpperCase() + ticket.status.slice(1)}
+              {t(`status_${ticket.status}`)}
             </span>
             {slaWarning && (
               <span className="badge-warning flex items-center gap-1 text-xs">
-                <AlertTriangle className="w-3 h-3" /> SLA Warning
+                <AlertTriangle className="w-3 h-3" /> {t('slaWarning')}
               </span>
             )}
           </div>
-          <p className={`text-sm mt-0.5 ${priority.color}`}>{priority.label} Priority</p>
+          <p className={`text-sm mt-0.5 ${priority.color}`}>{t('priorityLine', { priority: t(`priority_${ticket.priority}`) })}</p>
         </div>
         {ticket.status === 'closed' && panel?.closeAction !== 'delete' && (
           <button
@@ -279,7 +282,7 @@ export default function TicketDetailPage() {
             className="btn-secondary flex items-center gap-2 text-sm"
           >
             <RefreshCw className="w-4 h-4" />
-            {reopenMut.isPending ? 'Reopening...' : 'Reopen Ticket'}
+            {reopenMut.isPending ? t('reopening') : t('reopenTicket')}
           </button>
         )}
         <button
@@ -288,38 +291,38 @@ export default function TicketDetailPage() {
           className="flex items-center gap-2 text-sm px-3 py-1.5 rounded text-gray-400 hover:text-white hover:bg-white/5 border border-white/10 transition-colors disabled:opacity-40"
         >
           <Download className="w-4 h-4" />
-          {downloadingTranscript ? 'Exporting...' : 'Transcript'}
+          {downloadingTranscript ? t('exporting') : t('transcript')}
         </button>
         <button
-          onClick={() => { if (confirm(`Permanently delete ticket #${ticket.number}? This cannot be undone.`)) deleteMut.mutate(); }}
+          onClick={() => { if (confirm(t('confirmDelete', { number: ticket.number }))) deleteMut.mutate(); }}
           disabled={deleteMut.isPending}
           className="flex items-center gap-2 text-sm px-3 py-1.5 rounded text-red-400 hover:text-red-300 hover:bg-red-500/10 border border-red-500/20 transition-colors"
         >
           <Trash2 className="w-4 h-4" />
-          {deleteMut.isPending ? 'Deleting...' : 'Delete'}
+          {deleteMut.isPending ? t('deleting') : t('delete')}
         </button>
       </div>
 
       {/* Info Grid */}
       <div className="card grid grid-cols-2 md:grid-cols-3 gap-4">
-        <InfoCell label="Opened by"  value={ticket.username} />
-        <InfoCell label="Panel"      value={panel?.name ?? ticket.panelId} />
-        <InfoCell label="Created"    value={new Date(ticket.createdAt).toLocaleString()} />
-        <InfoCell label="Last activity" value={new Date(ticket.lastActivity).toLocaleString()} />
+        <InfoCell label={t('openedBy')}  value={ticket.username} />
+        <InfoCell label={t('panel')}      value={panel?.name ?? ticket.panelId} />
+        <InfoCell label={t('created')}    value={new Date(ticket.createdAt).toLocaleString()} />
+        <InfoCell label={t('lastActivity')} value={new Date(ticket.lastActivity).toLocaleString()} />
         {ticket.firstResponseAt && (
           <InfoCell
-            label="First response"
+            label={t('firstResponse')}
             value={formatResponseTime(ticket.createdAt, ticket.firstResponseAt)}
           />
         )}
-        {ticket.claimedByTag && <InfoCell label="Claimed by"  value={ticket.claimedByTag} />}
-        {ticket.transferredToTag && <InfoCell label="Transferred to" value={ticket.transferredToTag} />}
-        {ticket.closedByTag  && <InfoCell label="Closed by"   value={ticket.closedByTag} />}
-        {ticket.closedAt     && <InfoCell label="Closed at"   value={new Date(ticket.closedAt).toLocaleString()} />}
-        {ticket.reason && <InfoCell label="Reason"    value={ticket.reason} className="col-span-2 md:col-span-3" />}
+        {ticket.claimedByTag && <InfoCell label={t('claimedBy')}  value={ticket.claimedByTag} />}
+        {ticket.transferredToTag && <InfoCell label={t('transferredTo')} value={ticket.transferredToTag} />}
+        {ticket.closedByTag  && <InfoCell label={t('closedBy')}   value={ticket.closedByTag} />}
+        {ticket.closedAt     && <InfoCell label={t('closedAt')}   value={new Date(ticket.closedAt).toLocaleString()} />}
+        {ticket.reason && <InfoCell label={t('reason')}    value={ticket.reason} className="col-span-2 md:col-span-3" />}
         {ticket.tags.length > 0 && (
           <div className="col-span-2 md:col-span-3">
-            <p className="text-gray-500 text-xs mb-1">Tags</p>
+            <p className="text-gray-500 text-xs mb-1">{t('tags')}</p>
             <div className="flex flex-wrap gap-1">
               {ticket.tags.map((tag) => (
                 <span key={tag} className="badge-secondary text-xs">{tag}</span>
@@ -329,7 +332,7 @@ export default function TicketDetailPage() {
         )}
         {ticket.rating !== undefined && (
           <div className={ticket.ratingFeedback ? 'col-span-2 md:col-span-1' : ''}>
-            <p className="text-gray-500 text-xs mb-1">Rating</p>
+            <p className="text-gray-500 text-xs mb-1">{t('rating')}</p>
             <div className="flex items-center gap-1">
               {'⭐'.repeat(ticket.rating)}
               <span className="text-gray-400 text-sm ml-1">({ticket.rating}/5)</span>
@@ -337,15 +340,15 @@ export default function TicketDetailPage() {
           </div>
         )}
         {ticket.ratingFeedback && (
-          <InfoCell label="Rating Feedback" value={ticket.ratingFeedback} className="col-span-2 md:col-span-3" />
+          <InfoCell label={t('ratingFeedback')} value={ticket.ratingFeedback} className="col-span-2 md:col-span-3" />
         )}
-        {ticket.categoryTag && <InfoCell label="Category" value={ticket.categoryTag} />}
+        {ticket.categoryTag && <InfoCell label={t('category')} value={ticket.categoryTag} />}
       </div>
 
       {/* Timeline */}
       <div className="card space-y-3">
         <h2 className="text-white font-semibold flex items-center gap-2">
-          <Clock className="w-4 h-4 text-gray-400" /> Timeline
+          <Clock className="w-4 h-4 text-gray-400" /> {t('timeline')}
         </h2>
         <Timeline ticket={ticket} />
       </div>
@@ -353,40 +356,40 @@ export default function TicketDetailPage() {
       {/* Actions (only for open/claimed tickets) */}
       {ticket.status !== 'closed' && (
         <div className="card space-y-4">
-          <h2 className="text-white font-semibold border-b border-[var(--border-subtle)] pb-2">Staff Actions</h2>
+          <h2 className="text-white font-semibold border-b border-[var(--border-subtle)] pb-2">{t('staffActions')}</h2>
 
           {/* Claim / Unclaim */}
           <div className="flex items-center gap-3 flex-wrap">
             <UserCheck className="w-4 h-4 text-gray-400 flex-shrink-0" />
-            <span className="text-gray-400 text-sm w-24">Claim</span>
+            <span className="text-gray-400 text-sm w-24">{t('claim')}</span>
             {ticket.claimedByTag ? (
               <div className="flex items-center gap-2 flex-1">
-                <span className="text-gray-300 text-sm">Claimed by <span className="text-white font-medium">{ticket.claimedByTag}</span></span>
-                <button onClick={() => claimMut.mutate(true)} disabled={claimMut.isPending} className="btn-secondary text-xs py-1 px-2">Unclaim</button>
+                <span className="text-gray-300 text-sm">{t.rich('claimedByLine', { tag: ticket.claimedByTag, b: (c) => <span className="text-white font-medium">{c}</span> })}</span>
+                <button onClick={() => claimMut.mutate(true)} disabled={claimMut.isPending} className="btn-secondary text-xs py-1 px-2">{t('unclaim')}</button>
               </div>
             ) : (
-              <button onClick={() => claimMut.mutate(false)} disabled={claimMut.isPending} className="btn-secondary text-xs py-1 px-3">Claim as {userTag}</button>
+              <button onClick={() => claimMut.mutate(false)} disabled={claimMut.isPending} className="btn-secondary text-xs py-1 px-3">{t('claimAs', { tag: userTag })}</button>
             )}
           </div>
 
           {/* Transfer */}
           <div className="flex items-start gap-3 flex-wrap">
             <ArrowRightLeft className="w-4 h-4 text-gray-400 flex-shrink-0 mt-2" />
-            <span className="text-gray-400 text-sm w-24 mt-2">Transfer</span>
+            <span className="text-gray-400 text-sm w-24 mt-2">{t('transfer')}</span>
             <div className="flex gap-2 flex-1 flex-wrap">
-              <input className="input text-sm font-mono flex-1 min-w-[140px]" placeholder="User ID" value={transferInput} onChange={(e) => setTransferInput(e.target.value)} />
-              <input className="input text-sm flex-1 min-w-[140px]" placeholder="Username" value={transferTagInput} onChange={(e) => setTransferTagInput(e.target.value)} />
+              <input className="input text-sm font-mono flex-1 min-w-[140px]" placeholder={t('userId')} value={transferInput} onChange={(e) => setTransferInput(e.target.value)} />
+              <input className="input text-sm flex-1 min-w-[140px]" placeholder={t('username')} value={transferTagInput} onChange={(e) => setTransferTagInput(e.target.value)} />
               <button
                 onClick={() => transferMut.mutate()}
                 disabled={transferMut.isPending || !transferInput.trim() || !transferTagInput.trim()}
                 className="btn-secondary text-xs py-1 px-3 disabled:opacity-40"
-              >Transfer</button>
+              >{t('transfer')}</button>
             </div>
           </div>
 
           {/* Priority */}
           <div className="flex items-center gap-3">
-            <span className="text-gray-400 text-sm w-24 pl-7">Priority</span>
+            <span className="text-gray-400 text-sm w-24 pl-7">{t('priority')}</span>
             <select
               className="input text-sm w-36"
               value={ticket.priority}
@@ -394,7 +397,7 @@ export default function TicketDetailPage() {
               disabled={priorityMut.isPending}
             >
               {['low', 'medium', 'high', 'urgent'].map((p) => (
-                <option key={p} value={p}>{p.charAt(0).toUpperCase() + p.slice(1)}</option>
+                <option key={p} value={p}>{t(`priority_${p}`)}</option>
               ))}
             </select>
           </div>
@@ -402,17 +405,17 @@ export default function TicketDetailPage() {
           {/* Tags */}
           <div className="flex items-start gap-3">
             <Tag className="w-4 h-4 text-gray-400 flex-shrink-0 mt-2" />
-            <span className="text-gray-400 text-sm w-24 mt-2">Tags</span>
+            <span className="text-gray-400 text-sm w-24 mt-2">{t('tags')}</span>
             <div className="flex-1 space-y-2">
               <div className="flex gap-2">
                 <input
                   className="input text-sm flex-1"
-                  placeholder="Add a tag..."
+                  placeholder={t('addTagPlaceholder')}
                   value={tagInput}
                   onChange={(e) => setTagInput(e.target.value)}
                   onKeyDown={(e) => { if (e.key === 'Enter' && tagInput.trim()) { e.preventDefault(); addTagMut.mutate(tagInput.trim()); } }}
                 />
-                <button onClick={() => addTagMut.mutate(tagInput.trim())} disabled={!tagInput.trim() || addTagMut.isPending} className="btn-secondary text-xs px-3 disabled:opacity-40">Add</button>
+                <button onClick={() => addTagMut.mutate(tagInput.trim())} disabled={!tagInput.trim() || addTagMut.isPending} className="btn-secondary text-xs px-3 disabled:opacity-40">{t('add')}</button>
               </div>
               {ticket.tags.filter((t) => t !== 'sla-warned').length > 0 && (
                 <div className="flex flex-wrap gap-1.5">
@@ -430,16 +433,16 @@ export default function TicketDetailPage() {
           {/* Add Note */}
           <div className="flex items-start gap-3">
             <StickyNote className="w-4 h-4 text-gray-400 flex-shrink-0 mt-2" />
-            <span className="text-gray-400 text-sm w-24 mt-2">Add Note</span>
+            <span className="text-gray-400 text-sm w-24 mt-2">{t('addNote')}</span>
             <div className="flex-1 space-y-2">
               <textarea
                 className="input text-sm w-full h-16 resize-none"
-                placeholder="Private staff note (not visible to the ticket creator)..."
+                placeholder={t('notePlaceholder')}
                 value={noteInput}
                 onChange={(e) => setNoteInput(e.target.value)}
                 maxLength={500}
               />
-              <button onClick={() => addNoteMut.mutate()} disabled={!noteInput.trim() || addNoteMut.isPending} className="btn-secondary text-xs px-3 disabled:opacity-40">Add Note</button>
+              <button onClick={() => addNoteMut.mutate()} disabled={!noteInput.trim() || addNoteMut.isPending} className="btn-secondary text-xs px-3 disabled:opacity-40">{t('addNote')}</button>
             </div>
           </div>
         </div>
@@ -449,7 +452,7 @@ export default function TicketDetailPage() {
       {ticket.notes.length > 0 && (
         <div className="card space-y-3">
           <h2 className="text-white font-semibold flex items-center gap-2">
-            🔒 Staff Notes
+            🔒 {t('staffNotes')}
             <span className="badge-secondary text-xs">{ticket.notes.length}</span>
           </h2>
           <div className="space-y-2">
@@ -470,12 +473,12 @@ export default function TicketDetailPage() {
       {ticket.status !== 'closed' && (
         <div className="card space-y-3">
           <h2 className="text-white font-semibold flex items-center gap-2">
-            <Send className="w-4 h-4 text-gray-400" /> Reply in Channel
+            <Send className="w-4 h-4 text-gray-400" /> {t('replyInChannel')}
           </h2>
           <div className="space-y-2">
             <textarea
               className="input text-sm w-full h-20 resize-none"
-              placeholder="Type a message to send into the ticket channel..."
+              placeholder={t('replyPlaceholder')}
               value={replyInput}
               onChange={(e) => setReplyInput(e.target.value)}
               onKeyDown={(e) => {
@@ -487,14 +490,14 @@ export default function TicketDetailPage() {
               maxLength={2000}
             />
             <div className="flex items-center justify-between">
-              <p className="text-gray-500 text-xs">Ctrl+Enter to send · Appears as a staff embed in Discord</p>
+              <p className="text-gray-500 text-xs">{t('replyHint')}</p>
               <button
                 onClick={() => replyMut.mutate()}
                 disabled={!replyInput.trim() || replyMut.isPending}
                 className="btn-primary flex items-center gap-2 text-sm disabled:opacity-40"
               >
                 <Send className="w-3.5 h-3.5" />
-                {replyMut.isPending ? 'Sending...' : 'Send'}
+                {replyMut.isPending ? t('sending') : t('send')}
               </button>
             </div>
           </div>
@@ -505,13 +508,13 @@ export default function TicketDetailPage() {
       <div className="card space-y-3">
         <div className="flex items-center justify-between">
           <h2 className="text-white font-semibold">
-            Transcript
-            <span className="text-gray-500 text-sm font-normal ml-2">({messages.length} messages)</span>
+            {t('transcript')}
+            <span className="text-gray-500 text-sm font-normal ml-2">{t('messagesCount', { count: messages.length })}</span>
           </h2>
         </div>
 
         {messages.length === 0 ? (
-          <p className="text-gray-400 text-sm">No messages recorded. Messages are tracked once the addon is active.</p>
+          <p className="text-gray-400 text-sm">{t('noMessages')}</p>
         ) : (
           <div className="space-y-0 max-h-[500px] overflow-y-auto">
             {messages.map((msg, i) => (
@@ -534,6 +537,7 @@ function InfoCell({ label, value, className = '' }: { label: string; value: stri
 }
 
 function MessageRow({ msg }: { msg: TicketMessage }) {
+  const t = useTranslations('ticketDetailPage');
   const time = new Date(msg.timestamp).toLocaleString('en-US', {
     month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
   });
@@ -555,7 +559,7 @@ function MessageRow({ msg }: { msg: TicketMessage }) {
           const isImage = /\.(png|jpe?g|gif|webp)(\?.*)?$/i.test(url);
           return isImage ? (
             <a key={j} href={url} target="_blank" rel="noreferrer">
-              <img src={url} alt="attachment" className="mt-1 max-h-32 rounded" />
+              <img src={url} alt={t('attachment')} className="mt-1 max-h-32 rounded" />
             </a>
           ) : (
             <a key={j} href={url} target="_blank" rel="noreferrer" className="text-discord-blurple text-xs hover:underline block mt-1">
