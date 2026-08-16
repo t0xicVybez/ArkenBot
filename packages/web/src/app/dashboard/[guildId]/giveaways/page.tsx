@@ -7,6 +7,7 @@ import api from '@/lib/api';
 import toast from 'react-hot-toast';
 import { useState } from 'react';
 import { Gift, Plus } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 type Giveaway = {
   id: string;
@@ -28,6 +29,7 @@ const giveawaysApi = {
 
 export default function GiveawaysPage() {
   const { guildId } = useParams() as { guildId: string };
+  const t = useTranslations('giveawaysPage');
   const queryClient = useQueryClient();
 
   // Create form state
@@ -57,7 +59,7 @@ export default function GiveawaysPage() {
   const createMutation = useMutation({
     mutationFn: (data: object) => giveawaysApi.create(guildId, data),
     onSuccess: () => {
-      toast.success('Giveaway created!');
+      toast.success(t('giveawayCreated'));
       queryClient.invalidateQueries({ queryKey: ['giveaways', guildId] });
       setPrize('');
       setDuration('');
@@ -67,7 +69,7 @@ export default function GiveawaysPage() {
       setBonusRoleId('');
       setBonusEntries('1');
     },
-    onError: () => toast.error('Failed to create giveaway'),
+    onError: () => toast.error(t('createError')),
   });
 
   const allChannels = (channelsRes?.data as { data?: Array<{ id: string; name: string; type: number }> })?.data ?? [];
@@ -81,11 +83,11 @@ export default function GiveawaysPage() {
 
   const handleCreate = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!prize.trim()) return toast.error('Prize is required');
-    if (!duration.trim()) return toast.error('Duration is required');
-    if (!channelId) return toast.error('Channel is required');
+    if (!prize.trim()) return toast.error(t('prizeRequired'));
+    if (!duration.trim()) return toast.error(t('durationRequired'));
+    if (!channelId) return toast.error(t('channelRequired'));
     const count = parseInt(winnersCount);
-    if (!count || count < 1) return toast.error('Winners must be at least 1');
+    if (!count || count < 1) return toast.error(t('winnersMin'));
 
     const payload: Record<string, unknown> = {
       prize: prize.trim(),
@@ -118,50 +120,50 @@ export default function GiveawaysPage() {
       <div className="page-head">
         <div className="page-head-icon"><Gift className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>Giveaways</h1>
-          <div className="page-head-desc">Create and manage giveaways for this server.</div>
+          <h1>{t('title')}</h1>
+          <div className="page-head-desc">{t('subtitle')}</div>
         </div>
       </div>
 
       {/* Create Giveaway */}
       <div className="card mb-8">
-        <h3 className="text-base font-semibold text-white mb-4">Create Giveaway</h3>
+        <h3 className="text-base font-semibold text-white mb-4">{t('createGiveaway')}</h3>
         <form onSubmit={handleCreate} className="space-y-3">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="label">Prize</label>
+              <label className="label">{t('prize')}</label>
               <input
                 type="text"
                 className="input"
-                placeholder="e.g. Discord Nitro"
+                placeholder={t('prizePlaceholder')}
                 value={prize}
                 onChange={(e) => setPrize(e.target.value)}
               />
             </div>
             <div>
-              <label className="label">Duration</label>
+              <label className="label">{t('duration')}</label>
               <input
                 type="text"
                 className="input"
-                placeholder="e.g. 1h, 7d, 30m"
+                placeholder={t('durationPlaceholder')}
                 value={duration}
                 onChange={(e) => setDuration(e.target.value)}
               />
-              <p className="text-xs text-gray-500 mt-1">Use d (days), h (hours), m (minutes).</p>
+              <p className="text-xs text-gray-500 mt-1">{t('durationHelp')}</p>
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="label">Channel</label>
+              <label className="label">{t('channel')}</label>
               <select className="input" value={channelId} onChange={(e) => setChannelId(e.target.value)}>
-                <option value="">Select channel...</option>
+                <option value="">{t('selectChannel')}</option>
                 {textChannels.map((ch) => (
                   <option key={ch.id} value={ch.id}>#{ch.name}</option>
                 ))}
               </select>
             </div>
             <div>
-              <label className="label">Number of Winners</label>
+              <label className="label">{t('numWinners')}</label>
               <input
                 type="number"
                 className="input"
@@ -174,19 +176,19 @@ export default function GiveawaysPage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="label">Required Role (optional)</label>
+              <label className="label">{t('requiredRoleOptional')}</label>
               <select className="input" value={requiredRoleId} onChange={(e) => setRequiredRoleId(e.target.value)}>
-                <option value="">None</option>
+                <option value="">{t('none')}</option>
                 {assignableRoles.map((r) => (
                   <option key={r.id} value={r.id}>@{r.name}</option>
                 ))}
               </select>
-              <p className="text-xs text-gray-500 mt-1">Only members with this role can enter.</p>
+              <p className="text-xs text-gray-500 mt-1">{t('requiredRoleHelp')}</p>
             </div>
             <div>
-              <label className="label">Bonus Role (optional)</label>
+              <label className="label">{t('bonusRoleOptional')}</label>
               <select className="input" value={bonusRoleId} onChange={(e) => setBonusRoleId(e.target.value)}>
-                <option value="">None</option>
+                <option value="">{t('none')}</option>
                 {assignableRoles.map((r) => (
                   <option key={r.id} value={r.id}>@{r.name}</option>
                 ))}
@@ -195,7 +197,7 @@ export default function GiveawaysPage() {
           </div>
           {bonusRoleId && (
             <div className="sm:w-48">
-              <label className="label">Bonus Entries</label>
+              <label className="label">{t('bonusEntries')}</label>
               <input
                 type="number"
                 className="input"
@@ -204,7 +206,7 @@ export default function GiveawaysPage() {
                 value={bonusEntries}
                 onChange={(e) => setBonusEntries(e.target.value)}
               />
-              <p className="text-xs text-gray-500 mt-1">Extra entries for the bonus role.</p>
+              <p className="text-xs text-gray-500 mt-1">{t('bonusEntriesHelp')}</p>
             </div>
           )}
           <button
@@ -213,16 +215,16 @@ export default function GiveawaysPage() {
             className="btn-primary flex items-center gap-1.5"
           >
             <Plus className="w-4 h-4" />
-            {createMutation.isPending ? 'Creating...' : 'Create Giveaway'}
+            {createMutation.isPending ? t('creating') : t('createGiveaway')}
           </button>
         </form>
       </div>
 
       <section className="mb-8">
-        <h2 className="text-lg font-semibold text-white mb-3">Active Giveaways</h2>
+        <h2 className="text-lg font-semibold text-white mb-3">{t('activeGiveaways')}</h2>
         {active.length === 0 ? (
           <div className="card text-center py-10">
-            <p className="text-gray-500 text-sm">No active giveaways right now.</p>
+            <p className="text-gray-500 text-sm">{t('noActive')}</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -234,10 +236,10 @@ export default function GiveawaysPage() {
       </section>
 
       <section>
-        <h2 className="text-lg font-semibold text-white mb-3">Ended Giveaways</h2>
+        <h2 className="text-lg font-semibold text-white mb-3">{t('endedGiveaways')}</h2>
         {ended.length === 0 ? (
           <div className="card text-center py-10">
-            <p className="text-gray-500 text-sm">No ended giveaways yet.</p>
+            <p className="text-gray-500 text-sm">{t('noEnded')}</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -252,6 +254,7 @@ export default function GiveawaysPage() {
 }
 
 function GiveawayCard({ giveaway, roles }: { giveaway: Giveaway; roles: Array<{ id: string; name: string }> }) {
+  const t = useTranslations('giveawaysPage');
   const endsDate = new Date(giveaway.endsAt);
   const dateStr = endsDate.toLocaleString();
 
@@ -266,28 +269,28 @@ function GiveawayCard({ giveaway, roles }: { giveaway: Giveaway; roles: Array<{ 
           <div className="flex items-center gap-2 mb-1">
             <span className="text-base font-semibold text-white truncate">{giveaway.prize}</span>
             {giveaway.ended ? (
-              <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-gray-700 text-gray-400 flex-shrink-0">Ended</span>
+              <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-gray-700 text-gray-400 flex-shrink-0">{t('statusEnded')}</span>
             ) : (
-              <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-green-500/15 text-green-400 flex-shrink-0">Active</span>
+              <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-green-500/15 text-green-400 flex-shrink-0">{t('statusActive')}</span>
             )}
           </div>
           <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-400">
-            <span>Host: <span className="font-mono text-gray-300">{giveaway.hostId}</span></span>
-            <span>{giveaway.ended ? 'Ended' : 'Ends'}: <span className="text-gray-300">{dateStr}</span></span>
-            <span>Winners: <span className="text-gray-300">{giveaway.winnersCount}</span></span>
+            <span>{t('hostLabel')}: <span className="font-mono text-gray-300">{giveaway.hostId}</span></span>
+            <span>{giveaway.ended ? t('endedLabel') : t('endsLabel')}: <span className="text-gray-300">{dateStr}</span></span>
+            <span>{t('winnersLabel')}: <span className="text-gray-300">{giveaway.winnersCount}</span></span>
           </div>
           {(giveaway.requiredRoleId || (giveaway.bonusRoleEntries && giveaway.bonusRoleEntries.length > 0)) && (
             <div className="flex flex-wrap gap-2 mt-2">
               {giveaway.requiredRoleId && (
                 <span className="text-xs bg-discord-blurple/15 text-discord-blurple px-2 py-0.5 rounded-full">
-                  Required: @{requiredRole?.name ?? giveaway.requiredRoleId}
+                  {t('requiredTag', { role: requiredRole?.name ?? giveaway.requiredRoleId })}
                 </span>
               )}
               {giveaway.bonusRoleEntries?.map((bonus) => {
                 const bonusRole = roles.find((r) => r.id === bonus.roleId);
                 return (
                   <span key={bonus.roleId} className="text-xs bg-yellow-500/10 text-yellow-400 px-2 py-0.5 rounded-full">
-                    Bonus: @{bonusRole?.name ?? bonus.roleId} +{bonus.entries} entries
+                    {t('bonusTag', { role: bonusRole?.name ?? bonus.roleId, entries: bonus.entries })}
                   </span>
                 );
               })}
@@ -295,7 +298,7 @@ function GiveawayCard({ giveaway, roles }: { giveaway: Giveaway; roles: Array<{ 
           )}
           {giveaway.ended && giveaway.winnerNames?.length > 0 && (
             <div className="mt-2">
-              <span className="text-xs text-gray-400">Winner{giveaway.winnerNames.length > 1 ? 's' : ''}: </span>
+              <span className="text-xs text-gray-400">{t('winnersResult', { count: giveaway.winnerNames.length })} </span>
               {giveaway.winnerNames.map((name, i) => (
                 <span key={i} className="text-xs font-medium bg-yellow-500/10 text-yellow-400 px-1.5 py-0.5 rounded mr-1">{name}</span>
               ))}
