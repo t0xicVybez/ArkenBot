@@ -7,7 +7,7 @@ import {
 } from 'discord.js';
 import type { AddonContext, AddonCommandDefinition } from '@arkenbot/addon-sdk';
 import { chatCompletion, isLLMAvailable, LLMUnavailableError } from '@arkenbot/shared';
-import { checkCooldown, AI_UNAVAILABLE_MESSAGE } from '../utils/shared.js';
+import { checkCooldown } from '../utils/shared.js';
 
 const SYSTEM_PROMPT = [
   'You are ArkenBot, a helpful assistant inside a Discord server.',
@@ -31,14 +31,16 @@ const command: AddonCommandDefinition = {
   async execute(interaction: ChatInputCommandInteraction | ContextMenuCommandInteraction, ctx: AddonContext) {
     if (!interaction.isChatInputCommand()) return;
 
+    const loc = await ctx.resolveLocale(interaction);
+
     if (!isLLMAvailable()) {
-      await interaction.reply({ content: AI_UNAVAILABLE_MESSAGE, flags: MessageFlags.Ephemeral });
+      await interaction.reply({ content: ctx.t('unavailable', loc), flags: MessageFlags.Ephemeral });
       return;
     }
 
     const cooldown = checkCooldown(interaction.user.id);
     if (cooldown) {
-      await interaction.reply({ content: `⏳ Slow down — try again in ${cooldown}s.`, flags: MessageFlags.Ephemeral });
+      await interaction.reply({ content: ctx.t('cooldown', loc, { seconds: cooldown }), flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -57,25 +59,25 @@ const command: AddonCommandDefinition = {
       );
 
       if (!answer) {
-        await interaction.editReply('🤔 The assistant had nothing to say. Try rephrasing your question.');
+        await interaction.editReply(ctx.t('askNothing', loc));
         return;
       }
 
       const embed = new EmbedBuilder()
         .setColor(0x5865f2)
-        .setAuthor({ name: `Asked by ${interaction.user.username}`, iconURL: interaction.user.displayAvatarURL() })
+        .setAuthor({ name: ctx.t('askAuthor', loc, { user: interaction.user.username }), iconURL: interaction.user.displayAvatarURL() })
         .setDescription(`**❓ ${question.slice(0, 240)}**\n\n${answer.slice(0, 3900)}`)
-        .setFooter({ text: 'AI-generated · may be inaccurate' })
+        .setFooter({ text: ctx.t('askFooter', loc) })
         .setTimestamp();
 
       await interaction.editReply({ embeds: [embed] });
     } catch (err) {
       if (err instanceof LLMUnavailableError) {
-        await interaction.editReply(AI_UNAVAILABLE_MESSAGE);
+        await interaction.editReply(ctx.t('unavailable', loc));
         return;
       }
       ctx.logger.warn(`/ask failed: ${err instanceof Error ? err.message : String(err)}`);
-      await interaction.editReply('⚠️ The assistant is unavailable right now. Please try again in a moment.');
+      await interaction.editReply(ctx.t('askError', loc));
     }
   },
 };
