@@ -10,7 +10,7 @@
   "dependencies": {
     "@arkenbot/addon-sdk": "workspace:*",
     "@arkenbot/shared": "workspace:*",
-    "ioredis": "^5.11.1"
+    "ioredis": "^6.0.0"
   },
   "peerDependencies": {
     "discord.js": "^14.0.0"
