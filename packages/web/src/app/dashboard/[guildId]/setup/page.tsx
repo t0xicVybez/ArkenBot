@@ -8,20 +8,22 @@ import toast from 'react-hot-toast';
 import { useState } from 'react';
 import { Check, ChevronRight, ChevronLeft, Sparkles, MessageSquare, Shield, Bot, TrendingUp, PartyPopper, Upload } from 'lucide-react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 interface GuildChannel { id: string; name: string; type: number }
 interface GuildRole { id: string; name: string }
 
 const STEPS = [
-  { id: 'welcome-msg', label: 'Welcome Messages', icon: MessageSquare },
-  { id: 'moderation',  label: 'Moderation',       icon: Shield },
-  { id: 'automod',     label: 'Auto-Mod',          icon: Bot },
-  { id: 'leveling',    label: 'Leveling',          icon: TrendingUp },
-  { id: 'done',        label: 'Done',              icon: PartyPopper },
+  { id: 'welcome-msg', icon: MessageSquare },
+  { id: 'moderation',  icon: Shield },
+  { id: 'automod',     icon: Bot },
+  { id: 'leveling',    icon: TrendingUp },
+  { id: 'done',        icon: PartyPopper },
 ];
 
 export default function SetupWizardPage() {
   const { guildId } = useParams() as { guildId: string };
+  const t = useTranslations('setupWizardPage');
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [completed, setCompleted] = useState<Set<number>>(new Set());
@@ -66,8 +68,8 @@ export default function SetupWizardPage() {
       <div className="page-head">
         <div className="page-head-icon"><Sparkles className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>Setup Wizard</h1>
-          <div className="page-head-desc">Configure the essentials in a few steps</div>
+          <h1>{t('title')}</h1>
+          <div className="page-head-desc">{t('subtitle')}</div>
         </div>
       </div>
 
@@ -75,13 +77,13 @@ export default function SetupWizardPage() {
       {step === 0 && (
         <div className="mb-6 rounded-xl border border-discord-blurple/25 bg-discord-blurple/5 p-4 flex flex-col sm:flex-row sm:items-center gap-3">
           <div className="flex-1">
-            <p className="text-sm font-semibold text-white">Have a backup file?</p>
+            <p className="text-sm font-semibold text-white">{t('haveBackup')}</p>
             <p className="text-xs text-gray-400 mt-0.5">
-              Restore a previously downloaded server config and skip the wizard entirely.
+              {t('haveBackupDesc')}
             </p>
           </div>
           <label className="btn-secondary flex items-center gap-2 cursor-pointer whitespace-nowrap">
-            <Upload className="w-4 h-4" /> Restore from backup
+            <Upload className="w-4 h-4" /> {t('restoreBackup')}
             <input
               type="file"
               accept="application/json,.json"
@@ -94,11 +96,11 @@ export default function SetupWizardPage() {
                   const parsed = JSON.parse(await file.text());
                   const res = await configTransferApi.import(guildId, parsed);
                   const counts = (res.data as { data?: { imported?: Record<string, number> } })?.data?.imported ?? {};
-                  toast.success(`Backup restored (${Object.keys(counts).length} sections) — you're all set!`);
+                  toast.success(t('backupRestored', { sections: Object.keys(counts).length }));
                   router.push(`/dashboard/${guildId}`);
                 } catch (err) {
                   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  toast.error((err as any)?.response?.data?.error ?? 'Import failed — is this an ArkenBot config file?');
+                  toast.error((err as any)?.response?.data?.error ?? t('importFailed'));
                 }
               }}
             />
@@ -125,7 +127,7 @@ export default function SetupWizardPage() {
                 }`}
               >
                 {done && !active ? <Check className="w-3 h-3" /> : <Icon className="w-3 h-3" />}
-                {s.label}
+                {t(`step_${s.id}`)}
               </button>
               {i < STEPS.length - 1 && <ChevronRight className="w-3 h-3 text-gray-600 flex-shrink-0" />}
             </div>
@@ -179,10 +181,10 @@ export default function SetupWizardPage() {
             disabled={step === 0}
             className="btn-secondary flex items-center gap-2 text-sm disabled:opacity-40"
           >
-            <ChevronLeft className="w-4 h-4" /> Back
+            <ChevronLeft className="w-4 h-4" /> {t('back')}
           </button>
           <button onClick={advance} className="btn-primary flex items-center gap-2 text-sm">
-            {step === STEPS.length - 2 ? 'Finish' : 'Next'} <ChevronRight className="w-4 h-4" />
+            {step === STEPS.length - 2 ? t('finish') : t('next')} <ChevronRight className="w-4 h-4" />
           </button>
         </div>
       )}
@@ -203,14 +205,15 @@ function WelcomeStep({
   channels: GuildChannel[];
   onNext: () => void;
 }) {
+  const t = useTranslations('setupWizardPage');
   const [enabled, setEnabled] = useState<boolean>((welcome?.welcomeEnabled as boolean | undefined) ?? false);
   const [channelId, setChannelId] = useState<string>((welcome?.welcomeChannelId as string | undefined) ?? '');
-  const [message, setMessage] = useState<string>((welcome?.welcomeMessage as string | undefined) ?? 'Welcome {user} to {server}!');
+  const [message, setMessage] = useState<string>((welcome?.welcomeMessage as string | undefined) ?? t('welcomeDefault'));
 
   const mut = useMutation({
     mutationFn: (data: object) => settingsApi.updateWelcome(guildId, data),
-    onSuccess: () => { toast.success('Welcome settings saved!'); onNext(); },
-    onError: () => toast.error('Failed to save welcome settings.'),
+    onSuccess: () => { toast.success(t('welcomeSaved')); onNext(); },
+    onError: () => toast.error(t('welcomeSaveError')),
   });
 
   const save = () => mut.mutate({ welcomeEnabled: enabled, welcomeChannelId: channelId, welcomeMessage: message });
@@ -218,26 +221,26 @@ function WelcomeStep({
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-white font-semibold text-lg mb-1">Welcome Messages</h2>
-        <p className="text-gray-500 text-sm">Greet new members automatically when they join your server.</p>
+        <h2 className="text-white font-semibold text-lg mb-1">{t('welcomeTitle')}</h2>
+        <p className="text-gray-500 text-sm">{t('welcomeDesc')}</p>
       </div>
 
-      <Toggle label="Enable welcome messages" enabled={enabled} onChange={setEnabled} />
+      <Toggle label={t('enableWelcome')} enabled={enabled} onChange={setEnabled} />
 
       {enabled && (
         <>
           <div>
-            <label className="label">Welcome Channel</label>
+            <label className="label">{t('welcomeChannel')}</label>
             <select className="input" value={channelId} onChange={(e) => setChannelId(e.target.value)}>
-              <option value="">Select a channel…</option>
+              <option value="">{t('selectChannel')}</option>
               {channels.map((c) => (
                 <option key={c.id} value={c.id}>#{c.name}</option>
               ))}
             </select>
           </div>
           <div>
-            <label className="label">Message</label>
-            <p className="text-xs text-gray-500 mb-1">Variables: <code className="text-gray-400">{'{user}'}</code> <code className="text-gray-400">{'{server}'}</code></p>
+            <label className="label">{t('messageLabel')}</label>
+            <p className="text-xs text-gray-500 mb-1">{t.rich('variablesHint', { code: (c) => <code className="text-gray-400">{c}</code> })}</p>
             <textarea
               className="input min-h-[72px] resize-y"
               value={message}
@@ -248,7 +251,7 @@ function WelcomeStep({
       )}
 
       <button onClick={save} disabled={mut.isPending} className="btn-primary w-full">
-        {mut.isPending ? 'Saving…' : 'Save & Continue'}
+        {mut.isPending ? t('saving') : t('saveContinue')}
       </button>
     </div>
   );
@@ -269,14 +272,15 @@ function ModerationStep({
   roles: GuildRole[];
   onNext: () => void;
 }) {
+  const t = useTranslations('setupWizardPage');
   const [enabled, setEnabled]     = useState<boolean>((settings?.moderationEnabled as boolean | undefined) ?? false);
   const [logChannel, setLogChannel] = useState<string>((settings?.logChannelId as string | undefined) ?? '');
   const [modRole, setModRole]     = useState<string>((settings?.modRoleId as string | undefined) ?? '');
 
   const mut = useMutation({
     mutationFn: (data: object) => settingsApi.update(guildId, data),
-    onSuccess: () => { toast.success('Moderation settings saved!'); onNext(); },
-    onError: () => toast.error('Failed to save moderation settings.'),
+    onSuccess: () => { toast.success(t('moderationSaved')); onNext(); },
+    onError: () => toast.error(t('moderationSaveError')),
   });
 
   const save = () => mut.mutate({ moderationEnabled: enabled, logChannelId: logChannel || undefined, modRoleId: modRole || undefined });
@@ -284,27 +288,27 @@ function ModerationStep({
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-white font-semibold text-lg mb-1">Moderation</h2>
-        <p className="text-gray-500 text-sm">Enable mod commands (ban, kick, warn, mute) and set a log channel.</p>
+        <h2 className="text-white font-semibold text-lg mb-1">{t('moderationTitle')}</h2>
+        <p className="text-gray-500 text-sm">{t('moderationDesc')}</p>
       </div>
 
-      <Toggle label="Enable moderation" enabled={enabled} onChange={setEnabled} />
+      <Toggle label={t('enableModeration')} enabled={enabled} onChange={setEnabled} />
 
       {enabled && (
         <>
           <div>
-            <label className="label">Mod Log Channel <span className="text-gray-500">(optional)</span></label>
+            <label className="label">{t('modLogChannel')} <span className="text-gray-500">{t('optional')}</span></label>
             <select className="input" value={logChannel} onChange={(e) => setLogChannel(e.target.value)}>
-              <option value="">None</option>
+              <option value="">{t('none')}</option>
               {channels.map((c) => (
                 <option key={c.id} value={c.id}>#{c.name}</option>
               ))}
             </select>
           </div>
           <div>
-            <label className="label">Moderator Role <span className="text-gray-500">(optional)</span></label>
+            <label className="label">{t('moderatorRole')} <span className="text-gray-500">{t('optional')}</span></label>
             <select className="input" value={modRole} onChange={(e) => setModRole(e.target.value)}>
-              <option value="">None</option>
+              <option value="">{t('none')}</option>
               {roles.map((r) => (
                 <option key={r.id} value={r.id}>{r.name}</option>
               ))}
@@ -314,7 +318,7 @@ function ModerationStep({
       )}
 
       <button onClick={save} disabled={mut.isPending} className="btn-primary w-full">
-        {mut.isPending ? 'Saving…' : 'Save & Continue'}
+        {mut.isPending ? t('saving') : t('saveContinue')}
       </button>
     </div>
   );
@@ -331,6 +335,7 @@ function AutoModStep({
   automod: Record<string, unknown> | undefined;
   onNext: () => void;
 }) {
+  const t = useTranslations('setupWizardPage');
   const [spam, setSpam]       = useState<boolean>((automod?.antiSpamEnabled as boolean | undefined) ?? false);
   const [filter, setFilter]   = useState<boolean>((automod?.filterEnabled as boolean | undefined) ?? false);
   const [mention, setMention] = useState<boolean>((automod?.antiMentionEnabled as boolean | undefined) ?? false);
@@ -338,8 +343,8 @@ function AutoModStep({
 
   const mut = useMutation({
     mutationFn: (data: object) => settingsApi.updateAutoMod(guildId, data),
-    onSuccess: () => { toast.success('Auto-Mod settings saved!'); onNext(); },
-    onError: () => toast.error('Failed to save Auto-Mod settings.'),
+    onSuccess: () => { toast.success(t('automodSaved')); onNext(); },
+    onError: () => toast.error(t('automodSaveError')),
   });
 
   const save = () => mut.mutate({ antiSpamEnabled: spam, filterEnabled: filter, antiMentionEnabled: mention, antiRaidEnabled: raid });
@@ -347,19 +352,19 @@ function AutoModStep({
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-white font-semibold text-lg mb-1">Auto-Mod</h2>
-        <p className="text-gray-500 text-sm">Enable automatic moderation filters. You can fine-tune thresholds later in the Auto-Mod settings page.</p>
+        <h2 className="text-white font-semibold text-lg mb-1">{t('automodTitle')}</h2>
+        <p className="text-gray-500 text-sm">{t('automodDesc')}</p>
       </div>
 
       <div className="space-y-3">
-        <Toggle label="Anti-Spam — delete repeated messages" enabled={spam} onChange={setSpam} />
-        <Toggle label="Word Filter — block configured words" enabled={filter} onChange={setFilter} />
-        <Toggle label="Anti-Mention Spam — limit mass pinging" enabled={mention} onChange={setMention} />
-        <Toggle label="Anti-Raid — protect against join raids" enabled={raid} onChange={setRaid} />
+        <Toggle label={t('antiSpam')} enabled={spam} onChange={setSpam} />
+        <Toggle label={t('wordFilter')} enabled={filter} onChange={setFilter} />
+        <Toggle label={t('antiMention')} enabled={mention} onChange={setMention} />
+        <Toggle label={t('antiRaid')} enabled={raid} onChange={setRaid} />
       </div>
 
       <button onClick={save} disabled={mut.isPending} className="btn-primary w-full">
-        {mut.isPending ? 'Saving…' : 'Save & Continue'}
+        {mut.isPending ? t('saving') : t('saveContinue')}
       </button>
     </div>
   );
@@ -376,29 +381,30 @@ function LevelingStep({
   settings: Record<string, unknown> | undefined;
   onNext: () => void;
 }) {
+  const t = useTranslations('setupWizardPage');
   const [enabled, setEnabled] = useState<boolean>((settings?.levelingEnabled as boolean | undefined) ?? false);
 
   const mut = useMutation({
     mutationFn: (data: object) => settingsApi.update(guildId, data),
-    onSuccess: () => { toast.success('Leveling settings saved!'); onNext(); },
-    onError: () => toast.error('Failed to save leveling settings.'),
+    onSuccess: () => { toast.success(t('levelingSaved')); onNext(); },
+    onError: () => toast.error(t('levelingSaveError')),
   });
 
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-white font-semibold text-lg mb-1">Leveling</h2>
-        <p className="text-gray-500 text-sm">Members earn XP for chatting and can level up to unlock roles. Configure rank cards, XP rates, and level roles in the Leveling page.</p>
+        <h2 className="text-white font-semibold text-lg mb-1">{t('levelingTitle')}</h2>
+        <p className="text-gray-500 text-sm">{t('levelingDesc')}</p>
       </div>
 
-      <Toggle label="Enable leveling & XP system" enabled={enabled} onChange={setEnabled} />
+      <Toggle label={t('enableLeveling')} enabled={enabled} onChange={setEnabled} />
 
       <button
         onClick={() => mut.mutate({ levelingEnabled: enabled })}
         disabled={mut.isPending}
         className="btn-primary w-full"
       >
-        {mut.isPending ? 'Saving…' : 'Save & Continue'}
+        {mut.isPending ? t('saving') : t('saveContinue')}
       </button>
     </div>
   );
@@ -407,13 +413,14 @@ function LevelingStep({
 // ─── Step: Done ───────────────────────────────────────────────────────────────
 
 function DoneStep({ guildId, completed }: { guildId: string; completed: Set<number> }) {
+  const t = useTranslations('setupWizardPage');
   const router = useRouter();
 
   const quickLinks = [
-    { href: `/dashboard/${guildId}/automod`,    label: 'Fine-tune Auto-Mod filters' },
-    { href: `/dashboard/${guildId}/leveling`,   label: 'Configure XP rates & level roles' },
-    { href: `/dashboard/${guildId}/moderation`, label: 'Moderation settings' },
-    { href: `/dashboard/${guildId}/logging`,    label: 'Set up logging channels' },
+    { href: `/dashboard/${guildId}/automod`,    label: t('quick_automod') },
+    { href: `/dashboard/${guildId}/leveling`,   label: t('quick_leveling') },
+    { href: `/dashboard/${guildId}/moderation`, label: t('quick_moderation') },
+    { href: `/dashboard/${guildId}/logging`,    label: t('quick_logging') },
   ];
 
   return (
@@ -423,9 +430,9 @@ function DoneStep({ guildId, completed }: { guildId: string; completed: Set<numb
           <Check className="w-7 h-7 text-green-400" />
         </div>
         <div>
-          <h2 className="text-white font-semibold text-xl">You&apos;re all set!</h2>
+          <h2 className="text-white font-semibold text-xl">{t('allSet')}</h2>
           <p className="text-gray-500 text-sm mt-1">
-            {completed.size} of {STEPS.length - 1} steps configured. Here are some next steps:
+            {t('stepsConfigured', { done: completed.size, total: STEPS.length - 1 })}
           </p>
         </div>
       </div>
@@ -447,7 +454,7 @@ function DoneStep({ guildId, completed }: { guildId: string; completed: Set<numb
         onClick={() => router.push(`/dashboard/${guildId}`)}
         className="btn-primary w-full"
       >
-        Go to Overview
+        {t('goToOverview')}
       </button>
     </div>
   );
