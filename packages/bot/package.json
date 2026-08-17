@@ -18,7 +18,7 @@
     "@arkenbot/addon-sdk": "workspace:*",
     "@arkenbot/shared": "workspace:*",
     "@discordjs/voice": "^0.19.2",
-    "@napi-rs/canvas": "^0.1.100",
+    "@napi-rs/canvas": "^1.0.6",
     "@prisma/client": "^5.22.0",
     "@snazzah/davey": "^0.1.12",
     "axios": "^1.19.0",
