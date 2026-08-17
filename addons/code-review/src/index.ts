@@ -21,6 +21,7 @@ import { detectLanguage } from './analyzer/detect.js';
 import { analyze } from './analyzer/index.js';
 import { buildResultEmbed } from './utils/embed.js';
 import { sendFormattedCode } from './utils/chunks.js';
+import { locales } from './locales.js';
 
 const LANGUAGE_CHOICES = [
   { name: 'Auto-detect', value: 'auto' },
@@ -35,6 +36,7 @@ const LANGUAGE_CHOICES = [
 const MODAL_PREFIX = 'code-review:';
 
 export default defineAddon({
+  locales,
   manifest: {
     name: 'code-review',
     displayName: 'Code Review',
@@ -72,24 +74,25 @@ export default defineAddon({
 
       async execute(
         interaction: ChatInputCommandInteraction | ContextMenuCommandInteraction,
-        _ctx: AddonContext,
+        ctx: AddonContext,
       ): Promise<void> {
         if (!interaction.isChatInputCommand()) return;
 
+        const loc = await ctx.resolveLocale(interaction);
         const langHint = interaction.options.getString('language') ?? 'auto';
 
         // Embed the language hint in the modal's customId so the submit handler
         // can retrieve it without additional storage.
         const modal = new ModalBuilder()
           .setCustomId(`${MODAL_PREFIX}${langHint}`)
-          .setTitle('Code Review')
+          .setTitle(ctx.t('modalTitle', loc))
           .addComponents(
             new ActionRowBuilder<TextInputBuilder>().addComponents(
               new TextInputBuilder()
                 .setCustomId('code')
-                .setLabel('Paste your code here')
+                .setLabel(ctx.t('modalCodeLabel', loc))
                 .setStyle(TextInputStyle.Paragraph)
-                .setPlaceholder('// Paste your code snippet...')
+                .setPlaceholder(ctx.t('modalCodePlaceholder', loc))
                 .setRequired(true)
                 .setMaxLength(4000),
             ),
@@ -110,6 +113,7 @@ export default defineAddon({
         if (!interaction?.isModalSubmit?.()) return;
         if (!interaction.customId.startsWith(MODAL_PREFIX)) return;
 
+        const loc = await ctx.resolveLocale(interaction);
         const langHint = interaction.customId.slice(MODAL_PREFIX.length);
         const raw = interaction.fields.getTextInputValue('code').trim();
         const guildId = interaction.guildId ?? undefined;
@@ -120,7 +124,7 @@ export default defineAddon({
 
         if (raw.length > maxLength) {
           await interaction.reply({
-            content: `❌ Code exceeds the maximum length of **${maxLength.toLocaleString()}** characters (yours: ${raw.length.toLocaleString()}).`,
+            content: ctx.t('tooLong', loc, { max: maxLength.toLocaleString(), len: raw.length.toLocaleString() }),
             ephemeral: true,
           });
           return;
@@ -132,14 +136,14 @@ export default defineAddon({
           const lang = langHint === 'auto' ? detectLanguage(raw) : langHint;
           const result = await analyze(raw, lang);
 
-          const embed = buildResultEmbed(result);
+          const embed = buildResultEmbed(result, (key, vars) => ctx.t(key, loc, vars));
           await interaction.editReply({ embeds: [embed] });
 
           await sendFormattedCode(interaction, lang, result.formatted);
         } catch (err) {
           ctx.logger.error('Code review failed', String(err));
           await interaction.editReply({
-            content: '❌ An error occurred while analyzing your code. Please try again.',
+            content: ctx.t('error', loc),
           });
         }
       },
