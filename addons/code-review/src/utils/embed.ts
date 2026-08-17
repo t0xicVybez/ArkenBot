@@ -2,6 +2,9 @@
 import { EmbedBuilder } from 'discord.js';
 import type { AnalysisResult } from '../analyzer/types.js';
 
+/** Translator bound to the viewer's locale, passed in from the addon context. */
+type Translate = (key: string, vars?: Record<string, string | number>) => string;
+
 const LANG_LABELS: Record<string, string> = {
   javascript: 'JavaScript',
   typescript: 'TypeScript',
@@ -29,7 +32,7 @@ const SEVERITY_ICONS = {
  * @param result - The analysis result returned by `analyze()`.
  * @returns A configured `EmbedBuilder` ready to be sent.
  */
-export function buildResultEmbed(result: AnalysisResult): EmbedBuilder {
+export function buildResultEmbed(result: AnalysisResult, t: Translate): EmbedBuilder {
   const isClean = result.errorCount === 0 && result.warningCount === 0 && result.infoCount === 0;
   const color =
     result.errorCount > 0
@@ -39,12 +42,12 @@ export function buildResultEmbed(result: AnalysisResult): EmbedBuilder {
         : 0x57f287;
 
   const langLabel = LANG_LABELS[result.language] ?? result.language;
-  const modeTag = result.aiPowered ? '✨ AI-Powered' : '⚙️ Static Analysis';
+  const modeTag = result.aiPowered ? t('modeAi') : t('modeStatic');
   const titleSuffix = result.aiPowered ? ' ✨' : '';
 
   const embed = new EmbedBuilder()
     .setColor(color)
-    .setTitle(`🔍 Code Review — ${langLabel}${titleSuffix}`)
+    .setTitle(`${t('embedTitle', { lang: langLabel })}${titleSuffix}`)
     .setTimestamp();
 
   if (result.summary) {
@@ -52,7 +55,7 @@ export function buildResultEmbed(result: AnalysisResult): EmbedBuilder {
   }
 
   if (isClean) {
-    const clean = '✅ **No issues found.** Your code looks clean!';
+    const clean = t('clean');
     embed.setDescription(result.summary ? `*${result.summary}*\n\n${clean}` : clean);
   } else {
     const MAX_SHOWN = 20;
@@ -60,7 +63,7 @@ export function buildResultEmbed(result: AnalysisResult): EmbedBuilder {
     const overflow = result.issues.length - MAX_SHOWN;
 
     const lines = shown.map((i) => `${SEVERITY_ICONS[i.severity]} ${i.message}`);
-    if (overflow > 0) lines.push(`*…and ${overflow} more issue${overflow > 1 ? 's' : ''}*`);
+    if (overflow > 0) lines.push(t('moreIssues', { n: overflow }));
 
     const issueBlock = lines.join('\n');
     embed.setDescription(
@@ -69,13 +72,13 @@ export function buildResultEmbed(result: AnalysisResult): EmbedBuilder {
   }
 
   embed.addFields(
-    { name: '🔴 Errors', value: String(result.errorCount), inline: true },
-    { name: '🟡 Warnings', value: String(result.warningCount), inline: true },
-    { name: '🔵 Info', value: String(result.infoCount), inline: true },
+    { name: t('fieldErrors'), value: String(result.errorCount), inline: true },
+    { name: t('fieldWarnings'), value: String(result.warningCount), inline: true },
+    { name: t('fieldInfo'), value: String(result.infoCount), inline: true },
   );
 
   const footerParts: string[] = [modeTag];
-  if (!isClean) footerParts.push('Corrected code attached below');
+  if (!isClean) footerParts.push(t('footerCorrected'));
   embed.setFooter({ text: footerParts.join(' · ') });
 
   return embed;
