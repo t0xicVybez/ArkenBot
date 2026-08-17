@@ -7,6 +7,7 @@ import api from '@/lib/api';
 import toast from 'react-hot-toast';
 import { useState } from 'react';
 import { ClipboardList, Plus, Trash2, ChevronDown, ChevronRight, Check, X } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 type ApplicationField = {
   id: string;
@@ -60,6 +61,7 @@ type Tab = 'forms' | 'submissions';
 
 export default function ApplicationsPage() {
   const { guildId } = useParams() as { guildId: string };
+  const t = useTranslations('applicationsPage');
   const queryClient = useQueryClient();
   const [tab, setTab] = useState<Tab>('forms');
 
@@ -117,40 +119,40 @@ export default function ApplicationsPage() {
   const createFormMutation = useMutation({
     mutationFn: (data: object) => applicationsApi.createForm(guildId, data),
     onSuccess: () => {
-      toast.success('Form created!');
+      toast.success(t('formCreated'));
       queryClient.invalidateQueries({ queryKey: ['application-forms', guildId] });
       setNewFormName('');
       setNewFormDesc('');
       setNewFormChannel('');
       setNewFormRole('');
     },
-    onError: () => toast.error('Failed to create form'),
+    onError: () => toast.error(t('createFormError')),
   });
 
   const updateFormMutation = useMutation({
     mutationFn: ({ formId, data }: { formId: string; data: object }) =>
       applicationsApi.updateForm(guildId, formId, data),
     onSuccess: () => {
-      toast.success('Form updated!');
+      toast.success(t('formUpdated'));
       queryClient.invalidateQueries({ queryKey: ['application-forms', guildId] });
     },
-    onError: () => toast.error('Failed to update form'),
+    onError: () => toast.error(t('updateFormError')),
   });
 
   const deleteFormMutation = useMutation({
     mutationFn: (formId: string) => applicationsApi.deleteForm(guildId, formId),
     onSuccess: () => {
-      toast.success('Form deleted');
+      toast.success(t('formDeleted'));
       queryClient.invalidateQueries({ queryKey: ['application-forms', guildId] });
     },
-    onError: () => toast.error('Failed to delete form'),
+    onError: () => toast.error(t('deleteFormError')),
   });
 
   const addFieldMutation = useMutation({
     mutationFn: ({ formId, data }: { formId: string; data: object }) =>
       applicationsApi.addField(guildId, formId, data),
     onSuccess: () => {
-      toast.success('Field added!');
+      toast.success(t('fieldAdded'));
       queryClient.invalidateQueries({ queryKey: ['application-forms', guildId] });
       setAddFieldFormId(null);
       setNewFieldLabel('');
@@ -158,28 +160,28 @@ export default function ApplicationsPage() {
       setNewFieldRequired(true);
       setNewFieldPlaceholder('');
     },
-    onError: () => toast.error('Failed to add field'),
+    onError: () => toast.error(t('addFieldError')),
   });
 
   const deleteFieldMutation = useMutation({
     mutationFn: ({ formId, fieldId }: { formId: string; fieldId: string }) =>
       applicationsApi.deleteField(guildId, formId, fieldId),
     onSuccess: () => {
-      toast.success('Field removed');
+      toast.success(t('fieldRemoved'));
       queryClient.invalidateQueries({ queryKey: ['application-forms', guildId] });
     },
-    onError: () => toast.error('Failed to remove field'),
+    onError: () => toast.error(t('removeFieldError')),
   });
 
   const reviewMutation = useMutation({
     mutationFn: ({ id, action, note }: { id: string; action: 'accept' | 'deny'; note?: string }) =>
       applicationsApi.reviewSubmission(guildId, id, { action, note }),
     onSuccess: () => {
-      toast.success('Submission reviewed!');
+      toast.success(t('submissionReviewed'));
       setPendingReview(null);
       queryClient.invalidateQueries({ queryKey: ['application-submissions', guildId] });
     },
-    onError: () => toast.error('Failed to review submission'),
+    onError: () => toast.error(t('reviewError')),
   });
 
   const toggleForm = (formId: string) => {
@@ -211,24 +213,24 @@ export default function ApplicationsPage() {
       <div className="page-head">
         <div className="page-head-icon"><ClipboardList className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>Applications</h1>
-          <div className="page-head-desc">Create application forms and review member submissions.</div>
+          <h1>{t('title')}</h1>
+          <div className="page-head-desc">{t('subtitle')}</div>
         </div>
       </div>
 
       {/* Tabs */}
       <div className="flex gap-1 mb-6 border-b border-gray-700">
-        {(['forms', 'submissions'] as Tab[]).map((t) => (
+        {(['forms', 'submissions'] as Tab[]).map((tabKey) => (
           <button
-            key={t}
-            onClick={() => setTab(t)}
-            className={`px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px capitalize ${
-              tab === t
+            key={tabKey}
+            onClick={() => setTab(tabKey)}
+            className={`px-4 py-2 text-sm font-medium transition-colors border-b-2 -mb-px ${
+              tab === tabKey
                 ? 'border-discord-blurple text-discord-blurple'
                 : 'border-transparent text-gray-400 hover:text-white'
             }`}
           >
-            {t}
+            {t(`tab_${tabKey}`)}
           </button>
         ))}
       </div>
@@ -238,23 +240,23 @@ export default function ApplicationsPage() {
         <div className="space-y-4">
           {/* Create form */}
           <div className="card">
-            <h3 className="text-base font-semibold text-white mb-4">Create New Form</h3>
+            <h3 className="text-base font-semibold text-white mb-4">{t('createNewForm')}</h3>
             <div className="space-y-3">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="label">Form Name</label>
+                  <label className="label">{t('formName')}</label>
                   <input
                     type="text"
                     className="input"
-                    placeholder="e.g. Staff Application"
+                    placeholder={t('formNamePlaceholder')}
                     value={newFormName}
                     onChange={(e) => setNewFormName(e.target.value)}
                   />
                 </div>
                 <div>
-                  <label className="label">Review Channel</label>
+                  <label className="label">{t('reviewChannel')}</label>
                   <select className="input" value={newFormChannel} onChange={(e) => setNewFormChannel(e.target.value)}>
-                    <option value="">Select channel...</option>
+                    <option value="">{t('selectChannel')}</option>
                     {textChannels.map((ch) => (
                       <option key={ch.id} value={ch.id}>#{ch.name}</option>
                     ))}
@@ -262,28 +264,28 @@ export default function ApplicationsPage() {
                 </div>
               </div>
               <div>
-                <label className="label">Description</label>
+                <label className="label">{t('description')}</label>
                 <textarea
                   className="input min-h-[70px] resize-none"
-                  placeholder="Describe this application..."
+                  placeholder={t('descriptionPlaceholder')}
                   value={newFormDesc}
                   onChange={(e) => setNewFormDesc(e.target.value)}
                 />
               </div>
               <div>
-                <label className="label">Accept Role (optional)</label>
+                <label className="label">{t('acceptRole')}</label>
                 <select className="input" value={newFormRole} onChange={(e) => setNewFormRole(e.target.value)}>
-                  <option value="">None</option>
+                  <option value="">{t('none')}</option>
                   {roles.filter((r) => r.name !== '@everyone').map((r) => (
                     <option key={r.id} value={r.id}>@{r.name}</option>
                   ))}
                 </select>
-                <p className="text-xs text-gray-500 mt-1">Role given automatically when an application is accepted.</p>
+                <p className="text-xs text-gray-500 mt-1">{t('acceptRoleHelp')}</p>
               </div>
               <button
                 onClick={() => {
                   if (!newFormName.trim() || !newFormChannel) {
-                    toast.error('Form name and review channel are required');
+                    toast.error(t('nameChannelRequired'));
                     return;
                   }
                   createFormMutation.mutate({
@@ -297,7 +299,7 @@ export default function ApplicationsPage() {
                 className="btn-primary flex items-center gap-1.5"
               >
                 <Plus className="w-4 h-4" />
-                {createFormMutation.isPending ? 'Creating…' : 'Create Form'}
+                {createFormMutation.isPending ? t('creating') : t('createForm')}
               </button>
             </div>
           </div>
@@ -312,7 +314,7 @@ export default function ApplicationsPage() {
           ) : forms.length === 0 ? (
             <div className="card text-center py-10 text-gray-500">
               <ClipboardList className="w-8 h-8 mx-auto mb-2 opacity-40" />
-              <p>No forms yet. Create one above.</p>
+              <p>{t('noForms')}</p>
             </div>
           ) : (
             forms.map((form) => {
@@ -334,29 +336,29 @@ export default function ApplicationsPage() {
                       <div>
                         <p className="text-sm font-semibold text-white">{form.name}</p>
                         <p className="text-xs text-gray-500">
-                          {form.fields.length} field{form.fields.length !== 1 ? 's' : ''} ·{' '}
+                          {t('fieldCount', { count: form.fields.length })} ·{' '}
                           {reviewCh ? `#${reviewCh.name}` : form.reviewChannelId}
-                          {acceptRole ? ` · accept: @${acceptRole.name}` : ''}
+                          {acceptRole ? t('acceptSuffix', { role: acceptRole.name }) : ''}
                         </p>
                       </div>
                     </button>
                     <span className={`badge ${form.enabled ? 'badge-success' : 'badge-warning'}`}>
-                      {form.enabled ? 'Open' : 'Closed'}
+                      {form.enabled ? t('badgeOpen') : t('badgeClosed')}
                     </span>
                     <button
                       onClick={() => updateFormMutation.mutate({ formId: form.id, data: { enabled: !form.enabled } })}
                       className="text-xs text-gray-400 hover:text-white transition-colors px-2 py-1 rounded border border-gray-600 hover:border-gray-400"
                     >
-                      {form.enabled ? 'Close' : 'Open'}
+                      {form.enabled ? t('btnClose') : t('btnOpen')}
                     </button>
                     <button
                       onClick={() => {
-                        if (confirm(`Delete form "${form.name}"? This cannot be undone.`)) {
+                        if (confirm(t('confirmDeleteForm', { name: form.name }))) {
                           deleteFormMutation.mutate(form.id);
                         }
                       }}
                       className="text-gray-500 hover:text-red-400 transition-colors"
-                      title="Delete form"
+                      title={t('deleteForm')}
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -365,16 +367,16 @@ export default function ApplicationsPage() {
                   {expanded && (
                     <div className="border-t border-[var(--border-subtle)] px-4 py-3 space-y-3">
                       {form.fields.length === 0 ? (
-                        <p className="text-sm text-gray-500">No fields yet.</p>
+                        <p className="text-sm text-gray-500">{t('noFields')}</p>
                       ) : (
                         <div className="space-y-2">
                           {form.fields.map((field) => (
                             <div key={field.id} className="flex items-center justify-between bg-white/[0.04] rounded-lg px-3 py-2">
                               <div>
                                 <p className="text-sm text-gray-200">{field.label}</p>
-                                <p className="text-xs text-gray-500 capitalize">
-                                  {field.style} · {field.required ? 'Required' : 'Optional'}
-                                  {field.placeholder ? ` · "${field.placeholder}"` : ''}
+                                <p className="text-xs text-gray-500">
+                                  {t(`style_${field.style}`)} · {field.required ? t('required') : t('optional')}
+                                  {field.placeholder ? t('phSuffix', { ph: field.placeholder }) : ''}
                                 </p>
                               </div>
                               <button
@@ -390,42 +392,42 @@ export default function ApplicationsPage() {
 
                       {addFieldFormId === form.id ? (
                         <div className="border border-[var(--border-subtle)] rounded-lg p-3 space-y-2">
-                          <p className="text-xs font-semibold text-gray-400 uppercase">Add Field</p>
+                          <p className="text-xs font-semibold text-gray-400 uppercase">{t('addFieldTitle')}</p>
                           <input
                             type="text"
                             className="input"
-                            placeholder="Field label"
+                            placeholder={t('fieldLabelPlaceholder')}
                             value={newFieldLabel}
                             onChange={(e) => setNewFieldLabel(e.target.value)}
                           />
                           <div className="flex gap-3 flex-wrap">
                             <div>
-                              <label className="label">Style</label>
+                              <label className="label">{t('styleLabel')}</label>
                               <select
                                 className="input"
                                 value={newFieldStyle}
                                 onChange={(e) => setNewFieldStyle(e.target.value as 'short' | 'paragraph')}
                               >
-                                <option value="short">Short</option>
-                                <option value="paragraph">Paragraph</option>
+                                <option value="short">{t('style_short')}</option>
+                                <option value="paragraph">{t('style_paragraph')}</option>
                               </select>
                             </div>
                             <div>
-                              <label className="label">Required?</label>
+                              <label className="label">{t('requiredLabel')}</label>
                               <select
                                 className="input"
                                 value={newFieldRequired ? 'yes' : 'no'}
                                 onChange={(e) => setNewFieldRequired(e.target.value === 'yes')}
                               >
-                                <option value="yes">Yes</option>
-                                <option value="no">No</option>
+                                <option value="yes">{t('yes')}</option>
+                                <option value="no">{t('no')}</option>
                               </select>
                             </div>
                           </div>
                           <input
                             type="text"
                             className="input"
-                            placeholder="Placeholder text (optional)"
+                            placeholder={t('phPlaceholder')}
                             value={newFieldPlaceholder}
                             onChange={(e) => setNewFieldPlaceholder(e.target.value)}
                           />
@@ -433,7 +435,7 @@ export default function ApplicationsPage() {
                             <button
                               onClick={() => {
                                 if (!newFieldLabel.trim()) {
-                                  toast.error('Field label is required');
+                                  toast.error(t('fieldLabelRequired'));
                                   return;
                                 }
                                 addFieldMutation.mutate({
@@ -449,13 +451,13 @@ export default function ApplicationsPage() {
                               disabled={addFieldMutation.isPending}
                               className="btn-primary text-sm py-1.5"
                             >
-                              {addFieldMutation.isPending ? 'Adding…' : 'Add Field'}
+                              {addFieldMutation.isPending ? t('adding') : t('addField')}
                             </button>
                             <button
                               onClick={() => setAddFieldFormId(null)}
                               className="btn-secondary text-sm py-1.5"
                             >
-                              Cancel
+                              {t('cancel')}
                             </button>
                           </div>
                         </div>
@@ -471,7 +473,7 @@ export default function ApplicationsPage() {
                           className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-white transition-colors"
                         >
                           <Plus className="w-4 h-4" />
-                          Add Field
+                          {t('addField')}
                         </button>
                       )}
                     </div>
@@ -489,21 +491,21 @@ export default function ApplicationsPage() {
           {/* Filters */}
           <div className="card flex flex-wrap gap-3">
             <div className="flex-1 min-w-[150px]">
-              <label className="label">Filter by Form</label>
+              <label className="label">{t('filterByForm')}</label>
               <select className="input" value={filterFormId} onChange={(e) => setFilterFormId(e.target.value)}>
-                <option value="">All Forms</option>
+                <option value="">{t('allForms')}</option>
                 {forms.map((f) => (
                   <option key={f.id} value={f.id}>{f.name}</option>
                 ))}
               </select>
             </div>
             <div>
-              <label className="label">Status</label>
+              <label className="label">{t('statusLabel')}</label>
               <select className="input" value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
-                <option value="">All</option>
-                <option value="pending">Pending</option>
-                <option value="accepted">Accepted</option>
-                <option value="denied">Denied</option>
+                <option value="">{t('all')}</option>
+                <option value="pending">{t('status_pending')}</option>
+                <option value="accepted">{t('status_accepted')}</option>
+                <option value="denied">{t('status_denied')}</option>
               </select>
             </div>
           </div>
@@ -516,7 +518,7 @@ export default function ApplicationsPage() {
             </div>
           ) : submissions.length === 0 ? (
             <div className="card text-center py-10 text-gray-500">
-              <p>No submissions found.</p>
+              <p>{t('noSubmissions')}</p>
             </div>
           ) : (
             <div className="card p-0 overflow-hidden">
@@ -524,10 +526,10 @@ export default function ApplicationsPage() {
                 <table className="w-full min-w-[500px]">
                   <thead className="bg-[var(--bg-base)]">
                     <tr>
-                      <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Submitted By</th>
-                      <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Form</th>
-                      <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Date</th>
-                      <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">Status</th>
+                      <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colSubmittedBy')}</th>
+                      <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colForm')}</th>
+                      <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colDate')}</th>
+                      <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colStatus')}</th>
                       <th className="px-4 py-3" />
                     </tr>
                   </thead>
@@ -550,7 +552,7 @@ export default function ApplicationsPage() {
                             </td>
                             <td className="px-4 py-3">
                               <span className={`badge ${statusColors[sub.status] ?? 'badge-info'}`}>
-                                {sub.status}
+                                {t(`status_${sub.status}`)}
                               </span>
                             </td>
                             <td className="px-4 py-3 text-right">
@@ -574,7 +576,7 @@ export default function ApplicationsPage() {
                                   {sub.reviewNote && (
                                     <div className="border-t border-[var(--border-subtle)] pt-2">
                                       <p className="text-xs text-gray-500">
-                                        Reviewed by <span className="text-gray-400">{sub.reviewerTag}</span>: {sub.reviewNote}
+                                        {t.rich('reviewedBy', { reviewer: sub.reviewerTag ?? '', note: sub.reviewNote, b: (c) => <span className="text-gray-400">{c}</span> })}
                                       </p>
                                     </div>
                                   )}
@@ -585,25 +587,25 @@ export default function ApplicationsPage() {
                                         className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-green-600/20 text-green-400 hover:bg-green-600/30 text-sm transition-colors"
                                       >
                                         <Check className="w-4 h-4" />
-                                        Accept
+                                        {t('accept')}
                                       </button>
                                       <button
                                         onClick={(e) => { e.stopPropagation(); setPendingReview({ id: sub.id, action: 'deny' }); }}
                                         className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-red-600/20 text-red-400 hover:bg-red-600/30 text-sm transition-colors"
                                       >
                                         <X className="w-4 h-4" />
-                                        Deny
+                                        {t('deny')}
                                       </button>
                                     </div>
                                   )}
                                   {isPendingReview && (
                                     <div className="border border-[var(--border-subtle)] rounded-lg p-3 space-y-2" onClick={(e) => e.stopPropagation()}>
                                       <p className="text-xs font-semibold text-gray-400 uppercase">
-                                        {pendingReview.action === 'accept' ? 'Accept' : 'Deny'} — Add a note (optional)
+                                        {t('reviewNoteTitle', { action: pendingReview.action === 'accept' ? t('accept') : t('deny') })}
                                       </p>
                                       <textarea
                                         className="input min-h-[60px] resize-none"
-                                        placeholder="Staff note visible to the applicant..."
+                                        placeholder={t('reviewNotePlaceholder')}
                                         value={reviewNotes[sub.id] ?? ''}
                                         onChange={(e) => setReviewNotes((prev) => ({ ...prev, [sub.id]: e.target.value }))}
                                       />
@@ -624,16 +626,16 @@ export default function ApplicationsPage() {
                                           }`}
                                         >
                                           {reviewMutation.isPending
-                                            ? 'Submitting…'
+                                            ? t('submitting')
                                             : pendingReview.action === 'accept'
-                                            ? 'Confirm Accept'
-                                            : 'Confirm Deny'}
+                                            ? t('confirmAccept')
+                                            : t('confirmDeny')}
                                         </button>
                                         <button
                                           onClick={() => setPendingReview(null)}
                                           className="btn-secondary text-sm py-1.5"
                                         >
-                                          Cancel
+                                          {t('cancel')}
                                         </button>
                                       </div>
                                     </div>
