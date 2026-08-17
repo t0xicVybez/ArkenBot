@@ -14,8 +14,10 @@ import { Sidebar } from '@/components/Sidebar';
 import { CommandPalette } from '@/components/CommandPalette';
 import { Topbar } from '@/components/Topbar';
 import { Menu } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 export default function GuildLayout({ children }: { children: React.ReactNode }) {
+  const t = useTranslations('sidebar');
   const { status, isAuthenticated } = useAuth();
   const router = useRouter();
   const params = useParams();
@@ -62,12 +64,12 @@ export default function GuildLayout({ children }: { children: React.ReactNode })
           <button
             onClick={() => setSidebarOpen(true)}
             className="p-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-white/[0.06] transition-colors"
-            aria-label="Open menu"
+            aria-label={t('openMenu')}
           >
             <Menu className="w-5 h-5" />
           </button>
           <p className="text-[var(--text-primary)] font-semibold text-sm truncate tracking-tight">
-            {guild?.name ?? 'Dashboard'}
+            {guild?.name ?? t('dashboardFallback')}
           </p>
         </div>
         <Topbar variant="guild" guildName={guild?.name} guildId={guildId} />

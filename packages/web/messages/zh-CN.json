@@ -1907,7 +1907,8 @@
     "staffPortal": "员工门户",
     "owner": "所有者",
     "staff": "员工",
-    "logout": "登出"
+    "logout": "登出",
+    "openMenu": "打开菜单"
   },
   "topbar": {
     "staffBadge": "员工",

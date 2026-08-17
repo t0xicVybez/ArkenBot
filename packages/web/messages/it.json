@@ -1907,7 +1907,8 @@
     "staffPortal": "Portale staff",
     "owner": "Proprietario",
     "staff": "Staff",
-    "logout": "Esci"
+    "logout": "Esci",
+    "openMenu": "Apri il menu"
   },
   "topbar": {
     "staffBadge": "STAFF",
