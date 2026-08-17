@@ -25,6 +25,7 @@ import { logger, swallow} from '../logger.js';
 import { pub } from '../redis.js';
 import { config } from '../config.js';
 import { t, resolveUserLocale } from '../i18n/index.js';
+import { localizeCommandJSON } from '../i18n/commandLocalizations.js';
 
 const DASHBOARD_URL = 'https://arkenbot.app/dashboard';
 const DOCS_URL = 'https://docs.arkenbot.app/';
@@ -137,7 +138,7 @@ const event: BotEvent = {
     // global deploy cycle, so members can use slash commands straight away.
     try {
       const client = _client as BotClient;
-      const commands = [...client.commands.values()].map((cmd) => cmd.data.toJSON());
+      const commands = [...client.commands.values()].map((cmd) => localizeCommandJSON(cmd.data.toJSON()));
       const rest = new REST({ version: '10' }).setToken(config.discord.token);
       await rest.put(
         Routes.applicationGuildCommands(config.discord.clientId, guild.id),

@@ -14,6 +14,7 @@ import { join, dirname } from "path";
 import { fileURLToPath, pathToFileURL } from "url";
 import { config } from "../config.js";
 import type { BotCommand } from "../types.js";
+import { localizeCommandJSON } from "../i18n/commandLocalizations.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -40,7 +41,7 @@ async function loadLocalCommands() {
       const command: BotCommand = module.default ?? module.command;
 
       if (command?.data) {
-        commands.push(command.data.toJSON());
+        commands.push(localizeCommandJSON(command.data.toJSON()));
         console.log(`Found command: ${command.data.name}`);
       }
     }
