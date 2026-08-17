@@ -1,6 +1,12 @@
 // @ts-nocheck
 import { defineAddon, AddonContext } from '@arkenbot/addon-sdk';
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { locales } from './locales.js';
+
+/** Resolve the guild's locale for background-posted (non-interaction) embeds. */
+function guildLoc(ctx: AddonContext, guildId: string): Promise<string> {
+  return ctx.resolveLocale({ user: { id: '' }, guildId, guildLocale: ctx.getGuild(guildId)?.preferredLocale });
+}
 
 interface GitHubCommit {
   sha: string;
@@ -118,6 +124,7 @@ async function checkCommits(
   const channel = ctx.client.channels.cache.get(channelId);
   if (!channel?.isTextBased()) return;
 
+  const loc = await guildLoc(ctx, guildId);
   const toPost = newCommits.slice(0, force ? 3 : 5).reverse();
   for (const commit of toPost) {
     const [firstLine, ...bodyLines] = commit.commit.message.split('\n');
@@ -125,14 +132,14 @@ async function checkCommits(
     const body = bodyLines.join('\n').trim().slice(0, 500);
     const authorName = commit.author?.login ?? commit.commit.author.name;
     const embed = new EmbedBuilder()
-      .setTitle(`New commit: ${title}`)
+      .setTitle(ctx.t('commitTitle', loc, { title }))
       .setURL(commit.html_url)
       .setColor(0x2da44e)
       .addFields(
-        { name: 'Repository', value: `[${owner}/${repo}](https://github.com/${owner}/${repo})`, inline: true },
-        { name: 'Branch', value: branch, inline: true },
-        { name: 'Author', value: authorName, inline: true },
-        { name: 'SHA', value: `\`${commit.sha.slice(0, 7)}\``, inline: true },
+        { name: ctx.t('fieldRepository', loc), value: `[${owner}/${repo}](https://github.com/${owner}/${repo})`, inline: true },
+        { name: ctx.t('fieldBranch', loc), value: branch, inline: true },
+        { name: ctx.t('fieldAuthor', loc), value: authorName, inline: true },
+        { name: ctx.t('fieldSha', loc), value: `\`${commit.sha.slice(0, 7)}\``, inline: true },
       )
       .setTimestamp(new Date(commit.commit.author.date));
     if (body) embed.setDescription(body);
@@ -142,7 +149,7 @@ async function checkCommits(
 
   if (newCommits.length > 5) {
     await channel
-      .send(`...and ${newCommits.length - 5} more commit(s). [View all](https://github.com/${owner}/${repo}/commits/${branch})`)
+      .send(ctx.t('moreCommits', loc, { n: newCommits.length - 5, url: `https://github.com/${owner}/${repo}/commits/${branch}` }))
       .catch(() => null);
   }
 }
@@ -178,15 +185,16 @@ async function checkPRs(
   const channel = ctx.client.channels.cache.get(channelId);
   if (!channel?.isTextBased()) return;
 
+  const loc = await guildLoc(ctx, guildId);
   for (const pr of toPost) {
     const embed = new EmbedBuilder()
-      .setTitle(`PR #${pr.number}: ${pr.title}`)
+      .setTitle(ctx.t('prTitle', loc, { num: pr.number, title: pr.title }))
       .setURL(pr.html_url)
       .setColor(0x6e40c9)
       .addFields(
-        { name: 'Repository', value: `[${owner}/${repo}](https://github.com/${owner}/${repo})`, inline: true },
-        { name: 'Author', value: `[${pr.user.login}](${pr.user.html_url})`, inline: true },
-        { name: 'Status', value: pr.draft ? 'Draft' : 'Open', inline: true },
+        { name: ctx.t('fieldRepository', loc), value: `[${owner}/${repo}](https://github.com/${owner}/${repo})`, inline: true },
+        { name: ctx.t('fieldAuthor', loc), value: `[${pr.user.login}](${pr.user.html_url})`, inline: true },
+        { name: ctx.t('fieldStatus', loc), value: pr.draft ? ctx.t('statusDraft', loc) : ctx.t('statusOpen', loc), inline: true },
       )
       .setTimestamp(new Date(pr.created_at))
       .setThumbnail(pr.user.avatar_url);
@@ -229,21 +237,22 @@ async function checkIssues(
   const channel = ctx.client.channels.cache.get(channelId);
   if (!channel?.isTextBased()) return;
 
+  const loc = await guildLoc(ctx, guildId);
   for (const issue of toPost) {
     const labelText = issue.labels.length
       ? issue.labels.map((l) => `\`${l.name}\``).join(' ')
       : null;
     const embed = new EmbedBuilder()
-      .setTitle(`Issue #${issue.number}: ${issue.title}`)
+      .setTitle(ctx.t('issueTitle', loc, { num: issue.number, title: issue.title }))
       .setURL(issue.html_url)
       .setColor(0xe06c00)
       .addFields(
-        { name: 'Repository', value: `[${owner}/${repo}](https://github.com/${owner}/${repo})`, inline: true },
-        { name: 'Author', value: `[${issue.user.login}](${issue.user.html_url})`, inline: true },
+        { name: ctx.t('fieldRepository', loc), value: `[${owner}/${repo}](https://github.com/${owner}/${repo})`, inline: true },
+        { name: ctx.t('fieldAuthor', loc), value: `[${issue.user.login}](${issue.user.html_url})`, inline: true },
       )
       .setTimestamp(new Date(issue.created_at))
       .setThumbnail(issue.user.avatar_url);
-    if (labelText) embed.addFields({ name: 'Labels', value: labelText, inline: true });
+    if (labelText) embed.addFields({ name: ctx.t('fieldLabels', loc), value: labelText, inline: true });
     if (issue.body) embed.setDescription(issue.body.slice(0, 300));
     await channel.send({ embeds: [embed] }).catch(() => null);
   }
@@ -298,6 +307,7 @@ async function pollAllGuilds(ctx: AddonContext): Promise<void> {
 }
 
 export default defineAddon({
+  locales,
   manifest: {
     name: 'github-monitor',
     displayName: 'GitHub Monitor',
@@ -368,6 +378,7 @@ export default defineAddon({
 
       async execute(interaction, ctx) {
         if (!interaction.isChatInputCommand() || !interaction.guildId) return;
+        const loc = await ctx.resolveLocale(interaction);
         const sub = interaction.options.getSubcommand();
 
         if (sub === 'status') {
@@ -380,30 +391,30 @@ export default defineAddon({
 
           const repoList = repos.split(',').map((r) => r.trim()).filter(Boolean);
           const monitoring = [
-            monitorCommits && 'Commits',
-            monitorPRs && 'Pull Requests',
-            monitorIssues && 'Issues',
+            monitorCommits && ctx.t('monCommits', loc),
+            monitorPRs && ctx.t('monPRs', loc),
+            monitorIssues && ctx.t('monIssues', loc),
           ].filter(Boolean).join(', ');
 
           const embed = new EmbedBuilder()
-            .setTitle('GitHub Monitor — Status')
+            .setTitle(ctx.t('statusTitle', loc))
             .setColor(0x24292e)
             .addFields(
               {
-                name: 'Repositories',
-                value: repoList.length ? repoList.map((r) => `\`${r}\``).join('\n') : '_None configured_',
+                name: ctx.t('fieldRepositories', loc),
+                value: repoList.length ? repoList.map((r) => `\`${r}\``).join('\n') : ctx.t('noneConfigured', loc),
               },
-              { name: 'Notification Channel', value: channelId ? `<#${channelId}>` : '_Not set_', inline: true },
-              { name: 'Branch', value: branch, inline: true },
-              { name: 'Monitoring', value: monitoring || '_Nothing_', inline: true },
-              { name: 'Poll Interval', value: '5 minutes', inline: true },
+              { name: ctx.t('fieldNotificationChannel', loc), value: channelId ? `<#${channelId}>` : ctx.t('notSet', loc), inline: true },
+              { name: ctx.t('fieldBranch', loc), value: branch, inline: true },
+              { name: ctx.t('fieldMonitoring', loc), value: monitoring || ctx.t('nothing', loc), inline: true },
+              { name: ctx.t('fieldPollInterval', loc), value: ctx.t('pollValue', loc), inline: true },
             );
 
           await interaction.reply({ embeds: [embed], ephemeral: true });
         } else if (sub === 'check') {
           await interaction.deferReply({ ephemeral: true });
           await checkGuild(ctx, interaction.guildId, true);
-          await interaction.editReply('Done — current commits, open PRs, and open issues have been posted to the notification channel.');
+          await interaction.editReply(ctx.t('refreshDone', loc));
         }
       },
     },
