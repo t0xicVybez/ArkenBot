@@ -14,8 +14,10 @@
 
 import { SlashCommandBuilder, EmbedBuilder, type GuildMember } from 'discord.js';
 import { defineAddon } from '@arkenbot/addon-sdk';
+import { locales } from './locales.js';
 
 export default defineAddon({
+  locales,
   manifest: {
     name: 'example-greeting',
     displayName: 'Greeting Bot',
@@ -67,15 +69,16 @@ export default defineAddon({
         );
         const color = await ctx.getSetting<string>(interaction.guildId, 'embedColor', '#5865F2');
 
+        const loc = await ctx.resolveLocale(interaction);
         const greeting = message
           .replace('{user}', `<@${targetUser.id}>`)
-          .replace('{server}', interaction.guild?.name ?? 'the server');
+          .replace('{server}', interaction.guild?.name ?? ctx.t('theServer', loc));
 
         const embed = new EmbedBuilder()
           .setColor(color as `#${string}`)
           .setDescription(`👋 ${greeting}`)
           .setThumbnail(targetUser.displayAvatarURL())
-          .setFooter({ text: `Greeted by ${interaction.user.tag}` })
+          .setFooter({ text: ctx.t('footerGreetedBy', loc, { tag: interaction.user.tag }) })
           .setTimestamp();
 
         await interaction.reply({ embeds: [embed] });
@@ -110,11 +113,12 @@ export default defineAddon({
         const channel = member.guild.channels.cache.get(channelId);
         if (!channel?.isTextBased()) return;
 
+        const loc = await ctx.resolveLocale({ user: { id: '' }, guildId: member.guild.id, guildLocale: member.guild.preferredLocale });
         const embed = new EmbedBuilder()
           .setColor(color as `#${string}`)
           .setDescription(`👋 ${greeting}`)
           .setThumbnail(member.user.displayAvatarURL())
-          .setFooter({ text: `Member #${member.guild.memberCount}` })
+          .setFooter({ text: ctx.t('footerMemberCount', loc, { count: member.guild.memberCount }) })
           .setTimestamp();
 
         // Silently discard errors — the channel may have been deleted since config was saved.

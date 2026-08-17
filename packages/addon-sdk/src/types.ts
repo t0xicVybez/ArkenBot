@@ -48,6 +48,26 @@ export interface AddonLifecycleHooks {
 }
 
 /**
+ * Localized message catalogs for an addon, keyed by locale code (e.g. `en-US`,
+ * `fr`). Each catalog is a nested object of dot-addressable string keys, mirroring
+ * the core bot's i18n format. `en-US` is the base/fallback catalog. Consumed via
+ * `ctx.t(key, locale, vars)`.
+ */
+export type AddonMessages = Record<string, Record<string, unknown>>;
+
+/**
+ * The minimal shape needed to resolve which language to reply in. A discord.js
+ * `ChatInputCommandInteraction`/`ContextMenuCommandInteraction` already satisfies
+ * it; event handlers can pass `{ user: { id: '' }, guildId, guildLocale }`.
+ */
+export interface LocaleResolvable {
+  user: { id: string };
+  locale?: string | null;
+  guildId?: string | null;
+  guildLocale?: string | null;
+}
+
+/**
  * The complete definition of an addon passed to `defineAddon()`.
  * The `manifest` is required; all other fields are optional.
  */
@@ -56,6 +76,12 @@ export interface AddonDefinition {
   commands?: AddonCommandDefinition[];
   events?: AddonEventHandler[];
   hooks?: AddonLifecycleHooks;
+  /**
+   * Localized message catalogs for this addon's user-facing output. When provided,
+   * `ctx.t(key, locale, vars)` resolves against them (falling back to `en-US`, then
+   * the key). Pair with `ctx.resolveLocale(interaction)` to pick the viewer's language.
+   */
+  locales?: AddonMessages;
 }
 
 /**
