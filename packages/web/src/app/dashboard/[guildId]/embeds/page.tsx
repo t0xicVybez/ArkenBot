@@ -6,6 +6,7 @@ import { embedsApi, guildsApi } from '@/lib/api';
 import { Layout, Trash2, Send, Plus, Edit2, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useState, useRef, useCallback } from 'react';
+import { useTranslations } from 'next-intl';
 
 type EmbedField = { name: string; value: string; inline: boolean };
 
@@ -99,13 +100,14 @@ function ImageInput({
   onChange: (v: string) => void;
   placeholder?: string;
 }) {
+  const t = useTranslations('embedsPage');
   const fileRef = useRef<HTMLInputElement>(null);
 
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > 3 * 1024 * 1024) {
-      toast.error('Image must be under 3 MB');
+      toast.error(t('imageTooBig'));
       return;
     }
     const reader = new FileReader();
@@ -125,7 +127,7 @@ function ImageInput({
           className="input flex-1"
           value={isData ? '' : value}
           onChange={(e) => onChange(e.target.value)}
-          placeholder={isData ? '(uploaded file)' : placeholder}
+          placeholder={isData ? t('uploadedFile') : placeholder}
           disabled={isData}
         />
         <button
@@ -133,14 +135,14 @@ function ImageInput({
           onClick={() => fileRef.current?.click()}
           className="btn-secondary text-xs px-3 flex-shrink-0"
         >
-          Upload
+          {t('upload')}
         </button>
         {value && (
           <button
             type="button"
             onClick={() => onChange('')}
             className="text-gray-500 hover:text-red-400 transition-colors flex-shrink-0"
-            title="Remove image"
+            title={t('removeImage')}
           >
             <X className="w-4 h-4" />
           </button>
@@ -156,6 +158,7 @@ function ImageInput({
 
 // ─── Discord-style embed preview ──────────────────────────────────────────────
 function DiscordPreview({ form }: { form: FormState }) {
+  const t = useTranslations('embedsPage');
   const color = form.embedColor || '#5865F2';
   const hasEmbed =
     form.embedTitle ||
@@ -178,7 +181,7 @@ function DiscordPreview({ form }: { form: FormState }) {
             <span className="bg-discord-blurple text-white text-[9px] px-1 py-0.5 rounded font-semibold leading-none">
               APP
             </span>
-            <span className="text-gray-500 text-xs">Today at 12:00 PM</span>
+            <span className="text-gray-500 text-xs">{t('todayAt')}</span>
           </div>
 
           {form.messageContent && (
@@ -237,8 +240,8 @@ function DiscordPreview({ form }: { form: FormState }) {
                   <div className="mt-2 grid gap-x-4 gap-y-2" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
                     {form.embedFields.map((f, i) => (
                       <div key={i} className={f.inline ? '' : 'col-span-3'}>
-                        <p className="text-white text-xs font-semibold mb-0.5">{f.name || 'Field Name'}</p>
-                        <p className="text-[#dbdee1] text-xs break-words">{f.value || 'Field Value'}</p>
+                        <p className="text-white text-xs font-semibold mb-0.5">{f.name || t('fieldNameFallback')}</p>
+                        <p className="text-[#dbdee1] text-xs break-words">{f.value || t('fieldValueFallback')}</p>
                       </div>
                     ))}
                   </div>
@@ -278,7 +281,7 @@ function DiscordPreview({ form }: { form: FormState }) {
           )}
 
           {!hasEmbed && !form.messageContent && (
-            <p className="text-gray-600 text-xs italic">Your embed preview will appear here…</p>
+            <p className="text-gray-600 text-xs italic">{t('previewPlaceholder')}</p>
           )}
         </div>
       </div>
@@ -289,6 +292,7 @@ function DiscordPreview({ form }: { form: FormState }) {
 // ─── Main page ────────────────────────────────────────────────────────────────
 export default function EmbedsPage() {
   const { guildId } = useParams() as { guildId: string };
+  const t = useTranslations('embedsPage');
   const queryClient = useQueryClient();
 
   const [form, setForm] = useState<FormState>({ ...BLANK });
@@ -322,9 +326,9 @@ export default function EmbedsPage() {
       queryClient.invalidateQueries({ queryKey: ['embeds', guildId] });
       const created = (res.data as { data?: GuildEmbed })?.data;
       if (created) setEditingId(created.id);
-      toast.success('Embed saved');
+      toast.success(t('embedSaved'));
     },
-    onError: () => toast.error('Failed to save embed'),
+    onError: () => toast.error(t('saveError')),
   });
 
   const updateMutation = useMutation({
@@ -332,25 +336,25 @@ export default function EmbedsPage() {
       embedsApi.update(guildId, id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['embeds', guildId] });
-      toast.success('Embed saved');
+      toast.success(t('embedSaved'));
     },
-    onError: () => toast.error('Failed to save embed'),
+    onError: () => toast.error(t('saveError')),
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id: string) => embedsApi.delete(guildId, id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['embeds', guildId] });
-      toast.success('Embed deleted');
+      toast.success(t('embedDeleted'));
     },
-    onError: () => toast.error('Failed to delete embed'),
+    onError: () => toast.error(t('deleteError')),
   });
 
   const sendMutation = useMutation({
     mutationFn: ({ id, channelId }: { id: string; channelId: string }) =>
       embedsApi.send(guildId, id, channelId),
-    onSuccess: () => toast.success('Embed sent to channel!'),
-    onError: () => toast.error('Failed to send embed'),
+    onSuccess: () => toast.success(t('embedSent')),
+    onError: () => toast.error(t('sendError')),
   });
 
   const resetForm = () => {
@@ -382,7 +386,7 @@ export default function EmbedsPage() {
   });
 
   const handleSave = () => {
-    if (!form.name.trim()) return toast.error('Embed name is required');
+    if (!form.name.trim()) return toast.error(t('nameRequired'));
     const payload = buildPayload();
     if (editingId) {
       updateMutation.mutate({ id: editingId, data: payload });
@@ -392,8 +396,8 @@ export default function EmbedsPage() {
   };
 
   const handlePublish = async () => {
-    if (!form.name.trim()) return toast.error('Embed name is required');
-    if (!form.channelId) return toast.error('Select a channel to publish to');
+    if (!form.name.trim()) return toast.error(t('nameRequired'));
+    if (!form.channelId) return toast.error(t('selectChannelPublish'));
 
     // Save the embed first (creating it if new) so it has a stable ID before sending.
     const payload = buildPayload();
@@ -402,7 +406,7 @@ export default function EmbedsPage() {
     if (!targetId) {
       const res = await embedsApi.create(guildId, payload);
       const created = (res.data as { data?: GuildEmbed })?.data;
-      if (!created) return toast.error('Failed to save embed');
+      if (!created) return toast.error(t('saveError'));
       targetId = created.id;
       setEditingId(targetId);
       queryClient.invalidateQueries({ queryKey: ['embeds', guildId] });
@@ -431,14 +435,14 @@ export default function EmbedsPage() {
         <div className="page-head">
         <div className="page-head-icon"><Layout className="w-5 h-5" /></div>
         <div className="min-w-0">
-          <h1>Embed Builder</h1>
-          <div className="page-head-desc">Create and send rich Discord embeds from the dashboard.</div>
+          <h1>{t('title')}</h1>
+          <div className="page-head-desc">{t('subtitle')}</div>
         </div>
       </div>
         {editingId && (
           <button onClick={resetForm} className="btn-secondary gap-1.5 text-sm">
             <Plus className="w-4 h-4" />
-            New Embed
+            {t('newEmbed')}
           </button>
         )}
       </div>
@@ -446,28 +450,28 @@ export default function EmbedsPage() {
       <div className="grid grid-cols-1 xl:grid-cols-[1fr_400px] gap-6 mb-6">
         <div className="card space-y-5">
           <h2 className="text-lg font-semibold text-white">
-            {editingId ? 'Edit Embed' : 'New Embed'}
+            {editingId ? t('editEmbed') : t('newEmbed')}
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="label">Embed Name *</label>
+              <label className="label">{t('embedName')}</label>
               <input
                 className="input"
                 value={form.name}
                 onChange={(e) => set('name', e.target.value)}
-                placeholder="e.g. Content Creator Rules"
+                placeholder={t('embedNamePlaceholder')}
                 maxLength={100}
               />
             </div>
             <div>
-              <label className="label">Target Channel (for Publish)</label>
+              <label className="label">{t('targetChannel')}</label>
               <select
                 className="input"
                 value={form.channelId}
                 onChange={(e) => set('channelId', e.target.value)}
               >
-                <option value="">Select a channel</option>
+                <option value="">{t('selectChannel')}</option>
                 {textChannels.map((ch) => (
                   <option key={ch.id} value={ch.id}>
                     #{ch.name}
@@ -478,20 +482,20 @@ export default function EmbedsPage() {
           </div>
 
           <div>
-            <label className="label">Message Content (above embed, optional)</label>
+            <label className="label">{t('messageContent')}</label>
             <textarea
               className="input min-h-[60px] resize-y"
               value={form.messageContent}
               onChange={(e) => set('messageContent', e.target.value)}
-              placeholder="Optional plain text message sent above the embed…"
+              placeholder={t('messageContentPlaceholder')}
             />
           </div>
 
           <div className="border-t border-[var(--border-subtle)] pt-4">
-            <h3 className="text-sm font-semibold text-gray-300 mb-3">Embed Content</h3>
+            <h3 className="text-sm font-semibold text-gray-300 mb-3">{t('embedContent')}</h3>
             <div className="flex gap-3 items-end mb-4">
               <div className="flex-shrink-0">
-                <label className="label">Color</label>
+                <label className="label">{t('color')}</label>
                 <div className="flex items-center gap-2">
                   <input
                     type="color"
@@ -510,43 +514,43 @@ export default function EmbedsPage() {
                 </div>
               </div>
               <div className="flex-1">
-                <label className="label">Title</label>
+                <label className="label">{t('titleLabel')}</label>
                 <input
                   className="input"
                   value={form.embedTitle}
                   onChange={(e) => set('embedTitle', e.target.value)}
-                  placeholder="Embed title"
+                  placeholder={t('titlePlaceholder')}
                   maxLength={256}
                 />
               </div>
             </div>
             <div>
-              <label className="label">Description</label>
+              <label className="label">{t('descriptionLabel')}</label>
               <textarea
                 className="input min-h-[100px] resize-y"
                 value={form.embedDescription}
                 onChange={(e) => set('embedDescription', e.target.value)}
-                placeholder="Write your embed description here…"
+                placeholder={t('descriptionPlaceholder')}
                 maxLength={4096}
               />
             </div>
           </div>
 
           <div className="border-t border-[var(--border-subtle)] pt-4">
-            <h3 className="text-sm font-semibold text-gray-300 mb-3">Author</h3>
+            <h3 className="text-sm font-semibold text-gray-300 mb-3">{t('authorSection')}</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="label">Author Name</label>
+                <label className="label">{t('authorName')}</label>
                 <input
                   className="input"
                   value={form.embedAuthorName}
                   onChange={(e) => set('embedAuthorName', e.target.value)}
-                  placeholder="Author name"
+                  placeholder={t('authorNamePlaceholder')}
                   maxLength={256}
                 />
               </div>
               <ImageInput
-                label="Author Icon"
+                label={t('authorIcon')}
                 value={form.embedAuthorIconUrl}
                 onChange={(v) => set('embedAuthorIconUrl', v)}
               />
@@ -554,15 +558,15 @@ export default function EmbedsPage() {
           </div>
 
           <div className="border-t border-[var(--border-subtle)] pt-4">
-            <h3 className="text-sm font-semibold text-gray-300 mb-3">Images</h3>
+            <h3 className="text-sm font-semibold text-gray-300 mb-3">{t('imagesSection')}</h3>
             <div className="space-y-4">
               <ImageInput
-                label="Thumbnail (top-right corner)"
+                label={t('thumbnail')}
                 value={form.embedThumbnailUrl}
                 onChange={(v) => set('embedThumbnailUrl', v)}
               />
               <ImageInput
-                label="Main Image (large, below description)"
+                label={t('mainImage')}
                 value={form.embedImageUrl}
                 onChange={(v) => set('embedImageUrl', v)}
               />
@@ -570,20 +574,20 @@ export default function EmbedsPage() {
           </div>
 
           <div className="border-t border-[var(--border-subtle)] pt-4">
-            <h3 className="text-sm font-semibold text-gray-300 mb-3">Footer</h3>
+            <h3 className="text-sm font-semibold text-gray-300 mb-3">{t('footerSection')}</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-3">
               <div>
-                <label className="label">Footer Text</label>
+                <label className="label">{t('footerText')}</label>
                 <input
                   className="input"
                   value={form.embedFooterText}
                   onChange={(e) => set('embedFooterText', e.target.value)}
-                  placeholder="Footer text"
+                  placeholder={t('footerTextPlaceholder')}
                   maxLength={2048}
                 />
               </div>
               <ImageInput
-                label="Footer Icon"
+                label={t('footerIcon')}
                 value={form.embedFooterIconUrl}
                 onChange={(v) => set('embedFooterIconUrl', v)}
               />
@@ -595,19 +599,19 @@ export default function EmbedsPage() {
                 checked={form.embedTimestamp}
                 onChange={(e) => set('embedTimestamp', e.target.checked)}
               />
-              <span className="text-sm text-gray-300">Include current timestamp</span>
+              <span className="text-sm text-gray-300">{t('includeTimestamp')}</span>
             </label>
           </div>
 
           <div className="border-t border-[var(--border-subtle)] pt-4">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-semibold text-gray-300">
-                Fields ({form.embedFields.length}/25)
+                {t('fieldsCount', { count: form.embedFields.length })}
               </h3>
               {form.embedFields.length < 25 && (
                 <button type="button" onClick={addField} className="btn-secondary text-xs px-2.5 py-1.5 gap-1">
                   <Plus className="w-3.5 h-3.5" />
-                  Add Field
+                  {t('addField')}
                 </button>
               )}
             </div>
@@ -621,14 +625,14 @@ export default function EmbedsPage() {
                           className="input text-xs"
                           value={field.name}
                           onChange={(e) => updateField(i, { name: e.target.value })}
-                          placeholder="Field name"
+                          placeholder={t('fieldNamePlaceholder')}
                           maxLength={256}
                         />
                         <input
                           className="input text-xs"
                           value={field.value}
                           onChange={(e) => updateField(i, { value: e.target.value })}
-                          placeholder="Field value"
+                          placeholder={t('fieldValuePlaceholder')}
                           maxLength={1024}
                         />
                       </div>
@@ -647,7 +651,7 @@ export default function EmbedsPage() {
                         checked={field.inline}
                         onChange={(e) => updateField(i, { inline: e.target.checked })}
                       />
-                      <span className="text-xs text-gray-400">Inline</span>
+                      <span className="text-xs text-gray-400">{t('inline')}</span>
                     </label>
                   </div>
                 ))}
@@ -662,7 +666,7 @@ export default function EmbedsPage() {
               disabled={isSaving}
               className="btn-secondary"
             >
-              {isSaving ? 'Saving…' : editingId ? 'Save Changes' : 'Save Embed'}
+              {isSaving ? t('saving') : editingId ? t('saveChanges') : t('saveEmbed')}
             </button>
             <button
               type="button"
@@ -671,11 +675,11 @@ export default function EmbedsPage() {
               className="btn-primary gap-2"
             >
               <Send className="w-4 h-4" />
-              {sendMutation.isPending ? 'Publishing…' : 'Save & Publish'}
+              {sendMutation.isPending ? t('publishing') : t('savePublish')}
             </button>
             {editingId && (
               <button type="button" onClick={resetForm} className="btn text-gray-400 hover:text-gray-200">
-                Discard
+                {t('discard')}
               </button>
             )}
           </div>
@@ -684,19 +688,19 @@ export default function EmbedsPage() {
         <div className="space-y-3">
           <div className="card">
             <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-3">
-              Live Preview
+              {t('livePreview')}
             </h2>
             <DiscordPreview form={form} />
           </div>
           <p className="text-xs text-gray-600 text-center px-2">
-            Preview is approximate. Final appearance may vary slightly in Discord.
+            {t('previewNote')}
           </p>
         </div>
       </div>
 
       <div className="card p-0 overflow-hidden">
         <div className="px-4 py-3 border-b border-[var(--border-subtle)]">
-          <h2 className="text-lg font-semibold text-white">Saved Embeds</h2>
+          <h2 className="text-lg font-semibold text-white">{t('savedEmbeds')}</h2>
         </div>
 
         {isLoading ? (
@@ -708,7 +712,7 @@ export default function EmbedsPage() {
         ) : embeds.length === 0 ? (
           <div className="p-8 text-center text-gray-500">
             <Layout className="w-8 h-8 mx-auto mb-2 opacity-40" />
-            <p className="text-sm">No embeds saved yet. Create one above.</p>
+            <p className="text-sm">{t('noEmbeds')}</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -716,16 +720,16 @@ export default function EmbedsPage() {
               <thead className="bg-[var(--bg-base)]">
                 <tr>
                   <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">
-                    Name
+                    {t('colName')}
                   </th>
                   <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">
-                    Preview
+                    {t('colPreview')}
                   </th>
                   <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">
-                    Created
+                    {t('colCreated')}
                   </th>
                   <th className="px-4 py-3 text-right text-xs font-medium text-gray-400 uppercase">
-                    Actions
+                    {t('colActions')}
                   </th>
                 </tr>
               </thead>
@@ -748,7 +752,7 @@ export default function EmbedsPage() {
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-400 max-w-[240px] truncate">
                       {embed.embedTitle || embed.embedDescription || embed.messageContent || (
-                        <span className="italic text-gray-600">no content</span>
+                        <span className="italic text-gray-600">{t('noContent')}</span>
                       )}
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">
@@ -759,7 +763,7 @@ export default function EmbedsPage() {
                         <button
                           onClick={() => loadEmbed(embed)}
                           className="text-gray-400 hover:text-white transition-colors"
-                          title="Edit embed"
+                          title={t('editEmbedTitle')}
                         >
                           <Edit2 className="w-4 h-4" />
                         </button>
@@ -778,7 +782,7 @@ export default function EmbedsPage() {
                           }}
                           disabled={deleteMutation.isPending}
                           className="text-gray-500 hover:text-red-400 transition-colors"
-                          title="Delete embed"
+                          title={t('deleteEmbed')}
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -807,6 +811,7 @@ function SendRowButton({
   onSend: (channelId: string) => void;
   isSending: boolean;
 }) {
+  const t = useTranslations('embedsPage');
   const [open, setOpen] = useState(false);
   const [channelId, setChannelId] = useState('');
 
@@ -815,7 +820,7 @@ function SendRowButton({
       <button
         onClick={() => setOpen(true)}
         className="text-gray-400 hover:text-discord-blurple transition-colors"
-        title="Send to channel"
+        title={t('sendToChannel')}
       >
         <Send className="w-4 h-4" />
       </button>
@@ -830,7 +835,7 @@ function SendRowButton({
         onChange={(e) => setChannelId(e.target.value)}
         autoFocus
       >
-        <option value="">Pick channel…</option>
+        <option value="">{t('pickChannel')}</option>
         {textChannels.map((ch) => (
           <option key={ch.id} value={ch.id}>
             #{ch.name}
@@ -847,7 +852,7 @@ function SendRowButton({
         disabled={!channelId || isSending}
         className="btn-primary text-xs px-2 py-1"
       >
-        Send
+        {t('send')}
       </button>
       <button
         onClick={() => { setOpen(false); setChannelId(''); }}
