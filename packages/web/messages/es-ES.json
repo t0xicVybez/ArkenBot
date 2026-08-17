@@ -1907,7 +1907,8 @@
     "staffPortal": "Portal del equipo",
     "owner": "Propietario",
     "staff": "Equipo",
-    "logout": "Cerrar sesión"
+    "logout": "Cerrar sesión",
+    "openMenu": "Abrir menú"
   },
   "topbar": {
     "staffBadge": "EQUIPO",

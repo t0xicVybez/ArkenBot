@@ -1907,7 +1907,8 @@
     "staffPortal": "Portal personelu",
     "owner": "Właściciel",
     "staff": "Personel",
-    "logout": "Wyloguj"
+    "logout": "Wyloguj",
+    "openMenu": "Otwórz menu"
   },
   "topbar": {
     "staffBadge": "PERSONEL",

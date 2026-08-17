@@ -1907,7 +1907,8 @@
     "staffPortal": "Team-Portal",
     "owner": "Inhaber",
     "staff": "Team",
-    "logout": "Abmelden"
+    "logout": "Abmelden",
+    "openMenu": "Menü öffnen"
   },
   "topbar": {
     "staffBadge": "TEAM",

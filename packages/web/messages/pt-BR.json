@@ -1907,7 +1907,8 @@
     "staffPortal": "Portal da equipe",
     "owner": "Dono",
     "staff": "Equipe",
-    "logout": "Sair"
+    "logout": "Sair",
+    "openMenu": "Abrir menu"
   },
   "topbar": {
     "staffBadge": "EQUIPE",

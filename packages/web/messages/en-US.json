@@ -1907,7 +1907,8 @@
     "staffPortal": "Staff Portal",
     "owner": "Owner",
     "staff": "Staff",
-    "logout": "Logout"
+    "logout": "Logout",
+    "openMenu": "Open menu"
   },
   "topbar": {
     "staffBadge": "STAFF",

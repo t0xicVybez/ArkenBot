@@ -1907,7 +1907,8 @@
     "staffPortal": "スタッフポータル",
     "owner": "オーナー",
     "staff": "スタッフ",
-    "logout": "ログアウト"
+    "logout": "ログアウト",
+    "openMenu": "メニューを開く"
   },
   "topbar": {
     "staffBadge": "スタッフ",

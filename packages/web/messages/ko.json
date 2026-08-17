@@ -1907,7 +1907,8 @@
     "staffPortal": "스태프 포털",
     "owner": "소유자",
     "staff": "스태프",
-    "logout": "로그아웃"
+    "logout": "로그아웃",
+    "openMenu": "메뉴 열기"
   },
   "topbar": {
     "staffBadge": "스태프",
