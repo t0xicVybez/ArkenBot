@@ -6,7 +6,7 @@
   "main": "./dist/index.js",
   "scripts": {
     "dev": "tsx watch --env-file ../../.env src/index.ts",
-    "build": "tsc && rm -rf dist/i18n/locales && cp -r src/i18n/locales dist/i18n/locales",
+    "build": "tsc && rm -rf dist/i18n/locales && cp -r src/i18n/locales dist/i18n/locales && cp src/i18n/command-meta.json dist/i18n/command-meta.json",
     "start": "node --env-file ../../.env dist/index.js",
     "start:sharded": "node --env-file ../../.env dist/shard.js",
     "typecheck": "tsc --noEmit",
