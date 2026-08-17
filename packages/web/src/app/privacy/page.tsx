@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import type { ReactNode } from 'react';
+import { getTranslations } from 'next-intl/server';
 import { LandingNav } from '@/components/LandingNav';
 import { Footer } from '@/components/Footer';
 
@@ -20,7 +22,7 @@ const SITE = {
 const LAST_UPDATED = 'July 12, 2026';
 const CONTACT_EMAIL = 'support@arkenbot.app';
 
-function Section({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
+function Section({ id, title, children }: { id: string; title: string; children: ReactNode }) {
   return (
     <section id={id} className="mb-10">
       <h2 className="text-lg font-semibold text-white mb-3 pb-2 border-b border-[var(--border-subtle)]">{title}</h2>
@@ -29,211 +31,143 @@ function Section({ id, title, children }: { id: string; title: string; children:
   );
 }
 
-export default function PrivacyPage() {
+/** Renderer helpers for next-intl rich text. */
+const extLink = (href: string) => (chunks: ReactNode) => (
+  <a href={href} target="_blank" rel="noopener noreferrer" className="text-discord-blurple hover:underline">{chunks}</a>
+);
+const intLink = (href: string) => (chunks: ReactNode) => (
+  <a href={href} className="text-discord-blurple hover:underline">{chunks}</a>
+);
+/** Inline formatting tags shared across every rich paragraph. */
+const fmt = {
+  b: (chunks: ReactNode) => <span className="text-white font-medium">{chunks}</span>,
+  w: (chunks: ReactNode) => <span className="text-white">{chunks}</span>,
+  strong: (chunks: ReactNode) => <strong>{chunks}</strong>,
+  code: (chunks: ReactNode) => <code className="text-xs bg-white/10 px-1 py-0.5 rounded">{chunks}</code>,
+};
+
+export default async function PrivacyPage() {
+  const t = await getTranslations('privacyPage');
+
   return (
     <div className="min-h-screen bg-[var(--bg-base)] text-[var(--text-primary)]">
       <LandingNav docsUrl={SITE.docsUrl} supportUrl={SITE.supportUrl} inviteUrl={SITE.inviteUrl} />
 
       <main className="max-w-3xl mx-auto px-6 py-16">
         <div className="mb-10">
-          <h1 className="text-3xl font-bold text-white mb-2">Privacy Policy</h1>
-          <p className="text-sm text-[var(--text-muted)]">Last updated: {LAST_UPDATED}</p>
+          <h1 className="text-3xl font-bold text-white mb-2">{t('title')}</h1>
+          <p className="text-sm text-[var(--text-muted)]">{t('lastUpdated', { date: LAST_UPDATED })}</p>
         </div>
 
         <p className="text-sm text-[var(--text-secondary)] leading-relaxed mb-10">
-          This Privacy Policy describes how Arken Bot (&ldquo;we&rdquo;, &ldquo;our&rdquo;, or &ldquo;us&rdquo;) collects, uses, and
-          protects information when you use our Discord bot and web dashboard at{' '}
-          <a href="https://arkenbot.app" className="text-discord-blurple hover:underline">arkenbot.app</a>.
-          By using Arken Bot you agree to the practices described here.
+          {t.rich('intro', { ...fmt, site: extLink('https://arkenbot.app') })}
         </p>
 
-        <Section id="data-collected" title="1. Information We Collect">
-          <p>We collect only the minimum data needed to operate the bot:</p>
+        <Section id="data-collected" title={t('s1Title')}>
+          <p>{t('s1Intro')}</p>
           <ul className="list-disc list-inside space-y-1.5 pl-2">
-            <li><span className="text-white font-medium">Discord account data</span> — your Discord user ID, username, and avatar, obtained via Discord OAuth when you log in to the dashboard.</li>
-            <li><span className="text-white font-medium">Guild (server) data</span> — server IDs, channel IDs, role IDs, and configuration settings entered by server administrators.</li>
-            <li><span className="text-white font-medium">Message metadata</span> — message IDs and timestamps used for features such as starboard, scheduled messages, and moderation logs. We do not store message content.</li>
-            <li><span className="text-white font-medium">Moderation records</span> — warnings, bans, kicks, and case notes created by server moderators.</li>
-            <li><span className="text-white font-medium">XP and leveling data</span> — per-user XP totals and level history within each server.</li>
+            <li>{t.rich('s1Item1', fmt)}</li>
+            <li>{t.rich('s1Item2', fmt)}</li>
+            <li>{t.rich('s1Item3', fmt)}</li>
+            <li>{t.rich('s1Item4', fmt)}</li>
+            <li>{t.rich('s1Item5', fmt)}</li>
           </ul>
-          <p>We do not collect payment information, email addresses (unless voluntarily provided for support), or any data from users who have not interacted with the bot in a server where it is active.</p>
+          <p>{t('s1Outro')}</p>
         </Section>
 
-        <Section id="cookies" title="2. Cookies and Local Storage">
-          <p>When you use the Arken Bot web dashboard, your browser stores data using the mechanisms below. We do not use advertising cookies, tracking pixels, or third-party analytics services.</p>
+        <Section id="cookies" title={t('s2Title')}>
+          <p>{t('s2Intro')}</p>
           <ul className="list-disc list-inside space-y-1.5 pl-2">
-            <li>
-              <span className="text-white font-medium">Authentication tokens (localStorage)</span> — after you log in via Discord OAuth, your session access token and refresh token are stored in your browser&apos;s <code className="text-xs bg-white/10 px-1 py-0.5 rounded">localStorage</code>. These are used exclusively to authenticate your requests to the Arken Bot API and are never shared with third parties.
-            </li>
-            <li>
-              <span className="text-white font-medium">UI preferences (localStorage)</span> — settings such as which sidebar sections are collapsed are stored locally in your browser under the key <code className="text-xs bg-white/10 px-1 py-0.5 rounded">sidebar_collapsed</code>. This data is never transmitted to our servers.
-            </li>
-            <li>
-              <span className="text-white font-medium">Session cookies</span> — your browser may store session-related cookies as part of standard HTTP communication with our API. We do not set advertising or tracking cookies.
-            </li>
+            <li>{t.rich('s2Item1', fmt)}</li>
+            <li>{t.rich('s2Item2', fmt)}</li>
+            <li>{t.rich('s2Item3', fmt)}</li>
           </ul>
-          <p>We do not use device fingerprinting, cross-site tracking, or any third-party analytics or advertising scripts. We do not load third-party tracking pixels or advertising networks. Web fonts are self-hosted and served from our own infrastructure; your browser does not make requests to external font CDNs.</p>
+          <p>{t('s2Outro')}</p>
         </Section>
 
-        <Section id="youtube" title="3. YouTube Data">
-          <p>
-            Arken Bot uses the{' '}
-            <a href="https://developers.google.com/youtube/v3" target="_blank" rel="noopener noreferrer" className="text-discord-blurple hover:underline">
-              YouTube Data API v3
-            </a>{' '}
-            to power our YouTube live stream notification feature. Our use of YouTube data is governed by the{' '}
-            <a href="https://www.youtube.com/t/terms" target="_blank" rel="noopener noreferrer" className="text-discord-blurple hover:underline">
-              YouTube Terms of Service
-            </a>{' '}
-            and{' '}
-            <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-discord-blurple hover:underline">
-              Google&apos;s Privacy Policy
-            </a>.
-          </p>
-          <p><span className="text-white font-medium">What we access:</span> We request only public video metadata — specifically video title, live broadcast status (<code className="text-xs bg-white/10 px-1 py-0.5 rounded">liveBroadcastContent</code>), and thumbnail URL — using the <code className="text-xs bg-white/10 px-1 py-0.5 rounded">snippet</code> and <code className="text-xs bg-white/10 px-1 py-0.5 rounded">liveStreamingDetails</code> resource parts. We do <strong>not</strong> request the <code className="text-xs bg-white/10 px-1 py-0.5 rounded">statistics</code> resource part and do not store, display, or process view counts, subscriber counts, like counts, or any other YouTube statistics. We do not access private videos, upload videos, manage YouTube accounts, or read any user&apos;s YouTube account data.</p>
-          <p><span className="text-white font-medium">No OAuth:</span> We do not request YouTube OAuth scopes. All YouTube API calls are server-side requests using an API key against publicly available video data.</p>
-          <p><span className="text-white font-medium">Data refresh cadence:</span> Our bot polls the YouTube Data API v3 every 5 minutes per configured alert. Each poll fetches fresh data from YouTube&apos;s servers; we do not cache API responses between polls. When a live stream ends, the stored video ID is cleared within the next poll cycle (within 5 minutes). As an additional safeguard, any stored YouTube video ID that has not been cleared within 30 days is automatically purged from our database.</p>
-          <p><span className="text-white font-medium">Data stored:</span> We store only a single YouTube video ID per configured alert, used solely to prevent sending duplicate notifications for the same livestream. This is a plain identifier string; it is not a statistic. It is stored until the stream ends (typically hours), deleted when the alert is removed by a server administrator, deleted when the bot is removed from a server, and automatically purged after 30 days in all cases.</p>
-          <p><span className="text-white font-medium">No redistribution:</span> YouTube data is used only to trigger a Discord notification embed containing the video title, thumbnail, and link. We do not store, cache beyond the current poll cycle, or redistribute YouTube media or content.</p>
-          <p>
-            You can revoke Arken Bot&apos;s access to any server configuration at any time by removing the bot from your Discord server or deleting your alert configurations via the dashboard. To request deletion of all data associated with your server, contact us at{' '}
-            <a href={`mailto:${CONTACT_EMAIL}`} className="text-discord-blurple hover:underline">{CONTACT_EMAIL}</a>.
-          </p>
+        <Section id="youtube" title={t('s3Title')}>
+          <p>{t.rich('s3p1', { ...fmt, api: extLink('https://developers.google.com/youtube/v3'), tos: extLink('https://www.youtube.com/t/terms'), privacy: extLink('https://policies.google.com/privacy') })}</p>
+          <p>{t.rich('s3p2', fmt)}</p>
+          <p>{t.rich('s3p3', fmt)}</p>
+          <p>{t.rich('s3p4', fmt)}</p>
+          <p>{t.rich('s3p5', fmt)}</p>
+          <p>{t.rich('s3p6', fmt)}</p>
+          <p>{t.rich('s3p7', { ...fmt, email: extLink(`mailto:${CONTACT_EMAIL}`) })}</p>
         </Section>
 
-        <Section id="reddit" title="4. Reddit Data">
-          <p>
-            Arken Bot uses the{' '}
-            <a href="https://www.reddit.com/dev/api/" target="_blank" rel="noopener noreferrer" className="text-discord-blurple hover:underline">
-              Reddit Data API
-            </a>{' '}
-            to power our Reddit feed notification feature. Our use of Reddit data is governed by the{' '}
-            <a href="https://www.redditinc.com/policies/data-api-terms" target="_blank" rel="noopener noreferrer" className="text-discord-blurple hover:underline">
-              Reddit Data API Terms
-            </a>{' '}
-            and{' '}
-            <a href="https://www.reddit.com/policies/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-discord-blurple hover:underline">
-              Reddit&apos;s Privacy Policy
-            </a>.
-          </p>
-          <p><span className="text-white font-medium">What we access:</span> We fetch only public post metadata — post ID, title, permalink, and author username — from the newest posts of subreddits that server administrators choose to follow. We do not access private communities, direct messages, votes, or any Reddit account data.</p>
-          <p><span className="text-white font-medium">No user accounts:</span> All Reddit API calls use application-only OAuth credentials. We never request access to any user&apos;s Reddit account, and no Reddit login is ever involved.</p>
-          <p><span className="text-white font-medium">Data refresh cadence:</span> Feeds are polled every 5 minutes. Each poll fetches fresh data directly from Reddit; responses are not cached between polls.</p>
-          <p><span className="text-white font-medium">Data stored:</span> We store only the ID of the most recently notified post per configured feed, used solely to prevent duplicate notifications. It is deleted when a server administrator removes the feed or the bot is removed from the server.</p>
-          <p><span className="text-white font-medium">No redistribution:</span> Reddit data is used only to trigger a Discord notification containing the post title, a link back to Reddit, and the author&apos;s public username. We do not store, archive, or redistribute Reddit content.</p>
+        <Section id="reddit" title={t('s4Title')}>
+          <p>{t.rich('s4p1', { ...fmt, api: extLink('https://www.reddit.com/dev/api/'), terms: extLink('https://www.redditinc.com/policies/data-api-terms'), privacy: extLink('https://www.reddit.com/policies/privacy-policy') })}</p>
+          <p>{t.rich('s4p2', fmt)}</p>
+          <p>{t.rich('s4p3', fmt)}</p>
+          <p>{t.rich('s4p4', fmt)}</p>
+          <p>{t.rich('s4p5', fmt)}</p>
+          <p>{t.rich('s4p6', fmt)}</p>
         </Section>
 
-        <Section id="monday" title="5. Monday.com Data">
-          <p>
-            Arken Bot can receive webhook notifications from{' '}
-            <a href="https://monday.com" target="_blank" rel="noopener noreferrer" className="text-discord-blurple hover:underline">monday.com</a>{' '}
-            when server administrators connect a board. Use of this feature is subject to the{' '}
-            <a href="https://monday.com/l/legal/tos/" target="_blank" rel="noopener noreferrer" className="text-discord-blurple hover:underline">monday.com Terms of Service</a>{' '}
-            and{' '}
-            <a href="https://monday.com/l/privacy/privacy-policy/" target="_blank" rel="noopener noreferrer" className="text-discord-blurple hover:underline">Privacy Policy</a>.
-          </p>
-          <p><span className="text-white font-medium">What we receive:</span> Board event payloads that monday.com pushes to a unique webhook URL configured by a server administrator — item names, board and group identifiers, column changes, and the numeric ID of the user who made the change. Payloads are processed transiently to build a Discord notification and are <strong>not stored</strong>.</p>
-          <p><span className="text-white font-medium">Optional API token:</span> Administrators may provide a monday.com API token to display user names instead of numeric IDs. The token is stored server-side, is never exposed through our API or dashboard, is used exclusively to look up display names, and is deleted when the administrator removes it or deletes the alert.</p>
-          <p><span className="text-white font-medium">Data stored:</span> Alert configuration only — the Discord channel, an optional board label, the event filter, and the optional API token. Resolved display names are cached in memory for up to one hour and never written to disk.</p>
+        <Section id="monday" title={t('s5Title')}>
+          <p>{t.rich('s5p1', { ...fmt, monday: extLink('https://monday.com'), tos: extLink('https://monday.com/l/legal/tos/'), privacy: extLink('https://monday.com/l/privacy/privacy-policy/') })}</p>
+          <p>{t.rich('s5p2', fmt)}</p>
+          <p>{t.rich('s5p3', fmt)}</p>
+          <p>{t.rich('s5p4', fmt)}</p>
         </Section>
 
-        <Section id="trello" title="6. Trello Data">
-          <p>
-            Arken Bot can receive webhook notifications from{' '}
-            <a href="https://trello.com" target="_blank" rel="noopener noreferrer" className="text-discord-blurple hover:underline">Trello</a>{' '}
-            when server administrators connect a board. Use of this feature is subject to the{' '}
-            <a href="https://www.atlassian.com/legal/cloud-terms-of-service" target="_blank" rel="noopener noreferrer" className="text-discord-blurple hover:underline">Atlassian Cloud Terms of Service</a>{' '}
-            and the{' '}
-            <a href="https://www.atlassian.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-discord-blurple hover:underline">Atlassian Privacy Policy</a>.
-          </p>
-          <p><span className="text-white font-medium">What we receive:</span> Board action payloads that Trello pushes to a unique webhook URL — card and list names, comments, attachments metadata, and the display name of the member who performed the action. Payloads are processed transiently to build a Discord notification and are <strong>not stored</strong>.</p>
-          <p><span className="text-white font-medium">API credentials:</span> The Trello API key and token an administrator provides during setup are used <strong>once</strong> to register the webhook with Trello and to read the board&apos;s name. They are never written to our database and never stored.</p>
-          <p><span className="text-white font-medium">Data stored:</span> Alert configuration only — the Discord channel, the board ID and name, and the event filter. When an alert is deleted, the corresponding Trello webhook is deactivated automatically.</p>
+        <Section id="trello" title={t('s6Title')}>
+          <p>{t.rich('s6p1', { ...fmt, trello: extLink('https://trello.com'), tos: extLink('https://www.atlassian.com/legal/cloud-terms-of-service'), privacy: extLink('https://www.atlassian.com/legal/privacy-policy') })}</p>
+          <p>{t.rich('s6p2', fmt)}</p>
+          <p>{t.rich('s6p3', fmt)}</p>
+          <p>{t.rich('s6p4', fmt)}</p>
         </Section>
 
-        <Section id="ai" title="7. AI Features">
-          <p>
-            Some optional Arken Bot features use a third-party AI provider,{' '}
-            <a href="https://groq.com" target="_blank" rel="noopener noreferrer" className="text-discord-blurple hover:underline">Groq</a>,
-            to process text. Groq&apos;s handling of the data it receives is governed by the{' '}
-            <a href="https://groq.com/privacy-policy/" target="_blank" rel="noopener noreferrer" className="text-discord-blurple hover:underline">Groq Privacy Policy</a>{' '}
-            and{' '}
-            <a href="https://groq.com/terms-of-use/" target="_blank" rel="noopener noreferrer" className="text-discord-blurple hover:underline">Terms of Use</a>.
-          </p>
-          <p><span className="text-white font-medium">Which features use AI:</span> the <code className="text-xs bg-white/10 px-1 py-0.5 rounded">/ask</code> and <code className="text-xs bg-white/10 px-1 py-0.5 rounded">/summarize</code> commands (when a member runs them), the AI triage button in the ticket system (when a staff member clicks it), and AI Moderation (only in servers where an administrator has explicitly enabled it — it is off by default).</p>
-          <p><span className="text-white font-medium">What is sent:</span> when one of these features runs, only the text needed for that request is sent to Groq to generate a response — the question you type (<code className="text-xs bg-white/10 px-1 py-0.5 rounded">/ask</code>), the recent messages in the channel (<code className="text-xs bg-white/10 px-1 py-0.5 rounded">/summarize</code>), the ticket&apos;s details and conversation (ticket triage), or the individual message being checked (AI Moderation). We do not send account identifiers, and <strong>no data is sent to any AI provider unless one of these features is actually used</strong>.</p>
-          <p><span className="text-white font-medium">Opt-in and control:</span> AI Moderation is disabled by default and runs only after a server administrator turns it on in <span className="text-white">Dashboard → Auto-Mod</span>. The assistant commands and ticket triage run only when a member or staff member chooses to use them.</p>
-          <p><span className="text-white font-medium">Storage and training:</span> we do not store the text sent to Groq or the AI&apos;s responses beyond delivering the result. An AI Moderation flag is recorded in your server&apos;s moderation log in the same way as any other Auto-Mod action. Per Groq&apos;s Terms of Use, data submitted through its API is not used to train its models.</p>
-          <p><span className="text-white font-medium">Availability:</span> AI features require an API key configured on the bot. Where none is set, these features are unavailable and no data is sent to any AI provider.</p>
+        <Section id="ai" title={t('s7Title')}>
+          <p>{t.rich('s7p1', { ...fmt, groq: extLink('https://groq.com'), privacy: extLink('https://groq.com/privacy-policy/'), terms: extLink('https://groq.com/terms-of-use/') })}</p>
+          <p>{t.rich('s7p2', fmt)}</p>
+          <p>{t.rich('s7p3', fmt)}</p>
+          <p>{t.rich('s7p4', fmt)}</p>
+          <p>{t.rich('s7p5', fmt)}</p>
+          <p>{t.rich('s7p6', fmt)}</p>
         </Section>
 
-        <Section id="how-we-use" title="8. How We Use Your Data">
+        <Section id="how-we-use" title={t('s8Title')}>
           <ul className="list-disc list-inside space-y-1.5 pl-2">
-            <li>To operate bot features configured by server administrators (moderation, leveling, alerts, etc.)</li>
-            <li>To display your server&apos;s dashboard and settings on the web interface</li>
-            <li>To send Discord notifications when configured triggers occur (stream alerts, birthdays, scheduled messages)</li>
-            <li>To maintain moderation records and audit logs within your server</li>
+            {(t.raw('s8list') as string[]).map((item) => <li key={item}>{item}</li>)}
           </ul>
-          <p>We do not sell, share, or license your data to third parties for advertising or marketing purposes.</p>
+          <p>{t('s8Outro')}</p>
         </Section>
 
-        <Section id="data-sharing" title="9. Data Sharing">
-          <p>We share data only with the following service providers necessary to operate the bot:</p>
+        <Section id="data-sharing" title={t('s9Title')}>
+          <p>{t('s9Intro')}</p>
           <ul className="list-disc list-inside space-y-1.5 pl-2">
-            <li><span className="text-white font-medium">Discord</span> — to operate the bot and authenticate dashboard users via OAuth.</li>
-            <li><span className="text-white font-medium">Google / YouTube</span> — public video metadata API calls for stream alert notifications. See <a href="#youtube" className="text-discord-blurple hover:underline">Section 3</a>.</li>
-            <li><span className="text-white font-medium">Reddit</span> — public post metadata API calls for feed notifications. See <a href="#reddit" className="text-discord-blurple hover:underline">Section 4</a>.</li>
-            <li><span className="text-white font-medium">Monday.com</span> — inbound board event webhooks and optional display-name lookups. See <a href="#monday" className="text-discord-blurple hover:underline">Section 5</a>.</li>
-            <li><span className="text-white font-medium">Trello / Atlassian</span> — inbound board action webhooks; credentials used once at setup. See <a href="#trello" className="text-discord-blurple hover:underline">Section 6</a>.</li>
-            <li><span className="text-white font-medium">Groq</span> — text processing for optional AI features (assistant commands, ticket triage, and opt-in AI moderation), only when those features are used. See <a href="#ai" className="text-discord-blurple hover:underline">Section 7</a>.</li>
-            <li><span className="text-white font-medium">Infrastructure providers</span> — hosting, database, and CDN providers bound by their own privacy policies and data processing agreements.</li>
+            <li>{t.rich('s9Item1', fmt)}</li>
+            <li>{t.rich('s9Item2', { ...fmt, sec: intLink('#youtube') })}</li>
+            <li>{t.rich('s9Item3', { ...fmt, sec: intLink('#reddit') })}</li>
+            <li>{t.rich('s9Item4', { ...fmt, sec: intLink('#monday') })}</li>
+            <li>{t.rich('s9Item5', { ...fmt, sec: intLink('#trello') })}</li>
+            <li>{t.rich('s9Item6', { ...fmt, sec: intLink('#ai') })}</li>
+            <li>{t.rich('s9Item7', fmt)}</li>
           </ul>
         </Section>
 
-        <Section id="retention" title="10. Data Retention and Deletion">
-          <p>
-            Server data is retained only for as long as the bot remains in your Discord server.
-          </p>
-          <p>
-            <span className="text-white font-medium">Automatic deletion on removal:</span> When Arken Bot is removed from a server, <strong>all</strong> data associated with that server is deleted automatically within 72 hours — configuration and settings, moderation records and warnings, XP and leveling data, birthdays, alert and feed configurations, integration settings, starboard and suggestion history, and analytics. No request is needed. The 72-hour window exists solely as an accidental-removal safety net: re-adding the bot within that window restores the server exactly as it was; after the window, deletion is permanent and the server starts with a clean slate if re-added.
-          </p>
-          <p>
-            To request deletion of data associated with your individual user account (for example, your data in servers you no longer share with the bot), contact us at{' '}
-            <a href={`mailto:${CONTACT_EMAIL}`} className="text-discord-blurple hover:underline">{CONTACT_EMAIL}</a>.
-            We will process deletion requests within 30 days.
-          </p>
-          <p>
-            YouTube-related data (last notified video IDs) is cleared within minutes of a stream ending, deleted when the associated alert is removed by a server administrator, and automatically purged after 30 days as a safeguard. See <a href="#youtube" className="text-discord-blurple hover:underline">Section 3</a> for details.
-          </p>
+        <Section id="retention" title={t('s10Title')}>
+          <p>{t('s10p1')}</p>
+          <p>{t.rich('s10p2', fmt)}</p>
+          <p>{t.rich('s10p3', { ...fmt, email: extLink(`mailto:${CONTACT_EMAIL}`) })}</p>
+          <p>{t.rich('s10p4', { ...fmt, sec: intLink('#youtube') })}</p>
         </Section>
 
-        <Section id="security" title="11. Security">
-          <p>
-            We use industry-standard security measures including encrypted connections (HTTPS/TLS), access-controlled databases, and server-side API key storage to protect your data. No internet transmission is 100% secure, and we cannot guarantee absolute security.
-          </p>
+        <Section id="security" title={t('s11Title')}>
+          <p>{t('s11p1')}</p>
         </Section>
 
-        <Section id="childrens" title="12. Children's Privacy">
-          <p>
-            Arken Bot is not directed at children under the age of 13. We do not knowingly collect personal information from children under 13. If you believe we have inadvertently collected such information, please contact us immediately.
-          </p>
+        <Section id="childrens" title={t('s12Title')}>
+          <p>{t('s12p1')}</p>
         </Section>
 
-        <Section id="changes" title="13. Changes to This Policy">
-          <p>
-            We may update this Privacy Policy from time to time. The &ldquo;Last updated&rdquo; date at the top of this page reflects when the most recent changes were made. Continued use of Arken Bot after changes are posted constitutes acceptance of the updated policy.
-          </p>
+        <Section id="changes" title={t('s13Title')}>
+          <p>{t('s13p1')}</p>
         </Section>
 
-        <Section id="contact" title="14. Contact">
-          <p>
-            If you have questions about this Privacy Policy or want to request data deletion, contact us at{' '}
-            <a href={`mailto:${CONTACT_EMAIL}`} className="text-discord-blurple hover:underline">{CONTACT_EMAIL}</a>{' '}
-            or join our{' '}
-            <a href={SITE.supportUrl} target="_blank" rel="noopener noreferrer" className="text-discord-blurple hover:underline">
-              support server
-            </a>.
-          </p>
+        <Section id="contact" title={t('s14Title')}>
+          <p>{t.rich('s14p1', { ...fmt, email: extLink(`mailto:${CONTACT_EMAIL}`), support: extLink(SITE.supportUrl) })}</p>
         </Section>
       </main>
 
