@@ -12,6 +12,7 @@ import { ExternalLink, Menu, X } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/lib/auth';
+import { LanguageMenu } from '@/components/LanguageMenu';
 
 interface LandingNavProps {
   docsUrl: string;
@@ -155,6 +156,7 @@ export function LandingNav({ docsUrl, supportUrl, inviteUrl }: LandingNavProps) 
         </div>
 
         <div className="hidden md:flex items-center gap-2">
+          <LanguageMenu />
           {loggedIn ? (
             <Link href="/dashboard" className="btn-secondary text-sm py-1.5 px-4">{t('dashboard')}</Link>
           ) : (
@@ -223,7 +225,8 @@ export function LandingNav({ docsUrl, supportUrl, inviteUrl }: LandingNavProps) 
           >
             {t('support')}
           </a>
-          <div className="pt-2 border-t border-[var(--border-subtle)] flex gap-2">
+          <div className="pt-2 border-t border-[var(--border-subtle)] flex items-center gap-2">
+            <LanguageMenu />
             {loggedIn ? (
               <Link href="/dashboard" onClick={() => setMobileOpen(false)} className="btn-secondary text-sm flex-1 justify-center">
                 {t('dashboard')}
