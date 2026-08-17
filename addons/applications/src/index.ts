@@ -4,8 +4,10 @@ import type { AutocompleteInteraction, Interaction } from 'discord.js';
 import applyCommand from './commands/apply.js';
 import appSetupCommand from './commands/app-setup.js';
 import { interactionHandler } from './events/interaction.js';
+import { locales } from './locales.js';
 
 export default defineAddon({
+  locales,
   manifest: {
     name: 'applications',
     displayName: 'Application System',
