@@ -27,7 +27,8 @@ const command: AddonCommandDefinition = {
     const form = forms.find((f) => f.id === formId && f.enabled);
 
     if (!form) {
-      await interaction.reply({ content: 'That application form was not found or is not currently open.', flags: MessageFlags.Ephemeral });
+      const loc = await ctx.resolveLocale(interaction);
+      await interaction.reply({ content: ctx.t('notFoundOrClosed', loc), flags: MessageFlags.Ephemeral });
       return;
     }
 

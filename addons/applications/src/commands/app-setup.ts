@@ -55,6 +55,8 @@ const command: AddonCommandDefinition = {
 
   async execute(interaction: ChatInputCommandInteraction | ContextMenuCommandInteraction, ctx: AddonContext): Promise<void> {
     if (!interaction.isChatInputCommand()) return;
+    const loc = await ctx.resolveLocale(interaction);
+    const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
     const sub = interaction.options.getSubcommand();
     const guildId = interaction.guildId!;
 
@@ -81,12 +83,12 @@ const command: AddonCommandDefinition = {
         embeds: [
           new EmbedBuilder()
             .setColor(0x57f287)
-            .setTitle('Form Created')
-            .setDescription(`**${name}** created. Use \`/app-setup add-field\` to add questions.`)
+            .setTitle(t('formCreatedTitle'))
+            .setDescription(t('formCreatedDesc', { name }))
             .addFields(
-              { name: 'Form ID', value: form.id, inline: true },
-              { name: 'Review Channel', value: `<#${reviewChannel.id}>`, inline: true },
-              ...(acceptRole ? [{ name: 'Accept Role', value: `<@&${acceptRole.id}>`, inline: true }] : []),
+              { name: t('fieldFormId'), value: form.id, inline: true },
+              { name: t('fieldReviewChannel'), value: `<#${reviewChannel.id}>`, inline: true },
+              ...(acceptRole ? [{ name: t('fieldAcceptRole'), value: `<@&${acceptRole.id}>`, inline: true }] : []),
             ),
         ],
         flags: MessageFlags.Ephemeral,
@@ -103,11 +105,11 @@ const command: AddonCommandDefinition = {
       const forms = await getForms(ctx.storage, guildId);
       const form = forms.find((f) => f.id === formId);
       if (!form) {
-        await interaction.reply({ content: 'Form not found.', flags: MessageFlags.Ephemeral });
+        await interaction.reply({ content: t('formNotFound2'), flags: MessageFlags.Ephemeral });
         return;
       }
       if (form.fields.length >= 5) {
-        await interaction.reply({ content: 'Discord modals support a maximum of 5 fields per form.', flags: MessageFlags.Ephemeral });
+        await interaction.reply({ content: t('maxFields'), flags: MessageFlags.Ephemeral });
         return;
       }
       form.fields.push({ id: generateId(), label, style, required, placeholder });
@@ -116,8 +118,8 @@ const command: AddonCommandDefinition = {
         embeds: [
           new EmbedBuilder()
             .setColor(0x57f287)
-            .setTitle('Field Added')
-            .setDescription(`Added **${label}** to **${form.name}** (${form.fields.length}/5 fields).`),
+            .setTitle(t('fieldAddedTitle'))
+            .setDescription(t('fieldAddedDesc', { label, form: form.name, count: form.fields.length })),
         ],
         flags: MessageFlags.Ephemeral,
       });
@@ -126,17 +128,17 @@ const command: AddonCommandDefinition = {
     else if (sub === 'list') {
       const forms = await getForms(ctx.storage, guildId);
       if (forms.length === 0) {
-        await interaction.reply({ content: 'No forms configured. Use `/app-setup create` to create one.', flags: MessageFlags.Ephemeral });
+        await interaction.reply({ content: t('noForms'), flags: MessageFlags.Ephemeral });
         return;
       }
       await interaction.reply({
         embeds: [
           new EmbedBuilder()
             .setColor(0x5865f2)
-            .setTitle('Application Forms')
+            .setTitle(t('formsListTitle'))
             .setDescription(
               forms.map((f) =>
-                `**${f.name}** \`${f.id}\` — ${f.enabled ? '✅ Open' : '❌ Closed'} — ${f.fields.length} field(s) — <#${f.reviewChannelId}>`
+                `**${f.name}** \`${f.id}\` — ${f.enabled ? t('listOpen') : t('listClosed')} — ${t('fieldsCount', { count: f.fields.length })} — <#${f.reviewChannelId}>`
               ).join('\n'),
             ),
         ],
@@ -149,11 +151,11 @@ const command: AddonCommandDefinition = {
       const forms = await getForms(ctx.storage, guildId);
       const form = forms.find((f) => f.id === formId);
       if (!form) {
-        await interaction.reply({ content: 'Form not found.', flags: MessageFlags.Ephemeral });
+        await interaction.reply({ content: t('formNotFound2'), flags: MessageFlags.Ephemeral });
         return;
       }
       await deleteForm(ctx.storage, guildId, formId);
-      await interaction.reply({ content: `Form **${form.name}** deleted.`, flags: MessageFlags.Ephemeral });
+      await interaction.reply({ content: t('formDeleted', { name: form.name }), flags: MessageFlags.Ephemeral });
     }
 
     else if (sub === 'toggle') {
@@ -162,13 +164,13 @@ const command: AddonCommandDefinition = {
       const forms = await getForms(ctx.storage, guildId);
       const form = forms.find((f) => f.id === formId);
       if (!form) {
-        await interaction.reply({ content: 'Form not found.', flags: MessageFlags.Ephemeral });
+        await interaction.reply({ content: t('formNotFound2'), flags: MessageFlags.Ephemeral });
         return;
       }
       form.enabled = enabled;
       await saveForm(ctx.storage, guildId, form);
       await interaction.reply({
-        content: `Form **${form.name}** is now ${enabled ? '✅ open' : '❌ closed'} for applications.`,
+        content: t('formToggled', { name: form.name, state: enabled ? t('toggleOpen') : t('toggleClosed') }),
         flags: MessageFlags.Ephemeral,
       });
     }

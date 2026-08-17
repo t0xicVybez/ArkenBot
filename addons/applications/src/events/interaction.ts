@@ -32,11 +32,15 @@ export const interactionHandler = {
 
     // ─── Modal: /apply submission ─────────────────────────────────────────────
     if (interaction.isModalSubmit() && interaction.customId.startsWith('app:submit:')) {
+      const applicantLoc = await ctx.resolveLocale(interaction);
+      const guildLoc = await ctx.resolveLocale({ user: { id: '' }, guildId, guildLocale: interaction.guild?.preferredLocale });
+      const at = (k: string, v?: Record<string, string | number>) => ctx.t(k, applicantLoc, v);
+      const gt = (k: string, v?: Record<string, string | number>) => ctx.t(k, guildLoc, v);
       const formId = interaction.customId.split(':')[2];
       const forms = await getForms(ctx.storage, guildId);
       const form = forms.find((f) => f.id === formId);
       if (!form) {
-        await interaction.reply({ content: 'Application form not found.', flags: MessageFlags.Ephemeral });
+        await interaction.reply({ content: at('formNotFound'), flags: MessageFlags.Ephemeral });
         return;
       }
 
@@ -61,8 +65,8 @@ export const interactionHandler = {
       const reviewChannel = interaction.guild?.channels.cache.get(form.reviewChannelId);
       if (reviewChannel && 'send' in reviewChannel) {
         const msg = await (reviewChannel as TextChannel).send({
-          embeds: [buildReviewEmbed(form, submission)],
-          components: [buildReviewButtons(submission.id, form.id)],
+          embeds: [buildReviewEmbed(form, submission, gt)],
+          components: [buildReviewButtons(submission.id, form.id, gt)],
         }).catch(() => null);
         if (msg) {
           submission.reviewMessageId = msg.id;
@@ -75,9 +79,9 @@ export const interactionHandler = {
         embeds: [
           new EmbedBuilder()
             .setColor(0x57f287)
-            .setTitle('Application Submitted!')
-            .setDescription(`Your application for **${form.name}** has been submitted. Staff will review it shortly.`)
-            .setFooter({ text: `Application ID: ${submission.id}` }),
+            .setTitle(at('submittedTitle'))
+            .setDescription(at('submittedDesc', { name: form.name }))
+            .setFooter({ text: at('appId', { id: submission.id }) }),
         ],
         flags: MessageFlags.Ephemeral,
       });
@@ -94,17 +98,18 @@ export const interactionHandler = {
       const formId = parts[2];
       const submissionId = parts[3];
 
+      const reviewerLoc = await ctx.resolveLocale(interaction);
       const modal = new ModalBuilder()
         .setCustomId(`app:note:${action}:${formId}:${submissionId}`)
-        .setTitle(action === 'accept' ? 'Accept Application' : 'Deny Application')
+        .setTitle(ctx.t(action === 'accept' ? 'modalAcceptTitle' : 'modalDenyTitle', reviewerLoc))
         .addComponents(
           new ActionRowBuilder<TextInputBuilder>().addComponents(
             new TextInputBuilder()
               .setCustomId('note')
-              .setLabel('Review note (optional — sent to applicant)')
+              .setLabel(ctx.t('modalNoteLabel', reviewerLoc))
               .setStyle(TextInputStyle.Paragraph)
               .setRequired(false)
-              .setPlaceholder('Leave a note for the applicant…'),
+              .setPlaceholder(ctx.t('modalNotePlaceholder', reviewerLoc)),
           ),
         );
 
@@ -121,15 +126,21 @@ export const interactionHandler = {
 
       await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
+      const reviewerLoc = await ctx.resolveLocale(interaction);
+      const guildLoc = await ctx.resolveLocale({ user: { id: '' }, guildId, guildLocale: interaction.guild?.preferredLocale });
+      const rt = (k: string, v?: Record<string, string | number>) => ctx.t(k, reviewerLoc, v);
+      const gt = (k: string, v?: Record<string, string | number>) => ctx.t(k, guildLoc, v);
+
       const form = await getForm(ctx.storage, guildId, formId);
       const submission = await getSubmission(ctx.storage, guildId, submissionId);
 
       if (!form || !submission) {
-        await interaction.editReply({ content: 'Application or form not found.' });
+        await interaction.editReply({ content: rt('appOrFormNotFound') });
         return;
       }
       if (submission.status !== 'pending') {
-        await interaction.editReply({ content: `This application has already been **${submission.status}**.` });
+        const statusWord = submission.status === 'accepted' ? rt('statusAccepted') : submission.status === 'denied' ? rt('statusDenied') : rt('statusPendingWord');
+        await interaction.editReply({ content: rt('alreadyReviewed', { status: statusWord }) });
         return;
       }
 
@@ -149,8 +160,8 @@ export const interactionHandler = {
           const msg = await (ch as TextChannel).messages.fetch(submission.reviewMessageId).catch(() => null);
           if (msg) {
             await msg.edit({
-              embeds: [buildResultEmbed(submission, form, accepted, interaction.user.tag, note)],
-              components: [buildReviewButtons(submissionId, formId, true)],
+              embeds: [buildResultEmbed(submission, form, accepted, interaction.user.tag, gt, note)],
+              components: [buildReviewButtons(submissionId, formId, gt, true)],
             }).catch(() => null);
           }
         }
@@ -162,10 +173,13 @@ export const interactionHandler = {
         if (member) await member.roles.add(form.acceptRoleId).catch(() => null);
       }
 
-      // DM the applicant
+      // DM the applicant — in the applicant's own language.
+      const applicantLoc = await ctx.resolveLocale({ user: { id: submission.userId }, guildId, guildLocale: interaction.guild?.preferredLocale });
+      const dmt = (k: string, v?: Record<string, string | number>) => ctx.t(k, applicantLoc, v);
+      const noteSuffix = note ? `\n\n> ${note}` : '';
       const dmText = accepted
-        ? (form.acceptDmMessage ?? `Your application for **${form.name}** in **${interaction.guild?.name}** has been **accepted**! 🎉${note ? `\n\n> ${note}` : ''}`)
-        : (form.denyDmMessage ?? `Your application for **${form.name}** in **${interaction.guild?.name}** has been **denied**.${note ? `\n\n> ${note}` : ''}`);
+        ? (form.acceptDmMessage ?? `${dmt('dmAcceptDefault', { name: form.name, guild: interaction.guild?.name ?? '' })}${noteSuffix}`)
+        : (form.denyDmMessage ?? `${dmt('dmDenyDefault', { name: form.name, guild: interaction.guild?.name ?? '' })}${noteSuffix}`);
 
       const applicant = await interaction.client.users.fetch(submission.userId).catch(() => null);
       if (applicant) {
@@ -173,16 +187,16 @@ export const interactionHandler = {
           embeds: [
             new EmbedBuilder()
               .setColor(accepted ? 0x57f287 : 0xed4245)
-              .setTitle(accepted ? '✅ Application Accepted' : '❌ Application Denied')
+              .setTitle(dmt(accepted ? 'dmAcceptTitle' : 'dmDenyTitle'))
               .setDescription(dmText)
-              .setFooter({ text: `Application ID: ${submission.id}` })
+              .setFooter({ text: dmt('appId', { id: submission.id }) })
               .setTimestamp(),
           ],
         }).catch(() => null);
       }
 
       await interaction.editReply({
-        content: `Application **${accepted ? 'accepted' : 'denied'}** for <@${submission.userId}>.`,
+        content: rt('finalizeResult', { decision: rt(accepted ? 'decisionAccepted' : 'decisionDenied'), mention: `<@${submission.userId}>` }),
       });
     }
   },
