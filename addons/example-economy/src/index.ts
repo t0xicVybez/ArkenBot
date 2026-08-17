@@ -15,6 +15,7 @@ import { SlashCommandBuilder, EmbedBuilder, type ChatInputCommandInteraction } f
 import { defineAddon } from '@arkenbot/addon-sdk';
 import type { AddonContext } from '@arkenbot/addon-sdk';
 import { COLORS } from '@arkenbot/shared';
+import { locales } from './locales.js';
 
 // ─── Helper Functions ─────────────────────────────────────────────────────────
 
@@ -47,6 +48,7 @@ async function getCurrencyInfo(ctx: AddonContext, guildId: string): Promise<{ na
 // ─── Addon Definition ─────────────────────────────────────────────────────────
 
 export default defineAddon({
+  locales,
   manifest: {
     name: 'example-economy',
     displayName: 'Economy System',
@@ -75,13 +77,14 @@ export default defineAddon({
         await interaction.deferReply();
 
         const targetUser = interaction.options.getUser('user') ?? interaction.user;
+        const loc = await ctx.resolveLocale(interaction);
         const { name, emoji } = await getCurrencyInfo(ctx, interaction.guildId);
         const balance = await getBalance(ctx, interaction.guildId, targetUser.id);
 
         const embed = new EmbedBuilder()
           .setColor(COLORS.INFO)
-          .setTitle(`${emoji} ${name} Balance`)
-          .setDescription(`**${targetUser.tag}** has **${balance.toLocaleString()} ${name}** ${emoji}`)
+          .setTitle(ctx.t('balanceTitle', loc, { emoji, name }))
+          .setDescription(ctx.t('balanceDesc', loc, { tag: targetUser.tag, balance: balance.toLocaleString(), name, emoji }))
           .setThumbnail(targetUser.displayAvatarURL())
           .setTimestamp();
 
@@ -107,20 +110,21 @@ export default defineAddon({
         const opts = (interaction as ChatInputCommandInteraction).options;
         const targetUser = opts.getUser('user', true);
         const amount = opts.getInteger('amount', true);
+        const loc = await ctx.resolveLocale(interaction);
         const { name, emoji } = await getCurrencyInfo(ctx, interaction.guildId);
 
         if (targetUser.id === interaction.user.id) {
-          await interaction.editReply('You cannot pay yourself!');
+          await interaction.editReply(ctx.t('payYourself', loc));
           return;
         }
         if (targetUser.bot) {
-          await interaction.editReply('You cannot pay bots!');
+          await interaction.editReply(ctx.t('payBots', loc));
           return;
         }
 
         const senderBalance = await getBalance(ctx, interaction.guildId, interaction.user.id);
         if (senderBalance < amount) {
-          await interaction.editReply(`You don't have enough ${name}! You have **${senderBalance.toLocaleString()}** ${emoji}`);
+          await interaction.editReply(ctx.t('payInsufficient', loc, { name, balance: senderBalance.toLocaleString(), emoji }));
           return;
         }
 
@@ -129,13 +133,13 @@ export default defineAddon({
 
         const embed = new EmbedBuilder()
           .setColor(COLORS.SUCCESS)
-          .setTitle(`${emoji} Payment Successful`)
+          .setTitle(ctx.t('paySuccessTitle', loc, { emoji }))
           .setDescription(
-            `**${interaction.user.tag}** paid **${targetUser.tag}** ${amount.toLocaleString()} ${name} ${emoji}`
+            ctx.t('paySuccessDesc', loc, { sender: interaction.user.tag, receiver: targetUser.tag, amount: amount.toLocaleString(), name, emoji })
           )
           .addFields(
-            { name: `${interaction.user.tag}'s Balance`, value: `${(senderBalance - amount).toLocaleString()} ${emoji}`, inline: true },
-            { name: `${targetUser.tag}'s Balance`, value: `${newReceiverBalance.toLocaleString()} ${emoji}`, inline: true },
+            { name: ctx.t('payFieldBalance', loc, { tag: interaction.user.tag }), value: `${(senderBalance - amount).toLocaleString()} ${emoji}`, inline: true },
+            { name: ctx.t('payFieldBalance', loc, { tag: targetUser.tag }), value: `${newReceiverBalance.toLocaleString()} ${emoji}`, inline: true },
           )
           .setTimestamp();
 
@@ -152,6 +156,7 @@ export default defineAddon({
         if (!interaction.guildId) return;
         await interaction.deferReply();
 
+        const loc = await ctx.resolveLocale(interaction);
         const { name, emoji, dailyAmount } = await getCurrencyInfo(ctx, interaction.guildId);
         const cooldownKey = `daily_cooldown:${interaction.user.id}`;
         const lastClaim = await ctx.storage.get<number>(cooldownKey, interaction.guildId);
@@ -162,8 +167,8 @@ export default defineAddon({
           const timeLeft = Math.ceil((lastClaim + cooldown - now) / 1000 / 3600);
           const embed = new EmbedBuilder()
             .setColor(COLORS.WARNING)
-            .setTitle(`⏰ Daily Already Claimed`)
-            .setDescription(`You've already claimed your daily reward! Come back in **${timeLeft}h**.`);
+            .setTitle(ctx.t('dailyClaimedTitle', loc))
+            .setDescription(ctx.t('dailyClaimedDesc', loc, { hours: timeLeft }));
           await interaction.editReply({ embeds: [embed] });
           return;
         }
@@ -173,9 +178,9 @@ export default defineAddon({
 
         const embed = new EmbedBuilder()
           .setColor(COLORS.SUCCESS)
-          .setTitle(`${emoji} Daily Reward Claimed!`)
-          .setDescription(`You received **${dailyAmount.toLocaleString()} ${name}** ${emoji}!\nYour balance: **${newBalance.toLocaleString()} ${name}**`)
-          .setFooter({ text: 'Come back in 24 hours for your next reward!' })
+          .setTitle(ctx.t('dailyRewardTitle', loc, { emoji }))
+          .setDescription(ctx.t('dailyRewardDesc', loc, { amount: dailyAmount.toLocaleString(), name, emoji, balance: newBalance.toLocaleString() }))
+          .setFooter({ text: ctx.t('dailyFooter', loc) })
           .setTimestamp();
 
         await interaction.editReply({ embeds: [embed] });
@@ -191,6 +196,7 @@ export default defineAddon({
         if (!interaction.guildId) return;
         await interaction.deferReply();
 
+        const loc = await ctx.resolveLocale(interaction);
         const { name, emoji } = await getCurrencyInfo(ctx, interaction.guildId);
         const keys = await ctx.storage.keys(interaction.guildId);
         const balanceKeys = keys.filter((k) => k.startsWith('balance:'));
@@ -207,16 +213,16 @@ export default defineAddon({
 
         const medals = ['🥇', '🥈', '🥉'];
         const description = sorted.length === 0
-          ? 'No one has any currency yet!'
+          ? ctx.t('lbEmpty', loc)
           : sorted
             .map((entry, i) => `${medals[i] ?? `**#${i + 1}**`} <@${entry.userId}> — **${entry.balance.toLocaleString()} ${name}** ${emoji}`)
             .join('\n');
 
         const embed = new EmbedBuilder()
           .setColor(COLORS.INFO)
-          .setTitle(`${emoji} ${name} Leaderboard`)
+          .setTitle(ctx.t('lbTitle', loc, { emoji, name }))
           .setDescription(description)
-          .setFooter({ text: `Top ${sorted.length} richest members` })
+          .setFooter({ text: ctx.t('lbFooter', loc, { count: sorted.length }) })
           .setTimestamp();
 
         await interaction.editReply({ embeds: [embed] });

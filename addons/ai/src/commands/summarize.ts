@@ -9,7 +9,7 @@ import {
 } from 'discord.js';
 import type { AddonContext, AddonCommandDefinition } from '@arkenbot/addon-sdk';
 import { chatCompletion, isLLMAvailable, LLMUnavailableError } from '@arkenbot/shared';
-import { checkCooldown, AI_UNAVAILABLE_MESSAGE } from '../utils/shared.js';
+import { checkCooldown } from '../utils/shared.js';
 
 const DEFAULT_COUNT = 30;
 const MAX_COUNT = 100;
@@ -41,20 +41,22 @@ const command: AddonCommandDefinition = {
   async execute(interaction: ChatInputCommandInteraction | ContextMenuCommandInteraction, ctx: AddonContext) {
     if (!interaction.isChatInputCommand()) return;
 
+    const loc = await ctx.resolveLocale(interaction);
+
     if (!isLLMAvailable()) {
-      await interaction.reply({ content: AI_UNAVAILABLE_MESSAGE, flags: MessageFlags.Ephemeral });
+      await interaction.reply({ content: ctx.t('unavailable', loc), flags: MessageFlags.Ephemeral });
       return;
     }
 
     const channel = interaction.channel;
     if (!channel || channel.type === ChannelType.DM || !('messages' in channel)) {
-      await interaction.reply({ content: '❌ This command can only be used in a server text channel.', flags: MessageFlags.Ephemeral });
+      await interaction.reply({ content: ctx.t('sumGuildOnly', loc), flags: MessageFlags.Ephemeral });
       return;
     }
 
     const cooldown = checkCooldown(interaction.user.id);
     if (cooldown) {
-      await interaction.reply({ content: `⏳ Slow down — try again in ${cooldown}s.`, flags: MessageFlags.Ephemeral });
+      await interaction.reply({ content: ctx.t('cooldown', loc, { seconds: cooldown }), flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -73,7 +75,7 @@ const command: AddonCommandDefinition = {
         .map((m: Message) => `${m.author.username}: ${m.content.replace(/\n+/g, ' ').slice(0, 400)}`);
 
       if (lines.length < 2) {
-        await interaction.editReply('🤷 Not enough recent conversation here to summarise.');
+        await interaction.editReply(ctx.t('sumNotEnough', loc));
         return;
       }
 
@@ -87,19 +89,19 @@ const command: AddonCommandDefinition = {
 
       const embed = new EmbedBuilder()
         .setColor(0x5865f2)
-        .setTitle('📝 Conversation Summary')
-        .setDescription(summary.slice(0, 3900) || 'No summary produced.')
-        .setFooter({ text: `Summarised ${lines.length} messages · AI-generated, may be inaccurate` })
+        .setTitle(ctx.t('sumTitle', loc))
+        .setDescription(summary.slice(0, 3900) || ctx.t('sumNoSummary', loc))
+        .setFooter({ text: ctx.t('sumFooter', loc, { count: lines.length }) })
         .setTimestamp();
 
       await interaction.editReply({ embeds: [embed] });
     } catch (err) {
       if (err instanceof LLMUnavailableError) {
-        await interaction.editReply(AI_UNAVAILABLE_MESSAGE);
+        await interaction.editReply(ctx.t('unavailable', loc));
         return;
       }
       ctx.logger.warn(`/summarize failed: ${err instanceof Error ? err.message : String(err)}`);
-      await interaction.editReply('⚠️ Could not summarise the conversation right now. Please try again in a moment.');
+      await interaction.editReply(ctx.t('sumError', loc));
     }
   },
 };

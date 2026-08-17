@@ -10,8 +10,10 @@ import { isLLMAvailable } from '@arkenbot/shared';
 
 import askCommand from './commands/ask.js';
 import summarizeCommand from './commands/summarize.js';
+import { locales } from './locales.js';
 
 export default defineAddon({
+  locales,
   manifest: {
     name: 'ai',
     displayName: 'AI Assistant',
