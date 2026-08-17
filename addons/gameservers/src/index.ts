@@ -13,8 +13,10 @@ import { getServers, addServer, takePending } from './utils/storage.js';
 import { buildStatusEmbed } from './utils/embeds.js';
 import { encryptCredential } from './utils/crypto.js';
 import { CREDENTIAL_MODAL_PREFIX, FIELD_PASSWORD, FIELD_QUERY_PORT } from './utils/modal.js';
+import { locales } from './locales.js';
 
 export default defineAddon({
+  locales,
   manifest: {
     name: 'gameservers',
     displayName: 'Game Server Status',
@@ -66,11 +68,13 @@ async function handleCredentialModal(
   interaction: ModalSubmitInteraction,
 ): Promise<void> {
   if (!interaction.guildId) return;
+  const loc = await ctx.resolveLocale(interaction);
+  const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
 
   const pending = await takePending(ctx.storage, interaction.guildId, interaction.user.id);
   if (!pending) {
     await interaction.reply({
-      content: '❌ That request expired. Run the command again.',
+      content: t('requestExpired'),
       flags: MessageFlags.Ephemeral,
     });
     return;
@@ -82,7 +86,7 @@ async function handleCredentialModal(
 
   if (!Number.isInteger(queryPort) || queryPort < 1 || queryPort > 65535) {
     await interaction.reply({
-      content: `❌ \`${rawPort}\` is not a valid port.`,
+      content: t('invalidPort', { port: rawPort }),
       flags: MessageFlags.Ephemeral,
     });
     return;
@@ -96,8 +100,8 @@ async function handleCredentialModal(
   if (pending.action === 'add') {
     if (!status.online) {
       await interaction.editReply({
-        content: `❌ **${pending.name}** was not saved — the server could not be queried.`,
-        embeds: [buildStatusEmbed(status, game, host, port, pending.name)],
+        content: t('notSavedQueryFailed', { name: pending.name ?? '' }),
+        embeds: [buildStatusEmbed(status, game, host, port, pending.name, t)],
       });
       return;
     }
@@ -113,13 +117,13 @@ async function handleCredentialModal(
     });
 
     await interaction.editReply({
-      content: `✅ **${pending.name}** saved! Use \`/server check ${pending.name}\` to query it anytime.`,
-      embeds: [buildStatusEmbed(status, game, host, port, pending.name)],
+      content: t('savedUse', { name: pending.name ?? '' }),
+      embeds: [buildStatusEmbed(status, game, host, port, pending.name, t)],
     });
     return;
   }
 
-  await interaction.editReply({ embeds: [buildStatusEmbed(status, game, host, port)] });
+  await interaction.editReply({ embeds: [buildStatusEmbed(status, game, host, port, undefined, t)] });
 }
 
 // ─── Autocomplete ─────────────────────────────────────────────────────────────

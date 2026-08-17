@@ -120,8 +120,10 @@ const command: AddonCommandDefinition = {
     ctx: AddonContext,
   ) {
     if (!interaction.isChatInputCommand()) return;
+    const loc = await ctx.resolveLocale(interaction);
+    const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
     if (!interaction.guildId) {
-      await interaction.reply({ content: '❌ This command must be used in a server.', ephemeral: true });
+      await interaction.reply({ content: t('mustBeInServer'), ephemeral: true });
       return;
     }
 
@@ -134,7 +136,7 @@ const command: AddonCommandDefinition = {
       const port = interaction.options.getInteger('port') ?? undefined;
 
       if (!SUPPORTED_GAMES[game]) {
-        await interaction.reply({ content: '❌ Unknown game type. Start typing in the `game` field to pick one.', ephemeral: true });
+        await interaction.reply({ content: t('unknownGameTypePick'), ephemeral: true });
         return;
       }
 
@@ -147,13 +149,13 @@ const command: AddonCommandDefinition = {
           host: address,
           port,
         });
-        await interaction.showModal(buildCredentialModal('status', SUPPORTED_GAMES[game].label));
+        await interaction.showModal(buildCredentialModal('status', SUPPORTED_GAMES[game].label, t));
         return;
       }
 
       await interaction.deferReply();
       const status = await queryServer(game, address, port);
-      await interaction.editReply({ embeds: [buildStatusEmbed(status, game, address, port)] });
+      await interaction.editReply({ embeds: [buildStatusEmbed(status, game, address, port, undefined, t)] });
       return;
     }
 
@@ -163,7 +165,7 @@ const command: AddonCommandDefinition = {
       const saved = await getServerByName(ctx.storage, interaction.guildId, name);
       if (!saved) {
         await interaction.reply({
-          content: `❌ No saved server named **${name}**. Use \`/server list\` to see all saved servers.`,
+          content: t('noSavedNamed', { name }),
           ephemeral: true,
         });
         return;
@@ -172,7 +174,7 @@ const command: AddonCommandDefinition = {
       await interaction.deferReply();
       const status = await queryServer(saved.game, saved.host, saved.port, authFor(saved));
       await interaction.editReply({
-        embeds: [buildStatusEmbed(status, saved.game, saved.host, saved.port, saved.name)],
+        embeds: [buildStatusEmbed(status, saved.game, saved.host, saved.port, saved.name, t)],
       });
       return;
     }
@@ -182,7 +184,7 @@ const command: AddonCommandDefinition = {
       const member = interaction.guild?.members.cache.get(interaction.user.id);
       if (!member?.permissions.has(PermissionFlagsBits.ManageGuild)) {
         await interaction.reply({
-          content: '❌ You need the **Manage Server** permission to save servers.',
+          content: t('needManageSave'),
           ephemeral: true,
         });
         return;
@@ -194,14 +196,14 @@ const command: AddonCommandDefinition = {
       const port = interaction.options.getInteger('port') ?? undefined;
 
       if (!SUPPORTED_GAMES[game]) {
-        await interaction.reply({ content: '❌ Unknown game type.', ephemeral: true });
+        await interaction.reply({ content: t('unknownGameType'), ephemeral: true });
         return;
       }
 
       const existing = await getServerByName(ctx.storage, interaction.guildId, name);
       if (existing) {
         await interaction.reply({
-          content: `❌ A server named **${name}** already exists. Remove it first with \`/server remove\`.`,
+          content: t('alreadyExists', { name }),
           ephemeral: true,
         });
         return;
@@ -209,16 +211,14 @@ const command: AddonCommandDefinition = {
 
       const servers = await getServers(ctx.storage, interaction.guildId);
       if (servers.length >= 25) {
-        await interaction.reply({ content: '❌ Maximum of 25 saved servers reached.', ephemeral: true });
+        await interaction.reply({ content: t('maxReached'), ephemeral: true });
         return;
       }
 
       if (AUTHENTICATED_GAMES.has(game)) {
         if (!canStoreCredentials()) {
           await interaction.reply({
-            content:
-              `❌ **${SUPPORTED_GAMES[game].label}** needs an admin password to query, but this bot has no ` +
-              'encryption key configured to store one safely. Set `ADDON_ENCRYPTION_KEY` and restart.',
+            content: t('needEncryptionKey', { game: SUPPORTED_GAMES[game].label }),
             ephemeral: true,
           });
           return;
@@ -230,7 +230,7 @@ const command: AddonCommandDefinition = {
           host: address,
           port,
         });
-        await interaction.showModal(buildCredentialModal('add', SUPPORTED_GAMES[game].label));
+        await interaction.showModal(buildCredentialModal('add', SUPPORTED_GAMES[game].label, t));
         return;
       }
 
@@ -246,8 +246,8 @@ const command: AddonCommandDefinition = {
       });
 
       await interaction.editReply({
-        content: `✅ **${name}** saved! Use \`/server check ${name}\` to query it anytime.`,
-        embeds: [buildStatusEmbed(status, game, address, port, name)],
+        content: t('savedUse', { name }),
+        embeds: [buildStatusEmbed(status, game, address, port, name, t)],
       });
       return;
     }
@@ -257,7 +257,7 @@ const command: AddonCommandDefinition = {
       const member = interaction.guild?.members.cache.get(interaction.user.id);
       if (!member?.permissions.has(PermissionFlagsBits.ManageGuild)) {
         await interaction.reply({
-          content: '❌ You need the **Manage Server** permission to remove servers.',
+          content: t('needManageRemove'),
           ephemeral: true,
         });
         return;
@@ -266,17 +266,17 @@ const command: AddonCommandDefinition = {
       const name = interaction.options.getString('name', true);
       const removed = await removeServer(ctx.storage, interaction.guildId, name);
       if (!removed) {
-        await interaction.reply({ content: `❌ No saved server named **${name}** found.`, ephemeral: true });
+        await interaction.reply({ content: t('noSavedNamedFound', { name }), ephemeral: true });
         return;
       }
-      await interaction.reply(`✅ Server **${name}** removed.`);
+      await interaction.reply(t('removed', { name }));
       return;
     }
 
     // ── list ───────────────────────────────────────────────────────────────────
     if (sub === 'list') {
       const servers = await getServers(ctx.storage, interaction.guildId);
-      const embed = buildServerListEmbed(servers, interaction.guild?.name ?? 'This Server');
+      const embed = buildServerListEmbed(servers, interaction.guild?.name ?? t('thisServer'), t);
       await interaction.reply({ embeds: [embed] });
       return;
     }
@@ -286,7 +286,7 @@ const command: AddonCommandDefinition = {
       const servers = await getServers(ctx.storage, interaction.guildId);
       if (servers.length === 0) {
         await interaction.reply({
-          content: '❌ No saved servers yet. Use `/server add` to save one.',
+          content: t('noSavedYet'),
           ephemeral: true,
         });
         return;
@@ -300,7 +300,7 @@ const command: AddonCommandDefinition = {
         })),
       );
 
-      await interaction.editReply({ embeds: [buildCheckAllEmbed(results, interaction.guild?.name ?? 'This Server')] });
+      await interaction.editReply({ embeds: [buildCheckAllEmbed(results, interaction.guild?.name ?? t('thisServer'), t)] });
     }
   },
 };
