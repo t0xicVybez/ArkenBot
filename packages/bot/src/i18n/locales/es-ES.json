@@ -148,7 +148,9 @@
     "kickLive": "¡{streamer} está en directo en Kick!",
     "twitterPosted": "{handle} publicó en X",
     "redditPostedBy": "Publicado por u/{author} en r/{subreddit}",
-    "rssNewPost": "Nueva publicación de **{feed}**"
+    "rssNewPost": "Nueva publicación de **{feed}**",
+    "rssFeedFallback": "Fuente RSS",
+    "rssPostFallback": "Nueva publicación"
   },
   "announcement": {
     "author": "Anuncios de ArkenBot",
@@ -298,7 +300,9 @@
       "hierarchyTitle": "Error de jerarquía",
       "hierarchyUser": "No puedes banear a un miembro con un rol superior o igual al tuyo.",
       "dmAction": "Baneado de {guild}",
-      "action": "Baneo"
+      "action": "Baneo",
+      "modalTitle": "Banear a {user}",
+      "modalReasonLabel": "Motivo del baneo"
     },
     "ctxTimeout": {
       "invalidDurationTitle": "Duración no válida",
@@ -309,7 +313,10 @@
       "hierarchyTitle": "Error de jerarquía",
       "hierarchyUser": "No puedes aislar a un miembro con un rol superior o igual al tuyo.",
       "dmAction": "Aislamiento en {guild}",
-      "action": "Aislamiento"
+      "action": "Aislamiento",
+      "modalTitle": "Aislar a {user}",
+      "modalDurationLabel": "Duración (p. ej. 10m, 1h, 1d)",
+      "modalReasonLabel": "Motivo"
     },
     "ctxWarn": {
       "notFoundTitle": "No encontrado",
@@ -318,7 +325,9 @@
       "hierarchyUser": "No puedes advertir a un miembro con un rol superior o igual al tuyo.",
       "dmAction": "Advertencia en {guild}",
       "action": "Advertencia",
-      "totalWarnings": "Advertencias totales"
+      "totalWarnings": "Advertencias totales",
+      "modalTitle": "Advertir a {user}",
+      "modalReasonLabel": "Motivo"
     },
     "purge": {
       "textOnly": "Este comando solo puede usarse en canales de texto.",
@@ -415,7 +424,9 @@
       "submittedTitle": "Reporte enviado",
       "submitted": "Tu reporte se ha enviado al equipo de moderación.",
       "notFound": "Reporte no encontrado.",
-      "markedReviewed": "Reporte marcado como revisado."
+      "markedReviewed": "Reporte marcado como revisado.",
+      "modalTitle": "Acción de reporte",
+      "modalStaffNoteLabel": "Nota del staff (opcional)"
     },
     "reportSetup": {
       "title": "Sistema de reportes configurado",
@@ -840,6 +851,60 @@
       "overview": "Resumen",
       "pageFooter": "Página {page} de {total}  ·  {commands} comandos disponibles para ti",
       "notYourMenu": "Este menú pertenece a otra persona."
+    }
+  },
+  "achievements": {
+    "level_5": {
+      "name": "Estrella naciente",
+      "description": "Alcanza el nivel 5"
+    },
+    "level_10": {
+      "name": "Miembro activo",
+      "description": "Alcanza el nivel 10"
+    },
+    "level_25": {
+      "name": "Veterano",
+      "description": "Alcanza el nivel 25"
+    },
+    "level_50": {
+      "name": "Élite",
+      "description": "Alcanza el nivel 50"
+    },
+    "level_100": {
+      "name": "Leyenda",
+      "description": "Alcanza el nivel 100"
+    },
+    "streak_7": {
+      "name": "Guerrero semanal",
+      "description": "Mantén una racha de mensajes de 7 días"
+    },
+    "streak_30": {
+      "name": "Leyenda mensual",
+      "description": "Mantén una racha de mensajes de 30 días"
+    },
+    "streak_100": {
+      "name": "Racha centenaria",
+      "description": "Mantén una racha de mensajes de 100 días"
+    },
+    "msg_100": {
+      "name": "Parlanchín",
+      "description": "Envía 100 mensajes"
+    },
+    "msg_500": {
+      "name": "Hablador",
+      "description": "Envía 500 mensajes"
+    },
+    "msg_1000": {
+      "name": "Dedicado",
+      "description": "Envía 1.000 mensajes"
+    },
+    "msg_5000": {
+      "name": "Imparable",
+      "description": "Envía 5.000 mensajes"
+    },
+    "msg_10000": {
+      "name": "Trascendente",
+      "description": "Envía 10.000 mensajes"
     }
   }
 }

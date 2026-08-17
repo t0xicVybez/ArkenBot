@@ -148,7 +148,9 @@
     "kickLive": "{streamer} è in diretta su Kick!",
     "twitterPosted": "{handle} ha pubblicato su X",
     "redditPostedBy": "Pubblicato da u/{author} in r/{subreddit}",
-    "rssNewPost": "Nuovo post da **{feed}**"
+    "rssNewPost": "Nuovo post da **{feed}**",
+    "rssFeedFallback": "Feed RSS",
+    "rssPostFallback": "Nuovo post"
   },
   "announcement": {
     "author": "Annunci ArkenBot",
@@ -298,7 +300,9 @@
       "hierarchyTitle": "Errore di gerarchia",
       "hierarchyUser": "Non puoi bannare un membro con un ruolo superiore o uguale al tuo.",
       "dmAction": "Bannato da {guild}",
-      "action": "Ban"
+      "action": "Ban",
+      "modalTitle": "Banna {user}",
+      "modalReasonLabel": "Motivo del ban"
     },
     "ctxTimeout": {
       "invalidDurationTitle": "Durata non valida",
@@ -309,7 +313,10 @@
       "hierarchyTitle": "Errore di gerarchia",
       "hierarchyUser": "Non puoi mettere in timeout un membro con un ruolo superiore o uguale al tuo.",
       "dmAction": "Timeout in {guild}",
-      "action": "Timeout"
+      "action": "Timeout",
+      "modalTitle": "Timeout per {user}",
+      "modalDurationLabel": "Durata (es. 10m, 1h, 1d)",
+      "modalReasonLabel": "Motivo"
     },
     "ctxWarn": {
       "notFoundTitle": "Non trovato",
@@ -318,7 +325,9 @@
       "hierarchyUser": "Non puoi ammonire un membro con un ruolo superiore o uguale al tuo.",
       "dmAction": "Ammonizione in {guild}",
       "action": "Ammonizione",
-      "totalWarnings": "Ammonizioni totali"
+      "totalWarnings": "Ammonizioni totali",
+      "modalTitle": "Ammonisci {user}",
+      "modalReasonLabel": "Motivo"
     },
     "purge": {
       "textOnly": "Questo comando può essere usato solo nei canali di testo.",
@@ -415,7 +424,9 @@
       "submittedTitle": "Segnalazione inviata",
       "submitted": "La tua segnalazione è stata inviata al team di moderazione.",
       "notFound": "Segnalazione non trovata.",
-      "markedReviewed": "Segnalazione contrassegnata come esaminata."
+      "markedReviewed": "Segnalazione contrassegnata come esaminata.",
+      "modalTitle": "Azione di segnalazione",
+      "modalStaffNoteLabel": "Nota dello staff (facoltativo)"
     },
     "reportSetup": {
       "title": "Sistema di segnalazioni configurato",
@@ -840,6 +851,60 @@
       "overview": "Panoramica",
       "pageFooter": "Pagina {page} di {total}  ·  {commands} comandi disponibili per te",
       "notYourMenu": "Questo menu appartiene a qualcun altro."
+    }
+  },
+  "achievements": {
+    "level_5": {
+      "name": "Stella nascente",
+      "description": "Raggiungi il livello 5"
+    },
+    "level_10": {
+      "name": "Membro attivo",
+      "description": "Raggiungi il livello 10"
+    },
+    "level_25": {
+      "name": "Veterano",
+      "description": "Raggiungi il livello 25"
+    },
+    "level_50": {
+      "name": "Élite",
+      "description": "Raggiungi il livello 50"
+    },
+    "level_100": {
+      "name": "Leggenda",
+      "description": "Raggiungi il livello 100"
+    },
+    "streak_7": {
+      "name": "Guerriero della settimana",
+      "description": "Mantieni una serie di messaggi di 7 giorni"
+    },
+    "streak_30": {
+      "name": "Leggenda del mese",
+      "description": "Mantieni una serie di messaggi di 30 giorni"
+    },
+    "streak_100": {
+      "name": "Serie del secolo",
+      "description": "Mantieni una serie di messaggi di 100 giorni"
+    },
+    "msg_100": {
+      "name": "Chiacchierone",
+      "description": "Invia 100 messaggi"
+    },
+    "msg_500": {
+      "name": "Loquace",
+      "description": "Invia 500 messaggi"
+    },
+    "msg_1000": {
+      "name": "Assiduo",
+      "description": "Invia 1.000 messaggi"
+    },
+    "msg_5000": {
+      "name": "Inarrestabile",
+      "description": "Invia 5.000 messaggi"
+    },
+    "msg_10000": {
+      "name": "Trascendente",
+      "description": "Invia 10.000 messaggi"
     }
   }
 }

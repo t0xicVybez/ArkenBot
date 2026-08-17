@@ -148,7 +148,9 @@
     "kickLive": "{streamer} が Kick で配信中！",
     "twitterPosted": "{handle} が X に投稿しました",
     "redditPostedBy": "r/{subreddit} で u/{author} が投稿",
-    "rssNewPost": "**{feed}** の新しい投稿"
+    "rssNewPost": "**{feed}** の新しい投稿",
+    "rssFeedFallback": "RSSフィード",
+    "rssPostFallback": "新しい投稿"
   },
   "announcement": {
     "author": "ArkenBot のお知らせ",
@@ -298,7 +300,9 @@
       "hierarchyTitle": "階層エラー",
       "hierarchyUser": "自分と同等以上のロールを持つメンバーをBANすることはできません。",
       "dmAction": "{guild} からBANされました",
-      "action": "BAN"
+      "action": "BAN",
+      "modalTitle": "{user} をBAN",
+      "modalReasonLabel": "BANの理由"
     },
     "ctxTimeout": {
       "invalidDurationTitle": "無効な期間",
@@ -309,7 +313,10 @@
       "hierarchyTitle": "階層エラー",
       "hierarchyUser": "自分と同等以上のロールを持つメンバーをタイムアウトすることはできません。",
       "dmAction": "{guild} でのタイムアウト",
-      "action": "タイムアウト"
+      "action": "タイムアウト",
+      "modalTitle": "{user} をタイムアウト",
+      "modalDurationLabel": "期間（例：10m、1h、1d）",
+      "modalReasonLabel": "理由"
     },
     "ctxWarn": {
       "notFoundTitle": "見つかりません",
@@ -318,7 +325,9 @@
       "hierarchyUser": "自分と同等以上のロールを持つメンバーに警告することはできません。",
       "dmAction": "{guild} での警告",
       "action": "警告",
-      "totalWarnings": "警告の合計"
+      "totalWarnings": "警告の合計",
+      "modalTitle": "{user} に警告",
+      "modalReasonLabel": "理由"
     },
     "purge": {
       "textOnly": "このコマンドはテキストチャンネルでのみ使用できます。",
@@ -415,7 +424,9 @@
       "submittedTitle": "通報を送信しました",
       "submitted": "通報はモデレーションチームに送信されました。",
       "notFound": "通報が見つかりません。",
-      "markedReviewed": "通報を確認済みとしてマークしました。"
+      "markedReviewed": "通報を確認済みとしてマークしました。",
+      "modalTitle": "レポート対応",
+      "modalStaffNoteLabel": "スタッフメモ（任意）"
     },
     "reportSetup": {
       "title": "通報システムを設定しました",
@@ -840,6 +851,60 @@
       "overview": "概要",
       "pageFooter": "ページ {page}/{total}  ·  あなたが利用できるコマンド {commands} 個",
       "notYourMenu": "このメニューは他の人のものです。"
+    }
+  },
+  "achievements": {
+    "level_5": {
+      "name": "新星",
+      "description": "レベル5に到達する"
+    },
+    "level_10": {
+      "name": "アクティブメンバー",
+      "description": "レベル10に到達する"
+    },
+    "level_25": {
+      "name": "ベテラン",
+      "description": "レベル25に到達する"
+    },
+    "level_50": {
+      "name": "エリート",
+      "description": "レベル50に到達する"
+    },
+    "level_100": {
+      "name": "レジェンド",
+      "description": "レベル100に到達する"
+    },
+    "streak_7": {
+      "name": "週間の戦士",
+      "description": "7日間の連続メッセージを維持する"
+    },
+    "streak_30": {
+      "name": "月間レジェンド",
+      "description": "30日間の連続メッセージを維持する"
+    },
+    "streak_100": {
+      "name": "100日連続",
+      "description": "100日間の連続メッセージを維持する"
+    },
+    "msg_100": {
+      "name": "おしゃべり",
+      "description": "100件のメッセージを送信する"
+    },
+    "msg_500": {
+      "name": "話好き",
+      "description": "500件のメッセージを送信する"
+    },
+    "msg_1000": {
+      "name": "熱心",
+      "description": "1,000件のメッセージを送信する"
+    },
+    "msg_5000": {
+      "name": "止まらない",
+      "description": "5,000件のメッセージを送信する"
+    },
+    "msg_10000": {
+      "name": "超越者",
+      "description": "10,000件のメッセージを送信する"
     }
   }
 }

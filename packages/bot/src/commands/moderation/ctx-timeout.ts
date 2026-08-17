@@ -51,20 +51,21 @@ const command: BotCommand = {
       return;
     }
 
+    const loc = await resolveUserLocale(ctxInteraction);
     const modal = new ModalBuilder()
       .setCustomId(`ctx-timeout:${targetUser.id}`)
-      .setTitle(`Timeout ${targetUser.username}`);
+      .setTitle(t('cmd.ctxTimeout.modalTitle', loc, { user: targetUser.username }));
 
     const durationInput = new TextInputBuilder()
       .setCustomId('duration')
-      .setLabel('Duration (e.g. 10m, 1h, 1d)')
+      .setLabel(t('cmd.ctxTimeout.modalDurationLabel', loc))
       .setStyle(TextInputStyle.Short)
       .setRequired(true)
       .setPlaceholder('1h');
 
     const reasonInput = new TextInputBuilder()
       .setCustomId('reason')
-      .setLabel('Reason')
+      .setLabel(t('cmd.ctxTimeout.modalReasonLabel', loc))
       .setStyle(TextInputStyle.Paragraph)
       .setRequired(true)
       .setMaxLength(500);

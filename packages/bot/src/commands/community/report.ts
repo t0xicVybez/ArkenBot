@@ -189,13 +189,14 @@ const command: BotCommand = {
     }
 
     if (action === 'action') {
+      const loc = await resolveUserLocale(interaction);
       const modal = new ModalBuilder()
         .setCustomId(`report:action:${reportId}:modal`)
-        .setTitle('Report Action');
+        .setTitle(t('cmd.report.modalTitle', loc));
 
       const noteInput = new TextInputBuilder()
         .setCustomId('staffNote')
-        .setLabel('Staff Note (optional)')
+        .setLabel(t('cmd.report.modalStaffNoteLabel', loc))
         .setStyle(TextInputStyle.Paragraph)
         .setRequired(false)
         .setMaxLength(500);

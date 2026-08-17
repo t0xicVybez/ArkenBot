@@ -75,7 +75,7 @@ const command: BotCommand = {
     );
 
     const achievementText = achievements.length > 0
-      ? achievements.map((a) => `${a.emoji} **${a.name}** — ${a.description}`).join('\n')
+      ? achievements.map((a) => `${a.emoji} **${t(`achievements.${a.id}.name`, loc)}** — ${t(`achievements.${a.id}.description`, loc)}`).join('\n')
       : t('cmd.profile.noAchievements', loc);
 
     const member = interaction.guild.members.cache.get(targetUser.id);
