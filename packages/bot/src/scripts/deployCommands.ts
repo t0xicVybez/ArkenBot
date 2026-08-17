@@ -72,7 +72,7 @@ async function loadAddonCommands() {
       for (const cmd of addonDef.commands) {
         if (!cmd.data) continue;
 
-        const json = cmd.data.toJSON();
+        const json = localizeCommandJSON(cmd.data.toJSON());
         commands.push(json);
 
         console.log(`Found addon command: ${json.name}`);
