@@ -11,11 +11,13 @@ export const CREDENTIAL_MODAL_PREFIX = 'gs:cred:';
 export const FIELD_PASSWORD = 'password';
 export const FIELD_QUERY_PORT = 'queryport';
 
+type Translate = (key: string, vars?: Record<string, string | number>) => string;
+
 /** Builds the credential modal for an `add` or one-off `status` lookup. */
-export function buildCredentialModal(action: 'add' | 'status', gameLabel: string): ModalBuilder {
+export function buildCredentialModal(action: 'add' | 'status', gameLabel: string, t: Translate): ModalBuilder {
   return new ModalBuilder()
     .setCustomId(`${CREDENTIAL_MODAL_PREFIX}${action}`)
-    .setTitle(`${gameLabel} — admin password`.slice(0, 45))
+    .setTitle(t('modalTitle', { game: gameLabel }).slice(0, 45))
     .addComponents(
       new ActionRowBuilder<TextInputBuilder>().addComponents(
         new TextInputBuilder()
@@ -29,7 +31,7 @@ export function buildCredentialModal(action: 'add' | 'status', gameLabel: string
       new ActionRowBuilder<TextInputBuilder>().addComponents(
         new TextInputBuilder()
           .setCustomId(FIELD_QUERY_PORT)
-          .setLabel('REST API port (optional)')
+          .setLabel(t('modalPortLabel'))
           .setPlaceholder(String(PALWORLD_REST_PORT))
           .setStyle(TextInputStyle.Short)
           .setRequired(false)
