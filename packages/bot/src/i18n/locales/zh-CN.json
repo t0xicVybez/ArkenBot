@@ -148,7 +148,9 @@
     "kickLive": "{streamer} 正在 Kick 直播！",
     "twitterPosted": "{handle} 在 X 上发帖了",
     "redditPostedBy": "由 u/{author} 发布于 r/{subreddit}",
-    "rssNewPost": "**{feed}** 的新帖子"
+    "rssNewPost": "**{feed}** 的新帖子",
+    "rssFeedFallback": "RSS 源",
+    "rssPostFallback": "新帖子"
   },
   "announcement": {
     "author": "ArkenBot 公告",
@@ -298,7 +300,9 @@
       "hierarchyTitle": "层级错误",
       "hierarchyUser": "你不能封禁身份组高于或等于你的成员。",
       "dmAction": "已从 {guild} 封禁",
-      "action": "封禁"
+      "action": "封禁",
+      "modalTitle": "封禁 {user}",
+      "modalReasonLabel": "封禁原因"
     },
     "ctxTimeout": {
       "invalidDurationTitle": "无效时长",
@@ -309,7 +313,10 @@
       "hierarchyTitle": "层级错误",
       "hierarchyUser": "你不能禁言身份组高于或等于你的成员。",
       "dmAction": "在 {guild} 的禁言",
-      "action": "禁言"
+      "action": "禁言",
+      "modalTitle": "禁言 {user}",
+      "modalDurationLabel": "时长（例如 10m、1h、1d）",
+      "modalReasonLabel": "原因"
     },
     "ctxWarn": {
       "notFoundTitle": "未找到",
@@ -318,7 +325,9 @@
       "hierarchyUser": "你不能警告身份组高于或等于你的成员。",
       "dmAction": "在 {guild} 的警告",
       "action": "警告",
-      "totalWarnings": "警告总数"
+      "totalWarnings": "警告总数",
+      "modalTitle": "警告 {user}",
+      "modalReasonLabel": "原因"
     },
     "purge": {
       "textOnly": "此命令只能在文字频道中使用。",
@@ -415,7 +424,9 @@
       "submittedTitle": "举报已提交",
       "submitted": "你的举报已提交给管理团队。",
       "notFound": "未找到举报。",
-      "markedReviewed": "举报已标记为已审核。"
+      "markedReviewed": "举报已标记为已审核。",
+      "modalTitle": "举报操作",
+      "modalStaffNoteLabel": "工作人员备注（可选）"
     },
     "reportSetup": {
       "title": "举报系统已配置",
@@ -840,6 +851,60 @@
       "overview": "概览",
       "pageFooter": "第 {page}/{total} 页  ·  你可使用 {commands} 条命令",
       "notYourMenu": "此菜单属于其他人。"
+    }
+  },
+  "achievements": {
+    "level_5": {
+      "name": "新星",
+      "description": "达到 5 级"
+    },
+    "level_10": {
+      "name": "活跃成员",
+      "description": "达到 10 级"
+    },
+    "level_25": {
+      "name": "老将",
+      "description": "达到 25 级"
+    },
+    "level_50": {
+      "name": "精英",
+      "description": "达到 50 级"
+    },
+    "level_100": {
+      "name": "传奇",
+      "description": "达到 100 级"
+    },
+    "streak_7": {
+      "name": "一周斗士",
+      "description": "保持 7 天的连续发言"
+    },
+    "streak_30": {
+      "name": "月度传奇",
+      "description": "保持 30 天的连续发言"
+    },
+    "streak_100": {
+      "name": "百日连击",
+      "description": "保持 100 天的连续发言"
+    },
+    "msg_100": {
+      "name": "健谈",
+      "description": "发送 100 条消息"
+    },
+    "msg_500": {
+      "name": "话痨",
+      "description": "发送 500 条消息"
+    },
+    "msg_1000": {
+      "name": "专注",
+      "description": "发送 1,000 条消息"
+    },
+    "msg_5000": {
+      "name": "势不可挡",
+      "description": "发送 5,000 条消息"
+    },
+    "msg_10000": {
+      "name": "超凡",
+      "description": "发送 10,000 条消息"
     }
   }
 }

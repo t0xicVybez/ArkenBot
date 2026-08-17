@@ -43,13 +43,14 @@ const command: BotCommand = {
       return;
     }
 
+    const loc = await resolveUserLocale(ctxInteraction);
     const modal = new ModalBuilder()
       .setCustomId(`ctx-warn:${targetUser.id}`)
-      .setTitle(`Warn ${targetUser.username}`);
+      .setTitle(t('cmd.ctxWarn.modalTitle', loc, { user: targetUser.username }));
 
     const reasonInput = new TextInputBuilder()
       .setCustomId('reason')
-      .setLabel('Reason')
+      .setLabel(t('cmd.ctxWarn.modalReasonLabel', loc))
       .setStyle(TextInputStyle.Paragraph)
       .setRequired(true)
       .setMaxLength(500);

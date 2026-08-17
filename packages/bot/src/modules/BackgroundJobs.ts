@@ -1082,14 +1082,15 @@ export class BackgroundJobs {
         await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastStreamId: itemId } });
 
         const itemUrl = latestItem.link ?? alert.channelUsername;
-        const feedTitle = feed.title ?? 'RSS Feed';
+        const feedTitle = feed.title ?? t('streamAlert.rssFeedFallback', loc);
+        const postFallback = t('streamAlert.rssPostFallback', loc);
         const message = alert.message
           .replace(/\{streamer\}/g, feedTitle)
           .replace(/\{url\}/g, itemUrl)
-          .replace(/\{title\}/g, latestItem.title ?? 'New post');
+          .replace(/\{title\}/g, latestItem.title ?? postFallback);
 
         const embed = new EmbedBuilder()
-          .setTitle(latestItem.title ?? 'New post')
+          .setTitle(latestItem.title ?? postFallback)
           .setURL(itemUrl)
           .setDescription(t('streamAlert.rssNewPost', loc, { feed: feedTitle }))
           .setColor(alertColor ?? 0xf26522)

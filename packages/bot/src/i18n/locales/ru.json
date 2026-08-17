@@ -148,7 +148,9 @@
     "kickLive": "{streamer} в эфире на Kick!",
     "twitterPosted": "{handle} опубликовал(а) в X",
     "redditPostedBy": "Опубликовано u/{author} в r/{subreddit}",
-    "rssNewPost": "Новая запись от **{feed}**"
+    "rssNewPost": "Новая запись от **{feed}**",
+    "rssFeedFallback": "RSS-лента",
+    "rssPostFallback": "Новая публикация"
   },
   "announcement": {
     "author": "Объявления ArkenBot",
@@ -298,7 +300,9 @@
       "hierarchyTitle": "Ошибка иерархии",
       "hierarchyUser": "Ты не можешь забанить участника с ролью выше или равной твоей.",
       "dmAction": "Забанен на {guild}",
-      "action": "Бан"
+      "action": "Бан",
+      "modalTitle": "Забанить {user}",
+      "modalReasonLabel": "Причина бана"
     },
     "ctxTimeout": {
       "invalidDurationTitle": "Недействительная длительность",
@@ -309,7 +313,10 @@
       "hierarchyTitle": "Ошибка иерархии",
       "hierarchyUser": "Ты не можешь отправить в тайм-аут участника с ролью выше или равной твоей.",
       "dmAction": "Тайм-аут на {guild}",
-      "action": "Тайм-аут"
+      "action": "Тайм-аут",
+      "modalTitle": "Тайм-аут для {user}",
+      "modalDurationLabel": "Длительность (напр. 10m, 1h, 1d)",
+      "modalReasonLabel": "Причина"
     },
     "ctxWarn": {
       "notFoundTitle": "Не найдено",
@@ -318,7 +325,9 @@
       "hierarchyUser": "Ты не можешь предупредить участника с ролью выше или равной твоей.",
       "dmAction": "Предупреждение на {guild}",
       "action": "Предупреждение",
-      "totalWarnings": "Всего предупреждений"
+      "totalWarnings": "Всего предупреждений",
+      "modalTitle": "Предупредить {user}",
+      "modalReasonLabel": "Причина"
     },
     "purge": {
       "textOnly": "Эту команду можно использовать только в текстовых каналах.",
@@ -415,7 +424,9 @@
       "submittedTitle": "Жалоба отправлена",
       "submitted": "Твоя жалоба отправлена команде модерации.",
       "notFound": "Жалоба не найдена.",
-      "markedReviewed": "Жалоба отмечена как рассмотренная."
+      "markedReviewed": "Жалоба отмечена как рассмотренная.",
+      "modalTitle": "Действие по жалобе",
+      "modalStaffNoteLabel": "Заметка персонала (необязательно)"
     },
     "reportSetup": {
       "title": "Система жалоб настроена",
@@ -840,6 +851,60 @@
       "overview": "Обзор",
       "pageFooter": "Страница {page} из {total}  ·  {commands} команд доступно тебе",
       "notYourMenu": "Это меню принадлежит другому человеку."
+    }
+  },
+  "achievements": {
+    "level_5": {
+      "name": "Восходящая звезда",
+      "description": "Достигните 5 уровня"
+    },
+    "level_10": {
+      "name": "Активный участник",
+      "description": "Достигните 10 уровня"
+    },
+    "level_25": {
+      "name": "Ветеран",
+      "description": "Достигните 25 уровня"
+    },
+    "level_50": {
+      "name": "Элита",
+      "description": "Достигните 50 уровня"
+    },
+    "level_100": {
+      "name": "Легенда",
+      "description": "Достигните 100 уровня"
+    },
+    "streak_7": {
+      "name": "Воин недели",
+      "description": "Поддерживайте серию сообщений 7 дней"
+    },
+    "streak_30": {
+      "name": "Легенда месяца",
+      "description": "Поддерживайте серию сообщений 30 дней"
+    },
+    "streak_100": {
+      "name": "Столетняя серия",
+      "description": "Поддерживайте серию сообщений 100 дней"
+    },
+    "msg_100": {
+      "name": "Болтун",
+      "description": "Отправьте 100 сообщений"
+    },
+    "msg_500": {
+      "name": "Разговорчивый",
+      "description": "Отправьте 500 сообщений"
+    },
+    "msg_1000": {
+      "name": "Преданный",
+      "description": "Отправьте 1 000 сообщений"
+    },
+    "msg_5000": {
+      "name": "Неудержимый",
+      "description": "Отправьте 5 000 сообщений"
+    },
+    "msg_10000": {
+      "name": "Трансцендентный",
+      "description": "Отправьте 10 000 сообщений"
     }
   }
 }

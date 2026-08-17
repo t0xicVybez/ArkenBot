@@ -148,7 +148,9 @@
     "kickLive": "{streamer}님이 Kick에서 라이브 중입니다!",
     "twitterPosted": "{handle}님이 X에 게시했습니다",
     "redditPostedBy": "r/{subreddit}에서 u/{author}님이 게시함",
-    "rssNewPost": "**{feed}**의 새 게시물"
+    "rssNewPost": "**{feed}**의 새 게시물",
+    "rssFeedFallback": "RSS 피드",
+    "rssPostFallback": "새 게시물"
   },
   "announcement": {
     "author": "ArkenBot 공지",
@@ -298,7 +300,9 @@
       "hierarchyTitle": "계층 오류",
       "hierarchyUser": "당신보다 높거나 같은 역할을 가진 멤버를 차단할 수 없습니다.",
       "dmAction": "{guild}에서 차단됨",
-      "action": "차단"
+      "action": "차단",
+      "modalTitle": "{user} 차단",
+      "modalReasonLabel": "차단 사유"
     },
     "ctxTimeout": {
       "invalidDurationTitle": "잘못된 기간",
@@ -309,7 +313,10 @@
       "hierarchyTitle": "계층 오류",
       "hierarchyUser": "당신보다 높거나 같은 역할을 가진 멤버를 타임아웃할 수 없습니다.",
       "dmAction": "{guild}에서의 타임아웃",
-      "action": "타임아웃"
+      "action": "타임아웃",
+      "modalTitle": "{user} 타임아웃",
+      "modalDurationLabel": "기간 (예: 10m, 1h, 1d)",
+      "modalReasonLabel": "이유"
     },
     "ctxWarn": {
       "notFoundTitle": "찾을 수 없음",
@@ -318,7 +325,9 @@
       "hierarchyUser": "당신보다 높거나 같은 역할을 가진 멤버에게 경고할 수 없습니다.",
       "dmAction": "{guild}에서의 경고",
       "action": "경고",
-      "totalWarnings": "총 경고 수"
+      "totalWarnings": "총 경고 수",
+      "modalTitle": "{user} 경고",
+      "modalReasonLabel": "이유"
     },
     "purge": {
       "textOnly": "이 명령어는 텍스트 채널에서만 사용할 수 있습니다.",
@@ -415,7 +424,9 @@
       "submittedTitle": "신고 제출됨",
       "submitted": "신고가 관리팀에 제출되었습니다.",
       "notFound": "신고를 찾을 수 없습니다.",
-      "markedReviewed": "신고를 검토됨으로 표시했습니다."
+      "markedReviewed": "신고를 검토됨으로 표시했습니다.",
+      "modalTitle": "신고 조치",
+      "modalStaffNoteLabel": "스태프 메모 (선택 사항)"
     },
     "reportSetup": {
       "title": "신고 시스템 구성됨",
@@ -840,6 +851,60 @@
       "overview": "개요",
       "pageFooter": "{page}/{total} 페이지  ·  사용 가능한 명령어 {commands}개",
       "notYourMenu": "이 메뉴는 다른 사람의 것입니다."
+    }
+  },
+  "achievements": {
+    "level_5": {
+      "name": "떠오르는 별",
+      "description": "레벨 5 달성"
+    },
+    "level_10": {
+      "name": "활동 멤버",
+      "description": "레벨 10 달성"
+    },
+    "level_25": {
+      "name": "베테랑",
+      "description": "레벨 25 달성"
+    },
+    "level_50": {
+      "name": "엘리트",
+      "description": "레벨 50 달성"
+    },
+    "level_100": {
+      "name": "전설",
+      "description": "레벨 100 달성"
+    },
+    "streak_7": {
+      "name": "주간 전사",
+      "description": "7일 연속 메시지 유지"
+    },
+    "streak_30": {
+      "name": "월간 전설",
+      "description": "30일 연속 메시지 유지"
+    },
+    "streak_100": {
+      "name": "100일 연속",
+      "description": "100일 연속 메시지 유지"
+    },
+    "msg_100": {
+      "name": "수다쟁이",
+      "description": "메시지 100개 전송"
+    },
+    "msg_500": {
+      "name": "말이 많은",
+      "description": "메시지 500개 전송"
+    },
+    "msg_1000": {
+      "name": "헌신적인",
+      "description": "메시지 1,000개 전송"
+    },
+    "msg_5000": {
+      "name": "멈출 수 없는",
+      "description": "메시지 5,000개 전송"
+    },
+    "msg_10000": {
+      "name": "초월자",
+      "description": "메시지 10,000개 전송"
     }
   }
 }

@@ -148,7 +148,9 @@
     "kickLive": "{streamer} jest na żywo na Kick!",
     "twitterPosted": "{handle} opublikował(a) na X",
     "redditPostedBy": "Opublikowane przez u/{author} w r/{subreddit}",
-    "rssNewPost": "Nowy wpis od **{feed}**"
+    "rssNewPost": "Nowy wpis od **{feed}**",
+    "rssFeedFallback": "Kanał RSS",
+    "rssPostFallback": "Nowy wpis"
   },
   "announcement": {
     "author": "Ogłoszenia ArkenBot",
@@ -298,7 +300,9 @@
       "hierarchyTitle": "Błąd hierarchii",
       "hierarchyUser": "Nie możesz zbanować członka z rolą wyższą lub równą Twojej.",
       "dmAction": "Zbanowano z {guild}",
-      "action": "Ban"
+      "action": "Ban",
+      "modalTitle": "Zbanuj {user}",
+      "modalReasonLabel": "Powód bana"
     },
     "ctxTimeout": {
       "invalidDurationTitle": "Nieprawidłowy czas",
@@ -309,7 +313,10 @@
       "hierarchyTitle": "Błąd hierarchii",
       "hierarchyUser": "Nie możesz nałożyć timeoutu na członka z rolą wyższą lub równą Twojej.",
       "dmAction": "Timeout na {guild}",
-      "action": "Timeout"
+      "action": "Timeout",
+      "modalTitle": "Timeout dla {user}",
+      "modalDurationLabel": "Czas trwania (np. 10m, 1h, 1d)",
+      "modalReasonLabel": "Powód"
     },
     "ctxWarn": {
       "notFoundTitle": "Nie znaleziono",
@@ -318,7 +325,9 @@
       "hierarchyUser": "Nie możesz ostrzec członka z rolą wyższą lub równą Twojej.",
       "dmAction": "Ostrzeżenie na {guild}",
       "action": "Ostrzeżenie",
-      "totalWarnings": "Łączna liczba ostrzeżeń"
+      "totalWarnings": "Łączna liczba ostrzeżeń",
+      "modalTitle": "Ostrzeż {user}",
+      "modalReasonLabel": "Powód"
     },
     "purge": {
       "textOnly": "Tego polecenia można używać tylko na kanałach tekstowych.",
@@ -415,7 +424,9 @@
       "submittedTitle": "Wysłano zgłoszenie",
       "submitted": "Twoje zgłoszenie zostało przesłane do zespołu moderacji.",
       "notFound": "Nie znaleziono zgłoszenia.",
-      "markedReviewed": "Zgłoszenie oznaczone jako sprawdzone."
+      "markedReviewed": "Zgłoszenie oznaczone jako sprawdzone.",
+      "modalTitle": "Akcja zgłoszenia",
+      "modalStaffNoteLabel": "Notatka personelu (opcjonalnie)"
     },
     "reportSetup": {
       "title": "Skonfigurowano system zgłoszeń",
@@ -840,6 +851,60 @@
       "overview": "Przegląd",
       "pageFooter": "Strona {page} z {total}  ·  {commands} poleceń dostępnych dla Ciebie",
       "notYourMenu": "To menu należy do kogoś innego."
+    }
+  },
+  "achievements": {
+    "level_5": {
+      "name": "Wschodząca gwiazda",
+      "description": "Osiągnij poziom 5"
+    },
+    "level_10": {
+      "name": "Aktywny członek",
+      "description": "Osiągnij poziom 10"
+    },
+    "level_25": {
+      "name": "Weteran",
+      "description": "Osiągnij poziom 25"
+    },
+    "level_50": {
+      "name": "Elita",
+      "description": "Osiągnij poziom 50"
+    },
+    "level_100": {
+      "name": "Legenda",
+      "description": "Osiągnij poziom 100"
+    },
+    "streak_7": {
+      "name": "Wojownik tygodnia",
+      "description": "Utrzymaj 7-dniową serię wiadomości"
+    },
+    "streak_30": {
+      "name": "Legenda miesiąca",
+      "description": "Utrzymaj 30-dniową serię wiadomości"
+    },
+    "streak_100": {
+      "name": "Seria stulecia",
+      "description": "Utrzymaj 100-dniową serię wiadomości"
+    },
+    "msg_100": {
+      "name": "Gaduła",
+      "description": "Wyślij 100 wiadomości"
+    },
+    "msg_500": {
+      "name": "Rozmowny",
+      "description": "Wyślij 500 wiadomości"
+    },
+    "msg_1000": {
+      "name": "Oddany",
+      "description": "Wyślij 1000 wiadomości"
+    },
+    "msg_5000": {
+      "name": "Niepowstrzymany",
+      "description": "Wyślij 5000 wiadomości"
+    },
+    "msg_10000": {
+      "name": "Transcendentny",
+      "description": "Wyślij 10 000 wiadomości"
     }
   }
 }
