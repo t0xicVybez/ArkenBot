@@ -14,6 +14,7 @@ import { AddonContext } from '@arkenbot/addon-sdk';
 import { AddonEventBus } from '@arkenbot/addon-sdk';
 import { prisma } from '../database.js';
 import { logger } from '../logger.js';
+import { resolveUserLocale } from '../i18n/index.js';
 import { ADDON_CATEGORY_PREFIX } from '@arkenbot/shared';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -238,6 +239,10 @@ export class AddonHandler {
         });
         return (guildAddon?.settings as Record<string, unknown>) ?? {};
       },
+      // Wire the addon's own localized catalogs and the shared locale resolver so
+      // `ctx.t()` / `ctx.resolveLocale()` reply in the viewer's language.
+      messages: definition.locales,
+      resolveLocale: resolveUserLocale,
     });
 
     const unsubscribers: Array<() => void> = [];
