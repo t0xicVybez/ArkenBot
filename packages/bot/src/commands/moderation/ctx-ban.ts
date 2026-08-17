@@ -43,13 +43,14 @@ const command: BotCommand = {
       return;
     }
 
+    const loc = await resolveUserLocale(ctxInteraction);
     const modal = new ModalBuilder()
       .setCustomId(`ctx-ban:${targetUser.id}`)
-      .setTitle(`Ban ${targetUser.username}`);
+      .setTitle(t('cmd.ctxBan.modalTitle', loc, { user: targetUser.username }));
 
     const reasonInput = new TextInputBuilder()
       .setCustomId('reason')
-      .setLabel('Reason for ban')
+      .setLabel(t('cmd.ctxBan.modalReasonLabel', loc))
       .setStyle(TextInputStyle.Paragraph)
       .setRequired(true)
       .setMaxLength(500);

@@ -148,7 +148,9 @@
     "kickLive": "{streamer} está ao vivo no Kick!",
     "twitterPosted": "{handle} publicou no X",
     "redditPostedBy": "Publicado por u/{author} em r/{subreddit}",
-    "rssNewPost": "Nova publicação de **{feed}**"
+    "rssNewPost": "Nova publicação de **{feed}**",
+    "rssFeedFallback": "Feed RSS",
+    "rssPostFallback": "Nova publicação"
   },
   "announcement": {
     "author": "Anúncios do ArkenBot",
@@ -298,7 +300,9 @@
       "hierarchyTitle": "Erro de hierarquia",
       "hierarchyUser": "Você não pode banir um membro com um cargo superior ou igual ao seu.",
       "dmAction": "Banido de {guild}",
-      "action": "Banimento"
+      "action": "Banimento",
+      "modalTitle": "Banir {user}",
+      "modalReasonLabel": "Motivo do banimento"
     },
     "ctxTimeout": {
       "invalidDurationTitle": "Duração inválida",
@@ -309,7 +313,10 @@
       "hierarchyTitle": "Erro de hierarquia",
       "hierarchyUser": "Você não pode pausar um membro com um cargo superior ou igual ao seu.",
       "dmAction": "Pausa em {guild}",
-      "action": "Pausa"
+      "action": "Pausa",
+      "modalTitle": "Pausar {user}",
+      "modalDurationLabel": "Duração (ex. 10m, 1h, 1d)",
+      "modalReasonLabel": "Motivo"
     },
     "ctxWarn": {
       "notFoundTitle": "Não encontrado",
@@ -318,7 +325,9 @@
       "hierarchyUser": "Você não pode advertir um membro com um cargo superior ou igual ao seu.",
       "dmAction": "Advertência em {guild}",
       "action": "Advertência",
-      "totalWarnings": "Total de advertências"
+      "totalWarnings": "Total de advertências",
+      "modalTitle": "Advertir {user}",
+      "modalReasonLabel": "Motivo"
     },
     "purge": {
       "textOnly": "Este comando só pode ser usado em canais de texto.",
@@ -415,7 +424,9 @@
       "submittedTitle": "Denúncia enviada",
       "submitted": "Sua denúncia foi enviada à equipe de moderação.",
       "notFound": "Denúncia não encontrada.",
-      "markedReviewed": "Denúncia marcada como revisada."
+      "markedReviewed": "Denúncia marcada como revisada.",
+      "modalTitle": "Ação de denúncia",
+      "modalStaffNoteLabel": "Nota da equipe (opcional)"
     },
     "reportSetup": {
       "title": "Sistema de denúncias configurado",
@@ -840,6 +851,60 @@
       "overview": "Visão geral",
       "pageFooter": "Página {page} de {total}  ·  {commands} comandos disponíveis para você",
       "notYourMenu": "Este menu pertence a outra pessoa."
+    }
+  },
+  "achievements": {
+    "level_5": {
+      "name": "Estrela em ascensão",
+      "description": "Alcance o nível 5"
+    },
+    "level_10": {
+      "name": "Membro ativo",
+      "description": "Alcance o nível 10"
+    },
+    "level_25": {
+      "name": "Veterano",
+      "description": "Alcance o nível 25"
+    },
+    "level_50": {
+      "name": "Elite",
+      "description": "Alcance o nível 50"
+    },
+    "level_100": {
+      "name": "Lenda",
+      "description": "Alcance o nível 100"
+    },
+    "streak_7": {
+      "name": "Guerreiro da semana",
+      "description": "Mantenha uma sequência de mensagens de 7 dias"
+    },
+    "streak_30": {
+      "name": "Lenda do mês",
+      "description": "Mantenha uma sequência de mensagens de 30 dias"
+    },
+    "streak_100": {
+      "name": "Sequência centenária",
+      "description": "Mantenha uma sequência de mensagens de 100 dias"
+    },
+    "msg_100": {
+      "name": "Tagarela",
+      "description": "Envie 100 mensagens"
+    },
+    "msg_500": {
+      "name": "Falante",
+      "description": "Envie 500 mensagens"
+    },
+    "msg_1000": {
+      "name": "Dedicado",
+      "description": "Envie 1.000 mensagens"
+    },
+    "msg_5000": {
+      "name": "Imparável",
+      "description": "Envie 5.000 mensagens"
+    },
+    "msg_10000": {
+      "name": "Transcendente",
+      "description": "Envie 10.000 mensagens"
     }
   }
 }
