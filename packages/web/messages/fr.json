@@ -1907,7 +1907,8 @@
     "staffPortal": "Portail de l'équipe",
     "owner": "Propriétaire",
     "staff": "Équipe",
-    "logout": "Déconnexion"
+    "logout": "Déconnexion",
+    "openMenu": "Ouvrir le menu"
   },
   "topbar": {
     "staffBadge": "ÉQUIPE",

@@ -1907,7 +1907,8 @@
     "staffPortal": "Портал команды",
     "owner": "Владелец",
     "staff": "Команда",
-    "logout": "Выйти"
+    "logout": "Выйти",
+    "openMenu": "Открыть меню"
   },
   "topbar": {
     "staffBadge": "КОМАНДА",
