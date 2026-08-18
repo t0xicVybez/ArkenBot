@@ -112,10 +112,12 @@ async function handleOpenTicket(
 ): Promise<void> {
   const guildId = interaction.guildId;
   if (!guildId || !interaction.guild) return;
+  const loc = await ctx.resolveLocale(interaction);
+  const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
 
   const panel = await getPanel(ctx.storage, guildId, panelId);
   if (!panel || !panel.enabled) {
-    await interaction.reply({ content: '❌ This ticket panel is not available.', flags: MessageFlags.Ephemeral });
+    await interaction.reply({ content: t('panelNotAvailable'), flags: MessageFlags.Ephemeral });
     return;
   }
 
@@ -123,7 +125,7 @@ async function handleOpenTicket(
   const config = await getConfig(ctx.storage, guildId);
   if (config.blacklistedUsers.includes(interaction.user.id)) {
     await interaction.reply({
-      content: '❌ You are not allowed to open tickets in this server.',
+      content: t('notAllowedOpen'),
       flags: MessageFlags.Ephemeral,
     });
     return;
@@ -134,7 +136,7 @@ async function handleOpenTicket(
   if (openTickets.length >= panel.maxTicketsPerUser) {
     const existing = openTickets[0];
     await interaction.reply({
-      content: `❌ You already have ${openTickets.length} open ticket(s). Please close your existing ticket first.\n${existing ? `→ <#${existing.channelId}>` : ''}`,
+      content: t('tooManyOpen', { count: openTickets.length, existing: existing ? `→ <#${existing.channelId}>` : '' }),
       flags: MessageFlags.Ephemeral,
     });
     return;
@@ -148,7 +150,7 @@ async function handleOpenTicket(
   if (panel.fields && panel.fields.length > 0) {
     const modal = new ModalBuilder()
       .setCustomId(`ticket:reason:${panelId}${buttonId ? `:${buttonId}` : ''}`)
-      .setTitle('Open a Ticket');
+      .setTitle(t('modalOpenTitle'));
     const fieldRows = panel.fields.slice(0, 5).map((f) =>
       new ActionRowBuilder<TextInputBuilder>().addComponents(
         new TextInputBuilder()
@@ -166,14 +168,14 @@ async function handleOpenTicket(
     // Embed buttonId in modal customId so it survives through the modal submit
     const modal = new ModalBuilder()
       .setCustomId(`ticket:reason:${panelId}${buttonId ? `:${buttonId}` : ''}`)
-      .setTitle('Open a Ticket')
+      .setTitle(t('modalOpenTitle'))
       .addComponents(
         new ActionRowBuilder<TextInputBuilder>().addComponents(
           new TextInputBuilder()
             .setCustomId('reason')
-            .setLabel('Describe your issue')
+            .setLabel(t('modalDescribeLabel'))
             .setStyle(TextInputStyle.Paragraph)
-            .setPlaceholder('Please briefly describe what you need help with...')
+            .setPlaceholder(t('modalDescribePlaceholder'))
             .setRequired(true)
             .setMaxLength(500),
         ),
@@ -199,9 +201,11 @@ export async function createTicket(
   formResponses?: Record<string, string>,
 ): Promise<void> {
   const guildId = guild.id;
+  const loc = await ctx.resolveLocale(interaction);
+  const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
   const member = guild.members.cache.get(userId) ?? (await guild.members.fetch(userId).catch(() => null));
   if (!member) {
-    await interaction.editReply('❌ Could not fetch your member data.');
+    await interaction.editReply(t('couldNotFetchMember'));
     return;
   }
 
@@ -213,7 +217,7 @@ export async function createTicket(
     channel = await createTicketChannel(guild, panel, member, channelName);
   } catch (err) {
     ctx.logger.error('Failed to create ticket channel', String(err));
-    await interaction.editReply('❌ Failed to create ticket channel. Check my permissions.');
+    await interaction.editReply(t('failedCreateChannel'));
     return;
   }
 
@@ -241,8 +245,8 @@ export async function createTicket(
 
   // Send welcome embed + controls
   try {
-    const embed = buildTicketEmbed(ticket, panel, member);
-    const controls = buildTicketControls(channel.id);
+    const embed = buildTicketEmbed(ticket, panel, member, t);
+    const controls = buildTicketControls(channel.id, t);
     const controlsMsg = await channel.send({ content: `<@${userId}>`, embeds: [embed], components: controls });
     ticket.controlsMessageId = controlsMsg.id;
     await saveTicket(ctx.storage, guildId, ticket);
@@ -250,7 +254,7 @@ export async function createTicket(
     ctx.logger.warn(`Failed to send welcome embed in ticket #${number}: ${err}`);
   }
 
-  await interaction.editReply(`✅ Your ticket has been created: ${channel}`);
+  await interaction.editReply(t('ticketCreated', { channel: String(channel) }));
 
   ctx.logger.info(`Ticket #${number} created in guild ${guildId} by ${userTag}`);
 
@@ -306,7 +310,7 @@ export async function createTicket(
           ticket.claimedBy = assignee.id;
           ticket.claimedByTag = assignee.user.tag;
           await saveTicket(ctx.storage, guildId, ticket);
-          await channel.send(`🤖 This ticket has been automatically assigned to <@${assignee.id}>.`).catch(() => null);
+          await channel.send(t('autoAssigned', { mention: `<@${assignee.id}>` })).catch(() => null);
         }
       }
     } catch (err) {
@@ -323,9 +327,11 @@ async function handleCloseButton(
   channelId: string,
 ): Promise<void> {
   if (!interaction.guildId) return;
+  const loc = await ctx.resolveLocale(interaction);
+  const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
   const ticket = await getTicketByChannel(ctx.storage, interaction.guildId, channelId);
   if (!ticket) {
-    await interaction.reply({ content: '❌ Ticket not found.', flags: MessageFlags.Ephemeral });
+    await interaction.reply({ content: t('ticketNotFound'), flags: MessageFlags.Ephemeral });
     return;
   }
   await interaction.deferReply();
@@ -346,6 +352,8 @@ async function finalizeTicketClose(
   panel: TicketPanel | null,
   webhookUrl: string | undefined,
 ): Promise<void> {
+  const loc = await ctx.resolveLocale({ user: { id: '' }, guildId, guildLocale: ctx.getGuild(guildId)?.preferredLocale });
+  const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
   // Cancel any pending fallback timer so it doesn't run twice
   const existing = pendingClose.get(channelId);
   if (existing) {
@@ -364,8 +372,8 @@ async function finalizeTicketClose(
     const logChannel = ctx.client.channels.cache.get(logChannelId) as TextChannel | undefined;
     if (logChannel) {
       try {
-        const transcriptEmbed = buildTranscriptEmbed(freshTicket, freshMessages.length);
-        const staffHtml = generateTranscriptHtml(freshTicket, panel, freshMessages, true);
+        const transcriptEmbed = buildTranscriptEmbed(freshTicket, freshMessages.length, t);
+        const staffHtml = generateTranscriptHtml(freshTicket, panel, freshMessages, t, true);
         await logChannel.send({
           embeds: [transcriptEmbed],
           files: [{ attachment: staffHtml, name: `ticket-${freshTicket.number}.html` }],
@@ -417,6 +425,10 @@ export async function closeTicket(
   reason: string | undefined,
 ): Promise<void> {
   const guildId = ticket.guildId;
+  const loc = await ctx.resolveLocale(interaction);
+  const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
+  const ownerLoc = await ctx.resolveLocale({ user: { id: ticket.userId }, guildId, guildLocale: ctx.getGuild(guildId)?.preferredLocale });
+  const ownerT = (k: string, v?: Record<string, string | number>) => ctx.t(k, ownerLoc, v);
   const channel = ctx.client.channels.cache.get(ticket.channelId) as TextChannel | undefined;
   const panel = await getPanel(ctx.storage, guildId, ticket.panelId);
   const config = await getConfig(ctx.storage, guildId);
@@ -430,12 +442,12 @@ export async function closeTicket(
 
   // Send closed embed
   const closeAction = panel?.closeAction ?? 'delete';
-  const closedEmbed = buildClosedEmbed(ticket, interaction.user.tag);
+  const closedEmbed = buildClosedEmbed(ticket, interaction.user.tag, ownerT);
   if (channel) {
     try {
       if (closeAction === 'archive') {
         const { buildReopenButton } = await import('../utils/embeds.js');
-        await channel.send({ embeds: [closedEmbed], components: [buildReopenButton(channel.id)] });
+        await channel.send({ embeds: [closedEmbed], components: [buildReopenButton(channel.id, ownerT)] });
       } else {
         await channel.send({ embeds: [closedEmbed] });
       }
@@ -451,9 +463,9 @@ export async function closeTicket(
   if (panel) {
     try {
       const user = await ctx.client.users.fetch(ticket.userId);
-      const userHtml = generateTranscriptHtml(ticket, panel, messages, false);
+      const userHtml = generateTranscriptHtml(ticket, panel, messages, ownerT, false);
       await user.send({
-        content: `📋 Your ticket **#${ticket.number}** has been closed. Here is your transcript.`,
+        content: ownerT('transcriptDmContent', { num: ticket.number }),
         files: [{ attachment: userHtml, name: `ticket-${ticket.number}.html` }],
       });
     } catch {
@@ -464,10 +476,10 @@ export async function closeTicket(
   // Send rating prompt
   if (channel && closeAction === 'delete') {
     try {
-      const ratingEmbed = buildRatingEmbed(ticket);
+      const ratingEmbed = buildRatingEmbed(ticket, ownerT);
       const ratingRow = buildRatingButtons(guildId, ticket.channelId);
       await channel.send({
-        content: `<@${ticket.userId}> Please rate your experience! This channel will close once you submit your rating.`,
+        content: ownerT('pleaseRateClose', { mention: `<@${ticket.userId}>` }),
         embeds: [ratingEmbed],
         components: [ratingRow],
       });
@@ -476,10 +488,10 @@ export async function closeTicket(
     }
   } else if (channel && closeAction === 'archive') {
     try {
-      const ratingEmbed = buildRatingEmbed(ticket);
+      const ratingEmbed = buildRatingEmbed(ticket, ownerT);
       const ratingRow = buildRatingButtons(guildId, ticket.channelId);
       await channel.send({
-        content: `<@${ticket.userId}> Please rate your experience!`,
+        content: ownerT('pleaseRate', { mention: `<@${ticket.userId}>` }),
         embeds: [ratingEmbed],
         components: [ratingRow],
       });
@@ -490,9 +502,9 @@ export async function closeTicket(
 
   // Reply to interaction
   if (interaction.deferred || interaction.replied) {
-    await interaction.editReply('🔒 Ticket is being closed...');
+    await interaction.editReply(t('ticketBeingClosed'));
   } else {
-    await interaction.reply({ content: '🔒 Closing ticket...', flags: MessageFlags.Ephemeral });
+    await interaction.reply({ content: t('closingTicket'), flags: MessageFlags.Ephemeral });
   }
 
   // For delete: finalize after rating is submitted (handleRateModal calls finalizeTicketClose).
@@ -518,13 +530,15 @@ async function handleReopenButton(
   channelId: string,
 ): Promise<void> {
   if (!interaction.guildId) return;
+  const loc = await ctx.resolveLocale(interaction);
+  const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
   const ticket = await getTicketByChannel(ctx.storage, interaction.guildId, channelId);
   if (!ticket) {
-    await interaction.reply({ content: '❌ Ticket not found.', flags: MessageFlags.Ephemeral });
+    await interaction.reply({ content: t('ticketNotFound'), flags: MessageFlags.Ephemeral });
     return;
   }
   if (ticket.status !== 'closed') {
-    await interaction.reply({ content: '❌ This ticket is not closed.', flags: MessageFlags.Ephemeral });
+    await interaction.reply({ content: t('notClosed'), flags: MessageFlags.Ephemeral });
     return;
   }
 
@@ -537,7 +551,7 @@ async function handleReopenButton(
     reopenEffectiveStaffRoles.some((rid) => member?.roles.cache.has(rid));
 
   if (!isStaff) {
-    await interaction.reply({ content: '❌ Only staff can reopen tickets.', flags: MessageFlags.Ephemeral });
+    await interaction.reply({ content: t('onlyStaffReopen'), flags: MessageFlags.Ephemeral });
     return;
   }
 
@@ -557,16 +571,16 @@ async function handleReopenButton(
       );
     }
 
-    const controls = buildTicketControls(channel.id);
+    const controls = buildTicketControls(channel.id, t);
     const controlsMsg = await channel.send({
-      content: `🔓 **${interaction.user.tag}** has reopened this ticket. <@${ticket.userId}>`,
+      content: t('reopenedMsg', { user: interaction.user.tag, mention: `<@${ticket.userId}>` }),
       components: controls,
     });
     ticket.controlsMessageId = controlsMsg.id;
   }
 
   await saveTicket(ctx.storage, interaction.guildId, ticket);
-  await interaction.reply({ content: '✅ Ticket reopened.', flags: MessageFlags.Ephemeral });
+  await interaction.reply({ content: t('reopenedOk'), flags: MessageFlags.Ephemeral });
 
   // Disable the reopen button
   await interaction.message.edit({ components: [] }).catch(() => null);
@@ -580,9 +594,11 @@ async function handleClaimButton(
   channelId: string,
 ): Promise<void> {
   if (!interaction.guildId) return;
+  const loc = await ctx.resolveLocale(interaction);
+  const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
   const ticket = await getTicketByChannel(ctx.storage, interaction.guildId, channelId);
   if (!ticket || ticket.status === 'closed') {
-    await interaction.reply({ content: '❌ Ticket not found or already closed.', flags: MessageFlags.Ephemeral });
+    await interaction.reply({ content: t('ticketNotFoundOrClosed'), flags: MessageFlags.Ephemeral });
     return;
   }
 
@@ -596,7 +612,7 @@ async function handleClaimButton(
     effectiveStaffRoles.some((rid) => member?.roles.cache.has(rid));
 
   if (!isStaff) {
-    await interaction.reply({ content: '❌ Only staff can claim tickets.', flags: MessageFlags.Ephemeral });
+    await interaction.reply({ content: t('onlyStaffClaim'), flags: MessageFlags.Ephemeral });
     return;
   }
 
@@ -606,7 +622,7 @@ async function handleClaimButton(
   ticket.lastActivity = new Date().toISOString();
   await saveTicket(ctx.storage, interaction.guildId, ticket);
   await updateControlsMessage(ctx, ticket, true);
-  await interaction.reply(`🙋 **${interaction.user.tag}** has claimed this ticket.`);
+  await interaction.reply(t('claimed', { user: interaction.user.tag }));
 }
 
 /**
@@ -622,10 +638,12 @@ export async function generateTriage(
   channelId: string,
 ): Promise<void> {
   if (!interaction.guildId) return;
+  const loc = await ctx.resolveLocale(interaction);
+  const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
 
   const ticket = await getTicketByChannel(ctx.storage, interaction.guildId, channelId);
   if (!ticket || ticket.status === 'closed') {
-    await interaction.reply({ content: '❌ Ticket not found or already closed.', flags: MessageFlags.Ephemeral });
+    await interaction.reply({ content: t('ticketNotFoundOrClosed'), flags: MessageFlags.Ephemeral });
     return;
   }
 
@@ -637,13 +655,13 @@ export async function generateTriage(
     effectiveStaffRoles.length === 0 ||
     effectiveStaffRoles.some((rid) => member?.roles.cache.has(rid));
   if (!isStaff) {
-    await interaction.reply({ content: '❌ Only staff can generate an AI summary.', flags: MessageFlags.Ephemeral });
+    await interaction.reply({ content: t('aiOnlyStaff'), flags: MessageFlags.Ephemeral });
     return;
   }
 
   if (!isLLMAvailable()) {
     await interaction.reply({
-      content: '🤖 AI features are not configured on this bot. An administrator needs to set `GROQ_API_KEY`.',
+      content: t('aiUnavailable'),
       flags: MessageFlags.Ephemeral,
     });
     return;
@@ -673,7 +691,7 @@ export async function generateTriage(
   ].filter(Boolean).join('\n\n');
 
   if (!context) {
-    await interaction.editReply('🤷 There is nothing in this ticket to summarise yet.');
+    await interaction.editReply(t('aiNothing'));
     return;
   }
 
@@ -704,11 +722,11 @@ export async function generateTriage(
 
     const embed = new EmbedBuilder()
       .setColor(meta.color)
-      .setTitle(`🤖 AI Triage — Ticket #${ticket.number}`)
+      .setTitle(t('aiTriageTitle', { num: ticket.number }))
       .addFields(
-        { name: '📋 Summary', value: (result.summary ?? 'No summary produced.').slice(0, 1024) },
-        { name: '⏱️ Urgency', value: `${meta.emoji} ${urgency.charAt(0).toUpperCase() + urgency.slice(1)}`, inline: true },
-        { name: '💬 Suggested Reply', value: (result.reply ?? '—').slice(0, 1024) },
+        { name: t('aiFieldSummary'), value: (result.summary ?? 'No summary produced.').slice(0, 1024) },
+        { name: t('aiFieldUrgency'), value: `${meta.emoji} ${t('priority' + urgency.charAt(0).toUpperCase() + urgency.slice(1))}`, inline: true },
+        { name: t('aiFieldReply'), value: (result.reply ?? '—').slice(0, 1024) },
       )
       .setFooter({ text: 'AI-generated · only you can see this · review before sending' })
       .setTimestamp();
@@ -716,11 +734,11 @@ export async function generateTriage(
     await interaction.editReply({ embeds: [embed] });
   } catch (err) {
     if (err instanceof LLMUnavailableError) {
-      await interaction.editReply('🤖 AI features are not configured on this bot.');
+      await interaction.editReply(t('aiUnavailable'));
       return;
     }
     ctx.logger.warn(`Ticket AI triage failed: ${err instanceof Error ? err.message : String(err)}`);
-    await interaction.editReply('⚠️ Could not generate a summary right now. Please try again in a moment.');
+    await interaction.editReply(t('aiError'));
   }
 }
 
@@ -730,14 +748,16 @@ async function handleUnclaimButton(
   channelId: string,
 ): Promise<void> {
   if (!interaction.guildId) return;
+  const loc = await ctx.resolveLocale(interaction);
+  const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
   const ticket = await getTicketByChannel(ctx.storage, interaction.guildId, channelId);
   if (!ticket || ticket.status === 'closed') {
-    await interaction.reply({ content: '❌ Ticket not found or already closed.', flags: MessageFlags.Ephemeral });
+    await interaction.reply({ content: t('ticketNotFoundOrClosed'), flags: MessageFlags.Ephemeral });
     return;
   }
 
   if (ticket.claimedBy !== interaction.user.id) {
-    await interaction.reply({ content: '❌ Only the staff member who claimed this ticket can unclaim it.', flags: MessageFlags.Ephemeral });
+    await interaction.reply({ content: t('onlyClaimerUnclaim'), flags: MessageFlags.Ephemeral });
     return;
   }
 
@@ -747,22 +767,24 @@ async function handleUnclaimButton(
   ticket.lastActivity = new Date().toISOString();
   await saveTicket(ctx.storage, interaction.guildId, ticket);
   await updateControlsMessage(ctx, ticket, false);
-  await interaction.reply('↩️ Ticket unclaimed and returned to the queue.');
+  await interaction.reply(t('unclaimed'));
 }
 
 export async function updateControlsMessage(ctx: AddonContext, ticket: Ticket, claimed: boolean): Promise<void> {
   if (!ticket.controlsMessageId) return;
+  const loc = await ctx.resolveLocale({ user: { id: '' }, guildId: ticket.guildId, guildLocale: ctx.getGuild(ticket.guildId)?.preferredLocale });
+  const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
   const channel = ctx.client.channels.cache.get(ticket.channelId) as TextChannel | undefined;
   if (!channel) return;
   const msg = await channel.messages.fetch(ticket.controlsMessageId).catch(() => null);
   if (!msg) return;
   const waiting = ticket.status === 'waiting';
-  const components = claimed ? buildClaimedControls(ticket.channelId, waiting) : buildTicketControls(ticket.channelId, waiting);
+  const components = claimed ? buildClaimedControls(ticket.channelId, t, waiting) : buildTicketControls(ticket.channelId, t, waiting);
   const panel = await getPanel(ctx.storage, channel.guildId, ticket.panelId);
   const member = channel.guild.members.cache.get(ticket.userId)
     ?? await channel.guild.members.fetch(ticket.userId).catch(() => null);
   if (panel && member) {
-    const embed = buildTicketEmbed(ticket, panel, member);
+    const embed = buildTicketEmbed(ticket, panel, member, t);
     await msg.edit({ embeds: [embed], components }).catch(() => null);
   } else {
     await msg.edit({ components }).catch(() => null);
@@ -777,14 +799,16 @@ async function handleTranscriptButton(
   channelId: string,
 ): Promise<void> {
   if (!interaction.guildId) return;
+  const loc = await ctx.resolveLocale(interaction);
+  const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
   const ticket = await getTicketByChannel(ctx.storage, interaction.guildId, channelId);
   if (!ticket) {
-    await interaction.reply({ content: '❌ Ticket not found.', flags: MessageFlags.Ephemeral });
+    await interaction.reply({ content: t('ticketNotFound'), flags: MessageFlags.Ephemeral });
     return;
   }
   const panel = await getPanel(ctx.storage, interaction.guildId, ticket.panelId);
   if (!panel) {
-    await interaction.reply({ content: '❌ Panel not found.', flags: MessageFlags.Ephemeral });
+    await interaction.reply({ content: t('panelNotFound'), flags: MessageFlags.Ephemeral });
     return;
   }
 
@@ -796,15 +820,15 @@ async function handleTranscriptButton(
   const isOwner = interaction.user.id === ticket.userId;
 
   if (!isStaff && !isOwner) {
-    await interaction.reply({ content: '❌ Only the ticket owner or staff can generate transcripts.', flags: MessageFlags.Ephemeral });
+    await interaction.reply({ content: t('onlyOwnerStaffTranscript'), flags: MessageFlags.Ephemeral });
     return;
   }
 
   await interaction.deferReply({ flags: MessageFlags.Ephemeral });
   const messages = await getMessages(ctx.storage, channelId);
   // Staff always gets the notes-included version; users get the public version
-  const html = generateTranscriptHtml(ticket, panel, messages, isStaff);
-  const embed = buildTranscriptEmbed(ticket, messages.length);
+  const html = generateTranscriptHtml(ticket, panel, messages, t, isStaff);
+  const embed = buildTranscriptEmbed(ticket, messages.length, t);
   await interaction.editReply({
     embeds: [embed],
     files: [{ attachment: html, name: `ticket-${ticket.number}.html` }],
@@ -821,34 +845,36 @@ async function handleRateButton(
   rating: number,
 ): Promise<void> {
   const ticket = await getTicketByChannel(ctx.storage, guildId, channelId);
+  const loc = await ctx.resolveLocale(interaction);
+  const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
   if (!ticket) {
-    await interaction.reply({ content: '❌ Ticket not found.', flags: MessageFlags.Ephemeral });
+    await interaction.reply({ content: t('ticketNotFound'), flags: MessageFlags.Ephemeral });
     return;
   }
 
   if (interaction.user.id !== ticket.userId) {
-    await interaction.reply({ content: '❌ Only the ticket owner can rate the support.', flags: MessageFlags.Ephemeral });
+    await interaction.reply({ content: t('onlyOwnerRate'), flags: MessageFlags.Ephemeral });
     return;
   }
 
   if (ticket.rating !== undefined) {
-    await interaction.reply({ content: '❌ You have already rated this ticket.', flags: MessageFlags.Ephemeral });
+    await interaction.reply({ content: t('alreadyRated'), flags: MessageFlags.Ephemeral });
     return;
   }
 
   // Show a modal so the user can optionally leave text feedback
   const modal = new ModalBuilder()
     .setCustomId(`ticket:rate-modal:${guildId}:${channelId}:${rating}`)
-    .setTitle(`Rate Your Experience (${'⭐'.repeat(rating)})`)
+    .setTitle(`${t('rateModalTitle')} (${'⭐'.repeat(rating)})`)
     .addComponents(
       new ActionRowBuilder<TextInputBuilder>().addComponents(
         new TextInputBuilder()
           .setCustomId('feedback')
-          .setLabel('Additional feedback (optional)')
+          .setLabel(t('rateFeedbackLabel'))
           .setStyle(TextInputStyle.Paragraph)
           .setRequired(false)
           .setMaxLength(500)
-          .setPlaceholder('Share any additional comments about your experience...'),
+          .setPlaceholder(t('rateFeedbackPlaceholder')),
       ),
     );
 
@@ -883,16 +909,18 @@ async function handleRateModal(
   rating: number,
 ): Promise<void> {
   const ticket = await getTicketByChannel(ctx.storage, guildId, channelId);
+  const loc = await ctx.resolveLocale(interaction);
+  const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
   if (!ticket) {
-    await interaction.reply({ content: '❌ Ticket not found.', flags: MessageFlags.Ephemeral });
+    await interaction.reply({ content: t('ticketNotFound'), flags: MessageFlags.Ephemeral });
     return;
   }
   if (interaction.user.id !== ticket.userId) {
-    await interaction.reply({ content: '❌ Only the ticket owner can rate the support.', flags: MessageFlags.Ephemeral });
+    await interaction.reply({ content: t('onlyOwnerRate'), flags: MessageFlags.Ephemeral });
     return;
   }
   if (ticket.rating !== undefined) {
-    await interaction.reply({ content: '❌ You have already rated this ticket.', flags: MessageFlags.Ephemeral });
+    await interaction.reply({ content: t('alreadyRated'), flags: MessageFlags.Ephemeral });
     return;
   }
 
@@ -924,10 +952,12 @@ async function handleReasonModal(
 ): Promise<void> {
   const guildId = interaction.guildId;
   if (!guildId || !interaction.guild) return;
+  const loc = await ctx.resolveLocale(interaction);
+  const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
 
   const panel = await getPanel(ctx.storage, guildId, panelId);
   if (!panel) {
-    await interaction.reply({ content: '❌ Panel not found.', flags: MessageFlags.Ephemeral });
+    await interaction.reply({ content: t('panelNotFound'), flags: MessageFlags.Ephemeral });
     return;
   }
 
@@ -966,9 +996,11 @@ async function handleWaitingButton(
   channelId: string,
 ): Promise<void> {
   if (!interaction.guildId) return;
+  const loc = await ctx.resolveLocale(interaction);
+  const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
   const ticket = await getTicketByChannel(ctx.storage, interaction.guildId, channelId);
   if (!ticket || ticket.status === 'closed') {
-    await interaction.reply({ content: '❌ Ticket not found or already closed.', flags: MessageFlags.Ephemeral });
+    await interaction.reply({ content: t('ticketNotFoundOrClosed'), flags: MessageFlags.Ephemeral });
     return;
   }
 
@@ -981,7 +1013,7 @@ async function handleWaitingButton(
     effectiveRoles.some((rid) => member?.roles.cache.has(rid));
 
   if (!isStaff) {
-    await interaction.reply({ content: '❌ Only staff can change ticket waiting status.', flags: MessageFlags.Ephemeral });
+    await interaction.reply({ content: t('onlyStaffWaiting'), flags: MessageFlags.Ephemeral });
     return;
   }
 
@@ -990,13 +1022,13 @@ async function handleWaitingButton(
     ticket.lastActivity = new Date().toISOString();
     await saveTicket(ctx.storage, interaction.guildId, ticket);
     await updateControlsMessage(ctx, ticket, !!ticket.claimedBy);
-    await interaction.reply({ content: '🔄 Ticket marked active.', flags: MessageFlags.Ephemeral });
+    await interaction.reply({ content: t('markedActive'), flags: MessageFlags.Ephemeral });
   } else {
     ticket.status = 'waiting';
     ticket.lastActivity = new Date().toISOString();
     await saveTicket(ctx.storage, interaction.guildId, ticket);
     await updateControlsMessage(ctx, ticket, !!ticket.claimedBy);
-    await interaction.reply({ content: '⏳ Ticket set to waiting — awaiting user response.', flags: MessageFlags.Ephemeral });
+    await interaction.reply({ content: t('setWaiting'), flags: MessageFlags.Ephemeral });
   }
 }
 

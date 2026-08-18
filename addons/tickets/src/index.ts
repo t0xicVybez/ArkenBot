@@ -11,6 +11,7 @@ import { handleTicketMessage } from './events/message.js';
 import { getTickets, getPanels, getConfig, getPanel, getTicketByChannel, appendMessage, saveTicket } from './utils/storage.js';
 import { buildPanelEmbed, buildPanelButtons } from './utils/embeds.js';
 import type { TicketNote } from './types.js';
+import { locales } from './locales.js';
 
 // Auto-close / SLA check interval (every 30 minutes)
 const AUTO_CLOSE_INTERVAL_MS = 30 * 60 * 1000;
@@ -18,6 +19,7 @@ let autoCloseTimer: ReturnType<typeof setInterval> | null = null;
 let redisSub: Redis | null = null;
 
 export default defineAddon({
+  locales,
   manifest: {
     name: 'tickets',
     displayName: 'Ticket System',
@@ -208,6 +210,8 @@ async function runAutoCloseAndSLA(ctx: AddonContext): Promise<void> {
   const now = Date.now();
 
   for (const guild of ctx.client.guilds.cache.values()) {
+    const loc = await ctx.resolveLocale({ user: { id: '' }, guildId: guild.id, guildLocale: guild.preferredLocale });
+    const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
     const panels = await getPanels(ctx.storage, guild.id);
     const tickets = await getTickets(ctx.storage, guild.id);
     const config = await getConfig(ctx.storage, guild.id);
@@ -228,7 +232,7 @@ async function runAutoCloseAndSLA(ctx: AddonContext): Promise<void> {
             const channel = ctx.client.channels.cache.get(ticket.channelId) as import('discord.js').TextChannel | undefined;
             if (channel?.isTextBased()) {
               await channel.send(
-                `⏰ This ticket has been automatically closed due to **${panel.autoCloseHours} hours** of inactivity.`,
+                t('autoClosedInactivity', { hours: panel.autoCloseHours }),
               );
             }
             const fakeInteraction = {
@@ -239,7 +243,7 @@ async function runAutoCloseAndSLA(ctx: AddonContext): Promise<void> {
               reply: async () => {},
               editReply: async () => {},
             } as unknown as import('discord.js').ChatInputCommandInteraction;
-            await closeTicket(ctx, fakeInteraction, ticket, 'Auto-closed due to inactivity');
+            await closeTicket(ctx, fakeInteraction, ticket, t('autoClosedReason'));
           } catch (err) {
             ctx.logger.error(`Failed to auto-close ticket #${ticket.number}`, String(err));
           }
@@ -259,7 +263,7 @@ async function runAutoCloseAndSLA(ctx: AddonContext): Promise<void> {
             const channel = ctx.client.channels.cache.get(ticket.channelId) as import('discord.js').TextChannel | undefined;
             if (channel?.isTextBased()) {
               const rolePing = level.pingRoleId ? `<@&${level.pingRoleId}> ` : '';
-              const msg = level.message ?? `⚠️ **SLA Alert:** Ticket #${ticket.number} has been open for over **${level.hours} hours** without a staff response.`;
+              const msg = level.message ?? t('slaDefaultMsg', { num: ticket.number, hours: level.hours });
               await channel.send(`${rolePing}${msg}`).catch(() => null);
             }
           }
@@ -278,7 +282,7 @@ async function runAutoCloseAndSLA(ctx: AddonContext): Promise<void> {
             const channel = ctx.client.channels.cache.get(ticket.channelId) as import('discord.js').TextChannel | undefined;
             if (channel?.isTextBased()) {
               await channel.send(
-                `⚠️ **SLA Warning:** This ticket has been open for over **${config.slaHours} hours** without a staff response.`,
+                t('slaWarningMsg', { hours: config.slaHours }),
               ).catch(() => null);
             }
           }

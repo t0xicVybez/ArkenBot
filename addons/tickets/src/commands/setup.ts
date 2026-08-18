@@ -264,8 +264,10 @@ const command: AddonCommandDefinition = {
 
   async execute(interaction: ChatInputCommandInteraction | ContextMenuCommandInteraction, ctx: AddonContext) {
     if (!interaction.isChatInputCommand()) return;
+    const loc = await ctx.resolveLocale(interaction);
+    const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
     if (!interaction.guildId || !interaction.guild) {
-      await interaction.reply({ content: 'This command must be used in a server.', flags: MessageFlags.Ephemeral });
+      await interaction.reply({ content: t('mustBeInServer'), flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -297,6 +299,8 @@ async function handlePanelCreate(
   interaction: ChatInputCommandInteraction,
   ctx: AddonContext,
 ): Promise<void> {
+    const loc = await ctx.resolveLocale(interaction);
+    const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
   const guildId = interaction.guildId!;
 
   const name = interaction.options.getString('name', true);
@@ -306,7 +310,7 @@ async function handlePanelCreate(
   const panels = await getPanels(ctx.storage, guildId);
   if (panels.some((p) => p.name.toLowerCase() === name.toLowerCase())) {
     await interaction.reply({
-      content: `❌ A panel named **${name}** already exists.`,
+      content: t('panelExists', { name }),
       flags: MessageFlags.Ephemeral,
     });
     return;
@@ -342,7 +346,7 @@ async function handlePanelCreate(
   await savePanel(ctx.storage, guildId, panel);
 
   await interaction.reply({
-    content: `✅ Panel **${name}** created (ID: \`${panel.id}\`).\nUse \`/ticket-setup panel send\` to post it in a channel.`,
+    content: t('panelCreated', { name, id: panel.id }),
     flags: MessageFlags.Ephemeral,
   });
 }
@@ -351,19 +355,21 @@ async function handlePanelSend(
   interaction: ChatInputCommandInteraction,
   ctx: AddonContext,
 ): Promise<void> {
+    const loc = await ctx.resolveLocale(interaction);
+    const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
   const guildId = interaction.guildId!;
   const panelId = interaction.options.getString('panel', true);
   const targetChannel = interaction.options.getChannel('channel', true);
 
   const panel = await getPanel(ctx.storage, guildId, panelId);
   if (!panel) {
-    await interaction.reply({ content: '❌ Panel not found.', flags: MessageFlags.Ephemeral });
+    await interaction.reply({ content: t('panelNotFound'), flags: MessageFlags.Ephemeral });
     return;
   }
 
   const channel = interaction.guild!.channels.cache.get(targetChannel.id) as TextChannel | undefined;
   if (!channel?.isTextBased()) {
-    await interaction.reply({ content: '❌ Invalid channel.', flags: MessageFlags.Ephemeral });
+    await interaction.reply({ content: t('invalidChannel'), flags: MessageFlags.Ephemeral });
     return;
   }
 
@@ -378,7 +384,7 @@ async function handlePanelSend(
   await savePanel(ctx.storage, guildId, panel);
 
   await interaction.reply({
-    content: `✅ Panel **${panel.name}** sent in ${channel}.`,
+    content: t('panelSent', { name: panel.name, channel: String(channel) }),
     flags: MessageFlags.Ephemeral,
   });
 }
@@ -387,11 +393,13 @@ async function handlePanelList(
   interaction: ChatInputCommandInteraction,
   ctx: AddonContext,
 ): Promise<void> {
+    const loc = await ctx.resolveLocale(interaction);
+    const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
   const panels = await getPanels(ctx.storage, interaction.guildId!);
 
   if (panels.length === 0) {
     await interaction.reply({
-      content: '📭 No panels configured. Use `/ticket-setup panel create` to create one.',
+      content: t('noPanels'),
       flags: MessageFlags.Ephemeral,
     });
     return;
@@ -403,7 +411,7 @@ async function handlePanelList(
   );
 
   await interaction.reply({
-    content: `**Ticket Panels (${panels.length})**\n${lines.join('\n')}`,
+    content: `${t('panelsHeader', { count: panels.length })}\n${lines.join('\n')}`,
     flags: MessageFlags.Ephemeral,
   });
 }
@@ -412,18 +420,20 @@ async function handlePanelDelete(
   interaction: ChatInputCommandInteraction,
   ctx: AddonContext,
 ): Promise<void> {
+    const loc = await ctx.resolveLocale(interaction);
+    const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
   const guildId = interaction.guildId!;
   const panelId = interaction.options.getString('panel', true);
 
   const panel = await getPanel(ctx.storage, guildId, panelId);
   if (!panel) {
-    await interaction.reply({ content: '❌ Panel not found.', flags: MessageFlags.Ephemeral });
+    await interaction.reply({ content: t('panelNotFound'), flags: MessageFlags.Ephemeral });
     return;
   }
 
   await deletePanel(ctx.storage, guildId, panelId);
   await interaction.reply({
-    content: `✅ Panel **${panel.name}** deleted.`,
+    content: t('panelDeleted', { name: panel.name }),
     flags: MessageFlags.Ephemeral,
   });
 }
@@ -432,6 +442,8 @@ async function handleConfigTranscript(
   interaction: ChatInputCommandInteraction,
   ctx: AddonContext,
 ): Promise<void> {
+    const loc = await ctx.resolveLocale(interaction);
+    const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
   const guildId = interaction.guildId!;
   const channel = interaction.options.getChannel('channel', true);
 
@@ -440,7 +452,7 @@ async function handleConfigTranscript(
   await saveConfig(ctx.storage, guildId, config);
 
   await interaction.reply({
-    content: `✅ Transcript channel set to ${channel}.`,
+    content: t('transcriptChannelSet', { channel: String(channel) }),
     flags: MessageFlags.Ephemeral,
   });
 }
@@ -449,6 +461,8 @@ async function handleConfigBlacklist(
   interaction: ChatInputCommandInteraction,
   ctx: AddonContext,
 ): Promise<void> {
+    const loc = await ctx.resolveLocale(interaction);
+    const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
   const guildId = interaction.guildId!;
   const action = interaction.options.getString('action', true) as 'add' | 'remove';
   const user = interaction.options.getUser('user', true);
@@ -461,14 +475,14 @@ async function handleConfigBlacklist(
     }
     await saveConfig(ctx.storage, guildId, config);
     await interaction.reply({
-      content: `✅ **${user.tag}** has been blacklisted from opening tickets.`,
+      content: t('blacklisted', { tag: user.tag }),
       flags: MessageFlags.Ephemeral,
     });
   } else {
     config.blacklistedUsers = config.blacklistedUsers.filter((id) => id !== user.id);
     await saveConfig(ctx.storage, guildId, config);
     await interaction.reply({
-      content: `✅ **${user.tag}** has been removed from the blacklist.`,
+      content: t('unblacklisted', { tag: user.tag }),
       flags: MessageFlags.Ephemeral,
     });
   }
@@ -478,6 +492,8 @@ async function handleConfigSettings(
   interaction: ChatInputCommandInteraction,
   ctx: AddonContext,
 ): Promise<void> {
+    const loc = await ctx.resolveLocale(interaction);
+    const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
   const guildId = interaction.guildId!;
   const config = await getConfig(ctx.storage, guildId);
 
@@ -494,10 +510,10 @@ async function handleConfigSettings(
   await saveConfig(ctx.storage, guildId, config);
 
   const lines: string[] = ['✅ Settings updated:'];
-  if (notifyChannel !== null) lines.push(`• Staff notify channel: ${notifyChannel}`);
-  if (notifyRole !== null) lines.push(`• Staff notify role: ${notifyRole}`);
-  if (ratingWindow !== null) lines.push(`• Rating window: ${ratingWindow} minutes`);
-  if (autoAssign !== null) lines.push(`• Auto-assign: ${autoAssign ? 'enabled' : 'disabled'}`);
+  if (notifyChannel !== null) lines.push(t('cfgNotifyChannel', { channel: String(notifyChannel) }));
+  if (notifyRole !== null) lines.push(t('cfgNotifyRole', { role: String(notifyRole) }));
+  if (ratingWindow !== null) lines.push(t('cfgRatingWindow', { minutes: ratingWindow }));
+  if (autoAssign !== null) lines.push(t('cfgAutoAssign', { state: autoAssign ? t('enabled') : t('disabled') }));
 
   await interaction.reply({ content: lines.join('\n'), flags: MessageFlags.Ephemeral });
 }
@@ -506,6 +522,8 @@ async function handleSlaAddLevel(
   interaction: ChatInputCommandInteraction,
   ctx: AddonContext,
 ): Promise<void> {
+    const loc = await ctx.resolveLocale(interaction);
+    const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
   const guildId = interaction.guildId!;
   const hours = interaction.options.getInteger('hours', true);
   const pingRole = interaction.options.getRole('ping_role');
@@ -515,7 +533,7 @@ async function handleSlaAddLevel(
   if (!config.slaLevels) config.slaLevels = [];
 
   if (config.slaLevels.some((l) => l.hours === hours)) {
-    await interaction.reply({ content: `❌ An SLA level for **${hours}h** already exists. Remove it first.`, flags: MessageFlags.Ephemeral });
+    await interaction.reply({ content: t('slaExists', { hours }), flags: MessageFlags.Ephemeral });
     return;
   }
 
@@ -527,7 +545,7 @@ async function handleSlaAddLevel(
 
   await saveConfig(ctx.storage, guildId, config);
   await interaction.reply({
-    content: `✅ SLA level added: **${hours}h**${pingRole ? ` → pings ${pingRole}` : ''}${message ? `\n> ${message}` : ''}`,
+    content: `${t('slaAdded', { hours })}${pingRole ? t('slaPings', { role: String(pingRole) }) : ''}${message ? `\n> ${message}` : ''}`,
     flags: MessageFlags.Ephemeral,
   });
 }
@@ -536,34 +554,38 @@ async function handleSlaListLevels(
   interaction: ChatInputCommandInteraction,
   ctx: AddonContext,
 ): Promise<void> {
+    const loc = await ctx.resolveLocale(interaction);
+    const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
   const guildId = interaction.guildId!;
   const config = await getConfig(ctx.storage, guildId);
 
   if (!config.slaLevels || config.slaLevels.length === 0) {
-    await interaction.reply({ content: '📭 No SLA levels configured.', flags: MessageFlags.Ephemeral });
+    await interaction.reply({ content: t('noSlaLevels'), flags: MessageFlags.Ephemeral });
     return;
   }
 
   const lines = config.slaLevels.map(
     (l) => `• **${l.hours}h**${l.pingRoleId ? ` — pings <@&${l.pingRoleId}>` : ''}${l.message ? `\n  > ${l.message}` : ''}`,
   );
-  await interaction.reply({ content: `**SLA Escalation Levels**\n${lines.join('\n')}`, flags: MessageFlags.Ephemeral });
+  await interaction.reply({ content: `${t('slaHeader')}\n${lines.join('\n')}`, flags: MessageFlags.Ephemeral });
 }
 
 async function handleSlaRemoveLevel(
   interaction: ChatInputCommandInteraction,
   ctx: AddonContext,
 ): Promise<void> {
+    const loc = await ctx.resolveLocale(interaction);
+    const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
   const guildId = interaction.guildId!;
   const hours = interaction.options.getInteger('hours', true);
 
   const config = await getConfig(ctx.storage, guildId);
   if (!config.slaLevels?.some((l) => l.hours === hours)) {
-    await interaction.reply({ content: `❌ No SLA level found for **${hours}h**.`, flags: MessageFlags.Ephemeral });
+    await interaction.reply({ content: t('slaNotFound', { hours }), flags: MessageFlags.Ephemeral });
     return;
   }
 
   config.slaLevels = config.slaLevels.filter((l) => l.hours !== hours);
   await saveConfig(ctx.storage, guildId, config);
-  await interaction.reply({ content: `✅ SLA level **${hours}h** removed.`, flags: MessageFlags.Ephemeral });
+  await interaction.reply({ content: t('slaRemoved', { hours }), flags: MessageFlags.Ephemeral });
 }

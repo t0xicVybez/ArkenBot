@@ -164,8 +164,10 @@ const command: AddonCommandDefinition = {
 
   async execute(interaction: ChatInputCommandInteraction | ContextMenuCommandInteraction, ctx: AddonContext) {
     if (!interaction.isChatInputCommand()) return;
+    const loc = await ctx.resolveLocale(interaction);
+    const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
     if (!interaction.guildId) {
-      await interaction.reply({ content: 'This command must be used in a server.', flags: MessageFlags.Ephemeral });
+      await interaction.reply({ content: t('mustBeInServer'), flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -173,7 +175,7 @@ const command: AddonCommandDefinition = {
 
     const ticket = await getTicketByChannel(ctx.storage, interaction.guildId, interaction.channelId);
     if (!ticket) {
-      await interaction.reply({ content: '❌ This command can only be used inside a ticket channel.', flags: MessageFlags.Ephemeral });
+      await interaction.reply({ content: t('notTicketChannel'), flags: MessageFlags.Ephemeral });
       return;
     }
 
@@ -182,7 +184,7 @@ const command: AddonCommandDefinition = {
       if (sub === 'reopen') {
         // handled below
       } else {
-        await interaction.reply({ content: '❌ This ticket is already closed.', flags: MessageFlags.Ephemeral });
+        await interaction.reply({ content: t('alreadyClosed'), flags: MessageFlags.Ephemeral });
         return;
       }
     }
@@ -205,7 +207,7 @@ const command: AddonCommandDefinition = {
       }
       case 'claim': {
         if (!isStaff) {
-          await interaction.reply({ content: '❌ Only staff can claim tickets.', flags: MessageFlags.Ephemeral });
+          await interaction.reply({ content: t('onlyStaffClaim'), flags: MessageFlags.Ephemeral });
           return;
         }
         ticket.status = 'claimed';
@@ -214,16 +216,16 @@ const command: AddonCommandDefinition = {
         ticket.lastActivity = new Date().toISOString();
         await saveTicket(ctx.storage, interaction.guildId, ticket);
         await updateControlsMessage(ctx, ticket, true);
-        await interaction.reply(`🙋 **${interaction.user.tag}** has claimed this ticket.`);
+        await interaction.reply(t('claimed', { user: interaction.user.tag }));
         break;
       }
       case 'unclaim': {
         if (!isStaff) {
-          await interaction.reply({ content: '❌ Only staff can unclaim tickets.', flags: MessageFlags.Ephemeral });
+          await interaction.reply({ content: t('onlyStaffUnclaim'), flags: MessageFlags.Ephemeral });
           return;
         }
         if (ticket.claimedBy !== interaction.user.id) {
-          await interaction.reply({ content: '❌ Only the staff member who claimed this ticket can unclaim it.', flags: MessageFlags.Ephemeral });
+          await interaction.reply({ content: t('onlyClaimerUnclaim'), flags: MessageFlags.Ephemeral });
           return;
         }
         ticket.status = 'open';
@@ -232,16 +234,16 @@ const command: AddonCommandDefinition = {
         ticket.lastActivity = new Date().toISOString();
         await saveTicket(ctx.storage, interaction.guildId, ticket);
         await updateControlsMessage(ctx, ticket, false);
-        await interaction.reply('↩️ Ticket unclaimed and returned to the queue.');
+        await interaction.reply(t('unclaimed'));
         break;
       }
       case 'reopen': {
         if (ticket.status !== 'closed') {
-          await interaction.reply({ content: '❌ This ticket is not closed.', flags: MessageFlags.Ephemeral });
+          await interaction.reply({ content: t('notClosed'), flags: MessageFlags.Ephemeral });
           return;
         }
         if (!isStaff) {
-          await interaction.reply({ content: '❌ Only staff can reopen tickets.', flags: MessageFlags.Ephemeral });
+          await interaction.reply({ content: t('onlyStaffReopen'), flags: MessageFlags.Ephemeral });
           return;
         }
         ticket.status = 'open';
@@ -259,26 +261,26 @@ const command: AddonCommandDefinition = {
           );
         }
         // Post reopen message and re-pin controls
-        const controls = buildTicketControls(channel.id);
+        const controls = buildTicketControls(channel.id, t);
         const controlsMsg = await channel.send({
-          content: `🔓 **${interaction.user.tag}** has reopened this ticket. <@${ticket.userId}>`,
+          content: t('reopenedMsg', { user: interaction.user.tag, mention: `<@${ticket.userId}>` }),
           components: controls,
         });
         ticket.controlsMessageId = controlsMsg.id;
         await saveTicket(ctx.storage, interaction.guildId, ticket);
 
-        await interaction.reply({ content: '✅ Ticket reopened.', flags: MessageFlags.Ephemeral });
+        await interaction.reply({ content: t('reopenedOk'), flags: MessageFlags.Ephemeral });
         break;
       }
       case 'transfer': {
         if (!isStaff) {
-          await interaction.reply({ content: '❌ Only staff can transfer tickets.', flags: MessageFlags.Ephemeral });
+          await interaction.reply({ content: t('onlyStaffTransfer'), flags: MessageFlags.Ephemeral });
           return;
         }
         const target = interaction.options.getUser('staff', true);
         const targetMember = interaction.guild!.members.cache.get(target.id) ?? await interaction.guild!.members.fetch(target.id).catch(() => null);
         if (!targetMember) {
-          await interaction.reply({ content: '❌ Could not find that user in this server.', flags: MessageFlags.Ephemeral });
+          await interaction.reply({ content: t('userNotFound'), flags: MessageFlags.Ephemeral });
           return;
         }
         const targetIsStaff =
@@ -286,7 +288,7 @@ const command: AddonCommandDefinition = {
           panel.staffRoles.length === 0 ||
           panel.staffRoles.some((rid) => targetMember.roles.cache.has(rid));
         if (!targetIsStaff) {
-          await interaction.reply({ content: '❌ The target user is not a staff member.', flags: MessageFlags.Ephemeral });
+          await interaction.reply({ content: t('targetNotStaff'), flags: MessageFlags.Ephemeral });
           return;
         }
 
@@ -302,48 +304,48 @@ const command: AddonCommandDefinition = {
         const channel = interaction.channel as TextChannel;
         await addUserToTicket(channel, target.id).catch(() => null);
         await updateControlsMessage(ctx, ticket, true);
-        await interaction.reply(`🔁 Ticket transferred to <@${target.id}>. They have been added to this channel.`);
+        await interaction.reply(t('transferred', { mention: `<@${target.id}>` }));
         break;
       }
       case 'add': {
         if (!isStaff) {
-          await interaction.reply({ content: '❌ Only staff can add users.', flags: MessageFlags.Ephemeral });
+          await interaction.reply({ content: t('onlyStaffAdd'), flags: MessageFlags.Ephemeral });
           return;
         }
         const user = interaction.options.getUser('user', true);
         const channel = interaction.channel as TextChannel;
         await addUserToTicket(channel, user.id);
-        await interaction.reply(`✅ Added <@${user.id}> to this ticket.`);
+        await interaction.reply(t('addedUser', { mention: `<@${user.id}>` }));
         break;
       }
       case 'remove': {
         if (!isStaff) {
-          await interaction.reply({ content: '❌ Only staff can remove users.', flags: MessageFlags.Ephemeral });
+          await interaction.reply({ content: t('onlyStaffRemove'), flags: MessageFlags.Ephemeral });
           return;
         }
         const user = interaction.options.getUser('user', true);
         if (user.id === ticket.userId) {
-          await interaction.reply({ content: '❌ Cannot remove the ticket owner.', flags: MessageFlags.Ephemeral });
+          await interaction.reply({ content: t('cannotRemoveOwner'), flags: MessageFlags.Ephemeral });
           return;
         }
         const channel = interaction.channel as TextChannel;
         await removeUserFromTicket(channel, user.id);
-        await interaction.reply(`✅ Removed <@${user.id}> from this ticket.`);
+        await interaction.reply(t('removedUser', { mention: `<@${user.id}>` }));
         break;
       }
       case 'rename': {
         if (!isStaff) {
-          await interaction.reply({ content: '❌ Only staff can rename tickets.', flags: MessageFlags.Ephemeral });
+          await interaction.reply({ content: t('onlyStaffRename'), flags: MessageFlags.Ephemeral });
           return;
         }
         const name = interaction.options.getString('name', true).toLowerCase().replace(/[^a-z0-9-]/g, '-');
         await (interaction.channel as TextChannel).setName(name);
-        await interaction.reply(`✅ Channel renamed to **${name}**.`);
+        await interaction.reply(t('renamed', { name }));
         break;
       }
       case 'priority': {
         if (!isStaff) {
-          await interaction.reply({ content: '❌ Only staff can set priority.', flags: MessageFlags.Ephemeral });
+          await interaction.reply({ content: t('onlyStaffPriority'), flags: MessageFlags.Ephemeral });
           return;
         }
         const level = interaction.options.getString('level', true) as typeof ticket.priority;
@@ -352,29 +354,29 @@ const command: AddonCommandDefinition = {
         await saveTicket(ctx.storage, interaction.guildId, ticket);
         await updateControlsMessage(ctx, ticket, !!ticket.claimedBy);
         const emoji = { low: '🟢', medium: '🟡', high: '🟠', urgent: '🔴' }[level];
-        await interaction.reply(`${emoji} Priority set to **${level}**.`);
+        await interaction.reply(t('prioritySet', { emoji, level: t('priority' + level.charAt(0).toUpperCase() + level.slice(1)) }));
         break;
       }
       case 'tag': {
         if (!isStaff) {
-          await interaction.reply({ content: '❌ Only staff can manage tags.', flags: MessageFlags.Ephemeral });
+          await interaction.reply({ content: t('onlyStaffTags'), flags: MessageFlags.Ephemeral });
           return;
         }
         const action = interaction.options.getString('action', true);
         const tag = interaction.options.getString('tag', true).toLowerCase();
         if (action === 'add') {
           if (!ticket.tags.includes(tag)) ticket.tags.push(tag);
-          await interaction.reply(`🏷️ Tag **${tag}** added.`);
+          await interaction.reply(t('tagAdded', { tag }));
         } else {
           ticket.tags = ticket.tags.filter((t) => t !== tag);
-          await interaction.reply(`🏷️ Tag **${tag}** removed.`);
+          await interaction.reply(t('tagRemoved', { tag }));
         }
         await saveTicket(ctx.storage, interaction.guildId, ticket);
         break;
       }
       case 'note': {
         if (!isStaff) {
-          await interaction.reply({ content: '❌ Only staff can add notes.', flags: MessageFlags.Ephemeral });
+          await interaction.reply({ content: t('onlyStaffNotes'), flags: MessageFlags.Ephemeral });
           return;
         }
         const text = interaction.options.getString('text', true);
@@ -388,34 +390,34 @@ const command: AddonCommandDefinition = {
         ticket.notes.push(note);
         await saveTicket(ctx.storage, interaction.guildId, ticket);
         await interaction.reply({
-          content: `🔒 Staff note added.`,
+          content: t('noteAdded'),
           flags: MessageFlags.Ephemeral,
         });
         break;
       }
       case 'info': {
         if (!panel) {
-          await interaction.reply({ content: '❌ Panel data not found.', flags: MessageFlags.Ephemeral });
+          await interaction.reply({ content: t('panelDataNotFound'), flags: MessageFlags.Ephemeral });
           return;
         }
-        const embed = buildInfoEmbed(ticket, panel);
+        const embed = buildInfoEmbed(ticket, panel, t);
         await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
         break;
       }
       case 'transcript': {
         const isOwner = interaction.user.id === ticket.userId;
         if (!isStaff && !isOwner) {
-          await interaction.reply({ content: '❌ Only the ticket owner or staff can generate transcripts.', flags: MessageFlags.Ephemeral });
+          await interaction.reply({ content: t('onlyOwnerStaffTranscript'), flags: MessageFlags.Ephemeral });
           return;
         }
         if (!panel) {
-          await interaction.reply({ content: '❌ Panel data not found.', flags: MessageFlags.Ephemeral });
+          await interaction.reply({ content: t('panelDataNotFound'), flags: MessageFlags.Ephemeral });
           return;
         }
         await interaction.deferReply({ flags: MessageFlags.Ephemeral });
         const messages = await getMessages(ctx.storage, ticket.channelId);
-        const html = generateTranscriptHtml(ticket, panel, messages, isStaff);
-        const embed = buildTranscriptEmbed(ticket, messages.length);
+        const html = generateTranscriptHtml(ticket, panel, messages, t, isStaff);
+        const embed = buildTranscriptEmbed(ticket, messages.length, t);
         await interaction.editReply({
           embeds: [embed],
           files: [{ attachment: html, name: `ticket-${ticket.number}.html` }],
@@ -424,11 +426,11 @@ const command: AddonCommandDefinition = {
       }
       case 'notes': {
         if (!isStaff) {
-          await interaction.reply({ content: '❌ Only staff can view notes.', flags: MessageFlags.Ephemeral });
+          await interaction.reply({ content: t('onlyStaffViewNotes'), flags: MessageFlags.Ephemeral });
           return;
         }
         if (ticket.notes.length === 0) {
-          await interaction.reply({ content: '📝 No staff notes on this ticket.', flags: MessageFlags.Ephemeral });
+          await interaction.reply({ content: t('noNotes'), flags: MessageFlags.Ephemeral });
           return;
         }
         const noteLines = ticket.notes.map((n, i) => {
@@ -436,21 +438,21 @@ const command: AddonCommandDefinition = {
           return `**${i + 1}.** ${n.content}\n> — ${n.authorTag} • ${time}`;
         });
         await interaction.reply({
-          content: `🔒 **Staff Notes for Ticket #${ticket.number}** (${ticket.notes.length})\n\n${noteLines.join('\n\n')}`,
+          content: `${t('notesHeader', { num: ticket.number, count: ticket.notes.length })}\n\n${noteLines.join('\n\n')}`,
           flags: MessageFlags.Ephemeral,
         });
         break;
       }
       case 'respond': {
         if (!isStaff) {
-          await interaction.reply({ content: '❌ Only staff can use canned responses.', flags: MessageFlags.Ephemeral });
+          await interaction.reply({ content: t('onlyStaffCanned'), flags: MessageFlags.Ephemeral });
           return;
         }
         const name = interaction.options.getString('name', true);
         const responses = await getCannedResponses(ctx.storage, interaction.guildId);
         const canned = responses.find((r) => r.name.toLowerCase() === name.toLowerCase());
         if (!canned) {
-          await interaction.reply({ content: `❌ Canned response **${name}** not found.`, flags: MessageFlags.Ephemeral });
+          await interaction.reply({ content: t('cannedNotFound', { name }), flags: MessageFlags.Ephemeral });
           return;
         }
         await interaction.reply(canned.content);
@@ -458,7 +460,7 @@ const command: AddonCommandDefinition = {
       }
       case 'waiting': {
         if (!isStaff) {
-          await interaction.reply({ content: '❌ Only staff can change ticket waiting status.', flags: MessageFlags.Ephemeral });
+          await interaction.reply({ content: t('onlyStaffWaiting'), flags: MessageFlags.Ephemeral });
           return;
         }
         if (ticket.status === 'waiting') {
@@ -466,13 +468,13 @@ const command: AddonCommandDefinition = {
           ticket.lastActivity = new Date().toISOString();
           await saveTicket(ctx.storage, interaction.guildId, ticket);
           await updateControlsMessage(ctx, ticket, !!ticket.claimedBy);
-          await interaction.reply({ content: '🔄 Ticket marked active.', flags: MessageFlags.Ephemeral });
+          await interaction.reply({ content: t('markedActive'), flags: MessageFlags.Ephemeral });
         } else {
           ticket.status = 'waiting';
           ticket.lastActivity = new Date().toISOString();
           await saveTicket(ctx.storage, interaction.guildId, ticket);
           await updateControlsMessage(ctx, ticket, !!ticket.claimedBy);
-          await interaction.reply({ content: '⏳ Ticket set to waiting — awaiting user response.', flags: MessageFlags.Ephemeral });
+          await interaction.reply({ content: t('setWaiting'), flags: MessageFlags.Ephemeral });
         }
         break;
       }
