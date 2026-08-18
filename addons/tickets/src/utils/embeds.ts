@@ -8,6 +8,9 @@ import {
 } from 'discord.js';
 import type { Ticket, TicketPanel } from '../types.js';
 
+/** Translator bound to the viewer's locale, passed in from the addon context. */
+export type Translate = (key: string, vars?: Record<string, string | number>) => string;
+
 const COLORS = {
   OPEN: 0x57f287,
   CLAIMED: 0x5865f2,
@@ -24,6 +27,14 @@ const PRIORITY_EMOJI: Record<string, string> = {
   urgent: '🔴',
 };
 
+/** Localized display label for a ticket status / priority enum value. */
+function statusLabel(t: Translate, status: string): string {
+  return t('status' + status.charAt(0).toUpperCase() + status.slice(1));
+}
+function priorityLabel(t: Translate, priority: string): string {
+  return t('priority' + priority.charAt(0).toUpperCase() + priority.slice(1));
+}
+
 function parseColor(hex?: string): number {
   if (!hex) return 0x5865f2;
   const n = parseInt(hex.replace('#', ''), 16);
@@ -37,7 +48,7 @@ function toButtonStyle(color: string): ButtonStyle {
   );
 }
 
-// ─── Panel Embed ──────────────────────────────────────────────────────────────
+// ─── Panel Embed (author-configured text — not translated) ────────────────────
 
 export function buildPanelEmbed(panel: TicketPanel, guild: Guild): EmbedBuilder {
   const embed = new EmbedBuilder()
@@ -60,10 +71,6 @@ export function buildPanelEmbed(panel: TicketPanel, guild: Guild): EmbedBuilder 
   return embed;
 }
 
-/**
- * Build action row(s) for the panel message.
- * Multi-button panels are grouped into rows of ≤5.
- */
 export function buildPanelButtons(panel: TicketPanel): ActionRowBuilder<ButtonBuilder>[] {
   const buttons = panel.buttons && panel.buttons.length > 0 ? panel.buttons : null;
 
@@ -96,28 +103,27 @@ export function buildPanelButtons(panel: TicketPanel): ActionRowBuilder<ButtonBu
 
 // ─── Ticket Open Embed ────────────────────────────────────────────────────────
 
-export function buildTicketEmbed(ticket: Ticket, panel: TicketPanel, member: GuildMember): EmbedBuilder {
+export function buildTicketEmbed(ticket: Ticket, panel: TicketPanel, member: GuildMember, t: Translate): EmbedBuilder {
   const fields = [
-    { name: 'Opened by', value: `<@${ticket.userId}>`, inline: true },
-    { name: 'Ticket #', value: `#${ticket.number}`, inline: true },
-    { name: 'Priority', value: `${PRIORITY_EMOJI[ticket.priority]} ${capitalize(ticket.priority)}`, inline: true },
+    { name: t('fieldOpenedBy'), value: `<@${ticket.userId}>`, inline: true },
+    { name: t('fieldTicketNum'), value: `#${ticket.number}`, inline: true },
+    { name: t('fieldPriority'), value: `${PRIORITY_EMOJI[ticket.priority]} ${priorityLabel(t, ticket.priority)}`, inline: true },
   ];
 
-  if (ticket.categoryTag) fields.push({ name: 'Category', value: ticket.categoryTag, inline: true });
+  if (ticket.categoryTag) fields.push({ name: t('fieldCategory'), value: ticket.categoryTag, inline: true });
 
-  // Show form responses with their field labels, falling back to a plain Reason field
   if (ticket.formResponses && panel.fields && panel.fields.length > 0) {
     for (const f of panel.fields) {
       const answer = ticket.formResponses[f.id];
       if (answer) fields.push({ name: f.label, value: answer, inline: false });
     }
   } else if (ticket.reason) {
-    fields.push({ name: 'Reason', value: ticket.reason, inline: false });
+    fields.push({ name: t('fieldReason'), value: ticket.reason, inline: false });
   }
 
   return new EmbedBuilder()
     .setColor(COLORS.OPEN)
-    .setTitle(`Ticket #${ticket.number}`)
+    .setTitle(t('ticketTitle', { num: ticket.number }))
     .setDescription(
       panel.welcomeMessage
         .replace('{user}', `<@${ticket.userId}>`)
@@ -125,34 +131,34 @@ export function buildTicketEmbed(ticket: Ticket, panel: TicketPanel, member: Gui
         .replace('{number}', String(ticket.number)),
     )
     .addFields(fields)
-    .setFooter({ text: `Panel: ${panel.name}` })
+    .setFooter({ text: t('ticketFooter', { name: panel.name }) })
     .setTimestamp(new Date(ticket.createdAt));
 }
 
-export function buildTicketControls(channelId: string, waiting = false): ActionRowBuilder<ButtonBuilder>[] {
+export function buildTicketControls(channelId: string, t: Translate, waiting = false): ActionRowBuilder<ButtonBuilder>[] {
   return [
     new ActionRowBuilder<ButtonBuilder>().addComponents(
-      new ButtonBuilder().setCustomId(`ticket:claim:${channelId}`).setLabel('Claim').setEmoji('🙋').setStyle(ButtonStyle.Primary),
-      new ButtonBuilder().setCustomId(`ticket:close:${channelId}`).setLabel('Close').setEmoji('🔒').setStyle(ButtonStyle.Danger),
-      new ButtonBuilder().setCustomId(`ticket:transcript:${channelId}`).setLabel('Transcript').setEmoji('📄').setStyle(ButtonStyle.Secondary),
+      new ButtonBuilder().setCustomId(`ticket:claim:${channelId}`).setLabel(t('btnClaim')).setEmoji('🙋').setStyle(ButtonStyle.Primary),
+      new ButtonBuilder().setCustomId(`ticket:close:${channelId}`).setLabel(t('btnClose')).setEmoji('🔒').setStyle(ButtonStyle.Danger),
+      new ButtonBuilder().setCustomId(`ticket:transcript:${channelId}`).setLabel(t('btnTranscript')).setEmoji('📄').setStyle(ButtonStyle.Secondary),
       new ButtonBuilder()
         .setCustomId(`ticket:waiting:${channelId}`)
-        .setLabel(waiting ? 'Mark Active' : 'Waiting')
+        .setLabel(waiting ? t('btnMarkActive') : t('btnWaiting'))
         .setEmoji(waiting ? '🔄' : '⏳')
         .setStyle(waiting ? ButtonStyle.Primary : ButtonStyle.Secondary),
     ),
   ];
 }
 
-export function buildClaimedControls(channelId: string, waiting = false): ActionRowBuilder<ButtonBuilder>[] {
+export function buildClaimedControls(channelId: string, t: Translate, waiting = false): ActionRowBuilder<ButtonBuilder>[] {
   return [
     new ActionRowBuilder<ButtonBuilder>().addComponents(
-      new ButtonBuilder().setCustomId(`ticket:unclaim:${channelId}`).setLabel('Unclaim').setEmoji('↩️').setStyle(ButtonStyle.Secondary),
-      new ButtonBuilder().setCustomId(`ticket:close:${channelId}`).setLabel('Close').setEmoji('🔒').setStyle(ButtonStyle.Danger),
-      new ButtonBuilder().setCustomId(`ticket:transcript:${channelId}`).setLabel('Transcript').setEmoji('📄').setStyle(ButtonStyle.Secondary),
+      new ButtonBuilder().setCustomId(`ticket:unclaim:${channelId}`).setLabel(t('btnUnclaim')).setEmoji('↩️').setStyle(ButtonStyle.Secondary),
+      new ButtonBuilder().setCustomId(`ticket:close:${channelId}`).setLabel(t('btnClose')).setEmoji('🔒').setStyle(ButtonStyle.Danger),
+      new ButtonBuilder().setCustomId(`ticket:transcript:${channelId}`).setLabel(t('btnTranscript')).setEmoji('📄').setStyle(ButtonStyle.Secondary),
       new ButtonBuilder()
         .setCustomId(`ticket:waiting:${channelId}`)
-        .setLabel(waiting ? 'Mark Active' : 'Waiting')
+        .setLabel(waiting ? t('btnMarkActive') : t('btnWaiting'))
         .setEmoji(waiting ? '🔄' : '⏳')
         .setStyle(waiting ? ButtonStyle.Primary : ButtonStyle.Secondary),
     ),
@@ -161,23 +167,23 @@ export function buildClaimedControls(channelId: string, waiting = false): Action
 
 // ─── Ticket Closed / Rating / Transcript embeds ───────────────────────────────
 
-export function buildClosedEmbed(ticket: Ticket, closedByTag: string): EmbedBuilder {
+export function buildClosedEmbed(ticket: Ticket, closedByTag: string, t: Translate): EmbedBuilder {
   return new EmbedBuilder()
     .setColor(COLORS.CLOSED)
-    .setTitle(`🔒 Ticket #${ticket.number} Closed`)
+    .setTitle(t('closedTitle', { num: ticket.number }))
     .addFields(
-      { name: 'Opened by', value: `<@${ticket.userId}>`, inline: true },
-      { name: 'Closed by', value: closedByTag, inline: true },
-      { name: 'Duration', value: getDuration(ticket.createdAt, ticket.closedAt ?? new Date().toISOString()), inline: true },
+      { name: t('fieldOpenedBy'), value: `<@${ticket.userId}>`, inline: true },
+      { name: t('fieldClosedBy'), value: closedByTag, inline: true },
+      { name: t('fieldDuration'), value: getDuration(ticket.createdAt, ticket.closedAt ?? new Date().toISOString()), inline: true },
     )
     .setTimestamp();
 }
 
-export function buildRatingEmbed(ticket: Ticket): EmbedBuilder {
+export function buildRatingEmbed(ticket: Ticket, t: Translate): EmbedBuilder {
   return new EmbedBuilder()
     .setColor(COLORS.RATING)
-    .setTitle('How was your support experience?')
-    .setDescription(`Your ticket **#${ticket.number}** has been closed.\nPlease rate your experience to help us improve!`);
+    .setTitle(t('ratingTitle'))
+    .setDescription(t('ratingDesc', { num: ticket.number }));
 }
 
 export function buildRatingButtons(guildId: string, channelId: string): ActionRowBuilder<ButtonBuilder> {
@@ -191,61 +197,57 @@ export function buildRatingButtons(guildId: string, channelId: string): ActionRo
   );
 }
 
-export function buildTranscriptEmbed(ticket: Ticket, messageCount: number): EmbedBuilder {
+export function buildTranscriptEmbed(ticket: Ticket, messageCount: number, t: Translate): EmbedBuilder {
   const fields = [
-    { name: 'User', value: `<@${ticket.userId}> (${ticket.username})`, inline: true },
-    { name: 'Ticket #', value: `#${ticket.number}`, inline: true },
-    { name: 'Messages', value: String(messageCount), inline: true },
-    { name: 'Status', value: capitalize(ticket.status), inline: true },
-    { name: 'Priority', value: `${PRIORITY_EMOJI[ticket.priority]} ${capitalize(ticket.priority)}`, inline: true },
+    { name: t('fieldUser'), value: `<@${ticket.userId}> (${ticket.username})`, inline: true },
+    { name: t('fieldTicketNum'), value: `#${ticket.number}`, inline: true },
+    { name: t('fieldMessages'), value: String(messageCount), inline: true },
+    { name: t('fieldStatus'), value: statusLabel(t, ticket.status), inline: true },
+    { name: t('fieldPriority'), value: `${PRIORITY_EMOJI[ticket.priority]} ${priorityLabel(t, ticket.priority)}`, inline: true },
   ];
-  if (ticket.categoryTag) fields.push({ name: 'Category', value: ticket.categoryTag, inline: true });
-  if (ticket.claimedByTag) fields.push({ name: 'Claimed by', value: ticket.claimedByTag, inline: true });
-  if (ticket.rating) fields.push({ name: 'Rating', value: '⭐'.repeat(ticket.rating), inline: true });
+  if (ticket.categoryTag) fields.push({ name: t('fieldCategory'), value: ticket.categoryTag, inline: true });
+  if (ticket.claimedByTag) fields.push({ name: t('fieldClaimedBy'), value: ticket.claimedByTag, inline: true });
+  if (ticket.rating) fields.push({ name: t('fieldRating'), value: '⭐'.repeat(ticket.rating), inline: true });
 
   return new EmbedBuilder()
     .setColor(COLORS.INFO)
-    .setTitle(`📄 Transcript — Ticket #${ticket.number}`)
+    .setTitle(t('transcriptTitle', { num: ticket.number }))
     .addFields(fields)
     .setTimestamp(ticket.closedAt ? new Date(ticket.closedAt) : undefined);
 }
 
-export function buildInfoEmbed(ticket: Ticket, panel: TicketPanel): EmbedBuilder {
+export function buildInfoEmbed(ticket: Ticket, panel: TicketPanel, t: Translate): EmbedBuilder {
   const statusColor = { open: COLORS.OPEN, claimed: COLORS.CLAIMED, closed: COLORS.CLOSED, waiting: COLORS.WAITING }[ticket.status] ?? COLORS.INFO;
   const fields = [
-    { name: 'Status', value: capitalize(ticket.status), inline: true },
-    { name: 'Priority', value: `${PRIORITY_EMOJI[ticket.priority]} ${capitalize(ticket.priority)}`, inline: true },
-    { name: 'Panel', value: panel.name, inline: true },
-    { name: 'Opened by', value: `<@${ticket.userId}>`, inline: true },
+    { name: t('fieldStatus'), value: statusLabel(t, ticket.status), inline: true },
+    { name: t('fieldPriority'), value: `${PRIORITY_EMOJI[ticket.priority]} ${priorityLabel(t, ticket.priority)}`, inline: true },
+    { name: t('fieldPanel'), value: panel.name, inline: true },
+    { name: t('fieldOpenedBy'), value: `<@${ticket.userId}>`, inline: true },
   ];
-  if (ticket.categoryTag) fields.push({ name: 'Category', value: ticket.categoryTag, inline: true });
-  if (ticket.claimedByTag) fields.push({ name: 'Claimed by', value: ticket.claimedByTag, inline: true });
-  if (ticket.tags.length > 0) fields.push({ name: 'Tags', value: ticket.tags.join(', '), inline: false });
-  if (ticket.notes.length > 0) fields.push({ name: 'Staff Notes', value: String(ticket.notes.length), inline: true });
-  if (ticket.reason) fields.push({ name: 'Reason', value: ticket.reason, inline: false });
+  if (ticket.categoryTag) fields.push({ name: t('fieldCategory'), value: ticket.categoryTag, inline: true });
+  if (ticket.claimedByTag) fields.push({ name: t('fieldClaimedBy'), value: ticket.claimedByTag, inline: true });
+  if (ticket.tags.length > 0) fields.push({ name: t('fieldTags'), value: ticket.tags.join(', '), inline: false });
+  if (ticket.notes.length > 0) fields.push({ name: t('fieldStaffNotes'), value: String(ticket.notes.length), inline: true });
+  if (ticket.reason) fields.push({ name: t('fieldReason'), value: ticket.reason, inline: false });
 
   return new EmbedBuilder()
     .setColor(statusColor)
-    .setTitle(`Ticket #${ticket.number} — Info`)
+    .setTitle(t('infoTitle', { num: ticket.number }))
     .addFields(fields)
     .setTimestamp(new Date(ticket.createdAt));
 }
 
-export function buildReopenButton(channelId: string): ActionRowBuilder<ButtonBuilder> {
+export function buildReopenButton(channelId: string, t: Translate): ActionRowBuilder<ButtonBuilder> {
   return new ActionRowBuilder<ButtonBuilder>().addComponents(
     new ButtonBuilder()
       .setCustomId(`ticket:reopen:${channelId}`)
-      .setLabel('Reopen')
+      .setLabel(t('btnReopen'))
       .setEmoji('🔓')
       .setStyle(ButtonStyle.Success),
   );
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function capitalize(str: string): string {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
 
 function getDuration(startIso: string, endIso: string): string {
   const diffMs = new Date(endIso).getTime() - new Date(startIso).getTime();
