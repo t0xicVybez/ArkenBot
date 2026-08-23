@@ -1232,7 +1232,11 @@
     "repeat_none": "Sem repetição",
     "repeat_hourly": "A cada hora",
     "repeat_daily": "Diário",
-    "repeat_weekly": "Semanal"
+    "repeat_weekly": "Semanal",
+    "timezone": "Fuso horário",
+    "timezoneHelp": "O horário acima é interpretado neste fuso horário. As repetições mantêm o mesmo horário local (mesmo no horário de verão).",
+    "daysLabel": "Repetir nos dias",
+    "daysHelp": "Escolha os dias da semana para publicar. Deixe vazio para repetir a cada 7 dias a partir do horário inicial."
   },
   "forumManagementPage": {
     "saved": "Configuração de gerenciamento de fóruns salva!",

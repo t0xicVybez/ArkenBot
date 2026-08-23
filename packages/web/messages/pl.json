@@ -1232,7 +1232,11 @@
     "repeat_none": "Bez powtarzania",
     "repeat_hourly": "Co godzinę",
     "repeat_daily": "Codziennie",
-    "repeat_weekly": "Co tydzień"
+    "repeat_weekly": "Co tydzień",
+    "timezone": "Strefa czasowa",
+    "timezoneHelp": "Powyższa godzina jest interpretowana w tej strefie czasowej. Powtórzenia zachowują tę samą godzinę lokalną (nawet przy zmianie czasu).",
+    "daysLabel": "Powtarzaj w dniach",
+    "daysHelp": "Wybierz dni tygodnia do publikacji. Pozostaw puste, aby powtarzać co 7 dni od godziny początkowej."
   },
   "forumManagementPage": {
     "saved": "Zapisano konfigurację zarządzania forami!",

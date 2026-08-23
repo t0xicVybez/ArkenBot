@@ -7,6 +7,27 @@ import type { FastifyInstance } from 'fastify';
 import { requireAuth, requireGuildAdmin } from '../middleware/auth.js';
 import { prisma } from '../database.js';
 import { pub } from '../redis.js';
+import { wallClockToUtc } from '@arkenbot/shared';
+
+/** Interpret a scheduled-message time: absolute if it carries Z/offset, else wall-clock in tz. */
+function resolveScheduledAt(value: string, timezone?: string | null): Date {
+  if (/[zZ]$|[+-]\d{2}:?\d{2}$/.test(value)) return new Date(value);
+  const m = value.match(/^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2})/);
+  if (!m) return new Date(value);
+  return wallClockToUtc(Number(m[1]), Number(m[2]), Number(m[3]), Number(m[4]), Number(m[5]), timezone && timezone.length ? timezone : 'UTC');
+}
+
+/** Keep only valid IANA timezones (or null). */
+function cleanTimezone(tz: unknown): string | null {
+  if (typeof tz !== 'string' || !tz.length) return null;
+  try { new Intl.DateTimeFormat('en-US', { timeZone: tz }); return tz; } catch { return null; }
+}
+
+/** Normalize a weekday list to unique ints 0-6. */
+function cleanDays(days: unknown): number[] {
+  if (!Array.isArray(days)) return [];
+  return [...new Set(days.map(Number).filter((n) => Number.isInteger(n) && n >= 0 && n <= 6))].sort();
+}
 
 /**
  * Registers feature routes.
@@ -305,26 +326,40 @@ export async function featureRoutes(server: FastifyInstance): Promise<void> {
 
   server.post('/guilds/:guildId/scheduled-messages', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
-    const { channelId, content, embed, scheduledAt, repeat } = request.body as {
-      channelId: string; content: string; embed?: boolean; scheduledAt: string; repeat?: string;
+    const { channelId, content, embed, scheduledAt, repeat, timezone, daysOfWeek } = request.body as {
+      channelId: string; content: string; embed?: boolean; scheduledAt: string; repeat?: string; timezone?: string | null; daysOfWeek?: number[];
     };
     if (!channelId || !content || !scheduledAt) {
       return reply.code(400).send({ success: false, error: 'channelId, content, scheduledAt required' });
     }
+    const tz = cleanTimezone(timezone);
     const row = await prisma.scheduledMessage.create({
-      data: { guildId, channelId, content, embed: embed ?? false, scheduledAt: new Date(scheduledAt), repeat: repeat ?? null },
+      data: {
+        guildId, channelId, content, embed: embed ?? false,
+        scheduledAt: resolveScheduledAt(scheduledAt, tz),
+        repeat: repeat ?? null,
+        timezone: tz,
+        daysOfWeek: cleanDays(daysOfWeek),
+      },
     });
     return reply.code(201).send({ success: true, data: row });
   });
 
   server.patch('/guilds/:guildId/scheduled-messages/:id', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, id } = request.params as { guildId: string; id: string };
-    const body = request.body as { channelId?: string; content?: string; embed?: boolean; scheduledAt?: string; repeat?: string | null; enabled?: boolean };
+    const body = request.body as { channelId?: string; content?: string; embed?: boolean; scheduledAt?: string; repeat?: string | null; enabled?: boolean; timezone?: string | null; daysOfWeek?: number[] };
     const existing = await prisma.scheduledMessage.findFirst({ where: { id, guildId } });
     if (!existing) return reply.code(404).send({ success: false, error: 'Not found' });
+    const effectiveTz = body.timezone !== undefined ? cleanTimezone(body.timezone) : (existing.timezone ?? null);
+    const { timezone: _tz, daysOfWeek: _dow, scheduledAt: _sa, ...rest } = body;
     const updated = await prisma.scheduledMessage.update({
       where: { id },
-      data: { ...body, ...(body.scheduledAt && { scheduledAt: new Date(body.scheduledAt) }) },
+      data: {
+        ...rest,
+        ...(body.timezone !== undefined && { timezone: effectiveTz }),
+        ...(body.daysOfWeek !== undefined && { daysOfWeek: cleanDays(body.daysOfWeek) }),
+        ...(body.scheduledAt && { scheduledAt: resolveScheduledAt(body.scheduledAt, effectiveTz) }),
+      },
     });
     return reply.send({ success: true, data: updated });
   });

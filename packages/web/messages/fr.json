@@ -1232,7 +1232,11 @@
     "repeat_none": "Pas de répétition",
     "repeat_hourly": "Toutes les heures",
     "repeat_daily": "Quotidien",
-    "repeat_weekly": "Hebdomadaire"
+    "repeat_weekly": "Hebdomadaire",
+    "timezone": "Fuseau horaire",
+    "timezoneHelp": "L'heure ci-dessus est interprétée dans ce fuseau horaire. Les répétitions conservent la même heure locale (même lors du passage à l'heure d'été).",
+    "daysLabel": "Répéter les jours",
+    "daysHelp": "Choisissez les jours de la semaine où publier. Laissez vide pour répéter tous les 7 jours à partir de l'heure de début."
   },
   "forumManagementPage": {
     "saved": "Configuration de gestion des forums enregistrée !",

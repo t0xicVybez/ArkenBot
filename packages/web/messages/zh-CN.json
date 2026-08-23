@@ -1232,7 +1232,11 @@
     "repeat_none": "不重复",
     "repeat_hourly": "每小时",
     "repeat_daily": "每天",
-    "repeat_weekly": "每周"
+    "repeat_weekly": "每周",
+    "timezone": "时区",
+    "timezoneHelp": "上面的时间按此时区解释。重复会保持相同的本地时间（即使跨越夏令时）。",
+    "daysLabel": "重复的星期",
+    "daysHelp": "选择要发布的星期几。留空则从开始时间起每 7 天重复一次。"
   },
   "forumManagementPage": {
     "saved": "论坛管理配置已保存！",

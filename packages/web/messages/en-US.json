@@ -1232,7 +1232,11 @@
     "repeat_none": "No repeat",
     "repeat_hourly": "Hourly",
     "repeat_daily": "Daily",
-    "repeat_weekly": "Weekly"
+    "repeat_weekly": "Weekly",
+    "timezone": "Timezone",
+    "timezoneHelp": "The time above is interpreted in this timezone. Repeats keep the same local time (even across daylight saving).",
+    "daysLabel": "Repeat on days",
+    "daysHelp": "Pick the days of the week to post. Leave empty to repeat every 7 days from the start time."
   },
   "forumManagementPage": {
     "saved": "Forum management config saved!",

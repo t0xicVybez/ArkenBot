@@ -1232,7 +1232,11 @@
     "repeat_none": "繰り返しなし",
     "repeat_hourly": "1時間ごと",
     "repeat_daily": "毎日",
-    "repeat_weekly": "毎週"
+    "repeat_weekly": "毎週",
+    "timezone": "タイムゾーン",
+    "timezoneHelp": "上記の時刻はこのタイムゾーンで解釈されます。繰り返しは同じ現地時刻を維持します（夏時間をまたいでも）。",
+    "daysLabel": "繰り返す曜日",
+    "daysHelp": "投稿する曜日を選びます。空欄の場合は開始時刻から7日ごとに繰り返します。"
   },
   "forumManagementPage": {
     "saved": "フォーラム管理の設定を保存しました！",

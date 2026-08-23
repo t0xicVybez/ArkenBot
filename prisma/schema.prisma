@@ -697,6 +697,8 @@ model ScheduledMessage {
   embed          Boolean   @default(false)
   scheduledAt    DateTime
   repeat         String?   // null | hourly | daily | weekly
+  timezone       String?   // IANA tz (e.g. Asia/Bangkok); null = UTC
+  daysOfWeek     Int[]     @default([]) // for weekly repeat: 0=Sun..6=Sat; empty = every 7 days
   lastSentAt     DateTime?
   enabled        Boolean   @default(true)
   roleMentionId  String?   // role to ping when message is sent

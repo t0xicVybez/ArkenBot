@@ -7,6 +7,7 @@
  */
 
 import { EmbedBuilder, type TextChannel, type VoiceChannel } from 'discord.js';
+import { computeNextOccurrence } from '@arkenbot/shared';
 import { postAnalytics } from '../commands/utility/analytics.js';
 import { prisma } from '../database.js';
 import { notifyActionFailure } from '../utils/permissionAlert.js';
@@ -364,7 +365,7 @@ export class BackgroundJobs {
 
       // Advance to the next occurrence; disable the record if it has no repeat
       // interval. A successful send also resets the consecutive-failure counter.
-      const nextAt = getNextOccurrence(msg.scheduledAt, msg.repeat ?? null);
+      const nextAt = computeNextOccurrence(msg.scheduledAt, msg.repeat ?? null, msg.timezone ?? null, msg.daysOfWeek ?? []);
       await prisma.scheduledMessage.update({
         where: { id: msg.id },
         data: nextAt
@@ -1185,14 +1186,3 @@ export class BackgroundJobs {
  * previous `base` timestamp. Returns `null` for one-shot messages or unrecognised
  * repeat values, which causes the caller to disable the record.
  */
-function getNextOccurrence(base: Date, repeat: string | null): Date | null {
-  if (!repeat) return null;
-  const next = new Date(base);
-  switch (repeat) {
-    case 'hourly':  next.setUTCHours(next.getUTCHours() + 1); break;
-    case 'daily':   next.setUTCDate(next.getUTCDate() + 1); break;
-    case 'weekly':  next.setUTCDate(next.getUTCDate() + 7); break;
-    default:        return null;
-  }
-  return next;
-}
