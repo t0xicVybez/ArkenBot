@@ -1232,7 +1232,11 @@
     "repeat_none": "Keine Wiederholung",
     "repeat_hourly": "Stündlich",
     "repeat_daily": "Täglich",
-    "repeat_weekly": "Wöchentlich"
+    "repeat_weekly": "Wöchentlich",
+    "timezone": "Zeitzone",
+    "timezoneHelp": "Die obige Uhrzeit wird in dieser Zeitzone interpretiert. Wiederholungen behalten dieselbe lokale Uhrzeit (auch über die Sommerzeit hinweg).",
+    "daysLabel": "An Tagen wiederholen",
+    "daysHelp": "Wähle die Wochentage zum Posten. Leer lassen, um alle 7 Tage ab der Startzeit zu wiederholen."
   },
   "forumManagementPage": {
     "saved": "Forum-Verwaltungs-Konfiguration gespeichert!",

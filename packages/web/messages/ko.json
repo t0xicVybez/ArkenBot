@@ -1232,7 +1232,11 @@
     "repeat_none": "반복 없음",
     "repeat_hourly": "매시간",
     "repeat_daily": "매일",
-    "repeat_weekly": "매주"
+    "repeat_weekly": "매주",
+    "timezone": "시간대",
+    "timezoneHelp": "위 시간은 이 시간대로 해석됩니다. 반복은 동일한 현지 시간을 유지합니다(서머타임이 바뀌어도).",
+    "daysLabel": "반복할 요일",
+    "daysHelp": "게시할 요일을 선택하세요. 비워 두면 시작 시간부터 7일마다 반복합니다."
   },
   "forumManagementPage": {
     "saved": "포럼 관리 구성을 저장했습니다!",
