@@ -906,5 +906,23 @@
       "name": "Transcendentny",
       "description": "Wyślij 10 000 wiadomości"
     }
+  },
+  "permAlert": {
+    "title": "⚠️ Akcja zablokowana — brak uprawnień",
+    "description": "Próbowałem wykonać akcję, ale Discord ją zablokował, bo brakuje mi uprawnienia lub moja rola jest zbyt nisko. Nadaj mi poniższe uprawnienie (i przenieś moją rolę nad cel), aby następnym razem zadziałało automatycznie.",
+    "fieldAction": "Akcja",
+    "fieldPermission": "Prawdopodobnie brakuje",
+    "fieldChannel": "Kanał",
+    "fieldTarget": "Cel",
+    "footer": "Alert uprawnień",
+    "actions": {
+      "automodDelete": "AutoMod — usuń wiadomość",
+      "automodTimeout": "AutoMod — wycisz członka",
+      "automodKick": "AutoMod — wyrzuć członka",
+      "automodBan": "AutoMod — zbanuj członka",
+      "antiNuke": "Anti-nuke — działanie ochronne",
+      "autoRole": "Autorola — nadaj rolę przy wejściu",
+      "modAutoEscalate": "Ostrzeżenia — automatyczna eskalacja"
+    }
   }
 }

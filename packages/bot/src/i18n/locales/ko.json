@@ -906,5 +906,23 @@
       "name": "초월자",
       "description": "메시지 10,000개 전송"
     }
+  },
+  "permAlert": {
+    "title": "⚠️ 작업 차단됨 — 권한 부족",
+    "description": "작업을 수행하려 했지만 권한이 부족하거나 제 역할이 너무 낮아 Discord에서 차단되었습니다. 아래 권한을 부여하고(제 역할을 대상보다 위로 올려) 주시면 다음부터 자동으로 실행됩니다.",
+    "fieldAction": "작업",
+    "fieldPermission": "부족 추정",
+    "fieldChannel": "채널",
+    "fieldTarget": "대상",
+    "footer": "권한 알림",
+    "actions": {
+      "automodDelete": "자동 관리 — 메시지 삭제",
+      "automodTimeout": "자동 관리 — 타임아웃",
+      "automodKick": "자동 관리 — 추방",
+      "automodBan": "자동 관리 — 차단",
+      "antiNuke": "안티 뉴크 — 보호 조치",
+      "autoRole": "자동 역할 — 입장 시 부여",
+      "modAutoEscalate": "경고 — 자동 단계 상향"
+    }
   }
 }

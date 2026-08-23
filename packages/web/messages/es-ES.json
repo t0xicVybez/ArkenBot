@@ -924,7 +924,13 @@
     "dangerDesc": "Copias de seguridad, retención y acciones destructivas — todo en un lugar claramente marcado. Los datos de usuario (niveles, advertencias, casos) y los secretos nunca se incluyen en las copias.",
     "downloadConfig": "Descargar config. del servidor",
     "restoreBackup": "Restaurar desde copia",
-    "dangerTip": "Consejo: descarga una copia antes de quitar el bot — los datos del servidor se eliminan permanentemente 72 horas tras la eliminación. Las alertas de Monday.com se restauran con nuevas URL de webhook que deben volver a pegarse en monday.com."
+    "dangerTip": "Consejo: descarga una copia antes de quitar el bot — los datos del servidor se eliminan permanentemente 72 horas tras la eliminación. Las alertas de Monday.com se restauran con nuevas URL de webhook que deben volver a pegarse en monday.com.",
+    "permAlertsTitle": "Alertas de permisos",
+    "permAlertsDesc": "Recibe un aviso cuando el bot no pueda completar una acción por falta de permisos.",
+    "permAlertsEnabled": "Activar alertas de permisos",
+    "permAlertsEnabledDesc": "Publica una alerta en tu canal de registro de moderación (o de registros) cuando una acción como una eliminación de AutoMod, una respuesta anti-nuke o un autorol falle por falta de permisos.",
+    "permAlertRole": "Rol de alerta",
+    "permAlertRoleDesc": "Se menciona a este rol en la alerta. Déjalo en Ninguno para publicar la alerta sin mención."
   },
   "suggestionsPage": {
     "saved": "¡Ajustes de sugerencias guardados!",

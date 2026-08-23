@@ -207,6 +207,40 @@ export default function SettingsPage() {
         </div>
       </SettingsSection>
 
+      <SettingsSection title={t('permAlertsTitle')} description={t('permAlertsDesc')}>
+        <label className="flex items-start gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            className="h-4 w-4 mt-1 accent-discord-blurple"
+            checked={settings.permissionAlertsEnabled ?? true}
+            onChange={(e) => {
+              const v = e.target.checked;
+              setSettings((s) => ({ ...s, permissionAlertsEnabled: v }));
+              handleSave({ permissionAlertsEnabled: v });
+            }}
+          />
+          <span>
+            <span className="label !mb-0">{t('permAlertsEnabled')}</span>
+            <span className="block text-sm text-[var(--text-muted)]">{t('permAlertsEnabledDesc')}</span>
+          </span>
+        </label>
+        <div>
+          <label className="label">{t('permAlertRole')}</label>
+          <select
+            className="input"
+            value={settings.permissionAlertRoleId ?? ''}
+            onChange={(e) => setSettings((s) => ({ ...s, permissionAlertRoleId: e.target.value || undefined }))}
+            onBlur={() => handleSave({ permissionAlertRoleId: settings.permissionAlertRoleId })}
+          >
+            <option value="">{t('none')}</option>
+            {roles.filter((r) => r.name !== '@everyone').map((r) => (
+              <option key={r.id} value={r.id}>{r.name}</option>
+            ))}
+          </select>
+          <p className="text-sm text-[var(--text-muted)] mt-1">{t('permAlertRoleDesc')}</p>
+        </div>
+      </SettingsSection>
+
       <SettingsSection title={t('embedColorsTitle')} description={t('embedColorsDesc')}>
         {(
           [
