@@ -30,8 +30,8 @@ export async function streamAlertRoutes(server: FastifyInstance): Promise<void> 
     if (!platform || !discordChannelId) {
       return reply.code(400).send({ success: false, error: 'platform and discordChannelId are required' });
     }
-    if (!['twitch', 'kick', 'twitter', 'reddit', 'rss', 'youtube'].includes(platform as string)) {
-      return reply.code(400).send({ success: false, error: 'platform must be twitch, kick, twitter, reddit, rss, or youtube' });
+    if (!['twitch', 'kick', 'rss', 'youtube'].includes(platform as string)) {
+      return reply.code(400).send({ success: false, error: 'platform must be twitch, kick, rss, or youtube' });
     }
 
     if (!channelUsername) {

@@ -118,8 +118,6 @@
     "playing": "Playing",
     "unknownGame": "Unknown",
     "kickLive": "{streamer} is live on Kick!",
-    "twitterPosted": "{handle} posted on X",
-    "redditPostedBy": "Posted by u/{author} in r/{subreddit}",
     "rssNewPost": "New post from **{feed}**"
   },
   "announcement": {

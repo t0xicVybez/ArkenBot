@@ -146,8 +146,6 @@
     "playing": "プレイ中",
     "unknownGame": "不明",
     "kickLive": "{streamer} が Kick で配信中！",
-    "twitterPosted": "{handle} が X に投稿しました",
-    "redditPostedBy": "r/{subreddit} で u/{author} が投稿",
     "rssNewPost": "**{feed}** の新しい投稿",
     "rssFeedFallback": "RSSフィード",
     "rssPostFallback": "新しい投稿"
