@@ -923,7 +923,19 @@
       "antiNuke": "안티 뉴크 — 보호 조치",
       "autoRole": "자동 역할 — 입장 시 부여",
       "modAutoEscalate": "경고 — 자동 단계 상향",
-      "feedPost": "스트림/피드 알림 — 게시"
+      "feedPost": "스트림/피드 알림 — 게시",
+      "sendMessage": "메시지 보내기",
+      "deleteMessage": "메시지 삭제",
+      "manageMessages": "메시지 관리(수정/고정/일괄 삭제)",
+      "addReaction": "반응 추가",
+      "manageRoles": "역할 추가 또는 제거",
+      "ban": "멤버 차단",
+      "kick": "멤버 추방",
+      "memberUpdate": "멤버 타임아웃 또는 수정",
+      "manageChannels": "채널 생성·수정·삭제",
+      "manageServer": "서버 설정 변경",
+      "manageWebhooks": "웹후크 관리",
+      "generic": "작업 수행"
     }
   }
 }

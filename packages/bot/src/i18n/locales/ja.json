@@ -923,7 +923,19 @@
       "antiNuke": "アンチニューク — 保護アクション",
       "autoRole": "自動ロール — 参加時に付与",
       "modAutoEscalate": "警告 — 自動エスカレーション",
-      "feedPost": "配信/フィード通知 — 投稿"
+      "feedPost": "配信/フィード通知 — 投稿",
+      "sendMessage": "メッセージを送信",
+      "deleteMessage": "メッセージを削除",
+      "manageMessages": "メッセージ管理（編集/ピン留め/一括削除）",
+      "addReaction": "リアクションを追加",
+      "manageRoles": "ロールの付与・剥奪",
+      "ban": "メンバーをBAN",
+      "kick": "メンバーをキック",
+      "memberUpdate": "メンバーのタイムアウト・更新",
+      "manageChannels": "チャンネルの作成・編集・削除",
+      "manageServer": "サーバー設定の更新",
+      "manageWebhooks": "Webhook の管理",
+      "generic": "操作を実行"
     }
   }
 }
