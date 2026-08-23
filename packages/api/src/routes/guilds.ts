@@ -34,10 +34,15 @@ export async function guildRoutes(server: FastifyInstance): Promise<void> {
         after = res.data[res.data.length - 1].id;
       }
 
+      // Access is granted to the server owner, or anyone with Administrator or
+      // Manage Server — the standard "can configure this server" threshold.
       const ADMINISTRATOR = BigInt(0x8);
+      const MANAGE_GUILD = BigInt(0x20);
       const adminGuilds = allGuilds.filter((g) => {
-        const hasAdmin = (BigInt(g.permissions) & ADMINISTRATOR) === ADMINISTRATOR;
-        return hasAdmin || g.owner;
+        const perms = BigInt(g.permissions);
+        const canManage =
+          (perms & ADMINISTRATOR) === ADMINISTRATOR || (perms & MANAGE_GUILD) === MANAGE_GUILD;
+        return canManage || g.owner;
       });
 
       // Enrich with bot presence
@@ -56,6 +61,7 @@ export async function guildRoutes(server: FastifyInstance): Promise<void> {
         botPresent: botGuildMap.has(g.id) && (botGuildMap.get(g.id)?.isActive ?? false),
         memberCount: g.approximate_member_count ?? 0,
       }));
+
 
       return reply.send({ success: true, data: enriched });
     } catch (err: unknown) {
