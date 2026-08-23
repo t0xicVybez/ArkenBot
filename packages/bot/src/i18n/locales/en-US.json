@@ -923,7 +923,19 @@
       "antiNuke": "Anti-nuke — protective action",
       "autoRole": "Auto-role — assign role on join",
       "modAutoEscalate": "Warnings — automatic escalation",
-      "feedPost": "Stream/feed alert — post notification"
+      "feedPost": "Stream/feed alert — post notification",
+      "sendMessage": "Send a message",
+      "deleteMessage": "Delete a message",
+      "manageMessages": "Manage messages (edit/pin/bulk-delete)",
+      "addReaction": "Add a reaction",
+      "manageRoles": "Add or remove a role",
+      "ban": "Ban a member",
+      "kick": "Kick a member",
+      "memberUpdate": "Time out or update a member",
+      "manageChannels": "Create, edit, or delete a channel",
+      "manageServer": "Update server settings",
+      "manageWebhooks": "Manage webhooks",
+      "generic": "Perform an action"
     }
   }
 }

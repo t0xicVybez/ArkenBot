@@ -923,7 +923,19 @@
       "antiNuke": "Anti-Nuke — Schutzmaßnahme",
       "autoRole": "Auto-Rolle — Rolle beim Beitritt",
       "modAutoEscalate": "Verwarnungen — automatische Eskalation",
-      "feedPost": "Stream-/Feed-Benachrichtigung — senden"
+      "feedPost": "Stream-/Feed-Benachrichtigung — senden",
+      "sendMessage": "Eine Nachricht senden",
+      "deleteMessage": "Eine Nachricht löschen",
+      "manageMessages": "Nachrichten verwalten (bearbeiten/anpinnen/Massenlöschung)",
+      "addReaction": "Eine Reaktion hinzufügen",
+      "manageRoles": "Eine Rolle hinzufügen oder entfernen",
+      "ban": "Ein Mitglied bannen",
+      "kick": "Ein Mitglied kicken",
+      "memberUpdate": "Ein Mitglied stummschalten oder ändern",
+      "manageChannels": "Einen Kanal erstellen, bearbeiten oder löschen",
+      "manageServer": "Servereinstellungen ändern",
+      "manageWebhooks": "Webhooks verwalten",
+      "generic": "Eine Aktion ausführen"
     }
   }
 }
