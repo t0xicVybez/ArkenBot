@@ -26,6 +26,8 @@ const GuildSettingsPatchSchema = z.object({
   muteRoleId:           z.string().nullable().optional(),
   autoRoleId:           z.string().nullable().optional(),
   memberRoleId:         z.string().nullable().optional(),
+  permissionAlertsEnabled: z.boolean().optional(),
+  permissionAlertRoleId:   z.string().nullable().optional(),
   accentColor:          z.string().regex(/^#[0-9A-Fa-f]{6}$/).optional(),
   musicColor:           z.string().regex(/^#[0-9A-Fa-f]{6}$/).optional(),
   levelUpColor:         z.string().regex(/^#[0-9A-Fa-f]{6}$/).optional(),

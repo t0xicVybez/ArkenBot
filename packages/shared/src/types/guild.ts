@@ -40,6 +40,10 @@ export interface GuildSettings {
   autoRoleId?: string;
   memberRoleId?: string;
 
+  // Permission-failure alerts
+  permissionAlertsEnabled?: boolean;
+  permissionAlertRoleId?: string;
+
   // Leveling
   xpPerMessage: number;
   xpCooldown: number;

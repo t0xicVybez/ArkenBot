@@ -10,6 +10,7 @@ import { type Message, PermissionFlagsBits } from 'discord.js';
 import { prisma } from '../../database.js';
 import { redis } from '../../redis.js';
 import { logger, swallow} from '../../logger.js';
+import { notifyActionFailure } from '../../utils/permissionAlert.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 import axios from 'axios';
 
@@ -118,7 +119,7 @@ export class AntiPhishingModule {
     logger.warn({ guildId: message.guild.id, userId: message.author.id, domain: hit }, 'Phishing domain detected');
 
     // Delete the message
-    await message.delete().catch(swallow);
+    await message.delete().catch((e) => notifyActionFailure(message.guild!, { action: 'automodDelete', error: e, requiredPermission: 'Manage Messages', channelId: message.channelId, target: message.author.toString() }));
 
     // Warn the user in-channel (brief ephemeral-style message that deletes itself)
     const channel = message.channel;
@@ -134,7 +135,7 @@ export class AntiPhishingModule {
     if (config.antiPhishingAction === 'delete_mute') {
       await member
         .disableCommunicationUntil(Date.now() + 10 * 60 * 1000, 'Anti-phishing: sent a phishing link')
-        .catch(swallow);
+        .catch((e) => notifyActionFailure(message.guild!, { action: 'automodTimeout', error: e, requiredPermission: 'Timeout Members', channelId: message.channelId, target: message.author.toString() }));
     }
   }
 }

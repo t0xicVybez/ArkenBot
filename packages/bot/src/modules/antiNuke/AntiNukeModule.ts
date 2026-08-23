@@ -11,6 +11,7 @@ import { type Guild, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 import { redis } from '../../redis.js';
 import { getGuildSettings } from '../../utils/settings.js';
 import { logger, swallow} from '../../logger.js';
+import { notifyActionFailure } from '../../utils/permissionAlert.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 
 type ActionType = 'channelDelete' | 'roleDelete' | 'ban' | 'kick';
@@ -80,7 +81,7 @@ export class AntiNukeModule {
       if (member) {
         const rolesToRemove = member.roles.cache.filter(r => r.id !== guild.id);
         for (const [, role] of rolesToRemove) {
-          await member.roles.remove(role, 'Anti-nuke: destructive action threshold exceeded').catch(swallow);
+          await member.roles.remove(role, 'Anti-nuke: destructive action threshold exceeded').catch((e) => notifyActionFailure(guild, { action: 'antiNuke', error: e, requiredPermission: 'Manage Roles', target: `<@${userId}>` }));
         }
       }
 
@@ -100,9 +101,9 @@ export class AntiNukeModule {
 
       // Apply configured punishment
       if (config.action === 'ban' && guild.members.me?.permissions.has(PermissionFlagsBits.BanMembers)) {
-        await guild.members.ban(userId, { reason: `Anti-nuke: ${actionType} threshold exceeded` }).catch(swallow);
+        await guild.members.ban(userId, { reason: `Anti-nuke: ${actionType} threshold exceeded` }).catch((e) => notifyActionFailure(guild, { action: 'antiNuke', error: e, requiredPermission: 'Ban Members', target: `<@${userId}>` }));
       } else if (config.action === 'kick' && member && guild.members.me?.permissions.has(PermissionFlagsBits.KickMembers)) {
-        await member.kick(`Anti-nuke: ${actionType} threshold exceeded`).catch(swallow);
+        await member.kick(`Anti-nuke: ${actionType} threshold exceeded`).catch((e) => notifyActionFailure(guild, { action: 'antiNuke', error: e, requiredPermission: 'Kick Members', target: `<@${userId}>` }));
       }
 
       // Send alert embed to configured channel

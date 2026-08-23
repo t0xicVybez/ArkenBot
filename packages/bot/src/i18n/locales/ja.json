@@ -906,5 +906,23 @@
       "name": "超越者",
       "description": "10,000件のメッセージを送信する"
     }
+  },
+  "permAlert": {
+    "title": "⚠️ 操作がブロックされました — 権限不足",
+    "description": "操作を実行しようとしましたが、権限が不足しているか私のロールが低すぎるため、Discord にブロックされました。以下の権限を付与し（私のロールを対象より上に移動して）ください。次回から自動で実行されます。",
+    "fieldAction": "操作",
+    "fieldPermission": "不足している可能性",
+    "fieldChannel": "チャンネル",
+    "fieldTarget": "対象",
+    "footer": "権限アラート",
+    "actions": {
+      "automodDelete": "自動モデレーション — メッセージ削除",
+      "automodTimeout": "自動モデレーション — タイムアウト",
+      "automodKick": "自動モデレーション — キック",
+      "automodBan": "自動モデレーション — BAN",
+      "antiNuke": "アンチニューク — 保護アクション",
+      "autoRole": "自動ロール — 参加時に付与",
+      "modAutoEscalate": "警告 — 自動エスカレーション"
+    }
   }
 }

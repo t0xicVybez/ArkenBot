@@ -18,6 +18,7 @@ import { redis } from '../../redis.js';
 import { chatCompletion, isLLMAvailable } from '@arkenbot/shared';
 import type { AutoModConfig } from '@arkenbot/shared';
 import { logger, swallow} from '../../logger.js';
+import { notifyActionFailure } from '../../utils/permissionAlert.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 
 /** Only scan messages within this length band — skip "lol" and copy-paste walls. */
@@ -96,7 +97,7 @@ export class AiModerationModule {
   /** Deletes (if configured) and logs the flagged message for moderators. */
   private static async act(message: Message, config: AutoModConfig, verdict: Verdict): Promise<void> {
     const deleted = config.aiModAction === 'delete';
-    if (deleted) await message.delete().catch(swallow);
+    if (deleted) await message.delete().catch((e) => notifyActionFailure(message.guild!, { action: 'automodDelete', error: e, requiredPermission: 'Manage Messages', channelId: message.channelId, target: message.author.toString() }));
 
     await prisma.logEntry.create({
       data: {

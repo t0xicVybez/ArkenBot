@@ -924,7 +924,13 @@
     "dangerDesc": "백업, 보존 및 파괴적인 작업 — 모두 명확히 표시된 한 곳에 모여 있습니다. 사용자 데이터(레벨, 경고, 사건)와 비밀 정보는 백업에 절대 포함되지 않습니다.",
     "downloadConfig": "서버 구성 다운로드",
     "restoreBackup": "백업에서 복원",
-    "dangerTip": "팁: 봇을 제거하기 전에 백업을 다운로드하세요 — 서버 데이터는 제거 후 72시간 뒤에 영구 삭제됩니다. Monday.com 알림은 새 웹훅 URL로 복원되며 monday.com에 다시 붙여넣어야 합니다."
+    "dangerTip": "팁: 봇을 제거하기 전에 백업을 다운로드하세요 — 서버 데이터는 제거 후 72시간 뒤에 영구 삭제됩니다. Monday.com 알림은 새 웹훅 URL로 복원되며 monday.com에 다시 붙여넣어야 합니다.",
+    "permAlertsTitle": "권한 알림",
+    "permAlertsDesc": "권한 부족으로 봇이 작업을 완료하지 못할 때 알림을 받습니다.",
+    "permAlertsEnabled": "권한 알림 사용",
+    "permAlertsEnabledDesc": "자동 관리 삭제, 안티 뉴크 대응, 자동 역할 등의 작업이 권한 부족으로 실패하면 모드로그(또는 로그) 채널에 알림을 게시합니다.",
+    "permAlertRole": "알림 역할",
+    "permAlertRoleDesc": "이 역할이 알림에서 멘션됩니다. 멘션 없이 게시하려면 없음으로 두세요."
   },
   "suggestionsPage": {
     "saved": "건의 설정을 저장했습니다!",

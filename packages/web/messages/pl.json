@@ -924,7 +924,13 @@
     "dangerDesc": "Kopie zapasowe, przechowywanie i działania destrukcyjne — wszystko w jednym wyraźnie oznaczonym miejscu. Dane użytkowników (poziomy, ostrzeżenia, sprawy) i sekrety nigdy nie są zawarte w kopiach.",
     "downloadConfig": "Pobierz konfigurację serwera",
     "restoreBackup": "Przywróć z kopii",
-    "dangerTip": "Wskazówka: pobierz kopię przed usunięciem bota — dane serwera są trwale usuwane 72 godziny po usunięciu. Powiadomienia Monday.com są przywracane z nowymi adresami webhooków, które trzeba ponownie wkleić do monday.com."
+    "dangerTip": "Wskazówka: pobierz kopię przed usunięciem bota — dane serwera są trwale usuwane 72 godziny po usunięciu. Powiadomienia Monday.com są przywracane z nowymi adresami webhooków, które trzeba ponownie wkleić do monday.com.",
+    "permAlertsTitle": "Alerty uprawnień",
+    "permAlertsDesc": "Otrzymuj powiadomienie, gdy bot nie może wykonać akcji z powodu braku uprawnień.",
+    "permAlertsEnabled": "Włącz alerty uprawnień",
+    "permAlertsEnabledDesc": "Publikuje alert na kanale mod-log (lub log), gdy akcja taka jak usunięcie przez AutoMod, reakcja anti-nuke lub autorola nie powiedzie się z powodu braku uprawnień.",
+    "permAlertRole": "Rola alertu",
+    "permAlertRoleDesc": "Ta rola jest oznaczana w alercie. Zostaw „Brak”, aby publikować alert bez oznaczenia."
   },
   "suggestionsPage": {
     "saved": "Zapisano ustawienia sugestii!",

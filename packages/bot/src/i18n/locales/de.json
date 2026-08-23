@@ -906,5 +906,23 @@
       "name": "Transzendent",
       "description": "Sende 10.000 Nachrichten"
     }
+  },
+  "permAlert": {
+    "title": "⚠️ Aktion blockiert — fehlende Berechtigungen",
+    "description": "Ich wollte eine Aktion ausführen, aber Discord hat sie blockiert, weil mir eine Berechtigung fehlt oder meine Rolle zu niedrig ist. Erteile mir die unten genannte Berechtigung (und setze meine Rolle über die Zielperson), damit es künftig automatisch klappt.",
+    "fieldAction": "Aktion",
+    "fieldPermission": "Vermutlich fehlt",
+    "fieldChannel": "Kanal",
+    "fieldTarget": "Ziel",
+    "footer": "Berechtigungshinweis",
+    "actions": {
+      "automodDelete": "AutoMod — Nachricht löschen",
+      "automodTimeout": "AutoMod — Mitglied stummschalten",
+      "automodKick": "AutoMod — Mitglied kicken",
+      "automodBan": "AutoMod — Mitglied bannen",
+      "antiNuke": "Anti-Nuke — Schutzmaßnahme",
+      "autoRole": "Auto-Rolle — Rolle beim Beitritt",
+      "modAutoEscalate": "Verwarnungen — automatische Eskalation"
+    }
   }
 }

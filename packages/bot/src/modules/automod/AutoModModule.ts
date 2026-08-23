@@ -10,6 +10,7 @@ import { redis } from '../../redis.js';
 import { REDIS_KEYS, COLORS } from '@arkenbot/shared';
 import type { AutoModConfig } from '@arkenbot/shared';
 import { logger, swallow} from '../../logger.js';
+import { notifyActionFailure } from '../../utils/permissionAlert.js';
 import { AiModerationModule } from './AiModerationModule.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 
@@ -106,7 +107,7 @@ export class AutoModModule {
     const userId = message.author.id;
     const member = message.member as GuildMember;
 
-    await message.delete().catch(swallow);
+    await message.delete().catch((e) => notifyActionFailure(message.guild!, { action: 'automodDelete', error: e, requiredPermission: 'Manage Messages', channelId: message.channelId, target: message.author.toString() }));
 
     // Track cumulative violations within a 24-hour rolling window. The expiry is
     // set only on the first increment so subsequent hits don't extend the window.
@@ -150,7 +151,7 @@ export class AutoModModule {
 
     if (action === 'timeout') {
       await member.timeout(timeoutDuration * 1000, `AutoMod: Word filter violation #${count}`)
-        .catch(swallow);
+        .catch((e) => notifyActionFailure(message.guild!, { action: 'automodTimeout', error: e, requiredPermission: 'Timeout Members', channelId: message.channelId, target: message.author.toString() }));
     } else if (action === 'kick') {
       // Attempt a DM notification before the kick so the user knows why they were removed.
       const authorLoc = await resolveUserLocale({ user: message.author, guildId, guildLocale: message.guild!.preferredLocale });
@@ -170,7 +171,7 @@ export class AutoModModule {
         })
         .catch(swallow);
 
-      await member.kick(`AutoMod: Word filter violation #${count}`).catch(swallow);
+      await member.kick(`AutoMod: Word filter violation #${count}`).catch((e) => notifyActionFailure(message.guild!, { action: 'automodKick', error: e, requiredPermission: 'Kick Members', channelId: message.channelId, target: message.author.toString() }));
 
       // Reset the counter so a rejoining user starts fresh rather than being
       // immediately kicked again on their first message.
@@ -260,7 +261,7 @@ export class AutoModModule {
     reason: string
   ): Promise<void> {
     try {
-      await message.delete().catch(swallow);
+      await message.delete().catch((e) => notifyActionFailure(message.guild!, { action: 'automodDelete', error: e, requiredPermission: 'Manage Messages', channelId: message.channelId, target: message.author.toString() }));
 
       if (action === 'warn' || action === 'mute' || action === 'kick' || action === 'ban') {
         if ('send' in message.channel) {
@@ -282,15 +283,15 @@ export class AutoModModule {
       }
 
       if (action === 'mute' && message.member) {
-        await message.member.timeout(60000, `AutoMod: ${reason}`).catch(swallow);
+        await message.member.timeout(60000, `AutoMod: ${reason}`).catch((e) => notifyActionFailure(message.guild!, { action: 'automodTimeout', error: e, requiredPermission: 'Timeout Members', channelId: message.channelId, target: message.author.toString() }));
       }
 
       if (action === 'kick' && message.member?.kickable) {
-        await message.member.kick(`AutoMod: ${reason}`).catch(swallow);
+        await message.member.kick(`AutoMod: ${reason}`).catch((e) => notifyActionFailure(message.guild!, { action: 'automodKick', error: e, requiredPermission: 'Kick Members', channelId: message.channelId, target: message.author.toString() }));
       }
 
       if (action === 'ban' && message.member?.bannable) {
-        await message.member.ban({ reason: `AutoMod: ${reason}`, deleteMessageSeconds: 86400 }).catch(swallow);
+        await message.member.ban({ reason: `AutoMod: ${reason}`, deleteMessageSeconds: 86400 }).catch((e) => notifyActionFailure(message.guild!, { action: 'automodBan', error: e, requiredPermission: 'Ban Members', channelId: message.channelId, target: message.author.toString() }));
       }
 
       if (message.guild) {

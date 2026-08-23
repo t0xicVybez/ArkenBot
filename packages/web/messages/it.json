@@ -924,7 +924,13 @@
     "dangerDesc": "Backup, conservazione e azioni distruttive — tutto in un unico posto chiaramente contrassegnato. I dati utente (livelli, avvisi, casi) e i segreti non sono mai inclusi nei backup.",
     "downloadConfig": "Scarica config del server",
     "restoreBackup": "Ripristina da backup",
-    "dangerTip": "Suggerimento: scarica un backup prima di rimuovere il bot — i dati del server vengono eliminati definitivamente 72 ore dopo la rimozione. Gli avvisi di Monday.com vengono ripristinati con nuovi URL webhook che devono essere reincollati in monday.com."
+    "dangerTip": "Suggerimento: scarica un backup prima di rimuovere il bot — i dati del server vengono eliminati definitivamente 72 ore dopo la rimozione. Gli avvisi di Monday.com vengono ripristinati con nuovi URL webhook che devono essere reincollati in monday.com.",
+    "permAlertsTitle": "Avvisi permessi",
+    "permAlertsDesc": "Ricevi una notifica quando il bot non riesce a completare un'azione per mancanza di permessi.",
+    "permAlertsEnabled": "Attiva avvisi permessi",
+    "permAlertsEnabledDesc": "Pubblica un avviso nel canale mod-log (o log) quando un'azione come una rimozione AutoMod, una risposta anti-nuke o un ruolo automatico fallisce per mancanza di permessi.",
+    "permAlertRole": "Ruolo da avvisare",
+    "permAlertRoleDesc": "Questo ruolo viene menzionato nell'avviso. Lascia Nessuno per pubblicare l'avviso senza menzione."
   },
   "suggestionsPage": {
     "saved": "Impostazioni dei suggerimenti salvate!",

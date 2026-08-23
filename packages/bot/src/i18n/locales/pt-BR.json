@@ -906,5 +906,23 @@
       "name": "Transcendente",
       "description": "Envie 10.000 mensagens"
     }
+  },
+  "permAlert": {
+    "title": "⚠️ Ação bloqueada — permissões ausentes",
+    "description": "Tentei executar uma ação, mas o Discord a bloqueou porque falta uma permissão ou meu cargo está muito baixo. Conceda a permissão abaixo (e mova meu cargo acima do alvo) para que funcione automaticamente na próxima vez.",
+    "fieldAction": "Ação",
+    "fieldPermission": "Provavelmente ausente",
+    "fieldChannel": "Canal",
+    "fieldTarget": "Alvo",
+    "footer": "Alerta de permissão",
+    "actions": {
+      "automodDelete": "AutoMod — apagar mensagem",
+      "automodTimeout": "AutoMod — silenciar membro",
+      "automodKick": "AutoMod — expulsar membro",
+      "automodBan": "AutoMod — banir membro",
+      "antiNuke": "Anti-nuke — ação de proteção",
+      "autoRole": "Cargo automático — atribuir ao entrar",
+      "modAutoEscalate": "Avisos — escalonamento automático"
+    }
   }
 }

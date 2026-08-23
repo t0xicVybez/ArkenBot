@@ -924,7 +924,13 @@
     "dangerDesc": "备份、保留和破坏性操作——全部集中在一个明确标记的位置。用户数据（等级、警告、案件）和密钥绝不包含在备份中。",
     "downloadConfig": "下载服务器配置",
     "restoreBackup": "从备份恢复",
-    "dangerTip": "提示：移除机器人前请先下载备份——服务器数据将在移除 72 小时后被永久删除。Monday.com 提醒会以新的 webhook URL 恢复，需要重新粘贴到 monday.com。"
+    "dangerTip": "提示：移除机器人前请先下载备份——服务器数据将在移除 72 小时后被永久删除。Monday.com 提醒会以新的 webhook URL 恢复，需要重新粘贴到 monday.com。",
+    "permAlertsTitle": "权限提醒",
+    "permAlertsDesc": "当机器人因缺少权限而无法完成操作时收到通知。",
+    "permAlertsEnabled": "启用权限提醒",
+    "permAlertsEnabledDesc": "当自动审核删除、反炸群响应或自动身份组等操作因缺少权限而失败时，向你的管理日志（或日志）频道发送提醒。",
+    "permAlertRole": "提醒身份组",
+    "permAlertRoleDesc": "该身份组会在提醒中被提及。保留为“无”即可发送不带提及的提醒。"
   },
   "suggestionsPage": {
     "saved": "建议设置已保存！",

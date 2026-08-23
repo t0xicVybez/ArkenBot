@@ -17,6 +17,7 @@ import { getNextCaseNumber, getGuildSettings } from '../../utils/settings.js';
 import { LoggingModule } from '../../modules/logging/LoggingModule.js';
 
 import { swallow } from '../../logger.js';
+import { notifyActionFailure } from '../../utils/permissionAlert.js';
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('warn')
@@ -127,22 +128,22 @@ const command: BotCommand = {
           if (matched.action === 'mute' && muteRoleId) {
             const role = interaction.guild.roles.cache.get(muteRoleId);
             if (role) {
-              await targetMember.roles.add(role, `Auto-mute: ${warningCount} warnings`).catch(swallow);
+              await targetMember.roles.add(role, `Auto-mute: ${warningCount} warnings`).catch((e) => notifyActionFailure(interaction.guild!, { action: 'modAutoEscalate', error: e, requiredPermission: 'Manage Roles', channelId: interaction.channelId, target: targetUser.toString() }));
               escalationNote = `\n${t('cmd.warn.escalationMute', loc, { count: warningCount })}`;
             }
           } else if (matched.action === 'timeout' && matched.duration) {
             await targetMember.disableCommunicationUntil(
               Date.now() + matched.duration * 1000,
               `Auto-timeout: ${warningCount} warnings`,
-            ).catch(swallow);
+            ).catch((e) => notifyActionFailure(interaction.guild!, { action: 'modAutoEscalate', error: e, requiredPermission: 'Timeout Members', channelId: interaction.channelId, target: targetUser.toString() }));
             escalationNote = `\n${t('cmd.warn.escalationTimeout', loc, { duration: matched.duration, count: warningCount })}`;
           } else if (matched.action === 'ban') {
             await interaction.guild.members.ban(targetUser, {
               reason: `Auto-ban: ${warningCount} warnings reached threshold`,
-            }).catch(swallow);
+            }).catch((e) => notifyActionFailure(interaction.guild!, { action: 'modAutoEscalate', error: e, requiredPermission: 'Ban Members', channelId: interaction.channelId, target: targetUser.toString() }));
             escalationNote = `\n${t('cmd.warn.escalationBan', loc, { count: warningCount })}`;
           } else if (matched.action === 'kick') {
-            await targetMember.kick(`Auto-kick: ${warningCount} warnings`).catch(swallow);
+            await targetMember.kick(`Auto-kick: ${warningCount} warnings`).catch((e) => notifyActionFailure(interaction.guild!, { action: 'modAutoEscalate', error: e, requiredPermission: 'Kick Members', channelId: interaction.channelId, target: targetUser.toString() }));
             escalationNote = `\n${t('cmd.warn.escalationKick', loc, { count: warningCount })}`;
           }
         } catch { /* escalation errors are non-fatal */ }

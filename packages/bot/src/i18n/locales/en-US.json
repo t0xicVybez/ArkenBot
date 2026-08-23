@@ -906,5 +906,23 @@
       "name": "Transcendent",
       "description": "Send 10,000 messages"
     }
+  },
+  "permAlert": {
+    "title": "⚠️ Action blocked — missing permissions",
+    "description": "I tried to carry out an action but Discord blocked it because I'm missing a permission or my role is too low. Grant the permission below (and move my role above the target) so this runs automatically next time.",
+    "fieldAction": "Action",
+    "fieldPermission": "Likely missing",
+    "fieldChannel": "Channel",
+    "fieldTarget": "Target",
+    "footer": "Permission alert",
+    "actions": {
+      "automodDelete": "AutoMod — delete message",
+      "automodTimeout": "AutoMod — time out member",
+      "automodKick": "AutoMod — kick member",
+      "automodBan": "AutoMod — ban member",
+      "antiNuke": "Anti-nuke — protective action",
+      "autoRole": "Auto-role — assign role on join",
+      "modAutoEscalate": "Warnings — automatic escalation"
+    }
   }
 }
