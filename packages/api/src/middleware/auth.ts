@@ -120,11 +120,18 @@ export async function requireGuildAdmin(request: FastifyRequest, reply: FastifyR
 
   try {
     const { default: axios } = await import('axios');
-    const guildsRes = await axios.get('https://discord.com/api/v10/users/@me/guilds', {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
-
-    const guild = guildsRes.data.find((g: { id: string; permissions: string }) => g.id === guildId);
+    // Paginate /users/@me/guilds (200/page) and stop as soon as the target guild
+    // is found, so admins of 200+ servers can still open a recently-joined one.
+    type UserGuild = { id: string; permissions: string; owner?: boolean };
+    let guild: UserGuild | undefined;
+    let after: string | undefined;
+    for (let page = 0; page < 10 && !guild; page++) {
+      const url = `https://discord.com/api/v10/users/@me/guilds?limit=200${after ? `&after=${after}` : ''}`;
+      const guildsRes = await axios.get<UserGuild[]>(url, { headers: { Authorization: `Bearer ${accessToken}` } });
+      guild = guildsRes.data.find((g) => g.id === guildId);
+      if (guildsRes.data.length < 200) break;
+      after = guildsRes.data[guildsRes.data.length - 1].id;
+    }
     if (!guild) {
       reply.code(403).send({ success: false, error: 'You are not a member of this guild' });
       return;

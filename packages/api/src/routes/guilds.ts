@@ -13,19 +13,29 @@ export async function guildRoutes(server: FastifyInstance): Promise<void> {
     }
 
     try {
-      const res = await axios.get<Array<{
+      type DiscordGuild = {
         id: string;
         name: string;
         icon: string | null;
         permissions: string;
         owner: boolean;
         approximate_member_count?: number;
-      }>>('https://discord.com/api/v10/users/@me/guilds?with_counts=true', {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
+      };
+      // /users/@me/guilds returns at most 200 guilds per page. Paginate with the
+      // `after` cursor so users in 200+ servers still see all of them (otherwise
+      // recently-joined servers — which sort last by ID — get cut off).
+      const allGuilds: DiscordGuild[] = [];
+      let after: string | undefined;
+      for (let page = 0; page < 10; page++) {
+        const url = `https://discord.com/api/v10/users/@me/guilds?limit=200&with_counts=true${after ? `&after=${after}` : ''}`;
+        const res = await axios.get<DiscordGuild[]>(url, { headers: { Authorization: `Bearer ${accessToken}` } });
+        allGuilds.push(...res.data);
+        if (res.data.length < 200) break;
+        after = res.data[res.data.length - 1].id;
+      }
 
       const ADMINISTRATOR = BigInt(0x8);
-      const adminGuilds = res.data.filter((g) => {
+      const adminGuilds = allGuilds.filter((g) => {
         const hasAdmin = (BigInt(g.permissions) & ADMINISTRATOR) === ADMINISTRATOR;
         return hasAdmin || g.owner;
       });
