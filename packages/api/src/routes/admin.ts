@@ -338,8 +338,9 @@ export async function adminRoutes(server: FastifyInstance): Promise<void> {
           method: 'POST',
           headers: { Authorization: `Bearer ${groqKey}`, 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            model: 'llama-3.3-70b-versatile',
+            model: 'openai/gpt-oss-20b',
             messages: [{ role: 'user', content: prompt }],
+            reasoning_effort: 'low',
             temperature: 0.4,
             max_tokens: 900,
             response_format: { type: 'json_object' },
