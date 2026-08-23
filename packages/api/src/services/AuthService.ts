@@ -7,7 +7,7 @@ import axios from 'axios';
 import { createHash, randomBytes } from 'crypto';
 import { prisma } from '../database.js';
 import { config } from '../config.js';
-import { encryptSecret } from '../utils/crypto.js';
+import { encryptSecret, decryptSecretLenient } from '../utils/crypto.js';
 import type { PortalUser } from '@arkenbot/shared';
 
 const DISCORD_API = 'https://discord.com/api/v10';
@@ -135,5 +135,60 @@ export class AuthService {
       isStaff: user.isStaff,
       isBotOwner: user.isBotOwner,
     };
+  }
+
+  /**
+   * Exchanges a stored refresh token for a fresh access/refresh token pair.
+   * @throws If Discord rejects the refresh (e.g. the grant was revoked); the
+   *         caller should treat this as "re-authentication required".
+   */
+  static async refreshAccessToken(refreshToken: string): Promise<DiscordTokenResponse> {
+    const params = new URLSearchParams({
+      client_id: config.discord.clientId,
+      client_secret: config.discord.clientSecret,
+      grant_type: 'refresh_token',
+      refresh_token: refreshToken,
+    });
+    const response = await axios.post<DiscordTokenResponse>(
+      `${DISCORD_API}/oauth2/token`,
+      params,
+      { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
+    );
+    return response.data;
+  }
+
+  /**
+   * Returns a currently-valid Discord access token for the user, transparently
+   * refreshing (and re-sealing) it when the stored one is within 60s of expiry.
+   * Discord rotates the refresh token on each use, so the new pair is persisted.
+   * Returns null when there is no token or the refresh grant is no longer valid
+   * (the user must log in again).
+   */
+  static async getValidAccessToken(userId: string): Promise<string | null> {
+    const user = await prisma.portalUser.findUnique({
+      where: { id: userId },
+      select: { accessToken: true, refreshToken: true, tokenExpires: true },
+    });
+    if (!user?.accessToken) return null;
+
+    const stillValid = user.tokenExpires && user.tokenExpires.getTime() - Date.now() > 60_000;
+    if (stillValid) return decryptSecretLenient(user.accessToken);
+
+    // Expired (or about to): refresh using the stored refresh token.
+    if (!user.refreshToken) return null;
+    try {
+      const tokens = await this.refreshAccessToken(decryptSecretLenient(user.refreshToken));
+      await prisma.portalUser.update({
+        where: { id: userId },
+        data: {
+          accessToken: encryptSecret(tokens.access_token),
+          refreshToken: encryptSecret(tokens.refresh_token),
+          tokenExpires: new Date(Date.now() + tokens.expires_in * 1000),
+        },
+      });
+      return tokens.access_token;
+    } catch {
+      return null;
+    }
   }
 }
