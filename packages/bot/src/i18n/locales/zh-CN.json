@@ -922,7 +922,8 @@
       "automodBan": "自动审核 — 封禁成员",
       "antiNuke": "反炸群 — 保护操作",
       "autoRole": "自动身份组 — 加入时分配",
-      "modAutoEscalate": "警告 — 自动升级处理"
+      "modAutoEscalate": "警告 — 自动升级处理",
+      "feedPost": "直播/订阅提醒 — 发送通知"
     }
   }
 }

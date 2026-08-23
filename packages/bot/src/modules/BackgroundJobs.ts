@@ -9,6 +9,7 @@
 import { EmbedBuilder, type TextChannel, type VoiceChannel } from 'discord.js';
 import { postAnalytics } from '../commands/utility/analytics.js';
 import { prisma } from '../database.js';
+import { notifyActionFailure } from '../utils/permissionAlert.js';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = prisma as any;
 import { logger, swallow} from '../logger.js';
@@ -1114,6 +1115,21 @@ export class BackgroundJobs {
     const code = (err as { code?: number }).code;
     if (code !== 50001 && code !== 50013 && code !== 10003) return;
     await this.recordAlertFailure(id, `Discord error ${code}: ${(err as Error).message ?? 'permission denied'}`);
+    // On a genuine missing-permission error, also ping the guild's alert role.
+    if (code === 50013 || code === 50001) {
+      const alert = await prisma.streamAlert
+        .findUnique({ where: { id }, select: { guildId: true, discordChannelId: true } })
+        .catch(() => null);
+      const guild = alert ? this.client.guilds.cache.get(alert.guildId) : null;
+      if (guild && alert) {
+        await notifyActionFailure(guild, {
+          action: 'feedPost',
+          error: err,
+          requiredPermission: 'Send Messages / Embed Links',
+          channelId: alert.discordChannelId,
+        });
+      }
+    }
   }
 
   /**

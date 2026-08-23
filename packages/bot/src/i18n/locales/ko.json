@@ -922,7 +922,8 @@
       "automodBan": "자동 관리 — 차단",
       "antiNuke": "안티 뉴크 — 보호 조치",
       "autoRole": "자동 역할 — 입장 시 부여",
-      "modAutoEscalate": "경고 — 자동 단계 상향"
+      "modAutoEscalate": "경고 — 자동 단계 상향",
+      "feedPost": "스트림/피드 알림 — 게시"
     }
   }
 }

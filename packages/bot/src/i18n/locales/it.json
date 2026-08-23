@@ -922,7 +922,8 @@
       "automodBan": "AutoMod — banna membro",
       "antiNuke": "Anti-nuke — azione di protezione",
       "autoRole": "Ruolo automatico — assegna all’ingresso",
-      "modAutoEscalate": "Avvisi — escalation automatica"
+      "modAutoEscalate": "Avvisi — escalation automatica",
+      "feedPost": "Avviso stream/feed — pubblica notifica"
     }
   }
 }
