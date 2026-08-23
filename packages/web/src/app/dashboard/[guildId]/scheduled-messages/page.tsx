@@ -7,7 +7,7 @@ import { Clock, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useState } from 'react';
 import { Toggle } from '@/components/Toggle';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 
 type ScheduledMessage = {
   id: string;
@@ -17,11 +17,23 @@ type ScheduledMessage = {
   repeat: 'none' | 'hourly' | 'daily' | 'weekly';
   enabled: boolean;
   roleMentionId?: string | null;
+  timezone?: string | null;
+  daysOfWeek?: number[];
   failureCount?: number;
   lastError?: string | null;
 };
 
 const REPEAT_VALUES = ['none', 'hourly', 'daily', 'weekly'] as const;
+
+const TIMEZONES = [
+  'UTC',
+  'Pacific/Honolulu', 'America/Anchorage', 'America/Los_Angeles', 'America/Denver',
+  'America/Chicago', 'America/New_York', 'America/Sao_Paulo', 'Atlantic/Azores',
+  'Europe/London', 'Europe/Paris', 'Europe/Berlin', 'Europe/Athens', 'Europe/Moscow',
+  'Africa/Cairo', 'Africa/Johannesburg', 'Asia/Dubai', 'Asia/Karachi', 'Asia/Kolkata',
+  'Asia/Dhaka', 'Asia/Bangkok', 'Asia/Shanghai', 'Asia/Singapore', 'Asia/Tokyo',
+  'Asia/Seoul', 'Australia/Sydney', 'Pacific/Auckland',
+];
 
 export default function ScheduledMessagesPage() {
   const { guildId } = useParams() as { guildId: string };
@@ -33,6 +45,15 @@ export default function ScheduledMessagesPage() {
   const [newScheduledAt, setNewScheduledAt] = useState('');
   const [newRepeat, setNewRepeat] = useState<'none' | 'hourly' | 'daily' | 'weekly'>('none');
   const [newRoleMentionId, setNewRoleMentionId] = useState('');
+  const browserTz = typeof Intl !== 'undefined' ? Intl.DateTimeFormat().resolvedOptions().timeZone : 'UTC';
+  const [newTimezone, setNewTimezone] = useState<string>(browserTz || 'UTC');
+  const [newDays, setNewDays] = useState<number[]>([]);
+  const locale = useLocale();
+  const dayName = (d: number) =>
+    new Intl.DateTimeFormat(locale, { weekday: 'short', timeZone: 'UTC' }).format(new Date(Date.UTC(2024, 0, 7 + d)));
+  const toggleDay = (d: number) =>
+    setNewDays((prev) => (prev.includes(d) ? prev.filter((x) => x !== d) : [...prev, d].sort((a, b) => a - b)));
+  const timezoneOptions = TIMEZONES.includes(newTimezone) ? TIMEZONES : [newTimezone, ...TIMEZONES];
 
   const { data: msgsRes, isLoading } = useQuery({
     queryKey: ['scheduled-messages', guildId],
@@ -94,8 +115,10 @@ export default function ScheduledMessagesPage() {
     createMutation.mutate({
       channelId: newChannelId,
       content: newContent,
-      scheduledAt: new Date(newScheduledAt).toISOString(),
+      scheduledAt: newScheduledAt, // naive wall-clock; interpreted in the chosen timezone by the API
       repeat: newRepeat,
+      timezone: newTimezone,
+      ...(newRepeat === 'weekly' ? { daysOfWeek: newDays } : {}),
       ...(newRoleMentionId ? { roleMentionId: newRoleMentionId } : {}),
     });
   };
@@ -235,6 +258,37 @@ export default function ScheduledMessagesPage() {
               </select>
             </div>
           </div>
+          <div>
+            <label className="label">{t('timezone')}</label>
+            <select
+              className="input"
+              value={newTimezone}
+              onChange={(e) => setNewTimezone(e.target.value)}
+            >
+              {timezoneOptions.map((tz) => (
+                <option key={tz} value={tz}>{tz.replace(/_/g, ' ')}</option>
+              ))}
+            </select>
+            <p className="text-xs text-gray-500 mt-1">{t('timezoneHelp')}</p>
+          </div>
+          {newRepeat === 'weekly' && (
+            <div>
+              <label className="label">{t('daysLabel')}</label>
+              <div className="flex flex-wrap gap-2">
+                {[0, 1, 2, 3, 4, 5, 6].map((d) => (
+                  <button
+                    key={d}
+                    type="button"
+                    onClick={() => toggleDay(d)}
+                    className={`px-3 py-1.5 rounded-md text-sm border capitalize ${newDays.includes(d) ? 'bg-discord-blurple border-discord-blurple text-white' : 'border-[var(--border-subtle)] text-gray-300 hover:border-discord-blurple/50'}`}
+                  >
+                    {dayName(d)}
+                  </button>
+                ))}
+              </div>
+              <p className="text-xs text-gray-500 mt-1">{t('daysHelp')}</p>
+            </div>
+          )}
           <div>
             <label className="label">{t('pingRole')}</label>
             <select
