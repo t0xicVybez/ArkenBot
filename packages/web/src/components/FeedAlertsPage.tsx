@@ -47,8 +47,6 @@ const PLATFORM_VISUALS: Record<string, { glyph: string; bg: string; fg: string }
   twitch:  { glyph: 'T', bg: 'rgba(145,70,255,0.18)',  fg: '#b795ff' },
   kick:    { glyph: 'K', bg: 'rgba(83,252,24,0.14)',   fg: '#7ef15a' },
   youtube: { glyph: '▶', bg: 'rgba(255,0,0,0.16)',     fg: '#ff6b6b' },
-  twitter: { glyph: '𝕏', bg: 'rgba(255,255,255,0.10)', fg: '#e7e9ee' },
-  reddit:  { glyph: 'r/', bg: 'rgba(255,69,0,0.16)',   fg: '#ff8a5c' },
   rss:     { glyph: '⊙', bg: 'rgba(245,158,11,0.16)',  fg: '#f5b04b' },
 };
 

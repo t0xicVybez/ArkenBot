@@ -24,13 +24,6 @@ import RSSParser from 'rss-parser';
 export class BackgroundJobs {
   private client: BotClient;
   private timers: NodeJS.Timeout[] = [];
-  // Suppress the "Reddit alert skipped — no OAuth token" warning after the first
-  // occurrence so it doesn't flood logs every polling cycle while creds are unset.
-  private redditSkipWarned = false;
-  // Same idea for Twitter/X: once the handle→ID lookup starts failing (expired
-  // token, depleted API credits, rate limit), log one line with the HTTP status
-  // and suppress the rest so it doesn't flood logs every 5-minute cycle.
-  private twitterSkipWarned = false;
 
   constructor(client: BotClient) {
     this.client = client;
@@ -625,9 +618,6 @@ export class BackgroundJobs {
   private async runStreamAlerts(): Promise<void> {
     const twitchClientId = process.env.TWITCH_CLIENT_ID;
     const twitchClientSecret = process.env.TWITCH_CLIENT_SECRET;
-    const twitterBearerToken = process.env.TWITTER_BEARER_TOKEN;
-    const redditClientId = process.env.REDDIT_CLIENT_ID;
-    const redditClientSecret = process.env.REDDIT_CLIENT_SECRET;
     const youtubeApiKey = process.env.YOUTUBE_API_KEY;
 
     try {
@@ -657,28 +647,6 @@ export class BackgroundJobs {
         }
       }
 
-      // Obtain a Reddit OAuth token. Reddit blocks datacenter IPs from the
-      // public JSON API and RSS feeds; the OAuth endpoint works from any IP.
-      let redditToken: string | null = null;
-      if (redditClientId && redditClientSecret && otherAlerts.some((a) => a.platform === 'reddit')) {
-        const creds = Buffer.from(`${redditClientId}:${redditClientSecret}`).toString('base64');
-        const tokenRes = await fetch('https://www.reddit.com/api/v1/access_token', {
-          method: 'POST',
-          headers: {
-            Authorization: `Basic ${creds}`,
-            'User-Agent': 'linux:arkenbot:v1.0 (by /u/ArkenbotOffical)',
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: 'grant_type=client_credentials',
-        }).catch(swallow);
-        if (tokenRes?.ok) {
-          const tokenData = await tokenRes.json() as { access_token: string };
-          redditToken = tokenData.access_token;
-        } else {
-          logger.warn('Failed to obtain Reddit OAuth token — Reddit alerts will be skipped');
-        }
-      }
-
       const rssParser = new RSSParser();
 
       // Process alerts in parallel batches of 5 so we don't hammer external APIs
@@ -687,7 +655,7 @@ export class BackgroundJobs {
       for (let i = 0; i < otherAlerts.length; i += BATCH) {
         await Promise.allSettled(
           otherAlerts.slice(i, i + BATCH).map((alert) =>
-            this.processStreamAlert(alert, twitchClientId ?? null, twitchClientSecret ?? null, twitchToken, twitterBearerToken ?? null, redditToken, rssParser),
+            this.processStreamAlert(alert, twitchClientId ?? null, twitchClientSecret ?? null, twitchToken, rssParser),
           ),
         );
       }
@@ -868,8 +836,6 @@ export class BackgroundJobs {
     twitchClientId: string | null,
     twitchClientSecret: string | null,
     twitchToken: string | null,
-    twitterBearerToken: string | null,
-    redditToken: string | null,
     rssParser: RSSParser,
   ): Promise<void> {
     if (!alert) return;
@@ -963,111 +929,6 @@ export class BackgroundJobs {
         const alertMsg = await channel.send({ content: message, embeds: [embed] });
         await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastMessageId: alertMsg.id, lastMessageChannelId: alertMsg.channelId, failureCount: 0, lastError: null } }).catch(swallow);
         logger.info({ guildId: alert.guildId, streamer: alert.channelUsername }, 'Kick stream alert sent');
-
-      } else if (alert.platform === 'twitter' && twitterBearerToken) {
-        // Twitter's v2 timeline endpoint requires a numeric user ID. On the first
-        // alert check, resolve the handle to an ID and persist it so subsequent
-        // runs skip the lookup.
-        let resolvedUserId = alert.channelId;
-        if (!resolvedUserId) {
-          const username = alert.channelUsername.replace(/^@/, '');
-          const userRes = await fetch(
-            `https://api.twitter.com/2/users/by/username/${encodeURIComponent(username)}`,
-            { headers: { 'Authorization': `Bearer ${twitterBearerToken}` } },
-          );
-          const userData = await userRes.json() as { data?: { id: string } };
-          resolvedUserId = userData.data?.id ?? null;
-          if (resolvedUserId) {
-            await prisma.streamAlert.update({ where: { id: alert.id }, data: { channelId: resolvedUserId } });
-            this.twitterSkipWarned = false; // recovered — allow future warnings again
-          } else {
-            if (!this.twitterSkipWarned) {
-              const reason = userRes.status === 402 ? ' — API credits depleted'
-                : userRes.status === 401 ? ' — invalid/expired bearer token'
-                : userRes.status === 429 ? ' — rate limited'
-                : '';
-              logger.warn(
-                { status: userRes.status, channelUsername: alert.channelUsername },
-                `Twitter alert lookup failed (HTTP ${userRes.status}${reason}) — could not resolve user ID. Suppressing further warnings until it recovers.`,
-              );
-              this.twitterSkipWarned = true;
-            }
-            return;
-          }
-        }
-
-        const tweetsRes = await fetch(
-          `https://api.twitter.com/2/users/${resolvedUserId}/tweets?max_results=5&exclude=retweets,replies`,
-          { headers: { 'Authorization': `Bearer ${twitterBearerToken}` } },
-        );
-        const tweetsData = await tweetsRes.json() as { data?: Array<{ id: string; text: string }> };
-        const latestTweet = tweetsData.data?.[0];
-        if (!latestTweet || latestTweet.id === alert.lastStreamId) return;
-
-        await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastStreamId: latestTweet.id } });
-
-        const tweetUrl = `https://x.com/${alert.channelUsername.replace(/^@/, '')}/status/${latestTweet.id}`;
-        const handle = alert.channelUsername.startsWith('@') ? alert.channelUsername : `@${alert.channelUsername}`;
-        const message = alert.message
-          .replace(/\{streamer\}/g, handle)
-          .replace(/\{url\}/g, tweetUrl)
-          .replace(/\{title\}/g, latestTweet.text);
-
-        const embed = new EmbedBuilder()
-          .setTitle(t('streamAlert.twitterPosted', loc, { handle }))
-          .setDescription(latestTweet.text)
-          .setURL(tweetUrl)
-          .setColor(alertColor ?? 0x000000)
-          .setTimestamp();
-
-        const alertMsg = await channel.send({ content: message, embeds: [embed] });
-        await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastMessageId: alertMsg.id, lastMessageChannelId: alertMsg.channelId, failureCount: 0, lastError: null } }).catch(swallow);
-        logger.info({ guildId: alert.guildId, streamer: alert.channelUsername }, 'Twitter/X alert sent');
-
-      } else if (alert.platform === 'reddit') {
-        // Reddit blocks unauthenticated requests from datacenter IPs.
-        // Requires REDDIT_CLIENT_ID + REDDIT_CLIENT_SECRET in .env.
-        if (!redditToken) {
-          if (!this.redditSkipWarned) {
-            logger.warn('Reddit alerts skipped — no OAuth token (set REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET). Further warnings suppressed this run.');
-            this.redditSkipWarned = true;
-          }
-          return;
-        }
-        const subreddit = alert.channelUsername.replace(/^r\//, '');
-        const res = await fetch(
-          `https://oauth.reddit.com/r/${encodeURIComponent(subreddit)}/new?limit=5`,
-          {
-            headers: {
-              Authorization: `Bearer ${redditToken}`,
-              'User-Agent': 'linux:arkenbot:v1.0 (by /u/ArkenbotOffical)',
-            },
-          },
-        );
-        if (!res.ok) return;
-        const data = await res.json() as { data?: { children?: Array<{ data: { id: string; title: string; permalink: string; author: string } }> } };
-        const latestPost = data.data?.children?.[0]?.data;
-        if (!latestPost || latestPost.id === alert.lastStreamId) return;
-
-        await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastStreamId: latestPost.id } });
-
-        const postUrl = `https://reddit.com${latestPost.permalink}`;
-        const message = alert.message
-          .replace(/\{streamer\}/g, `r/${subreddit}`)
-          .replace(/\{url\}/g, postUrl)
-          .replace(/\{title\}/g, latestPost.title)
-          .replace(/\{author\}/g, latestPost.author);
-
-        const embed = new EmbedBuilder()
-          .setTitle(latestPost.title)
-          .setURL(postUrl)
-          .setDescription(t('streamAlert.redditPostedBy', loc, { author: latestPost.author, subreddit }))
-          .setColor(alertColor ?? 0xff4500)
-          .setTimestamp();
-
-        const alertMsg = await channel.send({ content: message, embeds: [embed] });
-        await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastMessageId: alertMsg.id, lastMessageChannelId: alertMsg.channelId, failureCount: 0, lastError: null } }).catch(swallow);
-        logger.info({ guildId: alert.guildId, subreddit }, 'Reddit post alert sent');
 
       } else if (alert.platform === 'rss') {
         // For RSS/Podcast alerts, `channelUsername` stores the feed URL rather

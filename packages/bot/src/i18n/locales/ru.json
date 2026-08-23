@@ -146,8 +146,6 @@
     "playing": "Играет в",
     "unknownGame": "Неизвестно",
     "kickLive": "{streamer} в эфире на Kick!",
-    "twitterPosted": "{handle} опубликовал(а) в X",
-    "redditPostedBy": "Опубликовано u/{author} в r/{subreddit}",
     "rssNewPost": "Новая запись от **{feed}**",
     "rssFeedFallback": "RSS-лента",
     "rssPostFallback": "Новая публикация"

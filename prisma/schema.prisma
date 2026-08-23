@@ -1139,15 +1139,15 @@ model CommandRolePermission {
 }
 
 // ─────────────────────────────────────────────
-// Stream Alerts (Twitch, Kick, Twitter, Reddit, RSS notifications)
+// Stream Alerts (Twitch, Kick, RSS, YouTube notifications)
 // ─────────────────────────────────────────────
 model StreamAlert {
   id               String   @id @default(cuid())
   guildId          String
   guild            Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
-  platform         String   // "twitch" | "kick" | "twitter" | "reddit" | "rss" | "youtube"
+  platform         String   // "twitch" | "kick" | "rss" | "youtube"
   channelUsername  String
-  channelId        String?  // resolved platform ID (e.g. Twitter numeric user ID)
+  channelId        String?  // resolved platform ID (e.g. YouTube channel ID)
   discordChannelId String
   message          String   @default("{streamer} is now live! {url}")
   enabled          Boolean  @default(true)

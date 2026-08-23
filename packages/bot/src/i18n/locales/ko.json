@@ -146,8 +146,6 @@
     "playing": "플레이 중",
     "unknownGame": "알 수 없음",
     "kickLive": "{streamer}님이 Kick에서 라이브 중입니다!",
-    "twitterPosted": "{handle}님이 X에 게시했습니다",
-    "redditPostedBy": "r/{subreddit}에서 u/{author}님이 게시함",
     "rssNewPost": "**{feed}**의 새 게시물",
     "rssFeedFallback": "RSS 피드",
     "rssPostFallback": "새 게시물"
