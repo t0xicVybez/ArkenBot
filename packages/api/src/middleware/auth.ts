@@ -138,10 +138,13 @@ export async function requireGuildAdmin(request: FastifyRequest, reply: FastifyR
     }
 
     const ADMINISTRATOR = BigInt(0x8);
-    const hasAdmin = (BigInt(guild.permissions) & ADMINISTRATOR) === ADMINISTRATOR;
+    const MANAGE_GUILD = BigInt(0x20);
+    const perms = BigInt(guild.permissions);
+    const canManage =
+      (perms & ADMINISTRATOR) === ADMINISTRATOR || (perms & MANAGE_GUILD) === MANAGE_GUILD;
 
-    if (!hasAdmin && guild.owner !== true) {
-      reply.code(403).send({ success: false, error: 'Administrator permission required' });
+    if (!canManage && guild.owner !== true) {
+      reply.code(403).send({ success: false, error: 'Administrator or Manage Server permission required' });
     }
   } catch {
     reply.code(500).send({ success: false, error: 'Failed to verify guild permissions' });
