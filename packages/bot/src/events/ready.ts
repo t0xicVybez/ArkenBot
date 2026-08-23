@@ -5,7 +5,7 @@
  * real-time commands from the web dashboard (settings reloads, presence updates,
  * reaction-role deployments, embed sends, and announcements).
  */
-import { ActivityType, ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, type PresenceStatusData, type TextChannel } from 'discord.js';
+import { ActivityType, ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, ChannelType, EmbedBuilder, PermissionFlagsBits, type PresenceStatusData, type TextChannel } from 'discord.js';
 import type { BotEvent } from '../types.js';
 import { logger, swallow} from '../logger.js';
 import { pub } from '../redis.js';
@@ -35,9 +35,58 @@ const TYPE_LABEL: Record<string, { emoji: string; label: string }> = {
   hotfix:      { emoji: '🚑', label: 'Hotfix' },
 };
 
+/**
+ * Resolves where a bot announcement should go for a guild. Prefers the server's
+ * chosen channel; otherwise auto-creates a gated '#arken-updates' channel (only
+ * readable by members who can manage the server) — but only where the bot has
+ * Manage Channels, skipping the guild otherwise. The created channel is saved as
+ * the guild's announcement channel so it's reused next time.
+ */
+async function resolveAnnouncementChannel(
+  client: import('../client.js').BotClient,
+  guildId: string,
+  storedChannelId: string | null,
+): Promise<TextChannel | null> {
+  if (storedChannelId) {
+    const ch = client.channels.cache.get(storedChannelId) ?? (await client.channels.fetch(storedChannelId).catch(() => null));
+    if (ch && ch.isTextBased()) return ch as TextChannel;
+  }
+  const guild = client.guilds.cache.get(guildId);
+  const me = guild?.members.me;
+  if (!guild || !me?.permissions.has(PermissionFlagsBits.ManageChannels)) return null;
+
+  let channel = guild.channels.cache.find(
+    (c) => c.type === ChannelType.GuildText && c.name === 'arken-updates',
+  ) as TextChannel | undefined;
+
+  if (!channel) {
+    const overwrites: Array<{ id: string; allow?: bigint[]; deny?: bigint[] }> = [
+      { id: guild.roles.everyone.id, deny: [PermissionFlagsBits.ViewChannel] },
+      { id: me.id, allow: [PermissionFlagsBits.ViewChannel, PermissionFlagsBits.SendMessages, PermissionFlagsBits.EmbedLinks] },
+    ];
+    for (const role of guild.roles.cache.values()) {
+      if (role.permissions.has(PermissionFlagsBits.Administrator) || role.permissions.has(PermissionFlagsBits.ManageGuild)) {
+        overwrites.push({ id: role.id, allow: [PermissionFlagsBits.ViewChannel] });
+      }
+    }
+    channel = await guild.channels
+      .create({
+        name: 'arken-updates',
+        type: ChannelType.GuildText,
+        topic: 'ArkenBot announcements & updates — visible to members who can manage the server.',
+        permissionOverwrites: overwrites,
+      })
+      .catch(() => undefined);
+    if (!channel) return null;
+  }
+
+  await prisma.guildSettings.update({ where: { guildId }, data: { announcementChannelId: channel.id } }).catch(swallow);
+  return channel;
+}
+
 async function sendAnnouncement(
   client: import('../client.js').BotClient,
-  data: { id: string; title: string; body: string; type: string; targets: Array<{ guildId: string; announcementChannelId: string }> },
+  data: { id: string; title: string; body: string; type: string; targets: Array<{ guildId: string; announcementChannelId: string | null }> },
 ): Promise<void> {
   const defaultColor = TYPE_COLOR[data.type] ?? TYPE_COLOR.update;
   const meta = TYPE_LABEL[data.type] ?? TYPE_LABEL.update;
@@ -47,7 +96,7 @@ async function sendAnnouncement(
   let sent = 0;
   for (const target of data.targets) {
     try {
-      const channel = client.channels.cache.get(target.announcementChannelId) as TextChannel | undefined;
+      const channel = await resolveAnnouncementChannel(client, target.guildId, target.announcementChannelId);
       if (channel?.isTextBased()) {
         const guildSettings = await getGuildSettings(target.guildId);
         const guild = client.guilds.cache.get(target.guildId);
