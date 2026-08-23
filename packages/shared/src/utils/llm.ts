@@ -10,7 +10,7 @@
 const GROQ_ENDPOINT = 'https://api.groq.com/openai/v1/chat/completions';
 
 /** Default model — fast, capable, and already used for changelog rewriting. */
-export const DEFAULT_LLM_MODEL = 'llama-3.3-70b-versatile';
+export const DEFAULT_LLM_MODEL = 'openai/gpt-oss-20b';
 
 export type LLMRole = 'system' | 'user' | 'assistant';
 export interface LLMMessage {
@@ -78,6 +78,9 @@ export async function chatCompletion(messages: LLMMessage[], opts: LLMOptions = 
         messages,
         temperature,
         max_tokens: maxTokens,
+        // gpt-oss models reason before answering; keep it minimal so tight
+        // token budgets (e.g. automod's 150) still leave room for the answer.
+        reasoning_effort: 'low',
         ...(json ? { response_format: { type: 'json_object' } } : {}),
       }),
       signal: controller.signal,

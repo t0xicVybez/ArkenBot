@@ -7,7 +7,7 @@
  */
 
 const GROQ_ENDPOINT = 'https://api.groq.com/openai/v1/chat/completions';
-const GROQ_MODEL = 'llama-3.1-8b-instant';
+const GROQ_MODEL = 'openai/gpt-oss-20b';
 
 /** The shape of a successful Groq review response. */
 export interface GroqReview {
@@ -64,6 +64,7 @@ export async function reviewWithGroq(code: string, lang: string): Promise<GroqRe
         ],
         max_tokens: 2048,
         temperature: 0.1,
+        reasoning_effort: 'low',
       }),
     });
 
