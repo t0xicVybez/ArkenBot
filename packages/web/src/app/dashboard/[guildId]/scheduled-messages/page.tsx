@@ -54,6 +54,19 @@ export default function ScheduledMessagesPage() {
   const toggleDay = (d: number) =>
     setNewDays((prev) => (prev.includes(d) ? prev.filter((x) => x !== d) : [...prev, d].sort((a, b) => a - b)));
   const timezoneOptions = TIMEZONES.includes(newTimezone) ? TIMEZONES : [newTimezone, ...TIMEZONES];
+  const tzOffset = (tz: string) => {
+    try {
+      const parts = new Intl.DateTimeFormat('en-US', { timeZone: tz, timeZoneName: 'shortOffset' }).formatToParts(new Date());
+      return (parts.find((x) => x.type === 'timeZoneName')?.value ?? '').replace('GMT', 'UTC');
+    } catch {
+      return '';
+    }
+  };
+  const tzLabel = (tz: string) => {
+    if (tz === 'UTC') return 'UTC';
+    const off = tzOffset(tz);
+    return off ? `${tz.replace(/_/g, ' ')} (${off})` : tz.replace(/_/g, ' ');
+  };
 
   const { data: msgsRes, isLoading } = useQuery({
     queryKey: ['scheduled-messages', guildId],
@@ -266,7 +279,7 @@ export default function ScheduledMessagesPage() {
               onChange={(e) => setNewTimezone(e.target.value)}
             >
               {timezoneOptions.map((tz) => (
-                <option key={tz} value={tz}>{tz.replace(/_/g, ' ')}</option>
+                <option key={tz} value={tz}>{tzLabel(tz)}</option>
               ))}
             </select>
             <p className="text-xs text-gray-500 mt-1">{t('timezoneHelp')}</p>
