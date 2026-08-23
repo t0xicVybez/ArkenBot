@@ -60,6 +60,11 @@ function createAudioStream(videoUrl: string): AudioStream {
   if (process.env.YOUTUBE_COOKIES_FILE) {
     ytdlpArgs.push('--cookies', process.env.YOUTUBE_COOKIES_FILE);
   }
+  // Route only yt-dlp (YouTube) traffic through a residential proxy when set, so
+  // requests egress from a non-datacenter IP that YouTube does not block.
+  if (process.env.YTDLP_PROXY) {
+    ytdlpArgs.push('--proxy', process.env.YTDLP_PROXY);
+  }
   ytdlpArgs.push(videoUrl);
 
   const ytdlp = spawn('yt-dlp', ytdlpArgs, { stdio: ['ignore', 'pipe', 'pipe'] });
