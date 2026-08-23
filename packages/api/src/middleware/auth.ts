@@ -11,7 +11,7 @@ import { prisma } from '../database.js';
 import { config } from '../config.js';
 import { SessionService } from '../services/SessionService.js';
 import { setSessionCookie } from '../utils/sessionCookie.js';
-import { decryptSecretLenient } from '../utils/crypto.js';
+import { AuthService } from '../services/AuthService.js';
 
 declare module 'fastify' {
   interface FastifyRequest {
@@ -112,16 +112,14 @@ export async function requireGuildAdmin(request: FastifyRequest, reply: FastifyR
   // Staff and bot owners have implicit access to all guilds.
   if (request.user?.isStaff || request.user?.isBotOwner) return;
 
-  const user = await prisma.portalUser.findUnique({ where: { id: request.user!.id } });
-  if (!user?.accessToken) {
-    reply.code(403).send({ success: false, error: 'No Discord access token' });
+  const accessToken = await AuthService.getValidAccessToken(request.user!.id);
+  if (!accessToken) {
+    reply.code(403).send({ success: false, error: 'Discord authorization expired — please log in again' });
     return;
   }
 
   try {
     const { default: axios } = await import('axios');
-    // Stored sealed; legacy plaintext rows decrypt to themselves until next login.
-    const accessToken = decryptSecretLenient(user.accessToken);
     const guildsRes = await axios.get('https://discord.com/api/v10/users/@me/guilds', {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
