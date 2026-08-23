@@ -906,5 +906,23 @@
       "name": "超凡",
       "description": "发送 10,000 条消息"
     }
+  },
+  "permAlert": {
+    "title": "⚠️ 操作被阻止 — 权限不足",
+    "description": "我尝试执行操作，但因缺少权限或我的身份组过低而被 Discord 阻止。请授予下方权限（并将我的身份组移到目标之上），下次即可自动执行。",
+    "fieldAction": "操作",
+    "fieldPermission": "可能缺少",
+    "fieldChannel": "频道",
+    "fieldTarget": "目标",
+    "footer": "权限提醒",
+    "actions": {
+      "automodDelete": "自动审核 — 删除消息",
+      "automodTimeout": "自动审核 — 禁言成员",
+      "automodKick": "自动审核 — 踢出成员",
+      "automodBan": "自动审核 — 封禁成员",
+      "antiNuke": "反炸群 — 保护操作",
+      "autoRole": "自动身份组 — 加入时分配",
+      "modAutoEscalate": "警告 — 自动升级处理"
+    }
   }
 }

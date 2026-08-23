@@ -111,6 +111,10 @@ model GuildSettings {
   autoRoleId        String?
   memberRoleId      String?
 
+  // Permission-failure alerts: ping a role when the bot is blocked by missing perms
+  permissionAlertsEnabled Boolean @default(true)
+  permissionAlertRoleId   String?
+
   // Leveling config
   xpPerMessage        Int     @default(15)
   xpCooldown          Int     @default(60)

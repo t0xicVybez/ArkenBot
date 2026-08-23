@@ -906,5 +906,23 @@
       "name": "Transcendant",
       "description": "Envoyer 10 000 messages"
     }
+  },
+  "permAlert": {
+    "title": "⚠️ Action bloquée — permissions manquantes",
+    "description": "J’ai tenté d’effectuer une action mais Discord l’a bloquée car il me manque une permission ou mon rôle est trop bas. Accordez-moi la permission ci-dessous (et placez mon rôle au-dessus de la cible) pour que cela fonctionne automatiquement.",
+    "fieldAction": "Action",
+    "fieldPermission": "Probablement manquante",
+    "fieldChannel": "Salon",
+    "fieldTarget": "Cible",
+    "footer": "Alerte de permission",
+    "actions": {
+      "automodDelete": "AutoMod — supprimer le message",
+      "automodTimeout": "AutoMod — exclure temporairement",
+      "automodKick": "AutoMod — expulser le membre",
+      "automodBan": "AutoMod — bannir le membre",
+      "antiNuke": "Anti-nuke — action de protection",
+      "autoRole": "Rôle auto — attribuer à l’arrivée",
+      "modAutoEscalate": "Avertissements — escalade automatique"
+    }
   }
 }

@@ -924,7 +924,13 @@
     "dangerDesc": "Backups, retention, and destructive actions — all in one clearly-marked place. User data (levels, warnings, cases) and secrets are never included in backups.",
     "downloadConfig": "Download server config",
     "restoreBackup": "Restore from backup",
-    "dangerTip": "Tip: download a backup before removing the bot — server data is permanently deleted 72 hours after removal. Monday.com alerts are restored with fresh webhook URLs that must be re-pasted into monday.com."
+    "dangerTip": "Tip: download a backup before removing the bot — server data is permanently deleted 72 hours after removal. Monday.com alerts are restored with fresh webhook URLs that must be re-pasted into monday.com.",
+    "permAlertsTitle": "Permission Alerts",
+    "permAlertsDesc": "Get notified when the bot can't complete an action because it's missing a permission.",
+    "permAlertsEnabled": "Enable permission alerts",
+    "permAlertsEnabledDesc": "Post an alert to your mod-log (or log) channel when an action such as an AutoMod removal, anti-nuke response, or auto-role fails due to missing permissions.",
+    "permAlertRole": "Alert role",
+    "permAlertRoleDesc": "This role is pinged on the alert. Leave as None to post the alert without a ping."
   },
   "suggestionsPage": {
     "saved": "Suggestions settings saved!",

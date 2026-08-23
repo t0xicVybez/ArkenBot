@@ -1,4 +1,5 @@
 import { type Guild, type GuildMember, EmbedBuilder, type TextChannel } from 'discord.js';
+import { notifyActionFailure } from '../../utils/permissionAlert.js';
 import { prisma } from '../../database.js';
 import { formatTemplate } from '@arkenbot/shared';
 import { swallow} from '../../logger.js';
@@ -67,7 +68,7 @@ export class WelcomeModule {
     if (settings?.autoRoleId) {
       const role = guild.roles.cache.get(settings.autoRoleId);
       if (role && role.editable) {
-        await member.roles.add(role, 'Auto-role on join').catch(swallow);
+        await member.roles.add(role, 'Auto-role on join').catch((e) => notifyActionFailure(guild, { action: 'autoRole', error: e, requiredPermission: 'Manage Roles', target: member.toString() }));
       }
     }
   }

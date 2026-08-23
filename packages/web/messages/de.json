@@ -924,7 +924,13 @@
     "dangerDesc": "Backups, Aufbewahrung und destruktive Aktionen — alles an einem klar gekennzeichneten Ort. Nutzerdaten (Level, Verwarnungen, Fälle) und Geheimnisse sind nie in Backups enthalten.",
     "downloadConfig": "Server-Konfiguration herunterladen",
     "restoreBackup": "Aus Backup wiederherstellen",
-    "dangerTip": "Tipp: Lade ein Backup herunter, bevor du den Bot entfernst — Serverdaten werden 72 Stunden nach der Entfernung endgültig gelöscht. Monday.com-Benachrichtigungen werden mit neuen Webhook-URLs wiederhergestellt, die erneut in monday.com eingefügt werden müssen."
+    "dangerTip": "Tipp: Lade ein Backup herunter, bevor du den Bot entfernst — Serverdaten werden 72 Stunden nach der Entfernung endgültig gelöscht. Monday.com-Benachrichtigungen werden mit neuen Webhook-URLs wiederhergestellt, die erneut in monday.com eingefügt werden müssen.",
+    "permAlertsTitle": "Berechtigungswarnungen",
+    "permAlertsDesc": "Werde benachrichtigt, wenn der Bot eine Aktion wegen fehlender Berechtigung nicht ausführen kann.",
+    "permAlertsEnabled": "Berechtigungswarnungen aktivieren",
+    "permAlertsEnabledDesc": "Sendet eine Warnung in deinen Mod-Log- (oder Log-)Kanal, wenn eine Aktion wie eine AutoMod-Entfernung, eine Anti-Nuke-Reaktion oder eine Auto-Rolle wegen fehlender Berechtigungen fehlschlägt.",
+    "permAlertRole": "Warnrolle",
+    "permAlertRoleDesc": "Diese Rolle wird in der Warnung erwähnt. Auf „Keine“ lassen, um die Warnung ohne Ping zu senden."
   },
   "suggestionsPage": {
     "saved": "Vorschlags-Einstellungen gespeichert!",
