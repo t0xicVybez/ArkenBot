@@ -16,7 +16,7 @@
     "axios": "^1.19.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.468.0",
-    "next": "^16.3.0",
+    "next": "^16.3.1",
     "next-auth": "^4.24.15",
     "next-intl": "^4.13.6",
     "react": "^19.2.8",
@@ -26,8 +26,8 @@
     "recharts": "^2.15.4",
     "socket.io-client": "^4.8.3",
     "tailwind-merge": "^2.6.1",
-    "zod": "^3.25.76",
-    "zustand": "^5.0.14"
+    "zod": "^4.4.3",
+    "zustand": "^5.0.15"
   },
   "devDependencies": {
     "@types/node": "^22.20.1",
@@ -35,7 +35,7 @@
     "@types/react-dom": "^19.2.4",
     "autoprefixer": "^10.5.4",
     "eslint": "^9.39.5",
-    "eslint-config-next": "^16.3.0",
+    "eslint-config-next": "^16.3.1",
     "postcss": "^8.5.26",
     "tailwindcss": "^3.4.19",
     "typescript": "^5.9.3"
