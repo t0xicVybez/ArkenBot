@@ -1,0 +1,24 @@
+{
+  "name": "gameadmin",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@arkenbot/addon-sdk": "workspace:*",
+    "@arkenbot/shared": "workspace:*",
+    "ws": "^8.18.0"
+  },
+  "peerDependencies": {
+    "discord.js": "^14.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.1",
+    "@types/ws": "^8.5.12",
+    "discord.js": "^14.27.0",
+    "typescript": "^5.9.3"
+  }
+}

@@ -387,7 +387,7 @@ export async function adminRoutes(server: FastifyInstance): Promise<void> {
     const { title, body, type } = input;
 
     const opted = await prisma.guildSettings.findMany({
-      where: { announcementsEnabled: true, announcementChannelId: { not: null } },
+      where: { announcementsEnabled: true },
       select: { guildId: true, announcementChannelId: true },
     });
 
