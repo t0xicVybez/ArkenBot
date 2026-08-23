@@ -923,7 +923,19 @@
       "antiNuke": "反炸群 — 保护操作",
       "autoRole": "自动身份组 — 加入时分配",
       "modAutoEscalate": "警告 — 自动升级处理",
-      "feedPost": "直播/订阅提醒 — 发送通知"
+      "feedPost": "直播/订阅提醒 — 发送通知",
+      "sendMessage": "发送消息",
+      "deleteMessage": "删除消息",
+      "manageMessages": "管理消息（编辑/置顶/批量删除）",
+      "addReaction": "添加反应",
+      "manageRoles": "添加或移除身份组",
+      "ban": "封禁成员",
+      "kick": "踢出成员",
+      "memberUpdate": "禁言或更新成员",
+      "manageChannels": "创建、编辑或删除频道",
+      "manageServer": "更新服务器设置",
+      "manageWebhooks": "管理 Webhook",
+      "generic": "执行操作"
     }
   }
 }

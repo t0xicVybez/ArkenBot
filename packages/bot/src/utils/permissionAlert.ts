@@ -54,6 +54,12 @@ export async function notifyActionFailure(guild: Guild, opts: ActionFailureOptio
   try {
     if (!isPermissionError(error)) return null;
 
+    // Mark the error so the global REST interceptor treats this as already handled
+    // (it fires only as a fallback for actions without a call-site handler).
+    if (error && typeof error === 'object') {
+      (error as { __arkenHandled?: boolean }).__arkenHandled = true;
+    }
+
     const settings = await getGuildSettings(guild.id);
     if (!settings || settings.permissionAlertsEnabled === false) return null;
 

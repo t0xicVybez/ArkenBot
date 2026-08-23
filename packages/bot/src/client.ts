@@ -10,6 +10,7 @@ import {
   Collection,
 } from 'discord.js';
 import type { BotCommand } from './types.js';
+import { installRestErrorInterceptor } from './utils/restErrorInterceptor.js';
 
 /**
  * The central Discord client for ArkenBot. Extends the discord.js `Client` with
@@ -57,5 +58,8 @@ export class BotClient extends Client {
         repliedUser: false,
       },
     });
+
+    // Catch-all: surface any missing-permission API failure as an admin alert.
+    installRestErrorInterceptor(this);
   }
 }

@@ -923,7 +923,19 @@
       "antiNuke": "Anti-nuke — działanie ochronne",
       "autoRole": "Autorola — nadaj rolę przy wejściu",
       "modAutoEscalate": "Ostrzeżenia — automatyczna eskalacja",
-      "feedPost": "Alert streamu/kanału — publikacja powiadomienia"
+      "feedPost": "Alert streamu/kanału — publikacja powiadomienia",
+      "sendMessage": "Wysłać wiadomość",
+      "deleteMessage": "Usunąć wiadomość",
+      "manageMessages": "Zarządzać wiadomościami (edycja/przypięcie/masowe usuwanie)",
+      "addReaction": "Dodać reakcję",
+      "manageRoles": "Nadać lub odebrać rolę",
+      "ban": "Zbanować członka",
+      "kick": "Wyrzucić członka",
+      "memberUpdate": "Wyciszyć lub zaktualizować członka",
+      "manageChannels": "Utworzyć, edytować lub usunąć kanał",
+      "manageServer": "Zmienić ustawienia serwera",
+      "manageWebhooks": "Zarządzać webhookami",
+      "generic": "Wykonać akcję"
     }
   }
 }
