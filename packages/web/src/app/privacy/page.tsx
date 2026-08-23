@@ -95,15 +95,6 @@ export default async function PrivacyPage() {
           <p>{t.rich('s3p7', { ...fmt, email: extLink(`mailto:${CONTACT_EMAIL}`) })}</p>
         </Section>
 
-        <Section id="reddit" title={t('s4Title')}>
-          <p>{t.rich('s4p1', { ...fmt, api: extLink('https://www.reddit.com/dev/api/'), terms: extLink('https://www.redditinc.com/policies/data-api-terms'), privacy: extLink('https://www.reddit.com/policies/privacy-policy') })}</p>
-          <p>{t.rich('s4p2', fmt)}</p>
-          <p>{t.rich('s4p3', fmt)}</p>
-          <p>{t.rich('s4p4', fmt)}</p>
-          <p>{t.rich('s4p5', fmt)}</p>
-          <p>{t.rich('s4p6', fmt)}</p>
-        </Section>
-
         <Section id="monday" title={t('s5Title')}>
           <p>{t.rich('s5p1', { ...fmt, monday: extLink('https://monday.com'), tos: extLink('https://monday.com/l/legal/tos/'), privacy: extLink('https://monday.com/l/privacy/privacy-policy/') })}</p>
           <p>{t.rich('s5p2', fmt)}</p>
@@ -139,7 +130,6 @@ export default async function PrivacyPage() {
           <ul className="list-disc list-inside space-y-1.5 pl-2">
             <li>{t.rich('s9Item1', fmt)}</li>
             <li>{t.rich('s9Item2', { ...fmt, sec: intLink('#youtube') })}</li>
-            <li>{t.rich('s9Item3', { ...fmt, sec: intLink('#reddit') })}</li>
             <li>{t.rich('s9Item4', { ...fmt, sec: intLink('#monday') })}</li>
             <li>{t.rich('s9Item5', { ...fmt, sec: intLink('#trello') })}</li>
             <li>{t.rich('s9Item6', { ...fmt, sec: intLink('#ai') })}</li>

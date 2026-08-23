@@ -71,12 +71,6 @@ export default async function TermsPage() {
           <p>{t.rich('s3p3', { privacy: extLink('https://policies.google.com/privacy') })}</p>
         </Section>
 
-        <Section id="reddit" title={t('s4Title')}>
-          <p>{t.rich('s4p1', { api: extLink('https://www.reddit.com/dev/api/'), terms: extLink('https://www.redditinc.com/policies/data-api-terms'), agreement: extLink('https://www.redditinc.com/policies/user-agreement') })}</p>
-          <p>{t('s4p2')}</p>
-          <p>{t.rich('s4p3', { privacy: extLink('https://www.reddit.com/policies/privacy-policy') })}</p>
-        </Section>
-
         <Section id="integrations" title={t('s5Title')}>
           <p>{t.rich('s5p1', { monday: extLink('https://monday.com'), trello: extLink('https://trello.com'), mondayTos: extLink('https://monday.com/l/legal/tos/'), atlassian: extLink('https://www.atlassian.com/legal/cloud-terms-of-service') })}</p>
           <p>{t.rich('s5p2', { privacy: (chunks: ReactNode) => <Link href="/privacy" className="text-discord-blurple hover:underline">{chunks}</Link> })}</p>

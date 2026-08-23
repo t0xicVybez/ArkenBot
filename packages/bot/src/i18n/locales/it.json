@@ -146,8 +146,6 @@
     "playing": "Sta giocando a",
     "unknownGame": "Sconosciuto",
     "kickLive": "{streamer} è in diretta su Kick!",
-    "twitterPosted": "{handle} ha pubblicato su X",
-    "redditPostedBy": "Pubblicato da u/{author} in r/{subreddit}",
     "rssNewPost": "Nuovo post da **{feed}**",
     "rssFeedFallback": "Feed RSS",
     "rssPostFallback": "Nuovo post"

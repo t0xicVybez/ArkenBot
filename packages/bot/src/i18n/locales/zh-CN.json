@@ -146,8 +146,6 @@
     "playing": "正在玩",
     "unknownGame": "未知",
     "kickLive": "{streamer} 正在 Kick 直播！",
-    "twitterPosted": "{handle} 在 X 上发帖了",
-    "redditPostedBy": "由 u/{author} 发布于 r/{subreddit}",
     "rssNewPost": "**{feed}** 的新帖子",
     "rssFeedFallback": "RSS 源",
     "rssPostFallback": "新帖子"
