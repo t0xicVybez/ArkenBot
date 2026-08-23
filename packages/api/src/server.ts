@@ -9,7 +9,7 @@ import fastifyRateLimit from '@fastify/rate-limit';
 import fastifyWebSocket from '@fastify/websocket';
 import fastifyCookie from '@fastify/cookie';
 import { config } from './config.js';
-import { logger } from './logger.js';
+import { logger, errSerializer } from './logger.js';
 import { redis } from './redis.js';
 import { authRoutes } from './routes/auth.js';
 import { guildRoutes } from './routes/guilds.js';
@@ -63,6 +63,7 @@ export async function createServer() {
   const server = Fastify({
     logger: {
       level: config.logLevel,
+      serializers: { err: errSerializer },
       transport:
         config.env !== 'production'
           ? { target: 'pino-pretty', options: { colorize: true } }
