@@ -19,7 +19,7 @@
  * --force to regenerate everything.
  */
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
-import { join, basename } from 'path';
+import { join } from 'path';
 import { LOCALES, DEFAULT_LOCALE } from '../packages/shared/src/i18n/locales.js';
 import { jsonCompletion } from '../packages/shared/src/utils/llm.js';
 
