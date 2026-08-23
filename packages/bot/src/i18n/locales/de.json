@@ -922,7 +922,8 @@
       "automodBan": "AutoMod — Mitglied bannen",
       "antiNuke": "Anti-Nuke — Schutzmaßnahme",
       "autoRole": "Auto-Rolle — Rolle beim Beitritt",
-      "modAutoEscalate": "Verwarnungen — automatische Eskalation"
+      "modAutoEscalate": "Verwarnungen — automatische Eskalation",
+      "feedPost": "Stream-/Feed-Benachrichtigung — senden"
     }
   }
 }

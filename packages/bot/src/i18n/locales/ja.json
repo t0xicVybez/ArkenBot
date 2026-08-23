@@ -922,7 +922,8 @@
       "automodBan": "自動モデレーション — BAN",
       "antiNuke": "アンチニューク — 保護アクション",
       "autoRole": "自動ロール — 参加時に付与",
-      "modAutoEscalate": "警告 — 自動エスカレーション"
+      "modAutoEscalate": "警告 — 自動エスカレーション",
+      "feedPost": "配信/フィード通知 — 投稿"
     }
   }
 }

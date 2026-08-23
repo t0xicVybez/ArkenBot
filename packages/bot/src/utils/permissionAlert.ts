@@ -60,8 +60,8 @@ export async function notifyActionFailure(guild: Guild, opts: ActionFailureOptio
     const channelId = settings.modLogChannelId ?? settings.logChannelId;
     if (!channelId) return null;
 
-    // De-duplicate: one alert per guild+action per window.
-    const key = `${guild.id}:${action}`;
+    // De-duplicate: one alert per guild+action+channel per window.
+    const key = `${guild.id}:${action}:${opts.channelId ?? ''}`;
     const now = Date.now();
     const last = lastAlertAt.get(key);
     if (last && now - last < DEDUPE_TTL_MS) return null;
