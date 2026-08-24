@@ -1127,5 +1127,18 @@
     "topStarValue": "{stars} ⭐ — par {user} · [aller]({link})",
     "xpLeaders": "🏆 Meilleurs en XP",
     "levelValue": "Niveau {level}"
+  },
+  "lottery": {
+    "disabled": "La loterie n’est pas activée sur ce serveur.",
+    "infoTitle": "🎟️ Loterie hebdomadaire",
+    "pot": "Cagnotte actuelle",
+    "ticketPrice": "Prix du ticket",
+    "totalTickets": "Tickets au total",
+    "yourTickets": "Tes tickets",
+    "drawFooter": "Tirage chaque dimanche. Le gagnant remporte toute la cagnotte !",
+    "boughtTitle": "Tickets achetés",
+    "bought": "Tu as acheté **{count}** ticket(s) pour {cost}. Bonne chance !",
+    "drawTitle": "🎉 Gagnant de la loterie !",
+    "drawWinner": "{user} a gagné la cagnotte de **{pot}** avec {tickets} tickets en jeu !"
   }
 }

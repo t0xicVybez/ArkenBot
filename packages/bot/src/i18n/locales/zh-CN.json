@@ -1127,5 +1127,18 @@
     "topStarValue": "{stars} ⭐ — 来自 {user} · [跳转]({link})",
     "xpLeaders": "🏆 经验榜首",
     "levelValue": "等级 {level}"
+  },
+  "lottery": {
+    "disabled": "本服务器未启用彩票。",
+    "infoTitle": "🎟️ 每周彩票",
+    "pot": "当前奖池",
+    "ticketPrice": "彩票价格",
+    "totalTickets": "总票数",
+    "yourTickets": "你的票数",
+    "drawFooter": "每周日开奖。中奖者赢得全部奖池！",
+    "boughtTitle": "购票成功",
+    "bought": "你以 {cost} 购买了 **{count}** 张彩票。祝你好运！",
+    "drawTitle": "🎉 彩票中奖者！",
+    "drawWinner": "{user} 在 {tickets} 张彩票中赢得了 **{pot}** 奖池！"
   }
 }

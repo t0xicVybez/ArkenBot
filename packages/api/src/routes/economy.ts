@@ -25,6 +25,9 @@ const ConfigSchema = z.object({
   levelUpReward: z.number().int().min(0).max(1_000_000).optional(),
   bankInterestPct: z.number().int().min(0).max(100).optional(),
   bankInterestCap: z.number().int().min(0).max(10_000_000).optional(),
+  lotteryEnabled: z.boolean().optional(),
+  lotteryTicketPrice: z.number().int().min(1).max(10_000_000).optional(),
+  lotteryChannelId: z.string().max(32).nullish(),
 });
 
 const DEFAULTS = {
@@ -33,6 +36,7 @@ const DEFAULTS = {
   robEnabled: true, robCooldown: 86400, robSuccessRate: 40, robMaxPercent: 20,
   robMinBalance: 500, robFinePercent: 15, gamblingEnabled: true, maxBet: 10000,
   levelUpReward: 0, bankInterestPct: 0, bankInterestCap: 1000,
+  lotteryEnabled: false, lotteryTicketPrice: 100, lotteryChannelId: null,
 };
 
 export async function economyRoutes(server: FastifyInstance): Promise<void> {

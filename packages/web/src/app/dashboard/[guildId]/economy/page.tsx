@@ -32,6 +32,9 @@ type EconomyConfig = {
   levelUpReward?: number;
   bankInterestPct?: number;
   bankInterestCap?: number;
+  lotteryEnabled?: boolean;
+  lotteryTicketPrice?: number;
+  lotteryChannelId?: string | null;
 };
 
 type IncomeRole = { id: string; roleId: string; amount: number };
@@ -81,6 +84,10 @@ export default function EconomyPage() {
     queryKey: ['roles', guildId],
     queryFn: () => guildsApi.roles(guildId),
   });
+  const { data: channelsRes } = useQuery({
+    queryKey: ['channels', guildId],
+    queryFn: () => guildsApi.channels(guildId),
+  });
   const { data: incomeRes } = useQuery({
     queryKey: ['economy-income', guildId],
     queryFn: () => economyApi.listIncome(guildId),
@@ -94,6 +101,7 @@ export default function EconomyPage() {
   const shopItems: ShopItem[] = (shopRes?.data as { data?: ShopItem[] })?.data ?? [];
   const incomeRoles: IncomeRole[] = (incomeRes?.data as { data?: IncomeRole[] })?.data ?? [];
   const roles = ((rolesRes?.data as { data?: Role[] })?.data ?? []).filter((r) => r.name !== '@everyone' && !r.managed);
+  const textChannels = ((channelsRes?.data as { data?: Array<{ id: string; name: string; type: number }> })?.data ?? []).filter((c) => c.type === 0);
 
   const configMutation = useMutation({
     mutationFn: (data: Partial<EconomyConfig>) => economyApi.updateConfig(guildId, data),
@@ -298,6 +306,28 @@ export default function EconomyPage() {
             <p className="text-xs text-gray-500 mt-1">{t('bankInterestCapHelp')}</p>
           </div>
         </div>
+      </SettingsSection>
+
+      <SettingsSection title={t('lotteryTitle')} description={t('lotteryDesc')}>
+        <Toggle label={t('lotteryEnable')} description={t('lotteryEnableDesc')} enabled={config.lotteryEnabled ?? false} onChange={(v) => save({ lotteryEnabled: v })} />
+        {config.lotteryEnabled && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="label">{t('lotteryTicketPrice')}</label>
+              <input type="number" className="input" min={1} {...num('lotteryTicketPrice', 1)} />
+              <p className="text-xs text-gray-500 mt-1">{t('lotteryTicketPriceHelp')}</p>
+            </div>
+            <div>
+              <label className="label">{t('lotteryChannel')}</label>
+              <select className="input" value={config.lotteryChannelId ?? ''}
+                onChange={(e) => save({ lotteryChannelId: e.target.value || null })}>
+                <option value="">{t('lotteryChannelNone')}</option>
+                {textChannels.map((c) => (<option key={c.id} value={c.id}>#{c.name}</option>))}
+              </select>
+              <p className="text-xs text-gray-500 mt-1">{t('lotteryChannelHelp')}</p>
+            </div>
+          </div>
+        )}
       </SettingsSection>
 
       <div className="card">

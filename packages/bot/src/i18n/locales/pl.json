@@ -1127,5 +1127,18 @@
     "topStarValue": "{stars} ⭐ — od {user} · [przejdź]({link})",
     "xpLeaders": "🏆 Liderzy XP",
     "levelValue": "Poziom {level}"
+  },
+  "lottery": {
+    "disabled": "Loteria nie jest włączona na tym serwerze.",
+    "infoTitle": "🎟️ Cotygodniowa loteria",
+    "pot": "Aktualna pula",
+    "ticketPrice": "Cena biletu",
+    "totalTickets": "Łącznie biletów",
+    "yourTickets": "Twoje bilety",
+    "drawFooter": "Losowanie w każdą niedzielę. Zwycięzca bierze całą pulę!",
+    "boughtTitle": "Kupiono bilety",
+    "bought": "Kupiłeś **{count}** bilet(ów) za {cost}. Powodzenia!",
+    "drawTitle": "🎉 Zwycięzca loterii!",
+    "drawWinner": "{user} wygrał pulę **{pot}** przy {tickets} biletach w grze!"
   }
 }

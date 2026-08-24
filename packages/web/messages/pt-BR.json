@@ -3297,6 +3297,15 @@
     "incomeAdd": "Adicionar",
     "incomeEmpty": "Ainda não há cargos de renda.",
     "incomePerDay": "dia",
-    "incomeRoleRequired": "Escolha um cargo e um valor."
+    "incomeRoleRequired": "Escolha um cargo e um valor.",
+    "lotteryTitle": "Loteria",
+    "lotteryDesc": "Um sorteio semanal — membros compram bilhetes e um vencedor leva todo o prêmio.",
+    "lotteryEnable": "Ativar loteria",
+    "lotteryEnableDesc": "Permite /lottery e sorteia um vencedor todo domingo.",
+    "lotteryTicketPrice": "Preço do bilhete",
+    "lotteryTicketPriceHelp": "Custo de um bilhete de loteria.",
+    "lotteryChannel": "Canal do sorteio",
+    "lotteryChannelNone": "Sem anúncio",
+    "lotteryChannelHelp": "Onde o vencedor semanal é anunciado."
   }
 }

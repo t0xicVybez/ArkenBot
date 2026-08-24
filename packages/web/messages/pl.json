@@ -3297,6 +3297,15 @@
     "incomeAdd": "Dodaj",
     "incomeEmpty": "Brak ról dochodowych.",
     "incomePerDay": "dzień",
-    "incomeRoleRequired": "Wybierz rolę i kwotę."
+    "incomeRoleRequired": "Wybierz rolę i kwotę.",
+    "lotteryTitle": "Loteria",
+    "lotteryDesc": "Cotygodniowa loteria — członkowie kupują bilety, jeden zwycięzca bierze całą pulę.",
+    "lotteryEnable": "Włącz loterię",
+    "lotteryEnableDesc": "Zezwala na /lottery i losuje zwycięzcę w każdą niedzielę.",
+    "lotteryTicketPrice": "Cena biletu",
+    "lotteryTicketPriceHelp": "Koszt jednego biletu loterii.",
+    "lotteryChannel": "Kanał losowania",
+    "lotteryChannelNone": "Bez ogłoszenia",
+    "lotteryChannelHelp": "Gdzie ogłaszany jest cotygodniowy zwycięzca."
   }
 }

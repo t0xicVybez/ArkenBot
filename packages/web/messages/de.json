@@ -3297,6 +3297,15 @@
     "incomeAdd": "Hinzufügen",
     "incomeEmpty": "Noch keine Einkommensrollen.",
     "incomePerDay": "Tag",
-    "incomeRoleRequired": "Wähle eine Rolle und einen Betrag."
+    "incomeRoleRequired": "Wähle eine Rolle und einen Betrag.",
+    "lotteryTitle": "Lotterie",
+    "lotteryDesc": "Eine wöchentliche Verlosung — Mitglieder kaufen Tickets, ein Gewinner bekommt den ganzen Topf.",
+    "lotteryEnable": "Lotterie aktivieren",
+    "lotteryEnableDesc": "Erlaubt /lottery und zieht jeden Sonntag einen Gewinner.",
+    "lotteryTicketPrice": "Ticketpreis",
+    "lotteryTicketPriceHelp": "Kosten eines Lotterietickets.",
+    "lotteryChannel": "Ziehungskanal",
+    "lotteryChannelNone": "Keine Ankündigung",
+    "lotteryChannelHelp": "Wo der wöchentliche Gewinner angekündigt wird."
   }
 }

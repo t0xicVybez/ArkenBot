@@ -1127,5 +1127,18 @@
     "topStarValue": "{stars} ⭐ — di {user} · [vai]({link})",
     "xpLeaders": "🏆 Leader XP",
     "levelValue": "Livello {level}"
+  },
+  "lottery": {
+    "disabled": "La lotteria non è attivata su questo server.",
+    "infoTitle": "🎟️ Lotteria settimanale",
+    "pot": "Montepremi attuale",
+    "ticketPrice": "Prezzo del biglietto",
+    "totalTickets": "Biglietti totali",
+    "yourTickets": "I tuoi biglietti",
+    "drawFooter": "Estrazione ogni domenica. Il vincitore prende tutto il montepremi!",
+    "boughtTitle": "Biglietti acquistati",
+    "bought": "Hai comprato **{count}** biglietto/i per {cost}. Buona fortuna!",
+    "drawTitle": "🎉 Vincitore della lotteria!",
+    "drawWinner": "{user} ha vinto il montepremi di **{pot}** con {tickets} biglietti in gioco!"
   }
 }
