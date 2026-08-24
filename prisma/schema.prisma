@@ -101,6 +101,7 @@ model GuildSettings {
   loggingEnabled       Boolean @default(false)
   musicEnabled         Boolean @default(false)
   reactionRolesEnabled Boolean @default(false)
+  highlightsEnabled    Boolean @default(false)
 
   // Channel IDs
   logChannelId          String?
@@ -110,6 +111,7 @@ model GuildSettings {
   levelUpChannelId      String?
   announcementChannelId String?
   analyticsChannelId    String?
+  highlightsChannelId   String?
 
   // Announcement opt-in
   announcementsEnabled Boolean @default(true)

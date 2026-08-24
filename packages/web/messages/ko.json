@@ -948,7 +948,13 @@
     "permAlertsEnabled": "권한 알림 사용",
     "permAlertsEnabledDesc": "자동 관리 삭제, 안티 뉴크 대응, 자동 역할 등의 작업이 권한 부족으로 실패하면 모드로그(또는 로그) 채널에 알림을 게시합니다.",
     "permAlertRole": "알림 역할",
-    "permAlertRoleDesc": "이 역할이 알림에서 멘션됩니다. 멘션 없이 게시하려면 없음으로 두세요."
+    "permAlertRoleDesc": "이 역할이 알림에서 멘션됩니다. 멘션 없이 게시하려면 없음으로 두세요.",
+    "highlightsTitle": "주간 하이라이트",
+    "highlightsDesc": "서버 활동의 친근한 주간 요약을 게시합니다.",
+    "highlightsEnabled": "주간 하이라이트 활성화",
+    "highlightsEnabledDesc": "매주 월요일에 지난 주 요약(메시지, 신규 멤버, 최고 별점 메시지, XP 리더)을 게시합니다.",
+    "highlightsChannel": "하이라이트 채널",
+    "highlightsChannelDesc": "주간 요약이 게시되는 곳."
   },
   "suggestionsPage": {
     "saved": "건의 설정을 저장했습니다!",

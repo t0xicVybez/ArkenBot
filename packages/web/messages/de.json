@@ -948,7 +948,13 @@
     "permAlertsEnabled": "Berechtigungswarnungen aktivieren",
     "permAlertsEnabledDesc": "Sendet eine Warnung in deinen Mod-Log- (oder Log-)Kanal, wenn eine Aktion wie eine AutoMod-Entfernung, eine Anti-Nuke-Reaktion oder eine Auto-Rolle wegen fehlender Berechtigungen fehlschlägt.",
     "permAlertRole": "Warnrolle",
-    "permAlertRoleDesc": "Diese Rolle wird in der Warnung erwähnt. Auf „Keine“ lassen, um die Warnung ohne Ping zu senden."
+    "permAlertRoleDesc": "Diese Rolle wird in der Warnung erwähnt. Auf „Keine“ lassen, um die Warnung ohne Ping zu senden.",
+    "highlightsTitle": "Wöchentliche Highlights",
+    "highlightsDesc": "Poste einen freundlichen wöchentlichen Rückblick der Serveraktivität.",
+    "highlightsEnabled": "Wöchentliche Highlights aktivieren",
+    "highlightsEnabledDesc": "Jeden Montag ein Wochenrückblick — Nachrichten, neue Mitglieder, meistgesternte Nachricht und XP-Spitzenreiter.",
+    "highlightsChannel": "Highlights-Kanal",
+    "highlightsChannelDesc": "Wo der Wochenrückblick gepostet wird."
   },
   "suggestionsPage": {
     "saved": "Vorschlags-Einstellungen gespeichert!",

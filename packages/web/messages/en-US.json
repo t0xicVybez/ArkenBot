@@ -948,7 +948,13 @@
     "permAlertsEnabled": "Enable permission alerts",
     "permAlertsEnabledDesc": "Post an alert to your mod-log (or log) channel when an action such as an AutoMod removal, anti-nuke response, or auto-role fails due to missing permissions.",
     "permAlertRole": "Alert role",
-    "permAlertRoleDesc": "This role is pinged on the alert. Leave as None to post the alert without a ping."
+    "permAlertRoleDesc": "This role is pinged on the alert. Leave as None to post the alert without a ping.",
+    "highlightsTitle": "Weekly Highlights",
+    "highlightsDesc": "Post a friendly weekly recap of server activity.",
+    "highlightsEnabled": "Enable weekly highlights",
+    "highlightsEnabledDesc": "Every Monday, post a digest of the past week — messages, new members, top starred message and XP leaders.",
+    "highlightsChannel": "Highlights channel",
+    "highlightsChannelDesc": "Where the weekly digest is posted."
   },
   "suggestionsPage": {
     "saved": "Suggestions settings saved!",

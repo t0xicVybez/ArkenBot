@@ -1117,5 +1117,15 @@
       "black": "чёрное",
       "green": "зелёное"
     }
+  },
+  "highlights": {
+    "title": "📰 {server} — За неделю",
+    "subtitle": "Вот что произошло за последние 7 дней.",
+    "messages": "💬 Сообщения",
+    "newMembers": "👋 Новые участники",
+    "topStar": "⭐ Лучшее сообщение",
+    "topStarValue": "{stars} ⭐ — от {user} · [перейти]({link})",
+    "xpLeaders": "🏆 Лидеры по опыту",
+    "levelValue": "Уровень {level}"
   }
 }

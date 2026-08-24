@@ -1117,5 +1117,15 @@
       "black": "검정",
       "green": "초록"
     }
+  },
+  "highlights": {
+    "title": "📰 {server} — 이번 주",
+    "subtitle": "지난 7일 동안의 소식입니다.",
+    "messages": "💬 메시지",
+    "newMembers": "👋 신규 멤버",
+    "topStar": "⭐ 별을 가장 많이 받은 메시지",
+    "topStarValue": "{stars} ⭐ — {user} · [이동]({link})",
+    "xpLeaders": "🏆 XP 리더",
+    "levelValue": "레벨 {level}"
   }
 }

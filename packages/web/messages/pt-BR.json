@@ -948,7 +948,13 @@
     "permAlertsEnabled": "Ativar alertas de permissão",
     "permAlertsEnabledDesc": "Publica um alerta no seu canal de registro de moderação (ou de registros) quando uma ação como uma remoção do AutoMod, uma resposta anti-nuke ou um cargo automático falhar por falta de permissões.",
     "permAlertRole": "Cargo de alerta",
-    "permAlertRoleDesc": "Este cargo é mencionado no alerta. Deixe como Nenhum para publicar o alerta sem menção."
+    "permAlertRoleDesc": "Este cargo é mencionado no alerta. Deixe como Nenhum para publicar o alerta sem menção.",
+    "highlightsTitle": "Destaques semanais",
+    "highlightsDesc": "Publique um resumo semanal amigável da atividade do servidor.",
+    "highlightsEnabled": "Ativar destaques semanais",
+    "highlightsEnabledDesc": "Toda segunda, publique um resumo da semana — mensagens, novos membros, mensagem mais destacada e líderes de XP.",
+    "highlightsChannel": "Canal dos destaques",
+    "highlightsChannelDesc": "Onde o resumo semanal é publicado."
   },
   "suggestionsPage": {
     "saved": "Configurações de sugestões salvas!",
