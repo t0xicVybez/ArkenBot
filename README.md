@@ -14,6 +14,8 @@ Replace a stack of single-purpose bots with one **permanently free**, self-hosta
 
 **[🌐 Website](https://arkenbot.app)** · **[📖 Docs](https://docs.arkenbot.app)** · **[➕ Add to Discord](https://discord.com/oauth2/authorize?client_id=1477178407543373834&permissions=8824675416665207&integration_type=0&scope=bot+applications.commands)** · **[💬 Support Server](https://discord.gg/fXJnYPdHRX)**
 
+<a href="https://www.buymeacoffee.com/corylynch8d" target="_blank"><img src="https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=&slug=corylynch8d&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" alt="Buy Me A Coffee" height="42" /></a>
+
 </div>
 
 ---
