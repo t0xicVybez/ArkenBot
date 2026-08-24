@@ -30,8 +30,6 @@
     "commands": "Commands",
     "forum-management": "Forum Management",
     "stream-alerts": "Stream Alerts",
-    "twitter-feeds": "X / Twitter Feeds",
-    "reddit-feeds": "Reddit Feeds",
     "rss-feeds": "RSS Feeds",
     "monday": "Monday.com",
     "trello": "Trello",
@@ -1016,13 +1014,11 @@
       "stream-alerts": {
         "title": "Stream Alerts",
         "tagline": "Notify your community the moment anything goes live or gets posted.",
-        "description": "Monitor Twitch, Kick, YouTube, X (Twitter), Reddit, and RSS/Podcast feeds and automatically post a notification embed in any Discord channel when there is new content. Keep your community engaged without manual announcements.",
+        "description": "Monitor Twitch, Kick, YouTube, and RSS/Podcast feeds and automatically post a notification embed in any Discord channel when there is new content. Keep your community engaged without manual announcements.",
         "bullets": [
           "Twitch: alerts when a channel goes live",
           "Kick: alerts when a Kick.com channel goes live",
           "YouTube: alerts when a channel starts a live stream",
-          "X (Twitter): alerts when a user posts a new tweet",
-          "Reddit: alerts when a subreddit gets a new post",
           "RSS / Podcast: alerts when a feed publishes a new episode or post",
           "Configurable alert channel and custom message per alert",
           "Multiple alerts tracked simultaneously across platforms"
