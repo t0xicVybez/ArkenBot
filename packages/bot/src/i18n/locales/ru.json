@@ -1074,6 +1074,8 @@
     "takeTitle": "Валюта изъята",
     "takeDesc": "Вы изъяли **{amount}** у {user}. Новый кошелёк: {wallet}.",
     "resetTitle": "Баланс сброшен",
-    "resetDesc": "Баланс {user} сброшен до нуля."
+    "resetDesc": "Баланс {user} сброшен до нуля.",
+    "incomeRoles": "Доходные роли",
+    "bankInterest": "Проценты по банку"
   }
 }

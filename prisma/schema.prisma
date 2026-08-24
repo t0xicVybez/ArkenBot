@@ -71,8 +71,9 @@ model Guild {
   trelloAlerts           TrelloAlert[]
   dashboardAuditLogs     DashboardAuditLog[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  EconomyIncomeRole EconomyIncomeRole[]
 
   @@map("guilds")
 }
@@ -1441,6 +1442,9 @@ model EconomyConfig {
   robFinePercent   Int      @default(15) // % of robber wallet lost as a fine on failure
   gamblingEnabled  Boolean  @default(true)
   maxBet           Int      @default(10000)
+  levelUpReward    Int      @default(0) // coins granted per level-up (0 = off)
+  bankInterestPct  Int      @default(0) // daily % interest paid on bank balance (0 = off)
+  bankInterestCap  Int      @default(1000) // max interest paid per day (0 = uncapped)
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
@@ -1493,4 +1497,16 @@ model EconomyInventory {
   @@unique([guildId, userId, itemId])
   @@index([guildId, userId])
   @@map("economy_inventory")
+}
+
+model EconomyIncomeRole {
+  id      String @id @default(cuid())
+  guildId String
+  guild   Guild  @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  roleId  String
+  amount  Int // added to /daily for members holding this role
+
+  @@unique([guildId, roleId])
+  @@index([guildId])
+  @@map("economy_income_roles")
 }

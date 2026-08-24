@@ -39,10 +39,20 @@ const command: BotCommand = {
     const withinStreak = bal.lastDaily ? now - bal.lastDaily.getTime() < 2 * DAY_MS : false;
     const streak = withinStreak ? bal.dailyStreak + 1 : 1;
     const streakBonus = Math.min(streak - 1, 6) * cfg.dailyStreakBonus;
-    const total = cfg.dailyAmount + streakBonus;
+
+    // Income roles: a passive bonus for members holding configured roles.
+    const roleIds = interaction.member && 'roles' in interaction.member
+      ? Array.from((interaction.member.roles as { cache: Map<string, unknown> }).cache?.keys?.() ?? [])
+      : [];
+    const income = await EconomyModule.incomeForRoles(interaction.guild.id, roleIds as string[]);
+
+    // Bank interest: a daily percentage on whatever is banked, capped by config.
+    const interest = EconomyModule.bankInterest(bal.bank, cfg);
+
+    const total = cfg.dailyAmount + streakBonus + income;
     await prisma.economyBalance.update({
       where: { guildId_userId: { guildId: interaction.guild.id, userId: interaction.user.id } },
-      data: { wallet: { increment: total }, lastDaily: new Date(now), dailyStreak: streak },
+      data: { wallet: { increment: total }, bank: { increment: interest }, lastDaily: new Date(now), dailyStreak: streak },
     });
     const embed = new EmbedBuilder()
       .setColor(COLORS.SUCCESS)
@@ -51,8 +61,10 @@ const command: BotCommand = {
       .addFields(
         { name: t('economy.streak', loc), value: t('economy.streakDays', loc, { days: String(streak) }), inline: true },
         { name: t('economy.streakBonus', loc), value: EconomyModule.format(streakBonus, cfg), inline: true },
-      )
-      .setTimestamp();
+      );
+    if (income > 0) embed.addFields({ name: t('economy.incomeRoles', loc), value: EconomyModule.format(income, cfg), inline: true });
+    if (interest > 0) embed.addFields({ name: t('economy.bankInterest', loc), value: EconomyModule.format(interest, cfg), inline: true });
+    embed.setTimestamp();
     await interaction.editReply({ embeds: [embed] });
   },
 };

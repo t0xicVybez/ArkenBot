@@ -3259,6 +3259,22 @@
     "itemAdded": "Artikel hinzugefügt",
     "itemDeleted": "Artikel entfernt",
     "itemError": "Etwas ist schiefgelaufen",
-    "itemNamePriceRequired": "Name und Preis sind erforderlich."
+    "itemNamePriceRequired": "Name und Preis sind erforderlich.",
+    "rewardsTitle": "Belohnungen & Zinsen",
+    "rewardsDesc": "Verknüpfe die Wirtschaft mit dem Leveln und belohne Sparen.",
+    "levelUpReward": "Level-Up-Belohnung",
+    "levelUpRewardHelp": "Münzen pro Level, multipliziert mit dem neuen Level (0 = aus).",
+    "bankInterestPct": "Bankzins %",
+    "bankInterestPctHelp": "Täglicher Zins auf das Bankguthaben via /daily (0 = aus).",
+    "bankInterestCap": "Zinsobergrenze",
+    "bankInterestCapHelp": "Max. Zins pro Tag (0 = unbegrenzt).",
+    "incomeTitle": "Einkommensrollen",
+    "incomeDesc": "Mitglieder mit diesen Rollen erhalten einen passiven Bonus bei /daily.",
+    "incomeSelectRole": "Rolle wählen",
+    "incomeAmount": "Betrag / Tag",
+    "incomeAdd": "Hinzufügen",
+    "incomeEmpty": "Noch keine Einkommensrollen.",
+    "incomePerDay": "Tag",
+    "incomeRoleRequired": "Wähle eine Rolle und einen Betrag."
   }
 }

@@ -3259,6 +3259,22 @@
     "itemAdded": "Item adicionado",
     "itemDeleted": "Item removido",
     "itemError": "Algo deu errado",
-    "itemNamePriceRequired": "Nome e preço são obrigatórios."
+    "itemNamePriceRequired": "Nome e preço são obrigatórios.",
+    "rewardsTitle": "Recompensas e juros",
+    "rewardsDesc": "Conecte a economia ao nível e recompense a poupança.",
+    "levelUpReward": "Recompensa por subir de nível",
+    "levelUpRewardHelp": "Moedas por nível, multiplicadas pelo novo nível (0 = desligado).",
+    "bankInterestPct": "% de juros do banco",
+    "bankInterestPctHelp": "Juros diários sobre o saldo do banco via /daily (0 = desligado).",
+    "bankInterestCap": "Limite de juros",
+    "bankInterestCapHelp": "Juros máximos por dia (0 = sem limite).",
+    "incomeTitle": "Cargos de renda",
+    "incomeDesc": "Membros com esses cargos ganham um bônus passivo no /daily.",
+    "incomeSelectRole": "Selecione um cargo",
+    "incomeAmount": "Valor / dia",
+    "incomeAdd": "Adicionar",
+    "incomeEmpty": "Ainda não há cargos de renda.",
+    "incomePerDay": "dia",
+    "incomeRoleRequired": "Escolha um cargo e um valor."
   }
 }

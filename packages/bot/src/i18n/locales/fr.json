@@ -1074,6 +1074,8 @@
     "takeTitle": "Monnaie retirée",
     "takeDesc": "Tu as retiré **{amount}** à {user}. Nouveau portefeuille : {wallet}.",
     "resetTitle": "Solde réinitialisé",
-    "resetDesc": "Le solde de {user} a été remis à zéro."
+    "resetDesc": "Le solde de {user} a été remis à zéro.",
+    "incomeRoles": "Rôles de revenu",
+    "bankInterest": "Intérêts bancaires"
   }
 }
