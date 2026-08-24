@@ -1117,5 +1117,15 @@
       "black": "czarne",
       "green": "zielone"
     }
+  },
+  "highlights": {
+    "title": "📰 {server} — W tym tygodniu",
+    "subtitle": "Oto co wydarzyło się przez ostatnie 7 dni.",
+    "messages": "💬 Wiadomości",
+    "newMembers": "👋 Nowi członkowie",
+    "topStar": "⭐ Najbardziej ogwiazdkowana wiadomość",
+    "topStarValue": "{stars} ⭐ — od {user} · [przejdź]({link})",
+    "xpLeaders": "🏆 Liderzy XP",
+    "levelValue": "Poziom {level}"
   }
 }
