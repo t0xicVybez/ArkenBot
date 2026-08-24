@@ -1076,6 +1076,14 @@
     "resetTitle": "Saldo zresetowane",
     "resetDesc": "Saldo {user} zostało wyzerowane.",
     "incomeRoles": "Role dochodowe",
-    "bankInterest": "Odsetki bankowe"
+    "bankInterest": "Odsetki bankowe",
+    "rouletteBadBet": "Zakład musi być \"red\", \"black\", \"green\" lub liczbą 0–36.",
+    "rouletteResult": "Kulka wpadła na **{pocket}** ({color}). {outcome}",
+    "highlowResult": "Baza to **{base}**, następna to **{next}**. {outcome}",
+    "roulette": {
+      "red": "czerwone",
+      "black": "czarne",
+      "green": "zielone"
+    }
   }
 }

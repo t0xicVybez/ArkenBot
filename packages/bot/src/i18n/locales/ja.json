@@ -1076,6 +1076,14 @@
     "resetTitle": "残高をリセット",
     "resetDesc": "{user} の残高をゼロにリセットしました。",
     "incomeRoles": "収入ロール",
-    "bankInterest": "銀行利息"
+    "bankInterest": "銀行利息",
+    "rouletteBadBet": "ベットは \"red\"・\"black\"・\"green\" または 0〜36 の数字にしてください。",
+    "rouletteResult": "ボールは **{pocket}**（{color}）に入りました。{outcome}",
+    "highlowResult": "基準は **{base}**、次は **{next}** でした。{outcome}",
+    "roulette": {
+      "red": "赤",
+      "black": "黒",
+      "green": "緑"
+    }
   }
 }

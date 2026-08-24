@@ -1076,6 +1076,14 @@
     "resetTitle": "Баланс сброшен",
     "resetDesc": "Баланс {user} сброшен до нуля.",
     "incomeRoles": "Доходные роли",
-    "bankInterest": "Проценты по банку"
+    "bankInterest": "Проценты по банку",
+    "rouletteBadBet": "Ставка должна быть \"red\", \"black\", \"green\" или числом 0–36.",
+    "rouletteResult": "Шарик выпал на **{pocket}** ({color}). {outcome}",
+    "highlowResult": "База была **{base}**, следующее — **{next}**. {outcome}",
+    "roulette": {
+      "red": "красное",
+      "black": "чёрное",
+      "green": "зелёное"
+    }
   }
 }

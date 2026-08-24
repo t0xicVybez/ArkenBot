@@ -21,7 +21,14 @@ const command: BotCommand = {
     .addSubcommand((s) => s.setName('slots').setDescription('Spin the slot machine')
       .addIntegerOption((o) => o.setName('amount').setDescription('Amount to bet').setRequired(true).setMinValue(1)))
     .addSubcommand((s) => s.setName('dice').setDescription('Beat the house roll (2 dice)')
-      .addIntegerOption((o) => o.setName('amount').setDescription('Amount to bet').setRequired(true).setMinValue(1))),
+      .addIntegerOption((o) => o.setName('amount').setDescription('Amount to bet').setRequired(true).setMinValue(1)))
+    .addSubcommand((s) => s.setName('roulette').setDescription('Bet on red, black, green or a number (0–36)')
+      .addIntegerOption((o) => o.setName('amount').setDescription('Amount to bet').setRequired(true).setMinValue(1))
+      .addStringOption((o) => o.setName('bet').setDescription('"red", "black", "green" or a number 0–36').setRequired(true)))
+    .addSubcommand((s) => s.setName('highlow').setDescription('Guess if the next number (1–100) is higher or lower')
+      .addIntegerOption((o) => o.setName('amount').setDescription('Amount to bet').setRequired(true).setMinValue(1))
+      .addStringOption((o) => o.setName('guess').setDescription('Higher or lower').setRequired(true)
+        .addChoices({ name: 'Higher', value: 'higher' }, { name: 'Lower', value: 'lower' }))),
   category: 'Economy',
 
   async execute(interaction: ChatInputCommandInteraction, _client: BotClient) {
@@ -81,7 +88,7 @@ const command: BotCommand = {
       desc = `**${line}**\n\n` + (won
         ? t('economy.wonAmount', loc, { amount: EconomyModule.format(delta, cfg) })
         : t('economy.lostAmount', loc, { amount: EconomyModule.format(bet, cfg) }));
-    } else {
+    } else if (sub === 'dice') {
       const roll = () => (1 + Math.floor(Math.random() * 6)) + (1 + Math.floor(Math.random() * 6));
       const you = roll();
       const house = roll();
@@ -93,6 +100,39 @@ const command: BotCommand = {
         : won ? t('economy.wonAmount', loc, { amount: EconomyModule.format(bet, cfg) })
               : t('economy.lostAmount', loc, { amount: EconomyModule.format(bet, cfg) });
       desc = t('economy.diceResult', loc, { you: String(you), house: String(house), outcome });
+    } else if (sub === 'roulette') {
+      const raw = interaction.options.getString('bet', true).trim().toLowerCase();
+      const asNum = /^\d+$/.test(raw) ? parseInt(raw, 10) : null;
+      const isColor = raw === 'red' || raw === 'black' || raw === 'green';
+      if ((asNum === null || asNum < 0 || asNum > 36) && !isColor) {
+        await interaction.editReply({ embeds: [errorEmbed(t('economy.errorTitle', loc), t('economy.rouletteBadBet', loc))] });
+        return;
+      }
+      const pocket = Math.floor(Math.random() * 37); // 0–36
+      const color = pocket === 0 ? 'green' : pocket % 2 === 0 ? 'black' : 'red';
+      let won = false;
+      let mult = -1;
+      if (asNum !== null) { won = pocket === asNum; mult = won ? 35 : -1; }
+      else if (raw === 'green') { won = color === 'green'; mult = won ? 35 : -1; }
+      else { won = color === raw; mult = won ? 1 : -1; }
+      delta = bet * mult;
+      title = t(won ? 'economy.gambleWinTitle' : 'economy.gambleLoseTitle', loc);
+      const colorLabel = t(`economy.roulette.${color}`, loc);
+      const outcome = won ? t('economy.wonAmount', loc, { amount: EconomyModule.format(Math.abs(delta), cfg) })
+                          : t('economy.lostAmount', loc, { amount: EconomyModule.format(bet, cfg) });
+      desc = t('economy.rouletteResult', loc, { pocket: String(pocket), color: colorLabel, outcome });
+    } else {
+      // highlow
+      const guess = interaction.options.getString('guess', true);
+      const base = 1 + Math.floor(Math.random() * 100);
+      let next = 1 + Math.floor(Math.random() * 100);
+      while (next === base) next = 1 + Math.floor(Math.random() * 100); // avoid ties
+      const won = guess === 'higher' ? next > base : next < base;
+      delta = won ? bet : -bet;
+      title = t(won ? 'economy.gambleWinTitle' : 'economy.gambleLoseTitle', loc);
+      const outcome = won ? t('economy.wonAmount', loc, { amount: EconomyModule.format(bet, cfg) })
+                          : t('economy.lostAmount', loc, { amount: EconomyModule.format(bet, cfg) });
+      desc = t('economy.highlowResult', loc, { base: String(base), next: String(next), outcome });
     }
 
     let updated = bal;

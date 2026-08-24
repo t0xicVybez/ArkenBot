@@ -1076,6 +1076,14 @@
     "resetTitle": "Kontostand zurückgesetzt",
     "resetDesc": "Der Kontostand von {user} wurde auf null zurückgesetzt.",
     "incomeRoles": "Einkommensrollen",
-    "bankInterest": "Bankzinsen"
+    "bankInterest": "Bankzinsen",
+    "rouletteBadBet": "Der Einsatz muss \"red\", \"black\", \"green\" oder eine Zahl 0–36 sein.",
+    "rouletteResult": "Die Kugel landete auf **{pocket}** ({color}). {outcome}",
+    "highlowResult": "Basis war **{base}**, die nächste war **{next}**. {outcome}",
+    "roulette": {
+      "red": "Rot",
+      "black": "Schwarz",
+      "green": "Grün"
+    }
   }
 }

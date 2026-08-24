@@ -1076,6 +1076,14 @@
     "resetTitle": "Saldo azzerato",
     "resetDesc": "Il saldo di {user} è stato azzerato.",
     "incomeRoles": "Ruoli di reddito",
-    "bankInterest": "Interessi bancari"
+    "bankInterest": "Interessi bancari",
+    "rouletteBadBet": "La puntata deve essere \"red\", \"black\", \"green\" o un numero 0–36.",
+    "rouletteResult": "La pallina è caduta su **{pocket}** ({color}). {outcome}",
+    "highlowResult": "La base era **{base}**, il successivo era **{next}**. {outcome}",
+    "roulette": {
+      "red": "rosso",
+      "black": "nero",
+      "green": "verde"
+    }
   }
 }
