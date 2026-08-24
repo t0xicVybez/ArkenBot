@@ -954,7 +954,13 @@
     "highlightsEnabled": "週間ハイライトを有効化",
     "highlightsEnabledDesc": "毎週月曜に、先週のまとめ（メッセージ数・新メンバー・最も星を集めた投稿・XPリーダー）を投稿します。",
     "highlightsChannel": "ハイライトチャンネル",
-    "highlightsChannelDesc": "週間まとめを投稿する場所。"
+    "highlightsChannelDesc": "週間まとめを投稿する場所。",
+    "appealsTitle": "BAN・ミュートの異議申し立て",
+    "appealsDesc": "BANまたはミュートされたメンバーが処分に異議を申し立てられるようにします。",
+    "appealsEnabled": "異議申し立てを有効化",
+    "appealsEnabledDesc": "BAN/ミュートされたメンバーのDMに「異議申し立て」ボタンが表示されます。承認すると処分が自動的に取り消されます。",
+    "appealChannel": "異議審査チャンネル",
+    "appealChannelDesc": "スタッフが承認・却下するために異議が投稿される場所。"
   },
   "suggestionsPage": {
     "saved": "提案の設定を保存しました！",

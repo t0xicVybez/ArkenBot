@@ -954,7 +954,13 @@
     "highlightsEnabled": "Attiva riepilogo settimanale",
     "highlightsEnabledDesc": "Ogni lunedì, un riepilogo della settimana — messaggi, nuovi membri, messaggio più votato e leader XP.",
     "highlightsChannel": "Canale del riepilogo",
-    "highlightsChannelDesc": "Dove viene pubblicato il riepilogo settimanale."
+    "highlightsChannelDesc": "Dove viene pubblicato il riepilogo settimanale.",
+    "appealsTitle": "Ricorsi per ban e silenziamento",
+    "appealsDesc": "Consenti ai membri bannati o silenziati di fare ricorso.",
+    "appealsEnabled": "Attiva ricorsi",
+    "appealsEnabledDesc": "I membri bannati/silenziati ricevono un pulsante “Fai ricorso” in DM; le approvazioni annullano automaticamente l’azione.",
+    "appealChannel": "Canale di revisione ricorsi",
+    "appealChannelDesc": "Dove i ricorsi vengono pubblicati per l’approvazione o il rifiuto dello staff."
   },
   "suggestionsPage": {
     "saved": "Impostazioni dei suggerimenti salvate!",

@@ -954,7 +954,13 @@
     "highlightsEnabled": "Ativar destaques semanais",
     "highlightsEnabledDesc": "Toda segunda, publique um resumo da semana — mensagens, novos membros, mensagem mais destacada e líderes de XP.",
     "highlightsChannel": "Canal dos destaques",
-    "highlightsChannelDesc": "Onde o resumo semanal é publicado."
+    "highlightsChannelDesc": "Onde o resumo semanal é publicado.",
+    "appealsTitle": "Recursos de banimento e silenciamento",
+    "appealsDesc": "Permita que membros banidos ou silenciados recorram da ação.",
+    "appealsEnabled": "Ativar recursos",
+    "appealsEnabledDesc": "Membros banidos/silenciados recebem um botão “Recorrer” na DM; aprovações revertem a ação automaticamente.",
+    "appealChannel": "Canal de análise de recursos",
+    "appealChannelDesc": "Onde os recursos são postados para a equipe aprovar ou negar."
   },
   "suggestionsPage": {
     "saved": "Configurações de sugestões salvas!",

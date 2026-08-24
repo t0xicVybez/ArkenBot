@@ -1175,5 +1175,34 @@
     "failed": "Der Handel konnte nicht abgeschlossen werden — das Angebot ist nicht mehr gültig.",
     "doneTitle": "Handel abgeschlossen",
     "done": "{recipient} hat {offer} von {sender} angenommen."
+  },
+  "appeals": {
+    "appealButton": "Einspruch",
+    "alreadyPending": "Du hast bereits einen offenen Einspruch für diesen Server.",
+    "modalTitle": "Einspruch einreichen",
+    "modalLabel": "Warum sollte das rückgängig gemacht werden?",
+    "disabled": "Einsprüche sind auf diesem Server nicht aktiviert.",
+    "submitted": "Dein Einspruch wurde eingereicht. Das Team prüft ihn.",
+    "reviewTitle": "Neuer {type}-Einspruch",
+    "userField": "Nutzer",
+    "approve": "Genehmigen",
+    "deny": "Ablehnen",
+    "gone": "Dieser Einspruch existiert nicht mehr.",
+    "handled": "Dieser Einspruch wurde bereits bearbeitet.",
+    "unbanned": "Nutzer entbannt",
+    "unbanFailed": "Entbannen fehlgeschlagen",
+    "unmuted": "Timeout entfernt",
+    "unmuteFailed": "Timeout konnte nicht entfernt werden",
+    "approvedTitle": "Einspruch genehmigt — {server}",
+    "approvedDesc": "Dein Einspruch für **{server}** wurde genehmigt. Die Aktion wurde rückgängig gemacht.",
+    "deniedTitle": "Einspruch abgelehnt — {server}",
+    "deniedDesc": "Dein Einspruch für **{server}** wurde abgelehnt.",
+    "decision": "Entscheidung",
+    "approvedBy": "Genehmigt von {user}",
+    "deniedBy": "Abgelehnt von {user}",
+    "type": {
+      "ban": "Bann",
+      "mute": "Timeout"
+    }
   }
 }

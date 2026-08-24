@@ -954,7 +954,13 @@
     "highlightsEnabled": "Wöchentliche Highlights aktivieren",
     "highlightsEnabledDesc": "Jeden Montag ein Wochenrückblick — Nachrichten, neue Mitglieder, meistgesternte Nachricht und XP-Spitzenreiter.",
     "highlightsChannel": "Highlights-Kanal",
-    "highlightsChannelDesc": "Wo der Wochenrückblick gepostet wird."
+    "highlightsChannelDesc": "Wo der Wochenrückblick gepostet wird.",
+    "appealsTitle": "Bann- & Timeout-Einsprüche",
+    "appealsDesc": "Lass gebannte oder stummgeschaltete Mitglieder Einspruch einlegen.",
+    "appealsEnabled": "Einsprüche aktivieren",
+    "appealsEnabledDesc": "Gebannte/stummgeschaltete Mitglieder erhalten einen „Einspruch“-Button per DM; Genehmigungen machen die Aktion automatisch rückgängig.",
+    "appealChannel": "Einspruch-Prüfkanal",
+    "appealChannelDesc": "Wo Einsprüche zur Genehmigung/Ablehnung durch das Team gepostet werden."
   },
   "suggestionsPage": {
     "saved": "Vorschlags-Einstellungen gespeichert!",

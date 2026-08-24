@@ -1175,5 +1175,34 @@
     "failed": "交易无法完成——该提议已失效。",
     "doneTitle": "交易完成",
     "done": "{recipient} 接受了来自 {sender} 的 {offer}。"
+  },
+  "appeals": {
+    "appealButton": "申诉",
+    "alreadyPending": "你在该服务器已有一个待处理的申诉。",
+    "modalTitle": "提交申诉",
+    "modalLabel": "为什么应该撤销此处罚？",
+    "disabled": "该服务器未启用申诉。",
+    "submitted": "你的申诉已提交，工作人员将进行审核。",
+    "reviewTitle": "新的{type}申诉",
+    "userField": "用户",
+    "approve": "批准",
+    "deny": "拒绝",
+    "gone": "该申诉已不存在。",
+    "handled": "该申诉已被处理。",
+    "unbanned": "已解封用户",
+    "unbanFailed": "解封失败",
+    "unmuted": "已解除禁言",
+    "unmuteFailed": "无法解除禁言",
+    "approvedTitle": "申诉已批准 — {server}",
+    "approvedDesc": "你对 **{server}** 的申诉已被批准，处罚已撤销。",
+    "deniedTitle": "申诉被拒绝 — {server}",
+    "deniedDesc": "你对 **{server}** 的申诉被拒绝。",
+    "decision": "决定",
+    "approvedBy": "由 {user} 批准",
+    "deniedBy": "由 {user} 拒绝",
+    "type": {
+      "ban": "封禁",
+      "mute": "禁言"
+    }
   }
 }

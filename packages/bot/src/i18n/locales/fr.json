@@ -1175,5 +1175,34 @@
     "failed": "L’échange n’a pas pu aboutir — l’offre n’est plus valide.",
     "doneTitle": "Échange effectué",
     "done": "{recipient} a accepté {offer} de {sender}."
+  },
+  "appeals": {
+    "appealButton": "Faire appel",
+    "alreadyPending": "Tu as déjà un appel en attente pour ce serveur.",
+    "modalTitle": "Soumettre un appel",
+    "modalLabel": "Pourquoi cela devrait-il être annulé ?",
+    "disabled": "Les appels ne sont pas activés sur ce serveur.",
+    "submitted": "Ton appel a été soumis. Le staff l’examinera.",
+    "reviewTitle": "Nouvel appel de {type}",
+    "userField": "Utilisateur",
+    "approve": "Approuver",
+    "deny": "Refuser",
+    "gone": "Cet appel n’existe plus.",
+    "handled": "Cet appel a déjà été traité.",
+    "unbanned": "utilisateur débanni",
+    "unbanFailed": "échec du débannissement",
+    "unmuted": "exclusion retirée",
+    "unmuteFailed": "impossible de retirer l’exclusion",
+    "approvedTitle": "Appel approuvé — {server}",
+    "approvedDesc": "Ton appel pour **{server}** a été approuvé. L’action a été annulée.",
+    "deniedTitle": "Appel refusé — {server}",
+    "deniedDesc": "Ton appel pour **{server}** a été refusé.",
+    "decision": "Décision",
+    "approvedBy": "Approuvé par {user}",
+    "deniedBy": "Refusé par {user}",
+    "type": {
+      "ban": "bannissement",
+      "mute": "exclusion"
+    }
   }
 }

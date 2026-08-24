@@ -1175,5 +1175,34 @@
     "failed": "取引を完了できませんでした。オファーはもう有効ではありません。",
     "doneTitle": "取引完了",
     "done": "{recipient} が {sender} からの {offer} を受け取りました。"
+  },
+  "appeals": {
+    "appealButton": "異議申し立て",
+    "alreadyPending": "このサーバーには保留中の異議申し立てがすでにあります。",
+    "modalTitle": "異議を申し立てる",
+    "modalLabel": "なぜ取り消すべきですか？",
+    "disabled": "このサーバーでは異議申し立てが有効になっていません。",
+    "submitted": "異議申し立てを送信しました。スタッフが確認します。",
+    "reviewTitle": "新しい{type}の異議",
+    "userField": "ユーザー",
+    "approve": "承認",
+    "deny": "却下",
+    "gone": "その異議申し立ては存在しません。",
+    "handled": "この異議申し立ては既に処理されています。",
+    "unbanned": "BAN解除",
+    "unbanFailed": "BAN解除失敗",
+    "unmuted": "タイムアウト解除",
+    "unmuteFailed": "タイムアウトを解除できません",
+    "approvedTitle": "異議承認 — {server}",
+    "approvedDesc": "**{server}** への異議が承認されました。処分は取り消されました。",
+    "deniedTitle": "異議却下 — {server}",
+    "deniedDesc": "**{server}** への異議は却下されました。",
+    "decision": "判断",
+    "approvedBy": "{user} が承認",
+    "deniedBy": "{user} が却下",
+    "type": {
+      "ban": "BAN",
+      "mute": "ミュート"
+    }
   }
 }

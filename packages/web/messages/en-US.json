@@ -954,7 +954,13 @@
     "highlightsEnabled": "Enable weekly highlights",
     "highlightsEnabledDesc": "Every Monday, post a digest of the past week — messages, new members, top starred message and XP leaders.",
     "highlightsChannel": "Highlights channel",
-    "highlightsChannelDesc": "Where the weekly digest is posted."
+    "highlightsChannelDesc": "Where the weekly digest is posted.",
+    "appealsTitle": "Ban & Mute Appeals",
+    "appealsDesc": "Let banned or muted members appeal the action.",
+    "appealsEnabled": "Enable appeals",
+    "appealsEnabledDesc": "Banned/muted members get an “Appeal” button in their DM; approvals auto-reverse the action.",
+    "appealChannel": "Appeal review channel",
+    "appealChannelDesc": "Where appeals are posted for staff to approve or deny."
   },
   "suggestionsPage": {
     "saved": "Suggestions settings saved!",

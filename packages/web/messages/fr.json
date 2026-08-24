@@ -954,7 +954,13 @@
     "highlightsEnabled": "Activer le résumé hebdomadaire",
     "highlightsEnabledDesc": "Chaque lundi, publie un récap de la semaine : messages, nouveaux membres, message le plus étoilé et meilleurs en XP.",
     "highlightsChannel": "Salon du résumé",
-    "highlightsChannelDesc": "Où le résumé hebdomadaire est publié."
+    "highlightsChannelDesc": "Où le résumé hebdomadaire est publié.",
+    "appealsTitle": "Appels de bannissement et d’exclusion",
+    "appealsDesc": "Permets aux membres bannis ou exclus de faire appel.",
+    "appealsEnabled": "Activer les appels",
+    "appealsEnabledDesc": "Les membres bannis/exclus reçoivent un bouton « Faire appel » en MP ; les approbations annulent automatiquement l’action.",
+    "appealChannel": "Salon d’examen des appels",
+    "appealChannelDesc": "Où les appels sont publiés pour que le staff les approuve ou les refuse."
   },
   "suggestionsPage": {
     "saved": "Paramètres des suggestions enregistrés !",

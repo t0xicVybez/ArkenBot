@@ -1175,5 +1175,34 @@
     "failed": "거래를 완료할 수 없습니다 — 제안이 더 이상 유효하지 않습니다.",
     "doneTitle": "거래 완료",
     "done": "{recipient}님이 {sender}님의 {offer}을(를) 수락했습니다."
+  },
+  "appeals": {
+    "appealButton": "이의 제기",
+    "alreadyPending": "이 서버에 대해 이미 대기 중인 이의 제기가 있습니다.",
+    "modalTitle": "이의 제기하기",
+    "modalLabel": "왜 취소되어야 하나요?",
+    "disabled": "이 서버에서는 이의 제기가 활성화되어 있지 않습니다.",
+    "submitted": "이의 제기가 제출되었습니다. 스태프가 검토합니다.",
+    "reviewTitle": "새 {type} 이의 제기",
+    "userField": "사용자",
+    "approve": "승인",
+    "deny": "거부",
+    "gone": "해당 이의 제기가 더 이상 존재하지 않습니다.",
+    "handled": "이 이의 제기는 이미 처리되었습니다.",
+    "unbanned": "차단 해제됨",
+    "unbanFailed": "차단 해제 실패",
+    "unmuted": "타임아웃 해제됨",
+    "unmuteFailed": "타임아웃을 해제할 수 없음",
+    "approvedTitle": "이의 제기 승인 — {server}",
+    "approvedDesc": "**{server}**에 대한 이의 제기가 승인되었습니다. 조치가 취소되었습니다.",
+    "deniedTitle": "이의 제기 거부 — {server}",
+    "deniedDesc": "**{server}**에 대한 이의 제기가 거부되었습니다.",
+    "decision": "결정",
+    "approvedBy": "{user}님이 승인",
+    "deniedBy": "{user}님이 거부",
+    "type": {
+      "ban": "차단",
+      "mute": "뮤트"
+    }
   }
 }

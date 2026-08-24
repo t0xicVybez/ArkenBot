@@ -954,7 +954,13 @@
     "highlightsEnabled": "Włącz cotygodniowe podsumowanie",
     "highlightsEnabledDesc": "W każdy poniedziałek podsumowanie tygodnia — wiadomości, nowi członkowie, najlepsza wiadomość i liderzy XP.",
     "highlightsChannel": "Kanał podsumowania",
-    "highlightsChannelDesc": "Gdzie publikowane jest cotygodniowe podsumowanie."
+    "highlightsChannelDesc": "Gdzie publikowane jest cotygodniowe podsumowanie.",
+    "appealsTitle": "Odwołania od bana i wyciszenia",
+    "appealsDesc": "Pozwól zbanowanym lub wyciszonym członkom odwołać się od działania.",
+    "appealsEnabled": "Włącz odwołania",
+    "appealsEnabledDesc": "Zbanowani/wyciszeni członkowie dostają przycisk „Odwołaj się” w DM; zatwierdzenie automatycznie cofa działanie.",
+    "appealChannel": "Kanał rozpatrywania odwołań",
+    "appealChannelDesc": "Gdzie odwołania są publikowane do zatwierdzenia lub odrzucenia przez zespół."
   },
   "suggestionsPage": {
     "saved": "Zapisano ustawienia sugestii!",

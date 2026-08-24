@@ -70,6 +70,7 @@ model Guild {
   mondayAlerts           MondayAlert[]
   trelloAlerts           TrelloAlert[]
   dashboardAuditLogs     DashboardAuditLog[]
+  moderationAppeals      ModerationAppeal[]
 
   createdAt            DateTime               @default(now())
   updatedAt            DateTime               @updatedAt
@@ -125,6 +126,10 @@ model GuildSettings {
   // Permission-failure alerts: ping a role when the bot is blocked by missing perms
   permissionAlertsEnabled Boolean @default(true)
   permissionAlertRoleId   String?
+
+  // Ban/mute appeals
+  appealsEnabled  Boolean @default(false)
+  appealChannelId String?
 
   // Leveling config
   xpPerMessage      Int     @default(15)
@@ -1570,4 +1575,22 @@ model EconomyLotteryTicket {
   @@unique([guildId, userId])
   @@index([guildId])
   @@map("economy_lottery_tickets")
+}
+
+model ModerationAppeal {
+  id         String    @id @default(cuid())
+  guildId    String
+  guild      Guild     @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  userId     String
+  userTag    String
+  type       String // ban | mute
+  reason     String // the user's appeal text
+  status     String    @default("pending") // pending | approved | denied
+  reviewedBy String?
+  reviewedAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([guildId, status])
+  @@index([userId])
+  @@map("moderation_appeals")
 }
