@@ -44,7 +44,7 @@
   },
   "streamAlerts": {
     "title": "방송 알림",
-    "description": "크리에이터가 라이브를 시작하거나 게시할 때 커뮤니티에 알립니다 — Twitch, Kick, YouTube, X, RSS.",
+    "description": "크리에이터가 라이브를 시작하거나 게시할 때 커뮤니티에 알림 — Twitch, Kick, YouTube, RSS.",
     "channelUsername": "채널 사용자명",
     "channelHandle": "채널 핸들"
   },
@@ -1911,8 +1911,6 @@
     "commands": "명령어",
     "forum-management": "포럼 관리",
     "stream-alerts": "방송 알림",
-    "twitter-feeds": "X / Twitter 피드",
-    "reddit-feeds": "Reddit 피드",
     "rss-feeds": "RSS 피드",
     "monday": "Monday.com",
     "trello": "Trello",
@@ -2342,7 +2340,7 @@
       },
       {
         "title": "모든 것에 대한 알림",
-        "desc": "Twitch, Kick, YouTube, X, Reddit, RSS — 그리고 Trello와 Monday.com 보드."
+        "desc": "Twitch, Kick, YouTube, RSS — 여기에 Trello와 Monday.com 보드까지."
       },
       {
         "title": "레벨과 참여",
@@ -2402,7 +2400,7 @@
         },
         {
           "title": "방송 알림",
-          "desc": "Twitch, Kick, YouTube 채널이 라이브가 되거나 Twitter, Reddit, RSS 피드가 업데이트될 때 알림을 받으세요. 자동으로 알림 임베드를 게시합니다."
+          "desc": "Twitch, Kick 또는 YouTube 채널이 라이브를 시작하거나 RSS 피드가 업데이트될 때 알림을 받습니다. 알림 임베드를 자동으로 게시합니다."
         },
         {
           "title": "monday.com 및 Trello 알림",
@@ -2898,13 +2896,11 @@
       "stream-alerts": {
         "title": "방송 알림",
         "tagline": "무언가가 라이브가 되거나 게시되는 순간 커뮤니티에 알립니다.",
-        "description": "Twitch, Kick, YouTube, X(Twitter), Reddit, RSS/팟캐스트 피드를 모니터링하고 새 콘텐츠가 있을 때 아무 Discord 채널에나 자동으로 알림 임베드를 게시합니다. 수동 공지 없이 커뮤니티의 참여를 유지하세요.",
+        "description": "Twitch, Kick, YouTube 및 RSS/팟캐스트 피드를 모니터링하고 새 콘텐츠가 있을 때 임의의 Discord 채널에 알림 임베드를 자동으로 게시합니다. 수동 공지 없이 커뮤니티의 참여를 유지하세요.",
         "bullets": [
           "Twitch: 채널이 라이브가 될 때 알림",
           "Kick: Kick.com 채널이 라이브가 될 때 알림",
           "YouTube: 채널이 라이브 스트림을 시작할 때 알림",
-          "X(Twitter): 사용자가 새 트윗을 게시할 때 알림",
-          "Reddit: 서브레딧에 새 게시물이 생길 때 알림",
           "RSS / 팟캐스트: 피드가 새 에피소드나 게시물을 게시할 때 알림",
           "알림별 구성 가능한 알림 채널과 사용자 지정 메시지",
           "플랫폼 전반에 걸쳐 동시에 추적되는 여러 알림"

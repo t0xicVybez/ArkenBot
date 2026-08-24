@@ -18,20 +18,10 @@
     "cmdStop": "Stop playback and clear the queue",
     "cmdNowplaying": "Show the currently playing track"
   },
-  "redditFeeds": {
-    "title": "Reddit Feeds — Coming Soon",
-    "description": "Reddit notifications are temporarily unavailable while we complete Reddit's Data API approval. This feature will return automatically once access is granted."
-  },
   "rssFeeds": {
     "title": "RSS Feeds",
     "description": "Post a Discord notification whenever an RSS or podcast feed publishes a new item. Checks every 5 minutes. No API key required.",
     "usernameLabel": "Feed URL"
-  },
-  "twitterFeeds": {
-    "title": "X / Twitter Feeds",
-    "description": "Post a Discord notification whenever a tracked account publishes a new tweet. Checks every 5 minutes.",
-    "usernameLabel": "Username",
-    "notice": "X/Twitter alerts require a Bearer Token (TWITTER_BEARER_TOKEN) set in the bot's .env file. A free X Developer account with a Basic app is sufficient. Without it, Twitter alerts will be silently skipped."
   },
   "streamAlerts": {
     "title": "Stream Alerts",

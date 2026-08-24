@@ -44,7 +44,7 @@
   },
   "streamAlerts": {
     "title": "Stream-Benachrichtigungen",
-    "description": "Benachrichtige die Community, wenn Creator live gehen oder posten — Twitch, Kick, YouTube, X, RSS.",
+    "description": "Benachrichtige die Community, wenn Creator live gehen oder posten — Twitch, Kick, YouTube, RSS.",
     "channelUsername": "Kanal-Benutzername",
     "channelHandle": "Kanal-Handle"
   },
@@ -1911,8 +1911,6 @@
     "commands": "Befehle",
     "forum-management": "Forum-Verwaltung",
     "stream-alerts": "Stream-Benachrichtigungen",
-    "twitter-feeds": "X-/Twitter-Feeds",
-    "reddit-feeds": "Reddit-Feeds",
     "rss-feeds": "RSS-Feeds",
     "monday": "Monday.com",
     "trello": "Trello",
@@ -2342,7 +2340,7 @@
       },
       {
         "title": "Benachrichtigungen für alles",
-        "desc": "Twitch, Kick, YouTube, X, Reddit, RSS — plus Trello- und Monday.com-Boards."
+        "desc": "Twitch, Kick, YouTube, RSS — plus Trello- und Monday.com-Boards."
       },
       {
         "title": "Level & Engagement",
@@ -2402,7 +2400,7 @@
         },
         {
           "title": "Stream-Benachrichtigungen",
-          "desc": "Werde benachrichtigt, wenn Twitch-, Kick- oder YouTube-Kanäle live gehen oder wenn Twitter-, Reddit- oder RSS-Feeds aktualisiert werden. Postet automatisch ein Benachrichtigungs-Embed."
+          "desc": "Werde benachrichtigt, wenn Twitch-, Kick- oder YouTube-Kanäle live gehen oder wenn ein RSS-Feed aktualisiert wird. Postet automatisch ein Benachrichtigungs-Embed."
         },
         {
           "title": "monday.com- & Trello-Benachrichtigungen",
@@ -2898,13 +2896,11 @@
       "stream-alerts": {
         "title": "Stream-Benachrichtigungen",
         "tagline": "Benachrichtige deine Community in dem Moment, in dem etwas live geht oder gepostet wird.",
-        "description": "Überwache Twitch-, Kick-, YouTube-, X- (Twitter-), Reddit- und RSS-/Podcast-Feeds und poste automatisch ein Benachrichtigungs-Embed in jedem Discord-Kanal, wenn es neuen Inhalt gibt. Halte deine Community engagiert, ohne manuelle Ankündigungen.",
+        "description": "Überwache Twitch-, Kick-, YouTube- und RSS/Podcast-Feeds und poste automatisch ein Benachrichtigungs-Embed in jedem Discord-Kanal, sobald es neuen Inhalt gibt. Halte deine Community ohne manuelle Ankündigungen bei der Stange.",
         "bullets": [
           "Twitch: Benachrichtigungen, wenn ein Kanal live geht",
           "Kick: Benachrichtigungen, wenn ein Kick.com-Kanal live geht",
           "YouTube: Benachrichtigungen, wenn ein Kanal einen Livestream startet",
-          "X (Twitter): Benachrichtigungen, wenn ein Nutzer einen neuen Tweet postet",
-          "Reddit: Benachrichtigungen, wenn ein Subreddit einen neuen Beitrag erhält",
           "RSS / Podcast: Benachrichtigungen, wenn ein Feed eine neue Folge oder einen neuen Beitrag veröffentlicht",
           "Konfigurierbarer Benachrichtigungskanal und benutzerdefinierte Nachricht pro Benachrichtigung",
           "Mehrere Benachrichtigungen gleichzeitig über Plattformen hinweg verfolgt"

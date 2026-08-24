@@ -44,7 +44,7 @@
   },
   "streamAlerts": {
     "title": "Stream Alerts",
-    "description": "Notify the community when creators go live or post — Twitch, Kick, YouTube, X, RSS.",
+    "description": "Notify the community when creators go live or post — Twitch, Kick, YouTube, RSS.",
     "channelUsername": "Channel Username",
     "channelHandle": "Channel Handle"
   },
@@ -1911,8 +1911,6 @@
     "commands": "Commands",
     "forum-management": "Forum Management",
     "stream-alerts": "Stream Alerts",
-    "twitter-feeds": "X / Twitter Feeds",
-    "reddit-feeds": "Reddit Feeds",
     "rss-feeds": "RSS Feeds",
     "monday": "Monday.com",
     "trello": "Trello",
@@ -2342,7 +2340,7 @@
       },
       {
         "title": "Alerts for everything",
-        "desc": "Twitch, Kick, YouTube, X, Reddit, RSS — plus Trello and Monday.com boards."
+        "desc": "Twitch, Kick, YouTube, RSS — plus Trello and Monday.com boards."
       },
       {
         "title": "Leveling & engagement",
@@ -2402,7 +2400,7 @@
         },
         {
           "title": "Stream Alerts",
-          "desc": "Get notified when Twitch, Kick, or YouTube channels go live, or when Twitter, Reddit, or RSS feeds update. Posts a notification embed automatically."
+          "desc": "Get notified when Twitch, Kick, or YouTube channels go live, or when an RSS feed updates. Posts a notification embed automatically."
         },
         {
           "title": "monday.com & Trello Alerts",
@@ -2898,13 +2896,11 @@
       "stream-alerts": {
         "title": "Stream Alerts",
         "tagline": "Notify your community the moment anything goes live or gets posted.",
-        "description": "Monitor Twitch, Kick, YouTube, X (Twitter), Reddit, and RSS/Podcast feeds and automatically post a notification embed in any Discord channel when there is new content. Keep your community engaged without manual announcements.",
+        "description": "Monitor Twitch, Kick, YouTube, and RSS/Podcast feeds and automatically post a notification embed in any Discord channel when there is new content. Keep your community engaged without manual announcements.",
         "bullets": [
           "Twitch: alerts when a channel goes live",
           "Kick: alerts when a Kick.com channel goes live",
           "YouTube: alerts when a channel starts a live stream",
-          "X (Twitter): alerts when a user posts a new tweet",
-          "Reddit: alerts when a subreddit gets a new post",
           "RSS / Podcast: alerts when a feed publishes a new episode or post",
           "Configurable alert channel and custom message per alert",
           "Multiple alerts tracked simultaneously across platforms"
