@@ -3297,6 +3297,15 @@
     "incomeAdd": "Добавить",
     "incomeEmpty": "Пока нет доходных ролей.",
     "incomePerDay": "день",
-    "incomeRoleRequired": "Выберите роль и сумму."
+    "incomeRoleRequired": "Выберите роль и сумму.",
+    "lotteryTitle": "Лотерея",
+    "lotteryDesc": "Еженедельный розыгрыш — участники покупают билеты, один победитель забирает весь банк.",
+    "lotteryEnable": "Включить лотерею",
+    "lotteryEnableDesc": "Разрешить /lottery и разыгрывать победителя каждое воскресенье.",
+    "lotteryTicketPrice": "Цена билета",
+    "lotteryTicketPriceHelp": "Стоимость одного билета.",
+    "lotteryChannel": "Канал розыгрыша",
+    "lotteryChannelNone": "Без объявления",
+    "lotteryChannelHelp": "Где объявляется еженедельный победитель."
   }
 }

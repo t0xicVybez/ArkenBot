@@ -71,11 +71,12 @@ model Guild {
   trelloAlerts           TrelloAlert[]
   dashboardAuditLogs     DashboardAuditLog[]
 
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
-  EconomyIncomeRole EconomyIncomeRole[]
-  ModmailSnippet    ModmailSnippet[]
-  ModmailBlock      ModmailBlock[]
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  EconomyIncomeRole    EconomyIncomeRole[]
+  ModmailSnippet       ModmailSnippet[]
+  ModmailBlock         ModmailBlock[]
+  EconomyLotteryTicket EconomyLotteryTicket[]
 
   @@map("guilds")
 }
@@ -1438,31 +1439,34 @@ model ModmailThread {
 }
 
 model EconomyConfig {
-  id               String   @id @default(cuid())
-  guildId          String   @unique
-  guild            Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
-  enabled          Boolean  @default(false)
-  currencyName     String   @default("Coins")
-  currencySymbol   String   @default("🪙")
-  startingBalance  Int      @default(0)
-  dailyAmount      Int      @default(200)
-  dailyStreakBonus Int      @default(50) // added per consecutive day, capped at 7x
-  workMin          Int      @default(50)
-  workMax          Int      @default(300)
-  workCooldown     Int      @default(3600) // seconds between /work
-  robEnabled       Boolean  @default(true)
-  robCooldown      Int      @default(86400) // seconds between /rob attempts
-  robSuccessRate   Int      @default(40) // percent chance a rob succeeds
-  robMaxPercent    Int      @default(20) // max % of victim wallet stolen on success
-  robMinBalance    Int      @default(500) // victim must hold at least this to be robbable
-  robFinePercent   Int      @default(15) // % of robber wallet lost as a fine on failure
-  gamblingEnabled  Boolean  @default(true)
-  maxBet           Int      @default(10000)
-  levelUpReward    Int      @default(0) // coins granted per level-up (0 = off)
-  bankInterestPct  Int      @default(0) // daily % interest paid on bank balance (0 = off)
-  bankInterestCap  Int      @default(1000) // max interest paid per day (0 = uncapped)
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  id                 String   @id @default(cuid())
+  guildId            String   @unique
+  guild              Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  enabled            Boolean  @default(false)
+  currencyName       String   @default("Coins")
+  currencySymbol     String   @default("🪙")
+  startingBalance    Int      @default(0)
+  dailyAmount        Int      @default(200)
+  dailyStreakBonus   Int      @default(50) // added per consecutive day, capped at 7x
+  workMin            Int      @default(50)
+  workMax            Int      @default(300)
+  workCooldown       Int      @default(3600) // seconds between /work
+  robEnabled         Boolean  @default(true)
+  robCooldown        Int      @default(86400) // seconds between /rob attempts
+  robSuccessRate     Int      @default(40) // percent chance a rob succeeds
+  robMaxPercent      Int      @default(20) // max % of victim wallet stolen on success
+  robMinBalance      Int      @default(500) // victim must hold at least this to be robbable
+  robFinePercent     Int      @default(15) // % of robber wallet lost as a fine on failure
+  gamblingEnabled    Boolean  @default(true)
+  maxBet             Int      @default(10000)
+  levelUpReward      Int      @default(0) // coins granted per level-up (0 = off)
+  bankInterestPct    Int      @default(0) // daily % interest paid on bank balance (0 = off)
+  bankInterestCap    Int      @default(1000) // max interest paid per day (0 = uncapped)
+  lotteryEnabled     Boolean  @default(false)
+  lotteryTicketPrice Int      @default(100)
+  lotteryChannelId   String? // where weekly draw results are announced
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 
   @@map("economy_config")
 }
@@ -1552,4 +1556,18 @@ model ModmailBlock {
   @@unique([guildId, userId])
   @@index([guildId])
   @@map("modmail_blocks")
+}
+
+model EconomyLotteryTicket {
+  id        String   @id @default(cuid())
+  guildId   String
+  guild     Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  userId    String
+  userTag   String
+  tickets   Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@unique([guildId, userId])
+  @@index([guildId])
+  @@map("economy_lottery_tickets")
 }

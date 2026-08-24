@@ -8,6 +8,10 @@
  * gambling, purchases).
  */
 import { prisma } from '../../database.js';
+import { EmbedBuilder, type Guild, type TextChannel } from 'discord.js';
+import { COLORS } from '@arkenbot/shared';
+import { swallow } from '../../logger.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
 import type { EconomyConfig, EconomyBalance } from '@prisma/client';
 
 export type Config = EconomyConfig;
@@ -115,5 +119,40 @@ export class EconomyModule {
   /** Discord relative-timestamp tag for "ready in" messaging (auto-localised per viewer). */
   static readyTag(remainingMs: number, now = Date.now()): string {
     return `<t:${Math.floor((now + remainingMs) / 1000)}:R>`;
+  }
+
+  /**
+   * Draw the weekly lottery for one guild: pick a ticket-weighted winner, pay
+   * the whole pot into their wallet, announce it, and clear all tickets.
+   * No-op when the lottery is disabled or fewer than two participants entered.
+   */
+  static async drawLottery(guild: Guild): Promise<boolean> {
+    const cfg = await this.getConfig(guild.id);
+    if (!cfg?.enabled || !cfg.lotteryEnabled) return false;
+    const rows = await prisma.economyLotteryTicket.findMany({ where: { guildId: guild.id } });
+    const totalTickets = rows.reduce((s, r) => s + r.tickets, 0);
+    if (rows.length < 2 || totalTickets < 1) return false; // need a real draw
+
+    // Weighted random pick.
+    let pick = Math.floor(Math.random() * totalTickets);
+    let winner = rows[0];
+    for (const r of rows) { if (pick < r.tickets) { winner = r; break; } pick -= r.tickets; }
+
+    const pot = totalTickets * cfg.lotteryTicketPrice;
+    await this.addWallet(guild.id, winner.userId, pot, cfg.startingBalance);
+    await prisma.economyLotteryTicket.deleteMany({ where: { guildId: guild.id } });
+
+    const channelId = cfg.lotteryChannelId ?? undefined;
+    if (channelId) {
+      const channel = guild.channels.cache.get(channelId) as TextChannel | undefined;
+      if (channel?.isTextBased()) {
+        const loc = await resolveUserLocale({ user: { id: '' }, guildId: guild.id, guildLocale: guild.preferredLocale });
+        const embed = new EmbedBuilder().setColor(COLORS.WARNING).setTitle(t('lottery.drawTitle', loc))
+          .setDescription(t('lottery.drawWinner', loc, { user: `<@${winner.userId}>`, pot: this.format(pot, cfg), tickets: String(totalTickets) }))
+          .setTimestamp();
+        await channel.send({ content: `<@${winner.userId}>`, embeds: [embed], allowedMentions: { users: [winner.userId] } }).catch(swallow);
+      }
+    }
+    return true;
   }
 }

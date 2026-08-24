@@ -1127,5 +1127,18 @@
     "topStarValue": "{stars} ⭐ — {user} · [이동]({link})",
     "xpLeaders": "🏆 XP 리더",
     "levelValue": "레벨 {level}"
+  },
+  "lottery": {
+    "disabled": "이 서버에서는 복권이 활성화되어 있지 않습니다.",
+    "infoTitle": "🎟️ 주간 복권",
+    "pot": "현재 상금",
+    "ticketPrice": "티켓 가격",
+    "totalTickets": "전체 티켓",
+    "yourTickets": "내 티켓",
+    "drawFooter": "매주 일요일 추첨. 당첨자가 상금을 모두 가져갑니다!",
+    "boughtTitle": "티켓 구매 완료",
+    "bought": "티켓 **{count}**장을 {cost}에 구매했습니다. 행운을 빕니다!",
+    "drawTitle": "🎉 복권 당첨자!",
+    "drawWinner": "{user}님이 {tickets}장의 티켓 중 **{pot}** 상금을 차지했습니다!"
   }
 }
