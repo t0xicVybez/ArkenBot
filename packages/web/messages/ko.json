@@ -386,7 +386,11 @@
     "accountAgeActionAlert": "알림만(제거 안 함)",
     "accountAgeFlagEnable": "새 계정 표시",
     "accountAgeFlagEnableDesc": "새로운 계정이 참여하면(필터를 통과해도) 모드로그에 알림을 게시합니다.",
-    "accountAgeFlagHours": "다음보다 새로운 계정 표시(시간)"
+    "accountAgeFlagHours": "다음보다 새로운 계정 표시(시간)",
+    "accountAgeActionQuarantine": "격리(역할 부여)",
+    "quarantineRole": "격리 역할",
+    "quarantineRoleNone": "역할 선택",
+    "quarantineRoleHelp": "새 계정은 추방되는 대신 이 역할을 받습니다. 접근을 차단하도록 설정하고 봇 역할을 그 위에 두세요."
   },
   "levelingPage": {
     "saved": "레벨 설정이 저장되었습니다!",

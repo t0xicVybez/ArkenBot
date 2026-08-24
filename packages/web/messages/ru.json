@@ -386,7 +386,11 @@
     "accountAgeActionAlert": "Только уведомить (не удалять)",
     "accountAgeFlagEnable": "Отмечать новые аккаунты",
     "accountAgeFlagEnableDesc": "Публикует уведомление в мод-логе, когда заходит новый аккаунт (даже если он прошёл фильтр).",
-    "accountAgeFlagHours": "Отмечать аккаунты моложе (часы)"
+    "accountAgeFlagHours": "Отмечать аккаунты моложе (часы)",
+    "accountAgeActionQuarantine": "Карантин (выдать роль)",
+    "quarantineRole": "Роль карантина",
+    "quarantineRoleNone": "Выберите роль",
+    "quarantineRoleHelp": "Новые аккаунты получают эту роль вместо удаления. Настройте её на запрет доступа и держите роль бота выше."
   },
   "levelingPage": {
     "saved": "Настройки уровней сохранены!",

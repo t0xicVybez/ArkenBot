@@ -386,7 +386,11 @@
     "accountAgeActionAlert": "Solo avisar (no expulsar)",
     "accountAgeFlagEnable": "Marcar cuentas nuevas",
     "accountAgeFlagEnableDesc": "Publica un aviso en tu registro de moderación cuando entra una cuenta reciente (aunque pase el filtro).",
-    "accountAgeFlagHours": "Marcar cuentas más nuevas de (horas)"
+    "accountAgeFlagHours": "Marcar cuentas más nuevas de (horas)",
+    "accountAgeActionQuarantine": "Cuarentena (asignar rol)",
+    "quarantineRole": "Rol de cuarentena",
+    "quarantineRoleNone": "Selecciona un rol",
+    "quarantineRoleHelp": "Las cuentas nuevas reciben este rol en vez de ser expulsadas. Configúralo para denegar acceso y mantén el rol del bot por encima."
   },
   "levelingPage": {
     "saved": "¡Ajustes de niveles guardados!",

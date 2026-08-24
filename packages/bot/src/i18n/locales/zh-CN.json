@@ -950,7 +950,8 @@
       "kick": "踢出",
       "ban": "封禁",
       "alert": "标记（未移除）",
-      "flag": "标记"
+      "flag": "标记",
+      "quarantine": "已隔离"
     }
   },
   "modmail": {
