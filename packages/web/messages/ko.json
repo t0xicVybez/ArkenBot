@@ -474,7 +474,13 @@
     "enableVoiceXp": "음성 XP 활성화",
     "enableVoiceXpDesc": "음성 채널을 함께 쓰는 음소거되지 않은 멤버에게 매분 XP를 지급합니다.",
     "voiceXpPerMinute": "분당 XP",
-    "voiceXpPerMinuteHelp": "음성에서 매분 지급됩니다(역할 배수도 적용)."
+    "voiceXpPerMinuteHelp": "음성에서 매분 지급됩니다(역할 배수도 적용).",
+    "prestigeTitle": "프레스티지",
+    "prestigeDesc": "멤버가 레벨을 초기화하고 영구 프레스티지 등급을 얻게 합니다.",
+    "enablePrestige": "프레스티지 활성화",
+    "enablePrestigeDesc": "프레스티지 레벨에 도달한 멤버는 /prestige로 초기화하고 승급할 수 있습니다.",
+    "prestigeLevel": "프레스티지 레벨",
+    "prestigeLevelHelp": "프레스티지하기 위해 도달해야 하는 레벨."
   },
   "starboardPage": {
     "saved": "스타보드 설정을 저장했습니다.",

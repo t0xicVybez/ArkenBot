@@ -474,7 +474,13 @@
     "enableVoiceXp": "Enable voice XP",
     "enableVoiceXpDesc": "Grant XP each minute to unmuted members sharing a voice channel.",
     "voiceXpPerMinute": "XP per minute",
-    "voiceXpPerMinuteHelp": "Awarded every minute in voice (role multipliers still apply)."
+    "voiceXpPerMinuteHelp": "Awarded every minute in voice (role multipliers still apply).",
+    "prestigeTitle": "Prestige",
+    "prestigeDesc": "Let members reset their level for a permanent prestige rank.",
+    "enablePrestige": "Enable prestige",
+    "enablePrestigeDesc": "Members at the prestige level can run /prestige to reset and rank up.",
+    "prestigeLevel": "Prestige level",
+    "prestigeLevelHelp": "Level a member must reach before they can prestige."
   },
   "starboardPage": {
     "saved": "Starboard settings saved!",

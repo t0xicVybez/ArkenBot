@@ -474,7 +474,13 @@
     "enableVoiceXp": "Włącz XP głosowe",
     "enableVoiceXpDesc": "Przyznaje XP co minutę niewyciszonym członkom na wspólnym kanale głosowym.",
     "voiceXpPerMinute": "XP na minutę",
-    "voiceXpPerMinuteHelp": "Przyznawane co minutę na głosowym (mnożniki ról nadal obowiązują)."
+    "voiceXpPerMinuteHelp": "Przyznawane co minutę na głosowym (mnożniki ról nadal obowiązują).",
+    "prestigeTitle": "Prestiż",
+    "prestigeDesc": "Pozwól członkom resetować poziom w zamian za stały ranga prestiżu.",
+    "enablePrestige": "Włącz prestiż",
+    "enablePrestigeDesc": "Członkowie na poziomie prestiżu mogą użyć /prestige, aby zresetować i awansować.",
+    "prestigeLevel": "Poziom prestiżu",
+    "prestigeLevelHelp": "Poziom, który członek musi osiągnąć, aby zdobyć prestiż."
   },
   "starboardPage": {
     "saved": "Zapisano ustawienia starboardu.",

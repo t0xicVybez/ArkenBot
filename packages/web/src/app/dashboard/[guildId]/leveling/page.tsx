@@ -568,6 +568,31 @@ export default function LevelingPage() {
         )}
       </SettingsSection>
 
+      {/* Prestige */}
+      <SettingsSection title={t('prestigeTitle')} description={t('prestigeDesc')}>
+        <Toggle
+          label={t('enablePrestige')}
+          description={t('enablePrestigeDesc')}
+          enabled={settings.prestigeEnabled ?? false}
+          onChange={(v) => { setSettings((s) => ({ ...s, prestigeEnabled: v })); handleSave({ prestigeEnabled: v }); }}
+        />
+        {settings.prestigeEnabled && (
+          <div className="max-w-xs">
+            <label className="label">{t('prestigeLevel')}</label>
+            <input
+              type="number"
+              className="input"
+              value={settings.prestigeLevel ?? 100}
+              min={10}
+              max={1000}
+              onChange={(e) => setSettings((s) => ({ ...s, prestigeLevel: parseInt(e.target.value) }))}
+              onBlur={() => handleSave({ prestigeLevel: settings.prestigeLevel })}
+            />
+            <p className="text-xs text-gray-500 mt-1">{t('prestigeLevelHelp')}</p>
+          </div>
+        )}
+      </SettingsSection>
+
       {/* XP Decay */}
       <SettingsSection title={t('decayTitle')} description={t('decayDesc')}>
         <Toggle

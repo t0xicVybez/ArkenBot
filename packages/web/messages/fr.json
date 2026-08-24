@@ -474,7 +474,13 @@
     "enableVoiceXp": "Activer l’XP vocale",
     "enableVoiceXpDesc": "Accorde de l’XP chaque minute aux membres non muets partageant un salon vocal.",
     "voiceXpPerMinute": "XP par minute",
-    "voiceXpPerMinuteHelp": "Accordée chaque minute en vocal (les multiplicateurs de rôle s’appliquent toujours)."
+    "voiceXpPerMinuteHelp": "Accordée chaque minute en vocal (les multiplicateurs de rôle s’appliquent toujours).",
+    "prestigeTitle": "Prestige",
+    "prestigeDesc": "Permets aux membres de réinitialiser leur niveau pour un rang de prestige permanent.",
+    "enablePrestige": "Activer le prestige",
+    "enablePrestigeDesc": "Les membres au niveau de prestige peuvent utiliser /prestige pour réinitialiser et monter en rang.",
+    "prestigeLevel": "Niveau de prestige",
+    "prestigeLevelHelp": "Niveau qu’un membre doit atteindre avant de pouvoir passer prestige."
   },
   "starboardPage": {
     "saved": "Paramètres du starboard enregistrés.",

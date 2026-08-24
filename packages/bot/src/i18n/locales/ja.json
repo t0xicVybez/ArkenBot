@@ -483,7 +483,8 @@
       "fieldLevel": "📈 レベル",
       "fieldTotalXp": "✨ 合計XP",
       "fieldMessages": "💬 メッセージ",
-      "fieldProgress": "レベル {level} までの進捗"
+      "fieldProgress": "レベル {level} までの進捗",
+      "fieldPrestige": "プレステージ"
     },
     "stats": {
       "disabledTitle": "レベル機能は無効",
@@ -849,6 +850,14 @@
       "overview": "概要",
       "pageFooter": "ページ {page}/{total}  ·  あなたが利用できるコマンド {commands} 個",
       "notYourMenu": "このメニューは他の人のものです。"
+    },
+    "prestige": {
+      "disabledTitle": "プレステージは利用不可",
+      "disabled": "このサーバーではプレステージが有効になっていません。",
+      "tooLowTitle": "まだです",
+      "tooLow": "プレステージにはレベル {level} が必要です（現在レベル {current}）。",
+      "title": "プレステージ！",
+      "desc": "レベルをリセットし、**プレステージ {prestige}** ⭐ に到達しました"
     }
   },
   "achievements": {

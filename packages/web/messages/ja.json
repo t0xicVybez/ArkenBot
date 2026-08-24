@@ -474,7 +474,13 @@
     "enableVoiceXp": "ボイスXPを有効化",
     "enableVoiceXpDesc": "ボイスチャンネルにいるミュートしていないメンバーに毎分XPを付与します。",
     "voiceXpPerMinute": "毎分のXP",
-    "voiceXpPerMinuteHelp": "ボイスで毎分付与されます（ロール倍率も適用）。"
+    "voiceXpPerMinuteHelp": "ボイスで毎分付与されます（ロール倍率も適用）。",
+    "prestigeTitle": "プレステージ",
+    "prestigeDesc": "メンバーがレベルをリセットして永続的なプレステージ階級を得られるようにします。",
+    "enablePrestige": "プレステージを有効化",
+    "enablePrestigeDesc": "プレステージレベルのメンバーは /prestige でリセットして昇格できます。",
+    "prestigeLevel": "プレステージレベル",
+    "prestigeLevelHelp": "プレステージするために必要なレベル。"
   },
   "starboardPage": {
     "saved": "スターボードの設定を保存しました。",

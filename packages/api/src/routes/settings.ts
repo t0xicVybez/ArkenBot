@@ -20,6 +20,8 @@ const GuildSettingsPatchSchema = z.object({
   reactionRolesEnabled: z.boolean().optional(),
   voiceXpEnabled:       z.boolean().optional(),
   voiceXpPerMinute:     z.number().int().min(1).max(100).optional(),
+  prestigeEnabled:      z.boolean().optional(),
+  prestigeLevel:        z.number().int().min(10).max(1000).optional(),
   logChannelId:         z.string().nullable().optional(),
   modLogChannelId:      z.string().nullable().optional(),
   welcomeChannelId:     z.string().nullable().optional(),

@@ -483,7 +483,8 @@
       "fieldLevel": "📈 Level",
       "fieldTotalXp": "✨ Total XP",
       "fieldMessages": "💬 Messages",
-      "fieldProgress": "Progress to Level {level}"
+      "fieldProgress": "Progress to Level {level}",
+      "fieldPrestige": "Prestige"
     },
     "stats": {
       "disabledTitle": "Leveling Disabled",
@@ -849,6 +850,14 @@
       "overview": "Overview",
       "pageFooter": "Page {page} of {total}  ·  {commands} commands available to you",
       "notYourMenu": "This menu belongs to someone else."
+    },
+    "prestige": {
+      "disabledTitle": "Prestige Unavailable",
+      "disabled": "Prestige is not enabled on this server.",
+      "tooLowTitle": "Not Yet",
+      "tooLow": "You need to reach level {level} to prestige (you are level {current}).",
+      "title": "Prestige!",
+      "desc": "You reset your level and reached **Prestige {prestige}** ⭐"
     }
   },
   "achievements": {

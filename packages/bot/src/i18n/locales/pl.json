@@ -483,7 +483,8 @@
       "fieldLevel": "📈 Poziom",
       "fieldTotalXp": "✨ Łączne XP",
       "fieldMessages": "💬 Wiadomości",
-      "fieldProgress": "Postęp do poziomu {level}"
+      "fieldProgress": "Postęp do poziomu {level}",
+      "fieldPrestige": "Prestiż"
     },
     "stats": {
       "disabledTitle": "Poziomy wyłączone",
@@ -849,6 +850,14 @@
       "overview": "Przegląd",
       "pageFooter": "Strona {page} z {total}  ·  {commands} poleceń dostępnych dla Ciebie",
       "notYourMenu": "To menu należy do kogoś innego."
+    },
+    "prestige": {
+      "disabledTitle": "Prestiż niedostępny",
+      "disabled": "Prestiż nie jest włączony na tym serwerze.",
+      "tooLowTitle": "Jeszcze nie",
+      "tooLow": "Musisz osiągnąć poziom {level}, aby zdobyć prestiż (masz poziom {current}).",
+      "title": "Prestiż!",
+      "desc": "Zresetowałeś poziom i osiągnąłeś **Prestiż {prestige}** ⭐"
     }
   },
   "achievements": {
