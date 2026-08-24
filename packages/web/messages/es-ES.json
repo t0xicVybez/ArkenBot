@@ -954,7 +954,13 @@
     "highlightsEnabled": "Activar resumen semanal",
     "highlightsEnabledDesc": "Cada lunes, publica un resumen de la semana: mensajes, nuevos miembros, mensaje más destacado y líderes de XP.",
     "highlightsChannel": "Canal del resumen",
-    "highlightsChannelDesc": "Dónde se publica el resumen semanal."
+    "highlightsChannelDesc": "Dónde se publica el resumen semanal.",
+    "appealsTitle": "Apelaciones de baneo y silencio",
+    "appealsDesc": "Permite que los miembros baneados o silenciados apelen la acción.",
+    "appealsEnabled": "Activar apelaciones",
+    "appealsEnabledDesc": "Los miembros baneados/silenciados reciben un botón «Apelar» en su MD; las aprobaciones revierten la acción automáticamente.",
+    "appealChannel": "Canal de revisión de apelaciones",
+    "appealChannelDesc": "Dónde se publican las apelaciones para que el staff las apruebe o rechace."
   },
   "suggestionsPage": {
     "saved": "¡Ajustes de sugerencias guardados!",

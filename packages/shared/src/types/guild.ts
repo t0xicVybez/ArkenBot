@@ -45,6 +45,8 @@ export interface GuildSettings {
   // Permission-failure alerts
   permissionAlertsEnabled?: boolean;
   permissionAlertRoleId?: string;
+  appealsEnabled?: boolean;
+  appealChannelId?: string | null;
 
   // Leveling
   xpPerMessage: number;
