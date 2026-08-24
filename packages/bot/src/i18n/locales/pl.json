@@ -1154,5 +1154,22 @@
     "yourMove": "Dobierasz czy pas?",
     "alreadyPlaying": "Masz już trwającą grę w blackjacka.",
     "notYourGame": "To nie twoja gra."
+  },
+  "trade": {
+    "self": "Nie możesz handlować sam ze sobą.",
+    "empty": "Zaproponuj monety lub przedmiot do wymiany.",
+    "noItem": "Nie posiadasz tego przedmiotu.",
+    "title": "🤝 Oferta wymiany",
+    "offer": "{sender} oferuje {offer} dla {recipient}.",
+    "expires": "Wygasa za 2 minuty.",
+    "accept": "Akceptuj",
+    "decline": "Odrzuć",
+    "notYours": "Ta oferta wymiany nie jest dla ciebie.",
+    "declinedTitle": "Wymiana odrzucona",
+    "declined": "Wymiana została odrzucona.",
+    "failedTitle": "Wymiana nieudana",
+    "failed": "Nie udało się dokończyć wymiany — oferta nie jest już ważna.",
+    "doneTitle": "Wymiana zakończona",
+    "done": "{recipient} przyjął {offer} od {sender}."
   }
 }

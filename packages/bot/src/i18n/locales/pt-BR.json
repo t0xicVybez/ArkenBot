@@ -1154,5 +1154,22 @@
     "yourMove": "Pedir ou parar?",
     "alreadyPlaying": "Você já tem um jogo de blackjack em andamento.",
     "notYourGame": "Este não é o seu jogo."
+  },
+  "trade": {
+    "self": "Você não pode negociar consigo mesmo.",
+    "empty": "Ofereça moedas ou um item para negociar.",
+    "noItem": "Você não possui esse item.",
+    "title": "🤝 Oferta de troca",
+    "offer": "{sender} oferece {offer} para {recipient}.",
+    "expires": "Expira em 2 minutos.",
+    "accept": "Aceitar",
+    "decline": "Recusar",
+    "notYours": "Esta oferta de troca não é para você.",
+    "declinedTitle": "Troca recusada",
+    "declined": "A troca foi recusada.",
+    "failedTitle": "Troca falhou",
+    "failed": "A troca não pôde ser concluída — a oferta não é mais válida.",
+    "doneTitle": "Troca concluída",
+    "done": "{recipient} aceitou {offer} de {sender}."
   }
 }

@@ -1154,5 +1154,22 @@
     "yourMove": "ヒット？スタンド？",
     "alreadyPlaying": "すでにブラックジャックのゲームが進行中です。",
     "notYourGame": "あなたのゲームではありません。"
+  },
+  "trade": {
+    "self": "自分自身とは取引できません。",
+    "empty": "取引するコインかアイテムを提示してください。",
+    "noItem": "そのアイテムを所持していません。",
+    "title": "🤝 取引のオファー",
+    "offer": "{sender} が {recipient} に {offer} を提示しました。",
+    "expires": "2分で期限切れです。",
+    "accept": "承認",
+    "decline": "拒否",
+    "notYours": "この取引オファーはあなた宛てではありません。",
+    "declinedTitle": "取引を拒否",
+    "declined": "取引は拒否されました。",
+    "failedTitle": "取引失敗",
+    "failed": "取引を完了できませんでした。オファーはもう有効ではありません。",
+    "doneTitle": "取引完了",
+    "done": "{recipient} が {sender} からの {offer} を受け取りました。"
   }
 }

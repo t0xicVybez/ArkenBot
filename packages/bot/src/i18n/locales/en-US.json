@@ -1154,5 +1154,22 @@
     "yourMove": "Hit or stand?",
     "alreadyPlaying": "You already have a blackjack game in progress.",
     "notYourGame": "This isn’t your game."
+  },
+  "trade": {
+    "self": "You can’t trade with yourself.",
+    "empty": "Offer some coins or an item to trade.",
+    "noItem": "You don’t own that item.",
+    "title": "🤝 Trade offer",
+    "offer": "{sender} offers {offer} to {recipient}.",
+    "expires": "Expires in 2 minutes.",
+    "accept": "Accept",
+    "decline": "Decline",
+    "notYours": "This trade offer isn’t for you.",
+    "declinedTitle": "Trade declined",
+    "declined": "The trade was declined.",
+    "failedTitle": "Trade failed",
+    "failed": "The trade could not be completed — the offer is no longer valid.",
+    "doneTitle": "Trade complete",
+    "done": "{recipient} accepted {offer} from {sender}."
   }
 }

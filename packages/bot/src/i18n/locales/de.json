@@ -1154,5 +1154,22 @@
     "yourMove": "Ziehen oder halten?",
     "alreadyPlaying": "Du hast bereits ein laufendes Blackjack-Spiel.",
     "notYourGame": "Das ist nicht dein Spiel."
+  },
+  "trade": {
+    "self": "Du kannst nicht mit dir selbst handeln.",
+    "empty": "Biete Münzen oder einen Gegenstand zum Handeln.",
+    "noItem": "Du besitzt diesen Gegenstand nicht.",
+    "title": "🤝 Handelsangebot",
+    "offer": "{sender} bietet {recipient} {offer} an.",
+    "expires": "Läuft in 2 Minuten ab.",
+    "accept": "Annehmen",
+    "decline": "Ablehnen",
+    "notYours": "Dieses Handelsangebot ist nicht für dich.",
+    "declinedTitle": "Handel abgelehnt",
+    "declined": "Der Handel wurde abgelehnt.",
+    "failedTitle": "Handel fehlgeschlagen",
+    "failed": "Der Handel konnte nicht abgeschlossen werden — das Angebot ist nicht mehr gültig.",
+    "doneTitle": "Handel abgeschlossen",
+    "done": "{recipient} hat {offer} von {sender} angenommen."
   }
 }
