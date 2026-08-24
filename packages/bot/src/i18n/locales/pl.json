@@ -1204,5 +1204,25 @@
       "ban": "ban",
       "mute": "wyciszenie"
     }
+  },
+  "events": {
+    "when": "Kiedy",
+    "location": "Miejsce",
+    "going": "Będę",
+    "maybe": "Może",
+    "no": "Nie będę",
+    "roleFooter": "Wybierz „Będę”, aby otrzymać rolę wydarzenia.",
+    "cancelledTag": "Anulowano",
+    "gone": "To wydarzenie już nie istnieje.",
+    "listTitle": "📅 Nadchodzące wydarzenia",
+    "listEmpty": "Brak nadchodzących wydarzeń. Utwórz jedno przez /event create.",
+    "needManage": "Potrzebujesz uprawnienia Zarządzanie wydarzeniami, aby to zrobić.",
+    "badWhenTitle": "Nieprawidłowy czas",
+    "badWhen": "Użyj czasu względnego jak \"2d\" lub \"6h\", albo daty jak \"2026-09-01 18:00\".",
+    "badChannel": "Wybierz kanał tekstowy do opublikowania wydarzenia.",
+    "created": "Utworzono wydarzenie na {channel}.",
+    "cancelled": "Anulowano **{title}**.",
+    "reminderTitle": "⏰ Wkrótce start: {title}",
+    "reminderDesc": "To wydarzenie zaczyna się {time}. Do zobaczenia!"
   }
 }

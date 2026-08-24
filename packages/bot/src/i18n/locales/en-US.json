@@ -1204,5 +1204,25 @@
       "ban": "ban",
       "mute": "mute"
     }
+  },
+  "events": {
+    "when": "When",
+    "location": "Location",
+    "going": "Going",
+    "maybe": "Maybe",
+    "no": "Can’t go",
+    "roleFooter": "RSVP “Going” to get the event role.",
+    "cancelledTag": "Cancelled",
+    "gone": "That event no longer exists.",
+    "listTitle": "📅 Upcoming events",
+    "listEmpty": "No upcoming events. Create one with /event create.",
+    "needManage": "You need the Manage Events permission to do that.",
+    "badWhenTitle": "Invalid time",
+    "badWhen": "Use a relative time like \"2d\" or \"6h\", or a date like \"2026-09-01 18:00\".",
+    "badChannel": "Pick a text channel to post the event in.",
+    "created": "Event created in {channel}.",
+    "cancelled": "Cancelled **{title}**.",
+    "reminderTitle": "⏰ Starting soon: {title}",
+    "reminderDesc": "This event starts {time}. See you there!"
   }
 }

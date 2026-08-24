@@ -1204,5 +1204,25 @@
       "ban": "Bann",
       "mute": "Timeout"
     }
+  },
+  "events": {
+    "when": "Wann",
+    "location": "Ort",
+    "going": "Dabei",
+    "maybe": "Vielleicht",
+    "no": "Kann nicht",
+    "roleFooter": "Wähle „Dabei“, um die Event-Rolle zu erhalten.",
+    "cancelledTag": "Abgesagt",
+    "gone": "Dieses Event existiert nicht mehr.",
+    "listTitle": "📅 Anstehende Events",
+    "listEmpty": "Keine anstehenden Events. Erstelle eins mit /event create.",
+    "needManage": "Du brauchst die Berechtigung „Events verwalten“ dafür.",
+    "badWhenTitle": "Ungültige Zeit",
+    "badWhen": "Nutze eine relative Zeit wie \"2d\" oder \"6h\" oder ein Datum wie \"2026-09-01 18:00\".",
+    "badChannel": "Wähle einen Textkanal zum Posten des Events.",
+    "created": "Event in {channel} erstellt.",
+    "cancelled": "**{title}** abgesagt.",
+    "reminderTitle": "⏰ Beginnt bald: {title}",
+    "reminderDesc": "Dieses Event beginnt {time}. Bis gleich!"
   }
 }

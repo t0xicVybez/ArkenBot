@@ -1204,5 +1204,25 @@
       "ban": "bannissement",
       "mute": "exclusion"
     }
+  },
+  "events": {
+    "when": "Quand",
+    "location": "Lieu",
+    "going": "Présent",
+    "maybe": "Peut-être",
+    "no": "Absent",
+    "roleFooter": "Choisis « Présent » pour obtenir le rôle de l’événement.",
+    "cancelledTag": "Annulé",
+    "gone": "Cet événement n’existe plus.",
+    "listTitle": "📅 Événements à venir",
+    "listEmpty": "Aucun événement à venir. Crées-en un avec /event create.",
+    "needManage": "Il te faut la permission Gérer les événements pour faire cela.",
+    "badWhenTitle": "Heure invalide",
+    "badWhen": "Utilise un temps relatif comme \"2d\" ou \"6h\", ou une date comme \"2026-09-01 18:00\".",
+    "badChannel": "Choisis un salon textuel pour publier l’événement.",
+    "created": "Événement créé dans {channel}.",
+    "cancelled": "**{title}** annulé.",
+    "reminderTitle": "⏰ Bientôt : {title}",
+    "reminderDesc": "Cet événement commence {time}. À tout de suite !"
   }
 }

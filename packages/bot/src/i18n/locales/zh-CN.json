@@ -1204,5 +1204,25 @@
       "ban": "封禁",
       "mute": "禁言"
     }
+  },
+  "events": {
+    "when": "时间",
+    "location": "地点",
+    "going": "参加",
+    "maybe": "待定",
+    "no": "不参加",
+    "roleFooter": "选择“参加”即可获得活动身份组。",
+    "cancelledTag": "已取消",
+    "gone": "该活动已不存在。",
+    "listTitle": "📅 近期活动",
+    "listEmpty": "暂无近期活动。用 /event create 创建一个。",
+    "needManage": "你需要“管理活动”权限才能这样做。",
+    "badWhenTitle": "时间无效",
+    "badWhen": "请使用相对时间如 \"2d\" 或 \"6h\"，或日期如 \"2026-09-01 18:00\"。",
+    "badChannel": "请选择用于发布活动的文字频道。",
+    "created": "已在 {channel} 创建活动。",
+    "cancelled": "已取消 **{title}**。",
+    "reminderTitle": "⏰ 即将开始：{title}",
+    "reminderDesc": "该活动将于 {time} 开始。到时见！"
   }
 }

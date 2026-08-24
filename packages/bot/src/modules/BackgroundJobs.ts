@@ -22,6 +22,7 @@ import { XPDecayModule } from './leveling/XPDecayModule.js';
 import { LevelingModule } from './leveling/LevelingModule.js';
 import { HighlightsModule } from './HighlightsModule.js';
 import { EconomyModule } from './economy/EconomyModule.js';
+import { EventsModule } from './events/EventsModule.js';
 import { ModmailModule } from './modmail/ModmailModule.js';
 import { AnalyticsModule } from './AnalyticsModule.js';
 import RSSParser from 'rss-parser';
@@ -82,6 +83,9 @@ export class BackgroundJobs {
 
     // Weekly community highlights digest (Monday-gated).
     setTimeout(() => this.timers.push(setInterval(() => void this.runWeeklyHighlights(), 6 * 60 * 60 * 1000)), jitter());
+
+    // Event RSVP reminders (every minute).
+    setTimeout(() => this.timers.push(setInterval(() => void EventsModule.runReminders(this.client).catch(() => {}), 60 * 1000)), jitter());
 
     // Weekly economy lottery draw (Sunday-gated).
     setTimeout(() => this.timers.push(setInterval(() => void this.runLotteryDraw(), 6 * 60 * 60 * 1000)), jitter());
