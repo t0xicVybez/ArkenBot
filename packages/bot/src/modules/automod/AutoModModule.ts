@@ -325,7 +325,7 @@ export class AutoModModule {
     const ageHours = (Date.now() - member.user.createdTimestamp) / 3_600_000;
 
     if (config.minAccountAgeEnabled && ageHours < config.minAccountAgeHours) {
-      const action = config.minAccountAgeAction; // kick | ban | alert
+      const action = config.minAccountAgeAction; // kick | ban | alert | quarantine
       if (action === 'kick' || action === 'ban') {
         const loc = await resolveUserLocale({ user: member.user, guildId: member.guild.id, guildLocale: member.guild.preferredLocale });
         await member.send({
@@ -338,8 +338,19 @@ export class AutoModModule {
         } else if (member.kickable) {
           await member.kick('Alt/raid protection: account too new').catch((e) => notifyActionFailure(member.guild, { action: 'kick', error: e, requiredPermission: 'Kick Members', target: member.toString() }));
         }
+      } else if (action === 'quarantine' && config.quarantineRoleId) {
+        // Keep the account in the server but strip its ability to interact,
+        // handing review to staff. The quarantine role should deny access.
+        const role = member.guild.roles.cache.get(config.quarantineRoleId);
+        const me = member.guild.members.me;
+        if (role && me?.permissions.has(PermissionFlagsBits.ManageRoles) && role.position < me.roles.highest.position) {
+          await member.roles.add(role, 'Alt/raid protection: quarantined new account').catch((e) => notifyActionFailure(member.guild, { action: 'manageRoles', error: e, requiredPermission: 'Manage Roles', target: member.toString() }));
+        } else {
+          await notifyActionFailure(member.guild, { action: 'manageRoles', error: new Error('Missing Manage Roles or quarantine role too high'), requiredPermission: 'Manage Roles', target: member.toString() });
+        }
       }
-      await this.postJoinAlert(member, (action === 'alert' ? 'alert' : action) as 'kick' | 'ban' | 'alert', config.minAccountAgeHours);
+      const alertKind = action === 'quarantine' ? 'quarantine' : action === 'alert' ? 'alert' : action;
+      await this.postJoinAlert(member, alertKind as 'kick' | 'ban' | 'alert' | 'quarantine', config.minAccountAgeHours);
       return;
     }
 
@@ -349,7 +360,7 @@ export class AutoModModule {
   }
 
   /** Posts an alt/raid heads-up to the guild's mod-log (falling back to the log channel). */
-  private static async postJoinAlert(member: GuildMember, kind: 'kick' | 'ban' | 'alert' | 'flag', thresholdHours: number): Promise<void> {
+  private static async postJoinAlert(member: GuildMember, kind: 'kick' | 'ban' | 'alert' | 'flag' | 'quarantine', thresholdHours: number): Promise<void> {
     const settings = await getGuildSettings(member.guild.id);
     const channelId = settings?.modLogChannelId ?? settings?.logChannelId;
     if (!channelId) return;
@@ -357,10 +368,10 @@ export class AutoModModule {
     if (!channel?.isTextBased()) return;
     const loc = await resolveUserLocale({ user: { id: '' }, guildId: member.guild.id, guildLocale: member.guild.preferredLocale });
     const created = `<t:${Math.floor(member.user.createdTimestamp / 1000)}:R>`;
-    const isBlock = kind === 'kick' || kind === 'ban';
+    const isBlock = kind === 'kick' || kind === 'ban' || kind === 'quarantine';
     const actionWord = t(`accountGate.action.${kind}`, loc);
     const embed = new EmbedBuilder()
-      .setColor(isBlock ? COLORS.ERROR : 0xfaa61a)
+      .setColor(kind === 'kick' || kind === 'ban' ? COLORS.ERROR : 0xfaa61a)
       .setAuthor({ name: member.user.tag, iconURL: member.user.displayAvatarURL() })
       .setTitle(isBlock ? t('accountGate.gateTitle', loc) : t('accountGate.flagTitle', loc))
       .setDescription(t(isBlock ? 'accountGate.gateDesc' : 'accountGate.flagDesc', loc, { user: member.toString(), tag: member.user.tag, action: actionWord }))

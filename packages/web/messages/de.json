@@ -386,7 +386,11 @@
     "accountAgeActionAlert": "Nur melden (nicht entfernen)",
     "accountAgeFlagEnable": "Neue Konten markieren",
     "accountAgeFlagEnableDesc": "Poste einen Hinweis in deinem Mod-Log, wenn ein neues Konto beitritt (auch wenn es die Sperre passiert).",
-    "accountAgeFlagHours": "Konten markieren, die jünger sind als (Stunden)"
+    "accountAgeFlagHours": "Konten markieren, die jünger sind als (Stunden)",
+    "accountAgeActionQuarantine": "Quarantäne (Rolle zuweisen)",
+    "quarantineRole": "Quarantäne-Rolle",
+    "quarantineRoleNone": "Rolle wählen",
+    "quarantineRoleHelp": "Neue Konten erhalten diese Rolle, statt entfernt zu werden. Richte sie so ein, dass sie Zugriff verweigert, und halte die Bot-Rolle darüber."
   },
   "levelingPage": {
     "saved": "Level-Einstellungen gespeichert!",

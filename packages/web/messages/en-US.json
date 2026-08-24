@@ -386,7 +386,11 @@
     "accountAgeActionAlert": "Alert only (don't remove)",
     "accountAgeFlagEnable": "Flag new accounts",
     "accountAgeFlagEnableDesc": "Post a heads-up in your mod-log when a newish account joins (even if it passes the gate).",
-    "accountAgeFlagHours": "Flag accounts newer than (hours)"
+    "accountAgeFlagHours": "Flag accounts newer than (hours)",
+    "accountAgeActionQuarantine": "Quarantine (assign role)",
+    "quarantineRole": "Quarantine role",
+    "quarantineRoleNone": "Select a role",
+    "quarantineRoleHelp": "New accounts get this role instead of being removed. Set it up to deny access, and keep the bot’s role above it."
   },
   "levelingPage": {
     "saved": "Leveling settings saved!",

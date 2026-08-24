@@ -386,7 +386,11 @@
     "accountAgeActionAlert": "Apenas alertar (não remover)",
     "accountAgeFlagEnable": "Sinalizar novas contas",
     "accountAgeFlagEnableDesc": "Publica um aviso no seu registro de moderação quando uma conta recente entra (mesmo que passe no filtro).",
-    "accountAgeFlagHours": "Sinalizar contas mais novas que (horas)"
+    "accountAgeFlagHours": "Sinalizar contas mais novas que (horas)",
+    "accountAgeActionQuarantine": "Quarentena (atribuir cargo)",
+    "quarantineRole": "Cargo de quarentena",
+    "quarantineRoleNone": "Selecione um cargo",
+    "quarantineRoleHelp": "Contas novas recebem este cargo em vez de serem removidas. Configure-o para negar acesso e mantenha o cargo do bot acima."
   },
   "levelingPage": {
     "saved": "Configurações de níveis salvas!",

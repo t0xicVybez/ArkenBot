@@ -950,7 +950,8 @@
       "kick": "추방",
       "ban": "차단",
       "alert": "플래그(제거 안 됨)",
-      "flag": "플래그"
+      "flag": "플래그",
+      "quarantine": "격리됨"
     }
   },
   "modmail": {

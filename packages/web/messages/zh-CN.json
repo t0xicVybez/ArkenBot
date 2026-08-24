@@ -386,7 +386,11 @@
     "accountAgeActionAlert": "仅提醒（不移除）",
     "accountAgeFlagEnable": "标记新账号",
     "accountAgeFlagEnableDesc": "当较新的账号加入时（即使通过了过滤）在管理日志中发布提醒。",
-    "accountAgeFlagHours": "标记新于以下时长的账号（小时）"
+    "accountAgeFlagHours": "标记新于以下时长的账号（小时）",
+    "accountAgeActionQuarantine": "隔离（分配身份组）",
+    "quarantineRole": "隔离身份组",
+    "quarantineRoleNone": "选择身份组",
+    "quarantineRoleHelp": "新账号会获得该身份组而不是被移除。请将其设置为拒绝访问，并让机器人的身份组保持在其之上。"
   },
   "levelingPage": {
     "saved": "等级设置已保存！",

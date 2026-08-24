@@ -494,8 +494,25 @@ export default function AutoModPage() {
                 <option value="kick">{t('accountAgeActionKick')}</option>
                 <option value="ban">{t('accountAgeActionBan')}</option>
                 <option value="alert">{t('accountAgeActionAlert')}</option>
+                <option value="quarantine">{t('accountAgeActionQuarantine')}</option>
               </select>
             </div>
+            {config.minAccountAgeAction === 'quarantine' && (
+              <div>
+                <label className="label">{t('quarantineRole')}</label>
+                <select
+                  className="input"
+                  value={config.quarantineRoleId ?? ''}
+                  onChange={(e) => { const v = e.target.value || null; setConfig((c) => ({ ...c, quarantineRoleId: v })); handleSave({ quarantineRoleId: v }); }}
+                >
+                  <option value="">{t('quarantineRoleNone')}</option>
+                  {allRoles.filter((r) => r.name !== '@everyone').map((r) => (
+                    <option key={r.id} value={r.id}>{r.name}</option>
+                  ))}
+                </select>
+                <p className="text-xs text-gray-500 mt-1">{t('quarantineRoleHelp')}</p>
+              </div>
+            )}
           </div>
         )}
         <div className="pt-3">

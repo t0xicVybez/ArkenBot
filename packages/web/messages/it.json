@@ -386,7 +386,11 @@
     "accountAgeActionAlert": "Solo avviso (non rimuovere)",
     "accountAgeFlagEnable": "Segnala nuovi account",
     "accountAgeFlagEnableDesc": "Pubblica un avviso nel tuo mod-log quando entra un account recente (anche se supera il filtro).",
-    "accountAgeFlagHours": "Segnala account più recenti di (ore)"
+    "accountAgeFlagHours": "Segnala account più recenti di (ore)",
+    "accountAgeActionQuarantine": "Quarantena (assegna ruolo)",
+    "quarantineRole": "Ruolo di quarantena",
+    "quarantineRoleNone": "Seleziona un ruolo",
+    "quarantineRoleHelp": "I nuovi account ricevono questo ruolo invece di essere rimossi. Impostalo per negare l’accesso e tieni il ruolo del bot sopra di esso."
   },
   "levelingPage": {
     "saved": "Impostazioni dei livelli salvate!",

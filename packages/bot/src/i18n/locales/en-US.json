@@ -950,7 +950,8 @@
       "kick": "kicked",
       "ban": "banned",
       "alert": "flagged (not removed)",
-      "flag": "flagged"
+      "flag": "flagged",
+      "quarantine": "quarantined"
     }
   },
   "modmail": {

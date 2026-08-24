@@ -386,7 +386,11 @@
     "accountAgeActionAlert": "Signaler seulement (ne pas expulser)",
     "accountAgeFlagEnable": "Signaler les nouveaux comptes",
     "accountAgeFlagEnableDesc": "Publie un avertissement dans ton journal de modération quand un compte récent arrive (même s'il passe le filtre).",
-    "accountAgeFlagHours": "Signaler les comptes plus récents que (heures)"
+    "accountAgeFlagHours": "Signaler les comptes plus récents que (heures)",
+    "accountAgeActionQuarantine": "Quarantaine (attribuer un rôle)",
+    "quarantineRole": "Rôle de quarantaine",
+    "quarantineRoleNone": "Choisir un rôle",
+    "quarantineRoleHelp": "Les nouveaux comptes reçoivent ce rôle au lieu d’être expulsés. Configure-le pour refuser l’accès et garde le rôle du bot au-dessus."
   },
   "levelingPage": {
     "saved": "Paramètres de niveaux enregistrés !",
