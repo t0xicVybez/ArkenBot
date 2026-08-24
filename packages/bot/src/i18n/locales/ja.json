@@ -511,7 +511,11 @@
       "line": "{medal} {user} — レベル **{level}** | **{xp}** XP",
       "title": "🏆 {guild} リーダーボード",
       "footer": "ページ {page}/{pages} • 合計 {total} 人のユーザー",
-      "viewFull": "リーダーボード全体を表示"
+      "viewFull": "リーダーボード全体を表示",
+      "period": {
+        "weekly": "今週",
+        "monthly": "今月"
+      }
     },
     "profile": {
       "disabledTitle": "レベル機能は無効",

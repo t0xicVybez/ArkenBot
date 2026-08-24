@@ -511,7 +511,11 @@
       "line": "{medal} {user} — Level **{level}** | **{xp}** XP",
       "title": "🏆 {guild}-Bestenliste",
       "footer": "Seite {page} von {pages} • {total} Benutzer insgesamt",
-      "viewFull": "Vollständige Bestenliste ansehen"
+      "viewFull": "Vollständige Bestenliste ansehen",
+      "period": {
+        "weekly": "Diese Woche",
+        "monthly": "Diesen Monat"
+      }
     },
     "profile": {
       "disabledTitle": "Level deaktiviert",

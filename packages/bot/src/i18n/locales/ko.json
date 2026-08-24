@@ -511,7 +511,11 @@
       "line": "{medal} {user} — 레벨 **{level}** | **{xp}** XP",
       "title": "🏆 {guild} 리더보드",
       "footer": "{page}/{pages} 페이지 • 총 {total}명의 사용자",
-      "viewFull": "전체 리더보드 보기"
+      "viewFull": "전체 리더보드 보기",
+      "period": {
+        "weekly": "이번 주",
+        "monthly": "이번 달"
+      }
     },
     "profile": {
       "disabledTitle": "레벨 기능 비활성화됨",

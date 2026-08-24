@@ -511,7 +511,11 @@
       "line": "{medal} {user} — Level **{level}** | **{xp}** XP",
       "title": "🏆 {guild} Leaderboard",
       "footer": "Page {page} of {pages} • {total} total users",
-      "viewFull": "View Full Leaderboard"
+      "viewFull": "View Full Leaderboard",
+      "period": {
+        "weekly": "This week",
+        "monthly": "This month"
+      }
     },
     "profile": {
       "disabledTitle": "Leveling Disabled",
