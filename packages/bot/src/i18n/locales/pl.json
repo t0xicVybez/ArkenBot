@@ -952,5 +952,37 @@
       "alert": "oznaczony (nie usunięty)",
       "flag": "oznaczony"
     }
+  },
+  "modmail": {
+    "noServer": "Nie jesteś na żadnym serwerze używającym modmaila ArkenBota, więc nie mogę otworzyć rozmowy.",
+    "pickPlaceholder": "Wybierz serwer…",
+    "pickPrompt": "Jesteś na kilku serwerach z modmailem. Dla którego jest ta wiadomość?",
+    "cantOpen": "Nie mogłem otworzyć wątku modmail na **{server}** — brakuje mi tam uprawnienia Zarządzanie kanałami.",
+    "newThreadTitle": "📬 Nowy wątek modmail",
+    "newThreadDesc": "{user} otworzył wątek modmail. Odpowiedz na tym kanale, a zostanie wysłane w DM. ID: `{id}`",
+    "replyHint": "Pisz tutaj, aby odpowiedzieć · /modmail close aby zamknąć",
+    "openedTitle": "📬 Modmail otwarty — {server}",
+    "openedDesc": "Twoja wiadomość trafiła do ekipy **{server}**. Odpowiedzą tutaj — pisz do mnie dalej.",
+    "staffReplyFooter": "Ekipa {server}",
+    "closedTitle": "📪 Modmail zamknięty — {server}",
+    "closedReason": "Ta rozmowa została zamknięta: {reason}",
+    "closedDesc": "Twoja rozmowa modmail z **{server}** została zamknięta. Napisz do mnie kiedy chcesz, aby otworzyć nową.",
+    "transcriptTitle": "Zapis modmail — {user}",
+    "transcriptMeta": "Wątek z {user}, zamknięty przez {closedBy}.",
+    "closing": "Zamykanie wątku…",
+    "notThread": "To nie jest otwarty kanał modmail.",
+    "needManage": "Potrzebujesz uprawnienia **Zarządzanie serwerem**, aby skonfigurować modmail.",
+    "setupDone": "✅ Modmail włączony i skonfigurowany.",
+    "disabled": "Modmail został wyłączony.",
+    "on": "Wł.",
+    "off": "Wył.",
+    "none": "Nie ustawiono",
+    "configTitle": "Konfiguracja modmail",
+    "cfgEnabled": "Włączony",
+    "cfgCategory": "Kategoria",
+    "cfgStaff": "Rola ekipy",
+    "cfgLog": "Log zapisów",
+    "cfgAnon": "Anonimowe odpowiedzi",
+    "picked": "Jasne — wysyłam Twoją wiadomość. Ekipa odpowie tutaj."
   }
 }

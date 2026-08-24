@@ -952,5 +952,37 @@
       "alert": "signalé (non expulsé)",
       "flag": "signalé"
     }
+  },
+  "modmail": {
+    "noServer": "Tu n'es dans aucun serveur qui utilise le modmail d'ArkenBot, je ne peux donc pas ouvrir de conversation.",
+    "pickPlaceholder": "Choisis un serveur…",
+    "pickPrompt": "Tu es dans plusieurs serveurs qui utilisent le modmail. Pour lequel est ce message ?",
+    "cantOpen": "Je n'ai pas pu ouvrir de fil modmail dans **{server}** — il me manque la permission Gérer les salons.",
+    "newThreadTitle": "📬 Nouveau fil modmail",
+    "newThreadDesc": "{user} a ouvert un fil modmail. Réponds dans ce salon et ce sera envoyé en DM. ID : `{id}`",
+    "replyHint": "Écris ici pour répondre · /modmail close pour fermer",
+    "openedTitle": "📬 Modmail ouvert — {server}",
+    "openedDesc": "Ton message a été envoyé au staff de **{server}**. Ils répondront ici — continue à m'écrire.",
+    "staffReplyFooter": "Staff de {server}",
+    "closedTitle": "📪 Modmail fermé — {server}",
+    "closedReason": "Cette conversation a été fermée : {reason}",
+    "closedDesc": "Ta conversation modmail avec **{server}** a été fermée. Écris-moi quand tu veux pour en ouvrir une nouvelle.",
+    "transcriptTitle": "Transcription modmail — {user}",
+    "transcriptMeta": "Fil avec {user}, fermé par {closedBy}.",
+    "closing": "Fermeture du fil…",
+    "notThread": "Ce n'est pas un salon modmail ouvert.",
+    "needManage": "Tu as besoin de la permission **Gérer le serveur** pour configurer le modmail.",
+    "setupDone": "✅ Modmail activé et configuré.",
+    "disabled": "Le modmail a été désactivé.",
+    "on": "Activé",
+    "off": "Désactivé",
+    "none": "Non défini",
+    "configTitle": "Configuration du modmail",
+    "cfgEnabled": "Activé",
+    "cfgCategory": "Catégorie",
+    "cfgStaff": "Rôle du staff",
+    "cfgLog": "Journal des transcriptions",
+    "cfgAnon": "Réponses anonymes",
+    "picked": "Compris — envoi de ton message. Le staff répondra ici."
   }
 }

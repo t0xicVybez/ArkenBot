@@ -952,5 +952,37 @@
       "alert": "标记（未移除）",
       "flag": "标记"
     }
+  },
+  "modmail": {
+    "noServer": "你没有加入任何使用 ArkenBot 私信信箱的服务器，因此无法开启会话。",
+    "pickPlaceholder": "选择服务器…",
+    "pickPrompt": "你加入了多个使用私信信箱的服务器。这条消息是发给哪一个的？",
+    "cantOpen": "无法在 **{server}** 开启私信信箱频道——我在那里缺少「管理频道」权限。",
+    "newThreadTitle": "📬 新的私信信箱会话",
+    "newThreadDesc": "{user} 开启了一个私信信箱会话。在此频道回复即会以私信发送给对方。ID：`{id}`",
+    "replyHint": "在此输入即可回复 · /modmail close 关闭",
+    "openedTitle": "📬 私信信箱已开启 — {server}",
+    "openedDesc": "你的消息已发送给 **{server}** 的staff。他们会在这里回复——继续给我发消息即可。",
+    "staffReplyFooter": "{server} staff",
+    "closedTitle": "📪 私信信箱已关闭 — {server}",
+    "closedReason": "此会话已关闭：{reason}",
+    "closedDesc": "你与 **{server}** 的私信信箱会话已关闭。随时再给我发消息即可开启新的会话。",
+    "transcriptTitle": "私信信箱记录 — {user}",
+    "transcriptMeta": "与 {user} 的会话，由 {closedBy} 关闭。",
+    "closing": "正在关闭此会话…",
+    "notThread": "这不是一个开启中的私信信箱频道。",
+    "needManage": "配置私信信箱需要**管理服务器**权限。",
+    "setupDone": "✅ 私信信箱已启用并配置完成。",
+    "disabled": "私信信箱已停用。",
+    "on": "开",
+    "off": "关",
+    "none": "未设置",
+    "configTitle": "私信信箱配置",
+    "cfgEnabled": "已启用",
+    "cfgCategory": "分类",
+    "cfgStaff": "staff 身份组",
+    "cfgLog": "记录日志",
+    "cfgAnon": "匿名回复",
+    "picked": "收到——正在发送你的消息。staff 会在这里回复。"
   }
 }
