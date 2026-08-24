@@ -13,6 +13,7 @@ import { AntiPhishingModule } from '../modules/automod/AntiPhishingModule.js';
 import { LevelingModule } from '../modules/leveling/LevelingModule.js';
 import { AnalyticsModule } from '../modules/AnalyticsModule.js';
 import { CountingModule } from '../modules/counting/CountingModule.js';
+import { ModmailModule } from '../modules/modmail/ModmailModule.js';
 import { prisma } from '../database.js';
 import { redis } from '../redis.js';
 import { logger, swallow} from '../logger.js';
@@ -196,7 +197,18 @@ async function checkSlowmode(message: Message): Promise<void> {
 const event: BotEvent = {
   name: 'messageCreate',
   async execute(_client: BotClient, message: Message) {
-    if (!message.author || !message.guild || message.author.bot) return;
+    if (!message.author || message.author.bot) return;
+
+    // Modmail: a DM opens or continues a private support thread.
+    if (!message.guild) {
+      await ModmailModule.handleUserDM(_client, message).catch((err) => logger.error({ err }, 'modmail DM failed'));
+      return;
+    }
+    // Modmail: a staff message in an open thread channel relays to the user.
+    if (ModmailModule.hasOpenThread(message.channel.id)) {
+      await ModmailModule.handleStaffMessage(message).catch(swallow);
+      return;
+    }
 
     await Promise.allSettled([
       AutoModModule.analyze(message),

@@ -952,5 +952,37 @@
       "alert": "플래그(제거 안 됨)",
       "flag": "플래그"
     }
+  },
+  "modmail": {
+    "noServer": "ArkenBot 모드메일을 사용하는 서버에 참여하고 있지 않아 대화를 열 수 없습니다.",
+    "pickPlaceholder": "서버 선택…",
+    "pickPrompt": "모드메일을 사용하는 여러 서버에 있습니다. 이 메시지는 어느 서버용인가요?",
+    "cantOpen": "**{server}** 에서 모드메일 스레드를 열 수 없습니다 — 그곳에 채널 관리 권한이 없습니다.",
+    "newThreadTitle": "📬 새 모드메일 스레드",
+    "newThreadDesc": "{user} 님이 모드메일 스레드를 열었습니다. 이 채널에 답장하면 DM으로 전송됩니다. ID: `{id}`",
+    "replyHint": "여기에 입력해 답장 · /modmail close 로 종료",
+    "openedTitle": "📬 모드메일 열림 — {server}",
+    "openedDesc": "메시지가 **{server}** 스태프에게 전송되었습니다. 여기서 답장합니다 — 계속 메시지를 보내세요.",
+    "staffReplyFooter": "{server} 스태프",
+    "closedTitle": "📪 모드메일 종료 — {server}",
+    "closedReason": "이 대화가 종료되었습니다: {reason}",
+    "closedDesc": "**{server}** 와의 모드메일 대화가 종료되었습니다. 언제든 메시지를 보내 새로 열 수 있습니다.",
+    "transcriptTitle": "모드메일 기록 — {user}",
+    "transcriptMeta": "{user} 와의 스레드, {closedBy} 종료.",
+    "closing": "스레드를 종료하는 중…",
+    "notThread": "열린 모드메일 채널이 아닙니다.",
+    "needManage": "모드메일을 설정하려면 **서버 관리** 권한이 필요합니다.",
+    "setupDone": "✅ 모드메일이 활성화되고 설정되었습니다.",
+    "disabled": "모드메일이 비활성화되었습니다.",
+    "on": "켜짐",
+    "off": "꺼짐",
+    "none": "설정 안 됨",
+    "configTitle": "모드메일 설정",
+    "cfgEnabled": "활성화",
+    "cfgCategory": "카테고리",
+    "cfgStaff": "스태프 역할",
+    "cfgLog": "기록 로그",
+    "cfgAnon": "익명 답장",
+    "picked": "확인 — 메시지를 보냅니다. 스태프가 여기서 답장합니다."
   }
 }

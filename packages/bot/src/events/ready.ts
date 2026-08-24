@@ -11,6 +11,7 @@ import { logger, swallow} from '../logger.js';
 import { pub } from '../redis.js';
 import { prisma } from '../database.js';
 import { getGuildSettings } from '../utils/settings.js';
+import { ModmailModule } from '../modules/modmail/ModmailModule.js';
 import { t, resolveUserLocale } from '../i18n/index.js';
 
 /** Shape of the `botConfig` singleton row used for presence configuration. */
@@ -386,6 +387,7 @@ const event: BotEvent = {
     await sub.subscribe('topgg:vote');
 
 
+    await ModmailModule.loadOpenThreads().catch(() => {});
     logger.info('Bot ready! Serving ' + client.guilds.cache.size + ' guilds');
 
   },

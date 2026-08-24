@@ -952,5 +952,37 @@
       "alert": "フラグ（削除なし）",
       "flag": "フラグ"
     }
+  },
+  "modmail": {
+    "noServer": "ArkenBot のモッドメールを使っているサーバーに参加していないため、会話を開けません。",
+    "pickPlaceholder": "サーバーを選択…",
+    "pickPrompt": "モッドメールを使う複数のサーバーに参加しています。このメッセージはどのサーバー宛てですか？",
+    "cantOpen": "**{server}** でモッドメールスレッドを開けませんでした — 「チャンネルの管理」権限がありません。",
+    "newThreadTitle": "📬 新しいモッドメールスレッド",
+    "newThreadDesc": "{user} がモッドメールスレッドを開きました。このチャンネルで返信すると DM で送られます。ID: `{id}`",
+    "replyHint": "ここに入力で返信 · /modmail close で終了",
+    "openedTitle": "📬 モッドメール開始 — {server}",
+    "openedDesc": "あなたのメッセージは **{server}** のスタッフに送られました。ここで返信します — 続けてメッセージを送ってください。",
+    "staffReplyFooter": "{server} スタッフ",
+    "closedTitle": "📪 モッドメール終了 — {server}",
+    "closedReason": "この会話は終了しました: {reason}",
+    "closedDesc": "**{server}** とのモッドメール会話は終了しました。いつでもメッセージを送れば新しく開けます。",
+    "transcriptTitle": "モッドメール記録 — {user}",
+    "transcriptMeta": "{user} とのスレッド、{closedBy} が終了。",
+    "closing": "スレッドを終了しています…",
+    "notThread": "これは開いているモッドメールチャンネルではありません。",
+    "needManage": "モッドメールの設定には **サーバー管理** 権限が必要です。",
+    "setupDone": "✅ モッドメールを有効化し設定しました。",
+    "disabled": "モッドメールを無効にしました。",
+    "on": "オン",
+    "off": "オフ",
+    "none": "未設定",
+    "configTitle": "モッドメール設定",
+    "cfgEnabled": "有効",
+    "cfgCategory": "カテゴリ",
+    "cfgStaff": "スタッフロール",
+    "cfgLog": "記録ログ",
+    "cfgAnon": "匿名返信",
+    "picked": "了解 — メッセージを送信します。スタッフがここで返信します。"
   }
 }

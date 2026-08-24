@@ -952,5 +952,37 @@
       "alert": "flagged (not removed)",
       "flag": "flagged"
     }
+  },
+  "modmail": {
+    "noServer": "You're not in any server that uses ArkenBot modmail, so I can't open a conversation.",
+    "pickPlaceholder": "Choose a server…",
+    "pickPrompt": "You're in multiple servers that use modmail. Which one is this message for?",
+    "cantOpen": "I couldn't open a modmail thread in **{server}** — I'm missing the Manage Channels permission there.",
+    "newThreadTitle": "📬 New modmail thread",
+    "newThreadDesc": "{user} opened a modmail thread. Reply in this channel and it will be DM'd to them. User ID: `{id}`",
+    "replyHint": "Type here to reply · /modmail close to close",
+    "openedTitle": "📬 Modmail opened — {server}",
+    "openedDesc": "Your message was sent to the staff of **{server}**. They'll reply right here — just keep messaging me to continue.",
+    "staffReplyFooter": "{server} staff",
+    "closedTitle": "📪 Modmail closed — {server}",
+    "closedReason": "This conversation was closed: {reason}",
+    "closedDesc": "Your modmail conversation with **{server}** has been closed. Message me again any time to open a new one.",
+    "transcriptTitle": "Modmail transcript — {user}",
+    "transcriptMeta": "Thread with {user}, closed by {closedBy}.",
+    "closing": "Closing this thread…",
+    "notThread": "This isn't an open modmail channel.",
+    "needManage": "You need the **Manage Server** permission to configure modmail.",
+    "setupDone": "✅ Modmail is now enabled and configured.",
+    "disabled": "Modmail has been disabled.",
+    "on": "On",
+    "off": "Off",
+    "none": "Not set",
+    "configTitle": "Modmail Configuration",
+    "cfgEnabled": "Enabled",
+    "cfgCategory": "Category",
+    "cfgStaff": "Staff role",
+    "cfgLog": "Transcript log",
+    "cfgAnon": "Anonymous replies",
+    "picked": "Got it — sending your message. Staff will reply here."
   }
 }
