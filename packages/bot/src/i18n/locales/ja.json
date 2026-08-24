@@ -1117,5 +1117,15 @@
       "black": "黒",
       "green": "緑"
     }
+  },
+  "highlights": {
+    "title": "📰 {server} — 今週のまとめ",
+    "subtitle": "過去7日間の出来事です。",
+    "messages": "💬 メッセージ",
+    "newMembers": "👋 新メンバー",
+    "topStar": "⭐ 最も星を集めた投稿",
+    "topStarValue": "{stars} ⭐ — {user} · [ジャンプ]({link})",
+    "xpLeaders": "🏆 XPリーダー",
+    "levelValue": "レベル {level}"
   }
 }

@@ -19,6 +19,7 @@ import { getGuildSettings } from '../utils/settings.js';
 import { t, resolveUserLocale } from '../i18n/index.js';
 import { XPDecayModule } from './leveling/XPDecayModule.js';
 import { LevelingModule } from './leveling/LevelingModule.js';
+import { HighlightsModule } from './HighlightsModule.js';
 import { ModmailModule } from './modmail/ModmailModule.js';
 import { AnalyticsModule } from './AnalyticsModule.js';
 import RSSParser from 'rss-parser';
@@ -76,6 +77,9 @@ export class BackgroundJobs {
     // Weekly analytics reports — fire every 7 days, but only actually post on
     // Mondays (UTC) so restarts mid-week don't double-post.
     setTimeout(() => this.timers.push(setInterval(() => void this.runWeeklyAnalytics(), 7 * 24 * 60 * 60 * 1000)), jitter());
+
+    // Weekly community highlights digest (Monday-gated).
+    setTimeout(() => this.timers.push(setInterval(() => void this.runWeeklyHighlights(), 6 * 60 * 60 * 1000)), jitter());
 
     // Purge data for guilds that left longer than the grace period ago.
     void this.runGuildPurgeSweep();
@@ -1032,6 +1036,17 @@ export class BackgroundJobs {
   }
 
   // ── Weekly Analytics Reports ─────────────────────────────────────────────
+
+  private async runWeeklyHighlights(): Promise<void> {
+    // Only post on Mondays (UTC) so a restart during the week doesn't repeat it.
+    if (new Date().getUTCDay() !== 1) return;
+    const configs = await prisma.guildSettings.findMany({ where: { highlightsEnabled: true, highlightsChannelId: { not: null } }, select: { guildId: true } }).catch(() => []);
+    for (const cfg of configs) {
+      const guild = this.client.guilds.cache.get(cfg.guildId);
+      if (!guild) continue;
+      await HighlightsModule.postDigest(guild).catch((err) => logger.error({ err, guildId: cfg.guildId }, 'highlights digest failed'));
+    }
+  }
 
   private async runWeeklyAnalytics(): Promise<void> {
     // Only post on Mondays (UTC day 1) so mid-week restarts don't double-post.

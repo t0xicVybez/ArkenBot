@@ -27,6 +27,7 @@ export interface GuildSettings {
   loggingEnabled: boolean;
   musicEnabled: boolean;
   reactionRolesEnabled: boolean;
+  highlightsEnabled: boolean;
 
   // Channels
   logChannelId?: string;
@@ -34,6 +35,7 @@ export interface GuildSettings {
   welcomeChannelId?: string;
   leaveChannelId?: string;
   levelUpChannelId?: string;
+  highlightsChannelId?: string | null;
 
   // Roles
   muteRoleId?: string;

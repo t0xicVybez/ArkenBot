@@ -1117,5 +1117,15 @@
       "black": "黑",
       "green": "绿"
     }
+  },
+  "highlights": {
+    "title": "📰 {server} — 本周回顾",
+    "subtitle": "以下是过去 7 天发生的事。",
+    "messages": "💬 消息",
+    "newMembers": "👋 新成员",
+    "topStar": "⭐ 最高星标消息",
+    "topStarValue": "{stars} ⭐ — 来自 {user} · [跳转]({link})",
+    "xpLeaders": "🏆 经验榜首",
+    "levelValue": "等级 {level}"
   }
 }

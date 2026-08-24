@@ -948,7 +948,13 @@
     "permAlertsEnabled": "権限アラートを有効化",
     "permAlertsEnabledDesc": "自動モデレーションの削除、アンチニュークの対応、自動ロールなどの操作が権限不足で失敗したとき、モデレーションログ（またはログ）チャンネルにアラートを投稿します。",
     "permAlertRole": "アラート用ロール",
-    "permAlertRoleDesc": "このロールがアラートでメンションされます。メンションなしで投稿する場合は「なし」のままにします。"
+    "permAlertRoleDesc": "このロールがアラートでメンションされます。メンションなしで投稿する場合は「なし」のままにします。",
+    "highlightsTitle": "週間ハイライト",
+    "highlightsDesc": "サーバー活動の週間まとめを投稿します。",
+    "highlightsEnabled": "週間ハイライトを有効化",
+    "highlightsEnabledDesc": "毎週月曜に、先週のまとめ（メッセージ数・新メンバー・最も星を集めた投稿・XPリーダー）を投稿します。",
+    "highlightsChannel": "ハイライトチャンネル",
+    "highlightsChannelDesc": "週間まとめを投稿する場所。"
   },
   "suggestionsPage": {
     "saved": "提案の設定を保存しました！",

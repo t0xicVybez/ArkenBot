@@ -948,7 +948,13 @@
     "permAlertsEnabled": "Activer les alertes de permissions",
     "permAlertsEnabledDesc": "Publie une alerte dans votre salon de journaux de modération (ou de journaux) lorsqu'une action comme une suppression AutoMod, une réponse anti-nuke ou un rôle auto échoue par manque de permissions.",
     "permAlertRole": "Rôle à alerter",
-    "permAlertRoleDesc": "Ce rôle est mentionné dans l'alerte. Laissez sur Aucun pour publier l'alerte sans mention."
+    "permAlertRoleDesc": "Ce rôle est mentionné dans l'alerte. Laissez sur Aucun pour publier l'alerte sans mention.",
+    "highlightsTitle": "Résumé hebdomadaire",
+    "highlightsDesc": "Publie un récapitulatif hebdomadaire convivial de l’activité du serveur.",
+    "highlightsEnabled": "Activer le résumé hebdomadaire",
+    "highlightsEnabledDesc": "Chaque lundi, publie un récap de la semaine : messages, nouveaux membres, message le plus étoilé et meilleurs en XP.",
+    "highlightsChannel": "Salon du résumé",
+    "highlightsChannelDesc": "Où le résumé hebdomadaire est publié."
   },
   "suggestionsPage": {
     "saved": "Paramètres des suggestions enregistrés !",

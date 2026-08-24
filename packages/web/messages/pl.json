@@ -948,7 +948,13 @@
     "permAlertsEnabled": "Włącz alerty uprawnień",
     "permAlertsEnabledDesc": "Publikuje alert na kanale mod-log (lub log), gdy akcja taka jak usunięcie przez AutoMod, reakcja anti-nuke lub autorola nie powiedzie się z powodu braku uprawnień.",
     "permAlertRole": "Rola alertu",
-    "permAlertRoleDesc": "Ta rola jest oznaczana w alercie. Zostaw „Brak”, aby publikować alert bez oznaczenia."
+    "permAlertRoleDesc": "Ta rola jest oznaczana w alercie. Zostaw „Brak”, aby publikować alert bez oznaczenia.",
+    "highlightsTitle": "Cotygodniowe podsumowanie",
+    "highlightsDesc": "Publikuj przyjazne cotygodniowe podsumowanie aktywności serwera.",
+    "highlightsEnabled": "Włącz cotygodniowe podsumowanie",
+    "highlightsEnabledDesc": "W każdy poniedziałek podsumowanie tygodnia — wiadomości, nowi członkowie, najlepsza wiadomość i liderzy XP.",
+    "highlightsChannel": "Kanał podsumowania",
+    "highlightsChannelDesc": "Gdzie publikowane jest cotygodniowe podsumowanie."
   },
   "suggestionsPage": {
     "saved": "Zapisano ustawienia sugestii!",

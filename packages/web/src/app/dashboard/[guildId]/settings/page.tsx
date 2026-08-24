@@ -29,6 +29,11 @@ export default function SettingsPage() {
     queryFn: () => guildsApi.roles(guildId),
   });
 
+  const { data: channelsRes } = useQuery({
+    queryKey: ['channels', guildId],
+    queryFn: () => guildsApi.channels(guildId),
+  });
+
   const { data: personalizationRes } = useQuery({
     queryKey: ['personalization', guildId],
     queryFn: () => personalizationApi.get(guildId),
@@ -88,6 +93,7 @@ export default function SettingsPage() {
   const handleSave = (partial: Partial<GuildSettings>) => mutation.mutate(partial);
 
   const roles = (rolesRes?.data?.data ?? []) as Array<{ id: string; name: string }>;
+  const textChannels = ((channelsRes?.data?.data ?? []) as Array<{ id: string; name: string; type: number }>).filter((c) => c.type === 0);
 
   if (isLoading) {
     return (
@@ -239,6 +245,39 @@ export default function SettingsPage() {
           </select>
           <p className="text-sm text-[var(--text-muted)] mt-1">{t('permAlertRoleDesc')}</p>
         </div>
+      </SettingsSection>
+
+      <SettingsSection title={t('highlightsTitle')} description={t('highlightsDesc')}>
+        <label className="flex items-start gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            className="h-4 w-4 mt-1 accent-discord-blurple"
+            checked={settings.highlightsEnabled ?? false}
+            onChange={(e) => {
+              const v = e.target.checked;
+              setSettings((s) => ({ ...s, highlightsEnabled: v }));
+              handleSave({ highlightsEnabled: v });
+            }}
+          />
+          <span>
+            <span className="label !mb-0">{t('highlightsEnabled')}</span>
+            <span className="block text-sm text-[var(--text-muted)]">{t('highlightsEnabledDesc')}</span>
+          </span>
+        </label>
+        {settings.highlightsEnabled && (
+          <div>
+            <label className="label">{t('highlightsChannel')}</label>
+            <select
+              className="input"
+              value={settings.highlightsChannelId ?? ''}
+              onChange={(e) => { const v = e.target.value || null; setSettings((s) => ({ ...s, highlightsChannelId: v })); handleSave({ highlightsChannelId: v }); }}
+            >
+              <option value="">{t('none')}</option>
+              {textChannels.map((c) => (<option key={c.id} value={c.id}>#{c.name}</option>))}
+            </select>
+            <p className="text-sm text-[var(--text-muted)] mt-1">{t('highlightsChannelDesc')}</p>
+          </div>
+        )}
       </SettingsSection>
 
       <SettingsSection title={t('embedColorsTitle')} description={t('embedColorsDesc')}>

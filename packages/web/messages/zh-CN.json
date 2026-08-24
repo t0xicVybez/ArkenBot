@@ -948,7 +948,13 @@
     "permAlertsEnabled": "启用权限提醒",
     "permAlertsEnabledDesc": "当自动审核删除、反炸群响应或自动身份组等操作因缺少权限而失败时，向你的管理日志（或日志）频道发送提醒。",
     "permAlertRole": "提醒身份组",
-    "permAlertRoleDesc": "该身份组会在提醒中被提及。保留为“无”即可发送不带提及的提醒。"
+    "permAlertRoleDesc": "该身份组会在提醒中被提及。保留为“无”即可发送不带提及的提醒。",
+    "highlightsTitle": "每周精选",
+    "highlightsDesc": "发布友好的每周服务器活动回顾。",
+    "highlightsEnabled": "启用每周精选",
+    "highlightsEnabledDesc": "每周一发布上周回顾——消息、新成员、最高星标消息和经验榜首。",
+    "highlightsChannel": "精选频道",
+    "highlightsChannelDesc": "每周回顾发布的位置。"
   },
   "suggestionsPage": {
     "saved": "建议设置已保存！",

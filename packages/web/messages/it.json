@@ -948,7 +948,13 @@
     "permAlertsEnabled": "Attiva avvisi permessi",
     "permAlertsEnabledDesc": "Pubblica un avviso nel canale mod-log (o log) quando un'azione come una rimozione AutoMod, una risposta anti-nuke o un ruolo automatico fallisce per mancanza di permessi.",
     "permAlertRole": "Ruolo da avvisare",
-    "permAlertRoleDesc": "Questo ruolo viene menzionato nell'avviso. Lascia Nessuno per pubblicare l'avviso senza menzione."
+    "permAlertRoleDesc": "Questo ruolo viene menzionato nell'avviso. Lascia Nessuno per pubblicare l'avviso senza menzione.",
+    "highlightsTitle": "Riepilogo settimanale",
+    "highlightsDesc": "Pubblica un riepilogo settimanale amichevole dell’attività del server.",
+    "highlightsEnabled": "Attiva riepilogo settimanale",
+    "highlightsEnabledDesc": "Ogni lunedì, un riepilogo della settimana — messaggi, nuovi membri, messaggio più votato e leader XP.",
+    "highlightsChannel": "Canale del riepilogo",
+    "highlightsChannelDesc": "Dove viene pubblicato il riepilogo settimanale."
   },
   "suggestionsPage": {
     "saved": "Impostazioni dei suggerimenti salvate!",
