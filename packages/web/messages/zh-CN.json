@@ -474,7 +474,13 @@
     "enableVoiceXp": "启用语音经验",
     "enableVoiceXpDesc": "每分钟向共处一个语音频道且未静音的成员发放经验。",
     "voiceXpPerMinute": "每分钟经验",
-    "voiceXpPerMinuteHelp": "在语音中每分钟发放（身份组倍率仍然适用）。"
+    "voiceXpPerMinuteHelp": "在语音中每分钟发放（身份组倍率仍然适用）。",
+    "prestigeTitle": "威望",
+    "prestigeDesc": "让成员重置等级以换取永久的威望等级。",
+    "enablePrestige": "启用威望",
+    "enablePrestigeDesc": "达到威望等级的成员可用 /prestige 重置并晋升。",
+    "prestigeLevel": "威望等级",
+    "prestigeLevelHelp": "成员晋升威望前需要达到的等级。"
   },
   "starboardPage": {
     "saved": "已保存星标板设置。",

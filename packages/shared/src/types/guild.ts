@@ -56,6 +56,8 @@ export interface GuildSettings {
   xpDecayPercent: number;
   voiceXpEnabled: boolean;
   voiceXpPerMinute: number;
+  prestigeEnabled: boolean;
+  prestigeLevel: number;
 
   // Embed accent colors (hex strings)
   accentColor: string;

@@ -483,7 +483,8 @@
       "fieldLevel": "📈 等级",
       "fieldTotalXp": "✨ 总 XP",
       "fieldMessages": "💬 消息数",
-      "fieldProgress": "距 {level} 级的进度"
+      "fieldProgress": "距 {level} 级的进度",
+      "fieldPrestige": "威望"
     },
     "stats": {
       "disabledTitle": "等级功能已禁用",
@@ -849,6 +850,14 @@
       "overview": "概览",
       "pageFooter": "第 {page}/{total} 页  ·  你可使用 {commands} 条命令",
       "notYourMenu": "此菜单属于其他人。"
+    },
+    "prestige": {
+      "disabledTitle": "威望不可用",
+      "disabled": "本服务器未启用威望。",
+      "tooLowTitle": "还不行",
+      "tooLow": "你需要达到等级 {level} 才能晋升威望（你当前等级 {current}）。",
+      "title": "威望晋升！",
+      "desc": "你重置了等级并达到 **威望 {prestige}** ⭐"
     }
   },
   "achievements": {
