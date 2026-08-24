@@ -954,7 +954,13 @@
     "highlightsEnabled": "启用每周精选",
     "highlightsEnabledDesc": "每周一发布上周回顾——消息、新成员、最高星标消息和经验榜首。",
     "highlightsChannel": "精选频道",
-    "highlightsChannelDesc": "每周回顾发布的位置。"
+    "highlightsChannelDesc": "每周回顾发布的位置。",
+    "appealsTitle": "封禁与禁言申诉",
+    "appealsDesc": "允许被封禁或禁言的成员对处罚提出申诉。",
+    "appealsEnabled": "启用申诉",
+    "appealsEnabledDesc": "被封禁/禁言的成员会在私信中收到“申诉”按钮；批准后自动撤销处罚。",
+    "appealChannel": "申诉审核频道",
+    "appealChannelDesc": "申诉发布供工作人员批准或拒绝的位置。"
   },
   "suggestionsPage": {
     "saved": "建议设置已保存！",

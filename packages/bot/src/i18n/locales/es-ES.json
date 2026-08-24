@@ -1175,5 +1175,34 @@
     "failed": "No se pudo completar el intercambio: la oferta ya no es válida.",
     "doneTitle": "Intercambio completado",
     "done": "{recipient} aceptó {offer} de {sender}."
+  },
+  "appeals": {
+    "appealButton": "Apelar",
+    "alreadyPending": "Ya tienes una apelación pendiente para este servidor.",
+    "modalTitle": "Enviar una apelación",
+    "modalLabel": "¿Por qué debería revertirse?",
+    "disabled": "Las apelaciones no están activadas en este servidor.",
+    "submitted": "Tu apelación se ha enviado. El staff la revisará.",
+    "reviewTitle": "Nueva apelación de {type}",
+    "userField": "Usuario",
+    "approve": "Aprobar",
+    "deny": "Rechazar",
+    "gone": "Esa apelación ya no existe.",
+    "handled": "Esta apelación ya fue gestionada.",
+    "unbanned": "usuario desbaneado",
+    "unbanFailed": "fallo al desbanear",
+    "unmuted": "silencio retirado",
+    "unmuteFailed": "no se pudo retirar el silencio",
+    "approvedTitle": "Apelación aprobada — {server}",
+    "approvedDesc": "Tu apelación para **{server}** fue aprobada. La acción se ha revertido.",
+    "deniedTitle": "Apelación rechazada — {server}",
+    "deniedDesc": "Tu apelación para **{server}** fue rechazada.",
+    "decision": "Decisión",
+    "approvedBy": "Aprobada por {user}",
+    "deniedBy": "Rechazada por {user}",
+    "type": {
+      "ban": "baneo",
+      "mute": "silencio"
+    }
   }
 }

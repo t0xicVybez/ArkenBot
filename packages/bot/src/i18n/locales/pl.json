@@ -1175,5 +1175,34 @@
     "failed": "Nie udało się dokończyć wymiany — oferta nie jest już ważna.",
     "doneTitle": "Wymiana zakończona",
     "done": "{recipient} przyjął {offer} od {sender}."
+  },
+  "appeals": {
+    "appealButton": "Odwołaj się",
+    "alreadyPending": "Masz już oczekujące odwołanie dla tego serwera.",
+    "modalTitle": "Złóż odwołanie",
+    "modalLabel": "Dlaczego powinno to zostać cofnięte?",
+    "disabled": "Odwołania nie są włączone na tym serwerze.",
+    "submitted": "Twoje odwołanie zostało wysłane. Zespół je rozpatrzy.",
+    "reviewTitle": "Nowe odwołanie: {type}",
+    "userField": "Użytkownik",
+    "approve": "Zatwierdź",
+    "deny": "Odrzuć",
+    "gone": "To odwołanie już nie istnieje.",
+    "handled": "To odwołanie zostało już rozpatrzone.",
+    "unbanned": "użytkownik odbanowany",
+    "unbanFailed": "odbanowanie nie powiodło się",
+    "unmuted": "wyciszenie usunięte",
+    "unmuteFailed": "nie można usunąć wyciszenia",
+    "approvedTitle": "Odwołanie zatwierdzone — {server}",
+    "approvedDesc": "Twoje odwołanie dla **{server}** zostało zatwierdzone. Działanie cofnięto.",
+    "deniedTitle": "Odwołanie odrzucone — {server}",
+    "deniedDesc": "Twoje odwołanie dla **{server}** zostało odrzucone.",
+    "decision": "Decyzja",
+    "approvedBy": "Zatwierdzone przez {user}",
+    "deniedBy": "Odrzucone przez {user}",
+    "type": {
+      "ban": "ban",
+      "mute": "wyciszenie"
+    }
   }
 }

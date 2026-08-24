@@ -1175,5 +1175,34 @@
     "failed": "Non è stato possibile completare lo scambio — l’offerta non è più valida.",
     "doneTitle": "Scambio completato",
     "done": "{recipient} ha accettato {offer} da {sender}."
+  },
+  "appeals": {
+    "appealButton": "Fai ricorso",
+    "alreadyPending": "Hai già un ricorso in sospeso per questo server.",
+    "modalTitle": "Invia un ricorso",
+    "modalLabel": "Perché dovrebbe essere annullato?",
+    "disabled": "I ricorsi non sono attivati su questo server.",
+    "submitted": "Il tuo ricorso è stato inviato. Lo staff lo esaminerà.",
+    "reviewTitle": "Nuovo ricorso di {type}",
+    "userField": "Utente",
+    "approve": "Approva",
+    "deny": "Rifiuta",
+    "gone": "Quel ricorso non esiste più.",
+    "handled": "Questo ricorso è già stato gestito.",
+    "unbanned": "utente sbannato",
+    "unbanFailed": "sblocco fallito",
+    "unmuted": "timeout rimosso",
+    "unmuteFailed": "impossibile rimuovere il timeout",
+    "approvedTitle": "Ricorso approvato — {server}",
+    "approvedDesc": "Il tuo ricorso per **{server}** è stato approvato. L’azione è stata annullata.",
+    "deniedTitle": "Ricorso rifiutato — {server}",
+    "deniedDesc": "Il tuo ricorso per **{server}** è stato rifiutato.",
+    "decision": "Decisione",
+    "approvedBy": "Approvato da {user}",
+    "deniedBy": "Rifiutato da {user}",
+    "type": {
+      "ban": "ban",
+      "mute": "silenziamento"
+    }
   }
 }

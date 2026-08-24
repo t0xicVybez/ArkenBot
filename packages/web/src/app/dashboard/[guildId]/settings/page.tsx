@@ -247,6 +247,39 @@ export default function SettingsPage() {
         </div>
       </SettingsSection>
 
+      <SettingsSection title={t('appealsTitle')} description={t('appealsDesc')}>
+        <label className="flex items-start gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            className="h-4 w-4 mt-1 accent-discord-blurple"
+            checked={settings.appealsEnabled ?? false}
+            onChange={(e) => {
+              const v = e.target.checked;
+              setSettings((s) => ({ ...s, appealsEnabled: v }));
+              handleSave({ appealsEnabled: v });
+            }}
+          />
+          <span>
+            <span className="label !mb-0">{t('appealsEnabled')}</span>
+            <span className="block text-sm text-[var(--text-muted)]">{t('appealsEnabledDesc')}</span>
+          </span>
+        </label>
+        {settings.appealsEnabled && (
+          <div>
+            <label className="label">{t('appealChannel')}</label>
+            <select
+              className="input"
+              value={settings.appealChannelId ?? ''}
+              onChange={(e) => { const v = e.target.value || null; setSettings((s) => ({ ...s, appealChannelId: v })); handleSave({ appealChannelId: v }); }}
+            >
+              <option value="">{t('none')}</option>
+              {textChannels.map((c) => (<option key={c.id} value={c.id}>#{c.name}</option>))}
+            </select>
+            <p className="text-sm text-[var(--text-muted)] mt-1">{t('appealChannelDesc')}</p>
+          </div>
+        )}
+      </SettingsSection>
+
       <SettingsSection title={t('highlightsTitle')} description={t('highlightsDesc')}>
         <label className="flex items-start gap-3 cursor-pointer">
           <input

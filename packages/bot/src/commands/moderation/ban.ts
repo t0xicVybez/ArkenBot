@@ -11,6 +11,7 @@ import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { moderationEmbed, errorEmbed } from '../../utils/embed.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
+import { AppealsModule } from '../../modules/moderation/AppealsModule.js';
 import { canModerate } from '../../utils/permissions.js';
 import { parseDuration, formatDuration } from '@arkenbot/shared';
 import { prisma } from '../../database.js';
@@ -114,6 +115,9 @@ const command: BotCommand = {
     try {
       // Attempt DM notification before the ban so the message can actually be delivered.
       if (targetMember) {
+        // Offer an appeal button (in the target's language) when appeals are enabled.
+        const appealsOn = await AppealsModule.enabled(interaction.guild.id);
+        const targetLoc = await resolveUserLocale({ user: { id: targetUser.id }, guildId: interaction.guild.id, guildLocale: interaction.guild.preferredLocale });
         await targetUser
           .send({
             embeds: [
@@ -125,6 +129,7 @@ const command: BotCommand = {
                 duration: durationStr ? formatDuration(durationSeconds!) : undefined,
               }, settings?.moderationColor),
             ],
+            components: appealsOn ? [AppealsModule.appealButton(interaction.guild.id, 'ban', targetLoc)] : [],
           })
           .catch(swallow);
       }

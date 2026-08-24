@@ -954,7 +954,13 @@
     "highlightsEnabled": "주간 하이라이트 활성화",
     "highlightsEnabledDesc": "매주 월요일에 지난 주 요약(메시지, 신규 멤버, 최고 별점 메시지, XP 리더)을 게시합니다.",
     "highlightsChannel": "하이라이트 채널",
-    "highlightsChannelDesc": "주간 요약이 게시되는 곳."
+    "highlightsChannelDesc": "주간 요약이 게시되는 곳.",
+    "appealsTitle": "차단 및 뮤트 이의 제기",
+    "appealsDesc": "차단되거나 뮤트된 멤버가 조치에 이의를 제기할 수 있게 합니다.",
+    "appealsEnabled": "이의 제기 활성화",
+    "appealsEnabledDesc": "차단/뮤트된 멤버의 DM에 “이의 제기” 버튼이 표시되며, 승인 시 조치가 자동으로 취소됩니다.",
+    "appealChannel": "이의 검토 채널",
+    "appealChannelDesc": "스태프가 승인/거부하도록 이의가 게시되는 곳."
   },
   "suggestionsPage": {
     "saved": "건의 설정을 저장했습니다!",

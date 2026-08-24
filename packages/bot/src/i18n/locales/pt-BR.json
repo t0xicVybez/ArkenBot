@@ -1175,5 +1175,34 @@
     "failed": "A troca não pôde ser concluída — a oferta não é mais válida.",
     "doneTitle": "Troca concluída",
     "done": "{recipient} aceitou {offer} de {sender}."
+  },
+  "appeals": {
+    "appealButton": "Recorrer",
+    "alreadyPending": "Você já tem um recurso pendente para este servidor.",
+    "modalTitle": "Enviar um recurso",
+    "modalLabel": "Por que isso deveria ser revertido?",
+    "disabled": "Recursos não estão ativados neste servidor.",
+    "submitted": "Seu recurso foi enviado. A equipe irá analisá-lo.",
+    "reviewTitle": "Novo recurso de {type}",
+    "userField": "Usuário",
+    "approve": "Aprovar",
+    "deny": "Negar",
+    "gone": "Esse recurso não existe mais.",
+    "handled": "Este recurso já foi tratado.",
+    "unbanned": "usuário desbanido",
+    "unbanFailed": "falha ao desbanir",
+    "unmuted": "silenciamento removido",
+    "unmuteFailed": "não foi possível remover o silenciamento",
+    "approvedTitle": "Recurso aprovado — {server}",
+    "approvedDesc": "Seu recurso para **{server}** foi aprovado. A ação foi revertida.",
+    "deniedTitle": "Recurso negado — {server}",
+    "deniedDesc": "Seu recurso para **{server}** foi negado.",
+    "decision": "Decisão",
+    "approvedBy": "Aprovado por {user}",
+    "deniedBy": "Negado por {user}",
+    "type": {
+      "ban": "banimento",
+      "mute": "silenciamento"
+    }
   }
 }
