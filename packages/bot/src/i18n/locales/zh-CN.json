@@ -511,7 +511,11 @@
       "line": "{medal} {user} — **{level}** 级 | **{xp}** XP",
       "title": "🏆 {guild} 排行榜",
       "footer": "第 {page}/{pages} 页 • 共 {total} 名用户",
-      "viewFull": "查看完整排行榜"
+      "viewFull": "查看完整排行榜",
+      "period": {
+        "weekly": "本周",
+        "monthly": "本月"
+      }
     },
     "profile": {
       "disabledTitle": "等级功能已禁用",
