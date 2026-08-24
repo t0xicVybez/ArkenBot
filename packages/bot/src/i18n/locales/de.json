@@ -1074,6 +1074,8 @@
     "takeTitle": "Währung entfernt",
     "takeDesc": "Du hast {user} **{amount}** abgezogen. Neuer Geldbeutel: {wallet}.",
     "resetTitle": "Kontostand zurückgesetzt",
-    "resetDesc": "Der Kontostand von {user} wurde auf null zurückgesetzt."
+    "resetDesc": "Der Kontostand von {user} wurde auf null zurückgesetzt.",
+    "incomeRoles": "Einkommensrollen",
+    "bankInterest": "Bankzinsen"
   }
 }

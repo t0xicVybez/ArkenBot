@@ -1074,6 +1074,8 @@
     "takeTitle": "Moneda retirada",
     "takeDesc": "Quitaste **{amount}** a {user}. Nueva cartera: {wallet}.",
     "resetTitle": "Saldo reiniciado",
-    "resetDesc": "El saldo de {user} se reinició a cero."
+    "resetDesc": "El saldo de {user} se reinició a cero.",
+    "incomeRoles": "Roles de ingresos",
+    "bankInterest": "Interés del banco"
   }
 }

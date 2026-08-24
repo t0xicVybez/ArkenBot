@@ -12,6 +12,7 @@ import { REDIS_KEYS, levelFromXp, formatTemplate } from '@arkenbot/shared';
 import { getGuildSettings } from '../../utils/settings.js';
 import { logger, swallow} from '../../logger.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
+import { EconomyModule } from '../economy/EconomyModule.js';
 
 export class LevelingModule {
   /**
@@ -120,6 +121,9 @@ export class LevelingModule {
       );
 
       await this.applyLevelRoles(guild, user.id, newLevel, settings.keepPreviousRoles ?? false);
+
+      // Economy tie-in: pay a currency reward for the new level when configured.
+      await EconomyModule.awardLevelUp(guild.id, user.id, newLevel).catch(swallow);
     }
 
     const totalMessages = (existing?.totalMessages ?? 0) + 1;

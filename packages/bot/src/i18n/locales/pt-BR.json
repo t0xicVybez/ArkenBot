@@ -1074,6 +1074,8 @@
     "takeTitle": "Moeda removida",
     "takeDesc": "Você removeu **{amount}** de {user}. Nova carteira: {wallet}.",
     "resetTitle": "Saldo zerado",
-    "resetDesc": "O saldo de {user} foi zerado."
+    "resetDesc": "O saldo de {user} foi zerado.",
+    "incomeRoles": "Cargos de renda",
+    "bankInterest": "Juros do banco"
   }
 }

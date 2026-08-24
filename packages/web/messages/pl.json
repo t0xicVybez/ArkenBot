@@ -3259,6 +3259,22 @@
     "itemAdded": "Dodano przedmiot",
     "itemDeleted": "Usunięto przedmiot",
     "itemError": "Coś poszło nie tak",
-    "itemNamePriceRequired": "Wymagane są nazwa i cena."
+    "itemNamePriceRequired": "Wymagane są nazwa i cena.",
+    "rewardsTitle": "Nagrody i odsetki",
+    "rewardsDesc": "Powiąż ekonomię z poziomami i nagradzaj oszczędzanie.",
+    "levelUpReward": "Nagroda za poziom",
+    "levelUpRewardHelp": "Monety za poziom, mnożone przez nowy poziom (0 = wył.).",
+    "bankInterestPct": "% odsetek bankowych",
+    "bankInterestPctHelp": "Dzienne odsetki od salda banku przez /daily (0 = wył.).",
+    "bankInterestCap": "Limit odsetek",
+    "bankInterestCapHelp": "Maks. odsetki dziennie (0 = bez limitu).",
+    "incomeTitle": "Role dochodowe",
+    "incomeDesc": "Członkowie z tymi rolami dostają pasywny bonus do /daily.",
+    "incomeSelectRole": "Wybierz rolę",
+    "incomeAmount": "Kwota / dzień",
+    "incomeAdd": "Dodaj",
+    "incomeEmpty": "Brak ról dochodowych.",
+    "incomePerDay": "dzień",
+    "incomeRoleRequired": "Wybierz rolę i kwotę."
   }
 }

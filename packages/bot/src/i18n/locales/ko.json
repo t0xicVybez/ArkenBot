@@ -1074,6 +1074,8 @@
     "takeTitle": "화폐 회수",
     "takeDesc": "{user}님에게서 **{amount}**을(를) 회수했습니다. 새 지갑: {wallet}.",
     "resetTitle": "잔액 초기화",
-    "resetDesc": "{user}님의 잔액이 0으로 초기화되었습니다."
+    "resetDesc": "{user}님의 잔액이 0으로 초기화되었습니다.",
+    "incomeRoles": "수입 역할",
+    "bankInterest": "은행 이자"
   }
 }

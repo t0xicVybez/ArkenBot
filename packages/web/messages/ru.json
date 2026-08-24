@@ -3259,6 +3259,22 @@
     "itemAdded": "Товар добавлен",
     "itemDeleted": "Товар удалён",
     "itemError": "Что-то пошло не так",
-    "itemNamePriceRequired": "Требуются название и цена."
+    "itemNamePriceRequired": "Требуются название и цена.",
+    "rewardsTitle": "Награды и проценты",
+    "rewardsDesc": "Свяжите экономику с уровнями и поощряйте накопления.",
+    "levelUpReward": "Награда за уровень",
+    "levelUpRewardHelp": "Монет за уровень, умножается на новый уровень (0 = выкл.).",
+    "bankInterestPct": "Банковский процент %",
+    "bankInterestPctHelp": "Ежедневный процент на банковский баланс через /daily (0 = выкл.).",
+    "bankInterestCap": "Лимит процентов",
+    "bankInterestCapHelp": "Макс. процент в день (0 = без лимита).",
+    "incomeTitle": "Доходные роли",
+    "incomeDesc": "Участники с этими ролями получают пассивный бонус к /daily.",
+    "incomeSelectRole": "Выберите роль",
+    "incomeAmount": "Сумма / день",
+    "incomeAdd": "Добавить",
+    "incomeEmpty": "Пока нет доходных ролей.",
+    "incomePerDay": "день",
+    "incomeRoleRequired": "Выберите роль и сумму."
   }
 }

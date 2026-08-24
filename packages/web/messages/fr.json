@@ -3259,6 +3259,22 @@
     "itemAdded": "Article ajouté",
     "itemDeleted": "Article supprimé",
     "itemError": "Une erreur est survenue",
-    "itemNamePriceRequired": "Un nom et un prix sont requis."
+    "itemNamePriceRequired": "Un nom et un prix sont requis.",
+    "rewardsTitle": "Récompenses et intérêts",
+    "rewardsDesc": "Relie l’économie au niveau et récompense l’épargne.",
+    "levelUpReward": "Récompense de niveau",
+    "levelUpRewardHelp": "Pièces par niveau, multipliées par le nouveau niveau (0 = désactivé).",
+    "bankInterestPct": "% d’intérêt bancaire",
+    "bankInterestPctHelp": "Intérêt quotidien sur le solde bancaire via /daily (0 = désactivé).",
+    "bankInterestCap": "Plafond d’intérêt",
+    "bankInterestCapHelp": "Intérêt max par jour (0 = illimité).",
+    "incomeTitle": "Rôles de revenu",
+    "incomeDesc": "Les membres ayant ces rôles reçoivent un bonus passif dans /daily.",
+    "incomeSelectRole": "Choisir un rôle",
+    "incomeAmount": "Montant / jour",
+    "incomeAdd": "Ajouter",
+    "incomeEmpty": "Aucun rôle de revenu.",
+    "incomePerDay": "jour",
+    "incomeRoleRequired": "Choisis un rôle et un montant."
   }
 }

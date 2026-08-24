@@ -1074,6 +1074,8 @@
     "takeTitle": "已收回货币",
     "takeDesc": "你从 {user} 收回了 **{amount}**。新钱包：{wallet}。",
     "resetTitle": "余额已重置",
-    "resetDesc": "{user} 的余额已重置为零。"
+    "resetDesc": "{user} 的余额已重置为零。",
+    "incomeRoles": "收入身份组",
+    "bankInterest": "银行利息"
   }
 }

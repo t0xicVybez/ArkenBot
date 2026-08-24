@@ -29,7 +29,12 @@ type EconomyConfig = {
   robFinePercent?: number;
   gamblingEnabled?: boolean;
   maxBet?: number;
+  levelUpReward?: number;
+  bankInterestPct?: number;
+  bankInterestCap?: number;
 };
+
+type IncomeRole = { id: string; roleId: string; amount: number };
 
 type ShopItem = {
   id: string;
@@ -49,6 +54,9 @@ const economyApi = {
   listShop: (guildId: string) => api.get(`/guilds/${guildId}/economy/shop`),
   addItem: (guildId: string, data: object) => api.post(`/guilds/${guildId}/economy/shop`, data),
   deleteItem: (guildId: string, itemId: string) => api.delete(`/guilds/${guildId}/economy/shop/${itemId}`),
+  listIncome: (guildId: string) => api.get(`/guilds/${guildId}/economy/income-roles`),
+  putIncome: (guildId: string, data: object) => api.put(`/guilds/${guildId}/economy/income-roles`, data),
+  deleteIncome: (guildId: string, roleId: string) => api.delete(`/guilds/${guildId}/economy/income-roles/${roleId}`),
 };
 
 export default function EconomyPage() {
@@ -59,6 +67,7 @@ export default function EconomyPage() {
   const [newItem, setNewItem] = useState<{ name: string; price: string; description: string; roleId: string; stock: string }>({
     name: '', price: '', description: '', roleId: '', stock: '',
   });
+  const [newIncome, setNewIncome] = useState<{ roleId: string; amount: string }>({ roleId: '', amount: '' });
 
   const { data: configRes, isLoading } = useQuery({
     queryKey: ['economy-config', guildId],
@@ -72,6 +81,10 @@ export default function EconomyPage() {
     queryKey: ['roles', guildId],
     queryFn: () => guildsApi.roles(guildId),
   });
+  const { data: incomeRes } = useQuery({
+    queryKey: ['economy-income', guildId],
+    queryFn: () => economyApi.listIncome(guildId),
+  });
 
   useEffect(() => {
     const data = (configRes?.data as { data?: EconomyConfig })?.data;
@@ -79,6 +92,7 @@ export default function EconomyPage() {
   }, [configRes]);
 
   const shopItems: ShopItem[] = (shopRes?.data as { data?: ShopItem[] })?.data ?? [];
+  const incomeRoles: IncomeRole[] = (incomeRes?.data as { data?: IncomeRole[] })?.data ?? [];
   const roles = ((rolesRes?.data as { data?: Role[] })?.data ?? []).filter((r) => r.name !== '@everyone' && !r.managed);
 
   const configMutation = useMutation({
@@ -108,6 +122,30 @@ export default function EconomyPage() {
     },
     onError: () => toast.error(t('itemError')),
   });
+
+  const putIncomeMutation = useMutation({
+    mutationFn: (data: { roleId: string; amount: number }) => economyApi.putIncome(guildId, data),
+    onSuccess: () => {
+      toast.success(t('saved'));
+      setNewIncome({ roleId: '', amount: '' });
+      queryClient.invalidateQueries({ queryKey: ['economy-income', guildId] });
+    },
+    onError: () => toast.error(t('saveError')),
+  });
+  const deleteIncomeMutation = useMutation({
+    mutationFn: (roleId: string) => economyApi.deleteIncome(guildId, roleId),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['economy-income', guildId] }),
+    onError: () => toast.error(t('saveError')),
+  });
+
+  const handleAddIncome = () => {
+    const amount = parseInt(newIncome.amount || '0', 10);
+    if (!newIncome.roleId || !amount || amount < 1) {
+      toast.error(t('incomeRoleRequired'));
+      return;
+    }
+    putIncomeMutation.mutate({ roleId: newIncome.roleId, amount });
+  };
 
   const save = (partial: Partial<EconomyConfig>) => {
     setConfig((c) => ({ ...c, ...partial }));
@@ -241,6 +279,60 @@ export default function EconomyPage() {
           <p className="text-xs text-gray-500 mt-1">{t('maxBetHelp')}</p>
         </div>
       </SettingsSection>
+
+      <SettingsSection title={t('rewardsTitle')} description={t('rewardsDesc')}>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label className="label">{t('levelUpReward')}</label>
+            <input type="number" className="input" min={0} {...num('levelUpReward')} />
+            <p className="text-xs text-gray-500 mt-1">{t('levelUpRewardHelp')}</p>
+          </div>
+          <div>
+            <label className="label">{t('bankInterestPct')}</label>
+            <input type="number" className="input" min={0} max={100} {...num('bankInterestPct')} />
+            <p className="text-xs text-gray-500 mt-1">{t('bankInterestPctHelp')}</p>
+          </div>
+          <div>
+            <label className="label">{t('bankInterestCap')}</label>
+            <input type="number" className="input" min={0} {...num('bankInterestCap')} />
+            <p className="text-xs text-gray-500 mt-1">{t('bankInterestCapHelp')}</p>
+          </div>
+        </div>
+      </SettingsSection>
+
+      <div className="card">
+        <h2 className="text-lg font-semibold text-white mb-1">{t('incomeTitle')}</h2>
+        <p className="text-sm text-gray-400 mb-4">{t('incomeDesc')}</p>
+        <div className="flex flex-col sm:flex-row gap-3 mb-4">
+          <select className="input sm:flex-1" value={newIncome.roleId} onChange={(e) => setNewIncome((s) => ({ ...s, roleId: e.target.value }))}>
+            <option value="">{t('incomeSelectRole')}</option>
+            {roles.map((r) => (<option key={r.id} value={r.id}>{r.name}</option>))}
+          </select>
+          <input type="number" className="input sm:w-40" placeholder={t('incomeAmount')} value={newIncome.amount} min={1}
+            onChange={(e) => setNewIncome((s) => ({ ...s, amount: e.target.value }))} />
+          <button className="btn-primary flex items-center gap-2 justify-center" onClick={handleAddIncome} disabled={putIncomeMutation.isPending}>
+            <Plus className="w-4 h-4" /> {t('incomeAdd')}
+          </button>
+        </div>
+        <div className="space-y-2">
+          {incomeRoles.length === 0 ? (
+            <p className="text-gray-500 text-sm text-center py-4">{t('incomeEmpty')}</p>
+          ) : (
+            incomeRoles.map((ir) => (
+              <div key={ir.id} className="flex items-center justify-between gap-3 p-3 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-base)]">
+                <div className="text-sm text-white">
+                  @{roles.find((r) => r.id === ir.roleId)?.name ?? ir.roleId}
+                  <span className="text-yellow-400"> · {(config.currencySymbol ?? '🪙')} {ir.amount.toLocaleString()}/{t('incomePerDay')}</span>
+                </div>
+                <button className="text-gray-500 hover:text-[var(--error)] transition-colors" title={t('deleteItem')}
+                  onClick={() => deleteIncomeMutation.mutate(ir.roleId)}>
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
 
       <div className="card">
         <h2 className="text-lg font-semibold text-white mb-1">{t('shopTitle')}</h2>
