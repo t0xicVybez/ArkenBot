@@ -3297,6 +3297,15 @@
     "incomeAdd": "Add",
     "incomeEmpty": "No income roles yet.",
     "incomePerDay": "day",
-    "incomeRoleRequired": "Pick a role and an amount."
+    "incomeRoleRequired": "Pick a role and an amount.",
+    "lotteryTitle": "Lottery",
+    "lotteryDesc": "A weekly raffle — members buy tickets, one winner takes the whole pot.",
+    "lotteryEnable": "Enable lottery",
+    "lotteryEnableDesc": "Allow /lottery and draw a winner every Sunday.",
+    "lotteryTicketPrice": "Ticket price",
+    "lotteryTicketPriceHelp": "Cost of one lottery ticket.",
+    "lotteryChannel": "Draw channel",
+    "lotteryChannelNone": "No announcement",
+    "lotteryChannelHelp": "Where the weekly winner is announced."
   }
 }

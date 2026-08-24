@@ -3297,6 +3297,15 @@
     "incomeAdd": "追加",
     "incomeEmpty": "まだ収入ロールがありません。",
     "incomePerDay": "日",
-    "incomeRoleRequired": "ロールと金額を選んでください。"
+    "incomeRoleRequired": "ロールと金額を選んでください。",
+    "lotteryTitle": "宝くじ",
+    "lotteryDesc": "週間の抽選 — メンバーがチケットを買い、当選者が賞金を総取り。",
+    "lotteryEnable": "宝くじを有効化",
+    "lotteryEnableDesc": "/lottery を許可し、毎週日曜に当選者を抽選します。",
+    "lotteryTicketPrice": "チケット価格",
+    "lotteryTicketPriceHelp": "宝くじ1枚の価格。",
+    "lotteryChannel": "抽選チャンネル",
+    "lotteryChannelNone": "告知なし",
+    "lotteryChannelHelp": "毎週の当選者を告知する場所。"
   }
 }

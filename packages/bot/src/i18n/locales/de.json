@@ -1127,5 +1127,18 @@
     "topStarValue": "{stars} ⭐ — von {user} · [springen]({link})",
     "xpLeaders": "🏆 XP-Spitzenreiter",
     "levelValue": "Level {level}"
+  },
+  "lottery": {
+    "disabled": "Die Lotterie ist auf diesem Server nicht aktiviert.",
+    "infoTitle": "🎟️ Wöchentliche Lotterie",
+    "pot": "Aktueller Topf",
+    "ticketPrice": "Ticketpreis",
+    "totalTickets": "Tickets gesamt",
+    "yourTickets": "Deine Tickets",
+    "drawFooter": "Ziehung jeden Sonntag. Der Gewinner bekommt den ganzen Topf!",
+    "boughtTitle": "Tickets gekauft",
+    "bought": "Du hast **{count}** Ticket(s) für {cost} gekauft. Viel Glück!",
+    "drawTitle": "🎉 Lotterie-Gewinner!",
+    "drawWinner": "{user} hat den Topf von **{pot}** mit {tickets} Tickets im Spiel gewonnen!"
   }
 }

@@ -1127,5 +1127,18 @@
     "topStarValue": "{stars} ⭐ — by {user} · [jump]({link})",
     "xpLeaders": "🏆 XP leaders",
     "levelValue": "Level {level}"
+  },
+  "lottery": {
+    "disabled": "The lottery is not enabled on this server.",
+    "infoTitle": "🎟️ Weekly Lottery",
+    "pot": "Current pot",
+    "ticketPrice": "Ticket price",
+    "totalTickets": "Total tickets",
+    "yourTickets": "Your tickets",
+    "drawFooter": "Drawn every Sunday. Winner takes the whole pot!",
+    "boughtTitle": "Tickets Purchased",
+    "bought": "You bought **{count}** ticket(s) for {cost}. Good luck!",
+    "drawTitle": "🎉 Lottery Winner!",
+    "drawWinner": "{user} won the **{pot}** pot with {tickets} tickets in play!"
   }
 }

@@ -1127,5 +1127,18 @@
     "topStarValue": "{stars} ⭐ — {user} · [ジャンプ]({link})",
     "xpLeaders": "🏆 XPリーダー",
     "levelValue": "レベル {level}"
+  },
+  "lottery": {
+    "disabled": "このサーバーでは宝くじが有効になっていません。",
+    "infoTitle": "🎟️ 週間宝くじ",
+    "pot": "現在の賞金",
+    "ticketPrice": "チケット価格",
+    "totalTickets": "合計チケット",
+    "yourTickets": "あなたのチケット",
+    "drawFooter": "毎週日曜に抽選。当選者が賞金を総取り！",
+    "boughtTitle": "チケット購入",
+    "bought": "**{count}** 枚のチケットを {cost} で購入しました。幸運を！",
+    "drawTitle": "🎉 宝くじ当選者！",
+    "drawWinner": "{user} が {tickets} 枚のチケットの中から **{pot}** の賞金を獲得しました！"
   }
 }

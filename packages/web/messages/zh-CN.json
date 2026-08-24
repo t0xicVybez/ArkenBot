@@ -3297,6 +3297,15 @@
     "incomeAdd": "添加",
     "incomeEmpty": "还没有收入身份组。",
     "incomePerDay": "天",
-    "incomeRoleRequired": "请选择身份组和金额。"
+    "incomeRoleRequired": "请选择身份组和金额。",
+    "lotteryTitle": "彩票",
+    "lotteryDesc": "每周抽奖——成员购买彩票，一名中奖者赢得全部奖池。",
+    "lotteryEnable": "启用彩票",
+    "lotteryEnableDesc": "允许 /lottery，并在每周日抽出中奖者。",
+    "lotteryTicketPrice": "彩票价格",
+    "lotteryTicketPriceHelp": "一张彩票的价格。",
+    "lotteryChannel": "开奖频道",
+    "lotteryChannelNone": "不公告",
+    "lotteryChannelHelp": "公告每周中奖者的位置。"
   }
 }
