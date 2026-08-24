@@ -3259,6 +3259,22 @@
     "itemAdded": "Item added",
     "itemDeleted": "Item removed",
     "itemError": "Something went wrong",
-    "itemNamePriceRequired": "A name and a price are required."
+    "itemNamePriceRequired": "A name and a price are required.",
+    "rewardsTitle": "Rewards & interest",
+    "rewardsDesc": "Tie the economy into leveling and reward saving.",
+    "levelUpReward": "Level-up reward",
+    "levelUpRewardHelp": "Coins per level, multiplied by the new level (0 = off).",
+    "bankInterestPct": "Bank interest %",
+    "bankInterestPctHelp": "Daily interest paid on the bank balance via /daily (0 = off).",
+    "bankInterestCap": "Interest cap",
+    "bankInterestCapHelp": "Max interest paid per day (0 = uncapped).",
+    "incomeTitle": "Income roles",
+    "incomeDesc": "Members holding these roles get a passive bonus added to /daily.",
+    "incomeSelectRole": "Select a role",
+    "incomeAmount": "Amount / day",
+    "incomeAdd": "Add",
+    "incomeEmpty": "No income roles yet.",
+    "incomePerDay": "day",
+    "incomeRoleRequired": "Pick a role and an amount."
   }
 }

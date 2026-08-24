@@ -3259,6 +3259,22 @@
     "itemAdded": "已添加物品",
     "itemDeleted": "已移除物品",
     "itemError": "出了点问题",
-    "itemNamePriceRequired": "名称和价格为必填项。"
+    "itemNamePriceRequired": "名称和价格为必填项。",
+    "rewardsTitle": "奖励与利息",
+    "rewardsDesc": "将经济与等级挂钩，并奖励储蓄。",
+    "levelUpReward": "升级奖励",
+    "levelUpRewardHelp": "每级的硬币数，乘以新等级发放（0 = 关闭）。",
+    "bankInterestPct": "银行利息 %",
+    "bankInterestPctHelp": "通过 /daily 对银行余额发放的每日利息（0 = 关闭）。",
+    "bankInterestCap": "利息上限",
+    "bankInterestCapHelp": "每日最高利息（0 = 无上限）。",
+    "incomeTitle": "收入身份组",
+    "incomeDesc": "拥有这些身份组的成员在 /daily 时获得被动奖励。",
+    "incomeSelectRole": "选择身份组",
+    "incomeAmount": "金额 / 天",
+    "incomeAdd": "添加",
+    "incomeEmpty": "还没有收入身份组。",
+    "incomePerDay": "天",
+    "incomeRoleRequired": "请选择身份组和金额。"
   }
 }

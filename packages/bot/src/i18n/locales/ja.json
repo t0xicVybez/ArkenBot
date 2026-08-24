@@ -1074,6 +1074,8 @@
     "takeTitle": "通貨を没収",
     "takeDesc": "{user} から **{amount}** を没収しました。新しい財布：{wallet}。",
     "resetTitle": "残高をリセット",
-    "resetDesc": "{user} の残高をゼロにリセットしました。"
+    "resetDesc": "{user} の残高をゼロにリセットしました。",
+    "incomeRoles": "収入ロール",
+    "bankInterest": "銀行利息"
   }
 }

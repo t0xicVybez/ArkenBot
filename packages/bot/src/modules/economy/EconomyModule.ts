@@ -86,6 +86,32 @@ export class EconomyModule {
     return Math.max(0, readyAt - now);
   }
 
+  /**
+   * Grant a level-up currency reward if the guild has economy + a reward configured.
+   * Returns the amount granted (0 when disabled). Safe to call for every level-up.
+   */
+  static async awardLevelUp(guildId: string, userId: string, newLevel: number): Promise<number> {
+    const cfg = await this.getConfig(guildId);
+    if (!cfg?.enabled || cfg.levelUpReward <= 0) return 0;
+    const reward = cfg.levelUpReward * newLevel;
+    await this.addWallet(guildId, userId, reward, cfg.startingBalance);
+    return reward;
+  }
+
+  /** Sum of income-role payouts a member qualifies for, given the roles they hold. */
+  static async incomeForRoles(guildId: string, roleIds: string[]): Promise<number> {
+    if (roleIds.length === 0) return 0;
+    const rows = await prisma.economyIncomeRole.findMany({ where: { guildId, roleId: { in: roleIds } } });
+    return rows.reduce((sum, r) => sum + r.amount, 0);
+  }
+
+  /** Daily bank interest for a balance under a config, clamped to the configured cap. */
+  static bankInterest(bank: number, cfg: Pick<Config, 'bankInterestPct' | 'bankInterestCap'>): number {
+    if (cfg.bankInterestPct <= 0 || bank <= 0) return 0;
+    const raw = Math.floor(bank * (cfg.bankInterestPct / 100));
+    return cfg.bankInterestCap > 0 ? Math.min(raw, cfg.bankInterestCap) : raw;
+  }
+
   /** Discord relative-timestamp tag for "ready in" messaging (auto-localised per viewer). */
   static readyTag(remainingMs: number, now = Date.now()): string {
     return `<t:${Math.floor((now + remainingMs) / 1000)}:R>`;

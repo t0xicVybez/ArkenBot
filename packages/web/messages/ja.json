@@ -3259,6 +3259,22 @@
     "itemAdded": "アイテムを追加しました",
     "itemDeleted": "アイテムを削除しました",
     "itemError": "問題が発生しました",
-    "itemNamePriceRequired": "名前と価格が必要です。"
+    "itemNamePriceRequired": "名前と価格が必要です。",
+    "rewardsTitle": "報酬と利息",
+    "rewardsDesc": "経済をレベルと連動させ、貯蓄に報酬を与えます。",
+    "levelUpReward": "レベルアップ報酬",
+    "levelUpRewardHelp": "レベルごとのコイン。新しいレベルを掛けて付与（0＝オフ）。",
+    "bankInterestPct": "銀行利息 %",
+    "bankInterestPctHelp": "/daily で銀行残高に付く日次利息（0＝オフ）。",
+    "bankInterestCap": "利息上限",
+    "bankInterestCapHelp": "1日あたりの最大利息（0＝無制限）。",
+    "incomeTitle": "収入ロール",
+    "incomeDesc": "これらのロールを持つメンバーは /daily にパッシブボーナスが加算されます。",
+    "incomeSelectRole": "ロールを選択",
+    "incomeAmount": "金額 / 日",
+    "incomeAdd": "追加",
+    "incomeEmpty": "まだ収入ロールがありません。",
+    "incomePerDay": "日",
+    "incomeRoleRequired": "ロールと金額を選んでください。"
   }
 }

@@ -1074,6 +1074,8 @@
     "takeTitle": "Valuta rimossa",
     "takeDesc": "Hai tolto **{amount}** a {user}. Nuovo portafoglio: {wallet}.",
     "resetTitle": "Saldo azzerato",
-    "resetDesc": "Il saldo di {user} è stato azzerato."
+    "resetDesc": "Il saldo di {user} è stato azzerato.",
+    "incomeRoles": "Ruoli di reddito",
+    "bankInterest": "Interessi bancari"
   }
 }

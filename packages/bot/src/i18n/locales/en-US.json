@@ -1074,6 +1074,8 @@
     "takeTitle": "Currency Removed",
     "takeDesc": "Removed **{amount}** from {user}. New wallet: {wallet}.",
     "resetTitle": "Balance Reset",
-    "resetDesc": "{user}'s balance was reset to zero."
+    "resetDesc": "{user}'s balance was reset to zero.",
+    "incomeRoles": "Income roles",
+    "bankInterest": "Bank interest"
   }
 }

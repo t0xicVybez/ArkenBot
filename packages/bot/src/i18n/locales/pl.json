@@ -1074,6 +1074,8 @@
     "takeTitle": "Odebrano walutę",
     "takeDesc": "Zabrałeś **{amount}** od {user}. Nowy portfel: {wallet}.",
     "resetTitle": "Saldo zresetowane",
-    "resetDesc": "Saldo {user} zostało wyzerowane."
+    "resetDesc": "Saldo {user} zostało wyzerowane.",
+    "incomeRoles": "Role dochodowe",
+    "bankInterest": "Odsetki bankowe"
   }
 }
