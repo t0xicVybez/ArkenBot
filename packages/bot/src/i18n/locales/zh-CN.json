@@ -1076,6 +1076,14 @@
     "resetTitle": "余额已重置",
     "resetDesc": "{user} 的余额已重置为零。",
     "incomeRoles": "收入身份组",
-    "bankInterest": "银行利息"
+    "bankInterest": "银行利息",
+    "rouletteBadBet": "下注必须是 \"red\"、\"black\"、\"green\" 或 0–36 的数字。",
+    "rouletteResult": "球落在 **{pocket}**（{color}）。{outcome}",
+    "highlowResult": "基准为 **{base}**，下一个为 **{next}**。{outcome}",
+    "roulette": {
+      "red": "红",
+      "black": "黑",
+      "green": "绿"
+    }
   }
 }

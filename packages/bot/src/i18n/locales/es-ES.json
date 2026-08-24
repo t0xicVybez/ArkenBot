@@ -1076,6 +1076,14 @@
     "resetTitle": "Saldo reiniciado",
     "resetDesc": "El saldo de {user} se reinició a cero.",
     "incomeRoles": "Roles de ingresos",
-    "bankInterest": "Interés del banco"
+    "bankInterest": "Interés del banco",
+    "rouletteBadBet": "La apuesta debe ser \"red\", \"black\", \"green\" o un número 0–36.",
+    "rouletteResult": "La bola cayó en **{pocket}** ({color}). {outcome}",
+    "highlowResult": "La base era **{base}**, la siguiente fue **{next}**. {outcome}",
+    "roulette": {
+      "red": "rojo",
+      "black": "negro",
+      "green": "verde"
+    }
   }
 }
