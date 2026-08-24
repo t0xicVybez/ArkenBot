@@ -1076,6 +1076,14 @@
     "resetTitle": "Saldo zerado",
     "resetDesc": "O saldo de {user} foi zerado.",
     "incomeRoles": "Cargos de renda",
-    "bankInterest": "Juros do banco"
+    "bankInterest": "Juros do banco",
+    "rouletteBadBet": "A aposta deve ser \"red\", \"black\", \"green\" ou um número 0–36.",
+    "rouletteResult": "A bola caiu no **{pocket}** ({color}). {outcome}",
+    "highlowResult": "A base era **{base}**, o próximo foi **{next}**. {outcome}",
+    "roulette": {
+      "red": "vermelho",
+      "black": "preto",
+      "green": "verde"
+    }
   }
 }

@@ -1076,6 +1076,14 @@
     "resetTitle": "Balance Reset",
     "resetDesc": "{user}'s balance was reset to zero.",
     "incomeRoles": "Income roles",
-    "bankInterest": "Bank interest"
+    "bankInterest": "Bank interest",
+    "rouletteBadBet": "Bet must be \"red\", \"black\", \"green\" or a number 0–36.",
+    "rouletteResult": "The ball landed on **{pocket}** ({color}). {outcome}",
+    "highlowResult": "Base was **{base}**, next was **{next}**. {outcome}",
+    "roulette": {
+      "red": "red",
+      "black": "black",
+      "green": "green"
+    }
   }
 }

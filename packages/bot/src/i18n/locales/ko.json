@@ -1076,6 +1076,14 @@
     "resetTitle": "잔액 초기화",
     "resetDesc": "{user}님의 잔액이 0으로 초기화되었습니다.",
     "incomeRoles": "수입 역할",
-    "bankInterest": "은행 이자"
+    "bankInterest": "은행 이자",
+    "rouletteBadBet": "베팅은 \"red\", \"black\", \"green\" 또는 0~36 숫자여야 합니다.",
+    "rouletteResult": "공이 **{pocket}**({color})에 떨어졌습니다. {outcome}",
+    "highlowResult": "기준은 **{base}**, 다음은 **{next}**였습니다. {outcome}",
+    "roulette": {
+      "red": "빨강",
+      "black": "검정",
+      "green": "초록"
+    }
   }
 }
