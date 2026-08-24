@@ -1154,5 +1154,22 @@
     "yourMove": "힛? 스탠드?",
     "alreadyPlaying": "이미 진행 중인 블랙잭 게임이 있습니다.",
     "notYourGame": "당신의 게임이 아닙니다."
+  },
+  "trade": {
+    "self": "자기 자신과는 거래할 수 없습니다.",
+    "empty": "거래할 코인이나 아이템을 제시하세요.",
+    "noItem": "해당 아이템을 보유하고 있지 않습니다.",
+    "title": "🤝 거래 제안",
+    "offer": "{sender}님이 {recipient}님에게 {offer}을(를) 제안했습니다.",
+    "expires": "2분 후 만료됩니다.",
+    "accept": "수락",
+    "decline": "거절",
+    "notYours": "이 거래 제안은 당신을 위한 것이 아닙니다.",
+    "declinedTitle": "거래 거절됨",
+    "declined": "거래가 거절되었습니다.",
+    "failedTitle": "거래 실패",
+    "failed": "거래를 완료할 수 없습니다 — 제안이 더 이상 유효하지 않습니다.",
+    "doneTitle": "거래 완료",
+    "done": "{recipient}님이 {sender}님의 {offer}을(를) 수락했습니다."
   }
 }

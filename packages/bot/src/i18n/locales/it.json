@@ -1154,5 +1154,22 @@
     "yourMove": "Carta o resti?",
     "alreadyPlaying": "Hai già una partita di blackjack in corso.",
     "notYourGame": "Questa non è la tua partita."
+  },
+  "trade": {
+    "self": "Non puoi scambiare con te stesso.",
+    "empty": "Offri monete o un oggetto da scambiare.",
+    "noItem": "Non possiedi quell’oggetto.",
+    "title": "🤝 Offerta di scambio",
+    "offer": "{sender} offre {offer} a {recipient}.",
+    "expires": "Scade tra 2 minuti.",
+    "accept": "Accetta",
+    "decline": "Rifiuta",
+    "notYours": "Questa offerta di scambio non è per te.",
+    "declinedTitle": "Scambio rifiutato",
+    "declined": "Lo scambio è stato rifiutato.",
+    "failedTitle": "Scambio fallito",
+    "failed": "Non è stato possibile completare lo scambio — l’offerta non è più valida.",
+    "doneTitle": "Scambio completato",
+    "done": "{recipient} ha accettato {offer} da {sender}."
   }
 }

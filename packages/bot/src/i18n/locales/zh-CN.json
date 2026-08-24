@@ -1154,5 +1154,22 @@
     "yourMove": "要牌还是停牌？",
     "alreadyPlaying": "你已有一局进行中的21点游戏。",
     "notYourGame": "这不是你的游戏。"
+  },
+  "trade": {
+    "self": "你不能和自己交易。",
+    "empty": "请提供用于交易的金币或物品。",
+    "noItem": "你没有该物品。",
+    "title": "🤝 交易提议",
+    "offer": "{sender} 向 {recipient} 提议 {offer}。",
+    "expires": "2 分钟后过期。",
+    "accept": "接受",
+    "decline": "拒绝",
+    "notYours": "这个交易提议不是给你的。",
+    "declinedTitle": "交易已拒绝",
+    "declined": "该交易已被拒绝。",
+    "failedTitle": "交易失败",
+    "failed": "交易无法完成——该提议已失效。",
+    "doneTitle": "交易完成",
+    "done": "{recipient} 接受了来自 {sender} 的 {offer}。"
   }
 }
