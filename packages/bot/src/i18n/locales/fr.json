@@ -1154,5 +1154,22 @@
     "yourMove": "Tirer ou rester ?",
     "alreadyPlaying": "Tu as déjà une partie de blackjack en cours.",
     "notYourGame": "Ce n’est pas ta partie."
+  },
+  "trade": {
+    "self": "Tu ne peux pas échanger avec toi-même.",
+    "empty": "Propose des pièces ou un objet à échanger.",
+    "noItem": "Tu ne possèdes pas cet objet.",
+    "title": "🤝 Offre d’échange",
+    "offer": "{sender} propose {offer} à {recipient}.",
+    "expires": "Expire dans 2 minutes.",
+    "accept": "Accepter",
+    "decline": "Refuser",
+    "notYours": "Cette offre d’échange ne t’est pas destinée.",
+    "declinedTitle": "Échange refusé",
+    "declined": "L’échange a été refusé.",
+    "failedTitle": "Échec de l’échange",
+    "failed": "L’échange n’a pas pu aboutir — l’offre n’est plus valide.",
+    "doneTitle": "Échange effectué",
+    "done": "{recipient} a accepté {offer} de {sender}."
   }
 }
