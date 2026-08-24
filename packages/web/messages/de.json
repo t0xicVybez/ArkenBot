@@ -374,7 +374,19 @@
     "exemptChannelsTitle": "Ausgenommene Kanäle",
     "exemptChannelsDesc": "Auto-Mod ist in diesen Kanälen deaktiviert. Nützlich für Bot- oder Team-Kanäle.",
     "addExemptChannel": "Ausgenommenen Kanal hinzufügen…",
-    "noExemptChannels": "Keine ausgenommenen Kanäle"
+    "noExemptChannels": "Keine ausgenommenen Kanäle",
+    "accountAgeTitle": "Kontoalters-Schutz",
+    "accountAgeDesc": "Blockiere oder markiere brandneue Konten beim Beitritt — ein starker Schutz gegen Zweitkonten und Raid-Bots.",
+    "accountAgeEnable": "Mindestkontoalter verlangen",
+    "accountAgeEnableDesc": "Konten, die jünger als das Alter unten sind, werden beim Beitritt automatisch behandelt.",
+    "accountAgeMinHours": "Mindestkontoalter (Stunden)",
+    "accountAgeAction": "Aktion",
+    "accountAgeActionKick": "Kicken",
+    "accountAgeActionBan": "Bannen",
+    "accountAgeActionAlert": "Nur melden (nicht entfernen)",
+    "accountAgeFlagEnable": "Neue Konten markieren",
+    "accountAgeFlagEnableDesc": "Poste einen Hinweis in deinem Mod-Log, wenn ein neues Konto beitritt (auch wenn es die Sperre passiert).",
+    "accountAgeFlagHours": "Konten markieren, die jünger sind als (Stunden)"
   },
   "levelingPage": {
     "saved": "Level-Einstellungen gespeichert!",

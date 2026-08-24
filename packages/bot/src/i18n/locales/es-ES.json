@@ -935,5 +935,22 @@
       "manageWebhooks": "Gestionar webhooks",
       "generic": "Realizar una acción"
     }
+  },
+  "accountGate": {
+    "dmTitle": "Expulsado de {server}",
+    "dm": "Tu cuenta es demasiado nueva para unirse a **{server}**. Las cuentas deben tener al menos {hours} horas — es una medida anti-alt/raid. Inténtalo de nuevo cuando tu cuenta sea más antigua.",
+    "gateTitle": "🚫 Entrada bloqueada — cuenta demasiado nueva",
+    "gateDesc": "{user} ({tag}) fue **{action}**.",
+    "flagTitle": "🔍 Nueva cuenta se unió",
+    "flagDesc": "{user} ({tag}) se unió con una cuenta muy nueva.",
+    "fieldCreated": "Cuenta creada",
+    "fieldThreshold": "Edad mínima",
+    "hours": "{hours} horas",
+    "action": {
+      "kick": "expulsado",
+      "ban": "baneado",
+      "alert": "marcado (no expulsado)",
+      "flag": "marcado"
+    }
   }
 }

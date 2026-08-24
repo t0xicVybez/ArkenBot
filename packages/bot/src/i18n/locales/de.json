@@ -935,5 +935,22 @@
       "manageWebhooks": "Webhooks verwalten",
       "generic": "Eine Aktion ausführen"
     }
+  },
+  "accountGate": {
+    "dmTitle": "Von {server} entfernt",
+    "dm": "Dein Konto ist zu neu, um **{server}** beizutreten. Konten müssen mindestens {hours} Stunden alt sein — eine Anti-Alt/Raid-Maßnahme. Versuche es erneut, wenn dein Konto älter ist.",
+    "gateTitle": "🚫 Beitritt blockiert — Konto zu neu",
+    "gateDesc": "{user} ({tag}) wurde **{action}**.",
+    "flagTitle": "🔍 Neues Konto beigetreten",
+    "flagDesc": "{user} ({tag}) ist mit einem sehr neuen Konto beigetreten.",
+    "fieldCreated": "Konto erstellt",
+    "fieldThreshold": "Mindestalter",
+    "hours": "{hours} Stunden",
+    "action": {
+      "kick": "gekickt",
+      "ban": "gebannt",
+      "alert": "markiert (nicht entfernt)",
+      "flag": "markiert"
+    }
   }
 }

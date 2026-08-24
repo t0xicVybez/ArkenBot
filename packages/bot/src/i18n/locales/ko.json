@@ -935,5 +935,22 @@
       "manageWebhooks": "웹후크 관리",
       "generic": "작업 수행"
     }
+  },
+  "accountGate": {
+    "dmTitle": "{server} 에서 제거됨",
+    "dm": "계정이 너무 최근에 생성되어 **{server}** 에 참여할 수 없습니다. 계정은 최소 {hours} 시간이 지나야 합니다 — 부계정/레이드 방지 조치입니다. 계정이 더 오래된 후 다시 시도하세요.",
+    "gateTitle": "🚫 참여 차단 — 계정이 너무 새로움",
+    "gateDesc": "{user} ({tag}) 님이 **{action}** 되었습니다.",
+    "flagTitle": "🔍 새 계정 참여",
+    "flagDesc": "{user} ({tag}) 님이 매우 새로운 계정으로 참여했습니다.",
+    "fieldCreated": "계정 생성",
+    "fieldThreshold": "최소 경과",
+    "hours": "{hours} 시간",
+    "action": {
+      "kick": "추방",
+      "ban": "차단",
+      "alert": "플래그(제거 안 됨)",
+      "flag": "플래그"
+    }
   }
 }

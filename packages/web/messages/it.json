@@ -374,7 +374,19 @@
     "exemptChannelsTitle": "Canali esenti",
     "exemptChannelsDesc": "L'auto-moderazione è disattivata in questi canali. Utile per i canali di bot o dello staff.",
     "addExemptChannel": "Aggiungi un canale esente…",
-    "noExemptChannels": "Nessun canale esente"
+    "noExemptChannels": "Nessun canale esente",
+    "accountAgeTitle": "Protezione per età account",
+    "accountAgeDesc": "Blocca o segnala gli account nuovissimi all'ingresso — una difesa forte contro alt e bot di raid.",
+    "accountAgeEnable": "Richiedi un'età minima dell'account",
+    "accountAgeEnableDesc": "Gli account più recenti dell'età sottostante vengono gestiti automaticamente all'ingresso.",
+    "accountAgeMinHours": "Età minima account (ore)",
+    "accountAgeAction": "Azione",
+    "accountAgeActionKick": "Espelli",
+    "accountAgeActionBan": "Banna",
+    "accountAgeActionAlert": "Solo avviso (non rimuovere)",
+    "accountAgeFlagEnable": "Segnala nuovi account",
+    "accountAgeFlagEnableDesc": "Pubblica un avviso nel tuo mod-log quando entra un account recente (anche se supera il filtro).",
+    "accountAgeFlagHours": "Segnala account più recenti di (ore)"
   },
   "levelingPage": {
     "saved": "Impostazioni dei livelli salvate!",
