@@ -374,7 +374,19 @@
     "exemptChannelsTitle": "예외 채널",
     "exemptChannelsDesc": "이 채널에서는 자동 관리가 비활성화됩니다. 봇이나 스태프 채널에 유용합니다.",
     "addExemptChannel": "예외 채널 추가…",
-    "noExemptChannels": "예외 채널이 없습니다"
+    "noExemptChannels": "예외 채널이 없습니다",
+    "accountAgeTitle": "계정 생성 기간 보호",
+    "accountAgeDesc": "참여 시 신규 계정을 차단하거나 표시 — 부계정과 레이드 봇에 대한 강력한 방어.",
+    "accountAgeEnable": "최소 계정 생성 기간 요구",
+    "accountAgeEnableDesc": "아래 기간보다 새로운 계정은 참여 시 자동으로 처리됩니다.",
+    "accountAgeMinHours": "최소 계정 생성 기간(시간)",
+    "accountAgeAction": "조치",
+    "accountAgeActionKick": "추방",
+    "accountAgeActionBan": "차단",
+    "accountAgeActionAlert": "알림만(제거 안 함)",
+    "accountAgeFlagEnable": "새 계정 표시",
+    "accountAgeFlagEnableDesc": "새로운 계정이 참여하면(필터를 통과해도) 모드로그에 알림을 게시합니다.",
+    "accountAgeFlagHours": "다음보다 새로운 계정 표시(시간)"
   },
   "levelingPage": {
     "saved": "레벨 설정이 저장되었습니다!",

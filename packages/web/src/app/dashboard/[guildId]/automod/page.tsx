@@ -463,6 +463,65 @@ export default function AutoModPage() {
         )}
       </SettingsSection>
 
+      <SettingsSection title={t('accountAgeTitle')} description={t('accountAgeDesc')}>
+        <Toggle
+          label={t('accountAgeEnable')}
+          description={t('accountAgeEnableDesc')}
+          enabled={config.minAccountAgeEnabled ?? false}
+          onChange={(v) => handleToggle('minAccountAgeEnabled', v)}
+        />
+        {config.minAccountAgeEnabled && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+            <div>
+              <label className="label">{t('accountAgeMinHours')}</label>
+              <input
+                type="number"
+                className="input"
+                value={config.minAccountAgeHours ?? 72}
+                min={1}
+                max={8760}
+                onChange={(e) => setConfig((c) => ({ ...c, minAccountAgeHours: parseInt(e.target.value) }))}
+                onBlur={() => handleSave({ minAccountAgeHours: config.minAccountAgeHours })}
+              />
+            </div>
+            <div>
+              <label className="label">{t('accountAgeAction')}</label>
+              <select
+                className="input"
+                value={config.minAccountAgeAction ?? 'kick'}
+                onChange={(e) => { const v = e.target.value; setConfig((c) => ({ ...c, minAccountAgeAction: v })); handleSave({ minAccountAgeAction: v }); }}
+              >
+                <option value="kick">{t('accountAgeActionKick')}</option>
+                <option value="ban">{t('accountAgeActionBan')}</option>
+                <option value="alert">{t('accountAgeActionAlert')}</option>
+              </select>
+            </div>
+          </div>
+        )}
+        <div className="pt-3">
+          <Toggle
+            label={t('accountAgeFlagEnable')}
+            description={t('accountAgeFlagEnableDesc')}
+            enabled={config.newAccountFlagEnabled ?? false}
+            onChange={(v) => handleToggle('newAccountFlagEnabled', v)}
+          />
+          {config.newAccountFlagEnabled && (
+            <div className="pt-2 max-w-xs">
+              <label className="label">{t('accountAgeFlagHours')}</label>
+              <input
+                type="number"
+                className="input"
+                value={config.newAccountFlagHours ?? 168}
+                min={1}
+                max={8760}
+                onChange={(e) => setConfig((c) => ({ ...c, newAccountFlagHours: parseInt(e.target.value) }))}
+                onBlur={() => handleSave({ newAccountFlagHours: config.newAccountFlagHours })}
+              />
+            </div>
+          )}
+        </div>
+      </SettingsSection>
+
       <SettingsSection
         title={t('phishTitle')}
         description={t('phishDesc')}

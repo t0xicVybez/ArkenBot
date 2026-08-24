@@ -935,5 +935,22 @@
       "manageWebhooks": "Gérer les webhooks",
       "generic": "Effectuer une action"
     }
+  },
+  "accountGate": {
+    "dmTitle": "Expulsé de {server}",
+    "dm": "Votre compte est trop récent pour rejoindre **{server}**. Les comptes doivent avoir au moins {hours} heures — c'est une mesure anti-alt/raid. Réessayez quand votre compte sera plus ancien.",
+    "gateTitle": "🚫 Arrivée bloquée — compte trop récent",
+    "gateDesc": "{user} ({tag}) a été **{action}**.",
+    "flagTitle": "🔍 Nouveau compte arrivé",
+    "flagDesc": "{user} ({tag}) a rejoint avec un compte très récent.",
+    "fieldCreated": "Compte créé",
+    "fieldThreshold": "Âge minimum",
+    "hours": "{hours} heures",
+    "action": {
+      "kick": "expulsé",
+      "ban": "banni",
+      "alert": "signalé (non expulsé)",
+      "flag": "signalé"
+    }
   }
 }

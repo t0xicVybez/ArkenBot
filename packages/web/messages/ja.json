@@ -374,7 +374,19 @@
     "exemptChannelsTitle": "除外チャンネル",
     "exemptChannelsDesc": "これらのチャンネルでは自動モデレーションが無効になります。ボットやスタッフのチャンネルに便利です。",
     "addExemptChannel": "除外チャンネルを追加…",
-    "noExemptChannels": "除外チャンネルがありません"
+    "noExemptChannels": "除外チャンネルがありません",
+    "accountAgeTitle": "アカウント経過時間による保護",
+    "accountAgeDesc": "参加時に新規アカウントをブロックまたはフラグ付け — アルトや荒らしボットへの強力な対策。",
+    "accountAgeEnable": "最小アカウント経過時間を要求",
+    "accountAgeEnableDesc": "以下の時間より新しいアカウントは参加時に自動処理されます。",
+    "accountAgeMinHours": "最小アカウント経過時間（時間）",
+    "accountAgeAction": "アクション",
+    "accountAgeActionKick": "キック",
+    "accountAgeActionBan": "BAN",
+    "accountAgeActionAlert": "通知のみ（削除しない）",
+    "accountAgeFlagEnable": "新規アカウントをフラグ付け",
+    "accountAgeFlagEnableDesc": "新しめのアカウントが参加したとき（フィルターを通過しても）モデレーションログに通知を投稿します。",
+    "accountAgeFlagHours": "次より新しいアカウントをフラグ（時間）"
   },
   "levelingPage": {
     "saved": "レベル設定を保存しました！",

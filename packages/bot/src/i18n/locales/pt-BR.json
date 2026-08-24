@@ -935,5 +935,22 @@
       "manageWebhooks": "Gerenciar webhooks",
       "generic": "Executar uma ação"
     }
+  },
+  "accountGate": {
+    "dmTitle": "Removido de {server}",
+    "dm": "Sua conta é muito nova para entrar em **{server}**. As contas devem ter pelo menos {hours} horas — é uma medida anti-alt/raid. Tente novamente quando sua conta for mais antiga.",
+    "gateTitle": "🚫 Entrada bloqueada — conta muito nova",
+    "gateDesc": "{user} ({tag}) foi **{action}**.",
+    "flagTitle": "🔍 Nova conta entrou",
+    "flagDesc": "{user} ({tag}) entrou com uma conta muito nova.",
+    "fieldCreated": "Conta criada",
+    "fieldThreshold": "Idade mínima",
+    "hours": "{hours} horas",
+    "action": {
+      "kick": "expulso",
+      "ban": "banido",
+      "alert": "sinalizado (não removido)",
+      "flag": "sinalizado"
+    }
   }
 }

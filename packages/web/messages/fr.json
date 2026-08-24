@@ -374,7 +374,19 @@
     "exemptChannelsTitle": "Salons exemptés",
     "exemptChannelsDesc": "L'auto-modération est désactivée dans ces salons. Utile pour les salons de bots ou du staff.",
     "addExemptChannel": "Ajouter un salon exempté…",
-    "noExemptChannels": "Aucun salon exempté"
+    "noExemptChannels": "Aucun salon exempté",
+    "accountAgeTitle": "Protection par ancienneté de compte",
+    "accountAgeDesc": "Bloque ou signale les comptes tout neufs à leur arrivée — une défense solide contre les alts et les bots de raid.",
+    "accountAgeEnable": "Exiger une ancienneté minimale de compte",
+    "accountAgeEnableDesc": "Les comptes plus récents que l'âge ci-dessous sont traités automatiquement à l'arrivée.",
+    "accountAgeMinHours": "Ancienneté minimale du compte (heures)",
+    "accountAgeAction": "Action",
+    "accountAgeActionKick": "Expulser",
+    "accountAgeActionBan": "Bannir",
+    "accountAgeActionAlert": "Signaler seulement (ne pas expulser)",
+    "accountAgeFlagEnable": "Signaler les nouveaux comptes",
+    "accountAgeFlagEnableDesc": "Publie un avertissement dans ton journal de modération quand un compte récent arrive (même s'il passe le filtre).",
+    "accountAgeFlagHours": "Signaler les comptes plus récents que (heures)"
   },
   "levelingPage": {
     "saved": "Paramètres de niveaux enregistrés !",

@@ -935,5 +935,22 @@
       "manageWebhooks": "Webhook の管理",
       "generic": "操作を実行"
     }
+  },
+  "accountGate": {
+    "dmTitle": "{server} から削除されました",
+    "dm": "アカウントが新しすぎるため **{server}** に参加できません。アカウントは少なくとも {hours} 時間経過している必要があります（アンチ・アルト/レイド対策）。アカウントが古くなってから再度お試しください。",
+    "gateTitle": "🚫 参加をブロック — アカウントが新しすぎます",
+    "gateDesc": "{user} ({tag}) を **{action}**。",
+    "flagTitle": "🔍 新しいアカウントが参加",
+    "flagDesc": "{user} ({tag}) が非常に新しいアカウントで参加しました。",
+    "fieldCreated": "アカウント作成",
+    "fieldThreshold": "最小経過時間",
+    "hours": "{hours} 時間",
+    "action": {
+      "kick": "キック",
+      "ban": "BAN",
+      "alert": "フラグ（削除なし）",
+      "flag": "フラグ"
+    }
   }
 }

@@ -935,5 +935,22 @@
       "manageWebhooks": "管理 Webhook",
       "generic": "执行操作"
     }
+  },
+  "accountGate": {
+    "dmTitle": "已从 {server} 移除",
+    "dm": "你的账号太新，无法加入 **{server}**。账号至少需注册 {hours} 小时——这是防小号/防炸群措施。请在账号更久后再试。",
+    "gateTitle": "🚫 加入被拦截——账号太新",
+    "gateDesc": "{user}（{tag}）已被**{action}**。",
+    "flagTitle": "🔍 新账号加入",
+    "flagDesc": "{user}（{tag}）以一个非常新的账号加入。",
+    "fieldCreated": "账号创建",
+    "fieldThreshold": "最低时长",
+    "hours": "{hours} 小时",
+    "action": {
+      "kick": "踢出",
+      "ban": "封禁",
+      "alert": "标记（未移除）",
+      "flag": "标记"
+    }
   }
 }

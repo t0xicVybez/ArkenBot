@@ -935,5 +935,22 @@
       "manageWebhooks": "Manage webhooks",
       "generic": "Perform an action"
     }
+  },
+  "accountGate": {
+    "dmTitle": "Removed from {server}",
+    "dm": "Your account is too new to join **{server}**. Accounts must be at least {hours} hours old — this is an anti-alt/raid measure. Please try again once your account is older.",
+    "gateTitle": "🚫 Join blocked — account too new",
+    "gateDesc": "{user} ({tag}) was **{action}**.",
+    "flagTitle": "🔍 New account joined",
+    "flagDesc": "{user} ({tag}) joined with a very new account.",
+    "fieldCreated": "Account created",
+    "fieldThreshold": "Minimum age",
+    "hours": "{hours} hours",
+    "action": {
+      "kick": "kicked",
+      "ban": "banned",
+      "alert": "flagged (not removed)",
+      "flag": "flagged"
+    }
   }
 }

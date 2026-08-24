@@ -374,7 +374,19 @@
     "exemptChannelsTitle": "Canales exentos",
     "exemptChannelsDesc": "La auto-moderación está desactivada en estos canales. Útil para canales de bots o del equipo.",
     "addExemptChannel": "Añadir un canal exento…",
-    "noExemptChannels": "No hay canales exentos"
+    "noExemptChannels": "No hay canales exentos",
+    "accountAgeTitle": "Protección por antigüedad de cuenta",
+    "accountAgeDesc": "Bloquea o marca cuentas recién creadas al entrar — una fuerte defensa contra alts y bots de raid.",
+    "accountAgeEnable": "Exigir una antigüedad mínima de cuenta",
+    "accountAgeEnableDesc": "Las cuentas más nuevas que la edad indicada se gestionan automáticamente al entrar.",
+    "accountAgeMinHours": "Antigüedad mínima de cuenta (horas)",
+    "accountAgeAction": "Acción",
+    "accountAgeActionKick": "Expulsar",
+    "accountAgeActionBan": "Banear",
+    "accountAgeActionAlert": "Solo avisar (no expulsar)",
+    "accountAgeFlagEnable": "Marcar cuentas nuevas",
+    "accountAgeFlagEnableDesc": "Publica un aviso en tu registro de moderación cuando entra una cuenta reciente (aunque pase el filtro).",
+    "accountAgeFlagHours": "Marcar cuentas más nuevas de (horas)"
   },
   "levelingPage": {
     "saved": "¡Ajustes de niveles guardados!",

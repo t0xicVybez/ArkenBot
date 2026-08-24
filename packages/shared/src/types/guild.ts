@@ -100,6 +100,11 @@ export interface AutoModConfig {
   raidThreshold: number;
   raidInterval: number;
   raidAction: string;
+  minAccountAgeEnabled: boolean;
+  minAccountAgeHours: number;
+  minAccountAgeAction: string;
+  newAccountFlagEnabled: boolean;
+  newAccountFlagHours: number;
   antiPhishingEnabled: boolean;
   antiPhishingAction: string;
   aiModEnabled: boolean;

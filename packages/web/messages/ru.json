@@ -374,7 +374,19 @@
     "exemptChannelsTitle": "Исключённые каналы",
     "exemptChannelsDesc": "Автомодерация отключена в этих каналах. Полезно для каналов ботов или команды.",
     "addExemptChannel": "Добавить исключённый канал…",
-    "noExemptChannels": "Нет исключённых каналов"
+    "noExemptChannels": "Нет исключённых каналов",
+    "accountAgeTitle": "Защита по возрасту аккаунта",
+    "accountAgeDesc": "Блокируй или отмечай совсем новые аккаунты при входе — надёжная защита от альтов и рейд-ботов.",
+    "accountAgeEnable": "Требовать минимальный возраст аккаунта",
+    "accountAgeEnableDesc": "Аккаунты моложе указанного возраста обрабатываются автоматически при входе.",
+    "accountAgeMinHours": "Мин. возраст аккаунта (часы)",
+    "accountAgeAction": "Действие",
+    "accountAgeActionKick": "Кик",
+    "accountAgeActionBan": "Бан",
+    "accountAgeActionAlert": "Только уведомить (не удалять)",
+    "accountAgeFlagEnable": "Отмечать новые аккаунты",
+    "accountAgeFlagEnableDesc": "Публикует уведомление в мод-логе, когда заходит новый аккаунт (даже если он прошёл фильтр).",
+    "accountAgeFlagHours": "Отмечать аккаунты моложе (часы)"
   },
   "levelingPage": {
     "saved": "Настройки уровней сохранены!",

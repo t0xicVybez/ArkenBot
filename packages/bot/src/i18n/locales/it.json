@@ -935,5 +935,22 @@
       "manageWebhooks": "Gestire i webhook",
       "generic": "Eseguire un’azione"
     }
+  },
+  "accountGate": {
+    "dmTitle": "Rimosso da {server}",
+    "dm": "Il tuo account è troppo nuovo per entrare in **{server}**. Gli account devono avere almeno {hours} ore — è una misura anti-alt/raid. Riprova quando il tuo account sarà più vecchio.",
+    "gateTitle": "🚫 Ingresso bloccato — account troppo nuovo",
+    "gateDesc": "{user} ({tag}) è stato **{action}**.",
+    "flagTitle": "🔍 Nuovo account entrato",
+    "flagDesc": "{user} ({tag}) è entrato con un account molto nuovo.",
+    "fieldCreated": "Account creato",
+    "fieldThreshold": "Età minima",
+    "hours": "{hours} ore",
+    "action": {
+      "kick": "espulso",
+      "ban": "bannato",
+      "alert": "segnalato (non rimosso)",
+      "flag": "segnalato"
+    }
   }
 }

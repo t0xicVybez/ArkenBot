@@ -374,7 +374,19 @@
     "exemptChannelsTitle": "Exempt Channels",
     "exemptChannelsDesc": "Auto-Mod is disabled in these channels. Useful for bot or staff channels.",
     "addExemptChannel": "Add an exempt channel…",
-    "noExemptChannels": "No exempt channels"
+    "noExemptChannels": "No exempt channels",
+    "accountAgeTitle": "Account-Age Protection",
+    "accountAgeDesc": "Block or flag brand-new accounts when they join — a strong defense against alts and raid bots.",
+    "accountAgeEnable": "Require a minimum account age",
+    "accountAgeEnableDesc": "Accounts younger than the age below are handled automatically on join.",
+    "accountAgeMinHours": "Minimum account age (hours)",
+    "accountAgeAction": "Action",
+    "accountAgeActionKick": "Kick",
+    "accountAgeActionBan": "Ban",
+    "accountAgeActionAlert": "Alert only (don't remove)",
+    "accountAgeFlagEnable": "Flag new accounts",
+    "accountAgeFlagEnableDesc": "Post a heads-up in your mod-log when a newish account joins (even if it passes the gate).",
+    "accountAgeFlagHours": "Flag accounts newer than (hours)"
   },
   "levelingPage": {
     "saved": "Leveling settings saved!",
