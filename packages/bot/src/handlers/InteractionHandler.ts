@@ -23,6 +23,7 @@ import { prisma } from '../database.js';
 import { redis } from '../redis.js';
 import { VerificationModule } from '../modules/verification/VerificationModule.js';
 import { AppealsModule } from '../modules/moderation/AppealsModule.js';
+import { EventsModule } from '../modules/events/EventsModule.js';
 
 /** Routes and pre-validates all incoming Discord interactions before command execution. */
 export class InteractionHandler {
@@ -209,6 +210,16 @@ export class InteractionHandler {
         await VerificationModule.handleVerifyButton(interaction);
       } catch (err) {
         logger.error({ err }, 'Verification button error');
+      }
+      return;
+    }
+
+    // Event RSVP buttons.
+    if (interaction.customId.startsWith('event:rsvp:')) {
+      try {
+        await EventsModule.handleRsvp(interaction);
+      } catch (err) {
+        logger.error({ err }, 'Event RSVP error');
       }
       return;
     }
