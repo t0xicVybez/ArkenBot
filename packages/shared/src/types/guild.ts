@@ -103,6 +103,7 @@ export interface AutoModConfig {
   minAccountAgeEnabled: boolean;
   minAccountAgeHours: number;
   minAccountAgeAction: string;
+  quarantineRoleId: string | null;
   newAccountFlagEnabled: boolean;
   newAccountFlagHours: number;
   antiPhishingEnabled: boolean;

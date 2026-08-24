@@ -386,7 +386,11 @@
     "accountAgeActionAlert": "通知のみ（削除しない）",
     "accountAgeFlagEnable": "新規アカウントをフラグ付け",
     "accountAgeFlagEnableDesc": "新しめのアカウントが参加したとき（フィルターを通過しても）モデレーションログに通知を投稿します。",
-    "accountAgeFlagHours": "次より新しいアカウントをフラグ（時間）"
+    "accountAgeFlagHours": "次より新しいアカウントをフラグ（時間）",
+    "accountAgeActionQuarantine": "隔離（ロールを付与）",
+    "quarantineRole": "隔離ロール",
+    "quarantineRoleNone": "ロールを選択",
+    "quarantineRoleHelp": "新しいアカウントは追放される代わりにこのロールが付与されます。アクセスを拒否するよう設定し、ボットのロールを上に保ってください。"
   },
   "levelingPage": {
     "saved": "レベル設定を保存しました！",

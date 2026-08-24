@@ -950,7 +950,8 @@
       "kick": "キック",
       "ban": "BAN",
       "alert": "フラグ（削除なし）",
-      "flag": "フラグ"
+      "flag": "フラグ",
+      "quarantine": "隔離"
     }
   },
   "modmail": {

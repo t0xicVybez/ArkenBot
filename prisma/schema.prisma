@@ -204,7 +204,8 @@ model AutoModConfig {
   // Account-age gate & new-account flagging (alt / raid protection)
   minAccountAgeEnabled  Boolean @default(false)
   minAccountAgeHours    Int     @default(72)
-  minAccountAgeAction   String  @default("kick") // kick | ban | alert
+  minAccountAgeAction   String  @default("kick") // kick | ban | alert | quarantine
+  quarantineRoleId      String? // role assigned when action = quarantine
   newAccountFlagEnabled Boolean @default(false)
   newAccountFlagHours   Int     @default(168)
 
