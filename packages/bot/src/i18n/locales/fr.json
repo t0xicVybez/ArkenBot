@@ -511,7 +511,11 @@
       "line": "{medal} {user} — Niveau **{level}** | **{xp}** XP",
       "title": "🏆 Classement de {guild}",
       "footer": "Page {page} sur {pages} • {total} utilisateurs au total",
-      "viewFull": "Voir le classement complet"
+      "viewFull": "Voir le classement complet",
+      "period": {
+        "weekly": "Cette semaine",
+        "monthly": "Ce mois-ci"
+      }
     },
     "profile": {
       "disabledTitle": "Niveaux désactivés",
