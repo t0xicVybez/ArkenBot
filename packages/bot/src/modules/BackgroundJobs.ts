@@ -18,6 +18,7 @@ import type { BotClient } from '../client.js';
 import { getGuildSettings } from '../utils/settings.js';
 import { t, resolveUserLocale } from '../i18n/index.js';
 import { XPDecayModule } from './leveling/XPDecayModule.js';
+import { LevelingModule } from './leveling/LevelingModule.js';
 import { ModmailModule } from './modmail/ModmailModule.js';
 import { AnalyticsModule } from './AnalyticsModule.js';
 import RSSParser from 'rss-parser';
@@ -79,6 +80,9 @@ export class BackgroundJobs {
     // Purge data for guilds that left longer than the grace period ago.
     void this.runGuildPurgeSweep();
     setTimeout(() => this.timers.push(setInterval(() => void this.runGuildPurgeSweep(), 60 * 60 * 1000)), jitter());
+
+    // Voice XP: award to eligible members in voice once a minute.
+    setTimeout(() => this.timers.push(setInterval(() => void this.runVoiceXp(), 60 * 1000)), jitter());
 
     // Auto-close idle modmail threads every 15 minutes.
     setTimeout(() => this.timers.push(setInterval(() => void ModmailModule.closeIdleThreads(this.client), 15 * 60 * 1000)), jitter());
@@ -152,6 +156,12 @@ export class BackgroundJobs {
   }
 
   /** Writes a short-lived Redis key so the API can report bot liveness. */
+  private async runVoiceXp(): Promise<void> {
+    for (const guild of this.client.guilds.cache.values()) {
+      await LevelingModule.sweepVoiceXp(guild).catch((err) => logger.error({ err, guildId: guild.id }, 'voice XP sweep failed'));
+    }
+  }
+
   private async beatHeartbeat(): Promise<void> {
     try {
       const { pub } = await import('../redis.js');
