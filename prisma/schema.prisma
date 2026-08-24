@@ -193,6 +193,13 @@ model AutoModConfig {
   raidInterval       Int      @default(10000)
   raidAction         String   @default("lockdown")
 
+  // Account-age gate & new-account flagging (alt / raid protection)
+  minAccountAgeEnabled  Boolean @default(false)
+  minAccountAgeHours    Int     @default(72)
+  minAccountAgeAction   String  @default("kick")   // kick | ban | alert
+  newAccountFlagEnabled Boolean @default(false)
+  newAccountFlagHours   Int     @default(168)
+
   // Anti-phishing
   antiPhishingEnabled Boolean @default(false)
   antiPhishingAction  String  @default("delete_mute") // delete | delete_mute

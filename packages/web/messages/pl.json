@@ -374,7 +374,19 @@
     "exemptChannelsTitle": "Wykluczone kanały",
     "exemptChannelsDesc": "Automoderacja jest wyłączona na tych kanałach. Przydatne dla kanałów botów lub personelu.",
     "addExemptChannel": "Dodaj wykluczony kanał…",
-    "noExemptChannels": "Brak wykluczonych kanałów"
+    "noExemptChannels": "Brak wykluczonych kanałów",
+    "accountAgeTitle": "Ochrona wg wieku konta",
+    "accountAgeDesc": "Blokuj lub oznaczaj zupełnie nowe konta przy dołączaniu — silna obrona przed altami i botami raidowymi.",
+    "accountAgeEnable": "Wymagaj minimalnego wieku konta",
+    "accountAgeEnableDesc": "Konta młodsze niż poniższy wiek są obsługiwane automatycznie przy dołączeniu.",
+    "accountAgeMinHours": "Minimalny wiek konta (godziny)",
+    "accountAgeAction": "Akcja",
+    "accountAgeActionKick": "Wyrzuć",
+    "accountAgeActionBan": "Zbanuj",
+    "accountAgeActionAlert": "Tylko alert (nie usuwaj)",
+    "accountAgeFlagEnable": "Oznaczaj nowe konta",
+    "accountAgeFlagEnableDesc": "Publikuje ostrzeżenie w mod-logu, gdy dołączy nowe konto (nawet jeśli przejdzie filtr).",
+    "accountAgeFlagHours": "Oznaczaj konta młodsze niż (godziny)"
   },
   "levelingPage": {
     "saved": "Ustawienia poziomów zapisane!",

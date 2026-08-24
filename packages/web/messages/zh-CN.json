@@ -374,7 +374,19 @@
     "exemptChannelsTitle": "豁免频道",
     "exemptChannelsDesc": "在这些频道中自动管理被禁用。适用于机器人或员工频道。",
     "addExemptChannel": "添加豁免频道…",
-    "noExemptChannels": "没有豁免频道"
+    "noExemptChannels": "没有豁免频道",
+    "accountAgeTitle": "账号注册时长保护",
+    "accountAgeDesc": "在加入时拦截或标记全新账号——有效防范小号和炸群机器人。",
+    "accountAgeEnable": "要求最低账号注册时长",
+    "accountAgeEnableDesc": "比下方时长更新的账号在加入时会被自动处理。",
+    "accountAgeMinHours": "最低账号注册时长（小时）",
+    "accountAgeAction": "操作",
+    "accountAgeActionKick": "踢出",
+    "accountAgeActionBan": "封禁",
+    "accountAgeActionAlert": "仅提醒（不移除）",
+    "accountAgeFlagEnable": "标记新账号",
+    "accountAgeFlagEnableDesc": "当较新的账号加入时（即使通过了过滤）在管理日志中发布提醒。",
+    "accountAgeFlagHours": "标记新于以下时长的账号（小时）"
   },
   "levelingPage": {
     "saved": "等级设置已保存！",
