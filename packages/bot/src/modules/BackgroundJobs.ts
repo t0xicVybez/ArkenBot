@@ -18,6 +18,7 @@ import type { BotClient } from '../client.js';
 import { getGuildSettings } from '../utils/settings.js';
 import { t, resolveUserLocale } from '../i18n/index.js';
 import { XPDecayModule } from './leveling/XPDecayModule.js';
+import { ModmailModule } from './modmail/ModmailModule.js';
 import { AnalyticsModule } from './AnalyticsModule.js';
 import RSSParser from 'rss-parser';
 
@@ -78,6 +79,9 @@ export class BackgroundJobs {
     // Purge data for guilds that left longer than the grace period ago.
     void this.runGuildPurgeSweep();
     setTimeout(() => this.timers.push(setInterval(() => void this.runGuildPurgeSweep(), 60 * 60 * 1000)), jitter());
+
+    // Auto-close idle modmail threads every 15 minutes.
+    setTimeout(() => this.timers.push(setInterval(() => void ModmailModule.closeIdleThreads(this.client), 15 * 60 * 1000)), jitter());
 
     // Heartbeat for the public status page — the API reads this key.
     void this.beatHeartbeat();

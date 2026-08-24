@@ -14,6 +14,8 @@ import {
   EmbedBuilder,
   ActionRowBuilder,
   StringSelectMenuBuilder,
+  ButtonBuilder,
+  ButtonStyle,
   type Message,
   type Guild,
   type User,
@@ -50,21 +52,25 @@ export class ModmailModule {
     const attachments = [...message.attachments.values()].map((a) => a.url);
     if (!content && !attachments.length) return;
 
-    // 1. Existing open thread → relay straight there.
+    // 1. Existing open thread → relay straight there (unless blocked in that guild).
     const open = await prisma.modmailThread.findFirst({ where: { userId: message.author.id, open: true } });
     if (open) {
+      const blk = await prisma.modmailBlock.findUnique({ where: { guildId_userId: { guildId: open.guildId, userId: message.author.id } } });
+      if (blk) { await message.react('🚫').catch(swallow); return; }
       await this.relayUserToChannel(client, message, open.guildId, open.channelId);
       return;
     }
 
-    // 2. Find modmail-enabled servers the user shares with the bot.
+    // 2. Find modmail-enabled servers the user shares with the bot (excluding ones they're blocked in).
     const configs = await prisma.modmailConfig.findMany({ where: { enabled: true }, select: { guildId: true } });
     const candidates: Guild[] = [];
     for (const cfg of configs) {
       const guild = client.guilds.cache.get(cfg.guildId);
       if (!guild) continue;
       const member = guild.members.cache.get(message.author.id) ?? (await guild.members.fetch(message.author.id).catch(() => null));
-      if (member) candidates.push(guild);
+      if (!member) continue;
+      const blk = await prisma.modmailBlock.findUnique({ where: { guildId_userId: { guildId: cfg.guildId, userId: message.author.id } } });
+      if (!blk) candidates.push(guild);
     }
 
     const loc = await resolveUserLocale({ user: message.author, guildId: '', guildLocale: null });
@@ -160,6 +166,7 @@ export class ModmailModule {
       return;
     }
     await this.postUserMessage(channel, message.author, message.content?.trim() ?? '', [...message.attachments.values()].map((a) => a.url));
+    await prisma.modmailThread.updateMany({ where: { channelId, open: true }, data: { lastActivity: new Date() } }).catch(swallow);
     await message.react('📨').catch(swallow);
   }
 
@@ -194,7 +201,36 @@ export class ModmailModule {
     if (att.length) embed.addFields({ name: 'Attachments', value: att.join('\n').slice(0, 1024) });
 
     const sent = await user.send({ embeds: [embed] }).then(() => true).catch(() => false);
+    if (sent) await prisma.modmailThread.update({ where: { id: thread.id }, data: { lastActivity: new Date() } }).catch(swallow);
     await message.react(sent ? '✅' : '❌').catch(swallow);
+  }
+
+  /** Send a saved snippet to the user as a staff reply (invoked from /modmail snippet). */
+  static async sendSnippet(guild: Guild, channelId: string, content: string): Promise<boolean> {
+    const thread = await prisma.modmailThread.findFirst({ where: { channelId, open: true } });
+    if (!thread) return false;
+    const config = await prisma.modmailConfig.findUnique({ where: { guildId: guild.id } });
+    const user = await guild.client.users.fetch(thread.userId).catch(() => null);
+    if (!user) return false;
+    const loc = await resolveUserLocale({ user: { id: thread.userId }, guildId: guild.id, guildLocale: guild.preferredLocale });
+    const anon = config?.anonymous ?? true;
+    const embed = new EmbedBuilder().setColor(MODMAIL_COLOR)
+      .setAuthor({ name: anon ? guild.name : guild.name, iconURL: guild.iconURL() ?? undefined })
+      .setDescription(content)
+      .setFooter({ text: t('modmail.staffReplyFooter', loc, { server: guild.name }) })
+      .setTimestamp();
+    const sent = await user.send({ embeds: [embed] }).then(() => true).catch(() => false);
+    if (sent) await prisma.modmailThread.update({ where: { id: thread.id }, data: { lastActivity: new Date() } }).catch(swallow);
+    return sent;
+  }
+
+  /** Mark a thread as claimed by a staff member. Returns false if already claimed by someone else. */
+  static async claim(channelId: string, staffId: string, staffTag: string): Promise<'claimed' | 'already' | 'none'> {
+    const thread = await prisma.modmailThread.findFirst({ where: { channelId, open: true } });
+    if (!thread) return 'none';
+    if (thread.claimedBy && thread.claimedBy !== staffId) return 'already';
+    await prisma.modmailThread.update({ where: { id: thread.id }, data: { claimedBy: staffId, claimedByTag: staffTag } });
+    return 'claimed';
   }
 
   /** Close a thread: DM the user, post a transcript, delete the channel. */
@@ -208,11 +244,20 @@ export class ModmailModule {
     await prisma.modmailThread.update({ where: { id: thread.id }, data: { open: false, closedBy: closedByTag, closedAt: new Date() } });
     this.openChannels.delete(channelId);
 
-    // DM the user.
+    // DM the user (with an optional feedback rating prompt).
     const user = await client.users.fetch(thread.userId).catch(() => null);
     if (user && guild) {
       const loc = await resolveUserLocale({ user: { id: user.id }, guildId: guild.id, guildLocale: guild.preferredLocale });
-      await user.send({ embeds: [new EmbedBuilder().setColor(0xed4245).setTitle(t('modmail.closedTitle', loc, { server: guild.name })).setDescription(reason ? t('modmail.closedReason', loc, { reason }) : t('modmail.closedDesc', loc, { server: guild.name }))] }).catch(swallow);
+      const closeEmbed = new EmbedBuilder().setColor(0xed4245).setTitle(t('modmail.closedTitle', loc, { server: guild.name })).setDescription(reason ? t('modmail.closedReason', loc, { reason }) : t('modmail.closedDesc', loc, { server: guild.name }));
+      const components: ActionRowBuilder<ButtonBuilder>[] = [];
+      if (config?.feedbackEnabled) {
+        closeEmbed.addFields({ name: t('modmail.ratePrompt', loc), value: t('modmail.rateHint', loc) });
+        const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+          [1, 2, 3, 4, 5].map((n) => new ButtonBuilder().setCustomId(`modmail:rate:${thread.id}:${n}`).setLabel('⭐'.repeat(n)).setStyle(ButtonStyle.Secondary)),
+        );
+        components.push(row);
+      }
+      await user.send({ embeds: [closeEmbed], components }).catch(swallow);
     }
 
     // Transcript to the log channel.
@@ -233,6 +278,41 @@ export class ModmailModule {
 
     await channel?.delete('Modmail thread closed').catch(swallow);
     return true;
+  }
+
+  /** Store a user's post-close star rating and forward it to the guild's log channel. */
+  static async recordRating(client: BotClient, threadId: string, rating: number): Promise<boolean> {
+    const thread = await prisma.modmailThread.findUnique({ where: { id: threadId } });
+    if (!thread || thread.rating != null) return false;
+    await prisma.modmailThread.update({ where: { id: threadId }, data: { rating } });
+    const guild = client.guilds.cache.get(thread.guildId);
+    const config = guild ? await prisma.modmailConfig.findUnique({ where: { guildId: guild.id } }) : null;
+    if (guild && config?.logChannelId) {
+      const logCh = guild.channels.cache.get(config.logChannelId) as TextChannel | undefined;
+      if (logCh?.isTextBased()) {
+        const staffLoc = await resolveUserLocale({ user: { id: '' }, guildId: guild.id, guildLocale: guild.preferredLocale });
+        await logCh.send({ embeds: [new EmbedBuilder().setColor(0xf1c40f)
+          .setTitle(t('modmail.ratingLogTitle', staffLoc))
+          .setDescription(t('modmail.ratingLog', staffLoc, { user: thread.userTag, stars: '⭐'.repeat(rating), rating: String(rating) }))
+          .setTimestamp()] }).catch(swallow);
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Auto-close threads that have been idle past their guild's autoCloseHours.
+   * Invoked periodically by BackgroundJobs.
+   */
+  static async closeIdleThreads(client: BotClient): Promise<void> {
+    const configs = await prisma.modmailConfig.findMany({ where: { enabled: true, autoCloseHours: { gt: 0 } } }).catch(() => []);
+    for (const cfg of configs) {
+      const cutoff = new Date(Date.now() - cfg.autoCloseHours * 60 * 60 * 1000);
+      const stale = await prisma.modmailThread.findMany({ where: { guildId: cfg.guildId, open: true, lastActivity: { lt: cutoff } } }).catch(() => []);
+      for (const thread of stale) {
+        await this.closeThread(client, thread.channelId, 'Auto-close (inactivity)').catch(swallow);
+      }
+    }
   }
 
 }

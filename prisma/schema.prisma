@@ -74,6 +74,8 @@ model Guild {
   createdAt         DateTime            @default(now())
   updatedAt         DateTime            @updatedAt
   EconomyIncomeRole EconomyIncomeRole[]
+  ModmailSnippet    ModmailSnippet[]
+  ModmailBlock      ModmailBlock[]
 
   @@map("guilds")
 }
@@ -1388,32 +1390,38 @@ model DashboardAuditLog {
 
 // ── Modmail: DM-based private support ─────────────────────────────────────────
 model ModmailConfig {
-  id           String   @id @default(cuid())
-  guildId      String   @unique
-  guild        Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
-  enabled      Boolean  @default(false)
-  categoryId   String? // category new modmail channels are created under
-  staffRoleId  String? // role pinged on new threads
-  logChannelId String? // where closed-thread transcripts are posted
-  anonymous    Boolean  @default(true) // hide individual staff identities from the user
-  greeting     String? // optional message DM'd to the user when a thread opens
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id              String   @id @default(cuid())
+  guildId         String   @unique
+  guild           Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  enabled         Boolean  @default(false)
+  categoryId      String? // category new modmail channels are created under
+  staffRoleId     String? // role pinged on new threads
+  logChannelId    String? // where closed-thread transcripts are posted
+  anonymous       Boolean  @default(true) // hide individual staff identities from the user
+  greeting        String? // optional message DM'd to the user when a thread opens
+  autoCloseHours  Int      @default(0) // auto-close threads idle this many hours (0 = off)
+  feedbackEnabled Boolean  @default(true) // DM the user a rating prompt when a thread closes
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
   @@map("modmail_config")
 }
 
 model ModmailThread {
-  id        String    @id @default(cuid())
-  guildId   String
-  guild     Guild     @relation(fields: [guildId], references: [id], onDelete: Cascade)
-  userId    String
-  userTag   String
-  channelId String
-  open      Boolean   @default(true)
-  closedBy  String?
-  closedAt  DateTime?
-  createdAt DateTime  @default(now())
+  id           String    @id @default(cuid())
+  guildId      String
+  guild        Guild     @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  userId       String
+  userTag      String
+  channelId    String
+  open         Boolean   @default(true)
+  claimedBy    String?
+  claimedByTag String?
+  lastActivity DateTime  @default(now())
+  rating       Int?
+  closedBy     String?
+  closedAt     DateTime?
+  createdAt    DateTime  @default(now())
 
   @@index([guildId, open])
   @@index([userId, open])
@@ -1509,4 +1517,31 @@ model EconomyIncomeRole {
   @@unique([guildId, roleId])
   @@index([guildId])
   @@map("economy_income_roles")
+}
+
+model ModmailSnippet {
+  id        String   @id @default(cuid())
+  guildId   String
+  guild     Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  name      String
+  content   String
+  createdAt DateTime @default(now())
+
+  @@unique([guildId, name])
+  @@index([guildId])
+  @@map("modmail_snippets")
+}
+
+model ModmailBlock {
+  id        String   @id @default(cuid())
+  guildId   String
+  guild     Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  userId    String
+  blockedBy String
+  reason    String?
+  createdAt DateTime @default(now())
+
+  @@unique([guildId, userId])
+  @@index([guildId])
+  @@map("modmail_blocks")
 }
