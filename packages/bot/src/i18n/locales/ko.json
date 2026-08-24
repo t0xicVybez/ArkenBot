@@ -1204,5 +1204,25 @@
       "ban": "차단",
       "mute": "뮤트"
     }
+  },
+  "events": {
+    "when": "일시",
+    "location": "장소",
+    "going": "참석",
+    "maybe": "미정",
+    "no": "불참",
+    "roleFooter": "“참석”을 선택하면 이벤트 역할을 받습니다.",
+    "cancelledTag": "취소됨",
+    "gone": "해당 이벤트가 더 이상 존재하지 않습니다.",
+    "listTitle": "📅 다가오는 이벤트",
+    "listEmpty": "다가오는 이벤트가 없습니다. /event create로 만드세요.",
+    "needManage": "이 작업을 하려면 이벤트 관리 권한이 필요합니다.",
+    "badWhenTitle": "잘못된 시간",
+    "badWhen": "\"2d\"나 \"6h\" 같은 상대 시간, 또는 \"2026-09-01 18:00\" 같은 날짜를 사용하세요.",
+    "badChannel": "이벤트를 게시할 텍스트 채널을 선택하세요.",
+    "created": "{channel}에 이벤트를 만들었습니다.",
+    "cancelled": "**{title}**을(를) 취소했습니다.",
+    "reminderTitle": "⏰ 곧 시작: {title}",
+    "reminderDesc": "이 이벤트는 {time}에 시작합니다. 거기서 만나요!"
   }
 }

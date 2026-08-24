@@ -1204,5 +1204,25 @@
       "ban": "BAN",
       "mute": "ミュート"
     }
+  },
+  "events": {
+    "when": "日時",
+    "location": "場所",
+    "going": "参加",
+    "maybe": "未定",
+    "no": "不参加",
+    "roleFooter": "「参加」を選ぶとイベントロールが付与されます。",
+    "cancelledTag": "中止",
+    "gone": "そのイベントは存在しません。",
+    "listTitle": "📅 今後のイベント",
+    "listEmpty": "今後のイベントはありません。/event create で作成できます。",
+    "needManage": "これを行うには「イベントの管理」権限が必要です。",
+    "badWhenTitle": "無効な時刻",
+    "badWhen": "\"2d\" や \"6h\" のような相対時間、または \"2026-09-01 18:00\" のような日付を使ってください。",
+    "badChannel": "イベントを投稿するテキストチャンネルを選んでください。",
+    "created": "{channel} にイベントを作成しました。",
+    "cancelled": "**{title}** を中止しました。",
+    "reminderTitle": "⏰ まもなく開始：{title}",
+    "reminderDesc": "このイベントは {time} に始まります。お楽しみに！"
   }
 }
