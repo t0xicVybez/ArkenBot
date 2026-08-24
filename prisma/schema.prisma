@@ -30,6 +30,8 @@ model Guild {
   guildAddons       GuildAddon[]
   logEntries        LogEntry[]
   automodConfig     AutoModConfig?
+  modmailConfig     ModmailConfig?
+  modmailThreads    ModmailThread[]
   welcomeConfig     WelcomeConfig?
   musicQueue        MusicQueue?
   disabledCommands        DisabledCommand[]
@@ -1378,4 +1380,38 @@ model DashboardAuditLog {
 
   @@index([guildId, createdAt])
   @@map("dashboard_audit_logs")
+}
+
+
+// ── Modmail: DM-based private support ─────────────────────────────────────────
+model ModmailConfig {
+  id           String  @id @default(cuid())
+  guildId      String  @unique
+  guild        Guild   @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  enabled      Boolean @default(false)
+  categoryId   String?          // category new modmail channels are created under
+  staffRoleId  String?          // role pinged on new threads
+  logChannelId String?          // where closed-thread transcripts are posted
+  anonymous    Boolean @default(true)   // hide individual staff identities from the user
+  greeting     String?          // optional message DM'd to the user when a thread opens
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  @@map("modmail_config")
+}
+
+model ModmailThread {
+  id        String    @id @default(cuid())
+  guildId   String
+  guild     Guild     @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  userId    String
+  userTag   String
+  channelId String
+  open      Boolean   @default(true)
+  closedBy  String?
+  closedAt  DateTime?
+  createdAt DateTime  @default(now())
+  @@index([guildId, open])
+  @@index([userId, open])
+  @@index([channelId])
+  @@map("modmail_threads")
 }
