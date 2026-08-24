@@ -1140,5 +1140,19 @@
     "bought": "Вы купили **{count}** билет(ов) за {cost}. Удачи!",
     "drawTitle": "🎉 Победитель лотереи!",
     "drawWinner": "{user} выиграл банк **{pot}** при {tickets} билетах в игре!"
+  },
+  "bj": {
+    "title": "♠ Блэкджек",
+    "dealerHand": "Дилер",
+    "yourHand": "Ваша рука",
+    "winTitle": "Вы выиграли!",
+    "loseTitle": "Вы проиграли",
+    "pushTitle": "Ничья",
+    "netWin": "Вы в плюсе на {amount}",
+    "netLoss": "Вы потеряли {amount}",
+    "netPush": "Ставка возвращена.",
+    "yourMove": "Взять ещё или остановиться?",
+    "alreadyPlaying": "У вас уже идёт игра в блэкджек.",
+    "notYourGame": "Это не ваша игра."
   }
 }

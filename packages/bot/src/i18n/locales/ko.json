@@ -1140,5 +1140,19 @@
     "bought": "티켓 **{count}**장을 {cost}에 구매했습니다. 행운을 빕니다!",
     "drawTitle": "🎉 복권 당첨자!",
     "drawWinner": "{user}님이 {tickets}장의 티켓 중 **{pot}** 상금을 차지했습니다!"
+  },
+  "bj": {
+    "title": "♠ 블랙잭",
+    "dealerHand": "딜러",
+    "yourHand": "내 패",
+    "winTitle": "승리!",
+    "loseTitle": "패배",
+    "pushTitle": "무승부",
+    "netWin": "{amount} 이득입니다",
+    "netLoss": "{amount}을(를) 잃었습니다",
+    "netPush": "베팅이 반환되었습니다.",
+    "yourMove": "힛? 스탠드?",
+    "alreadyPlaying": "이미 진행 중인 블랙잭 게임이 있습니다.",
+    "notYourGame": "당신의 게임이 아닙니다."
   }
 }
