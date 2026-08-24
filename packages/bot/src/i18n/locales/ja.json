@@ -1140,5 +1140,19 @@
     "bought": "**{count}** 枚のチケットを {cost} で購入しました。幸運を！",
     "drawTitle": "🎉 宝くじ当選者！",
     "drawWinner": "{user} が {tickets} 枚のチケットの中から **{pot}** の賞金を獲得しました！"
+  },
+  "bj": {
+    "title": "♠ ブラックジャック",
+    "dealerHand": "ディーラー",
+    "yourHand": "あなたの手札",
+    "winTitle": "勝ち！",
+    "loseTitle": "負け",
+    "pushTitle": "引き分け",
+    "netWin": "{amount} のプラスです",
+    "netLoss": "{amount} を失いました",
+    "netPush": "ベットは返却されました。",
+    "yourMove": "ヒット？スタンド？",
+    "alreadyPlaying": "すでにブラックジャックのゲームが進行中です。",
+    "notYourGame": "あなたのゲームではありません。"
   }
 }
