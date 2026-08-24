@@ -1140,5 +1140,19 @@
     "bought": "你以 {cost} 购买了 **{count}** 张彩票。祝你好运！",
     "drawTitle": "🎉 彩票中奖者！",
     "drawWinner": "{user} 在 {tickets} 张彩票中赢得了 **{pot}** 奖池！"
+  },
+  "bj": {
+    "title": "♠ 21点",
+    "dealerHand": "庄家",
+    "yourHand": "你的手牌",
+    "winTitle": "你赢了！",
+    "loseTitle": "你输了",
+    "pushTitle": "平局",
+    "netWin": "你净赚 {amount}",
+    "netLoss": "你损失了 {amount}",
+    "netPush": "已退回你的赌注。",
+    "yourMove": "要牌还是停牌？",
+    "alreadyPlaying": "你已有一局进行中的21点游戏。",
+    "notYourGame": "这不是你的游戏。"
   }
 }

@@ -1140,5 +1140,19 @@
     "bought": "Você comprou **{count}** bilhete(s) por {cost}. Boa sorte!",
     "drawTitle": "🎉 Vencedor da loteria!",
     "drawWinner": "{user} ganhou o prêmio de **{pot}** com {tickets} bilhetes em jogo!"
+  },
+  "bj": {
+    "title": "♠ Blackjack",
+    "dealerHand": "Crupiê",
+    "yourHand": "Sua mão",
+    "winTitle": "Você venceu!",
+    "loseTitle": "Você perdeu",
+    "pushTitle": "Empate",
+    "netWin": "Você está com {amount} a mais",
+    "netLoss": "Você perdeu {amount}",
+    "netPush": "Sua aposta foi devolvida.",
+    "yourMove": "Pedir ou parar?",
+    "alreadyPlaying": "Você já tem um jogo de blackjack em andamento.",
+    "notYourGame": "Este não é o seu jogo."
   }
 }
