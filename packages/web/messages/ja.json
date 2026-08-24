@@ -44,7 +44,7 @@
   },
   "streamAlerts": {
     "title": "配信アラート",
-    "description": "クリエイターがライブ配信を開始したり投稿したりしたときにコミュニティに通知します — Twitch、Kick、YouTube、X、RSS。",
+    "description": "配信者がライブを始めたり投稿したときにコミュニティへ通知 — Twitch、Kick、YouTube、RSS。",
     "channelUsername": "チャンネルのユーザー名",
     "channelHandle": "チャンネルのハンドル"
   },
@@ -1911,8 +1911,6 @@
     "commands": "コマンド",
     "forum-management": "フォーラム管理",
     "stream-alerts": "配信アラート",
-    "twitter-feeds": "X / Twitter フィード",
-    "reddit-feeds": "Reddit フィード",
     "rss-feeds": "RSS フィード",
     "monday": "Monday.com",
     "trello": "Trello",
@@ -2342,7 +2340,7 @@
       },
       {
         "title": "あらゆるものへのアラート",
-        "desc": "Twitch、Kick、YouTube、X、Reddit、RSS — さらに Trello と Monday.com のボード。"
+        "desc": "Twitch、Kick、YouTube、RSS — さらに Trello と Monday.com のボード。"
       },
       {
         "title": "レベルとエンゲージメント",
@@ -2402,7 +2400,7 @@
         },
         {
           "title": "配信アラート",
-          "desc": "Twitch、Kick、YouTube チャンネルがライブになったとき、または Twitter、Reddit、RSS フィードが更新されたときに通知を受け取ります。自動的に通知埋め込みを投稿します。"
+          "desc": "Twitch、Kick、YouTube チャンネルがライブになったとき、または RSS フィードが更新されたときに通知を受け取ります。自動的に通知埋め込みを投稿します。"
         },
         {
           "title": "monday.com と Trello のアラート",
@@ -2898,13 +2896,11 @@
       "stream-alerts": {
         "title": "配信アラート",
         "tagline": "何かがライブになったり投稿されたりした瞬間にコミュニティに通知します。",
-        "description": "Twitch、Kick、YouTube、X（Twitter）、Reddit、RSS/ポッドキャストのフィードを監視し、新しいコンテンツがあるときに任意の Discord チャンネルに通知埋め込みを自動的に投稿します。手動の告知なしでコミュニティのエンゲージメントを維持します。",
+        "description": "Twitch、Kick、YouTube、RSS/ポッドキャストのフィードを監視し、新しいコンテンツがあるときに任意の Discord チャンネルに通知埋め込みを自動的に投稿します。手動の告知なしでコミュニティのエンゲージメントを維持します。",
         "bullets": [
           "Twitch: チャンネルがライブになったときのアラート",
           "Kick: Kick.com チャンネルがライブになったときのアラート",
           "YouTube: チャンネルがライブ配信を開始したときのアラート",
-          "X（Twitter）: ユーザーが新しいツイートを投稿したときのアラート",
-          "Reddit: サブレディットに新しい投稿があったときのアラート",
           "RSS / ポッドキャスト: フィードが新しいエピソードや投稿を公開したときのアラート",
           "アラートごとに構成可能なアラートチャンネルとカスタムメッセージ",
           "プラットフォームをまたいで同時に追跡される複数のアラート"

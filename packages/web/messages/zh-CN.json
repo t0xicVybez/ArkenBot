@@ -44,7 +44,7 @@
   },
   "streamAlerts": {
     "title": "直播提醒",
-    "description": "当创作者开播或发帖时通知社区 — Twitch、Kick、YouTube、X、RSS。",
+    "description": "当创作者开播或发布内容时通知社区 — Twitch、Kick、YouTube、RSS。",
     "channelUsername": "频道用户名",
     "channelHandle": "频道句柄"
   },
@@ -1911,8 +1911,6 @@
     "commands": "命令",
     "forum-management": "论坛管理",
     "stream-alerts": "直播提醒",
-    "twitter-feeds": "X / Twitter 订阅",
-    "reddit-feeds": "Reddit 订阅",
     "rss-feeds": "RSS 订阅",
     "monday": "Monday.com",
     "trello": "Trello",
@@ -2342,7 +2340,7 @@
       },
       {
         "title": "面向一切的提醒",
-        "desc": "Twitch、Kick、YouTube、X、Reddit、RSS — 加上 Trello 和 Monday.com 看板。"
+        "desc": "Twitch、Kick、YouTube、RSS — 外加 Trello 和 Monday.com 看板。"
       },
       {
         "title": "等级与参与",
@@ -2402,7 +2400,7 @@
         },
         {
           "title": "直播提醒",
-          "desc": "当 Twitch、Kick 或 YouTube 频道开播，或当 Twitter、Reddit 或 RSS 订阅更新时收到通知。自动发布一个通知嵌入。"
+          "desc": "当 Twitch、Kick 或 YouTube 频道开播，或 RSS 订阅更新时收到通知。自动发布通知嵌入消息。"
         },
         {
           "title": "monday.com 和 Trello 提醒",
@@ -2898,13 +2896,11 @@
       "stream-alerts": {
         "title": "直播提醒",
         "tagline": "在任何东西开播或发布的那一刻通知你的社区。",
-        "description": "监控 Twitch、Kick、YouTube、X（Twitter）、Reddit 和 RSS/播客订阅源，并在有新内容时自动在任意 Discord 频道发布通知嵌入。无需手动公告即可保持社区参与。",
+        "description": "监控 Twitch、Kick、YouTube 和 RSS/播客订阅，在有新内容时自动在任意 Discord 频道发布通知嵌入消息。无需手动公告即可保持社区活跃。",
         "bullets": [
           "Twitch：频道开播时的提醒",
           "Kick：Kick.com 频道开播时的提醒",
           "YouTube：频道开始直播时的提醒",
-          "X（Twitter）：用户发布新推文时的提醒",
-          "Reddit：子版块有新帖子时的提醒",
           "RSS / 播客：订阅源发布新剧集或帖子时的提醒",
           "每个提醒可配置的提醒频道和自定义消息",
           "跨平台同时追踪多个提醒"

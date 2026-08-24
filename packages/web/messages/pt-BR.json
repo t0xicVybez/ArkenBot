@@ -44,7 +44,7 @@
   },
   "streamAlerts": {
     "title": "Alertas de live",
-    "description": "Avise a comunidade quando os criadores entram ao vivo ou publicam — Twitch, Kick, YouTube, X, RSS.",
+    "description": "Avise a comunidade quando os criadores entram ao vivo ou publicam — Twitch, Kick, YouTube, RSS.",
     "channelUsername": "Nome de usuário do canal",
     "channelHandle": "Identificador do canal"
   },
@@ -1911,8 +1911,6 @@
     "commands": "Comandos",
     "forum-management": "Gerenciamento de fóruns",
     "stream-alerts": "Alertas de live",
-    "twitter-feeds": "Feeds do X / Twitter",
-    "reddit-feeds": "Feeds do Reddit",
     "rss-feeds": "Feeds RSS",
     "monday": "Monday.com",
     "trello": "Trello",
@@ -2342,7 +2340,7 @@
       },
       {
         "title": "Alertas para tudo",
-        "desc": "Twitch, Kick, YouTube, X, Reddit, RSS — além de quadros do Trello e Monday.com."
+        "desc": "Twitch, Kick, YouTube, RSS — além dos quadros do Trello e Monday.com."
       },
       {
         "title": "Níveis e engajamento",
@@ -2402,7 +2400,7 @@
         },
         {
           "title": "Alertas de live",
-          "desc": "Seja avisado quando canais do Twitch, Kick ou YouTube entram ao vivo, ou quando feeds do Twitter, Reddit ou RSS são atualizados. Publica um embed de notificação automaticamente."
+          "desc": "Seja notificado quando canais do Twitch, Kick ou YouTube entram ao vivo, ou quando um feed RSS é atualizado. Publica um embed de notificação automaticamente."
         },
         {
           "title": "Alertas do monday.com e Trello",
@@ -2898,13 +2896,11 @@
       "stream-alerts": {
         "title": "Alertas de live",
         "tagline": "Avise sua comunidade no momento em que algo entra ao vivo ou é publicado.",
-        "description": "Monitore feeds do Twitch, Kick, YouTube, X (Twitter), Reddit e RSS/Podcast e publique automaticamente um embed de notificação em qualquer canal do Discord quando houver novo conteúdo. Mantenha sua comunidade engajada sem anúncios manuais.",
+        "description": "Monitore feeds do Twitch, Kick, YouTube e RSS/Podcast e publique automaticamente um embed de notificação em qualquer canal do Discord quando houver conteúdo novo. Mantenha sua comunidade engajada sem anúncios manuais.",
         "bullets": [
           "Twitch: alertas quando um canal entra ao vivo",
           "Kick: alertas quando um canal do Kick.com entra ao vivo",
           "YouTube: alertas quando um canal inicia uma transmissão ao vivo",
-          "X (Twitter): alertas quando um usuário publica um novo tweet",
-          "Reddit: alertas quando um subreddit recebe uma nova publicação",
           "RSS / Podcast: alertas quando um feed publica um novo episódio ou post",
           "Canal de alerta e mensagem personalizada configuráveis por alerta",
           "Vários alertas rastreados simultaneamente em diferentes plataformas"
