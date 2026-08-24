@@ -468,7 +468,13 @@
     "confirmReset": "Are you sure? This will wipe all XP and levels for every member in this server. This action is irreversible.",
     "resetting": "Resetting…",
     "yesReset": "Yes, reset all XP",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "voiceXpTitle": "Voice XP",
+    "voiceXpDesc": "Reward members for spending time together in voice channels.",
+    "enableVoiceXp": "Enable voice XP",
+    "enableVoiceXpDesc": "Grant XP each minute to unmuted members sharing a voice channel.",
+    "voiceXpPerMinute": "XP per minute",
+    "voiceXpPerMinuteHelp": "Awarded every minute in voice (role multipliers still apply)."
   },
   "starboardPage": {
     "saved": "Starboard settings saved!",

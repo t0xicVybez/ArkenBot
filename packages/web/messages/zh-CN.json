@@ -468,7 +468,13 @@
     "confirmReset": "你确定吗？这将清除此服务器每位成员的所有 XP 和等级。此操作不可逆。",
     "resetting": "重置中…",
     "yesReset": "是的，重置所有 XP",
-    "cancel": "取消"
+    "cancel": "取消",
+    "voiceXpTitle": "语音经验",
+    "voiceXpDesc": "奖励在语音频道一起花时间的成员。",
+    "enableVoiceXp": "启用语音经验",
+    "enableVoiceXpDesc": "每分钟向共处一个语音频道且未静音的成员发放经验。",
+    "voiceXpPerMinute": "每分钟经验",
+    "voiceXpPerMinuteHelp": "在语音中每分钟发放（身份组倍率仍然适用）。"
   },
   "starboardPage": {
     "saved": "已保存星标板设置。",

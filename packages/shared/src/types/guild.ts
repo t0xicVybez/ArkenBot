@@ -54,6 +54,8 @@ export interface GuildSettings {
   xpDecayEnabled: boolean;
   xpDecayDays: number;
   xpDecayPercent: number;
+  voiceXpEnabled: boolean;
+  voiceXpPerMinute: number;
 
   // Embed accent colors (hex strings)
   accentColor: string;

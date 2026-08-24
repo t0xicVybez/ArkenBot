@@ -468,7 +468,13 @@
     "confirmReset": "정말입니까? 이 서버의 모든 멤버에 대한 모든 XP와 레벨이 삭제됩니다. 이 작업은 되돌릴 수 없습니다.",
     "resetting": "초기화 중…",
     "yesReset": "예, 모든 XP 초기화",
-    "cancel": "취소"
+    "cancel": "취소",
+    "voiceXpTitle": "음성 XP",
+    "voiceXpDesc": "음성 채널에서 함께 시간을 보내는 멤버에게 보상을 줍니다.",
+    "enableVoiceXp": "음성 XP 활성화",
+    "enableVoiceXpDesc": "음성 채널을 함께 쓰는 음소거되지 않은 멤버에게 매분 XP를 지급합니다.",
+    "voiceXpPerMinute": "분당 XP",
+    "voiceXpPerMinuteHelp": "음성에서 매분 지급됩니다(역할 배수도 적용)."
   },
   "starboardPage": {
     "saved": "스타보드 설정을 저장했습니다.",

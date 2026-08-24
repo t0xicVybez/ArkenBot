@@ -543,6 +543,31 @@ export default function LevelingPage() {
         </form>
       </div>
 
+      {/* Voice XP */}
+      <SettingsSection title={t('voiceXpTitle')} description={t('voiceXpDesc')}>
+        <Toggle
+          label={t('enableVoiceXp')}
+          description={t('enableVoiceXpDesc')}
+          enabled={settings.voiceXpEnabled ?? false}
+          onChange={(v) => { setSettings((s) => ({ ...s, voiceXpEnabled: v })); handleSave({ voiceXpEnabled: v }); }}
+        />
+        {settings.voiceXpEnabled && (
+          <div className="max-w-xs">
+            <label className="label">{t('voiceXpPerMinute')}</label>
+            <input
+              type="number"
+              className="input"
+              value={settings.voiceXpPerMinute ?? 5}
+              min={1}
+              max={100}
+              onChange={(e) => setSettings((s) => ({ ...s, voiceXpPerMinute: parseInt(e.target.value) }))}
+              onBlur={() => handleSave({ voiceXpPerMinute: settings.voiceXpPerMinute })}
+            />
+            <p className="text-xs text-gray-500 mt-1">{t('voiceXpPerMinuteHelp')}</p>
+          </div>
+        )}
+      </SettingsSection>
+
       {/* XP Decay */}
       <SettingsSection title={t('decayTitle')} description={t('decayDesc')}>
         <Toggle

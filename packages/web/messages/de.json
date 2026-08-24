@@ -468,7 +468,13 @@
     "confirmReset": "Bist du sicher? Dies löscht alle XP und Level jedes Mitglieds auf diesem Server. Diese Aktion ist unwiderruflich.",
     "resetting": "Wird zurückgesetzt…",
     "yesReset": "Ja, alle XP zurücksetzen",
-    "cancel": "Abbrechen"
+    "cancel": "Abbrechen",
+    "voiceXpTitle": "Sprach-XP",
+    "voiceXpDesc": "Belohne Mitglieder für gemeinsame Zeit in Sprachkanälen.",
+    "enableVoiceXp": "Sprach-XP aktivieren",
+    "enableVoiceXpDesc": "Vergibt jede Minute XP an nicht stummgeschaltete Mitglieder in einem Sprachkanal.",
+    "voiceXpPerMinute": "XP pro Minute",
+    "voiceXpPerMinuteHelp": "Wird jede Minute im Sprachkanal vergeben (Rollen-Multiplikatoren gelten weiterhin)."
   },
   "starboardPage": {
     "saved": "Starboard-Einstellungen gespeichert.",

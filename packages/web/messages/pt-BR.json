@@ -468,7 +468,13 @@
     "confirmReset": "Tem certeza? Isso apagará todo o XP e níveis de cada membro deste servidor. Esta ação é irreversível.",
     "resetting": "Redefinindo…",
     "yesReset": "Sim, redefinir todo o XP",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "voiceXpTitle": "XP de voz",
+    "voiceXpDesc": "Recompense os membros por passarem tempo juntos em canais de voz.",
+    "enableVoiceXp": "Ativar XP de voz",
+    "enableVoiceXpDesc": "Concede XP a cada minuto para membros sem mudo em um canal de voz.",
+    "voiceXpPerMinute": "XP por minuto",
+    "voiceXpPerMinuteHelp": "Concedido a cada minuto na voz (os multiplicadores de cargo ainda se aplicam)."
   },
   "starboardPage": {
     "saved": "Configurações do starboard salvas.",

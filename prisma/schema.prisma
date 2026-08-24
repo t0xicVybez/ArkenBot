@@ -133,6 +133,8 @@ model GuildSettings {
   xpDecayEnabled    Boolean @default(false)
   xpDecayDays       Int     @default(30)
   xpDecayPercent    Int     @default(5)
+  voiceXpEnabled    Boolean @default(false)
+  voiceXpPerMinute  Int     @default(5)
 
   // Embed accent colors (per-guild customisation)
   accentColor           String @default("#5865F2")

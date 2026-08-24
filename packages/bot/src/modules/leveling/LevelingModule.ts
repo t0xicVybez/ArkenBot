@@ -3,7 +3,7 @@
  * and daily message streak tracking for the guild leveling system.
  */
 
-import { type Guild, type User, type TextChannel, type Message, EmbedBuilder, Colors } from 'discord.js';
+import { type Guild, type User, type GuildMember, type TextChannel, type Message, EmbedBuilder, Colors } from 'discord.js';
 import { prisma } from '../../database.js';
 import type { LevelRole } from '@prisma/client';
 import { AchievementsModule } from './AchievementsModule.js';
@@ -133,6 +133,67 @@ export class LevelingModule {
       xp: currentXp,
       streakDays: newStreak,
     });
+  }
+
+  /**
+   * Award voice XP to a member currently in a voice channel. Unlike message XP
+   * this has no per-user cooldown (the caller controls cadence) and does not
+   * touch the message count or daily streak. Handles level-up notifications,
+   * role assignment and the economy level-up tie-in.
+   */
+  static async awardVoiceXp(guild: Guild, member: GuildMember, amount: number): Promise<void> {
+    if (member.user.bot || amount <= 0) return;
+    const settings = await getGuildSettings(guild.id);
+    if (!settings?.levelingEnabled || !settings.voiceXpEnabled) return;
+
+    // Apply the same role multipliers used for message XP.
+    let mult = settings.xpMultiplier ?? 1.0;
+    const roleMultipliers = await prisma.xpRoleMultiplier.findMany({ where: { guildId: guild.id } }).catch(() => []);
+    if (roleMultipliers.length) {
+      const ids = new Set(member.roles.cache.keys());
+      const matching = roleMultipliers.filter((rm) => ids.has(rm.roleId));
+      if (matching.length) mult *= Math.max(...matching.map((rm) => rm.multiplier));
+    }
+    const gain = Math.max(1, Math.round(amount * mult));
+
+    const existing = await prisma.userLevel.findUnique({ where: { guildId_userId: { guildId: guild.id, userId: member.id } } });
+    const currentXp = (existing?.xp ?? 0) + gain;
+    const currentLevel = existing?.level ?? 0;
+    const newLevel = levelFromXp(currentXp);
+
+    await prisma.userLevel.upsert({
+      where: { guildId_userId: { guildId: guild.id, userId: member.id } },
+      update: { xp: currentXp, level: newLevel, userTag: member.user.tag },
+      create: { guildId: guild.id, userId: member.id, userTag: member.user.tag, xp: currentXp, level: newLevel },
+    });
+
+    if (newLevel > currentLevel) {
+      await this.handleLevelUp(guild, member.user, newLevel, settings.levelUpMessage, settings.levelUpChannelId, settings.levelUpEmbed ?? true, undefined, settings.levelUpColor);
+      await this.applyLevelRoles(guild, member.id, newLevel, settings.keepPreviousRoles ?? false);
+      await EconomyModule.awardLevelUp(guild.id, member.id, newLevel).catch(swallow);
+    }
+  }
+
+  /**
+   * Grant one minute of voice XP to every eligible member in voice across all
+   * guilds. Skips bots, self-muted/deafened members, AFK-channel occupants, and
+   * members alone in a channel. Invoked once a minute by BackgroundJobs.
+   */
+  static async sweepVoiceXp(guild: Guild): Promise<void> {
+    const settings = await getGuildSettings(guild.id);
+    if (!settings?.levelingEnabled || !settings.voiceXpEnabled) return;
+    const perMinute = settings.voiceXpPerMinute ?? 5;
+    const afkId = guild.afkChannelId;
+    for (const channel of guild.channels.cache.values()) {
+      if (!channel.isVoiceBased() || channel.id === afkId) continue;
+      const humans = channel.members.filter((m) => !m.user.bot);
+      if (humans.size < 2) continue; // need at least two people talking
+      for (const member of humans.values()) {
+        const vs = member.voice;
+        if (vs.selfMute || vs.selfDeaf || vs.mute || vs.deaf) continue;
+        await this.awardVoiceXp(guild, member, perMinute).catch(swallow);
+      }
+    }
   }
 
   /** Levels that receive a special embed colour and milestone badge in level-up notifications. */

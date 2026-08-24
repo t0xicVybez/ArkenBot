@@ -468,7 +468,13 @@
     "confirmReset": "よろしいですか？これにより、このサーバーの全メンバーのXPとレベルが消去されます。この操作は取り消せません。",
     "resetting": "リセット中…",
     "yesReset": "はい、すべてのXPをリセット",
-    "cancel": "キャンセル"
+    "cancel": "キャンセル",
+    "voiceXpTitle": "ボイスXP",
+    "voiceXpDesc": "ボイスチャンネルで一緒に過ごすメンバーに報酬を与えます。",
+    "enableVoiceXp": "ボイスXPを有効化",
+    "enableVoiceXpDesc": "ボイスチャンネルにいるミュートしていないメンバーに毎分XPを付与します。",
+    "voiceXpPerMinute": "毎分のXP",
+    "voiceXpPerMinuteHelp": "ボイスで毎分付与されます（ロール倍率も適用）。"
   },
   "starboardPage": {
     "saved": "スターボードの設定を保存しました。",

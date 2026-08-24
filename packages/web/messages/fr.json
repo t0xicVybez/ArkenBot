@@ -468,7 +468,13 @@
     "confirmReset": "Es-tu sûr ? Cela effacera toute l'XP et tous les niveaux de chaque membre de ce serveur. Cette action est irréversible.",
     "resetting": "Réinitialisation…",
     "yesReset": "Oui, réinitialiser toute l'XP",
-    "cancel": "Annuler"
+    "cancel": "Annuler",
+    "voiceXpTitle": "XP vocale",
+    "voiceXpDesc": "Récompense les membres qui passent du temps ensemble en vocal.",
+    "enableVoiceXp": "Activer l’XP vocale",
+    "enableVoiceXpDesc": "Accorde de l’XP chaque minute aux membres non muets partageant un salon vocal.",
+    "voiceXpPerMinute": "XP par minute",
+    "voiceXpPerMinuteHelp": "Accordée chaque minute en vocal (les multiplicateurs de rôle s’appliquent toujours)."
   },
   "starboardPage": {
     "saved": "Paramètres du starboard enregistrés.",

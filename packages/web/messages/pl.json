@@ -468,7 +468,13 @@
     "confirmReset": "Na pewno? Spowoduje to wymazanie całego XP i poziomów każdego członka tego serwera. Ta akcja jest nieodwracalna.",
     "resetting": "Resetowanie…",
     "yesReset": "Tak, zresetuj całe XP",
-    "cancel": "Anuluj"
+    "cancel": "Anuluj",
+    "voiceXpTitle": "XP głosowe",
+    "voiceXpDesc": "Nagradzaj członków za wspólny czas na kanałach głosowych.",
+    "enableVoiceXp": "Włącz XP głosowe",
+    "enableVoiceXpDesc": "Przyznaje XP co minutę niewyciszonym członkom na wspólnym kanale głosowym.",
+    "voiceXpPerMinute": "XP na minutę",
+    "voiceXpPerMinuteHelp": "Przyznawane co minutę na głosowym (mnożniki ról nadal obowiązują)."
   },
   "starboardPage": {
     "saved": "Zapisano ustawienia starboardu.",
