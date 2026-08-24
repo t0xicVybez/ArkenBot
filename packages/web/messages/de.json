@@ -474,7 +474,13 @@
     "enableVoiceXp": "Sprach-XP aktivieren",
     "enableVoiceXpDesc": "Vergibt jede Minute XP an nicht stummgeschaltete Mitglieder in einem Sprachkanal.",
     "voiceXpPerMinute": "XP pro Minute",
-    "voiceXpPerMinuteHelp": "Wird jede Minute im Sprachkanal vergeben (Rollen-Multiplikatoren gelten weiterhin)."
+    "voiceXpPerMinuteHelp": "Wird jede Minute im Sprachkanal vergeben (Rollen-Multiplikatoren gelten weiterhin).",
+    "prestigeTitle": "Prestige",
+    "prestigeDesc": "Lass Mitglieder ihr Level für einen dauerhaften Prestige-Rang zurücksetzen.",
+    "enablePrestige": "Prestige aktivieren",
+    "enablePrestigeDesc": "Mitglieder auf dem Prestige-Level können /prestige nutzen, um zurückzusetzen und aufzusteigen.",
+    "prestigeLevel": "Prestige-Level",
+    "prestigeLevelHelp": "Level, das ein Mitglied erreichen muss, um zu prestigen."
   },
   "starboardPage": {
     "saved": "Starboard-Einstellungen gespeichert.",

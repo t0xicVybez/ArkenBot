@@ -474,7 +474,13 @@
     "enableVoiceXp": "Ativar XP de voz",
     "enableVoiceXpDesc": "Concede XP a cada minuto para membros sem mudo em um canal de voz.",
     "voiceXpPerMinute": "XP por minuto",
-    "voiceXpPerMinuteHelp": "Concedido a cada minuto na voz (os multiplicadores de cargo ainda se aplicam)."
+    "voiceXpPerMinuteHelp": "Concedido a cada minuto na voz (os multiplicadores de cargo ainda se aplicam).",
+    "prestigeTitle": "Prestígio",
+    "prestigeDesc": "Permita que os membros redefinam o nível por um rank de prestígio permanente.",
+    "enablePrestige": "Ativar prestígio",
+    "enablePrestigeDesc": "Membros no nível de prestígio podem usar /prestige para redefinir e subir de rank.",
+    "prestigeLevel": "Nível de prestígio",
+    "prestigeLevelHelp": "Nível que um membro precisa alcançar antes de prestigiar."
   },
   "starboardPage": {
     "saved": "Configurações do starboard salvas.",

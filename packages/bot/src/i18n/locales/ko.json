@@ -483,7 +483,8 @@
       "fieldLevel": "📈 레벨",
       "fieldTotalXp": "✨ 총 XP",
       "fieldMessages": "💬 메시지",
-      "fieldProgress": "레벨 {level}까지의 진행도"
+      "fieldProgress": "레벨 {level}까지의 진행도",
+      "fieldPrestige": "프레스티지"
     },
     "stats": {
       "disabledTitle": "레벨 기능 비활성화됨",
@@ -849,6 +850,14 @@
       "overview": "개요",
       "pageFooter": "{page}/{total} 페이지  ·  사용 가능한 명령어 {commands}개",
       "notYourMenu": "이 메뉴는 다른 사람의 것입니다."
+    },
+    "prestige": {
+      "disabledTitle": "프레스티지 사용 불가",
+      "disabled": "이 서버에서는 프레스티지가 활성화되어 있지 않습니다.",
+      "tooLowTitle": "아직입니다",
+      "tooLow": "프레스티지하려면 레벨 {level}에 도달해야 합니다(현재 레벨 {current}).",
+      "title": "프레스티지!",
+      "desc": "레벨을 초기화하고 **프레스티지 {prestige}** ⭐에 도달했습니다"
     }
   },
   "achievements": {

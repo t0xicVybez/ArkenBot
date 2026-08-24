@@ -135,6 +135,8 @@ model GuildSettings {
   xpDecayPercent    Int     @default(5)
   voiceXpEnabled    Boolean @default(false)
   voiceXpPerMinute  Int     @default(5)
+  prestigeEnabled   Boolean @default(false)
+  prestigeLevel     Int     @default(100)
 
   // Embed accent colors (per-guild customisation)
   accentColor           String @default("#5865F2")
@@ -317,6 +319,7 @@ model UserLevel {
   xp             Int       @default(0)
   level          Int       @default(0)
   totalMessages  Int       @default(0)
+  prestige       Int       @default(0)
   streakDays     Int       @default(0)
   lastStreakDate DateTime?
 
