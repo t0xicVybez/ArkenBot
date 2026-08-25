@@ -19,6 +19,7 @@ import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { moderationEmbed, errorEmbed } from '../../utils/embed.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
+import { AppealsModule } from '../../modules/moderation/AppealsModule.js';
 import { canModerate } from '../../utils/permissions.js';
 import { getNextCaseNumber, getGuildSettings } from '../../utils/settings.js';
 import { prisma } from '../../database.js';
@@ -133,6 +134,8 @@ const command: BotCommand = {
     });
 
     const durationLabel = durationStr.toLowerCase();
+    const appealsOn = await AppealsModule.enabled(guild.id);
+    const targetLoc = await resolveUserLocale({ user: { id: targetUser.id }, guildId: guild.id, guildLocale: guild.preferredLocale });
     await targetUser.send({
       embeds: [moderationEmbed({
         action: t('cmd.ctxTimeout.dmAction', loc, { guild: guild.name }),
@@ -141,6 +144,7 @@ const command: BotCommand = {
         reason,
         duration: durationLabel,
       }, settings?.moderationColor)],
+      components: appealsOn ? [AppealsModule.appealButton(guild.id, 'mute', targetLoc)] : [],
     }).catch(swallow);
 
     await LoggingModule.logModerationAction(guild, {

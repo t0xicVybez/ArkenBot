@@ -1965,7 +1965,8 @@
     "guilds": "Serwery",
     "users": "Użytkownicy",
     "metrics": "Metryki",
-    "economy": "Ekonomia"
+    "economy": "Ekonomia",
+    "appeals": "Odwołania"
   },
   "sections": {
     "general": "Ogólne",
@@ -3313,5 +3314,46 @@
     "lotteryChannel": "Kanał losowania",
     "lotteryChannelNone": "Bez ogłoszenia",
     "lotteryChannelHelp": "Gdzie ogłaszany jest cotygodniowy zwycięzca."
+  },
+  "appealsPage": {
+    "title": "Odwołania",
+    "subtitle": "Rozpatruj odwołania członków od bana i wyciszenia.",
+    "approve": "Zatwierdź",
+    "deny": "Odrzuć",
+    "approved": "Odwołanie zatwierdzone",
+    "denied": "Odwołanie odrzucone",
+    "error": "Coś poszło nie tak",
+    "empty": "Brak odwołań.",
+    "filter": {
+      "pending": "Oczekujące",
+      "approved": "Zatwierdzone",
+      "denied": "Odrzucone",
+      "all": "Wszystkie"
+    },
+    "status": {
+      "pending": "Oczekujące",
+      "approved": "Zatwierdzone",
+      "denied": "Odrzucone"
+    },
+    "type": {
+      "ban": "Odwołanie od bana",
+      "mute": "Odwołanie od wyciszenia"
+    }
+  },
+  "appealPublic": {
+    "title": "Odwołaj się od kary",
+    "subtitle": "Zaloguj się przez Discord, aby odwołać się od bana lub wyciszenia na serwerze używającym ArkenBot.",
+    "loginPrompt": "Zaloguj się przez Discord, aby zobaczyć serwery, na których możesz się odwołać.",
+    "login": "Zaloguj się przez Discord",
+    "nothing": "Nie masz obecnie banów ani wyciszeń do zaskarżenia.",
+    "pending": "Masz już oczekujące odwołanie dla tego serwera.",
+    "reasonPlaceholder": "Wyjaśnij, dlaczego powinno to zostać cofnięte…",
+    "submit": "Wyślij odwołanie",
+    "submitted": "Odwołanie wysłane — zespół je rozpatrzy.",
+    "error": "Nie udało się wysłać odwołania.",
+    "type": {
+      "ban": "Jesteś tu zbanowany",
+      "mute": "Jesteś tu wyciszony"
+    }
   }
 }

@@ -114,7 +114,9 @@ const command: BotCommand = {
 
     try {
       // Attempt DM notification before the ban so the message can actually be delivered.
-      if (targetMember) {
+      // Sent even for ban-by-ID (non-members): the DM still reaches the user when
+      // they share another server with the bot, so an appeal button isn't lost.
+      {
         // Offer an appeal button (in the target's language) when appeals are enabled.
         const appealsOn = await AppealsModule.enabled(interaction.guild.id);
         const targetLoc = await resolveUserLocale({ user: { id: targetUser.id }, guildId: interaction.guild.id, guildLocale: interaction.guild.preferredLocale });

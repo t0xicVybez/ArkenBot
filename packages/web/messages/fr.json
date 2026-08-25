@@ -1965,7 +1965,8 @@
     "guilds": "Serveurs",
     "users": "Utilisateurs",
     "metrics": "Métriques",
-    "economy": "Économie"
+    "economy": "Économie",
+    "appeals": "Appels"
   },
   "sections": {
     "general": "Général",
@@ -3313,5 +3314,46 @@
     "lotteryChannel": "Salon du tirage",
     "lotteryChannelNone": "Aucune annonce",
     "lotteryChannelHelp": "Où le gagnant hebdomadaire est annoncé."
+  },
+  "appealsPage": {
+    "title": "Appels",
+    "subtitle": "Examine les appels de bannissement et d’exclusion de tes membres.",
+    "approve": "Approuver",
+    "deny": "Refuser",
+    "approved": "Appel approuvé",
+    "denied": "Appel refusé",
+    "error": "Une erreur est survenue",
+    "empty": "Aucun appel ici.",
+    "filter": {
+      "pending": "En attente",
+      "approved": "Approuvés",
+      "denied": "Refusés",
+      "all": "Tous"
+    },
+    "status": {
+      "pending": "En attente",
+      "approved": "Approuvé",
+      "denied": "Refusé"
+    },
+    "type": {
+      "ban": "Appel de bannissement",
+      "mute": "Appel d’exclusion"
+    }
+  },
+  "appealPublic": {
+    "title": "Faire appel d’une sanction",
+    "subtitle": "Connecte-toi avec Discord pour faire appel d’un bannissement ou d’une exclusion sur un serveur qui utilise ArkenBot.",
+    "loginPrompt": "Connecte-toi avec Discord pour voir les serveurs où tu peux faire appel.",
+    "login": "Se connecter avec Discord",
+    "nothing": "Tu n’as aucun bannissement ni exclusion à contester pour le moment.",
+    "pending": "Tu as déjà un appel en attente pour ce serveur.",
+    "reasonPlaceholder": "Explique pourquoi cela devrait être annulé…",
+    "submit": "Envoyer l’appel",
+    "submitted": "Appel envoyé — le staff l’examinera.",
+    "error": "Impossible d’envoyer ton appel.",
+    "type": {
+      "ban": "Tu es banni ici",
+      "mute": "Tu es exclu ici"
+    }
   }
 }
