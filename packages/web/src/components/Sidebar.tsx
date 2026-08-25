@@ -46,6 +46,7 @@ import {
   Mic,
   ShieldAlert,
   Flag,
+  Gavel,
   MessagesSquare,
   ClipboardList,
   Trello,
@@ -101,6 +102,7 @@ const buildNavSections = (guildId: string, installedAddons: string[]): NavSectio
         { href: `/dashboard/${guildId}/anti-nuke`, key: 'anti-nuke', icon: ShieldAlert },
         { href: `/dashboard/${guildId}/verification`, key: 'verification', icon: ShieldCheck },
         { href: `/dashboard/${guildId}/reports`, key: 'reports', icon: Flag },
+        { href: `/dashboard/${guildId}/appeals`, key: 'appeals', icon: Gavel },
       ],
     },
     {

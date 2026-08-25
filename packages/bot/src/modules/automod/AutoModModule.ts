@@ -11,6 +11,7 @@ import { REDIS_KEYS, COLORS } from '@arkenbot/shared';
 import type { AutoModConfig } from '@arkenbot/shared';
 import { logger, swallow} from '../../logger.js';
 import { notifyActionFailure } from '../../utils/permissionAlert.js';
+import { AppealsModule } from '../moderation/AppealsModule.js';
 import { AiModerationModule } from './AiModerationModule.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 import { getGuildSettings } from '../../utils/settings.js';
@@ -328,10 +329,13 @@ export class AutoModModule {
       const action = config.minAccountAgeAction; // kick | ban | alert | quarantine
       if (action === 'kick' || action === 'ban') {
         const loc = await resolveUserLocale({ user: member.user, guildId: member.guild.id, guildLocale: member.guild.preferredLocale });
+        // Only bans are appealable (a kicked user can simply rejoin).
+        const appealsOn = action === 'ban' && await AppealsModule.enabled(member.guild.id);
         await member.send({
           embeds: [new EmbedBuilder().setColor(COLORS.ERROR)
             .setTitle(t('accountGate.dmTitle', loc, { server: member.guild.name }))
             .setDescription(t('accountGate.dm', loc, { server: member.guild.name, hours: config.minAccountAgeHours }))],
+          components: appealsOn ? [AppealsModule.appealButton(member.guild.id, 'ban', loc)] : [],
         }).catch(swallow);
         if (action === 'ban') {
           if (member.bannable) await member.ban({ reason: 'Alt/raid protection: account too new' }).catch((e) => notifyActionFailure(member.guild, { action: 'ban', error: e, requiredPermission: 'Ban Members', target: member.toString() }));

@@ -19,6 +19,7 @@ import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { moderationEmbed, errorEmbed } from '../../utils/embed.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
+import { AppealsModule } from '../../modules/moderation/AppealsModule.js';
 import { canModerate } from '../../utils/permissions.js';
 import { getNextCaseNumber, getGuildSettings } from '../../utils/settings.js';
 import { prisma } from '../../database.js';
@@ -84,9 +85,24 @@ const command: BotCommand = {
       return;
     }
 
+    const settings = await getGuildSettings(guild.id);
+
+    // DM the user (with an appeal button when enabled) BEFORE the ban so the
+    // message can actually be delivered while they still share this server.
+    const appealsOn = await AppealsModule.enabled(guild.id);
+    const targetLoc = await resolveUserLocale({ user: { id: targetUser.id }, guildId: guild.id, guildLocale: guild.preferredLocale });
+    await targetUser.send({
+      embeds: [moderationEmbed({
+        action: t('cmd.ctxBan.dmAction', loc, { guild: guild.name }),
+        user: targetUser.tag,
+        moderator: interaction.user.tag,
+        reason,
+      }, settings?.moderationColor)],
+      components: appealsOn ? [AppealsModule.appealButton(guild.id, 'ban', targetLoc)] : [],
+    }).catch(swallow);
+
     await guild.members.ban(targetUser, { reason: `${interaction.user.tag}: ${reason}` }).catch(swallow);
 
-    const settings = await getGuildSettings(guild.id);
     const caseNumber = await getNextCaseNumber(guild.id);
     await prisma.moderationCase.create({
       data: {
@@ -101,15 +117,6 @@ const command: BotCommand = {
         active: true,
       },
     });
-
-    await targetUser.send({
-      embeds: [moderationEmbed({
-        action: t('cmd.ctxBan.dmAction', loc, { guild: guild.name }),
-        user: targetUser.tag,
-        moderator: interaction.user.tag,
-        reason,
-      }, settings?.moderationColor)],
-    }).catch(swallow);
 
     await LoggingModule.logModerationAction(guild, {
       type: 'ban',

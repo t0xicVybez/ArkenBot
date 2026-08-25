@@ -1965,7 +1965,8 @@
     "guilds": "Server",
     "users": "Utenti",
     "metrics": "Metriche",
-    "economy": "Economia"
+    "economy": "Economia",
+    "appeals": "Ricorsi"
   },
   "sections": {
     "general": "Generale",
@@ -3313,5 +3314,46 @@
     "lotteryChannel": "Canale dell’estrazione",
     "lotteryChannelNone": "Nessun annuncio",
     "lotteryChannelHelp": "Dove viene annunciato il vincitore settimanale."
+  },
+  "appealsPage": {
+    "title": "Ricorsi",
+    "subtitle": "Esamina i ricorsi per ban e silenziamento dei tuoi membri.",
+    "approve": "Approva",
+    "deny": "Rifiuta",
+    "approved": "Ricorso approvato",
+    "denied": "Ricorso rifiutato",
+    "error": "Qualcosa è andato storto",
+    "empty": "Nessun ricorso qui.",
+    "filter": {
+      "pending": "In sospeso",
+      "approved": "Approvati",
+      "denied": "Rifiutati",
+      "all": "Tutti"
+    },
+    "status": {
+      "pending": "In sospeso",
+      "approved": "Approvato",
+      "denied": "Rifiutato"
+    },
+    "type": {
+      "ban": "Ricorso ban",
+      "mute": "Ricorso silenziamento"
+    }
+  },
+  "appealPublic": {
+    "title": "Fai ricorso contro una sanzione",
+    "subtitle": "Accedi con Discord per fare ricorso contro un ban o un silenziamento su un server che usa ArkenBot.",
+    "loginPrompt": "Accedi con Discord per vedere i server dove puoi fare ricorso.",
+    "login": "Accedi con Discord",
+    "nothing": "Al momento non hai ban o silenziamenti da contestare.",
+    "pending": "Hai già un ricorso in sospeso per questo server.",
+    "reasonPlaceholder": "Spiega perché dovrebbe essere annullato…",
+    "submit": "Invia ricorso",
+    "submitted": "Ricorso inviato — lo staff lo esaminerà.",
+    "error": "Impossibile inviare il tuo ricorso.",
+    "type": {
+      "ban": "Sei bannato qui",
+      "mute": "Sei silenziato qui"
+    }
   }
 }

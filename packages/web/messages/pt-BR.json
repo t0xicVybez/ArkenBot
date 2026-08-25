@@ -1965,7 +1965,8 @@
     "guilds": "Servidores",
     "users": "Usuários",
     "metrics": "Métricas",
-    "economy": "Economia"
+    "economy": "Economia",
+    "appeals": "Recursos"
   },
   "sections": {
     "general": "Geral",
@@ -3313,5 +3314,46 @@
     "lotteryChannel": "Canal do sorteio",
     "lotteryChannelNone": "Sem anúncio",
     "lotteryChannelHelp": "Onde o vencedor semanal é anunciado."
+  },
+  "appealsPage": {
+    "title": "Recursos",
+    "subtitle": "Analise os recursos de banimento e silenciamento dos seus membros.",
+    "approve": "Aprovar",
+    "deny": "Negar",
+    "approved": "Recurso aprovado",
+    "denied": "Recurso negado",
+    "error": "Algo deu errado",
+    "empty": "Nenhum recurso aqui.",
+    "filter": {
+      "pending": "Pendentes",
+      "approved": "Aprovados",
+      "denied": "Negados",
+      "all": "Todos"
+    },
+    "status": {
+      "pending": "Pendente",
+      "approved": "Aprovado",
+      "denied": "Negado"
+    },
+    "type": {
+      "ban": "Recurso de banimento",
+      "mute": "Recurso de silenciamento"
+    }
+  },
+  "appealPublic": {
+    "title": "Recorrer de uma punição",
+    "subtitle": "Entre com o Discord para recorrer de um banimento ou silenciamento em um servidor que usa o ArkenBot.",
+    "loginPrompt": "Entre com o Discord para ver servidores onde você pode recorrer.",
+    "login": "Entrar com o Discord",
+    "nothing": "Você não tem banimentos ou silenciamentos para recorrer agora.",
+    "pending": "Você já tem um recurso pendente para este servidor.",
+    "reasonPlaceholder": "Explique por que isso deveria ser revertido…",
+    "submit": "Enviar recurso",
+    "submitted": "Recurso enviado — a equipe irá analisá-lo.",
+    "error": "Não foi possível enviar seu recurso.",
+    "type": {
+      "ban": "Você está banido aqui",
+      "mute": "Você está silenciado aqui"
+    }
   }
 }

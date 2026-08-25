@@ -1965,7 +1965,8 @@
     "guilds": "Guilds",
     "users": "Users",
     "metrics": "Metrics",
-    "economy": "Economy"
+    "economy": "Economy",
+    "appeals": "Appeals"
   },
   "sections": {
     "general": "General",
@@ -3313,5 +3314,46 @@
     "lotteryChannel": "Draw channel",
     "lotteryChannelNone": "No announcement",
     "lotteryChannelHelp": "Where the weekly winner is announced."
+  },
+  "appealsPage": {
+    "title": "Appeals",
+    "subtitle": "Review ban and mute appeals from your members.",
+    "approve": "Approve",
+    "deny": "Deny",
+    "approved": "Appeal approved",
+    "denied": "Appeal denied",
+    "error": "Something went wrong",
+    "empty": "No appeals here.",
+    "filter": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "denied": "Denied",
+      "all": "All"
+    },
+    "status": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "denied": "Denied"
+    },
+    "type": {
+      "ban": "Ban appeal",
+      "mute": "Mute appeal"
+    }
+  },
+  "appealPublic": {
+    "title": "Appeal a punishment",
+    "subtitle": "Log in with Discord to appeal a ban or mute on a server that uses ArkenBot.",
+    "loginPrompt": "Log in with Discord to see servers where you can appeal.",
+    "login": "Log in with Discord",
+    "nothing": "You have no bans or mutes to appeal right now.",
+    "pending": "You already have a pending appeal for this server.",
+    "reasonPlaceholder": "Explain why this should be reversed…",
+    "submit": "Submit appeal",
+    "submitted": "Appeal submitted — staff will review it.",
+    "error": "Could not submit your appeal.",
+    "type": {
+      "ban": "You are banned here",
+      "mute": "You are muted here"
+    }
   }
 }

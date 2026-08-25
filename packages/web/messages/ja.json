@@ -1965,7 +1965,8 @@
     "guilds": "サーバー",
     "users": "ユーザー",
     "metrics": "メトリクス",
-    "economy": "経済"
+    "economy": "経済",
+    "appeals": "異議申し立て"
   },
   "sections": {
     "general": "一般",
@@ -3313,5 +3314,46 @@
     "lotteryChannel": "抽選チャンネル",
     "lotteryChannelNone": "告知なし",
     "lotteryChannelHelp": "毎週の当選者を告知する場所。"
+  },
+  "appealsPage": {
+    "title": "異議申し立て",
+    "subtitle": "メンバーからのBAN・ミュートの異議を審査します。",
+    "approve": "承認",
+    "deny": "却下",
+    "approved": "異議を承認しました",
+    "denied": "異議を却下しました",
+    "error": "問題が発生しました",
+    "empty": "異議はありません。",
+    "filter": {
+      "pending": "保留中",
+      "approved": "承認済み",
+      "denied": "却下済み",
+      "all": "すべて"
+    },
+    "status": {
+      "pending": "保留中",
+      "approved": "承認済み",
+      "denied": "却下済み"
+    },
+    "type": {
+      "ban": "BANの異議",
+      "mute": "ミュートの異議"
+    }
+  },
+  "appealPublic": {
+    "title": "処分に異議を申し立てる",
+    "subtitle": "ArkenBot を使うサーバーでのBANやミュートに異議を申し立てるには、Discord でログインしてください。",
+    "loginPrompt": "Discord でログインすると、異議を申し立てられるサーバーが表示されます。",
+    "login": "Discord でログイン",
+    "nothing": "現在、異議を申し立てられるBANやミュートはありません。",
+    "pending": "このサーバーには保留中の異議申し立てがすでにあります。",
+    "reasonPlaceholder": "なぜ取り消すべきかを説明してください…",
+    "submit": "異議を送信",
+    "submitted": "異議を送信しました。スタッフが確認します。",
+    "error": "異議を送信できませんでした。",
+    "type": {
+      "ban": "ここでBANされています",
+      "mute": "ここでミュートされています"
+    }
   }
 }
