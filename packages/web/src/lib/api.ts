@@ -472,6 +472,13 @@ export const auditLogApi = {
 };
 
 // ─── Admin ────────────────────────────────────────────────────────
+export const appealsApi = {
+  appealable: () => api.get('/me/appealable'),
+  submit: (guildId: string, reason: string) => api.post('/me/appeals', { guildId, reason }),
+  listForGuild: (guildId: string, status?: string) => api.get(`/guilds/${guildId}/appeals${status ? `?status=${status}` : ''}`),
+  decide: (guildId: string, id: string, action: 'approve' | 'deny') => api.post(`/guilds/${guildId}/appeals/${id}/decision`, { action }),
+};
+
 export const adminApi = {
   getGuilds: (params?: object) => api.get('/admin/guilds', { params }),
   deleteGuild: (guildId: string) => api.delete(`/admin/guilds/${guildId}`),

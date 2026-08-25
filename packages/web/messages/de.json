@@ -1965,7 +1965,8 @@
     "guilds": "Server",
     "users": "Benutzer",
     "metrics": "Metriken",
-    "economy": "Wirtschaft"
+    "economy": "Wirtschaft",
+    "appeals": "Einsprüche"
   },
   "sections": {
     "general": "Allgemein",
@@ -3313,5 +3314,46 @@
     "lotteryChannel": "Ziehungskanal",
     "lotteryChannelNone": "Keine Ankündigung",
     "lotteryChannelHelp": "Wo der wöchentliche Gewinner angekündigt wird."
+  },
+  "appealsPage": {
+    "title": "Einsprüche",
+    "subtitle": "Prüfe Bann- und Timeout-Einsprüche deiner Mitglieder.",
+    "approve": "Genehmigen",
+    "deny": "Ablehnen",
+    "approved": "Einspruch genehmigt",
+    "denied": "Einspruch abgelehnt",
+    "error": "Etwas ist schiefgelaufen",
+    "empty": "Keine Einsprüche hier.",
+    "filter": {
+      "pending": "Offen",
+      "approved": "Genehmigt",
+      "denied": "Abgelehnt",
+      "all": "Alle"
+    },
+    "status": {
+      "pending": "Offen",
+      "approved": "Genehmigt",
+      "denied": "Abgelehnt"
+    },
+    "type": {
+      "ban": "Bann-Einspruch",
+      "mute": "Timeout-Einspruch"
+    }
+  },
+  "appealPublic": {
+    "title": "Gegen eine Strafe Einspruch einlegen",
+    "subtitle": "Melde dich mit Discord an, um gegen einen Bann oder Timeout auf einem Server mit ArkenBot Einspruch einzulegen.",
+    "loginPrompt": "Melde dich mit Discord an, um Server zu sehen, auf denen du Einspruch einlegen kannst.",
+    "login": "Mit Discord anmelden",
+    "nothing": "Du hast derzeit keine Banns oder Timeouts zum Anfechten.",
+    "pending": "Du hast bereits einen offenen Einspruch für diesen Server.",
+    "reasonPlaceholder": "Erkläre, warum das rückgängig gemacht werden sollte…",
+    "submit": "Einspruch senden",
+    "submitted": "Einspruch gesendet — das Team prüft ihn.",
+    "error": "Dein Einspruch konnte nicht gesendet werden.",
+    "type": {
+      "ban": "Du bist hier gebannt",
+      "mute": "Du bist hier stummgeschaltet"
+    }
   }
 }

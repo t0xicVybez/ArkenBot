@@ -1965,7 +1965,8 @@
     "guilds": "Servidores",
     "users": "Usuarios",
     "metrics": "Métricas",
-    "economy": "Economía"
+    "economy": "Economía",
+    "appeals": "Apelaciones"
   },
   "sections": {
     "general": "General",
@@ -3313,5 +3314,46 @@
     "lotteryChannel": "Canal del sorteo",
     "lotteryChannelNone": "Sin anuncio",
     "lotteryChannelHelp": "Dónde se anuncia el ganador semanal."
+  },
+  "appealsPage": {
+    "title": "Apelaciones",
+    "subtitle": "Revisa las apelaciones de baneo y silencio de tus miembros.",
+    "approve": "Aprobar",
+    "deny": "Rechazar",
+    "approved": "Apelación aprobada",
+    "denied": "Apelación rechazada",
+    "error": "Algo salió mal",
+    "empty": "No hay apelaciones aquí.",
+    "filter": {
+      "pending": "Pendientes",
+      "approved": "Aprobadas",
+      "denied": "Rechazadas",
+      "all": "Todas"
+    },
+    "status": {
+      "pending": "Pendiente",
+      "approved": "Aprobada",
+      "denied": "Rechazada"
+    },
+    "type": {
+      "ban": "Apelación de baneo",
+      "mute": "Apelación de silencio"
+    }
+  },
+  "appealPublic": {
+    "title": "Apelar una sanción",
+    "subtitle": "Inicia sesión con Discord para apelar un baneo o silencio en un servidor que usa ArkenBot.",
+    "loginPrompt": "Inicia sesión con Discord para ver los servidores donde puedes apelar.",
+    "login": "Iniciar sesión con Discord",
+    "nothing": "No tienes baneos ni silencios que apelar ahora mismo.",
+    "pending": "Ya tienes una apelación pendiente para este servidor.",
+    "reasonPlaceholder": "Explica por qué debería revertirse…",
+    "submit": "Enviar apelación",
+    "submitted": "Apelación enviada: el staff la revisará.",
+    "error": "No se pudo enviar tu apelación.",
+    "type": {
+      "ban": "Estás baneado aquí",
+      "mute": "Estás silenciado aquí"
+    }
   }
 }

@@ -1965,7 +1965,8 @@
     "guilds": "服务器",
     "users": "用户",
     "metrics": "指标",
-    "economy": "经济"
+    "economy": "经济",
+    "appeals": "申诉"
   },
   "sections": {
     "general": "常规",
@@ -3313,5 +3314,46 @@
     "lotteryChannel": "开奖频道",
     "lotteryChannelNone": "不公告",
     "lotteryChannelHelp": "公告每周中奖者的位置。"
+  },
+  "appealsPage": {
+    "title": "申诉",
+    "subtitle": "审核成员的封禁与禁言申诉。",
+    "approve": "批准",
+    "deny": "拒绝",
+    "approved": "申诉已批准",
+    "denied": "申诉已拒绝",
+    "error": "出了点问题",
+    "empty": "这里没有申诉。",
+    "filter": {
+      "pending": "待处理",
+      "approved": "已批准",
+      "denied": "已拒绝",
+      "all": "全部"
+    },
+    "status": {
+      "pending": "待处理",
+      "approved": "已批准",
+      "denied": "已拒绝"
+    },
+    "type": {
+      "ban": "封禁申诉",
+      "mute": "禁言申诉"
+    }
+  },
+  "appealPublic": {
+    "title": "申诉处罚",
+    "subtitle": "使用 Discord 登录，以对使用 ArkenBot 的服务器上的封禁或禁言进行申诉。",
+    "loginPrompt": "使用 Discord 登录以查看你可以申诉的服务器。",
+    "login": "使用 Discord 登录",
+    "nothing": "你目前没有可申诉的封禁或禁言。",
+    "pending": "你在该服务器已有一个待处理的申诉。",
+    "reasonPlaceholder": "说明为什么应当撤销此处罚…",
+    "submit": "提交申诉",
+    "submitted": "申诉已提交——工作人员将进行审核。",
+    "error": "无法提交你的申诉。",
+    "type": {
+      "ban": "你在此处被封禁",
+      "mute": "你在此处被禁言"
+    }
   }
 }
