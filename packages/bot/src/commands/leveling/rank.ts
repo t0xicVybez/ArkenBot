@@ -110,6 +110,10 @@ const command: BotCommand = {
         )
         .setFooter({ text: interaction.guild.name });
 
+      if (userLevel.prestige > 0) {
+        embed.addFields({ name: t('cmd.rank.fieldPrestige', loc), value: `⭐ ${userLevel.prestige}`, inline: true });
+      }
+
       await interaction.editReply({ embeds: [embed] });
     }
   },

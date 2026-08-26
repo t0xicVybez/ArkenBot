@@ -10,6 +10,7 @@ import { EmbedBuilder, type TextChannel, type VoiceChannel } from 'discord.js';
 import { computeNextOccurrence } from '@arkenbot/shared';
 import { postAnalytics } from '../commands/utility/analytics.js';
 import { prisma } from '../database.js';
+import { redis } from '../redis.js';
 import { notifyActionFailure } from '../utils/permissionAlert.js';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = prisma as any;
@@ -18,6 +19,11 @@ import type { BotClient } from '../client.js';
 import { getGuildSettings } from '../utils/settings.js';
 import { t, resolveUserLocale } from '../i18n/index.js';
 import { XPDecayModule } from './leveling/XPDecayModule.js';
+import { LevelingModule } from './leveling/LevelingModule.js';
+import { HighlightsModule } from './HighlightsModule.js';
+import { EconomyModule } from './economy/EconomyModule.js';
+import { EventsModule } from './events/EventsModule.js';
+import { ModmailModule } from './modmail/ModmailModule.js';
 import { AnalyticsModule } from './AnalyticsModule.js';
 import RSSParser from 'rss-parser';
 
@@ -75,9 +81,24 @@ export class BackgroundJobs {
     // Mondays (UTC) so restarts mid-week don't double-post.
     setTimeout(() => this.timers.push(setInterval(() => void this.runWeeklyAnalytics(), 7 * 24 * 60 * 60 * 1000)), jitter());
 
+    // Weekly community highlights digest (Monday-gated).
+    setTimeout(() => this.timers.push(setInterval(() => void this.runWeeklyHighlights(), 6 * 60 * 60 * 1000)), jitter());
+
+    // Event RSVP reminders (every minute).
+    setTimeout(() => this.timers.push(setInterval(() => void EventsModule.runReminders(this.client).catch(() => {}), 60 * 1000)), jitter());
+
+    // Weekly economy lottery draw (Sunday-gated).
+    setTimeout(() => this.timers.push(setInterval(() => void this.runLotteryDraw(), 6 * 60 * 60 * 1000)), jitter());
+
     // Purge data for guilds that left longer than the grace period ago.
     void this.runGuildPurgeSweep();
     setTimeout(() => this.timers.push(setInterval(() => void this.runGuildPurgeSweep(), 60 * 60 * 1000)), jitter());
+
+    // Voice XP: award to eligible members in voice once a minute.
+    setTimeout(() => this.timers.push(setInterval(() => void this.runVoiceXp(), 60 * 1000)), jitter());
+
+    // Auto-close idle modmail threads every 15 minutes.
+    setTimeout(() => this.timers.push(setInterval(() => void ModmailModule.closeIdleThreads(this.client), 15 * 60 * 1000)), jitter());
 
     // Heartbeat for the public status page — the API reads this key.
     void this.beatHeartbeat();
@@ -148,6 +169,12 @@ export class BackgroundJobs {
   }
 
   /** Writes a short-lived Redis key so the API can report bot liveness. */
+  private async runVoiceXp(): Promise<void> {
+    for (const guild of this.client.guilds.cache.values()) {
+      await LevelingModule.sweepVoiceXp(guild).catch((err) => logger.error({ err, guildId: guild.id }, 'voice XP sweep failed'));
+    }
+  }
+
   private async beatHeartbeat(): Promise<void> {
     try {
       const { pub } = await import('../redis.js');
@@ -1018,6 +1045,31 @@ export class BackgroundJobs {
   }
 
   // ── Weekly Analytics Reports ─────────────────────────────────────────────
+
+  private async runLotteryDraw(): Promise<void> {
+    // Draw on Sundays (UTC day 0); a Redis guard makes it exactly-once per week.
+    if (new Date().getUTCDay() !== 0) return;
+    const week = (() => { const d = new Date(); return `${d.getUTCFullYear()}-${Math.floor(d.getTime() / 6048e5)}`; })();
+    const configs = await prisma.economyConfig.findMany({ where: { enabled: true, lotteryEnabled: true }, select: { guildId: true } }).catch(() => []);
+    for (const cfg of configs) {
+      const guild = this.client.guilds.cache.get(cfg.guildId);
+      if (!guild) continue;
+      const guard = await redis.set(`lottery:${cfg.guildId}:${week}`, '1', 'EX', 8 * 86400, 'NX').catch(() => 'OK');
+      if (guard !== 'OK') continue;
+      await EconomyModule.drawLottery(guild).catch((err) => logger.error({ err, guildId: cfg.guildId }, 'lottery draw failed'));
+    }
+  }
+
+  private async runWeeklyHighlights(): Promise<void> {
+    // Only post on Mondays (UTC) so a restart during the week doesn't repeat it.
+    if (new Date().getUTCDay() !== 1) return;
+    const configs = await prisma.guildSettings.findMany({ where: { highlightsEnabled: true, highlightsChannelId: { not: null } }, select: { guildId: true } }).catch(() => []);
+    for (const cfg of configs) {
+      const guild = this.client.guilds.cache.get(cfg.guildId);
+      if (!guild) continue;
+      await HighlightsModule.postDigest(guild).catch((err) => logger.error({ err, guildId: cfg.guildId }, 'highlights digest failed'));
+    }
+  }
 
   private async runWeeklyAnalytics(): Promise<void> {
     // Only post on Mondays (UTC day 1) so mid-week restarts don't double-post.

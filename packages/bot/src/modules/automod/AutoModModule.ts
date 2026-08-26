@@ -11,8 +11,10 @@ import { REDIS_KEYS, COLORS } from '@arkenbot/shared';
 import type { AutoModConfig } from '@arkenbot/shared';
 import { logger, swallow} from '../../logger.js';
 import { notifyActionFailure } from '../../utils/permissionAlert.js';
+import { AppealsModule } from '../moderation/AppealsModule.js';
 import { AiModerationModule } from './AiModerationModule.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
+import { getGuildSettings } from '../../utils/settings.js';
 
 /** Redis key for the per-user word filter violation counter (24-hour rolling window). */
 const FILTER_VIOLATION_KEY = (guildId: string, userId: string) =>
@@ -313,6 +315,79 @@ export class AutoModModule {
    * Increments the join-surge counter for the guild and returns true when the
    * count exceeds the configured raid threshold within the detection window.
    */
+  /**
+   * Alt/raid protection at join time. A hard account-age gate can kick/ban (or
+   * just alert on) accounts younger than the configured minimum, and a softer
+   * flag posts a heads-up to the mod-log for newish accounts. Uses Discord
+   * relative timestamps so the account age auto-localizes for each viewer.
+   */
+  static async checkAccountAge(member: GuildMember, config: AutoModConfig): Promise<void> {
+    if (member.user.bot) return;
+    const ageHours = (Date.now() - member.user.createdTimestamp) / 3_600_000;
+
+    if (config.minAccountAgeEnabled && ageHours < config.minAccountAgeHours) {
+      const action = config.minAccountAgeAction; // kick | ban | alert | quarantine
+      if (action === 'kick' || action === 'ban') {
+        const loc = await resolveUserLocale({ user: member.user, guildId: member.guild.id, guildLocale: member.guild.preferredLocale });
+        // Only bans are appealable (a kicked user can simply rejoin).
+        const appealsOn = action === 'ban' && await AppealsModule.enabled(member.guild.id);
+        await member.send({
+          embeds: [new EmbedBuilder().setColor(COLORS.ERROR)
+            .setTitle(t('accountGate.dmTitle', loc, { server: member.guild.name }))
+            .setDescription(t('accountGate.dm', loc, { server: member.guild.name, hours: config.minAccountAgeHours }))],
+          components: appealsOn ? [AppealsModule.appealButton(member.guild.id, 'ban', loc)] : [],
+        }).catch(swallow);
+        if (action === 'ban') {
+          if (member.bannable) await member.ban({ reason: 'Alt/raid protection: account too new' }).catch((e) => notifyActionFailure(member.guild, { action: 'ban', error: e, requiredPermission: 'Ban Members', target: member.toString() }));
+        } else if (member.kickable) {
+          await member.kick('Alt/raid protection: account too new').catch((e) => notifyActionFailure(member.guild, { action: 'kick', error: e, requiredPermission: 'Kick Members', target: member.toString() }));
+        }
+      } else if (action === 'quarantine' && config.quarantineRoleId) {
+        // Keep the account in the server but strip its ability to interact,
+        // handing review to staff. The quarantine role should deny access.
+        const role = member.guild.roles.cache.get(config.quarantineRoleId);
+        const me = member.guild.members.me;
+        if (role && me?.permissions.has(PermissionFlagsBits.ManageRoles) && role.position < me.roles.highest.position) {
+          await member.roles.add(role, 'Alt/raid protection: quarantined new account').catch((e) => notifyActionFailure(member.guild, { action: 'manageRoles', error: e, requiredPermission: 'Manage Roles', target: member.toString() }));
+        } else {
+          await notifyActionFailure(member.guild, { action: 'manageRoles', error: new Error('Missing Manage Roles or quarantine role too high'), requiredPermission: 'Manage Roles', target: member.toString() });
+        }
+      }
+      const alertKind = action === 'quarantine' ? 'quarantine' : action === 'alert' ? 'alert' : action;
+      await this.postJoinAlert(member, alertKind as 'kick' | 'ban' | 'alert' | 'quarantine', config.minAccountAgeHours);
+      return;
+    }
+
+    if (config.newAccountFlagEnabled && ageHours < config.newAccountFlagHours) {
+      await this.postJoinAlert(member, 'flag', config.newAccountFlagHours);
+    }
+  }
+
+  /** Posts an alt/raid heads-up to the guild's mod-log (falling back to the log channel). */
+  private static async postJoinAlert(member: GuildMember, kind: 'kick' | 'ban' | 'alert' | 'flag' | 'quarantine', thresholdHours: number): Promise<void> {
+    const settings = await getGuildSettings(member.guild.id);
+    const channelId = settings?.modLogChannelId ?? settings?.logChannelId;
+    if (!channelId) return;
+    const channel = member.guild.channels.cache.get(channelId) as TextChannel | undefined;
+    if (!channel?.isTextBased()) return;
+    const loc = await resolveUserLocale({ user: { id: '' }, guildId: member.guild.id, guildLocale: member.guild.preferredLocale });
+    const created = `<t:${Math.floor(member.user.createdTimestamp / 1000)}:R>`;
+    const isBlock = kind === 'kick' || kind === 'ban' || kind === 'quarantine';
+    const actionWord = t(`accountGate.action.${kind}`, loc);
+    const embed = new EmbedBuilder()
+      .setColor(kind === 'kick' || kind === 'ban' ? COLORS.ERROR : 0xfaa61a)
+      .setAuthor({ name: member.user.tag, iconURL: member.user.displayAvatarURL() })
+      .setTitle(isBlock ? t('accountGate.gateTitle', loc) : t('accountGate.flagTitle', loc))
+      .setDescription(t(isBlock ? 'accountGate.gateDesc' : 'accountGate.flagDesc', loc, { user: member.toString(), tag: member.user.tag, action: actionWord }))
+      .addFields(
+        { name: t('accountGate.fieldCreated', loc), value: created, inline: true },
+        { name: t('accountGate.fieldThreshold', loc), value: t('accountGate.hours', loc, { hours: thresholdHours }), inline: true },
+      )
+      .setFooter({ text: `ID: ${member.id}` })
+      .setTimestamp();
+    await channel.send({ embeds: [embed] }).catch((e) => notifyActionFailure(member.guild, { action: 'sendMessage', error: e, requiredPermission: 'Send Messages / Embed Links', channelId, target: member.toString() }));
+  }
+
   static async checkRaid(guildId: string, config: AutoModConfig): Promise<boolean> {
     const key = REDIS_KEYS.RAID_TRACKER(guildId);
     const count = await redis.incr(key);
@@ -331,7 +406,12 @@ export class AutoModModule {
    */
   static async handleMemberJoin(member: GuildMember): Promise<void> {
     const config = await this.getConfig(member.guild.id);
-    if (!config?.antiRaidEnabled) return;
+    if (!config) return;
+
+    // Account-age gate + new-account flagging run independently of anti-raid.
+    await this.checkAccountAge(member, config).catch((err) => logger.error({ err }, 'account-age check failed'));
+
+    if (!config.antiRaidEnabled) return;
 
     const isRaid = await this.checkRaid(member.guild.id, config);
     if (!isRaid) return;

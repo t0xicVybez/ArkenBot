@@ -1,0 +1,158 @@
+/**
+ * EconomyModule — shared helpers for the guild economy feature.
+ *
+ * Centralises config loading, balance mutations (wallet/bank), cooldown maths
+ * and currency formatting so the individual command files stay thin. All money
+ * operations clamp at zero and run inside interactive transactions where a
+ * read-modify-write race could otherwise let a balance go negative (pay, rob,
+ * gambling, purchases).
+ */
+import { prisma } from '../../database.js';
+import { EmbedBuilder, type Guild, type TextChannel } from 'discord.js';
+import { COLORS } from '@arkenbot/shared';
+import { swallow } from '../../logger.js';
+import { t, resolveUserLocale } from '../../i18n/index.js';
+import type { EconomyConfig, EconomyBalance } from '@prisma/client';
+
+export type Config = EconomyConfig;
+export type Balance = EconomyBalance;
+
+export class EconomyModule {
+  /** Fetch (never create) the per-guild economy config. */
+  static async getConfig(guildId: string): Promise<EconomyConfig | null> {
+    return prisma.economyConfig.findUnique({ where: { guildId } });
+  }
+
+  /** Fetch config or a defaulted in-memory object when the guild has none yet. */
+  static async getConfigOrDefault(guildId: string): Promise<EconomyConfig> {
+    const cfg = await this.getConfig(guildId);
+    if (cfg) return cfg;
+    return {
+      id: '', guildId, enabled: false, currencyName: 'Coins', currencySymbol: '🪙',
+      startingBalance: 0, dailyAmount: 200, dailyStreakBonus: 50, workMin: 50, workMax: 300,
+      workCooldown: 3600, robEnabled: true, robCooldown: 86400, robSuccessRate: 40,
+      robMaxPercent: 20, robMinBalance: 500, robFinePercent: 15, gamblingEnabled: true,
+      maxBet: 10000, createdAt: new Date(), updatedAt: new Date(),
+    } as EconomyConfig;
+  }
+
+  /** Get (creating on first touch) a user's balance row, seeded with startingBalance. */
+  static async getBalance(guildId: string, userId: string, startingBalance = 0): Promise<EconomyBalance> {
+    const existing = await prisma.economyBalance.findUnique({
+      where: { guildId_userId: { guildId, userId } },
+    });
+    if (existing) return existing;
+    return prisma.economyBalance.create({
+      data: { guildId, userId, wallet: startingBalance },
+    });
+  }
+
+  /** Add (or subtract, with a negative amount) to a user's wallet, clamped at zero. */
+  static async addWallet(guildId: string, userId: string, amount: number, starting = 0): Promise<EconomyBalance> {
+    await this.getBalance(guildId, userId, starting);
+    return prisma.$transaction(async (tx) => {
+      const row = await tx.economyBalance.findUnique({ where: { guildId_userId: { guildId, userId } } });
+      const next = Math.max(0, (row?.wallet ?? 0) + amount);
+      return tx.economyBalance.update({
+        where: { guildId_userId: { guildId, userId } },
+        data: { wallet: next },
+      });
+    });
+  }
+
+  /** Net worth = wallet + bank. */
+  static net(bal: EconomyBalance): number {
+    return bal.wallet + bal.bank;
+  }
+
+  /** Format an amount with the guild's currency symbol, e.g. "🪙 1,250". */
+  static format(amount: number, cfg: Pick<EconomyConfig, 'currencySymbol'>): string {
+    return `${cfg.currencySymbol} ${amount.toLocaleString('en-US')}`;
+  }
+
+  /** Rank (1-based) of a user by net worth within the guild. */
+  static async rank(guildId: string, userId: string): Promise<number> {
+    const me = await prisma.economyBalance.findUnique({ where: { guildId_userId: { guildId, userId } } });
+    if (!me) return 0;
+    const myNet = this.net(me);
+    // Count everyone strictly richer. Prisma can't compare two columns' sum, so pull the field-sums.
+    const rows = await prisma.economyBalance.findMany({ where: { guildId }, select: { wallet: true, bank: true } });
+    const richer = rows.filter((r) => r.wallet + r.bank > myNet).length;
+    return richer + 1;
+  }
+
+  /**
+   * Returns remaining cooldown in ms for a timestamp+window pair, or 0 if ready.
+   */
+  static cooldownRemaining(last: Date | null, windowSeconds: number, now = Date.now()): number {
+    if (!last) return 0;
+    const readyAt = last.getTime() + windowSeconds * 1000;
+    return Math.max(0, readyAt - now);
+  }
+
+  /**
+   * Grant a level-up currency reward if the guild has economy + a reward configured.
+   * Returns the amount granted (0 when disabled). Safe to call for every level-up.
+   */
+  static async awardLevelUp(guildId: string, userId: string, newLevel: number): Promise<number> {
+    const cfg = await this.getConfig(guildId);
+    if (!cfg?.enabled || cfg.levelUpReward <= 0) return 0;
+    const reward = cfg.levelUpReward * newLevel;
+    await this.addWallet(guildId, userId, reward, cfg.startingBalance);
+    return reward;
+  }
+
+  /** Sum of income-role payouts a member qualifies for, given the roles they hold. */
+  static async incomeForRoles(guildId: string, roleIds: string[]): Promise<number> {
+    if (roleIds.length === 0) return 0;
+    const rows = await prisma.economyIncomeRole.findMany({ where: { guildId, roleId: { in: roleIds } } });
+    return rows.reduce((sum, r) => sum + r.amount, 0);
+  }
+
+  /** Daily bank interest for a balance under a config, clamped to the configured cap. */
+  static bankInterest(bank: number, cfg: Pick<Config, 'bankInterestPct' | 'bankInterestCap'>): number {
+    if (cfg.bankInterestPct <= 0 || bank <= 0) return 0;
+    const raw = Math.floor(bank * (cfg.bankInterestPct / 100));
+    return cfg.bankInterestCap > 0 ? Math.min(raw, cfg.bankInterestCap) : raw;
+  }
+
+  /** Discord relative-timestamp tag for "ready in" messaging (auto-localised per viewer). */
+  static readyTag(remainingMs: number, now = Date.now()): string {
+    return `<t:${Math.floor((now + remainingMs) / 1000)}:R>`;
+  }
+
+  /**
+   * Draw the weekly lottery for one guild: pick a ticket-weighted winner, pay
+   * the whole pot into their wallet, announce it, and clear all tickets.
+   * No-op when the lottery is disabled or fewer than two participants entered.
+   */
+  static async drawLottery(guild: Guild): Promise<boolean> {
+    const cfg = await this.getConfig(guild.id);
+    if (!cfg?.enabled || !cfg.lotteryEnabled) return false;
+    const rows = await prisma.economyLotteryTicket.findMany({ where: { guildId: guild.id } });
+    const totalTickets = rows.reduce((s, r) => s + r.tickets, 0);
+    if (rows.length < 2 || totalTickets < 1) return false; // need a real draw
+
+    // Weighted random pick.
+    let pick = Math.floor(Math.random() * totalTickets);
+    let winner = rows[0];
+    for (const r of rows) { if (pick < r.tickets) { winner = r; break; } pick -= r.tickets; }
+
+    const pot = totalTickets * cfg.lotteryTicketPrice;
+    await this.addWallet(guild.id, winner.userId, pot, cfg.startingBalance);
+    await prisma.economyLotteryTicket.deleteMany({ where: { guildId: guild.id } });
+
+    const channelId = cfg.lotteryChannelId ?? undefined;
+    if (channelId) {
+      const channel = guild.channels.cache.get(channelId) as TextChannel | undefined;
+      if (channel?.isTextBased()) {
+        const loc = await resolveUserLocale({ user: { id: '' }, guildId: guild.id, guildLocale: guild.preferredLocale });
+        const embed = new EmbedBuilder().setColor(COLORS.WARNING).setTitle(t('lottery.drawTitle', loc))
+          .setDescription(t('lottery.drawWinner', loc, { user: `<@${winner.userId}>`, pot: this.format(pot, cfg), tickets: String(totalTickets) }))
+          .setTimestamp();
+        await channel.send({ content: `<@${winner.userId}>`, embeds: [embed], allowedMentions: { users: [winner.userId] } }).catch(swallow);
+      }
+    }
+    return true;
+  }
+}

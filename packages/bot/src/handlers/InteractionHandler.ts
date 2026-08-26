@@ -22,6 +22,8 @@ import { ADDON_CATEGORY_PREFIX, classifyError } from '@arkenbot/shared';
 import { prisma } from '../database.js';
 import { redis } from '../redis.js';
 import { VerificationModule } from '../modules/verification/VerificationModule.js';
+import { AppealsModule } from '../modules/moderation/AppealsModule.js';
+import { EventsModule } from '../modules/events/EventsModule.js';
 
 /** Routes and pre-validates all incoming Discord interactions before command execution. */
 export class InteractionHandler {
@@ -212,6 +214,28 @@ export class InteractionHandler {
       return;
     }
 
+    // Event RSVP buttons.
+    if (interaction.customId.startsWith('event:rsvp:')) {
+      try {
+        await EventsModule.handleRsvp(interaction);
+      } catch (err) {
+        logger.error({ err }, 'Event RSVP error');
+      }
+      return;
+    }
+
+    // Ban/mute appeal buttons (start from a DM; approve/deny from the staff channel).
+    if (interaction.customId.startsWith('appeal:')) {
+      const [, sub] = interaction.customId.split(':');
+      try {
+        if (sub === 'start') await AppealsModule.handleStart(interaction);
+        else await AppealsModule.handleReview(this.client, interaction);
+      } catch (err) {
+        logger.error({ err }, 'Appeal button error');
+      }
+      return;
+    }
+
     const [commandName] = interaction.customId.split(':');
     const command = this.client.commands.get(commandName);
 
@@ -244,6 +268,16 @@ export class InteractionHandler {
    * Routes modal-submit interactions using a `commandName:...` customId convention.
    */
   private async handleModal(interaction: ModalSubmitInteraction): Promise<void> {
+    // Appeal submission modal (arrives from a DM, so route it explicitly).
+    if (interaction.customId.startsWith('appeal:modal:')) {
+      try {
+        await AppealsModule.handleModal(this.client, interaction);
+      } catch (err) {
+        logger.error({ err }, 'Appeal modal error');
+      }
+      return;
+    }
+
     const [commandName] = interaction.customId.split(':');
     const command = this.client.commands.get(commandName);
 
