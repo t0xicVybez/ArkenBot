@@ -11,6 +11,7 @@ import { logger, swallow} from '../logger.js';
 import { pub } from '../redis.js';
 import { prisma } from '../database.js';
 import { getGuildSettings } from '../utils/settings.js';
+import { ModmailModule } from '../modules/modmail/ModmailModule.js';
 import { t, resolveUserLocale } from '../i18n/index.js';
 
 /** Shape of the `botConfig` singleton row used for presence configuration. */
@@ -288,6 +289,14 @@ const event: BotEvent = {
           await ReactionRolesModule.deletePanel(client, event.data.guildId, event.data.channelId, event.data.messageId);
         } else if (event.type === 'bot:announcement') {
           await sendAnnouncement(client, event.data);
+        } else if (event.type === 'appeal:submitted') {
+          const { AppealsModule } = await import('../modules/moderation/AppealsModule.js');
+          await AppealsModule.postForReview(client, event.data.appealId as string);
+        } else if (event.type === 'appeal:decision') {
+          const { AppealsModule } = await import('../modules/moderation/AppealsModule.js');
+          const { prisma } = await import('../database.js');
+          const appeal = await prisma.moderationAppeal.findUnique({ where: { id: event.data.appealId as string } });
+          if (appeal) await AppealsModule.applyDecision(client, appeal, event.data.approved as boolean, (event.data.reviewerTag as string) ?? 'staff');
         } else if (event.type === 'stats-channels:refresh') {
           // Stats channels are updated by the BackgroundJobs scheduler on a 5-minute cycle;
           // this event is acknowledged but requires no immediate action.
@@ -386,6 +395,7 @@ const event: BotEvent = {
     await sub.subscribe('topgg:vote');
 
 
+    await ModmailModule.loadOpenThreads().catch(() => {});
     logger.info('Bot ready! Serving ' + client.guilds.cache.size + ' guilds');
 
   },

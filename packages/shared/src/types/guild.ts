@@ -27,6 +27,7 @@ export interface GuildSettings {
   loggingEnabled: boolean;
   musicEnabled: boolean;
   reactionRolesEnabled: boolean;
+  highlightsEnabled: boolean;
 
   // Channels
   logChannelId?: string;
@@ -34,6 +35,7 @@ export interface GuildSettings {
   welcomeChannelId?: string;
   leaveChannelId?: string;
   levelUpChannelId?: string;
+  highlightsChannelId?: string | null;
 
   // Roles
   muteRoleId?: string;
@@ -43,6 +45,8 @@ export interface GuildSettings {
   // Permission-failure alerts
   permissionAlertsEnabled?: boolean;
   permissionAlertRoleId?: string;
+  appealsEnabled?: boolean;
+  appealChannelId?: string | null;
 
   // Leveling
   xpPerMessage: number;
@@ -54,6 +58,10 @@ export interface GuildSettings {
   xpDecayEnabled: boolean;
   xpDecayDays: number;
   xpDecayPercent: number;
+  voiceXpEnabled: boolean;
+  voiceXpPerMinute: number;
+  prestigeEnabled: boolean;
+  prestigeLevel: number;
 
   // Embed accent colors (hex strings)
   accentColor: string;
@@ -100,6 +108,12 @@ export interface AutoModConfig {
   raidThreshold: number;
   raidInterval: number;
   raidAction: string;
+  minAccountAgeEnabled: boolean;
+  minAccountAgeHours: number;
+  minAccountAgeAction: string;
+  quarantineRoleId: string | null;
+  newAccountFlagEnabled: boolean;
+  newAccountFlagHours: number;
   antiPhishingEnabled: boolean;
   antiPhishingAction: string;
   aiModEnabled: boolean;
