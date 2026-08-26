@@ -89,7 +89,18 @@ async function deployCommands() {
   const localCommands = await loadLocalCommands();
   const addonCommands = await loadAddonCommands();
 
-  const allCommands: AnyCommandJSON[] = [...localCommands, ...addonCommands];
+  // Core commands are listed first and win on any name clash, so a demo/reference
+  // addon (e.g. example-economy) can never shadow a real command like /balance.
+  const seen = new Set<string>();
+  const allCommands: AnyCommandJSON[] = [];
+  for (const cmd of [...localCommands, ...addonCommands]) {
+    if (seen.has(cmd.name)) {
+      console.warn(`Skipping duplicate command name "${cmd.name}" (a core/earlier command already owns it)`);
+      continue;
+    }
+    seen.add(cmd.name);
+    allCommands.push(cmd);
+  }
 
   const rest = new REST({ version: "10" }).setToken(config.discord.token);
 

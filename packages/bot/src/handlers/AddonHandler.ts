@@ -257,6 +257,14 @@ export class AddonHandler {
             ? (interaction, _client) => cmd.autocomplete!(interaction, context)
             : undefined,
         };
+        // Core (built-in) commands take precedence: never let an addon shadow a
+        // command name that a first-party command already owns (e.g. the demo
+        // example-economy addon vs. the real /balance, /pay, /daily).
+        const existing = this.client.commands.get(cmd.data.name);
+        if (existing && !existing.category?.startsWith(ADDON_CATEGORY_PREFIX)) {
+          logger.warn(`Addon ${name} command "${cmd.data.name}" ignored — a core command already owns that name`);
+          continue;
+        }
         this.client.commands.set(cmd.data.name, botCommand);
         logger.debug(`Registered addon command: ${cmd.data.name} from ${name}`);
       }
