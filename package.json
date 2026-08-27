@@ -28,11 +28,11 @@
     "test:ui": "vitest --ui"
   },
   "devDependencies": {
-    "@prisma/client": "^5.22.0",
+    "@prisma/client": "7.9.1",
     "concurrently": "^9.2.4",
     "eslint": "^9.39.5",
     "eslint-plugin-unused-imports": "^4.4.1",
-    "prisma": "^5.22.0",
+    "prisma": "7.9.1",
     "tsx": "^4.23.12",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.67.0",

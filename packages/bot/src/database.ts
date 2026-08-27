@@ -4,11 +4,15 @@
  */
 
 import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
 import { logger } from './logger.js';
+
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 
 // Warn- and error-level Prisma events are forwarded to the application logger
 // rather than written to stderr so they appear in structured log output.
 const prisma = new PrismaClient({
+  adapter,
   log: [
     { level: 'warn', emit: 'event' },
     { level: 'error', emit: 'event' },
