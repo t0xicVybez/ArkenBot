@@ -1,4 +1,4 @@
-/** /gamble coinflip|slots|dice — wager wallet currency on a minigame. */
+/** /gamble coinflip|slots|dice|roulette|highlow — wager wallet currency on a minigame. */
 import { SlashCommandBuilder, EmbedBuilder, type ChatInputCommandInteraction } from 'discord.js';
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
@@ -7,14 +7,13 @@ import { prisma } from '../../database.js';
 import { errorEmbed } from '../../utils/embed.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 import { EconomyModule } from '../../modules/economy/EconomyModule.js';
-
-const SLOT_SYMBOLS = ['🍒', '🍋', '🍊', '🍇', '🔔', '💎'];
+import * as games from '../../modules/economy/games.js';
 
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('gamble')
     .setDescription('Wager your currency on a game of chance')
-    .addSubcommand((s) => s.setName('coinflip').setDescription('Flip a coin — double or nothing')
+    .addSubcommand((s) => s.setName('coinflip').setDescription('Flip a coin — win pays 0.95:1')
       .addIntegerOption((o) => o.setName('amount').setDescription('Amount to bet').setRequired(true).setMinValue(1))
       .addStringOption((o) => o.setName('side').setDescription('Heads or tails').setRequired(true)
         .addChoices({ name: 'Heads', value: 'heads' }, { name: 'Tails', value: 'tails' })))
@@ -59,80 +58,43 @@ const command: BotCommand = {
       return;
     }
     const sub = interaction.options.getSubcommand();
+    const won = (amount: number) => t('economy.wonAmount', loc, { amount: EconomyModule.format(amount, cfg) });
+    const lost = () => t('economy.lostAmount', loc, { amount: EconomyModule.format(bet, cfg) });
 
-    let delta = 0; // net change to wallet (bet already "held")
+    let delta = 0;
     let title = '';
     let desc = '';
 
     if (sub === 'coinflip') {
-      const side = interaction.options.getString('side', true);
-      const flip = Math.random() < 0.5 ? 'heads' : 'tails';
-      const won = flip === side;
-      delta = won ? bet : -bet;
-      title = t(won ? 'economy.gambleWinTitle' : 'economy.gambleLoseTitle', loc);
-      desc = t('economy.coinflipResult', loc, {
-        result: t(`economy.coin.${flip}`, loc),
-        outcome: won ? t('economy.wonAmount', loc, { amount: EconomyModule.format(bet, cfg) })
-                     : t('economy.lostAmount', loc, { amount: EconomyModule.format(bet, cfg) }),
-      });
+      const r = games.coinflip(bet, interaction.options.getString('side', true) as 'heads' | 'tails');
+      delta = r.delta;
+      title = t(r.won ? 'economy.gambleWinTitle' : 'economy.gambleLoseTitle', loc);
+      desc = t('economy.coinflipResult', loc, { result: t(`economy.coin.${r.flip}`, loc), outcome: r.won ? won(delta) : lost() });
     } else if (sub === 'slots') {
-      const reels = [0, 1, 2].map(() => SLOT_SYMBOLS[Math.floor(Math.random() * SLOT_SYMBOLS.length)]);
-      const [a, b, c] = reels;
-      let mult = -1;
-      if (a === b && b === c) mult = a === '💎' ? 9 : 4;      // triple (jackpot on diamonds)
-      else if (a === b || b === c || a === c) mult = 1;        // any pair returns the stake + equal
-      delta = bet * mult;
-      const won = delta > 0;
-      title = t(won ? 'economy.gambleWinTitle' : 'economy.gambleLoseTitle', loc);
-      const line = `${a} | ${b} | ${c}`;
-      desc = `**${line}**\n\n` + (won
-        ? t('economy.wonAmount', loc, { amount: EconomyModule.format(delta, cfg) })
-        : t('economy.lostAmount', loc, { amount: EconomyModule.format(bet, cfg) }));
+      const r = games.slots(bet);
+      delta = r.delta;
+      title = t(r.won ? 'economy.gambleWinTitle' : 'economy.gambleLoseTitle', loc);
+      desc = `**${r.reels.join(' | ')}**\n\n` + (r.won ? won(delta) : lost());
     } else if (sub === 'dice') {
-      const roll = () => (1 + Math.floor(Math.random() * 6)) + (1 + Math.floor(Math.random() * 6));
-      const you = roll();
-      const house = roll();
-      const won = you > house;
-      const tie = you === house;
-      delta = tie ? 0 : won ? bet : -bet;
-      title = t(tie ? 'economy.gambleTieTitle' : won ? 'economy.gambleWinTitle' : 'economy.gambleLoseTitle', loc);
-      const outcome = tie ? t('economy.pushAmount', loc)
-        : won ? t('economy.wonAmount', loc, { amount: EconomyModule.format(bet, cfg) })
-              : t('economy.lostAmount', loc, { amount: EconomyModule.format(bet, cfg) });
-      desc = t('economy.diceResult', loc, { you: String(you), house: String(house), outcome });
+      const r = games.dice(bet);
+      delta = r.delta;
+      title = t(r.tie ? 'economy.gambleTieTitle' : r.won ? 'economy.gambleWinTitle' : 'economy.gambleLoseTitle', loc);
+      const outcome = r.tie ? t('economy.pushAmount', loc) : r.won ? won(delta) : lost();
+      desc = t('economy.diceResult', loc, { you: String(r.you), house: String(r.house), outcome });
     } else if (sub === 'roulette') {
-      const raw = interaction.options.getString('bet', true).trim().toLowerCase();
-      const asNum = /^\d+$/.test(raw) ? parseInt(raw, 10) : null;
-      const isColor = raw === 'red' || raw === 'black' || raw === 'green';
-      if ((asNum === null || asNum < 0 || asNum > 36) && !isColor) {
+      const r = games.roulette(bet, interaction.options.getString('bet', true));
+      if (!r.valid) {
         await interaction.editReply({ embeds: [errorEmbed(t('economy.errorTitle', loc), t('economy.rouletteBadBet', loc))] });
         return;
       }
-      const pocket = Math.floor(Math.random() * 37); // 0–36
-      const color = pocket === 0 ? 'green' : pocket % 2 === 0 ? 'black' : 'red';
-      let won = false;
-      let mult = -1;
-      if (asNum !== null) { won = pocket === asNum; mult = won ? 35 : -1; }
-      else if (raw === 'green') { won = color === 'green'; mult = won ? 35 : -1; }
-      else { won = color === raw; mult = won ? 1 : -1; }
-      delta = bet * mult;
-      title = t(won ? 'economy.gambleWinTitle' : 'economy.gambleLoseTitle', loc);
-      const colorLabel = t(`economy.roulette.${color}`, loc);
-      const outcome = won ? t('economy.wonAmount', loc, { amount: EconomyModule.format(Math.abs(delta), cfg) })
-                          : t('economy.lostAmount', loc, { amount: EconomyModule.format(bet, cfg) });
-      desc = t('economy.rouletteResult', loc, { pocket: String(pocket), color: colorLabel, outcome });
+      delta = r.delta;
+      title = t(r.won ? 'economy.gambleWinTitle' : 'economy.gambleLoseTitle', loc);
+      desc = t('economy.rouletteResult', loc, { pocket: String(r.pocket), color: t(`economy.roulette.${r.color}`, loc), outcome: r.won ? won(delta) : lost() });
     } else {
-      // highlow
-      const guess = interaction.options.getString('guess', true);
-      const base = 1 + Math.floor(Math.random() * 100);
-      let next = 1 + Math.floor(Math.random() * 100);
-      while (next === base) next = 1 + Math.floor(Math.random() * 100); // avoid ties
-      const won = guess === 'higher' ? next > base : next < base;
-      delta = won ? bet : -bet;
-      title = t(won ? 'economy.gambleWinTitle' : 'economy.gambleLoseTitle', loc);
-      const outcome = won ? t('economy.wonAmount', loc, { amount: EconomyModule.format(bet, cfg) })
-                          : t('economy.lostAmount', loc, { amount: EconomyModule.format(bet, cfg) });
-      desc = t('economy.highlowResult', loc, { base: String(base), next: String(next), outcome });
+      const r = games.highlow(bet, interaction.options.getString('guess', true) as 'higher' | 'lower');
+      delta = r.delta;
+      title = t(r.won ? 'economy.gambleWinTitle' : 'economy.gambleLoseTitle', loc);
+      desc = t('economy.highlowResult', loc, { base: String(r.base), next: String(r.next), outcome: r.won ? won(delta) : lost() });
     }
 
     let updated = bal;

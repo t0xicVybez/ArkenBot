@@ -9,31 +9,13 @@ import { COLORS } from '@arkenbot/shared';
 import { errorEmbed } from '../../utils/embed.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 import { EconomyModule } from '../../modules/economy/EconomyModule.js';
+import { freshDeck, handValue, dealerPlay, blackjackPayout, type Card } from '../../modules/economy/games.js';
 
-type Card = { rank: string; suit: string };
 interface Game { guildId: string; userId: string; bet: number; deck: Card[]; player: Card[]; dealer: Card[]; }
 
 // One active game per user; short-lived, cleared on resolution. Keyed by guildId:userId.
 const games = new Map<string, Game>();
-const SUITS = ['♠', '♥', '♦', '♣'];
-const RANKS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
 
-function freshDeck(): Card[] {
-  const deck: Card[] = [];
-  for (const suit of SUITS) for (const rank of RANKS) deck.push({ rank, suit });
-  for (let i = deck.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [deck[i], deck[j]] = [deck[j], deck[i]]; }
-  return deck;
-}
-function handValue(hand: Card[]): number {
-  let total = 0, aces = 0;
-  for (const c of hand) {
-    if (c.rank === 'A') { aces++; total += 11; }
-    else if (['K', 'Q', 'J'].includes(c.rank)) total += 10;
-    else total += parseInt(c.rank, 10);
-  }
-  while (total > 21 && aces > 0) { total -= 10; aces--; }
-  return total;
-}
 const show = (hand: Card[]) => hand.map((c) => `${c.rank}${c.suit}`).join(' ');
 const key = (g: string, u: string) => `${g}:${u}`;
 
@@ -57,22 +39,18 @@ function tableEmbed(g: Game, loc: string, opts: { hideDealer?: boolean; color?: 
 }
 
 async function settle(interaction: ButtonInteraction, g: Game, loc: string): Promise<void> {
-  // Dealer draws to 17+.
-  while (handValue(g.dealer) < 17) g.dealer.push(g.deck.pop()!);
-  const pv = handValue(g.player), dv = handValue(g.dealer);
+  dealerPlay(g.dealer, g.deck); // dealer draws to 17+ (stands on soft 17)
   const cfg = await EconomyModule.getConfigOrDefault(g.guildId);
-  let payout = 0, title = '';
-  let color: number = COLORS.NEUTRAL;
-  const isBJ = pv === 21 && g.player.length === 2;
-  if (pv > 21) { payout = 0; title = t('bj.loseTitle', loc); color = COLORS.ERROR; }
-  else if (dv > 21 || pv > dv) { payout = isBJ ? Math.floor(g.bet * 2.5) : g.bet * 2; title = t('bj.winTitle', loc); color = COLORS.SUCCESS; }
-  else if (pv === dv) { payout = g.bet; title = t('bj.pushTitle', loc); color = COLORS.WARNING; }
-  else { payout = 0; title = t('bj.loseTitle', loc); color = COLORS.ERROR; }
 
-  if (payout > 0) await EconomyModule.addWallet(g.guildId, g.userId, payout, cfg.startingBalance);
+  // Net wallet change (bet was debited up front). Credit = net + the original bet.
+  const net = blackjackPayout(g.player, g.dealer, g.bet);
+  const title = net > 0 ? t('bj.winTitle', loc) : net < 0 ? t('bj.loseTitle', loc) : t('bj.pushTitle', loc);
+  const color = net > 0 ? COLORS.SUCCESS : net < 0 ? COLORS.ERROR : COLORS.WARNING;
+
+  const credit = net + g.bet;
+  if (credit > 0) await EconomyModule.addWallet(g.guildId, g.userId, credit, cfg.startingBalance);
   games.delete(key(g.guildId, g.userId));
 
-  const net = payout - g.bet;
   const footer = net > 0 ? t('bj.netWin', loc, { amount: EconomyModule.format(net, cfg) })
     : net < 0 ? t('bj.netLoss', loc, { amount: EconomyModule.format(-net, cfg) })
     : t('bj.netPush', loc);
