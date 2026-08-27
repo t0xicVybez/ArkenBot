@@ -22,7 +22,10 @@
     "deploy:commands": "pnpm db:generate && pnpm --filter @arkenbot/bot deploy:commands",
     "grant-staff": "tsx scripts/grant-staff.ts",
     "docs:dev": "pnpm --filter @arkenbot/docs dev",
-    "docs:build": "pnpm --filter @arkenbot/docs build"
+    "docs:build": "pnpm --filter @arkenbot/docs build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui"
   },
   "devDependencies": {
     "@prisma/client": "^5.22.0",
@@ -32,7 +35,8 @@
     "prisma": "^5.22.0",
     "tsx": "^4.23.12",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.67.0"
+    "typescript-eslint": "^8.67.0",
+    "vitest": "^4.1.11"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
