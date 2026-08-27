@@ -55,11 +55,14 @@ async function loadAddonCommands() {
   const addonsPath = join(__dirname, "../../../../addons");
 
 
+  // Retired reference addons kept in-repo but never registered in production.
+  const RETIRED_ADDONS = new Set(['example-economy']);
   const addonDirs = readdirSync(addonsPath).filter((dir) =>
     statSync(join(addonsPath, dir)).isDirectory()
   );
 
   for (const addon of addonDirs) {
+    if (RETIRED_ADDONS.has(addon)) continue;
     const distPath = join(addonsPath, addon, "dist", "index.js");
 
     try {
