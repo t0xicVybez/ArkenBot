@@ -127,6 +127,9 @@ interface LoadedAddon {
 }
 
 /** Discovers, loads, activates, and deactivates addon packages at runtime. */
+/** Reference/demo addons kept in-repo but never loaded in production. */
+const RETIRED_ADDONS = new Set(['example-economy']);
+
 export class AddonHandler {
   private client: BotClient;
   private loadedAddons = new Map<string, LoadedAddon>();
@@ -153,6 +156,13 @@ export class AddonHandler {
     );
 
     for (const folder of addonFolders) {
+      // Retired reference addons: kept in-repo as SDK examples but never loaded in
+      // production. example-economy is superseded by the built-in economy feature
+      // (its /balance, /pay, /daily collided with the real commands).
+      if (RETIRED_ADDONS.has(folder)) {
+        logger.info(`Skipping retired reference addon: ${folder}`);
+        continue;
+      }
       await this.loadAddon(join(addonsDir, folder));
     }
 
