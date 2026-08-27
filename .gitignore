@@ -46,3 +46,6 @@ db.sh
 # Standalone public library — lives in its own repo
 GameQuery/
 CLAUDE.md
+.prisma-monitor.state
+.prisma-rollback-done
+.prisma-monitor.off
