@@ -1,7 +1,9 @@
 import { describe, it, expect } from 'vitest';
+import type { EconomyBalance } from '@prisma/client';
 import { EconomyModule } from '../../packages/bot/src/modules/economy/EconomyModule.js';
 
 const cfg = { currencySymbol: '🪙' };
+const balance = (wallet: number, bank: number) => ({ wallet, bank } as unknown as EconomyBalance);
 
 describe('EconomyModule.format / net', () => {
   it('formats with the currency symbol and thousands separators', () => {
@@ -9,7 +11,7 @@ describe('EconomyModule.format / net', () => {
     expect(EconomyModule.format(1234567, cfg)).toBe('🪙 1,234,567');
   });
   it('net = wallet + bank', () => {
-    expect(EconomyModule.net({ wallet: 300, bank: 200 } as any)).toBe(500);
+    expect(EconomyModule.net(balance(300, 200))).toBe(500);
   });
 });
 

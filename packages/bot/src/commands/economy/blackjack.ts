@@ -6,7 +6,6 @@ import {
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { COLORS } from '@arkenbot/shared';
-import { prisma } from '../../database.js';
 import { errorEmbed } from '../../utils/embed.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 import { EconomyModule } from '../../modules/economy/EconomyModule.js';
