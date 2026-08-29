@@ -184,39 +184,69 @@ export async function guildRoutes(server: FastifyInstance): Promise<void> {
     });
   });
 
-  // GET /guilds/:guildId/analytics
+  // GET /guilds/:guildId/analytics?days=7|14|30|90
   server.get('/guilds/:guildId/analytics', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
-    const since = new Date(Date.now() - 24 * 3600 * 1000);
+    const requested = parseInt((request.query as { days?: string }).days ?? '30', 10);
+    const days = [7, 14, 30, 90].includes(requested) ? requested : 30;
+    const now = Date.now();
+    const since24 = new Date(now - 24 * 3600 * 1000);
+    const periodStart = new Date(now - days * 24 * 3600 * 1000);
 
-    const [modActions24h, logEntries24h] = await Promise.all([
-      prisma.moderationCase.count({ where: { guildId, createdAt: { gte: since } } }),
-      prisma.logEntry.groupBy({
-        by: ['type'],
-        where: { guildId, createdAt: { gte: since } },
-        _count: { type: true },
-      }),
+    const [modActions24h, logEntries24h, dailyHistory, modCases, topMembers] = await Promise.all([
+      prisma.moderationCase.count({ where: { guildId, createdAt: { gte: since24 } } }),
+      prisma.logEntry.groupBy({ by: ['type'], where: { guildId, createdAt: { gte: since24 } }, _count: { type: true } }),
+      prisma.serverDailyStats.findMany({ where: { guildId, date: { gte: periodStart } }, orderBy: { date: 'asc' } }),
+      prisma.moderationCase.findMany({ where: { guildId, createdAt: { gte: periodStart } }, select: { type: true, createdAt: true } }),
+      prisma.userLevel.findMany({ where: { guildId }, orderBy: { totalMessages: 'desc' }, take: 10, select: { userId: true, userTag: true, totalMessages: true, level: true } }),
     ]);
 
     const joinEvents = logEntries24h.find((e) => e.type === 'member_join')?._count.type ?? 0;
     const leaveEvents = logEntries24h.find((e) => e.type === 'member_leave')?._count.type ?? 0;
 
-    // Historical daily stats (last 30 days)
-    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 3600 * 1000);
-    const dailyHistory = await prisma.serverDailyStats.findMany({
-      where: { guildId, date: { gte: thirtyDaysAgo } },
-      orderBy: { date: 'asc' },
-    });
+    // Period summary derived from the daily stats.
+    const totalMessages = dailyHistory.reduce((s, d) => s + d.messagesCount, 0);
+    const totalCommands = dailyHistory.reduce((s, d) => s + d.commandsCount, 0);
+    const totalJoins = dailyHistory.reduce((s, d) => s + d.newMembers, 0);
+    const totalLeaves = dailyHistory.reduce((s, d) => s + d.leftMembers, 0);
+    const peak = dailyHistory.reduce<(typeof dailyHistory)[number] | null>((m, d) => (d.messagesCount > (m?.messagesCount ?? -1) ? d : m), null);
+    const summary = {
+      currentMembers: dailyHistory.at(-1)?.memberCount ?? null,
+      netGrowth: totalJoins - totalLeaves,
+      // Simple churn proxy: share of joiners not offset by leavers over the window.
+      retentionPct: totalJoins > 0 ? Math.max(0, Math.round((1 - totalLeaves / totalJoins) * 100)) : null,
+      totalMessages,
+      totalCommands,
+      totalJoins,
+      totalLeaves,
+      avgMessagesPerDay: dailyHistory.length ? Math.round(totalMessages / dailyHistory.length) : 0,
+      peakDay: peak?.date ?? null,
+      peakMessages: peak?.messagesCount ?? 0,
+    };
+
+    // Moderation actions per day, split by type.
+    const bucket: Record<string, { date: string; ban: number; kick: number; mute: number; warn: number; other: number }> = {};
+    for (const c of modCases) {
+      const day = c.createdAt.toISOString().slice(0, 10);
+      bucket[day] ??= { date: day, ban: 0, kick: 0, mute: 0, warn: 0, other: 0 };
+      const k = c.type === 'ban' || c.type === 'tempban' ? 'ban' : c.type === 'kick' ? 'kick' : c.type === 'mute' ? 'mute' : c.type === 'warn' ? 'warn' : 'other';
+      bucket[day][k]++;
+    }
+    const moderationTrend = Object.values(bucket).sort((a, b) => a.date.localeCompare(b.date));
 
     return reply.send({
       success: true,
       data: {
         guildId,
+        days,
         moderationActions24h: modActions24h,
         newMembers24h: joinEvents,
         leftMembers24h: leaveEvents,
         logEvents: logEntries24h,
         history: dailyHistory,
+        summary,
+        moderationTrend,
+        topMembers,
       },
     });
   });
