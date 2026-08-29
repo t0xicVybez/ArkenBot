@@ -57,7 +57,15 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      # Hard gate: unit tests + the 11-locale i18n parity guard + the gambling
+      # house-edge simulations. Catches locale drift and payout regressions.
+      - name: Test
+        run: pnpm test
+
       - name: Build server packages
         run: |
           pnpm --filter @arkenbot/api build
           pnpm --filter @arkenbot/bot build
+
+      - name: Build web dashboard
+        run: pnpm --filter @arkenbot/web build

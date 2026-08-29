@@ -13,6 +13,7 @@ import { BackgroundJobs } from './modules/BackgroundJobs.js';
 import { connectDatabase } from './database.js';
 import { connectRedis } from './redis.js';
 import { logger, swallow} from './logger.js';
+import { initSentry, captureError } from './sentry.js';
 
 // When the ShardingManager spawns shard processes it sets SHARDS to a JSON
 // array of shard IDs (e.g. "[0]"). Each shard gets its own lock key so they
@@ -25,6 +26,7 @@ const LOCK_TTL_SECONDS = 30;
 
 async function main() {
   logger.info('Starting Discord bot...');
+  initSentry(); // inert unless SENTRY_DSN is set
 
   await connectDatabase();
   await connectRedis();
@@ -81,15 +83,18 @@ async function main() {
   process.on('SIGINT', () => shutdown('SIGINT'));
   process.on('SIGTERM', () => shutdown('SIGTERM'));
   process.on('uncaughtException', (err) => {
+    captureError(err, { kind: 'uncaughtException' });
     logger.error({ err }, 'Uncaught exception');
     process.exit(1);
   });
   process.on('unhandledRejection', (reason) => {
+    captureError(reason, { kind: 'unhandledRejection' });
     logger.error({ reason }, 'Unhandled rejection');
   });
 }
 
 main().catch((err) => {
+  captureError(err, { kind: 'startup' });
   logger.error({ err }, 'Fatal error during startup');
   process.exit(1);
 });
