@@ -8,9 +8,11 @@ import { logger } from './logger.js';
 import { connectDatabase, disconnectDatabase } from './database.js';
 import { connectRedis, disconnectRedis } from './redis.js';
 import { createServer } from './server.js';
+import { initSentry, captureError } from './sentry.js';
 
 async function main() {
   logger.info('Starting API server...');
+  initSentry(); // inert unless SENTRY_DSN is set
 
   await connectDatabase();
   await connectRedis();
@@ -31,15 +33,18 @@ async function main() {
   process.on('SIGINT', () => shutdown('SIGINT'));
   process.on('SIGTERM', () => shutdown('SIGTERM'));
   process.on('uncaughtException', (err) => {
+    captureError(err, { kind: 'uncaughtException' });
     logger.error({ err }, 'Uncaught exception');
     process.exit(1);
   });
   process.on('unhandledRejection', (reason) => {
+    captureError(reason, { kind: 'unhandledRejection' });
     logger.error({ reason }, 'Unhandled rejection');
   });
 }
 
 main().catch((err) => {
+  captureError(err, { kind: 'startup' });
   logger.error({ err }, 'Fatal startup error');
   process.exit(1);
 });

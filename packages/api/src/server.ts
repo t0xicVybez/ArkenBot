@@ -10,6 +10,7 @@ import fastifyWebSocket from '@fastify/websocket';
 import fastifyCookie from '@fastify/cookie';
 import { config } from './config.js';
 import { logger, errSerializer } from './logger.js';
+import { captureError } from './sentry.js';
 import { redis } from './redis.js';
 import { authRoutes } from './routes/auth.js';
 import { guildRoutes } from './routes/guilds.js';
@@ -213,6 +214,11 @@ export async function createServer() {
 
     if (error.validation) {
       return reply.code(400).send({ success: false, error: 'Validation error', details: error.validation });
+    }
+
+    // Report genuine server errors (5xx, or anything with no explicit status) to Sentry.
+    if (!error.statusCode || error.statusCode >= 500) {
+      captureError(error, { url: request.url, method: request.method });
     }
 
     if (error.statusCode) {

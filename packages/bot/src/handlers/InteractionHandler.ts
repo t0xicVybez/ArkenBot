@@ -19,6 +19,7 @@ import { errorEmbed } from '../utils/embed.js';
 import { logger, swallow} from '../logger.js';
 import { isAddonEnabledForGuild } from '../utils/settings.js';
 import { ADDON_CATEGORY_PREFIX, classifyError } from '@arkenbot/shared';
+import { captureError } from '../sentry.js';
 import { prisma } from '../database.js';
 import { redis } from '../redis.js';
 import { VerificationModule } from '../modules/verification/VerificationModule.js';
@@ -168,6 +169,11 @@ export class InteractionHandler {
 
       // An expired/duplicate interaction can no longer be responded to.
       if (classified.category === 'interaction') return;
+
+      // Report genuine bugs (not user-permission/Discord-API conditions) to Sentry.
+      if (classified.category === 'unknown') {
+        captureError(err, { command: command.data.name, guildId: interaction.guildId ?? undefined });
+      }
 
       // Surface the specific reason for known failures (e.g. a missing
       // permission), and fall back to a generic message for anything unclassified.
