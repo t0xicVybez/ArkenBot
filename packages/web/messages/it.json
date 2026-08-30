@@ -978,7 +978,18 @@
     "appealsEnabled": "Attiva ricorsi",
     "appealsEnabledDesc": "I membri bannati/silenziati ricevono un pulsante “Fai ricorso” in DM; le approvazioni annullano automaticamente l’azione.",
     "appealChannel": "Canale di revisione ricorsi",
-    "appealChannelDesc": "Dove i ricorsi vengono pubblicati per l’approvazione o il rifiuto dello staff."
+    "appealChannelDesc": "Dove i ricorsi vengono pubblicati per l’approvazione o il rifiuto dello staff.",
+    "deleteDataTitle": "Elimina tutti i dati del server",
+    "deleteDataDesc": "Cancella definitivamente tutto ciò che ArkenBot memorizza per questo server — impostazioni, registri di moderazione, livelli, economia e altro. Il bot resta nel tuo server ma riparte da zero.",
+    "deleteDataButton": "Elimina tutti i dati",
+    "deleteDataModalTitle": "Eliminare tutti i dati di {server}?",
+    "deleteDataModalBody": "Questo elimina definitivamente tutte le impostazioni, i casi di moderazione, gli avvisi, i livelli, i saldi dell’economia e ogni altro record di questo server. Non può essere annullato.",
+    "deleteDataConfirmLabel": "Digita il nome del server per confermare:",
+    "deleteDataCancel": "Annulla",
+    "deleteDataConfirm": "Elimina definitivamente",
+    "deleteDataConfirming": "Eliminazione…",
+    "deleteDataDone": "Tutti i dati del server sono stati eliminati.",
+    "deleteDataError": "Impossibile eliminare i dati del server."
   },
   "suggestionsPage": {
     "saved": "Impostazioni dei suggerimenti salvate!",
@@ -1577,7 +1588,17 @@
     "revokeSession": "Revoca questa sessione",
     "sessionRevoked": "Sessione revocata",
     "revokeError": "Impossibile revocare la sessione",
-    "logoutAllError": "Impossibile uscire ovunque"
+    "logoutAllError": "Impossibile uscire ovunque",
+    "yourData": "I tuoi dati",
+    "yourDataDesc": "Scarica una copia di tutto ciò che ArkenBot memorizza su di te in tutti i server, o elimina definitivamente i tuoi dati personali (livelli, economia, compleanno, promemoria e preferenze).",
+    "downloadData": "Scarica i miei dati",
+    "deleteData": "Elimina i miei dati personali",
+    "deleteDataNote": "L’eliminazione rimuove i tuoi dati personali da ogni server. I registri di moderazione (avvisi, casi) restano nei server che li hanno emessi.",
+    "deleteDataConfirm": "Eliminare definitivamente i tuoi dati personali su tutti i server? Non può essere annullato.",
+    "dataDownloaded": "Il download dell’esportazione dei tuoi dati è iniziato.",
+    "dataExportError": "Impossibile esportare i tuoi dati.",
+    "dataDeleted": "I tuoi dati personali sono stati eliminati.",
+    "dataDeleteError": "Impossibile eliminare i tuoi dati."
   },
   "setupWizardPage": {
     "title": "Configurazione guidata",

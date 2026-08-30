@@ -259,6 +259,14 @@ const event: BotEvent = {
           // Bust the Redis cache so the next command invocation fetches fresh settings.
           invalidateSettingsCache(event.data.guildId);
           logger.debug(`Settings cache invalidated for guild ${event.data.guildId}`);
+        } else if (event.type === 'guild:reset') {
+          // A server admin wiped all data via the dashboard while the bot is still
+          // in the guild. Drop in-memory caches so nothing stale lingers; the Guild
+          // row is recreated with defaults on the next interaction (ensureGuildExists).
+          const gid = event.data.guildId as string;
+          InviteTrackerModule.clearGuild(gid);
+          invalidateSettingsCache(gid);
+          logger.info({ guildId: gid }, 'Guild data reset from dashboard — caches cleared');
         } else if (event.type === 'addon:install' || event.type === 'addon:uninstall') {
           invalidateAddonCache(event.data.guildId, event.data.addonName);
           logger.debug(`Addon cache invalidated for ${event.data.addonName} in guild ${event.data.guildId}`);

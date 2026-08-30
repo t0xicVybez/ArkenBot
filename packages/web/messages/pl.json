@@ -978,7 +978,18 @@
     "appealsEnabled": "Włącz odwołania",
     "appealsEnabledDesc": "Zbanowani/wyciszeni członkowie dostają przycisk „Odwołaj się” w DM; zatwierdzenie automatycznie cofa działanie.",
     "appealChannel": "Kanał rozpatrywania odwołań",
-    "appealChannelDesc": "Gdzie odwołania są publikowane do zatwierdzenia lub odrzucenia przez zespół."
+    "appealChannelDesc": "Gdzie odwołania są publikowane do zatwierdzenia lub odrzucenia przez zespół.",
+    "deleteDataTitle": "Usuń wszystkie dane serwera",
+    "deleteDataDesc": "Trwale usuwa wszystko, co ArkenBot przechowuje dla tego serwera — ustawienia, rejestry moderacji, poziomy, ekonomię i więcej. Bot pozostaje na serwerze, ale zaczyna od czystej karty.",
+    "deleteDataButton": "Usuń wszystkie dane",
+    "deleteDataModalTitle": "Usunąć wszystkie dane dla {server}?",
+    "deleteDataModalBody": "To trwale usuwa wszystkie ustawienia, sprawy moderacyjne, ostrzeżenia, poziomy, salda ekonomii i każdy inny rekord tego serwera. Nie można tego cofnąć.",
+    "deleteDataConfirmLabel": "Wpisz nazwę serwera, aby potwierdzić:",
+    "deleteDataCancel": "Anuluj",
+    "deleteDataConfirm": "Usuń trwale",
+    "deleteDataConfirming": "Usuwanie…",
+    "deleteDataDone": "Wszystkie dane serwera zostały usunięte.",
+    "deleteDataError": "Nie udało się usunąć danych serwera."
   },
   "suggestionsPage": {
     "saved": "Zapisano ustawienia sugestii!",
@@ -1577,7 +1588,17 @@
     "revokeSession": "Unieważnij tę sesję",
     "sessionRevoked": "Unieważniono sesję",
     "revokeError": "Nie udało się unieważnić sesji",
-    "logoutAllError": "Nie udało się wylogować wszędzie"
+    "logoutAllError": "Nie udało się wylogować wszędzie",
+    "yourData": "Twoje dane",
+    "yourDataDesc": "Pobierz kopię wszystkiego, co ArkenBot przechowuje o Tobie na wszystkich serwerach, lub trwale usuń swoje dane osobowe (poziomy, ekonomię, urodziny, przypomnienia i preferencje).",
+    "downloadData": "Pobierz moje dane",
+    "deleteData": "Usuń moje dane osobowe",
+    "deleteDataNote": "Usunięcie usuwa Twoje dane osobowe z każdego serwera. Rejestry moderacji (ostrzeżenia, sprawy) pozostają na serwerach, które je wydały.",
+    "deleteDataConfirm": "Trwale usunąć Twoje dane osobowe na wszystkich serwerach? Nie można tego cofnąć.",
+    "dataDownloaded": "Rozpoczęto pobieranie eksportu Twoich danych.",
+    "dataExportError": "Nie udało się wyeksportować Twoich danych.",
+    "dataDeleted": "Twoje dane osobowe zostały usunięte.",
+    "dataDeleteError": "Nie udało się usunąć Twoich danych."
   },
   "setupWizardPage": {
     "title": "Kreator konfiguracji",

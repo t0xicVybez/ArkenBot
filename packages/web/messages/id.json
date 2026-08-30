@@ -978,7 +978,18 @@
     "appealsEnabled": "Aktifkan banding",
     "appealsEnabledDesc": "Anggota yang diblokir/dibisukan mendapat tombol “Banding” di DM mereka; persetujuan otomatis membalikkan aksi.",
     "appealChannel": "Kanal peninjauan banding",
-    "appealChannelDesc": "Tempat banding diposting agar staf menyetujui atau menolak."
+    "appealChannelDesc": "Tempat banding diposting agar staf menyetujui atau menolak.",
+    "deleteDataTitle": "Hapus semua data server",
+    "deleteDataDesc": "Menghapus permanen semua yang disimpan ArkenBot untuk server ini — pengaturan, catatan moderasi, level, ekonomi, dan lainnya. Bot tetap di servermu tetapi memulai dari awal.",
+    "deleteDataButton": "Hapus semua data",
+    "deleteDataModalTitle": "Hapus semua data untuk {server}?",
+    "deleteDataModalBody": "Ini menghapus permanen semua pengaturan, kasus moderasi, peringatan, level, saldo ekonomi, dan setiap catatan lain dari server ini. Tidak dapat dibatalkan.",
+    "deleteDataConfirmLabel": "Ketik nama server untuk mengonfirmasi:",
+    "deleteDataCancel": "Batal",
+    "deleteDataConfirm": "Hapus permanen",
+    "deleteDataConfirming": "Menghapus…",
+    "deleteDataDone": "Semua data server telah dihapus.",
+    "deleteDataError": "Gagal menghapus data server."
   },
   "suggestionsPage": {
     "saved": "Pengaturan saran disimpan!",
@@ -1577,7 +1588,17 @@
     "revokeSession": "Cabut sesi ini",
     "sessionRevoked": "Sesi dicabut",
     "revokeError": "Gagal mencabut sesi",
-    "logoutAllError": "Gagal keluar di mana saja"
+    "logoutAllError": "Gagal keluar di mana saja",
+    "yourData": "Data Anda",
+    "yourDataDesc": "Unduh salinan semua yang disimpan ArkenBot tentang Anda di semua server, atau hapus permanen data pribadi Anda (level, ekonomi, ulang tahun, pengingat, dan preferensi).",
+    "downloadData": "Unduh data saya",
+    "deleteData": "Hapus data pribadi saya",
+    "deleteDataNote": "Menghapus akan menghapus data pribadi Anda dari setiap server. Catatan moderasi (peringatan, kasus) tetap di server yang menerbitkannya.",
+    "deleteDataConfirm": "Hapus permanen data pribadi Anda di semua server? Tidak dapat dibatalkan.",
+    "dataDownloaded": "Unduhan ekspor data Anda telah dimulai.",
+    "dataExportError": "Gagal mengekspor data Anda.",
+    "dataDeleted": "Data pribadi Anda telah dihapus.",
+    "dataDeleteError": "Gagal menghapus data Anda."
   },
   "setupWizardPage": {
     "title": "Wizard Pengaturan",

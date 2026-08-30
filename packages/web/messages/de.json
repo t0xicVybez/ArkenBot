@@ -978,7 +978,18 @@
     "appealsEnabled": "Einsprüche aktivieren",
     "appealsEnabledDesc": "Gebannte/stummgeschaltete Mitglieder erhalten einen „Einspruch“-Button per DM; Genehmigungen machen die Aktion automatisch rückgängig.",
     "appealChannel": "Einspruch-Prüfkanal",
-    "appealChannelDesc": "Wo Einsprüche zur Genehmigung/Ablehnung durch das Team gepostet werden."
+    "appealChannelDesc": "Wo Einsprüche zur Genehmigung/Ablehnung durch das Team gepostet werden.",
+    "deleteDataTitle": "Alle Serverdaten löschen",
+    "deleteDataDesc": "Löscht dauerhaft alles, was ArkenBot für diesen Server speichert — Einstellungen, Moderationsakten, Level, Wirtschaft und mehr. Der Bot bleibt auf deinem Server, beginnt aber bei null.",
+    "deleteDataButton": "Alle Daten löschen",
+    "deleteDataModalTitle": "Alle Daten für {server} löschen?",
+    "deleteDataModalBody": "Dies löscht dauerhaft alle Einstellungen, Moderationsfälle, Verwarnungen, Level, Wirtschaftsguthaben und jeden anderen Datensatz dieses Servers. Kann nicht rückgängig gemacht werden.",
+    "deleteDataConfirmLabel": "Gib zur Bestätigung den Servernamen ein:",
+    "deleteDataCancel": "Abbrechen",
+    "deleteDataConfirm": "Dauerhaft löschen",
+    "deleteDataConfirming": "Löschen…",
+    "deleteDataDone": "Alle Serverdaten wurden gelöscht.",
+    "deleteDataError": "Serverdaten konnten nicht gelöscht werden."
   },
   "suggestionsPage": {
     "saved": "Vorschlags-Einstellungen gespeichert!",
@@ -1577,7 +1588,17 @@
     "revokeSession": "Diese Sitzung widerrufen",
     "sessionRevoked": "Sitzung widerrufen",
     "revokeError": "Sitzung konnte nicht widerrufen werden",
-    "logoutAllError": "Abmelden überall fehlgeschlagen"
+    "logoutAllError": "Abmelden überall fehlgeschlagen",
+    "yourData": "Deine Daten",
+    "yourDataDesc": "Lade eine Kopie von allem herunter, was ArkenBot serverübergreifend über dich speichert, oder lösche deine persönlichen Daten dauerhaft (Level, Wirtschaft, Geburtstag, Erinnerungen und Einstellungen).",
+    "downloadData": "Meine Daten herunterladen",
+    "deleteData": "Meine persönlichen Daten löschen",
+    "deleteDataNote": "Das Löschen entfernt deine persönlichen Daten von jedem Server. Moderationsakten (Verwarnungen, Fälle) verbleiben bei den Servern, die sie ausgestellt haben.",
+    "deleteDataConfirm": "Deine persönlichen Daten auf allen Servern dauerhaft löschen? Kann nicht rückgängig gemacht werden.",
+    "dataDownloaded": "Der Download deiner Daten wurde gestartet.",
+    "dataExportError": "Daten konnten nicht exportiert werden.",
+    "dataDeleted": "Deine persönlichen Daten wurden gelöscht.",
+    "dataDeleteError": "Deine Daten konnten nicht gelöscht werden."
   },
   "setupWizardPage": {
     "title": "Einrichtungsassistent",

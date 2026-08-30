@@ -978,7 +978,18 @@
     "appealsEnabled": "異議申し立てを有効化",
     "appealsEnabledDesc": "BAN/ミュートされたメンバーのDMに「異議申し立て」ボタンが表示されます。承認すると処分が自動的に取り消されます。",
     "appealChannel": "異議審査チャンネル",
-    "appealChannelDesc": "スタッフが承認・却下するために異議が投稿される場所。"
+    "appealChannelDesc": "スタッフが承認・却下するために異議が投稿される場所。",
+    "deleteDataTitle": "サーバーの全データを削除",
+    "deleteDataDesc": "ArkenBot がこのサーバーについて保存しているすべて（設定、モデレーション記録、レベル、経済など）を完全に消去します。ボットはサーバーに残りますが、まっさらな状態から始まります。",
+    "deleteDataButton": "全データを削除",
+    "deleteDataModalTitle": "{server} の全データを削除しますか？",
+    "deleteDataModalBody": "これにより、このサーバーのすべての設定、モデレーション案件、警告、レベル、経済残高、その他すべての記録が完全に削除されます。元に戻せません。",
+    "deleteDataConfirmLabel": "確認のためサーバー名を入力してください:",
+    "deleteDataCancel": "キャンセル",
+    "deleteDataConfirm": "完全に削除",
+    "deleteDataConfirming": "削除中…",
+    "deleteDataDone": "サーバーの全データを削除しました。",
+    "deleteDataError": "サーバーデータの削除に失敗しました。"
   },
   "suggestionsPage": {
     "saved": "提案の設定を保存しました！",
@@ -1577,7 +1588,17 @@
     "revokeSession": "このセッションを取り消す",
     "sessionRevoked": "セッションを取り消しました",
     "revokeError": "セッションの取り消しに失敗しました",
-    "logoutAllError": "すべての場所からのログアウトに失敗しました"
+    "logoutAllError": "すべての場所からのログアウトに失敗しました",
+    "yourData": "あなたのデータ",
+    "yourDataDesc": "ArkenBot がすべてのサーバーであなたについて保存している内容のコピーをダウンロードするか、個人データ（レベル、経済、誕生日、リマインダー、設定）を完全に削除できます。",
+    "downloadData": "マイデータをダウンロード",
+    "deleteData": "個人データを削除",
+    "deleteDataNote": "削除するとすべてのサーバーからあなたの個人データが消去されます。モデレーション記録（警告・案件）は発行したサーバーに残ります。",
+    "deleteDataConfirm": "すべてのサーバーで個人データを完全に削除しますか？元に戻せません。",
+    "dataDownloaded": "データのエクスポートのダウンロードを開始しました。",
+    "dataExportError": "データのエクスポートに失敗しました。",
+    "dataDeleted": "個人データを削除しました。",
+    "dataDeleteError": "データの削除に失敗しました。"
   },
   "setupWizardPage": {
     "title": "セットアップウィザード",
