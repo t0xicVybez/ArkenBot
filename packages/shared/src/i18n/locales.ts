@@ -15,9 +15,9 @@ export interface LocaleInfo {
 
 // Only fully-translated locales are listed here so language pickers never offer
 // a locale that would render mostly in English. `resolveLocale` still maps any
-// Discord locale (e.g. `tr`, `nl`) to the closest supported one — falling back
-// to en-US — so auto-detect degrades gracefully for everyone else. Add a locale
-// back here once its bot + web catalogs are complete.
+// unsupported Discord locale (e.g. `sv-SE`, `uk`) to the closest supported one —
+// falling back to en-US — so auto-detect degrades gracefully for everyone else.
+// Add a locale here once its bot + web catalogs are complete.
 export const LOCALES: readonly LocaleInfo[] = [
   { code: 'en-US', name: 'English (US)', native: 'English (US)' },
   { code: 'zh-CN', name: 'Chinese (Simplified)', native: '中文' },
@@ -30,6 +30,9 @@ export const LOCALES: readonly LocaleInfo[] = [
   { code: 'pt-BR', name: 'Portuguese (Brazil)', native: 'Português do Brasil' },
   { code: 'ru', name: 'Russian', native: 'Русский' },
   { code: 'es-ES', name: 'Spanish', native: 'Español' },
+  { code: 'tr', name: 'Turkish', native: 'Türkçe' },
+  { code: 'nl', name: 'Dutch', native: 'Nederlands' },
+  { code: 'id', name: 'Indonesian', native: 'Bahasa Indonesia' },
 ] as const;
 
 /** The default/base locale — the source language all translations derive from. */

@@ -9,7 +9,10 @@
     "pl": "Dodaj nową automatyczną odpowiedź",
     "pt-BR": "Adicionar uma nova resposta automática",
     "ru": "Добавить новый автоответ",
-    "zh-CN": "添加新的自动回复"
+    "zh-CN": "添加新的自动回复",
+    "tr": "Yeni bir otomatik yanıt ekle",
+    "nl": "Voeg een nieuw auto-antwoord toe",
+    "id": "Tambahkan balasan otomatis baru"
   },
   "Add a note to a user": {
     "de": "Eine Notiz zu einem Benutzer hinzufügen",
@@ -21,7 +24,10 @@
     "pl": "Dodaj notatkę do użytkownika",
     "pt-BR": "Adicionar uma nota a um usuário",
     "ru": "Добавить заметку к пользователю",
-    "zh-CN": "为用户添加备注"
+    "zh-CN": "为用户添加备注",
+    "tr": "Bir kullanıcıya not ekle",
+    "nl": "Voeg een notitie toe aan een gebruiker",
+    "id": "Tambahkan catatan ke pengguna"
   },
   "Add a role to the self-assignable list (requires Manage Roles)": {
     "de": "Rolle zur selbst zuweisbaren Liste hinzufügen (benötigt Rollen verwalten)",
@@ -33,7 +39,10 @@
     "pl": "Dodaj rolę do listy samodzielnie przypisywanych (wymaga Zarządzania rolami)",
     "pt-BR": "Adicionar um cargo à lista autoatribuível (requer Gerenciar cargos)",
     "ru": "Добавить роль в список самоназначаемых (нужно «Управление ролями»)",
-    "zh-CN": "将身份组添加到可自助领取列表（需要“管理身份组”）"
+    "zh-CN": "将身份组添加到可自助领取列表（需要“管理身份组”）",
+    "tr": "Kendine atanabilir listeye bir rol ekle (Rolleri Yönet gerekir)",
+    "nl": "Voeg een rol toe aan de zelf-toewijsbare lijst (vereist Rollen Beheren)",
+    "id": "Tambahkan peran ke daftar yang dapat ditetapkan sendiri (perlu Kelola Peran)"
   },
   "Allow multiple votes per user": {
     "de": "Mehrere Stimmen pro Benutzer zulassen",
@@ -45,7 +54,10 @@
     "pl": "Zezwól na wiele głosów na użytkownika",
     "pt-BR": "Permitir vários votos por usuário",
     "ru": "Разрешить несколько голосов на пользователя",
-    "zh-CN": "允许每个用户多次投票"
+    "zh-CN": "允许每个用户多次投票",
+    "tr": "Kullanıcı başına birden fazla oya izin ver",
+    "nl": "Sta meerdere stemmen per gebruiker toe",
+    "id": "Izinkan beberapa suara per pengguna"
   },
   "Amount of XP to give": {
     "de": "Menge an XP zum Vergeben",
@@ -57,7 +69,10 @@
     "pl": "Ilość XP do przyznania",
     "pt-BR": "Quantidade de XP a conceder",
     "ru": "Количество опыта для выдачи",
-    "zh-CN": "要给予的经验值数量"
+    "zh-CN": "要给予的经验值数量",
+    "tr": "Verilecek XP miktarı",
+    "nl": "Hoeveelheid XP om te geven",
+    "id": "Jumlah XP yang diberikan"
   },
   "Amount of XP to remove": {
     "de": "Menge an XP zum Entfernen",
@@ -69,7 +84,10 @@
     "pl": "Ilość XP do usunięcia",
     "pt-BR": "Quantidade de XP a remover",
     "ru": "Количество опыта для удаления",
-    "zh-CN": "要移除的经验值数量"
+    "zh-CN": "要移除的经验值数量",
+    "tr": "Kaldırılacak XP miktarı",
+    "nl": "Hoeveelheid XP om te verwijderen",
+    "id": "Jumlah XP yang dihapus"
   },
   "Approve a suggestion": {
     "de": "Einen Vorschlag genehmigen",
@@ -81,7 +99,10 @@
     "pl": "Zatwierdź sugestię",
     "pt-BR": "Aprovar uma sugestão",
     "ru": "Одобрить предложение",
-    "zh-CN": "批准一条建议"
+    "zh-CN": "批准一条建议",
+    "tr": "Bir öneriyi onayla",
+    "nl": "Keur een suggestie goed",
+    "id": "Setujui saran"
   },
   "Assign a role to a member temporarily": {
     "de": "Einem Mitglied vorübergehend eine Rolle zuweisen",
@@ -93,7 +114,10 @@
     "pl": "Przypisz rolę członkowi tymczasowo",
     "pt-BR": "Atribuir um cargo a um membro temporariamente",
     "ru": "Временно назначить роль участнику",
-    "zh-CN": "临时为成员分配身份组"
+    "zh-CN": "临时为成员分配身份组",
+    "tr": "Bir üyeye geçici olarak rol ata",
+    "nl": "Wijs een lid tijdelijk een rol toe",
+    "id": "Tetapkan peran ke anggota sementara"
   },
   "Assign yourself a self-assignable role": {
     "de": "Dir selbst eine selbst zuweisbare Rolle zuweisen",
@@ -105,7 +129,10 @@
     "pl": "Przypisz sobie samodzielnie przypisywaną rolę",
     "pt-BR": "Atribuir a si mesmo um cargo autoatribuível",
     "ru": "Назначить себе самоназначаемую роль",
-    "zh-CN": "为自己领取可自助身份组"
+    "zh-CN": "为自己领取可自助身份组",
+    "tr": "Kendine atanabilir bir rol al",
+    "nl": "Wijs jezelf een zelf-toewijsbare rol toe",
+    "id": "Tetapkan peran yang dapat ditetapkan sendiri padamu"
   },
   "Auto-response ID": {
     "de": "Auto-Antwort-ID",
@@ -117,7 +144,10 @@
     "pl": "ID automatycznej odpowiedzi",
     "pt-BR": "ID da resposta automática",
     "ru": "ID автоответа",
-    "zh-CN": "自动回复 ID"
+    "zh-CN": "自动回复 ID",
+    "tr": "Otomatik yanıt kimliği",
+    "nl": "Auto-antwoord-ID",
+    "id": "ID balasan otomatis"
   },
   "Auto-response ID (from /autoresponse list)": {
     "de": "Auto-Antwort-ID (aus /autoresponse list)",
@@ -129,7 +159,10 @@
     "pl": "ID automatycznej odpowiedzi (z /autoresponse list)",
     "pt-BR": "ID da resposta automática (de /autoresponse list)",
     "ru": "ID автоответа (из /autoresponse list)",
-    "zh-CN": "自动回复 ID（来自 /autoresponse list）"
+    "zh-CN": "自动回复 ID（来自 /autoresponse list）",
+    "tr": "Otomatik yanıt kimliği (/autoresponse list'ten)",
+    "nl": "Auto-antwoord-ID (uit /autoresponse list)",
+    "id": "ID balasan otomatis (dari /autoresponse list)"
   },
   "Ban a member from the server": {
     "de": "Ein Mitglied vom Server bannen",
@@ -141,7 +174,10 @@
     "pl": "Zbanuj członka z serwera",
     "pt-BR": "Banir um membro do servidor",
     "ru": "Забанить участника на сервере",
-    "zh-CN": "将成员从服务器封禁"
+    "zh-CN": "将成员从服务器封禁",
+    "tr": "Bir üyeyi sunucudan yasakla",
+    "nl": "Verban een lid van de server",
+    "id": "Blokir anggota dari server"
   },
   "Birthday tracker commands": {
     "de": "Geburtstags-Tracker-Befehle",
@@ -153,7 +189,10 @@
     "pl": "Polecenia śledzenia urodzin",
     "pt-BR": "Comandos do rastreador de aniversários",
     "ru": "Команды трекера дней рождения",
-    "zh-CN": "生日追踪器命令"
+    "zh-CN": "生日追踪器命令",
+    "tr": "Doğum günü takipçisi komutları",
+    "nl": "Verjaardagstracker-opdrachten",
+    "id": "Perintah pelacak ulang tahun"
   },
   "Browse commands available to you": {
     "de": "Verfügbare Befehle durchsuchen",
@@ -165,7 +204,10 @@
     "pl": "Przeglądaj dostępne dla Ciebie polecenia",
     "pt-BR": "Navegar pelos comandos disponíveis para você",
     "ru": "Просмотреть доступные вам команды",
-    "zh-CN": "浏览你可用的命令"
+    "zh-CN": "浏览你可用的命令",
+    "tr": "Sana açık komutlara göz at",
+    "nl": "Blader door beschikbare opdrachten",
+    "id": "Jelajahi perintah yang tersedia untukmu"
   },
   "Bulk delete messages": {
     "de": "Nachrichten in großer Menge löschen",
@@ -177,7 +219,10 @@
     "pl": "Masowo usuń wiadomości",
     "pt-BR": "Excluir mensagens em massa",
     "ru": "Массово удалить сообщения",
-    "zh-CN": "批量删除消息"
+    "zh-CN": "批量删除消息",
+    "tr": "Mesajları toplu sil",
+    "nl": "Verwijder berichten in bulk",
+    "id": "Hapus pesan secara massal"
   },
   "Bulk-assign level roles to all members based on their current level": {
     "de": "Levelrollen anhand des aktuellen Levels an alle Mitglieder zuweisen",
@@ -189,7 +234,10 @@
     "pl": "Masowo przypisz role poziomów członkom według ich obecnego poziomu",
     "pt-BR": "Atribuir em massa cargos de nível aos membros com base no nível atual",
     "ru": "Массово назначить роли уровней участникам по их текущему уровню",
-    "zh-CN": "根据成员当前等级批量分配等级身份组"
+    "zh-CN": "根据成员当前等级批量分配等级身份组",
+    "tr": "Mevcut seviyelerine göre tüm üyelere seviye rollerini toplu ata",
+    "nl": "Wijs levelrollen in bulk toe aan alle leden op basis van hun huidige level",
+    "id": "Tetapkan peran level secara massal ke semua anggota berdasarkan level mereka saat ini"
   },
   "Case number": {
     "de": "Fallnummer",
@@ -201,7 +249,10 @@
     "pl": "Numer sprawy",
     "pt-BR": "Número do caso",
     "ru": "Номер дела",
-    "zh-CN": "案件编号"
+    "zh-CN": "案件编号",
+    "tr": "Vaka numarası",
+    "nl": "Zaaknummer",
+    "id": "Nomor kasus"
   },
   "Channel containing the verify button": {
     "de": "Kanal mit dem Verifizierungs-Button",
@@ -213,7 +264,10 @@
     "pl": "Kanał zawierający przycisk weryfikacji",
     "pt-BR": "Canal que contém o botão de verificação",
     "ru": "Канал с кнопкой верификации",
-    "zh-CN": "包含验证按钮的频道"
+    "zh-CN": "包含验证按钮的频道",
+    "tr": "Doğrula düğmesini içeren kanal",
+    "nl": "Kanaal met de verificatieknop",
+    "id": "Kanal berisi tombol verifikasi"
   },
   "Channel to send live notifications": {
     "de": "Kanal zum Senden von Live-Benachrichtigungen",
@@ -225,7 +279,10 @@
     "pl": "Kanał do wysyłania powiadomień o transmisjach",
     "pt-BR": "Canal para enviar notificações de transmissão",
     "ru": "Канал для отправки уведомлений о трансляциях",
-    "zh-CN": "用于发送直播通知的频道"
+    "zh-CN": "用于发送直播通知的频道",
+    "tr": "Canlı bildirimlerin gönderileceği kanal",
+    "nl": "Kanaal om live-meldingen naar te sturen",
+    "id": "Kanal untuk mengirim notifikasi langsung"
   },
   "Channel where reports will be sent": {
     "de": "Kanal, in dem Meldungen gesendet werden",
@@ -237,7 +294,10 @@
     "pl": "Kanał, na który będą wysyłane zgłoszenia",
     "pt-BR": "Canal para onde as denúncias serão enviadas",
     "ru": "Канал, куда будут отправляться жалобы",
-    "zh-CN": "举报将发送到的频道"
+    "zh-CN": "举报将发送到的频道",
+    "tr": "Raporların gönderileceği kanal",
+    "nl": "Kanaal waar rapporten naartoe worden gestuurd",
+    "id": "Kanal tempat laporan dikirim"
   },
   "Check a member's birthday": {
     "de": "Den Geburtstag eines Mitglieds prüfen",
@@ -249,7 +309,10 @@
     "pl": "Sprawdź urodziny członka",
     "pt-BR": "Verificar o aniversário de um membro",
     "ru": "Проверить день рождения участника",
-    "zh-CN": "查看成员的生日"
+    "zh-CN": "查看成员的生日",
+    "tr": "Bir üyenin doğum gününü kontrol et",
+    "nl": "Bekijk de verjaardag van een lid",
+    "id": "Periksa ulang tahun anggota"
   },
   "Check a member's reputation points": {
     "de": "Die Reputationspunkte eines Mitglieds prüfen",
@@ -261,7 +324,10 @@
     "pl": "Sprawdź punkty reputacji członka",
     "pt-BR": "Verificar os pontos de reputação de um membro",
     "ru": "Проверить очки репутации участника",
-    "zh-CN": "查看成员的声望点数"
+    "zh-CN": "查看成员的声望点数",
+    "tr": "Bir üyenin itibar puanlarını kontrol et",
+    "nl": "Bekijk de reputatiepunten van een lid",
+    "id": "Periksa poin reputasi anggota"
   },
   "Check current Live Role settings": {
     "de": "Aktuelle Live-Rollen-Einstellungen prüfen",
@@ -273,7 +339,10 @@
     "pl": "Sprawdź obecne ustawienia roli transmisji",
     "pt-BR": "Verificar as configurações atuais do Cargo de transmissão",
     "ru": "Проверить текущие настройки роли трансляции",
-    "zh-CN": "查看当前的直播身份组设置"
+    "zh-CN": "查看当前的直播身份组设置",
+    "tr": "Mevcut Canlı Rol ayarlarını kontrol et",
+    "nl": "Bekijk de huidige Live Rol-instellingen",
+    "id": "Periksa pengaturan Peran Langsung saat ini"
   },
   "Check how many members you or another user has invited": {
     "de": "Prüfen, wie viele Mitglieder du oder ein anderer eingeladen hat",
@@ -285,7 +354,10 @@
     "pl": "Sprawdź, ilu członków zaprosiłeś Ty lub inny użytkownik",
     "pt-BR": "Verificar quantos membros você ou outro usuário convidou",
     "ru": "Узнать, сколько участников пригласили вы или другой пользователь",
-    "zh-CN": "查看你或其他用户邀请了多少成员"
+    "zh-CN": "查看你或其他用户邀请了多少成员",
+    "tr": "Senin veya başka bir kullanıcının kaç üye davet ettiğini kontrol et",
+    "nl": "Bekijk hoeveel leden jij of een andere gebruiker heeft uitgenodigd",
+    "id": "Periksa berapa anggota yang kamu atau pengguna lain undang"
   },
   "Check the bot latency": {
     "de": "Die Latenz des Bots prüfen",
@@ -297,7 +369,10 @@
     "pl": "Sprawdź opóźnienie bota",
     "pt-BR": "Verificar a latência do bot",
     "ru": "Проверить задержку бота",
-    "zh-CN": "检查机器人的延迟"
+    "zh-CN": "检查机器人的延迟",
+    "tr": "Bot gecikmesini kontrol et",
+    "nl": "Controleer de botlatentie",
+    "id": "Periksa latensi bot"
   },
   "Check your or someone else's rank card": {
     "de": "Deine oder die Rangkarte eines anderen prüfen",
@@ -309,7 +384,10 @@
     "pl": "Sprawdź swoją lub czyjąś kartę rangi",
     "pt-BR": "Verificar seu cartão de rank ou o de outra pessoa",
     "ru": "Посмотреть свою или чужую карточку ранга",
-    "zh-CN": "查看你或他人的等级卡"
+    "zh-CN": "查看你或他人的等级卡",
+    "tr": "Senin veya başka birinin sıra kartını kontrol et",
+    "nl": "Bekijk jouw of iemand anders rangkaart",
+    "id": "Periksa kartu peringkatmu atau orang lain"
   },
   "Choose the language for my replies to you": {
     "de": "Wähle die Sprache für meine Antworten an dich",
@@ -321,7 +399,10 @@
     "pl": "Wybierz język moich odpowiedzi do Ciebie",
     "pt-BR": "Escolha o idioma das minhas respostas para você",
     "ru": "Выберите язык моих ответов вам",
-    "zh-CN": "选择我回复你时使用的语言"
+    "zh-CN": "选择我回复你时使用的语言",
+    "tr": "Sana yanıtlarım için dili seç",
+    "nl": "Kies de taal voor mijn antwoorden aan jou",
+    "id": "Pilih bahasa untuk balasanku kepadamu"
   },
   "Clear all notes for a user": {
     "de": "Alle Notizen für einen Benutzer löschen",
@@ -333,7 +414,10 @@
     "pl": "Wyczyść wszystkie notatki użytkownika",
     "pt-BR": "Limpar todas as notas de um usuário",
     "ru": "Очистить все заметки пользователя",
-    "zh-CN": "清除用户的所有备注"
+    "zh-CN": "清除用户的所有备注",
+    "tr": "Bir kullanıcının tüm notlarını temizle",
+    "nl": "Wis alle notities voor een gebruiker",
+    "id": "Hapus semua catatan untuk pengguna"
   },
   "Clear warnings for a member": {
     "de": "Verwarnungen für ein Mitglied löschen",
@@ -345,7 +429,10 @@
     "pl": "Wyczyść ostrzeżenia członka",
     "pt-BR": "Limpar as advertências de um membro",
     "ru": "Очистить предупреждения участника",
-    "zh-CN": "清除成员的警告"
+    "zh-CN": "清除成员的警告",
+    "tr": "Bir üyenin uyarılarını temizle",
+    "nl": "Wis waarschuwingen voor een lid",
+    "id": "Hapus peringatan untuk anggota"
   },
   "Clear your language and go back to auto-detect": {
     "de": "Deine Sprache zurücksetzen und zur automatischen Erkennung zurückkehren",
@@ -357,7 +444,10 @@
     "pl": "Wyczyść swój język i wróć do automatycznego wykrywania",
     "pt-BR": "Limpar seu idioma e voltar à detecção automática",
     "ru": "Сбросить язык и вернуться к автоопределению",
-    "zh-CN": "清除你的语言并恢复自动检测"
+    "zh-CN": "清除你的语言并恢复自动检测",
+    "tr": "Dilini temizle ve otomatik algılamaya geri dön",
+    "nl": "Wis je taal en ga terug naar automatisch detecteren",
+    "id": "Hapus bahasamu dan kembali ke deteksi otomatis"
   },
   "Close all open cases for a user": {
     "de": "Alle offenen Fälle eines Benutzers schließen",
@@ -369,7 +459,10 @@
     "pl": "Zamknij wszystkie otwarte sprawy użytkownika",
     "pt-BR": "Fechar todos os casos abertos de um usuário",
     "ru": "Закрыть все открытые дела пользователя",
-    "zh-CN": "关闭用户的所有未结案件"
+    "zh-CN": "关闭用户的所有未结案件",
+    "tr": "Bir kullanıcının tüm açık vakalarını kapat",
+    "nl": "Sluit alle open zaken voor een gebruiker",
+    "id": "Tutup semua kasus terbuka untuk pengguna"
   },
   "Comma-separated platforms (twitch,youtube,kick)": {
     "de": "Kommagetrennte Plattformen (twitch,youtube,kick)",
@@ -381,7 +474,10 @@
     "pl": "Platformy oddzielone przecinkami (twitch,youtube,kick)",
     "pt-BR": "Plataformas separadas por vírgulas (twitch,youtube,kick)",
     "ru": "Платформы через запятую (twitch,youtube,kick)",
-    "zh-CN": "以逗号分隔的平台（twitch,youtube,kick）"
+    "zh-CN": "以逗号分隔的平台（twitch,youtube,kick）",
+    "tr": "Virgülle ayrılmış platformlar (twitch,youtube,kick)",
+    "nl": "Kommagescheiden platforms (twitch,youtube,kick)",
+    "id": "Platform dipisahkan koma (twitch,youtube,kick)"
   },
   "Configure and enable the verification gate": {
     "de": "Das Verifizierungstor konfigurieren und aktivieren",
@@ -393,7 +489,10 @@
     "pl": "Skonfiguruj i włącz bramkę weryfikacji",
     "pt-BR": "Configurar e ativar o portão de verificação",
     "ru": "Настроить и включить проверочный барьер",
-    "zh-CN": "配置并启用验证关卡"
+    "zh-CN": "配置并启用验证关卡",
+    "tr": "Doğrulama kapısını yapılandır ve etkinleştir",
+    "nl": "Configureer en schakel de verificatiepoort in",
+    "id": "Konfigurasikan dan aktifkan gerbang verifikasi"
   },
   "Configure forum post management": {
     "de": "Forenbeitragsverwaltung konfigurieren",
@@ -405,7 +504,10 @@
     "pl": "Skonfiguruj zarządzanie postami forum",
     "pt-BR": "Configurar o gerenciamento de posts do fórum",
     "ru": "Настроить управление постами форума",
-    "zh-CN": "配置论坛帖子管理"
+    "zh-CN": "配置论坛帖子管理",
+    "tr": "Forum gönderi yönetimini yapılandır",
+    "nl": "Configureer forumpostbeheer",
+    "id": "Konfigurasikan pengelolaan postingan forum"
   },
   "Configure the Live Role feature": {
     "de": "Die Live-Rollen-Funktion konfigurieren",
@@ -417,7 +519,10 @@
     "pl": "Skonfiguruj funkcję roli transmisji",
     "pt-BR": "Configurar o recurso de Cargo de transmissão",
     "ru": "Настроить функцию роли трансляции",
-    "zh-CN": "配置直播身份组功能"
+    "zh-CN": "配置直播身份组功能",
+    "tr": "Canlı Rol özelliğini yapılandır",
+    "nl": "Configureer de Live Rol-functie",
+    "id": "Konfigurasikan fitur Peran Langsung"
   },
   "Configure the member report system": {
     "de": "Das Mitglieder-Meldesystem konfigurieren",
@@ -429,7 +534,10 @@
     "pl": "Skonfiguruj system zgłaszania członków",
     "pt-BR": "Configurar o sistema de denúncia de membros",
     "ru": "Настроить систему жалоб на участников",
-    "zh-CN": "配置成员举报系统"
+    "zh-CN": "配置成员举报系统",
+    "tr": "Üye rapor sistemini yapılandır",
+    "nl": "Configureer het ledenrapportsysteem",
+    "id": "Konfigurasikan sistem laporan anggota"
   },
   "Create a poll": {
     "de": "Eine Umfrage erstellen",
@@ -441,7 +549,10 @@
     "pl": "Utwórz ankietę",
     "pt-BR": "Criar uma enquete",
     "ru": "Создать опрос",
-    "zh-CN": "创建投票"
+    "zh-CN": "创建投票",
+    "tr": "Bir anket oluştur",
+    "nl": "Maak een peiling",
+    "id": "Buat jajak pendapat"
   },
   "Customise your rank card appearance": {
     "de": "Das Aussehen deiner Rangkarte anpassen",
@@ -453,7 +564,10 @@
     "pl": "Dostosuj wygląd swojej karty rangi",
     "pt-BR": "Personalizar a aparência do seu cartão de rank",
     "ru": "Настроить вид вашей карточки ранга",
-    "zh-CN": "自定义你的等级卡外观"
+    "zh-CN": "自定义你的等级卡外观",
+    "tr": "Sıra kartı görünümünü özelleştir",
+    "nl": "Pas het uiterlijk van je rangkaart aan",
+    "id": "Sesuaikan tampilan kartu peringkatmu"
   },
   "Day (1-31)": {
     "de": "Tag (1-31)",
@@ -465,7 +579,10 @@
     "pl": "Dzień (1-31)",
     "pt-BR": "Dia (1-31)",
     "ru": "День (1–31)",
-    "zh-CN": "日（1-31）"
+    "zh-CN": "日（1-31）",
+    "tr": "Gün (1-31)",
+    "nl": "Dag (1-31)",
+    "id": "Hari (1-31)"
   },
   "Delete messages from the last N days (0-7)": {
     "de": "Nachrichten der letzten N Tage löschen (0-7)",
@@ -477,7 +594,10 @@
     "pl": "Usuń wiadomości z ostatnich N dni (0-7)",
     "pt-BR": "Excluir mensagens dos últimos N dias (0-7)",
     "ru": "Удалить сообщения за последние N дней (0–7)",
-    "zh-CN": "删除最近 N 天的消息（0-7）"
+    "zh-CN": "删除最近 N 天的消息（0-7）",
+    "tr": "Son N günün mesajlarını sil (0-7)",
+    "nl": "Verwijder berichten van de laatste N dagen (0-7)",
+    "id": "Hapus pesan dari N hari terakhir (0-7)"
   },
   "Delete the triggering message": {
     "de": "Die auslösende Nachricht löschen",
@@ -489,7 +609,10 @@
     "pl": "Usuń wiadomość wyzwalającą",
     "pt-BR": "Excluir a mensagem que acionou",
     "ru": "Удалить сообщение-триггер",
-    "zh-CN": "删除触发的消息"
+    "zh-CN": "删除触发的消息",
+    "tr": "Tetikleyen mesajı sil",
+    "nl": "Verwijder het activerende bericht",
+    "id": "Hapus pesan pemicu"
   },
   "Deny a suggestion": {
     "de": "Einen Vorschlag ablehnen",
@@ -501,7 +624,10 @@
     "pl": "Odrzuć sugestię",
     "pt-BR": "Recusar uma sugestão",
     "ru": "Отклонить предложение",
-    "zh-CN": "拒绝一条建议"
+    "zh-CN": "拒绝一条建议",
+    "tr": "Bir öneriyi reddet",
+    "nl": "Wijs een suggestie af",
+    "id": "Tolak saran"
   },
   "Direct image URL (png/jpg/gif)": {
     "de": "Direkte Bild-URL (png/jpg/gif)",
@@ -513,7 +639,10 @@
     "pl": "Bezpośredni URL obrazu (png/jpg/gif)",
     "pt-BR": "URL direta da imagem (png/jpg/gif)",
     "ru": "Прямой URL изображения (png/jpg/gif)",
-    "zh-CN": "图片直链 URL（png/jpg/gif）"
+    "zh-CN": "图片直链 URL（png/jpg/gif）",
+    "tr": "Doğrudan görsel URL'si (png/jpg/gif)",
+    "nl": "Directe afbeeldings-URL (png/jpg/gif)",
+    "id": "URL gambar langsung (png/jpg/gif)"
   },
   "Disable the Live Role feature": {
     "de": "Die Live-Rollen-Funktion deaktivieren",
@@ -525,7 +654,10 @@
     "pl": "Wyłącz funkcję roli transmisji",
     "pt-BR": "Desativar o recurso de Cargo de transmissão",
     "ru": "Отключить функцию роли трансляции",
-    "zh-CN": "禁用直播身份组功能"
+    "zh-CN": "禁用直播身份组功能",
+    "tr": "Canlı Rol özelliğini devre dışı bırak",
+    "nl": "Schakel de Live Rol-functie uit",
+    "id": "Nonaktifkan fitur Peran Langsung"
   },
   "Disable the verification gate": {
     "de": "Das Verifizierungstor deaktivieren",
@@ -537,7 +669,10 @@
     "pl": "Wyłącz bramkę weryfikacji",
     "pt-BR": "Desativar o portão de verificação",
     "ru": "Отключить проверочный барьер",
-    "zh-CN": "禁用验证关卡"
+    "zh-CN": "禁用验证关卡",
+    "tr": "Doğrulama kapısını devre dışı bırak",
+    "nl": "Schakel de verificatiepoort uit",
+    "id": "Nonaktifkan gerbang verifikasi"
   },
   "Display information about a user": {
     "de": "Informationen über einen Benutzer anzeigen",
@@ -549,7 +684,10 @@
     "pl": "Wyświetl informacje o użytkowniku",
     "pt-BR": "Exibir informações sobre um usuário",
     "ru": "Показать информацию о пользователе",
-    "zh-CN": "显示某个用户的信息"
+    "zh-CN": "显示某个用户的信息",
+    "tr": "Bir kullanıcı hakkında bilgi göster",
+    "nl": "Toon informatie over een gebruiker",
+    "id": "Tampilkan informasi tentang pengguna"
   },
   "Display information about this server": {
     "de": "Informationen über diesen Server anzeigen",
@@ -561,7 +699,10 @@
     "pl": "Wyświetl informacje o tym serwerze",
     "pt-BR": "Exibir informações sobre este servidor",
     "ru": "Показать информацию об этом сервере",
-    "zh-CN": "显示此服务器的信息"
+    "zh-CN": "显示此服务器的信息",
+    "tr": "Bu sunucu hakkında bilgi göster",
+    "nl": "Toon informatie over deze server",
+    "id": "Tampilkan informasi tentang server ini"
   },
   "Duration (e.g. 10m, 1h, 1d) - max 28 days": {
     "de": "Dauer (z. B. 10m, 1h, 1d) – max. 28 Tage",
@@ -573,7 +714,10 @@
     "pl": "Czas trwania (np. 10m, 1h, 1d) - maks. 28 dni",
     "pt-BR": "Duração (ex. 10m, 1h, 1d) - máx. 28 dias",
     "ru": "Длительность (напр. 10m, 1h, 1d) — макс. 28 дней",
-    "zh-CN": "时长（例如 10m、1h、1d）- 最长 28 天"
+    "zh-CN": "时长（例如 10m、1h、1d）- 最长 28 天",
+    "tr": "Süre (örn. 10m, 1h, 1d) - en fazla 28 gün",
+    "nl": "Duur (bijv. 10m, 1h, 1d) - max 28 dagen",
+    "id": "Durasi (mis. 10m, 1h, 1d) - maks 28 hari"
   },
   "Duration e.g. 1h, 30m, 7d": {
     "de": "Dauer, z. B. 1h, 30m, 7d",
@@ -585,7 +729,10 @@
     "pl": "Czas trwania, np. 1h, 30m, 7d",
     "pt-BR": "Duração, ex. 1h, 30m, 7d",
     "ru": "Длительность, напр. 1h, 30m, 7d",
-    "zh-CN": "时长，例如 1h、30m、7d"
+    "zh-CN": "时长，例如 1h、30m、7d",
+    "tr": "Süre örn. 1h, 30m, 7d",
+    "nl": "Duur bijv. 1h, 30m, 7d",
+    "id": "Durasi mis. 1h, 30m, 7d"
   },
   "Duration in minutes (optional)": {
     "de": "Dauer in Minuten (optional)",
@@ -597,7 +744,10 @@
     "pl": "Czas trwania w minutach (opcjonalnie)",
     "pt-BR": "Duração em minutos (opcional)",
     "ru": "Длительность в минутах (необязательно)",
-    "zh-CN": "时长（分钟，可选）"
+    "zh-CN": "时长（分钟，可选）",
+    "tr": "Dakika cinsinden süre (isteğe bağlı)",
+    "nl": "Duur in minuten (optioneel)",
+    "id": "Durasi dalam menit (opsional)"
   },
   "Embed color hex e.g. #5865F2": {
     "de": "Embed-Farbe als Hex, z. B. #5865F2",
@@ -609,7 +759,10 @@
     "pl": "Kolor osadzenia w hex, np. #5865F2",
     "pt-BR": "Cor do embed em hex, ex. #5865F2",
     "ru": "Цвет вставки в hex, напр. #5865F2",
-    "zh-CN": "嵌入颜色十六进制，例如 #5865F2"
+    "zh-CN": "嵌入颜色十六进制，例如 #5865F2",
+    "tr": "Gömme rengi hex örn. #5865F2",
+    "nl": "Embed-kleur hex bijv. #5865F2",
+    "id": "Hex warna embed mis. #5865F2"
   },
   "Enable or disable an auto-response": {
     "de": "Eine Auto-Antwort aktivieren oder deaktivieren",
@@ -621,7 +774,10 @@
     "pl": "Włącz lub wyłącz automatyczną odpowiedź",
     "pt-BR": "Ativar ou desativar uma resposta automática",
     "ru": "Включить или отключить автоответ",
-    "zh-CN": "启用或禁用自动回复"
+    "zh-CN": "启用或禁用自动回复",
+    "tr": "Bir otomatik yanıtı etkinleştir veya devre dışı bırak",
+    "nl": "Schakel een auto-antwoord in of uit",
+    "id": "Aktifkan atau nonaktifkan balasan otomatis"
   },
   "Enable the Live Role feature": {
     "de": "Die Live-Rollen-Funktion aktivieren",
@@ -633,7 +789,10 @@
     "pl": "Włącz funkcję roli transmisji",
     "pt-BR": "Ativar o recurso de Cargo de transmissão",
     "ru": "Включить функцию роли трансляции",
-    "zh-CN": "启用直播身份组功能"
+    "zh-CN": "启用直播身份组功能",
+    "tr": "Canlı Rol özelliğini etkinleştir",
+    "nl": "Schakel de Live Rol-functie in",
+    "id": "Aktifkan fitur Peran Langsung"
   },
   "End a giveaway early": {
     "de": "Ein Gewinnspiel vorzeitig beenden",
@@ -645,7 +804,10 @@
     "pl": "Zakończ giveaway wcześniej",
     "pt-BR": "Encerrar um sorteio antecipadamente",
     "ru": "Завершить розыгрыш досрочно",
-    "zh-CN": "提前结束抽奖"
+    "zh-CN": "提前结束抽奖",
+    "tr": "Bir çekilişi erken bitir",
+    "nl": "Beëindig een giveaway vroegtijdig",
+    "id": "Akhiri giveaway lebih awal"
   },
   "Extra entries for bonus-role holders": {
     "de": "Zusätzliche Lose für Inhaber der Bonusrolle",
@@ -657,7 +819,10 @@
     "pl": "Dodatkowe losy dla posiadaczy roli bonusowej",
     "pt-BR": "Entradas extras para quem tem o cargo de bônus",
     "ru": "Дополнительные заявки для обладателей бонусной роли",
-    "zh-CN": "奖励身份组持有者的额外抽奖名额"
+    "zh-CN": "奖励身份组持有者的额外抽奖名额",
+    "tr": "Bonus rol sahipleri için ekstra katılımlar",
+    "nl": "Extra deelnames voor bonusrol-houders",
+    "id": "Entri tambahan untuk pemegang peran bonus"
   },
   "Get a DM when you can vote again": {
     "de": "Erhalte eine DM, wenn du wieder abstimmen kannst",
@@ -669,7 +834,10 @@
     "pl": "Otrzymaj wiadomość prywatną, gdy znów będziesz mógł zagłosować",
     "pt-BR": "Receba uma DM quando puder votar novamente",
     "ru": "Получить ЛС, когда снова можно голосовать",
-    "zh-CN": "当你可以再次投票时收到私信"
+    "zh-CN": "当你可以再次投票时收到私信",
+    "tr": "Tekrar oy verebileceğinde DM al",
+    "nl": "Krijg een DM als je weer kunt stemmen",
+    "id": "Dapatkan DM saat kamu bisa memberi suara lagi"
   },
   "Get a link to invite ArkenBot to your server": {
     "de": "Einen Link erhalten, um ArkenBot auf deinen Server einzuladen",
@@ -681,7 +849,10 @@
     "pl": "Uzyskaj link do zaproszenia ArkenBot na swój serwer",
     "pt-BR": "Obter um link para convidar o ArkenBot para o seu servidor",
     "ru": "Получить ссылку для добавления ArkenBot на ваш сервер",
-    "zh-CN": "获取邀请 ArkenBot 到你服务器的链接"
+    "zh-CN": "获取邀请 ArkenBot 到你服务器的链接",
+    "tr": "ArkenBot'u sunucuna davet etmek için bir bağlantı al",
+    "nl": "Krijg een link om ArkenBot uit te nodigen voor je server",
+    "id": "Dapatkan tautan untuk mengundang ArkenBot ke servermu"
   },
   "Get a user's avatar": {
     "de": "Den Avatar eines Benutzers abrufen",
@@ -693,7 +864,10 @@
     "pl": "Pobierz awatar użytkownika",
     "pt-BR": "Obter o avatar de um usuário",
     "ru": "Получить аватар пользователя",
-    "zh-CN": "获取用户的头像"
+    "zh-CN": "获取用户的头像",
+    "tr": "Bir kullanıcının avatarını al",
+    "nl": "Haal de avatar van een gebruiker op",
+    "id": "Dapatkan avatar pengguna"
   },
   "Give XP to a user": {
     "de": "Einem Benutzer XP geben",
@@ -705,7 +879,10 @@
     "pl": "Przyznaj XP użytkownikowi",
     "pt-BR": "Conceder XP a um usuário",
     "ru": "Выдать опыт пользователю",
-    "zh-CN": "给用户发放经验值"
+    "zh-CN": "给用户发放经验值",
+    "tr": "Bir kullanıcıya XP ver",
+    "nl": "Geef XP aan een gebruiker",
+    "id": "Beri XP ke pengguna"
   },
   "Give a reputation point to a member (once per 24 hours)": {
     "de": "Einem Mitglied einen Reputationspunkt geben (einmal pro 24 Stunden)",
@@ -717,7 +894,10 @@
     "pl": "Przyznaj członkowi punkt reputacji (raz na 24 godziny)",
     "pt-BR": "Conceder um ponto de reputação a um membro (uma vez a cada 24 horas)",
     "ru": "Дать участнику очко репутации (раз в 24 часа)",
-    "zh-CN": "给成员一个声望点数（每 24 小时一次）"
+    "zh-CN": "给成员一个声望点数（每 24 小时一次）",
+    "tr": "Bir üyeye itibar puanı ver (24 saatte bir)",
+    "nl": "Geef een reputatiepunt aan een lid (eens per 24 uur)",
+    "id": "Beri poin reputasi ke anggota (sekali per 24 jam)"
   },
   "Giveaway ID": {
     "de": "Gewinnspiel-ID",
@@ -729,7 +909,10 @@
     "pl": "ID giveawaya",
     "pt-BR": "ID do sorteio",
     "ru": "ID розыгрыша",
-    "zh-CN": "抽奖 ID"
+    "zh-CN": "抽奖 ID",
+    "tr": "Çekiliş kimliği",
+    "nl": "Giveaway-ID",
+    "id": "ID giveaway"
   },
   "Giveaway management": {
     "de": "Gewinnspielverwaltung",
@@ -741,7 +924,10 @@
     "pl": "Zarządzanie giveawayami",
     "pt-BR": "Gerenciamento de sorteios",
     "ru": "Управление розыгрышами",
-    "zh-CN": "抽奖管理"
+    "zh-CN": "抽奖管理",
+    "tr": "Çekiliş yönetimi",
+    "nl": "Giveawaybeheer",
+    "id": "Pengelolaan giveaway"
   },
   "Hex colour code e.g. #ff5733": {
     "de": "Hex-Farbcode, z. B. #ff5733",
@@ -753,7 +939,10 @@
     "pl": "Kod koloru hex, np. #ff5733",
     "pt-BR": "Código de cor hex, ex. #ff5733",
     "ru": "Hex-код цвета, напр. #ff5733",
-    "zh-CN": "十六进制颜色码，例如 #ff5733"
+    "zh-CN": "十六进制颜色码，例如 #ff5733",
+    "tr": "Hex renk kodu örn. #ff5733",
+    "nl": "Hex-kleurcode bijv. #ff5733",
+    "id": "Kode warna hex mis. #ff5733"
   },
   "How long (e.g. 1h, 1d, 7d)": {
     "de": "Wie lange (z. B. 1h, 1d, 7d)",
@@ -765,7 +954,10 @@
     "pl": "Jak długo (np. 1h, 1d, 7d)",
     "pt-BR": "Por quanto tempo (ex. 1h, 1d, 7d)",
     "ru": "На сколько (напр. 1h, 1d, 7d)",
-    "zh-CN": "持续多久（例如 1h、1d、7d）"
+    "zh-CN": "持续多久（例如 1h、1d、7d）",
+    "tr": "Ne kadar süre (örn. 1h, 1d, 7d)",
+    "nl": "Hoe lang (bijv. 1h, 1d, 7d)",
+    "id": "Berapa lama (mis. 1h, 1d, 7d)"
   },
   "Include cleared warnings": {
     "de": "Gelöschte Verwarnungen einbeziehen",
@@ -777,7 +969,10 @@
     "pl": "Uwzględnij usunięte ostrzeżenia",
     "pt-BR": "Incluir advertências removidas",
     "ru": "Включить снятые предупреждения",
-    "zh-CN": "包含已清除的警告"
+    "zh-CN": "包含已清除的警告",
+    "tr": "Temizlenen uyarıları dahil et",
+    "nl": "Inclusief gewiste waarschuwingen",
+    "id": "Sertakan peringatan yang dihapus"
   },
   "Kick a member from the server": {
     "de": "Ein Mitglied vom Server kicken",
@@ -789,7 +984,10 @@
     "pl": "Wyrzuć członka z serwera",
     "pt-BR": "Expulsar um membro do servidor",
     "ru": "Кикнуть участника с сервера",
-    "zh-CN": "将成员从服务器踢出"
+    "zh-CN": "将成员从服务器踢出",
+    "tr": "Bir üyeyi sunucudan at",
+    "nl": "Kick een lid van de server",
+    "id": "Keluarkan anggota dari server"
   },
   "Leveling system admin settings": {
     "de": "Admin-Einstellungen des Levelsystems",
@@ -801,7 +999,10 @@
     "pl": "Ustawienia administratora systemu poziomów",
     "pt-BR": "Configurações de administrador do sistema de níveis",
     "ru": "Настройки администратора системы уровней",
-    "zh-CN": "等级系统管理员设置"
+    "zh-CN": "等级系统管理员设置",
+    "tr": "Seviye sistemi yönetici ayarları",
+    "nl": "Beheerinstellingen levelingsysteem",
+    "id": "Pengaturan admin sistem leveling"
   },
   "List all active temporary roles in this server": {
     "de": "Alle aktiven temporären Rollen auf diesem Server auflisten",
@@ -813,7 +1014,10 @@
     "pl": "Wyświetl wszystkie aktywne role tymczasowe na tym serwerze",
     "pt-BR": "Listar todos os cargos temporários ativos neste servidor",
     "ru": "Показать все активные временные роли на этом сервере",
-    "zh-CN": "列出此服务器中所有生效的临时身份组"
+    "zh-CN": "列出此服务器中所有生效的临时身份组",
+    "tr": "Bu sunucudaki tüm etkin geçici rolleri listele",
+    "nl": "Toon alle actieve tijdelijke rollen in deze server",
+    "id": "Daftar semua peran sementara aktif di server ini"
   },
   "List all auto-responses for this server": {
     "de": "Alle Auto-Antworten für diesen Server auflisten",
@@ -825,7 +1029,10 @@
     "pl": "Wyświetl wszystkie automatyczne odpowiedzi na tym serwerze",
     "pt-BR": "Listar todas as respostas automáticas deste servidor",
     "ru": "Показать все автоответы этого сервера",
-    "zh-CN": "列出此服务器的所有自动回复"
+    "zh-CN": "列出此服务器的所有自动回复",
+    "tr": "Bu sunucudaki tüm otomatik yanıtları listele",
+    "nl": "Toon alle auto-antwoorden voor deze server",
+    "id": "Daftar semua balasan otomatis untuk server ini"
   },
   "List all self-assignable roles in this server": {
     "de": "Alle selbst zuweisbaren Rollen auf diesem Server auflisten",
@@ -837,7 +1044,10 @@
     "pl": "Wyświetl wszystkie samodzielnie przypisywane role na tym serwerze",
     "pt-BR": "Listar todos os cargos autoatribuíveis deste servidor",
     "ru": "Показать все самоназначаемые роли этого сервера",
-    "zh-CN": "列出此服务器所有可自助领取的身份组"
+    "zh-CN": "列出此服务器所有可自助领取的身份组",
+    "tr": "Bu sunucudaki tüm kendine atanabilir rolleri listele",
+    "nl": "Toon alle zelf-toewijsbare rollen in deze server",
+    "id": "Daftar semua peran yang dapat ditetapkan sendiri di server ini"
   },
   "List notes for a user": {
     "de": "Notizen für einen Benutzer auflisten",
@@ -849,7 +1059,10 @@
     "pl": "Wyświetl notatki użytkownika",
     "pt-BR": "Listar as notas de um usuário",
     "ru": "Показать заметки пользователя",
-    "zh-CN": "列出用户的备注"
+    "zh-CN": "列出用户的备注",
+    "tr": "Bir kullanıcının notlarını listele",
+    "nl": "Toon notities voor een gebruiker",
+    "id": "Daftar catatan untuk pengguna"
   },
   "List upcoming birthdays in this server": {
     "de": "Anstehende Geburtstage auf diesem Server auflisten",
@@ -861,7 +1074,10 @@
     "pl": "Wyświetl nadchodzące urodziny na tym serwerze",
     "pt-BR": "Listar os próximos aniversários neste servidor",
     "ru": "Показать ближайшие дни рождения на этом сервере",
-    "zh-CN": "列出此服务器即将到来的生日"
+    "zh-CN": "列出此服务器即将到来的生日",
+    "tr": "Bu sunucudaki yaklaşan doğum günlerini listele",
+    "nl": "Toon aankomende verjaardagen in deze server",
+    "id": "Daftar ulang tahun mendatang di server ini"
   },
   "Look up a moderation case by number": {
     "de": "Einen Moderationsfall per Nummer nachschlagen",
@@ -873,7 +1089,10 @@
     "pl": "Wyszukaj sprawę moderacyjną według numeru",
     "pt-BR": "Procurar um caso de moderação por número",
     "ru": "Найти дело модерации по номеру",
-    "zh-CN": "按编号查询审核案件"
+    "zh-CN": "按编号查询审核案件",
+    "tr": "Numaraya göre bir moderasyon vakası ara",
+    "nl": "Zoek een moderatiezaak op nummer",
+    "id": "Cari kasus moderasi berdasarkan nomor"
   },
   "Loop mode": {
     "de": "Wiederholungsmodus",
@@ -885,7 +1104,10 @@
     "pl": "Tryb pętli",
     "pt-BR": "Modo de repetição",
     "ru": "Режим повтора",
-    "zh-CN": "循环模式"
+    "zh-CN": "循环模式",
+    "tr": "Döngü modu",
+    "nl": "Loopmodus",
+    "id": "Mode ulang"
   },
   "Manage moderation cases": {
     "de": "Moderationsfälle verwalten",
@@ -897,7 +1119,10 @@
     "pl": "Zarządzaj sprawami moderacyjnymi",
     "pt-BR": "Gerenciar casos de moderação",
     "ru": "Управление делами модерации",
-    "zh-CN": "管理审核案件"
+    "zh-CN": "管理审核案件",
+    "tr": "Moderasyon vakalarını yönet",
+    "nl": "Beheer moderatiezaken",
+    "id": "Kelola kasus moderasi"
   },
   "Manage regex-triggered auto-responses": {
     "de": "Regex-ausgelöste Auto-Antworten verwalten",
@@ -909,7 +1134,10 @@
     "pl": "Zarządzaj automatycznymi odpowiedziami wyzwalanymi przez regex",
     "pt-BR": "Gerenciar respostas automáticas acionadas por regex",
     "ru": "Управление автоответами по регулярным выражениям",
-    "zh-CN": "管理由正则表达式触发的自动回复"
+    "zh-CN": "管理由正则表达式触发的自动回复",
+    "tr": "Regex tetiklemeli otomatik yanıtları yönet",
+    "nl": "Beheer regex-geactiveerde auto-antwoorden",
+    "id": "Kelola balasan otomatis yang dipicu regex"
   },
   "Manage self-assignable roles for this server": {
     "de": "Selbst zuweisbare Rollen für diesen Server verwalten",
@@ -921,7 +1149,10 @@
     "pl": "Zarządzaj samodzielnie przypisywanymi rolami na tym serwerze",
     "pt-BR": "Gerenciar os cargos autoatribuíveis deste servidor",
     "ru": "Управление самоназначаемыми ролями этого сервера",
-    "zh-CN": "管理此服务器的可自助领取身份组"
+    "zh-CN": "管理此服务器的可自助领取身份组",
+    "tr": "Bu sunucu için kendine atanabilir rolleri yönet",
+    "nl": "Beheer zelf-toewijsbare rollen voor deze server",
+    "id": "Kelola peran yang dapat ditetapkan sendiri untuk server ini"
   },
   "Manage staff notes on users": {
     "de": "Team-Notizen zu Benutzern verwalten",
@@ -933,7 +1164,10 @@
     "pl": "Zarządzaj notatkami personelu o użytkownikach",
     "pt-BR": "Gerenciar notas da equipe sobre usuários",
     "ru": "Управление заметками персонала о пользователях",
-    "zh-CN": "管理关于用户的工作人员备注"
+    "zh-CN": "管理关于用户的工作人员备注",
+    "tr": "Kullanıcılardaki yetkili notlarını yönet",
+    "nl": "Beheer stafnotities over gebruikers",
+    "id": "Kelola catatan staf pada pengguna"
   },
   "Manage suggestions": {
     "de": "Vorschläge verwalten",
@@ -945,7 +1179,10 @@
     "pl": "Zarządzaj sugestiami",
     "pt-BR": "Gerenciar sugestões",
     "ru": "Управление предложениями",
-    "zh-CN": "管理建议"
+    "zh-CN": "管理建议",
+    "tr": "Önerileri yönet",
+    "nl": "Beheer suggesties",
+    "id": "Kelola saran"
   },
   "Manage temporary roles": {
     "de": "Temporäre Rollen verwalten",
@@ -957,7 +1194,10 @@
     "pl": "Zarządzaj rolami tymczasowymi",
     "pt-BR": "Gerenciar cargos temporários",
     "ru": "Управление временными ролями",
-    "zh-CN": "管理临时身份组"
+    "zh-CN": "管理临时身份组",
+    "tr": "Geçici rolleri yönet",
+    "nl": "Beheer tijdelijke rollen",
+    "id": "Kelola peran sementara"
   },
   "Manage the verification gate": {
     "de": "Das Verifizierungstor verwalten",
@@ -969,7 +1209,10 @@
     "pl": "Zarządzaj bramką weryfikacji",
     "pt-BR": "Gerenciar o portão de verificação",
     "ru": "Управление проверочным барьером",
-    "zh-CN": "管理验证关卡"
+    "zh-CN": "管理验证关卡",
+    "tr": "Doğrulama kapısını yönet",
+    "nl": "Beheer de verificatiepoort",
+    "id": "Kelola gerbang verifikasi"
   },
   "Mark a suggestion as under consideration": {
     "de": "Einen Vorschlag als „in Prüfung“ markieren",
@@ -981,7 +1224,10 @@
     "pl": "Oznacz sugestię jako rozpatrywaną",
     "pt-BR": "Marcar uma sugestão como em análise",
     "ru": "Отметить предложение как рассматриваемое",
-    "zh-CN": "将建议标记为审议中"
+    "zh-CN": "将建议标记为审议中",
+    "tr": "Bir öneriyi değerlendiriliyor olarak işaretle",
+    "nl": "Markeer een suggestie als in overweging",
+    "id": "Tandai saran sebagai sedang dipertimbangkan"
   },
   "Member": {
     "de": "Mitglied",
@@ -993,7 +1239,10 @@
     "pl": "Członek",
     "pt-BR": "Membro",
     "ru": "Участник",
-    "zh-CN": "成员"
+    "zh-CN": "成员",
+    "tr": "Üye",
+    "nl": "Lid",
+    "id": "Anggota"
   },
   "Member to assign the role to": {
     "de": "Mitglied, dem die Rolle zugewiesen wird",
@@ -1005,7 +1254,10 @@
     "pl": "Członek, któremu przypisać rolę",
     "pt-BR": "Membro a quem atribuir o cargo",
     "ru": "Участник, которому назначить роль",
-    "zh-CN": "要分配身份组的成员"
+    "zh-CN": "要分配身份组的成员",
+    "tr": "Rolün atanacağı üye",
+    "nl": "Lid om de rol aan toe te wijzen",
+    "id": "Anggota untuk ditetapkan peran"
   },
   "Member to check (defaults to yourself)": {
     "de": "Zu prüfendes Mitglied (Standard: du selbst)",
@@ -1017,7 +1269,10 @@
     "pl": "Członek do sprawdzenia (domyślnie Ty)",
     "pt-BR": "Membro a verificar (padrão: você)",
     "ru": "Участник для проверки (по умолчанию вы)",
-    "zh-CN": "要查看的成员（默认是你自己）"
+    "zh-CN": "要查看的成员（默认是你自己）",
+    "tr": "Kontrol edilecek üye (varsayılan olarak kendin)",
+    "nl": "Lid om te bekijken (standaard jezelf)",
+    "id": "Anggota untuk diperiksa (default kamu sendiri)"
   },
   "Member to view (defaults to yourself)": {
     "de": "Anzuzeigendes Mitglied (Standard: du selbst)",
@@ -1029,7 +1284,10 @@
     "pl": "Członek do wyświetlenia (domyślnie Ty)",
     "pt-BR": "Membro a visualizar (padrão: você)",
     "ru": "Участник для просмотра (по умолчанию вы)",
-    "zh-CN": "要查看的成员（默认是你自己）"
+    "zh-CN": "要查看的成员（默认是你自己）",
+    "tr": "Görüntülenecek üye (varsayılan olarak kendin)",
+    "nl": "Lid om te bekijken (standaard jezelf)",
+    "id": "Anggota untuk dilihat (default kamu sendiri)"
   },
   "Message template ({user}, {platform}, {url})": {
     "de": "Nachrichtenvorlage ({user}, {platform}, {url})",
@@ -1041,7 +1299,10 @@
     "pl": "Szablon wiadomości ({user}, {platform}, {url})",
     "pt-BR": "Modelo de mensagem ({user}, {platform}, {url})",
     "ru": "Шаблон сообщения ({user}, {platform}, {url})",
-    "zh-CN": "消息模板（{user}、{platform}、{url}）"
+    "zh-CN": "消息模板（{user}、{platform}、{url}）",
+    "tr": "Mesaj şablonu ({user}, {platform}, {url})",
+    "nl": "Berichtsjabloon ({user}, {platform}, {url})",
+    "id": "Templat pesan ({user}, {platform}, {url})"
   },
   "Month (1-12)": {
     "de": "Monat (1-12)",
@@ -1053,7 +1314,10 @@
     "pl": "Miesiąc (1-12)",
     "pt-BR": "Mês (1-12)",
     "ru": "Месяц (1–12)",
-    "zh-CN": "月（1-12）"
+    "zh-CN": "月（1-12）",
+    "tr": "Ay (1-12)",
+    "nl": "Maand (1-12)",
+    "id": "Bulan (1-12)"
   },
   "Multiplier value between 0.1 and 10.0 (default: 1.0)": {
     "de": "Multiplikatorwert zwischen 0.1 und 10.0 (Standard: 1.0)",
@@ -1065,7 +1329,10 @@
     "pl": "Wartość mnożnika od 0.1 do 10.0 (domyślnie: 1.0)",
     "pt-BR": "Valor do multiplicador entre 0.1 e 10.0 (padrão: 1.0)",
     "ru": "Значение множителя от 0.1 до 10.0 (по умолчанию: 1.0)",
-    "zh-CN": "倍率值，介于 0.1 到 10.0 之间（默认：1.0）"
+    "zh-CN": "倍率值，介于 0.1 到 10.0 之间（默认：1.0）",
+    "tr": "0.1 ile 10.0 arasında çarpan değeri (varsayılan: 1.0)",
+    "nl": "Vermenigvuldigerwaarde tussen 0.1 en 10.0 (standaard: 1.0)",
+    "id": "Nilai pengganda antara 0.1 dan 10.0 (default: 1.0)"
   },
   "Must be true to confirm clear": {
     "de": "Muss „true“ sein, um das Löschen zu bestätigen",
@@ -1077,7 +1344,10 @@
     "pl": "Musi być true, aby potwierdzić wyczyszczenie",
     "pt-BR": "Deve ser true para confirmar a limpeza",
     "ru": "Должно быть true для подтверждения очистки",
-    "zh-CN": "必须为 true 才能确认清除"
+    "zh-CN": "必须为 true 才能确认清除",
+    "tr": "Temizlemeyi onaylamak için true olmalı",
+    "nl": "Moet true zijn om wissen te bevestigen",
+    "id": "Harus true untuk mengonfirmasi penghapusan"
   },
   "Name of the role to assign": {
     "de": "Name der zuzuweisenden Rolle",
@@ -1089,7 +1359,10 @@
     "pl": "Nazwa roli do przypisania",
     "pt-BR": "Nome do cargo a atribuir",
     "ru": "Название роли для назначения",
-    "zh-CN": "要分配的身份组名称"
+    "zh-CN": "要分配的身份组名称",
+    "tr": "Atanacak rolün adı",
+    "nl": "Naam van de toe te wijzen rol",
+    "id": "Nama peran yang ditetapkan"
   },
   "Name of the role to remove": {
     "de": "Name der zu entfernenden Rolle",
@@ -1101,7 +1374,10 @@
     "pl": "Nazwa roli do usunięcia",
     "pt-BR": "Nome do cargo a remover",
     "ru": "Название роли для удаления",
-    "zh-CN": "要移除的身份组名称"
+    "zh-CN": "要移除的身份组名称",
+    "tr": "Kaldırılacak rolün adı",
+    "nl": "Naam van de te verwijderen rol",
+    "id": "Nama peran yang dihapus"
   },
   "Note ID to remove": {
     "de": "Zu entfernende Notiz-ID",
@@ -1113,7 +1389,10 @@
     "pl": "ID notatki do usunięcia",
     "pt-BR": "ID da nota a remover",
     "ru": "ID заметки для удаления",
-    "zh-CN": "要删除的备注 ID"
+    "zh-CN": "要删除的备注 ID",
+    "tr": "Kaldırılacak not kimliği",
+    "nl": "Notitie-ID om te verwijderen",
+    "id": "ID catatan yang dihapus"
   },
   "Note content": {
     "de": "Notizinhalt",
@@ -1125,7 +1404,10 @@
     "pl": "Treść notatki",
     "pt-BR": "Conteúdo da nota",
     "ru": "Содержание заметки",
-    "zh-CN": "备注内容"
+    "zh-CN": "备注内容",
+    "tr": "Not içeriği",
+    "nl": "Notitie-inhoud",
+    "id": "Isi catatan"
   },
   "Number of messages to delete (1-100)": {
     "de": "Anzahl der zu löschenden Nachrichten (1-100)",
@@ -1137,7 +1419,10 @@
     "pl": "Liczba wiadomości do usunięcia (1-100)",
     "pt-BR": "Número de mensagens a excluir (1-100)",
     "ru": "Количество сообщений для удаления (1–100)",
-    "zh-CN": "要删除的消息数量（1-100）"
+    "zh-CN": "要删除的消息数量（1-100）",
+    "tr": "Silinecek mesaj sayısı (1-100)",
+    "nl": "Aantal te verwijderen berichten (1-100)",
+    "id": "Jumlah pesan yang dihapus (1-100)"
   },
   "Number of winners": {
     "de": "Anzahl der Gewinner",
@@ -1149,7 +1434,10 @@
     "pl": "Liczba zwycięzców",
     "pt-BR": "Número de vencedores",
     "ru": "Количество победителей",
-    "zh-CN": "获奖人数"
+    "zh-CN": "获奖人数",
+    "tr": "Kazanan sayısı",
+    "nl": "Aantal winnaars",
+    "id": "Jumlah pemenang"
   },
   "Only delete bot messages": {
     "de": "Nur Bot-Nachrichten löschen",
@@ -1161,7 +1449,10 @@
     "pl": "Usuń tylko wiadomości botów",
     "pt-BR": "Excluir apenas mensagens de bots",
     "ru": "Удалять только сообщения ботов",
-    "zh-CN": "仅删除机器人的消息"
+    "zh-CN": "仅删除机器人的消息",
+    "tr": "Yalnızca bot mesajlarını sil",
+    "nl": "Verwijder alleen botberichten",
+    "id": "Hanya hapus pesan bot"
   },
   "Only delete messages containing this text": {
     "de": "Nur Nachrichten mit diesem Text löschen",
@@ -1173,7 +1464,10 @@
     "pl": "Usuń tylko wiadomości zawierające ten tekst",
     "pt-BR": "Excluir apenas mensagens que contenham este texto",
     "ru": "Удалять только сообщения с этим текстом",
-    "zh-CN": "仅删除包含此文本的消息"
+    "zh-CN": "仅删除包含此文本的消息",
+    "tr": "Yalnızca bu metni içeren mesajları sil",
+    "nl": "Verwijder alleen berichten die deze tekst bevatten",
+    "id": "Hanya hapus pesan yang mengandung teks ini"
   },
   "Only delete messages from this user": {
     "de": "Nur Nachrichten von diesem Benutzer löschen",
@@ -1185,7 +1479,10 @@
     "pl": "Usuń tylko wiadomości tego użytkownika",
     "pt-BR": "Excluir apenas mensagens deste usuário",
     "ru": "Удалять только сообщения этого пользователя",
-    "zh-CN": "仅删除此用户的消息"
+    "zh-CN": "仅删除此用户的消息",
+    "tr": "Yalnızca bu kullanıcının mesajlarını sil",
+    "nl": "Verwijder alleen berichten van deze gebruiker",
+    "id": "Hanya hapus pesan dari pengguna ini"
   },
   "Options separated by | (e.g. Yes | No | Maybe)": {
     "de": "Optionen getrennt durch | (z. B. Ja | Nein | Vielleicht)",
@@ -1197,7 +1494,10 @@
     "pl": "Opcje oddzielone znakiem | (np. Tak | Nie | Może)",
     "pt-BR": "Opções separadas por | (ex. Sim | Não | Talvez)",
     "ru": "Варианты через | (напр. Да | Нет | Возможно)",
-    "zh-CN": "用 | 分隔的选项（例如 是 | 否 | 也许）"
+    "zh-CN": "用 | 分隔的选项（例如 是 | 否 | 也许）",
+    "tr": "| ile ayrılmış seçenekler (örn. Evet | Hayır | Belki)",
+    "nl": "Opties gescheiden door | (bijv. Ja | Nee | Misschien)",
+    "id": "Opsi dipisahkan | (mis. Ya | Tidak | Mungkin)"
   },
   "Page number": {
     "de": "Seitenzahl",
@@ -1209,7 +1509,10 @@
     "pl": "Numer strony",
     "pt-BR": "Número da página",
     "ru": "Номер страницы",
-    "zh-CN": "页码"
+    "zh-CN": "页码",
+    "tr": "Sayfa numarası",
+    "nl": "Paginanummer",
+    "id": "Nomor halaman"
   },
   "Pause the current song": {
     "de": "Den aktuellen Song pausieren",
@@ -1221,7 +1524,10 @@
     "pl": "Wstrzymaj bieżący utwór",
     "pt-BR": "Pausar a música atual",
     "ru": "Приостановить текущий трек",
-    "zh-CN": "暂停当前歌曲"
+    "zh-CN": "暂停当前歌曲",
+    "tr": "Mevcut şarkıyı duraklat",
+    "nl": "Pauzeer het huidige nummer",
+    "id": "Jeda lagu saat ini"
   },
   "Play a song or add it to the queue": {
     "de": "Einen Song abspielen oder zur Warteschlange hinzufügen",
@@ -1233,7 +1539,10 @@
     "pl": "Odtwórz utwór lub dodaj go do kolejki",
     "pt-BR": "Tocar uma música ou adicioná-la à fila",
     "ru": "Воспроизвести трек или добавить в очередь",
-    "zh-CN": "播放歌曲或将其加入队列"
+    "zh-CN": "播放歌曲或将其加入队列",
+    "tr": "Bir şarkı çal veya sıraya ekle",
+    "nl": "Speel een nummer of voeg het toe aan de wachtrij",
+    "id": "Putar lagu atau tambahkan ke antrean"
   },
   "Poll question": {
     "de": "Umfragefrage",
@@ -1245,7 +1554,10 @@
     "pl": "Pytanie ankiety",
     "pt-BR": "Pergunta da enquete",
     "ru": "Вопрос опроса",
-    "zh-CN": "投票问题"
+    "zh-CN": "投票问题",
+    "tr": "Anket sorusu",
+    "nl": "Peilingvraag",
+    "id": "Pertanyaan jajak pendapat"
   },
   "Post a counting game announcement in the counting channel": {
     "de": "Eine Zählspiel-Ankündigung im Zählkanal posten",
@@ -1257,7 +1569,10 @@
     "pl": "Opublikuj ogłoszenie gry w liczenie na kanale liczenia",
     "pt-BR": "Publicar um anúncio do jogo de contagem no canal de contagem",
     "ru": "Опубликовать объявление игры в счёт в канале счёта",
-    "zh-CN": "在计数频道发布计数游戏公告"
+    "zh-CN": "在计数频道发布计数游戏公告",
+    "tr": "Sayım kanalında bir sayım oyunu duyurusu yayınla",
+    "nl": "Plaats een telspel-aankondiging in het telkanaal",
+    "id": "Posting pengumuman permainan menghitung di kanal menghitung"
   },
   "Post the 30-day activity and member-flow charts here": {
     "de": "Die 30-Tage-Aktivitäts- und Mitgliederfluss-Diagramme hier posten",
@@ -1269,7 +1584,10 @@
     "pl": "Opublikuj tutaj wykresy aktywności i przepływu członków z 30 dni",
     "pt-BR": "Publicar aqui os gráficos de atividade e fluxo de membros de 30 dias",
     "ru": "Публиковать здесь графики активности и притока участников за 30 дней",
-    "zh-CN": "在此发布 30 天的活动和成员流动图表"
+    "zh-CN": "在此发布 30 天的活动和成员流动图表",
+    "tr": "30 günlük etkinlik ve üye akışı grafiklerini buraya yayınla",
+    "nl": "Plaats hier de grafieken van 30 dagen activiteit en ledenstroom",
+    "id": "Posting grafik aktivitas dan aliran anggota 30 hari di sini"
   },
   "Preview your current rank card style": {
     "de": "Deinen aktuellen Rangkarten-Stil in der Vorschau anzeigen",
@@ -1281,7 +1599,10 @@
     "pl": "Podejrzyj bieżący styl swojej karty rangi",
     "pt-BR": "Pré-visualizar o estilo atual do seu cartão de rank",
     "ru": "Предпросмотр текущего стиля вашей карточки ранга",
-    "zh-CN": "预览你当前的等级卡样式"
+    "zh-CN": "预览你当前的等级卡样式",
+    "tr": "Mevcut sıra kartı stilini önizle",
+    "nl": "Bekijk een voorbeeld van je huidige rangkaartstijl",
+    "id": "Pratinjau gaya kartu peringkatmu saat ini"
   },
   "Reason": {
     "de": "Grund",
@@ -1293,7 +1614,10 @@
     "pl": "Powód",
     "pt-BR": "Motivo",
     "ru": "Причина",
-    "zh-CN": "原因"
+    "zh-CN": "原因",
+    "tr": "Neden",
+    "nl": "Reden",
+    "id": "Alasan"
   },
   "Reason for clearing warnings": {
     "de": "Grund für das Löschen der Verwarnungen",
@@ -1305,7 +1629,10 @@
     "pl": "Powód wyczyszczenia ostrzeżeń",
     "pt-BR": "Motivo para limpar as advertências",
     "ru": "Причина снятия предупреждений",
-    "zh-CN": "清除警告的原因"
+    "zh-CN": "清除警告的原因",
+    "tr": "Uyarıları temizleme nedeni",
+    "nl": "Reden voor het wissen van waarschuwingen",
+    "id": "Alasan menghapus peringatan"
   },
   "Reason for closing": {
     "de": "Grund für das Schließen",
@@ -1317,7 +1644,10 @@
     "pl": "Powód zamknięcia",
     "pt-BR": "Motivo do fechamento",
     "ru": "Причина закрытия",
-    "zh-CN": "关闭的原因"
+    "zh-CN": "关闭的原因",
+    "tr": "Kapatma nedeni",
+    "nl": "Reden voor sluiten",
+    "id": "Alasan menutup"
   },
   "Reason for the ban": {
     "de": "Grund für den Bann",
@@ -1329,7 +1659,10 @@
     "pl": "Powód bana",
     "pt-BR": "Motivo do banimento",
     "ru": "Причина бана",
-    "zh-CN": "封禁的原因"
+    "zh-CN": "封禁的原因",
+    "tr": "Yasaklama nedeni",
+    "nl": "Reden voor de verbanning",
+    "id": "Alasan pemblokiran"
   },
   "Reason for the kick": {
     "de": "Grund für den Kick",
@@ -1341,7 +1674,10 @@
     "pl": "Powód wyrzucenia",
     "pt-BR": "Motivo da expulsão",
     "ru": "Причина кика",
-    "zh-CN": "踢出的原因"
+    "zh-CN": "踢出的原因",
+    "tr": "Atma nedeni",
+    "nl": "Reden voor de kick",
+    "id": "Alasan pengeluaran"
   },
   "Reason for the mute": {
     "de": "Grund für die Stummschaltung",
@@ -1353,7 +1689,10 @@
     "pl": "Powód wyciszenia",
     "pt-BR": "Motivo do silenciamento",
     "ru": "Причина мьюта",
-    "zh-CN": "禁言的原因"
+    "zh-CN": "禁言的原因",
+    "tr": "Susturma nedeni",
+    "nl": "Reden voor de demping",
+    "id": "Alasan pembisuan"
   },
   "Reason for the report": {
     "de": "Grund für die Meldung",
@@ -1365,7 +1704,10 @@
     "pl": "Powód zgłoszenia",
     "pt-BR": "Motivo da denúncia",
     "ru": "Причина жалобы",
-    "zh-CN": "举报的原因"
+    "zh-CN": "举报的原因",
+    "tr": "Rapor nedeni",
+    "nl": "Reden voor het rapport",
+    "id": "Alasan laporan"
   },
   "Reason for the warning": {
     "de": "Grund für die Verwarnung",
@@ -1377,7 +1719,10 @@
     "pl": "Powód ostrzeżenia",
     "pt-BR": "Motivo da advertência",
     "ru": "Причина предупреждения",
-    "zh-CN": "警告的原因"
+    "zh-CN": "警告的原因",
+    "tr": "Uyarı nedeni",
+    "nl": "Reden voor de waarschuwing",
+    "id": "Alasan peringatan"
   },
   "Reason for unban": {
     "de": "Grund für die Entbannung",
@@ -1389,7 +1734,10 @@
     "pl": "Powód odbanowania",
     "pt-BR": "Motivo do desbanimento",
     "ru": "Причина разбана",
-    "zh-CN": "解封的原因"
+    "zh-CN": "解封的原因",
+    "tr": "Yasak kaldırma nedeni",
+    "nl": "Reden voor ontbannen",
+    "id": "Alasan buka blokir"
   },
   "Regex flags (default: i)": {
     "de": "Regex-Flags (Standard: i)",
@@ -1401,7 +1749,10 @@
     "pl": "Flagi regex (domyślnie: i)",
     "pt-BR": "Flags de regex (padrão: i)",
     "ru": "Флаги регулярного выражения (по умолчанию: i)",
-    "zh-CN": "正则表达式标志（默认：i）"
+    "zh-CN": "正则表达式标志（默认：i）",
+    "tr": "Regex bayrakları (varsayılan: i)",
+    "nl": "Regex-vlaggen (standaard: i)",
+    "id": "Flag regex (default: i)"
   },
   "Regex pattern (no delimiters), e.g. \\bhello\\b": {
     "de": "Regex-Muster (ohne Trennzeichen), z. B. \\bhello\\b",
@@ -1413,7 +1764,10 @@
     "pl": "Wzorzec regex (bez ograniczników), np. \\bhello\\b",
     "pt-BR": "Padrão de regex (sem delimitadores), ex. \\bhello\\b",
     "ru": "Шаблон регулярного выражения (без разделителей), напр. \\bhello\\b",
-    "zh-CN": "正则表达式模式（无分隔符），例如 \\bhello\\b"
+    "zh-CN": "正则表达式模式（无分隔符），例如 \\bhello\\b",
+    "tr": "Regex deseni (sınırlayıcı yok), örn. \\bhello\\b",
+    "nl": "Regex-patroon (geen scheidingstekens), bijv. \\bhello\\b",
+    "id": "Pola regex (tanpa pembatas), mis. \\bhello\\b"
   },
   "Remove XP from a user": {
     "de": "Einem Benutzer XP entfernen",
@@ -1425,7 +1779,10 @@
     "pl": "Usuń XP użytkownikowi",
     "pt-BR": "Remover XP de um usuário",
     "ru": "Убрать опыт у пользователя",
-    "zh-CN": "从用户移除经验值"
+    "zh-CN": "从用户移除经验值",
+    "tr": "Bir kullanıcıdan XP kaldır",
+    "nl": "Verwijder XP van een gebruiker",
+    "id": "Hapus XP dari pengguna"
   },
   "Remove a role from the self-assignable list (requires Manage Roles)": {
     "de": "Rolle aus der selbst zuweisbaren Liste entfernen (benötigt Rollen verwalten)",
@@ -1437,7 +1794,10 @@
     "pl": "Usuń rolę z listy samodzielnie przypisywanych (wymaga Zarządzania rolami)",
     "pt-BR": "Remover um cargo da lista autoatribuível (requer Gerenciar cargos)",
     "ru": "Убрать роль из списка самоназначаемых (нужно «Управление ролями»)",
-    "zh-CN": "从可自助领取列表中移除身份组（需要“管理身份组”）"
+    "zh-CN": "从可自助领取列表中移除身份组（需要“管理身份组”）",
+    "tr": "Kendine atanabilir listeden bir rol kaldır (Rolleri Yönet gerekir)",
+    "nl": "Verwijder een rol uit de zelf-toewijsbare lijst (vereist Rollen Beheren)",
+    "id": "Hapus peran dari daftar yang dapat ditetapkan sendiri (perlu Kelola Peran)"
   },
   "Remove a self-assignable role from yourself": {
     "de": "Eine selbst zuweisbare Rolle von dir selbst entfernen",
@@ -1449,7 +1809,10 @@
     "pl": "Usuń sobie samodzielnie przypisywaną rolę",
     "pt-BR": "Remover de si mesmo um cargo autoatribuível",
     "ru": "Снять с себя самоназначаемую роль",
-    "zh-CN": "移除你自己的可自助身份组"
+    "zh-CN": "移除你自己的可自助身份组",
+    "tr": "Kendinden kendine atanabilir bir rolü kaldır",
+    "nl": "Verwijder een zelf-toewijsbare rol van jezelf",
+    "id": "Hapus peran yang dapat ditetapkan sendiri dari dirimu"
   },
   "Remove a specific note by ID": {
     "de": "Eine bestimmte Notiz per ID entfernen",
@@ -1461,7 +1824,10 @@
     "pl": "Usuń konkretną notatkę według ID",
     "pt-BR": "Remover uma nota específica por ID",
     "ru": "Удалить конкретную заметку по ID",
-    "zh-CN": "按 ID 删除指定备注"
+    "zh-CN": "按 ID 删除指定备注",
+    "tr": "Kimliğe göre belirli bir notu kaldır",
+    "nl": "Verwijder een specifieke notitie op ID",
+    "id": "Hapus catatan tertentu berdasarkan ID"
   },
   "Remove an active temporary role from a member early": {
     "de": "Eine aktive temporäre Rolle vorzeitig von einem Mitglied entfernen",
@@ -1473,7 +1839,10 @@
     "pl": "Usuń wcześniej aktywną rolę tymczasową członkowi",
     "pt-BR": "Remover antecipadamente um cargo temporário ativo de um membro",
     "ru": "Досрочно снять активную временную роль с участника",
-    "zh-CN": "提前移除成员的生效临时身份组"
+    "zh-CN": "提前移除成员的生效临时身份组",
+    "tr": "Bir üyeden etkin geçici rolü erken kaldır",
+    "nl": "Verwijder een actieve tijdelijke rol vroegtijdig van een lid",
+    "id": "Hapus peran sementara aktif dari anggota lebih awal"
   },
   "Remove an auto-response by ID": {
     "de": "Eine Auto-Antwort per ID entfernen",
@@ -1485,7 +1854,10 @@
     "pl": "Usuń automatyczną odpowiedź według ID",
     "pt-BR": "Remover uma resposta automática por ID",
     "ru": "Удалить автоответ по ID",
-    "zh-CN": "按 ID 删除自动回复"
+    "zh-CN": "按 ID 删除自动回复",
+    "tr": "Kimliğe göre bir otomatik yanıtı kaldır",
+    "nl": "Verwijder een auto-antwoord op ID",
+    "id": "Hapus balasan otomatis berdasarkan ID"
   },
   "Remove forum configuration for a channel": {
     "de": "Die Forenkonfiguration für einen Kanal entfernen",
@@ -1497,7 +1869,10 @@
     "pl": "Usuń konfigurację forum dla kanału",
     "pt-BR": "Remover a configuração do fórum de um canal",
     "ru": "Удалить настройку форума для канала",
-    "zh-CN": "移除某频道的论坛配置"
+    "zh-CN": "移除某频道的论坛配置",
+    "tr": "Bir kanalın forum yapılandırmasını kaldır",
+    "nl": "Verwijder forumconfiguratie voor een kanaal",
+    "id": "Hapus konfigurasi forum untuk kanal"
   },
   "Remove your birthday": {
     "de": "Deinen Geburtstag entfernen",
@@ -1509,7 +1884,10 @@
     "pl": "Usuń swoje urodziny",
     "pt-BR": "Remover seu aniversário",
     "ru": "Удалить свой день рождения",
-    "zh-CN": "移除你的生日"
+    "zh-CN": "移除你的生日",
+    "tr": "Doğum gününü kaldır",
+    "nl": "Verwijder je verjaardag",
+    "id": "Hapus ulang tahunmu"
   },
   "Report a user to the moderation team": {
     "de": "Einen Benutzer beim Moderationsteam melden",
@@ -1521,7 +1899,10 @@
     "pl": "Zgłoś użytkownika zespołowi moderacji",
     "pt-BR": "Denunciar um usuário à equipe de moderação",
     "ru": "Пожаловаться на пользователя команде модерации",
-    "zh-CN": "向管理团队举报某个用户"
+    "zh-CN": "向管理团队举报某个用户",
+    "tr": "Bir kullanıcıyı moderasyon ekibine bildir",
+    "nl": "Rapporteer een gebruiker aan het moderatieteam",
+    "id": "Laporkan pengguna ke tim moderasi"
   },
   "Reputation system — give or view reputation points": {
     "de": "Reputationssystem – Reputationspunkte vergeben oder ansehen",
@@ -1533,7 +1914,10 @@
     "pl": "System reputacji — przyznawaj lub przeglądaj punkty reputacji",
     "pt-BR": "Sistema de reputação — conceder ou ver pontos de reputação",
     "ru": "Система репутации — выдача или просмотр очков репутации",
-    "zh-CN": "声望系统 — 给予或查看声望点数"
+    "zh-CN": "声望系统 — 给予或查看声望点数",
+    "tr": "İtibar sistemi — itibar puanı ver veya görüntüle",
+    "nl": "Reputatiesysteem — geef of bekijk reputatiepunten",
+    "id": "Sistem reputasi — beri atau lihat poin reputasi"
   },
   "Reroll winners for a giveaway": {
     "de": "Gewinner eines Gewinnspiels neu auslosen",
@@ -1545,7 +1929,10 @@
     "pl": "Wylosuj ponownie zwycięzców giveawaya",
     "pt-BR": "Sortear novamente os vencedores de um sorteio",
     "ru": "Перевыбрать победителей розыгрыша",
-    "zh-CN": "重新抽取抽奖的获奖者"
+    "zh-CN": "重新抽取抽奖的获奖者",
+    "tr": "Bir çekiliş için kazananları yeniden çek",
+    "nl": "Loot opnieuw winnaars voor een giveaway",
+    "id": "Undi ulang pemenang giveaway"
   },
   "Reset all XP and levels for this server": {
     "de": "Alle XP und Level für diesen Server zurücksetzen",
@@ -1557,7 +1944,10 @@
     "pl": "Zresetuj cały XP i poziomy na tym serwerze",
     "pt-BR": "Redefinir todo o XP e os níveis deste servidor",
     "ru": "Сбросить весь опыт и уровни на этом сервере",
-    "zh-CN": "重置此服务器的所有经验值和等级"
+    "zh-CN": "重置此服务器的所有经验值和等级",
+    "tr": "Bu sunucudaki tüm XP ve seviyeleri sıfırla",
+    "nl": "Reset alle XP en levels voor deze server",
+    "id": "Reset semua XP dan level untuk server ini"
   },
   "Reset your rank card to the default style": {
     "de": "Deine Rangkarte auf den Standardstil zurücksetzen",
@@ -1569,7 +1959,10 @@
     "pl": "Zresetuj kartę rangi do domyślnego stylu",
     "pt-BR": "Redefinir seu cartão de rank para o estilo padrão",
     "ru": "Сбросить карточку ранга к стилю по умолчанию",
-    "zh-CN": "将你的等级卡重置为默认样式"
+    "zh-CN": "将你的等级卡重置为默认样式",
+    "tr": "Sıra kartını varsayılan stile sıfırla",
+    "nl": "Reset je rangkaart naar de standaardstijl",
+    "id": "Reset kartu peringkatmu ke gaya default"
   },
   "Response text": {
     "de": "Antworttext",
@@ -1581,7 +1974,10 @@
     "pl": "Tekst odpowiedzi",
     "pt-BR": "Texto da resposta",
     "ru": "Текст ответа",
-    "zh-CN": "回复文本"
+    "zh-CN": "回复文本",
+    "tr": "Yanıt metni",
+    "nl": "Antwoordtekst",
+    "id": "Teks balasan"
   },
   "Resume the paused song": {
     "de": "Den pausierten Song fortsetzen",
@@ -1593,7 +1989,10 @@
     "pl": "Wznów wstrzymany utwór",
     "pt-BR": "Retomar a música pausada",
     "ru": "Возобновить приостановленный трек",
-    "zh-CN": "继续播放暂停的歌曲"
+    "zh-CN": "继续播放暂停的歌曲",
+    "tr": "Duraklatılmış şarkıyı devam ettir",
+    "nl": "Hervat het gepauzeerde nummer",
+    "id": "Lanjutkan lagu yang dijeda"
   },
   "Role assigned after verification": {
     "de": "Rolle, die nach der Verifizierung zugewiesen wird",
@@ -1605,7 +2004,10 @@
     "pl": "Rola przypisywana po weryfikacji",
     "pt-BR": "Cargo atribuído após a verificação",
     "ru": "Роль, назначаемая после верификации",
-    "zh-CN": "验证后分配的身份组"
+    "zh-CN": "验证后分配的身份组",
+    "tr": "Doğrulama sonrası atanan rol",
+    "nl": "Rol toegewezen na verificatie",
+    "id": "Peran yang ditetapkan setelah verifikasi"
   },
   "Role assigned on join (unverified)": {
     "de": "Rolle, die beim Beitritt zugewiesen wird (unverifiziert)",
@@ -1617,7 +2019,10 @@
     "pl": "Rola przypisywana przy dołączeniu (niezweryfikowany)",
     "pt-BR": "Cargo atribuído ao entrar (não verificado)",
     "ru": "Роль, назначаемая при входе (без верификации)",
-    "zh-CN": "加入时分配的身份组（未验证）"
+    "zh-CN": "加入时分配的身份组（未验证）",
+    "tr": "Katılımda atanan rol (doğrulanmamış)",
+    "nl": "Rol toegewezen bij toetreding (niet-geverifieerd)",
+    "id": "Peran yang ditetapkan saat bergabung (belum diverifikasi)"
   },
   "Role required to enter": {
     "de": "Rolle, die zum Betreten erforderlich ist",
@@ -1629,7 +2034,10 @@
     "pl": "Rola wymagana do wejścia",
     "pt-BR": "Cargo necessário para entrar",
     "ru": "Роль, необходимая для входа",
-    "zh-CN": "进入所需的身份组"
+    "zh-CN": "进入所需的身份组",
+    "tr": "Katılmak için gereken rol",
+    "nl": "Vereiste rol om deel te nemen",
+    "id": "Peran yang diperlukan untuk masuk"
   },
   "Role that gets bonus entries": {
     "de": "Rolle, die Bonuslose erhält",
@@ -1641,7 +2049,10 @@
     "pl": "Rola otrzymująca dodatkowe losy",
     "pt-BR": "Cargo que recebe entradas bônus",
     "ru": "Роль, получающая бонусные заявки",
-    "zh-CN": "获得额外抽奖名额的身份组"
+    "zh-CN": "获得额外抽奖名额的身份组",
+    "tr": "Bonus katılım alan rol",
+    "nl": "Rol die bonusdeelnames krijgt",
+    "id": "Peran yang mendapat entri bonus"
   },
   "Role to assign": {
     "de": "Zuzuweisende Rolle",
@@ -1653,7 +2064,10 @@
     "pl": "Rola do przypisania",
     "pt-BR": "Cargo a atribuir",
     "ru": "Роль для назначения",
-    "zh-CN": "要分配的身份组"
+    "zh-CN": "要分配的身份组",
+    "tr": "Atanacak rol",
+    "nl": "Toe te wijzen rol",
+    "id": "Peran yang ditetapkan"
   },
   "Role to remove": {
     "de": "Zu entfernende Rolle",
@@ -1665,7 +2079,10 @@
     "pl": "Rola do usunięcia",
     "pt-BR": "Cargo a remover",
     "ru": "Роль для удаления",
-    "zh-CN": "要移除的身份组"
+    "zh-CN": "要移除的身份组",
+    "tr": "Kaldırılacak rol",
+    "nl": "Te verwijderen rol",
+    "id": "Peran yang dihapus"
   },
   "See the top.gg voters who support the bot the most": {
     "de": "Sieh dir die top.gg-Voter an, die den Bot am meisten unterstützen",
@@ -1677,7 +2094,10 @@
     "pl": "Zobacz głosujących na top.gg, którzy najbardziej wspierają bota",
     "pt-BR": "Ver os votantes do top.gg que mais apoiam o bot",
     "ru": "Посмотреть голосующих на top.gg, кто больше всех поддерживает бота",
-    "zh-CN": "查看在 top.gg 上最支持机器人的投票者"
+    "zh-CN": "查看在 top.gg 上最支持机器人的投票者",
+    "tr": "Botu en çok destekleyen top.gg oyverenlerini gör",
+    "nl": "Bekijk de top.gg-stemmers die de bot het meest steunen",
+    "id": "Lihat pemberi suara top.gg yang paling mendukung bot"
   },
   "Send response as an embed": {
     "de": "Antwort als Embed senden",
@@ -1689,7 +2109,10 @@
     "pl": "Wyślij odpowiedź jako osadzenie",
     "pt-BR": "Enviar a resposta como embed",
     "ru": "Отправить ответ как вставку",
-    "zh-CN": "以嵌入形式发送回复"
+    "zh-CN": "以嵌入形式发送回复",
+    "tr": "Yanıtı gömme olarak gönder",
+    "nl": "Verstuur antwoord als embed",
+    "id": "Kirim balasan sebagai embed"
   },
   "Set a custom background image for your rank card": {
     "de": "Ein eigenes Hintergrundbild für deine Rangkarte festlegen",
@@ -1701,7 +2124,10 @@
     "pl": "Ustaw własny obraz tła dla swojej karty rangi",
     "pt-BR": "Definir uma imagem de fundo personalizada para o seu cartão de rank",
     "ru": "Установить своё фоновое изображение для карточки ранга",
-    "zh-CN": "为你的等级卡设置自定义背景图片"
+    "zh-CN": "为你的等级卡设置自定义背景图片",
+    "tr": "Sıra kartın için özel bir arka plan görseli ayarla",
+    "nl": "Stel een aangepaste achtergrondafbeelding in voor je rangkaart",
+    "id": "Setel gambar latar belakang kustom untuk kartu peringkatmu"
   },
   "Set a reminder": {
     "de": "Eine Erinnerung festlegen",
@@ -1713,7 +2139,10 @@
     "pl": "Ustaw przypomnienie",
     "pt-BR": "Definir um lembrete",
     "ru": "Установить напоминание",
-    "zh-CN": "设置提醒"
+    "zh-CN": "设置提醒",
+    "tr": "Bir hatırlatma ayarla",
+    "nl": "Stel een herinnering in",
+    "id": "Setel pengingat"
   },
   "Set a tag to automatically apply to new threads": {
     "de": "Ein Tag festlegen, das automatisch auf neue Threads angewendet wird",
@@ -1725,7 +2154,10 @@
     "pl": "Ustaw tag automatycznie stosowany do nowych wątków",
     "pt-BR": "Definir uma tag para aplicar automaticamente a novos tópicos",
     "ru": "Задать тег, автоматически применяемый к новым веткам",
-    "zh-CN": "设置自动应用于新帖子的标签"
+    "zh-CN": "设置自动应用于新帖子的标签",
+    "tr": "Yeni konulara otomatik uygulanacak bir etiket ayarla",
+    "nl": "Stel een tag in om automatisch toe te passen op nieuwe threads",
+    "id": "Setel tag untuk otomatis diterapkan ke thread baru"
   },
   "Set a template message to post in new threads": {
     "de": "Eine Vorlagennachricht festlegen, die in neuen Threads gepostet wird",
@@ -1737,7 +2169,10 @@
     "pl": "Ustaw szablon wiadomości publikowany w nowych wątkach",
     "pt-BR": "Definir uma mensagem modelo para publicar em novos tópicos",
     "ru": "Задать шаблон сообщения для публикации в новых ветках",
-    "zh-CN": "设置在新帖子中发布的模板消息"
+    "zh-CN": "设置在新帖子中发布的模板消息",
+    "tr": "Yeni konularda yayınlanacak bir şablon mesajı ayarla",
+    "nl": "Stel een sjabloonbericht in om in nieuwe threads te plaatsen",
+    "id": "Setel pesan templat untuk diposting di thread baru"
   },
   "Set or view the language I use when replying to you": {
     "de": "Die Sprache festlegen oder ansehen, die ich für Antworten an dich verwende",
@@ -1749,7 +2184,10 @@
     "pl": "Ustaw lub wyświetl język, którego używam, odpowiadając Tobie",
     "pt-BR": "Definir ou ver o idioma que uso ao responder a você",
     "ru": "Установить или посмотреть язык, на котором я вам отвечаю",
-    "zh-CN": "设置或查看我回复你时使用的语言"
+    "zh-CN": "设置或查看我回复你时使用的语言",
+    "tr": "Sana yanıt verirken kullandığım dili ayarla veya görüntüle",
+    "nl": "Stel de taal in die ik gebruik als ik je antwoord, of bekijk deze",
+    "id": "Atur atau lihat bahasa yang kugunakan saat membalasmu"
   },
   "Set the XP multiplier for this server (e.g. 2.0 = double XP)": {
     "de": "Den XP-Multiplikator für diesen Server festlegen (z. B. 2.0 = doppeltes XP)",
@@ -1761,7 +2199,10 @@
     "pl": "Ustaw mnożnik XP dla tego serwera (np. 2.0 = podwójny XP)",
     "pt-BR": "Definir o multiplicador de XP deste servidor (ex. 2.0 = XP dobrado)",
     "ru": "Задать множитель опыта для этого сервера (напр. 2.0 = двойной опыт)",
-    "zh-CN": "设置此服务器的经验值倍率（例如 2.0 = 双倍经验）"
+    "zh-CN": "设置此服务器的经验值倍率（例如 2.0 = 双倍经验）",
+    "tr": "Bu sunucu için XP çarpanını ayarla (örn. 2.0 = çift XP)",
+    "nl": "Stel de XP-vermenigvuldiger voor deze server in (bijv. 2.0 = dubbele XP)",
+    "id": "Setel pengganda XP untuk server ini (mis. 2.0 = XP ganda)"
   },
   "Set the accent colour of your rank card": {
     "de": "Die Akzentfarbe deiner Rangkarte festlegen",
@@ -1773,7 +2214,10 @@
     "pl": "Ustaw kolor akcentu swojej karty rangi",
     "pt-BR": "Definir a cor de destaque do seu cartão de rank",
     "ru": "Задать акцентный цвет вашей карточки ранга",
-    "zh-CN": "设置你等级卡的强调色"
+    "zh-CN": "设置你等级卡的强调色",
+    "tr": "Sıra kartının vurgu rengini ayarla",
+    "nl": "Stel de accentkleur van je rangkaart in",
+    "id": "Setel warna aksen kartu peringkatmu"
   },
   "Set the channel for automatic weekly analytics reports": {
     "de": "Den Kanal für automatische wöchentliche Analyseberichte festlegen",
@@ -1785,7 +2229,10 @@
     "pl": "Ustaw kanał dla automatycznych tygodniowych raportów analitycznych",
     "pt-BR": "Definir o canal para os relatórios de análise semanais automáticos",
     "ru": "Задать канал для еженедельных автоматических отчётов аналитики",
-    "zh-CN": "设置每周自动分析报告的频道"
+    "zh-CN": "设置每周自动分析报告的频道",
+    "tr": "Otomatik haftalık analiz raporları için kanalı ayarla",
+    "nl": "Stel het kanaal in voor automatische wekelijkse analyticsrapporten",
+    "id": "Setel kanal untuk laporan analitik mingguan otomatis"
   },
   "Set the loop mode for the queue": {
     "de": "Den Wiederholungsmodus für die Warteschlange festlegen",
@@ -1797,7 +2244,10 @@
     "pl": "Ustaw tryb pętli dla kolejki",
     "pt-BR": "Definir o modo de repetição da fila",
     "ru": "Задать режим повтора для очереди",
-    "zh-CN": "设置队列的循环模式"
+    "zh-CN": "设置队列的循环模式",
+    "tr": "Sıra için döngü modunu ayarla",
+    "nl": "Stel de loopmodus voor de wachtrij in",
+    "id": "Setel mode ulang untuk antrean"
   },
   "Set the music volume": {
     "de": "Die Musiklautstärke festlegen",
@@ -1809,7 +2259,10 @@
     "pl": "Ustaw głośność muzyki",
     "pt-BR": "Definir o volume da música",
     "ru": "Задать громкость музыки",
-    "zh-CN": "设置音乐音量"
+    "zh-CN": "设置音乐音量",
+    "tr": "Müzik ses seviyesini ayarla",
+    "nl": "Stel het muziekvolume in",
+    "id": "Setel volume musik"
   },
   "Set the notification message template": {
     "de": "Die Vorlage der Benachrichtigungsnachricht festlegen",
@@ -1821,7 +2274,10 @@
     "pl": "Ustaw szablon wiadomości powiadomienia",
     "pt-BR": "Definir o modelo da mensagem de notificação",
     "ru": "Задать шаблон сообщения уведомления",
-    "zh-CN": "设置通知消息模板"
+    "zh-CN": "设置通知消息模板",
+    "tr": "Bildirim mesajı şablonunu ayarla",
+    "nl": "Stel het meldingsberichtsjabloon in",
+    "id": "Setel templat pesan notifikasi"
   },
   "Set which platforms to monitor": {
     "de": "Festlegen, welche Plattformen überwacht werden",
@@ -1833,7 +2289,10 @@
     "pl": "Ustaw, które platformy monitorować",
     "pt-BR": "Definir quais plataformas monitorar",
     "ru": "Задать, какие платформы отслеживать",
-    "zh-CN": "设置要监控的平台"
+    "zh-CN": "设置要监控的平台",
+    "tr": "İzlenecek platformları ayarla",
+    "nl": "Stel in welke platforms te monitoren",
+    "id": "Setel platform mana yang dipantau"
   },
   "Set your birthday": {
     "de": "Deinen Geburtstag festlegen",
@@ -1845,7 +2304,10 @@
     "pl": "Ustaw swoje urodziny",
     "pt-BR": "Definir seu aniversário",
     "ru": "Указать свой день рождения",
-    "zh-CN": "设置你的生日"
+    "zh-CN": "设置你的生日",
+    "tr": "Doğum gününü ayarla",
+    "nl": "Stel je verjaardag in",
+    "id": "Setel ulang tahunmu"
   },
   "Short name users type to claim it (e.g. fighter). Defaults to the role name.": {
     "de": "Kurzname zum Anfordern (z. B. fighter). Standard ist der Rollenname.",
@@ -1857,7 +2319,10 @@
     "pl": "Krótka nazwa do odebrania (np. fighter). Domyślnie nazwa roli.",
     "pt-BR": "Nome curto para reivindicá-lo (ex. fighter). Padrão: o nome do cargo.",
     "ru": "Короткое имя для получения (напр. fighter). По умолчанию — имя роли.",
-    "zh-CN": "用于领取的短名称（例如 fighter）。默认为身份组名称。"
+    "zh-CN": "用于领取的短名称（例如 fighter）。默认为身份组名称。",
+    "tr": "Kullanıcıların almak için yazdığı kısa ad (örn. fighter). Varsayılan olarak rol adı.",
+    "nl": "Korte naam die gebruikers typen om deze te claimen (bijv. fighter). Standaard de rolnaam.",
+    "id": "Nama pendek yang diketik pengguna untuk mengambilnya (mis. fighter). Default nama peran."
   },
   "Show a quick summary of the bot's current status": {
     "de": "Eine kurze Zusammenfassung des aktuellen Bot-Status anzeigen",
@@ -1869,7 +2334,10 @@
     "pl": "Pokaż szybkie podsumowanie bieżącego statusu bota",
     "pt-BR": "Mostrar um resumo rápido do status atual do bot",
     "ru": "Показать краткую сводку текущего состояния бота",
-    "zh-CN": "显示机器人当前状态的快速摘要"
+    "zh-CN": "显示机器人当前状态的快速摘要",
+    "tr": "Botun mevcut durumunun hızlı bir özetini göster",
+    "nl": "Toon een snel overzicht van de huidige status van de bot",
+    "id": "Tampilkan ringkasan cepat status bot saat ini"
   },
   "Show the top inviters leaderboard for this server": {
     "de": "Die Bestenliste der Top-Einlader für diesen Server anzeigen",
@@ -1881,7 +2349,10 @@
     "pl": "Pokaż ranking najlepszych zapraszających na tym serwerze",
     "pt-BR": "Mostrar o ranking dos maiores convidadores deste servidor",
     "ru": "Показать таблицу лидеров по приглашениям этого сервера",
-    "zh-CN": "显示此服务器的邀请排行榜"
+    "zh-CN": "显示此服务器的邀请排行榜",
+    "tr": "Bu sunucu için en çok davet edenler tablosunu göster",
+    "nl": "Toon het scorebord van beste uitnodigers voor deze server",
+    "id": "Tampilkan papan peringkat pengundang teratas untuk server ini"
   },
   "Show your current language": {
     "de": "Deine aktuelle Sprache anzeigen",
@@ -1893,7 +2364,10 @@
     "pl": "Pokaż swój obecny język",
     "pt-BR": "Mostrar seu idioma atual",
     "ru": "Показать ваш текущий язык",
-    "zh-CN": "显示你当前的语言"
+    "zh-CN": "显示你当前的语言",
+    "tr": "Mevcut dilini göster",
+    "nl": "Toon je huidige taal",
+    "id": "Tampilkan bahasamu saat ini"
   },
   "Skip the current song": {
     "de": "Den aktuellen Song überspringen",
@@ -1905,7 +2379,10 @@
     "pl": "Pomiń bieżący utwór",
     "pt-BR": "Pular a música atual",
     "ru": "Пропустить текущий трек",
-    "zh-CN": "跳过当前歌曲"
+    "zh-CN": "跳过当前歌曲",
+    "tr": "Mevcut şarkıyı atla",
+    "nl": "Sla het huidige nummer over",
+    "id": "Lewati lagu saat ini"
   },
   "Song name or YouTube/Spotify URL": {
     "de": "Songname oder YouTube/Spotify-URL",
@@ -1917,7 +2394,10 @@
     "pl": "Nazwa utworu lub URL YouTube/Spotify",
     "pt-BR": "Nome da música ou URL do YouTube/Spotify",
     "ru": "Название трека или URL YouTube/Spotify",
-    "zh-CN": "歌曲名称或 YouTube/Spotify 链接"
+    "zh-CN": "歌曲名称或 YouTube/Spotify 链接",
+    "tr": "Şarkı adı veya YouTube/Spotify URL'si",
+    "nl": "Nummernaam of YouTube/Spotify-URL",
+    "id": "Nama lagu atau URL YouTube/Spotify"
   },
   "Staff note": {
     "de": "Team-Notiz",
@@ -1929,7 +2409,10 @@
     "pl": "Notatka personelu",
     "pt-BR": "Nota da equipe",
     "ru": "Заметка персонала",
-    "zh-CN": "工作人员备注"
+    "zh-CN": "工作人员备注",
+    "tr": "Yetkili notu",
+    "nl": "Stafnotitie",
+    "id": "Catatan staf"
   },
   "Start a giveaway": {
     "de": "Ein Gewinnspiel starten",
@@ -1941,7 +2424,10 @@
     "pl": "Rozpocznij giveaway",
     "pt-BR": "Iniciar um sorteio",
     "ru": "Начать розыгрыш",
-    "zh-CN": "开始抽奖"
+    "zh-CN": "开始抽奖",
+    "tr": "Bir çekiliş başlat",
+    "nl": "Start een giveaway",
+    "id": "Mulai giveaway"
   },
   "Stop automatic weekly analytics reports": {
     "de": "Automatische wöchentliche Analyseberichte stoppen",
@@ -1953,7 +2439,10 @@
     "pl": "Zatrzymaj automatyczne tygodniowe raporty analityczne",
     "pt-BR": "Parar os relatórios de análise semanais automáticos",
     "ru": "Остановить еженедельные автоматические отчёты аналитики",
-    "zh-CN": "停止每周自动分析报告"
+    "zh-CN": "停止每周自动分析报告",
+    "tr": "Otomatik haftalık analiz raporlarını durdur",
+    "nl": "Stop automatische wekelijkse analyticsrapporten",
+    "id": "Hentikan laporan analitik mingguan otomatis"
   },
   "Stop music and clear the queue": {
     "de": "Musik stoppen und die Warteschlange leeren",
@@ -1965,7 +2454,10 @@
     "pl": "Zatrzymaj muzykę i wyczyść kolejkę",
     "pt-BR": "Parar a música e limpar a fila",
     "ru": "Остановить музыку и очистить очередь",
-    "zh-CN": "停止音乐并清空队列"
+    "zh-CN": "停止音乐并清空队列",
+    "tr": "Müziği durdur ve sırayı temizle",
+    "nl": "Stop muziek en wis de wachtrij",
+    "id": "Hentikan musik dan kosongkan antrean"
   },
   "Submit a suggestion for this server": {
     "de": "Einen Vorschlag für diesen Server einreichen",
@@ -1977,7 +2469,10 @@
     "pl": "Prześlij sugestię dla tego serwera",
     "pt-BR": "Enviar uma sugestão para este servidor",
     "ru": "Отправить предложение для этого сервера",
-    "zh-CN": "为此服务器提交一条建议"
+    "zh-CN": "为此服务器提交一条建议",
+    "tr": "Bu sunucu için bir öneri gönder",
+    "nl": "Dien een suggestie in voor deze server",
+    "id": "Kirim saran untuk server ini"
   },
   "Suggestion ID": {
     "de": "Vorschlags-ID",
@@ -1989,7 +2484,10 @@
     "pl": "ID sugestii",
     "pt-BR": "ID da sugestão",
     "ru": "ID предложения",
-    "zh-CN": "建议 ID"
+    "zh-CN": "建议 ID",
+    "tr": "Öneri kimliği",
+    "nl": "Suggestie-ID",
+    "id": "ID saran"
   },
   "Target user": {
     "de": "Zielbenutzer",
@@ -2001,7 +2499,10 @@
     "pl": "Użytkownik docelowy",
     "pt-BR": "Usuário alvo",
     "ru": "Целевой пользователь",
-    "zh-CN": "目标用户"
+    "zh-CN": "目标用户",
+    "tr": "Hedef kullanıcı",
+    "nl": "Doelgebruiker",
+    "id": "Pengguna target"
   },
   "Temp ban duration (e.g. 1d, 12h, 30m). Leave empty for permanent.": {
     "de": "Temp-Bann-Dauer (z. B. 1d, 12h, 30m). Leer lassen für dauerhaft.",
@@ -2013,7 +2514,10 @@
     "pl": "Czas tymczasowego bana (np. 1d, 12h, 30m). Puste = na stałe.",
     "pt-BR": "Duração do banimento temporário (ex. 1d, 12h, 30m). Vazio para permanente.",
     "ru": "Срок временного бана (напр. 1d, 12h, 30m). Пусто — навсегда.",
-    "zh-CN": "临时封禁时长（例如 1d、12h、30m）。留空表示永久。"
+    "zh-CN": "临时封禁时长（例如 1d、12h、30m）。留空表示永久。",
+    "tr": "Geçici yasak süresi (örn. 1d, 12h, 30m). Kalıcı için boş bırak.",
+    "nl": "Duur tijdelijke verbanning (bijv. 1d, 12h, 30m). Laat leeg voor permanent.",
+    "id": "Durasi blokir sementara (mis. 1d, 12h, 30m). Kosongkan untuk permanen."
   },
   "Template message content": {
     "de": "Inhalt der Vorlagennachricht",
@@ -2025,7 +2529,10 @@
     "pl": "Treść szablonu wiadomości",
     "pt-BR": "Conteúdo da mensagem modelo",
     "ru": "Содержание шаблона сообщения",
-    "zh-CN": "模板消息内容"
+    "zh-CN": "模板消息内容",
+    "tr": "Şablon mesajı içeriği",
+    "nl": "Sjabloonberichtinhoud",
+    "id": "Isi pesan templat"
   },
   "Text channel to post reports in": {
     "de": "Textkanal, in dem Berichte gepostet werden",
@@ -2037,7 +2544,10 @@
     "pl": "Kanał tekstowy do publikowania raportów",
     "pt-BR": "Canal de texto para publicar os relatórios",
     "ru": "Текстовый канал для публикации отчётов",
-    "zh-CN": "用于发布报告的文字频道"
+    "zh-CN": "用于发布报告的文字频道",
+    "tr": "Raporların yayınlanacağı metin kanalı",
+    "nl": "Tekstkanaal om rapporten in te plaatsen",
+    "id": "Kanal teks untuk memposting laporan"
   },
   "The forum channel": {
     "de": "Der Forumkanal",
@@ -2049,7 +2559,10 @@
     "pl": "Kanał forum",
     "pt-BR": "O canal de fórum",
     "ru": "Канал форума",
-    "zh-CN": "论坛频道"
+    "zh-CN": "论坛频道",
+    "tr": "Forum kanalı",
+    "nl": "Het forumkanaal",
+    "id": "Kanal forum"
   },
   "The forum channel to clear": {
     "de": "Der zu leerende Forumkanal",
@@ -2061,7 +2574,10 @@
     "pl": "Kanał forum do wyczyszczenia",
     "pt-BR": "O canal de fórum a limpar",
     "ru": "Канал форума для очистки",
-    "zh-CN": "要清除配置的论坛频道"
+    "zh-CN": "要清除配置的论坛频道",
+    "tr": "Temizlenecek forum kanalı",
+    "nl": "Het te wissen forumkanaal",
+    "id": "Kanal forum yang akan dibersihkan"
   },
   "The language to use": {
     "de": "Die zu verwendende Sprache",
@@ -2073,7 +2589,10 @@
     "pl": "Język do użycia",
     "pt-BR": "O idioma a usar",
     "ru": "Используемый язык",
-    "zh-CN": "要使用的语言"
+    "zh-CN": "要使用的语言",
+    "tr": "Kullanılacak dil",
+    "nl": "De te gebruiken taal",
+    "id": "Bahasa yang digunakan"
   },
   "The member to check": {
     "de": "Das zu prüfende Mitglied",
@@ -2085,7 +2604,10 @@
     "pl": "Członek do sprawdzenia",
     "pt-BR": "O membro a verificar",
     "ru": "Участник для проверки",
-    "zh-CN": "要查看的成员"
+    "zh-CN": "要查看的成员",
+    "tr": "Kontrol edilecek üye",
+    "nl": "Het te bekijken lid",
+    "id": "Anggota yang diperiksa"
   },
   "The member to clear warnings for": {
     "de": "Das Mitglied, dessen Verwarnungen gelöscht werden",
@@ -2097,7 +2619,10 @@
     "pl": "Członek, którego ostrzeżenia wyczyścić",
     "pt-BR": "O membro cujas advertências limpar",
     "ru": "Участник, чьи предупреждения снять",
-    "zh-CN": "要清除警告的成员"
+    "zh-CN": "要清除警告的成员",
+    "tr": "Uyarıları temizlenecek üye",
+    "nl": "Het lid om waarschuwingen voor te wissen",
+    "id": "Anggota yang peringatannya dihapus"
   },
   "The member to give rep to": {
     "de": "Das Mitglied, dem Reputation gegeben wird",
@@ -2109,7 +2634,10 @@
     "pl": "Członek, któremu przyznać reputację",
     "pt-BR": "O membro a quem dar reputação",
     "ru": "Участник, которому дать репутацию",
-    "zh-CN": "要给予声望的成员"
+    "zh-CN": "要给予声望的成员",
+    "tr": "İtibar verilecek üye",
+    "nl": "Het lid om rep aan te geven",
+    "id": "Anggota yang diberi rep"
   },
   "The member to kick": {
     "de": "Das zu kickende Mitglied",
@@ -2121,7 +2649,10 @@
     "pl": "Członek do wyrzucenia",
     "pt-BR": "O membro a expulsar",
     "ru": "Участник для кика",
-    "zh-CN": "要踢出的成员"
+    "zh-CN": "要踢出的成员",
+    "tr": "Atılacak üye",
+    "nl": "Het te kicken lid",
+    "id": "Anggota yang dikeluarkan"
   },
   "The member to mute": {
     "de": "Das stummzuschaltende Mitglied",
@@ -2133,7 +2664,10 @@
     "pl": "Członek do wyciszenia",
     "pt-BR": "O membro a silenciar",
     "ru": "Участник для мьюта",
-    "zh-CN": "要禁言的成员"
+    "zh-CN": "要禁言的成员",
+    "tr": "Susturulacak üye",
+    "nl": "Het te dempen lid",
+    "id": "Anggota yang dibisukan"
   },
   "The member to warn": {
     "de": "Das zu verwarnende Mitglied",
@@ -2145,7 +2679,10 @@
     "pl": "Członek do ostrzeżenia",
     "pt-BR": "O membro a advertir",
     "ru": "Участник для предупреждения",
-    "zh-CN": "要警告的成员"
+    "zh-CN": "要警告的成员",
+    "tr": "Uyarılacak üye",
+    "nl": "Het te waarschuwen lid",
+    "id": "Anggota yang diperingatkan"
   },
   "The role to assign when streaming": {
     "de": "Die Rolle, die beim Streamen zugewiesen wird",
@@ -2157,7 +2694,10 @@
     "pl": "Rola przypisywana podczas transmisji",
     "pt-BR": "O cargo a atribuir durante a transmissão",
     "ru": "Роль, назначаемая во время трансляции",
-    "zh-CN": "直播时分配的身份组"
+    "zh-CN": "直播时分配的身份组",
+    "tr": "Yayın yaparken atanacak rol",
+    "nl": "De rol om toe te wijzen tijdens streamen",
+    "id": "Peran yang ditetapkan saat siaran"
   },
   "The role to make self-assignable": {
     "de": "Die Rolle, die selbst zuweisbar gemacht wird",
@@ -2169,7 +2709,10 @@
     "pl": "Rola, którą uczynić samodzielnie przypisywaną",
     "pt-BR": "O cargo a tornar autoatribuível",
     "ru": "Роль, которую сделать самоназначаемой",
-    "zh-CN": "要设为可自助领取的身份组"
+    "zh-CN": "要设为可自助领取的身份组",
+    "tr": "Kendine atanabilir yapılacak rol",
+    "nl": "De rol om zelf-toewijsbaar te maken",
+    "id": "Peran yang dijadikan dapat ditetapkan sendiri"
   },
   "The tag ID to apply automatically": {
     "de": "Die automatisch anzuwendende Tag-ID",
@@ -2181,7 +2724,10 @@
     "pl": "ID tagu do automatycznego zastosowania",
     "pt-BR": "O ID da tag a aplicar automaticamente",
     "ru": "ID тега для автоматического применения",
-    "zh-CN": "要自动应用的标签 ID"
+    "zh-CN": "要自动应用的标签 ID",
+    "tr": "Otomatik uygulanacak etiket kimliği",
+    "nl": "De tag-ID om automatisch toe te passen",
+    "id": "ID tag yang diterapkan otomatis"
   },
   "The user (defaults to yourself)": {
     "de": "Der Benutzer (Standard: du selbst)",
@@ -2193,7 +2739,10 @@
     "pl": "Użytkownik (domyślnie Ty)",
     "pt-BR": "O usuário (padrão: você)",
     "ru": "Пользователь (по умолчанию вы)",
-    "zh-CN": "用户（默认是你自己）"
+    "zh-CN": "用户（默认是你自己）",
+    "tr": "Kullanıcı (varsayılan olarak kendin)",
+    "nl": "De gebruiker (standaard jezelf)",
+    "id": "Pengguna (default kamu sendiri)"
   },
   "The user ID to unban": {
     "de": "Die zu entbannende Benutzer-ID",
@@ -2205,7 +2754,10 @@
     "pl": "ID użytkownika do odbanowania",
     "pt-BR": "O ID do usuário a desbanir",
     "ru": "ID пользователя для разбана",
-    "zh-CN": "要解封的用户 ID"
+    "zh-CN": "要解封的用户 ID",
+    "tr": "Yasağı kaldırılacak kullanıcı kimliği",
+    "nl": "De gebruikers-ID om te ontbannen",
+    "id": "ID pengguna yang dibuka blokirnya"
   },
   "The user to ban": {
     "de": "Der zu bannende Benutzer",
@@ -2217,7 +2769,10 @@
     "pl": "Użytkownik do zbanowania",
     "pt-BR": "O usuário a banir",
     "ru": "Пользователь для бана",
-    "zh-CN": "要封禁的用户"
+    "zh-CN": "要封禁的用户",
+    "tr": "Yasaklanacak kullanıcı",
+    "nl": "De te verbannen gebruiker",
+    "id": "Pengguna yang diblokir"
   },
   "The user to check (defaults to yourself)": {
     "de": "Der zu prüfende Benutzer (Standard: du selbst)",
@@ -2229,7 +2784,10 @@
     "pl": "Użytkownik do sprawdzenia (domyślnie Ty)",
     "pt-BR": "O usuário a verificar (padrão: você)",
     "ru": "Пользователь для проверки (по умолчанию вы)",
-    "zh-CN": "要查看的用户（默认是你自己）"
+    "zh-CN": "要查看的用户（默认是你自己）",
+    "tr": "Kontrol edilecek kullanıcı (varsayılan olarak kendin)",
+    "nl": "De te bekijken gebruiker (standaard jezelf)",
+    "id": "Pengguna yang diperiksa (default kamu sendiri)"
   },
   "The user to give XP to": {
     "de": "Der Benutzer, dem XP gegeben wird",
@@ -2241,7 +2799,10 @@
     "pl": "Użytkownik, któremu przyznać XP",
     "pt-BR": "O usuário a quem conceder XP",
     "ru": "Пользователь, которому выдать опыт",
-    "zh-CN": "要发放经验值的用户"
+    "zh-CN": "要发放经验值的用户",
+    "tr": "XP verilecek kullanıcı",
+    "nl": "De gebruiker om XP aan te geven",
+    "id": "Pengguna yang diberi XP"
   },
   "The user to look up (defaults to yourself)": {
     "de": "Der nachzuschlagende Benutzer (Standard: du selbst)",
@@ -2253,7 +2814,10 @@
     "pl": "Użytkownik do wyszukania (domyślnie Ty)",
     "pt-BR": "O usuário a procurar (padrão: você)",
     "ru": "Пользователь для поиска (по умолчанию вы)",
-    "zh-CN": "要查询的用户（默认是你自己）"
+    "zh-CN": "要查询的用户（默认是你自己）",
+    "tr": "Aranacak kullanıcı (varsayılan olarak kendin)",
+    "nl": "De op te zoeken gebruiker (standaard jezelf)",
+    "id": "Pengguna yang dicari (default kamu sendiri)"
   },
   "The user to remove XP from": {
     "de": "Der Benutzer, dem XP entfernt wird",
@@ -2265,7 +2829,10 @@
     "pl": "Użytkownik, któremu usunąć XP",
     "pt-BR": "O usuário de quem remover XP",
     "ru": "Пользователь, у которого убрать опыт",
-    "zh-CN": "要移除经验值的用户"
+    "zh-CN": "要移除经验值的用户",
+    "tr": "XP kaldırılacak kullanıcı",
+    "nl": "De gebruiker om XP van te verwijderen",
+    "id": "Pengguna yang XP-nya dihapus"
   },
   "Timeout (mute) a member": {
     "de": "Ein Mitglied in Auszeit versetzen (stummschalten)",
@@ -2277,7 +2844,10 @@
     "pl": "Nałóż timeout (wycisz) na członka",
     "pt-BR": "Aplicar timeout (silenciar) a um membro",
     "ru": "Тайм-аут (мьют) участника",
-    "zh-CN": "对成员执行超时（禁言）"
+    "zh-CN": "对成员执行超时（禁言）",
+    "tr": "Bir üyeye zaman aşımı (susturma) ver",
+    "nl": "Geef een lid een time-out (demp)",
+    "id": "Timeout (bisukan) anggota"
   },
   "Toggle whether members keep previous level roles when they earn a higher one": {
     "de": "Umschalten, ob Mitglieder frühere Levelrollen behalten, wenn sie eine höhere erreichen",
@@ -2289,7 +2859,10 @@
     "pl": "Przełącz, czy członkowie zachowują poprzednie role poziomów po zdobyciu wyższej",
     "pt-BR": "Alternar se os membros mantêm cargos de nível anteriores ao ganhar um superior",
     "ru": "Переключить, сохраняют ли участники прежние роли уровней при новом",
-    "zh-CN": "切换成员在获得更高等级时是否保留之前的等级身份组"
+    "zh-CN": "切换成员在获得更高等级时是否保留之前的等级身份组",
+    "tr": "Üyelerin daha yüksek bir rol kazandığında önceki seviye rollerini koruyup korumayacağını değiştir",
+    "nl": "Wissel of leden vorige levelrollen behouden wanneer ze een hogere verdienen",
+    "id": "Alihkan apakah anggota mempertahankan peran level sebelumnya saat mendapat yang lebih tinggi"
   },
   "Type true to confirm — this cannot be undone": {
     "de": "Gib „true“ ein, um zu bestätigen – dies kann nicht rückgängig gemacht werden",
@@ -2301,7 +2874,10 @@
     "pl": "Wpisz true, aby potwierdzić — tego nie można cofnąć",
     "pt-BR": "Digite true para confirmar — isto não pode ser desfeito",
     "ru": "Введите true для подтверждения — отменить нельзя",
-    "zh-CN": "输入 true 以确认 — 此操作无法撤销"
+    "zh-CN": "输入 true 以确认 — 此操作无法撤销",
+    "tr": "Onaylamak için true yaz — bu geri alınamaz",
+    "nl": "Typ true om te bevestigen — dit kan niet ongedaan worden gemaakt",
+    "id": "Ketik true untuk konfirmasi — ini tidak dapat dibatalkan"
   },
   "Unban a user from the server": {
     "de": "Einen Benutzer auf dem Server entbannen",
@@ -2313,7 +2889,10 @@
     "pl": "Odbanuj użytkownika na serwerze",
     "pt-BR": "Desbanir um usuário do servidor",
     "ru": "Разбанить пользователя на сервере",
-    "zh-CN": "解除用户在服务器的封禁"
+    "zh-CN": "解除用户在服务器的封禁",
+    "tr": "Bir kullanıcının sunucudan yasağını kaldır",
+    "nl": "Ontban een gebruiker van de server",
+    "id": "Buka blokir pengguna dari server"
   },
   "User to check": {
     "de": "Zu prüfender Benutzer",
@@ -2325,7 +2904,10 @@
     "pl": "Użytkownik do sprawdzenia",
     "pt-BR": "Usuário a verificar",
     "ru": "Пользователь для проверки",
-    "zh-CN": "要查看的用户"
+    "zh-CN": "要查看的用户",
+    "tr": "Kontrol edilecek kullanıcı",
+    "nl": "Te bekijken gebruiker",
+    "id": "Pengguna yang diperiksa"
   },
   "User to check (defaults to yourself)": {
     "de": "Zu prüfender Benutzer (Standard: du selbst)",
@@ -2337,7 +2919,10 @@
     "pl": "Użytkownik do sprawdzenia (domyślnie Ty)",
     "pt-BR": "Usuário a verificar (padrão: você)",
     "ru": "Пользователь для проверки (по умолчанию вы)",
-    "zh-CN": "要查看的用户（默认是你自己）"
+    "zh-CN": "要查看的用户（默认是你自己）",
+    "tr": "Kontrol edilecek kullanıcı (varsayılan olarak kendin)",
+    "nl": "Te bekijken gebruiker (standaard jezelf)",
+    "id": "Pengguna yang diperiksa (default kamu sendiri)"
   },
   "User to report": {
     "de": "Zu meldender Benutzer",
@@ -2349,7 +2934,10 @@
     "pl": "Użytkownik do zgłoszenia",
     "pt-BR": "Usuário a denunciar",
     "ru": "Пользователь для жалобы",
-    "zh-CN": "要举报的用户"
+    "zh-CN": "要举报的用户",
+    "tr": "Bildirilecek kullanıcı",
+    "nl": "Te rapporteren gebruiker",
+    "id": "Pengguna yang dilaporkan"
   },
   "User whose cases to close": {
     "de": "Benutzer, dessen Fälle geschlossen werden",
@@ -2361,7 +2949,10 @@
     "pl": "Użytkownik, którego sprawy zamknąć",
     "pt-BR": "Usuário cujos casos fechar",
     "ru": "Пользователь, чьи дела закрыть",
-    "zh-CN": "要关闭其案件的用户"
+    "zh-CN": "要关闭其案件的用户",
+    "tr": "Vakaları kapatılacak kullanıcı",
+    "nl": "Gebruiker wiens zaken gesloten worden",
+    "id": "Pengguna yang kasusnya ditutup"
   },
   "View a member's full profile: level, XP, stats, and achievements": {
     "de": "Das vollständige Profil eines Mitglieds ansehen: Level, XP, Statistiken und Erfolge",
@@ -2373,7 +2964,10 @@
     "pl": "Zobacz pełny profil członka: poziom, XP, statystyki i osiągnięcia",
     "pt-BR": "Ver o perfil completo de um membro: nível, XP, estatísticas e conquistas",
     "ru": "Посмотреть полный профиль участника: уровень, опыт, статистику и достижения",
-    "zh-CN": "查看成员的完整资料：等级、经验值、统计和成就"
+    "zh-CN": "查看成员的完整资料：等级、经验值、统计和成就",
+    "tr": "Bir üyenin tam profilini görüntüle: seviye, XP, istatistikler ve başarımlar",
+    "nl": "Bekijk het volledige profiel van een lid: level, XP, statistieken en prestaties",
+    "id": "Lihat profil lengkap anggota: level, XP, statistik, dan pencapaian"
   },
   "View detailed engagement stats for a member": {
     "de": "Detaillierte Engagement-Statistiken für ein Mitglied ansehen",
@@ -2385,7 +2979,10 @@
     "pl": "Zobacz szczegółowe statystyki zaangażowania członka",
     "pt-BR": "Ver estatísticas detalhadas de engajamento de um membro",
     "ru": "Посмотреть подробную статистику активности участника",
-    "zh-CN": "查看成员的详细参与度统计"
+    "zh-CN": "查看成员的详细参与度统计",
+    "tr": "Bir üye için ayrıntılı etkileşim istatistiklerini görüntüle",
+    "nl": "Bekijk gedetailleerde betrokkenheidsstatistieken voor een lid",
+    "id": "Lihat statistik keterlibatan terperinci untuk anggota"
   },
   "View or configure server analytics": {
     "de": "Server-Analysen ansehen oder konfigurieren",
@@ -2397,7 +2994,10 @@
     "pl": "Wyświetl lub skonfiguruj analitykę serwera",
     "pt-BR": "Ver ou configurar as análises do servidor",
     "ru": "Просмотреть или настроить аналитику сервера",
-    "zh-CN": "查看或配置服务器分析"
+    "zh-CN": "查看或配置服务器分析",
+    "tr": "Sunucu analizlerini görüntüle veya yapılandır",
+    "nl": "Bekijk of configureer serveranalytics",
+    "id": "Lihat atau konfigurasikan analitik server"
   },
   "View the XP leaderboard": {
     "de": "Die XP-Bestenliste ansehen",
@@ -2409,7 +3009,10 @@
     "pl": "Zobacz ranking XP",
     "pt-BR": "Ver o ranking de XP",
     "ru": "Посмотреть таблицу лидеров по опыту",
-    "zh-CN": "查看经验值排行榜"
+    "zh-CN": "查看经验值排行榜",
+    "tr": "XP lider tablosunu görüntüle",
+    "nl": "Bekijk het XP-scorebord",
+    "id": "Lihat papan peringkat XP"
   },
   "View the music queue": {
     "de": "Die Musik-Warteschlange ansehen",
@@ -2421,7 +3024,10 @@
     "pl": "Zobacz kolejkę muzyki",
     "pt-BR": "Ver a fila de músicas",
     "ru": "Посмотреть очередь музыки",
-    "zh-CN": "查看音乐队列"
+    "zh-CN": "查看音乐队列",
+    "tr": "Müzik sırasını görüntüle",
+    "nl": "Bekijk de muziekwachtrij",
+    "id": "Lihat antrean musik"
   },
   "View the top reputation leaderboard": {
     "de": "Die Reputations-Bestenliste ansehen",
@@ -2433,7 +3039,10 @@
     "pl": "Zobacz ranking reputacji",
     "pt-BR": "Ver o ranking de reputação",
     "ru": "Посмотреть таблицу лидеров по репутации",
-    "zh-CN": "查看声望排行榜"
+    "zh-CN": "查看声望排行榜",
+    "tr": "En yüksek itibar lider tablosunu görüntüle",
+    "nl": "Bekijk het reputatiescorebord",
+    "id": "Lihat papan peringkat reputasi teratas"
   },
   "View warnings for a member": {
     "de": "Verwarnungen für ein Mitglied ansehen",
@@ -2445,7 +3054,10 @@
     "pl": "Zobacz ostrzeżenia członka",
     "pt-BR": "Ver as advertências de um membro",
     "ru": "Посмотреть предупреждения участника",
-    "zh-CN": "查看成员的警告"
+    "zh-CN": "查看成员的警告",
+    "tr": "Bir üyenin uyarılarını görüntüle",
+    "nl": "Bekijk waarschuwingen voor een lid",
+    "id": "Lihat peringatan untuk anggota"
   },
   "Volume level (1-100)": {
     "de": "Lautstärkepegel (1-100)",
@@ -2457,7 +3069,10 @@
     "pl": "Poziom głośności (1-100)",
     "pt-BR": "Nível de volume (1-100)",
     "ru": "Уровень громкости (1–100)",
-    "zh-CN": "音量大小（1-100）"
+    "zh-CN": "音量大小（1-100）",
+    "tr": "Ses seviyesi (1-100)",
+    "nl": "Volumeniveau (1-100)",
+    "id": "Tingkat volume (1-100)"
   },
   "Vote for the bot on top.gg and see your rewards": {
     "de": "Auf top.gg für den Bot abstimmen und deine Belohnungen ansehen",
@@ -2469,7 +3084,10 @@
     "pl": "Zagłosuj na bota na top.gg i zobacz swoje nagrody",
     "pt-BR": "Vote no bot no top.gg e veja suas recompensas",
     "ru": "Проголосуйте за бота на top.gg и посмотрите награды",
-    "zh-CN": "在 top.gg 为机器人投票并查看你的奖励"
+    "zh-CN": "在 top.gg 为机器人投票并查看你的奖励",
+    "tr": "Botu top.gg'de oyla ve ödüllerini gör",
+    "nl": "Stem op de bot op top.gg en bekijk je beloningen",
+    "id": "Beri suara untuk bot di top.gg dan lihat hadiahmu"
   },
   "Warn a member": {
     "de": "Ein Mitglied verwarnen",
@@ -2481,7 +3099,10 @@
     "pl": "Ostrzeż członka",
     "pt-BR": "Advertir um membro",
     "ru": "Предупредить участника",
-    "zh-CN": "警告某个成员"
+    "zh-CN": "警告某个成员",
+    "tr": "Bir üyeyi uyar",
+    "nl": "Waarschuw een lid",
+    "id": "Peringatkan anggota"
   },
   "What are you giving away?": {
     "de": "Was verlost du?",
@@ -2493,7 +3114,10 @@
     "pl": "Co rozdajesz?",
     "pt-BR": "O que você está sorteando?",
     "ru": "Что вы разыгрываете?",
-    "zh-CN": "你要抽送什么？"
+    "zh-CN": "你要抽送什么？",
+    "tr": "Ne veriyorsun?",
+    "nl": "Wat geef je weg?",
+    "id": "Apa yang kamu berikan?"
   },
   "What to remind you about": {
     "de": "Woran du erinnert werden möchtest",
@@ -2505,7 +3129,10 @@
     "pl": "O czym przypomnieć",
     "pt-BR": "Sobre o que lembrar você",
     "ru": "О чём напомнить",
-    "zh-CN": "要提醒你什么"
+    "zh-CN": "要提醒你什么",
+    "tr": "Sana neyi hatırlatacağım",
+    "nl": "Waaraan te herinneren",
+    "id": "Apa yang diingatkan"
   },
   "When to remind you (e.g. 10m, 2h, 1d)": {
     "de": "Wann du erinnert werden möchtest (z. B. 10m, 2h, 1d)",
@@ -2517,7 +3144,10 @@
     "pl": "Kiedy przypomnieć (np. 10m, 2h, 1d)",
     "pt-BR": "Quando lembrar você (ex. 10m, 2h, 1d)",
     "ru": "Когда напомнить (напр. 10m, 2h, 1d)",
-    "zh-CN": "何时提醒你（例如 10m、2h、1d）"
+    "zh-CN": "何时提醒你（例如 10m、2h、1d）",
+    "tr": "Ne zaman hatırlatılacak (örn. 10m, 2h, 1d)",
+    "nl": "Wanneer je te herinneren (bijv. 10m, 2h, 1d)",
+    "id": "Kapan mengingatkanmu (mis. 10m, 2h, 1d)"
   },
   "Your suggestion": {
     "de": "Dein Vorschlag",
@@ -2529,7 +3159,10 @@
     "pl": "Twoja sugestia",
     "pt-BR": "Sua sugestão",
     "ru": "Ваше предложение",
-    "zh-CN": "你的建议"
+    "zh-CN": "你的建议",
+    "tr": "Önerin",
+    "nl": "Jouw suggestie",
+    "id": "Saranmu"
   },
   "true = stack all earned roles, false = only keep the highest role": {
     "de": "true = alle erhaltenen Rollen behalten, false = nur die höchste Rolle behalten",
@@ -2541,7 +3174,10 @@
     "pl": "true = zachowaj wszystkie zdobyte role, false = tylko najwyższa rola",
     "pt-BR": "true = acumular todos os cargos obtidos, false = manter apenas o mais alto",
     "ru": "true = сохранять все полученные роли, false = только самую высокую",
-    "zh-CN": "true = 保留所有已获得的身份组，false = 仅保留最高身份组"
+    "zh-CN": "true = 保留所有已获得的身份组，false = 仅保留最高身份组",
+    "tr": "true = kazanılan tüm rolleri yığ, false = yalnızca en yüksek rolü koru",
+    "nl": "true = alle verdiende rollen stapelen, false = alleen de hoogste rol behouden",
+    "id": "true = tumpuk semua peran yang didapat, false = hanya pertahankan peran tertinggi"
   },
   "true to enable, false to disable": {
     "de": "true zum Aktivieren, false zum Deaktivieren",
@@ -2553,7 +3189,10 @@
     "pl": "true, aby włączyć, false, aby wyłączyć",
     "pt-BR": "true para ativar, false para desativar",
     "ru": "true — включить, false — отключить",
-    "zh-CN": "true 启用，false 禁用"
+    "zh-CN": "true 启用，false 禁用",
+    "tr": "etkinleştirmek için true, devre dışı bırakmak için false",
+    "nl": "true om in te schakelen, false om uit te schakelen",
+    "id": "true untuk aktifkan, false untuk nonaktifkan"
   },
   "Off": {
     "de": "Aus",
@@ -2565,7 +3204,10 @@
     "pl": "Wył.",
     "pt-BR": "Desativado",
     "ru": "Выкл.",
-    "zh-CN": "关闭"
+    "zh-CN": "关闭",
+    "tr": "Kapalı",
+    "nl": "Uit",
+    "id": "Mati"
   },
   "Queue": {
     "de": "Warteschlange",
@@ -2577,7 +3219,10 @@
     "pl": "Kolejka",
     "pt-BR": "Fila",
     "ru": "Очередь",
-    "zh-CN": "队列"
+    "zh-CN": "队列",
+    "tr": "Sıra",
+    "nl": "Wachtrij",
+    "id": "Antrean"
   },
   "Track": {
     "de": "Titel",
@@ -2589,7 +3234,10 @@
     "pl": "Utwór",
     "pt-BR": "Faixa",
     "ru": "Трек",
-    "zh-CN": "单曲"
+    "zh-CN": "单曲",
+    "tr": "Parça",
+    "nl": "Nummer",
+    "id": "Lagu"
   },
   "Turn off": {
     "de": "Ausschalten",
@@ -2601,7 +3249,10 @@
     "pl": "Wyłącz",
     "pt-BR": "Desativar",
     "ru": "Выключить",
-    "zh-CN": "关闭"
+    "zh-CN": "关闭",
+    "tr": "Kapat",
+    "nl": "Uitzetten",
+    "id": "Matikan"
   },
   "Turn on": {
     "de": "Einschalten",
@@ -2613,7 +3264,10 @@
     "pl": "Włącz",
     "pt-BR": "Ativar",
     "ru": "Включить",
-    "zh-CN": "开启"
+    "zh-CN": "开启",
+    "tr": "Aç",
+    "nl": "Aanzetten",
+    "id": "Nyalakan"
   },
   "AI summary, urgency, and a suggested reply for the current ticket (staff only)": {
     "de": "KI-Zusammenfassung, Dringlichkeit und Antwortvorschlag für das aktuelle Ticket (nur Team)",
@@ -2625,7 +3279,10 @@
     "pl": "Podsumowanie AI, pilność i sugerowana odpowiedź dla bieżącego zgłoszenia (tylko personel)",
     "pt-BR": "Resumo de IA, urgência e resposta sugerida para o ticket atual (apenas equipe)",
     "ru": "ИИ-сводка, срочность и предлагаемый ответ для текущего тикета (только персонал)",
-    "zh-CN": "当前工单的 AI 摘要、紧急度和建议回复（仅限工作人员）"
+    "zh-CN": "当前工单的 AI 摘要、紧急度和建议回复（仅限工作人员）",
+    "tr": "Mevcut bilet için yapay zekâ özeti, aciliyet ve önerilen yanıt (yalnızca yetkili)",
+    "nl": "AI-samenvatting, urgentie en een voorgesteld antwoord voor het huidige ticket (alleen staf)",
+    "id": "Ringkasan AI, urgensi, dan saran balasan untuk tiket saat ini (hanya staf)"
   },
   "Add a private staff note to this ticket": {
     "de": "Eine private Team-Notiz zu diesem Ticket hinzufügen",
@@ -2637,7 +3294,10 @@
     "pl": "Dodaj prywatną notatkę personelu do tego zgłoszenia",
     "pt-BR": "Adicionar uma nota privada da equipe a este ticket",
     "ru": "Добавить приватную заметку персонала к этому тикету",
-    "zh-CN": "为此工单添加私密的工作人员备注"
+    "zh-CN": "为此工单添加私密的工作人员备注",
+    "tr": "Bu bilete özel bir yetkili notu ekle",
+    "nl": "Voeg een privé-stafnotitie toe aan dit ticket",
+    "id": "Tambahkan catatan staf pribadi ke tiket ini"
   },
   "Add a question to a form": {
     "de": "Eine Frage zu einem Formular hinzufügen",
@@ -2649,7 +3309,10 @@
     "pl": "Dodaj pytanie do formularza",
     "pt-BR": "Adicionar uma pergunta a um formulário",
     "ru": "Добавить вопрос в форму",
-    "zh-CN": "向表单添加一个问题"
+    "zh-CN": "向表单添加一个问题",
+    "tr": "Bir forma soru ekle",
+    "nl": "Voeg een vraag toe aan een formulier",
+    "id": "Tambahkan pertanyaan ke formulir"
   },
   "Add a user to this ticket": {
     "de": "Einen Benutzer zu diesem Ticket hinzufügen",
@@ -2661,7 +3324,10 @@
     "pl": "Dodaj użytkownika do tego zgłoszenia",
     "pt-BR": "Adicionar um usuário a este ticket",
     "ru": "Добавить пользователя в этот тикет",
-    "zh-CN": "将用户添加到此工单"
+    "zh-CN": "将用户添加到此工单",
+    "tr": "Bu bilete bir kullanıcı ekle",
+    "nl": "Voeg een gebruiker toe aan dit ticket",
+    "id": "Tambahkan pengguna ke tiket ini"
   },
   "Add an SLA escalation level": {
     "de": "Eine SLA-Eskalationsstufe hinzufügen",
@@ -2673,7 +3339,10 @@
     "pl": "Dodaj poziom eskalacji SLA",
     "pt-BR": "Adicionar um nível de escalonamento de SLA",
     "ru": "Добавить уровень эскалации SLA",
-    "zh-CN": "添加一个 SLA 升级级别"
+    "zh-CN": "添加一个 SLA 升级级别",
+    "tr": "Bir SLA yükseltme seviyesi ekle",
+    "nl": "Voeg een SLA-escalatieniveau toe",
+    "id": "Tambahkan level eskalasi SLA"
   },
   "Add or remove": {
     "de": "Hinzufügen oder entfernen",
@@ -2685,7 +3354,10 @@
     "pl": "Dodaj lub usuń",
     "pt-BR": "Adicionar ou remover",
     "ru": "Добавить или удалить",
-    "zh-CN": "添加或移除"
+    "zh-CN": "添加或移除",
+    "tr": "Ekle veya kaldır",
+    "nl": "Toevoegen of verwijderen",
+    "id": "Tambah atau hapus"
   },
   "Add or remove a tag on this ticket": {
     "de": "Ein Tag zu diesem Ticket hinzufügen oder entfernen",
@@ -2697,7 +3369,10 @@
     "pl": "Dodaj lub usuń tag w tym zgłoszeniu",
     "pt-BR": "Adicionar ou remover uma tag neste ticket",
     "ru": "Добавить или удалить тег на этом тикете",
-    "zh-CN": "在此工单上添加或移除标签"
+    "zh-CN": "在此工单上添加或移除标签",
+    "tr": "Bu bilete bir etiket ekle veya kaldır",
+    "nl": "Voeg een tag toe aan of verwijder een tag van dit ticket",
+    "id": "Tambah atau hapus tag pada tiket ini"
   },
   "Add or remove a user from the ticket blacklist": {
     "de": "Einen Benutzer zur Ticket-Blacklist hinzufügen oder daraus entfernen",
@@ -2709,7 +3384,10 @@
     "pl": "Dodaj lub usuń użytkownika z czarnej listy zgłoszeń",
     "pt-BR": "Adicionar ou remover um usuário da lista negra de tickets",
     "ru": "Добавить или удалить пользователя из чёрного списка тикетов",
-    "zh-CN": "从工单黑名单中添加或移除用户"
+    "zh-CN": "从工单黑名单中添加或移除用户",
+    "tr": "Bilet kara listesine bir kullanıcı ekle veya kaldır",
+    "nl": "Voeg een gebruiker toe aan of verwijder een gebruiker van de ticket-zwarte lijst",
+    "id": "Tambah atau hapus pengguna dari daftar hitam tiket"
   },
   "Amount to pay": {
     "de": "Zu zahlender Betrag",
@@ -2721,7 +3399,10 @@
     "pl": "Kwota do zapłaty",
     "pt-BR": "Valor a pagar",
     "ru": "Сумма к оплате",
-    "zh-CN": "支付金额"
+    "zh-CN": "支付金额",
+    "tr": "Ödenecek miktar",
+    "nl": "Te betalen bedrag",
+    "id": "Jumlah yang dibayar"
   },
   "Analyze a code snippet for issues and formatting": {
     "de": "Ein Code-Snippet auf Probleme und Formatierung analysieren",
@@ -2733,7 +3414,10 @@
     "pl": "Przeanalizuj fragment kodu pod kątem problemów i formatowania",
     "pt-BR": "Analisar um trecho de código quanto a problemas e formatação",
     "ru": "Проанализировать фрагмент кода на проблемы и форматирование",
-    "zh-CN": "分析代码片段的问题和格式"
+    "zh-CN": "分析代码片段的问题和格式",
+    "tr": "Bir kod parçasını sorunlar ve biçimlendirme için analiz et",
+    "nl": "Analyseer een codefragment op problemen en opmaak",
+    "id": "Analisis cuplikan kode untuk masalah dan pemformatan"
   },
   "Ask the AI assistant a question": {
     "de": "Dem KI-Assistenten eine Frage stellen",
@@ -2745,7 +3429,10 @@
     "pl": "Zadaj pytanie asystentowi AI",
     "pt-BR": "Fazer uma pergunta ao assistente de IA",
     "ru": "Задать вопрос ИИ-ассистенту",
-    "zh-CN": "向 AI 助手提问"
+    "zh-CN": "向 AI 助手提问",
+    "tr": "Yapay zekâ asistanına bir soru sor",
+    "nl": "Stel de AI-assistent een vraag",
+    "id": "Ajukan pertanyaan ke asisten AI"
   },
   "Ask the user for a reason before opening (default: false)": {
     "de": "Den Benutzer vor dem Öffnen nach einem Grund fragen (Standard: false)",
@@ -2757,7 +3444,10 @@
     "pl": "Poproś użytkownika o powód przed otwarciem (domyślnie: false)",
     "pt-BR": "Pedir um motivo ao usuário antes de abrir (padrão: false)",
     "ru": "Спрашивать у пользователя причину перед открытием (по умолчанию: false)",
-    "zh-CN": "在打开前询问用户原因（默认：false）"
+    "zh-CN": "在打开前询问用户原因（默认：false）",
+    "tr": "Açmadan önce kullanıcıdan bir neden iste (varsayılan: false)",
+    "nl": "Vraag de gebruiker om een reden voor het openen (standaard: false)",
+    "id": "Minta alasan dari pengguna sebelum membuka (default: false)"
   },
   "Auto-close inactive tickets after N hours (0 = off, default: 48)": {
     "de": "Inaktive Tickets nach N Stunden automatisch schließen (0 = aus, Standard: 48)",
@@ -2769,7 +3459,10 @@
     "pl": "Automatycznie zamykaj nieaktywne zgłoszenia po N godzinach (0 = wył., domyślnie: 48)",
     "pt-BR": "Fechar automaticamente tickets inativos após N horas (0 = desativado, padrão: 48)",
     "ru": "Автозакрытие неактивных тикетов через N часов (0 = выкл., по умолчанию: 48)",
-    "zh-CN": "N 小时后自动关闭不活跃的工单（0 = 关闭，默认：48）"
+    "zh-CN": "N 小时后自动关闭不活跃的工单（0 = 关闭，默认：48）",
+    "tr": "Etkin olmayan biletleri N saat sonra otomatik kapat (0 = kapalı, varsayılan: 48)",
+    "nl": "Sluit inactieve tickets automatisch na N uur (0 = uit, standaard: 48)",
+    "id": "Tutup otomatis tiket tidak aktif setelah N jam (0 = mati, default: 48)"
   },
   "Button color": {
     "de": "Button-Farbe",
@@ -2781,7 +3474,10 @@
     "pl": "Kolor przycisku",
     "pt-BR": "Cor do botão",
     "ru": "Цвет кнопки",
-    "zh-CN": "按钮颜色"
+    "zh-CN": "按钮颜色",
+    "tr": "Düğme rengi",
+    "nl": "Knopkleur",
+    "id": "Warna tombol"
   },
   "Button emoji (e.g. 🎫)": {
     "de": "Button-Emoji (z. B. 🎫)",
@@ -2793,7 +3489,10 @@
     "pl": "Emoji przycisku (np. 🎫)",
     "pt-BR": "Emoji do botão (ex. 🎫)",
     "ru": "Эмодзи кнопки (напр. 🎫)",
-    "zh-CN": "按钮表情符号（例如 🎫）"
+    "zh-CN": "按钮表情符号（例如 🎫）",
+    "tr": "Düğme emojisi (örn. 🎫)",
+    "nl": "Knop-emoji (bijv. 🎫)",
+    "id": "Emoji tombol (mis. 🎫)"
   },
   "Button label text": {
     "de": "Button-Beschriftungstext",
@@ -2805,7 +3504,10 @@
     "pl": "Tekst etykiety przycisku",
     "pt-BR": "Texto do rótulo do botão",
     "ru": "Текст надписи на кнопке",
-    "zh-CN": "按钮标签文本"
+    "zh-CN": "按钮标签文本",
+    "tr": "Düğme etiketi metni",
+    "nl": "Knoplabeltekst",
+    "id": "Teks label tombol"
   },
   "Canned response name": {
     "de": "Name der vorgefertigten Antwort",
@@ -2817,7 +3519,10 @@
     "pl": "Nazwa gotowej odpowiedzi",
     "pt-BR": "Nome da resposta pronta",
     "ru": "Название шаблонного ответа",
-    "zh-CN": "预设回复名称"
+    "zh-CN": "预设回复名称",
+    "tr": "Hazır yanıt adı",
+    "nl": "Naam standaardantwoord",
+    "id": "Nama balasan siap pakai"
   },
   "Category to create ticket channels in": {
     "de": "Kategorie, in der Ticket-Kanäle erstellt werden",
@@ -2829,7 +3534,10 @@
     "pl": "Kategoria, w której tworzyć kanały zgłoszeń",
     "pt-BR": "Categoria onde criar os canais de tickets",
     "ru": "Категория для создания каналов тикетов",
-    "zh-CN": "用于创建工单频道的分类"
+    "zh-CN": "用于创建工单频道的分类",
+    "tr": "Bilet kanallarının oluşturulacağı kategori",
+    "nl": "Categorie om ticketkanalen in te maken",
+    "id": "Kategori untuk membuat kanal tiket"
   },
   "Channel for submissions": {
     "de": "Kanal für Einreichungen",
@@ -2841,7 +3549,10 @@
     "pl": "Kanał na zgłoszenia",
     "pt-BR": "Canal para as submissões",
     "ru": "Канал для заявок",
-    "zh-CN": "用于提交的频道"
+    "zh-CN": "用于提交的频道",
+    "tr": "Gönderimler için kanal",
+    "nl": "Kanaal voor inzendingen",
+    "id": "Kanal untuk kiriman"
   },
   "Channel naming pattern ({number}, {username}) — default: ticket-{number}": {
     "de": "Kanal-Namensmuster ({number}, {username}) — Standard: ticket-{number}",
@@ -2853,7 +3564,10 @@
     "pl": "Wzorzec nazwy kanału ({number}, {username}) — domyślnie: ticket-{number}",
     "pt-BR": "Padrão de nome de canal ({number}, {username}) — padrão: ticket-{number}",
     "ru": "Шаблон имени канала ({number}, {username}) — по умолчанию: ticket-{number}",
-    "zh-CN": "频道命名模式（{number}、{username}）— 默认：ticket-{number}"
+    "zh-CN": "频道命名模式（{number}、{username}）— 默认：ticket-{number}",
+    "tr": "Kanal adlandırma deseni ({number}, {username}) — varsayılan: ticket-{number}",
+    "nl": "Kanaalnaampatroon ({number}, {username}) — standaard: ticket-{number}",
+    "id": "Pola penamaan kanal ({number}, {username}) — default: ticket-{number}"
   },
   "Channel to ping when a new ticket opens": {
     "de": "Kanal, der beim Öffnen eines neuen Tickets gepingt wird",
@@ -2865,7 +3579,10 @@
     "pl": "Kanał do pingnięcia przy otwarciu nowego zgłoszenia",
     "pt-BR": "Canal a mencionar quando um novo ticket abre",
     "ru": "Канал для пинга при открытии нового тикета",
-    "zh-CN": "新工单打开时要提及的频道"
+    "zh-CN": "新工单打开时要提及的频道",
+    "tr": "Yeni bir bilet açıldığında etiketlenecek kanal",
+    "nl": "Kanaal om te pingen wanneer een nieuw ticket opent",
+    "id": "Kanal untuk ping saat tiket baru dibuka"
   },
   "Channel to post transcripts": {
     "de": "Kanal zum Posten von Transkripten",
@@ -2877,7 +3594,10 @@
     "pl": "Kanał do publikowania transkryptów",
     "pt-BR": "Canal para publicar as transcrições",
     "ru": "Канал для публикации стенограмм",
-    "zh-CN": "用于发布记录的频道"
+    "zh-CN": "用于发布记录的频道",
+    "tr": "Dökümlerin yayınlanacağı kanal",
+    "nl": "Kanaal om transcripties te plaatsen",
+    "id": "Kanal untuk memposting transkrip"
   },
   "Channel to send the panel in": {
     "de": "Kanal, in dem das Panel gesendet wird",
@@ -2889,7 +3609,10 @@
     "pl": "Kanał, na który wysłać panel",
     "pt-BR": "Canal para enviar o painel",
     "ru": "Канал для отправки панели",
-    "zh-CN": "用于发送面板的频道"
+    "zh-CN": "用于发送面板的频道",
+    "tr": "Panelin gönderileceği kanal",
+    "nl": "Kanaal om het paneel in te sturen",
+    "id": "Kanal untuk mengirim panel"
   },
   "Check a saved server by name": {
     "de": "Einen gespeicherten Server per Name prüfen",
@@ -2901,7 +3624,10 @@
     "pl": "Sprawdź zapisany serwer według nazwy",
     "pt-BR": "Verificar um servidor salvo pelo nome",
     "ru": "Проверить сохранённый сервер по имени",
-    "zh-CN": "按名称查看已保存的服务器"
+    "zh-CN": "按名称查看已保存的服务器",
+    "tr": "Kayıtlı bir sunucuyu ada göre kontrol et",
+    "nl": "Bekijk een opgeslagen server op naam",
+    "id": "Periksa server tersimpan berdasarkan nama"
   },
   "Check any game server by address": {
     "de": "Einen beliebigen Spieleserver per Adresse prüfen",
@@ -2913,7 +3639,10 @@
     "pl": "Sprawdź dowolny serwer gry według adresu",
     "pt-BR": "Verificar qualquer servidor de jogo pelo endereço",
     "ru": "Проверить любой игровой сервер по адресу",
-    "zh-CN": "按地址查看任意游戏服务器"
+    "zh-CN": "按地址查看任意游戏服务器",
+    "tr": "Herhangi bir oyun sunucusunu adrese göre kontrol et",
+    "nl": "Bekijk elke game-server op adres",
+    "id": "Periksa server game mana pun berdasarkan alamat"
   },
   "Check your or another user's balance": {
     "de": "Deinen oder den Kontostand eines anderen Benutzers prüfen",
@@ -2925,7 +3654,10 @@
     "pl": "Sprawdź saldo swoje lub innego użytkownika",
     "pt-BR": "Verificar seu saldo ou o de outro usuário",
     "ru": "Проверить свой или чужой баланс",
-    "zh-CN": "查看你或其他用户的余额"
+    "zh-CN": "查看你或其他用户的余额",
+    "tr": "Senin veya başka bir kullanıcının bakiyesini kontrol et",
+    "nl": "Bekijk jouw of iemand anders saldo",
+    "id": "Periksa saldomu atau pengguna lain"
   },
   "Claim this ticket as yours": {
     "de": "Dieses Ticket für dich beanspruchen",
@@ -2937,7 +3669,10 @@
     "pl": "Przypisz to zgłoszenie do siebie",
     "pt-BR": "Assumir este ticket como seu",
     "ru": "Взять этот тикет себе",
-    "zh-CN": "认领此工单"
+    "zh-CN": "认领此工单",
+    "tr": "Bu bileti kendine üstlen",
+    "nl": "Claim dit ticket als het jouwe",
+    "id": "Klaim tiket ini sebagai milikmu"
   },
   "Claim your daily currency reward": {
     "de": "Deine tägliche Währungsbelohnung abholen",
@@ -2949,7 +3684,10 @@
     "pl": "Odbierz swoją codzienną nagrodę walutową",
     "pt-BR": "Resgatar sua recompensa diária de moeda",
     "ru": "Получить ежедневную валютную награду",
-    "zh-CN": "领取每日货币奖励"
+    "zh-CN": "领取每日货币奖励",
+    "tr": "Günlük para ödülünü al",
+    "nl": "Claim je dagelijkse valutabeloning",
+    "id": "Ambil hadiah mata uang harianmu"
   },
   "Close this ticket": {
     "de": "Dieses Ticket schließen",
@@ -2961,7 +3699,10 @@
     "pl": "Zamknij to zgłoszenie",
     "pt-BR": "Fechar este ticket",
     "ru": "Закрыть этот тикет",
-    "zh-CN": "关闭此工单"
+    "zh-CN": "关闭此工单",
+    "tr": "Bu bileti kapat",
+    "nl": "Sluit dit ticket",
+    "id": "Tutup tiket ini"
   },
   "Configure global ticket settings": {
     "de": "Globale Ticket-Einstellungen konfigurieren",
@@ -2973,7 +3714,10 @@
     "pl": "Skonfiguruj globalne ustawienia zgłoszeń",
     "pt-BR": "Configurar as configurações globais de tickets",
     "ru": "Настроить глобальные параметры тикетов",
-    "zh-CN": "配置全局工单设置"
+    "zh-CN": "配置全局工单设置",
+    "tr": "Genel bilet ayarlarını yapılandır",
+    "nl": "Configureer globale ticketinstellingen",
+    "id": "Konfigurasikan pengaturan tiket global"
   },
   "Create a new application form": {
     "de": "Ein neues Bewerbungsformular erstellen",
@@ -2985,7 +3729,10 @@
     "pl": "Utwórz nowy formularz aplikacji",
     "pt-BR": "Criar um novo formulário de inscrição",
     "ru": "Создать новую форму заявки",
-    "zh-CN": "创建新的申请表单"
+    "zh-CN": "创建新的申请表单",
+    "tr": "Yeni bir başvuru formu oluştur",
+    "nl": "Maak een nieuw aanvraagformulier",
+    "id": "Buat formulir aplikasi baru"
   },
   "Create a new ticket panel": {
     "de": "Ein neues Ticket-Panel erstellen",
@@ -2997,7 +3744,10 @@
     "pl": "Utwórz nowy panel zgłoszeń",
     "pt-BR": "Criar um novo painel de tickets",
     "ru": "Создать новую панель тикетов",
-    "zh-CN": "创建新的工单面板"
+    "zh-CN": "创建新的工单面板",
+    "tr": "Yeni bir bilet paneli oluştur",
+    "nl": "Maak een nieuw ticketpaneel",
+    "id": "Buat panel tiket baru"
   },
   "Custom message to send": {
     "de": "Benutzerdefinierte Nachricht zum Senden",
@@ -3009,7 +3759,10 @@
     "pl": "Niestandardowa wiadomość do wysłania",
     "pt-BR": "Mensagem personalizada a enviar",
     "ru": "Своё сообщение для отправки",
-    "zh-CN": "要发送的自定义消息"
+    "zh-CN": "要发送的自定义消息",
+    "tr": "Gönderilecek özel mesaj",
+    "nl": "Aangepast bericht om te versturen",
+    "id": "Pesan kustom untuk dikirim"
   },
   "Delete a form": {
     "de": "Ein Formular löschen",
@@ -3021,7 +3774,10 @@
     "pl": "Usuń formularz",
     "pt-BR": "Excluir um formulário",
     "ru": "Удалить форму",
-    "zh-CN": "删除表单"
+    "zh-CN": "删除表单",
+    "tr": "Bir formu sil",
+    "nl": "Verwijder een formulier",
+    "id": "Hapus formulir"
   },
   "Delete a ticket panel": {
     "de": "Ein Ticket-Panel löschen",
@@ -3033,7 +3789,10 @@
     "pl": "Usuń panel zgłoszeń",
     "pt-BR": "Excluir um painel de tickets",
     "ru": "Удалить панель тикетов",
-    "zh-CN": "删除工单面板"
+    "zh-CN": "删除工单面板",
+    "tr": "Bir bilet panelini sil",
+    "nl": "Verwijder een ticketpaneel",
+    "id": "Hapus panel tiket"
   },
   "Enable or disable a form": {
     "de": "Ein Formular aktivieren oder deaktivieren",
@@ -3045,7 +3804,10 @@
     "pl": "Włącz lub wyłącz formularz",
     "pt-BR": "Ativar ou desativar um formulário",
     "ru": "Включить или отключить форму",
-    "zh-CN": "启用或禁用表单"
+    "zh-CN": "启用或禁用表单",
+    "tr": "Bir formu etkinleştir veya devre dışı bırak",
+    "nl": "Schakel een formulier in of uit",
+    "id": "Aktifkan atau nonaktifkan formulir"
   },
   "Enable or disable?": {
     "de": "Aktivieren oder deaktivieren?",
@@ -3057,7 +3819,10 @@
     "pl": "Włączyć czy wyłączyć?",
     "pt-BR": "Ativar ou desativar?",
     "ru": "Включить или отключить?",
-    "zh-CN": "启用还是禁用？"
+    "zh-CN": "启用还是禁用？",
+    "tr": "Etkinleştir mi devre dışı bırak mı?",
+    "nl": "Inschakelen of uitschakelen?",
+    "id": "Aktifkan atau nonaktifkan?"
   },
   "Form name": {
     "de": "Formularname",
@@ -3069,7 +3834,10 @@
     "pl": "Nazwa formularza",
     "pt-BR": "Nome do formulário",
     "ru": "Название формы",
-    "zh-CN": "表单名称"
+    "zh-CN": "表单名称",
+    "tr": "Form adı",
+    "nl": "Formuliernaam",
+    "id": "Nama formulir"
   },
   "Form to delete": {
     "de": "Zu löschendes Formular",
@@ -3081,7 +3849,10 @@
     "pl": "Formularz do usunięcia",
     "pt-BR": "Formulário a excluir",
     "ru": "Форма для удаления",
-    "zh-CN": "要删除的表单"
+    "zh-CN": "要删除的表单",
+    "tr": "Silinecek form",
+    "nl": "Te verwijderen formulier",
+    "id": "Formulir yang dihapus"
   },
   "Form to edit": {
     "de": "Zu bearbeitendes Formular",
@@ -3093,7 +3864,10 @@
     "pl": "Formularz do edycji",
     "pt-BR": "Formulário a editar",
     "ru": "Форма для редактирования",
-    "zh-CN": "要编辑的表单"
+    "zh-CN": "要编辑的表单",
+    "tr": "Düzenlenecek form",
+    "nl": "Te bewerken formulier",
+    "id": "Formulir yang diedit"
   },
   "Form to toggle": {
     "de": "Umzuschaltendes Formular",
@@ -3105,7 +3879,10 @@
     "pl": "Formularz do przełączenia",
     "pt-BR": "Formulário a alternar",
     "ru": "Форма для переключения",
-    "zh-CN": "要切换的表单"
+    "zh-CN": "要切换的表单",
+    "tr": "Değiştirilecek form",
+    "nl": "Om te schakelen formulier",
+    "id": "Formulir yang dialihkan"
   },
   "Friendly name for this server": {
     "de": "Anzeigename für diesen Server",
@@ -3117,7 +3894,10 @@
     "pl": "Przyjazna nazwa dla tego serwera",
     "pt-BR": "Nome amigável para este servidor",
     "ru": "Понятное имя для этого сервера",
-    "zh-CN": "此服务器的友好名称"
+    "zh-CN": "此服务器的友好名称",
+    "tr": "Bu sunucu için dostça bir ad",
+    "nl": "Vriendelijke naam voor deze server",
+    "id": "Nama ramah untuk server ini"
   },
   "Game server status commands": {
     "de": "Befehle für den Spieleserver-Status",
@@ -3129,7 +3909,10 @@
     "pl": "Polecenia statusu serwera gry",
     "pt-BR": "Comandos de status do servidor de jogo",
     "ru": "Команды статуса игрового сервера",
-    "zh-CN": "游戏服务器状态命令"
+    "zh-CN": "游戏服务器状态命令",
+    "tr": "Oyun sunucusu durumu komutları",
+    "nl": "Game-serverstatus-opdrachten",
+    "id": "Perintah status server game"
   },
   "Game type (start typing to search)": {
     "de": "Spieltyp (zum Suchen tippen)",
@@ -3141,7 +3924,10 @@
     "pl": "Typ gry (zacznij pisać, aby wyszukać)",
     "pt-BR": "Tipo de jogo (comece a digitar para pesquisar)",
     "ru": "Тип игры (начните вводить для поиска)",
-    "zh-CN": "游戏类型（开始输入以搜索）"
+    "zh-CN": "游戏类型（开始输入以搜索）",
+    "tr": "Oyun türü (aramak için yazmaya başla)",
+    "nl": "Gametype (begin te typen om te zoeken)",
+    "id": "Jenis game (mulai ketik untuk mencari)"
   },
   "Generate and send the transcript now": {
     "de": "Das Transkript jetzt erstellen und senden",
@@ -3153,7 +3939,10 @@
     "pl": "Wygeneruj i wyślij transkrypt teraz",
     "pt-BR": "Gerar e enviar a transcrição agora",
     "ru": "Сформировать и отправить стенограмму сейчас",
-    "zh-CN": "立即生成并发送记录"
+    "zh-CN": "立即生成并发送记录",
+    "tr": "Dökümü şimdi oluştur ve gönder",
+    "nl": "Genereer en verstuur de transcriptie nu",
+    "id": "Buat dan kirim transkrip sekarang"
   },
   "GitHub Monitor commands": {
     "de": "GitHub-Monitor-Befehle",
@@ -3165,7 +3954,10 @@
     "pl": "Polecenia GitHub Monitor",
     "pt-BR": "Comandos do GitHub Monitor",
     "ru": "Команды GitHub Monitor",
-    "zh-CN": "GitHub Monitor 命令"
+    "zh-CN": "GitHub Monitor 命令",
+    "tr": "GitHub İzleyici komutları",
+    "nl": "GitHub Monitor-opdrachten",
+    "id": "Perintah GitHub Monitor"
   },
   "Global ticket configuration": {
     "de": "Globale Ticket-Konfiguration",
@@ -3177,7 +3969,10 @@
     "pl": "Globalna konfiguracja zgłoszeń",
     "pt-BR": "Configuração global de tickets",
     "ru": "Глобальная конфигурация тикетов",
-    "zh-CN": "全局工单配置"
+    "zh-CN": "全局工单配置",
+    "tr": "Genel bilet yapılandırması",
+    "nl": "Globale ticketconfiguratie",
+    "id": "Konfigurasi tiket global"
   },
   "Greet another member": {
     "de": "Ein anderes Mitglied begrüßen",
@@ -3189,7 +3984,10 @@
     "pl": "Przywitaj innego członka",
     "pt-BR": "Cumprimentar outro membro",
     "ru": "Поприветствовать другого участника",
-    "zh-CN": "问候另一位成员"
+    "zh-CN": "问候另一位成员",
+    "tr": "Başka bir üyeyi selamla",
+    "nl": "Begroet een ander lid",
+    "id": "Sapa anggota lain"
   },
   "Hours before escalation": {
     "de": "Stunden bis zur Eskalation",
@@ -3201,7 +3999,10 @@
     "pl": "Godziny przed eskalacją",
     "pt-BR": "Horas antes do escalonamento",
     "ru": "Часов до эскалации",
-    "zh-CN": "升级前的小时数"
+    "zh-CN": "升级前的小时数",
+    "tr": "Yükseltmeden önceki saatler",
+    "nl": "Uren voor escalatie",
+    "id": "Jam sebelum eskalasi"
   },
   "Hours of the level to remove": {
     "de": "Stunden der zu entfernenden Stufe",
@@ -3213,7 +4014,10 @@
     "pl": "Godziny poziomu do usunięcia",
     "pt-BR": "Horas do nível a remover",
     "ru": "Часы уровня для удаления",
-    "zh-CN": "要移除级别的小时数"
+    "zh-CN": "要移除级别的小时数",
+    "tr": "Kaldırılacak seviyenin saatleri",
+    "nl": "Uren van het te verwijderen level",
+    "id": "Jam dari level yang dihapus"
   },
   "How many recent messages to summarise (default 30, max 100)": {
     "de": "Wie viele aktuelle Nachrichten zusammenfassen (Standard 30, max. 100)",
@@ -3225,7 +4029,10 @@
     "pl": "Ile ostatnich wiadomości podsumować (domyślnie 30, maks. 100)",
     "pt-BR": "Quantas mensagens recentes resumir (padrão 30, máx. 100)",
     "ru": "Сколько недавних сообщений суммировать (по умолчанию 30, макс. 100)",
-    "zh-CN": "要总结的最近消息数（默认 30，最多 100）"
+    "zh-CN": "要总结的最近消息数（默认 30，最多 100）",
+    "tr": "Kaç son mesajın özetleneceği (varsayılan 30, en fazla 100)",
+    "nl": "Hoeveel recente berichten samen te vatten (standaard 30, max 100)",
+    "id": "Berapa pesan terbaru untuk diringkas (default 30, maks 100)"
   },
   "How tickets are created (default: channel)": {
     "de": "Wie Tickets erstellt werden (Standard: channel)",
@@ -3237,7 +4044,10 @@
     "pl": "Jak tworzone są zgłoszenia (domyślnie: channel)",
     "pt-BR": "Como os tickets são criados (padrão: channel)",
     "ru": "Как создаются тикеты (по умолчанию: channel)",
-    "zh-CN": "工单的创建方式（默认：channel）"
+    "zh-CN": "工单的创建方式（默认：channel）",
+    "tr": "Biletlerin nasıl oluşturulduğu (varsayılan: kanal)",
+    "nl": "Hoe tickets worden gemaakt (standaard: kanaal)",
+    "id": "Cara tiket dibuat (default: kanal)"
   },
   "Input style": {
     "de": "Eingabestil",
@@ -3249,7 +4059,10 @@
     "pl": "Styl wprowadzania",
     "pt-BR": "Estilo de entrada",
     "ru": "Стиль ввода",
-    "zh-CN": "输入样式"
+    "zh-CN": "输入样式",
+    "tr": "Girdi stili",
+    "nl": "Invoerstijl",
+    "id": "Gaya masukan"
   },
   "Is this field required?": {
     "de": "Ist dieses Feld erforderlich?",
@@ -3261,7 +4074,10 @@
     "pl": "Czy to pole jest wymagane?",
     "pt-BR": "Este campo é obrigatório?",
     "ru": "Это поле обязательно?",
-    "zh-CN": "此字段是必填的吗？"
+    "zh-CN": "此字段是必填的吗？",
+    "tr": "Bu alan zorunlu mu?",
+    "nl": "Is dit veld verplicht?",
+    "id": "Apakah bidang ini wajib?"
   },
   "Language hint — skip for auto-detection": {
     "de": "Sprachhinweis — leer lassen für automatische Erkennung",
@@ -3273,7 +4089,10 @@
     "pl": "Wskazówka języka — pomiń, aby wykryć automatycznie",
     "pt-BR": "Dica de idioma — deixe em branco para detecção automática",
     "ru": "Подсказка языка — оставьте пустым для автоопределения",
-    "zh-CN": "语言提示 — 留空以自动检测"
+    "zh-CN": "语言提示 — 留空以自动检测",
+    "tr": "Dil ipucu — otomatik algılama için atla",
+    "nl": "Taalhint — sla over voor automatische detectie",
+    "id": "Petunjuk bahasa — lewati untuk deteksi otomatis"
   },
   "List all configured SLA escalation levels": {
     "de": "Alle konfigurierten SLA-Eskalationsstufen auflisten",
@@ -3285,7 +4104,10 @@
     "pl": "Wyświetl wszystkie skonfigurowane poziomy eskalacji SLA",
     "pt-BR": "Listar todos os níveis de escalonamento de SLA configurados",
     "ru": "Показать все настроенные уровни эскалации SLA",
-    "zh-CN": "列出所有已配置的 SLA 升级级别"
+    "zh-CN": "列出所有已配置的 SLA 升级级别",
+    "tr": "Yapılandırılmış tüm SLA yükseltme seviyelerini listele",
+    "nl": "Toon alle geconfigureerde SLA-escalatieniveaus",
+    "id": "Daftar semua level eskalasi SLA yang dikonfigurasi"
   },
   "List all forms in this server": {
     "de": "Alle Formulare auf diesem Server auflisten",
@@ -3297,7 +4119,10 @@
     "pl": "Wyświetl wszystkie formularze na tym serwerze",
     "pt-BR": "Listar todos os formulários deste servidor",
     "ru": "Показать все формы этого сервера",
-    "zh-CN": "列出此服务器的所有表单"
+    "zh-CN": "列出此服务器的所有表单",
+    "tr": "Bu sunucudaki tüm formları listele",
+    "nl": "Toon alle formulieren in deze server",
+    "id": "Daftar semua formulir di server ini"
   },
   "List all saved game servers for this guild": {
     "de": "Alle gespeicherten Spieleserver für diesen Server auflisten",
@@ -3309,7 +4134,10 @@
     "pl": "Wyświetl wszystkie zapisane serwery gier dla tego serwera",
     "pt-BR": "Listar todos os servidores de jogo salvos deste servidor",
     "ru": "Показать все сохранённые игровые серверы этого сервера",
-    "zh-CN": "列出此服务器所有已保存的游戏服务器"
+    "zh-CN": "列出此服务器所有已保存的游戏服务器",
+    "tr": "Bu sunucu için kayıtlı tüm oyun sunucularını listele",
+    "nl": "Toon alle opgeslagen game-servers voor deze server",
+    "id": "Daftar semua server game tersimpan untuk server ini"
   },
   "List all ticket panels in this server": {
     "de": "Alle Ticket-Panels auf diesem Server auflisten",
@@ -3321,7 +4149,10 @@
     "pl": "Wyświetl wszystkie panele zgłoszeń na tym serwerze",
     "pt-BR": "Listar todos os painéis de tickets deste servidor",
     "ru": "Показать все панели тикетов этого сервера",
-    "zh-CN": "列出此服务器的所有工单面板"
+    "zh-CN": "列出此服务器的所有工单面板",
+    "tr": "Bu sunucudaki tüm bilet panellerini listele",
+    "nl": "Toon alle ticketpanelen in deze server",
+    "id": "Daftar semua panel tiket di server ini"
   },
   "Manage SLA escalation levels": {
     "de": "SLA-Eskalationsstufen verwalten",
@@ -3333,7 +4164,10 @@
     "pl": "Zarządzaj poziomami eskalacji SLA",
     "pt-BR": "Gerenciar os níveis de escalonamento de SLA",
     "ru": "Управление уровнями эскалации SLA",
-    "zh-CN": "管理 SLA 升级级别"
+    "zh-CN": "管理 SLA 升级级别",
+    "tr": "SLA yükseltme seviyelerini yönet",
+    "nl": "Beheer SLA-escalatieniveaus",
+    "id": "Kelola level eskalasi SLA"
   },
   "Manage application forms": {
     "de": "Bewerbungsformulare verwalten",
@@ -3345,7 +4179,10 @@
     "pl": "Zarządzaj formularzami aplikacji",
     "pt-BR": "Gerenciar os formulários de inscrição",
     "ru": "Управление формами заявок",
-    "zh-CN": "管理申请表单"
+    "zh-CN": "管理申请表单",
+    "tr": "Başvuru formlarını yönet",
+    "nl": "Beheer aanvraagformulieren",
+    "id": "Kelola formulir aplikasi"
   },
   "Manage ticket panels": {
     "de": "Ticket-Panels verwalten",
@@ -3357,7 +4194,10 @@
     "pl": "Zarządzaj panelami zgłoszeń",
     "pt-BR": "Gerenciar os painéis de tickets",
     "ru": "Управление панелями тикетов",
-    "zh-CN": "管理工单面板"
+    "zh-CN": "管理工单面板",
+    "tr": "Bilet panellerini yönet",
+    "nl": "Beheer ticketpanelen",
+    "id": "Kelola panel tiket"
   },
   "Manage ticket panels and configuration": {
     "de": "Ticket-Panels und Konfiguration verwalten",
@@ -3369,7 +4209,10 @@
     "pl": "Zarządzaj panelami zgłoszeń i konfiguracją",
     "pt-BR": "Gerenciar os painéis de tickets e a configuração",
     "ru": "Управление панелями тикетов и конфигурацией",
-    "zh-CN": "管理工单面板和配置"
+    "zh-CN": "管理工单面板和配置",
+    "tr": "Bilet panellerini ve yapılandırmasını yönet",
+    "nl": "Beheer ticketpanelen en configuratie",
+    "id": "Kelola panel tiket dan konfigurasi"
   },
   "Max open tickets per user (default: 1)": {
     "de": "Max. offene Tickets pro Benutzer (Standard: 1)",
@@ -3381,7 +4224,10 @@
     "pl": "Maks. otwartych zgłoszeń na użytkownika (domyślnie: 1)",
     "pt-BR": "Máximo de tickets abertos por usuário (padrão: 1)",
     "ru": "Макс. открытых тикетов на пользователя (по умолчанию: 1)",
-    "zh-CN": "每个用户最多打开的工单数（默认：1）"
+    "zh-CN": "每个用户最多打开的工单数（默认：1）",
+    "tr": "Kullanıcı başına maks. açık bilet (varsayılan: 1)",
+    "nl": "Max open tickets per gebruiker (standaard: 1)",
+    "id": "Maks. tiket terbuka per pengguna (default: 1)"
   },
   "Message inside the ticket. Placeholders: {user}, {username}, {number}": {
     "de": "Nachricht im Ticket. Platzhalter: {user}, {username}, {number}",
@@ -3393,7 +4239,10 @@
     "pl": "Wiadomość w zgłoszeniu. Symbole: {user}, {username}, {number}",
     "pt-BR": "Mensagem dentro do ticket. Espaços reservados: {user}, {username}, {number}",
     "ru": "Сообщение внутри тикета. Плейсхолдеры: {user}, {username}, {number}",
-    "zh-CN": "工单内的消息。占位符：{user}、{username}、{number}"
+    "zh-CN": "工单内的消息。占位符：{user}、{username}、{number}",
+    "tr": "Biletin içindeki mesaj. Yer tutucular: {user}, {username}, {number}",
+    "nl": "Bericht in het ticket. Plaatsaanduidingen: {user}, {username}, {number}",
+    "id": "Pesan di dalam tiket. Placeholder: {user}, {username}, {number}"
   },
   "Minutes before ticket deletion (default: 5, max: 1440)": {
     "de": "Minuten bis zur Ticket-Löschung (Standard: 5, max.: 1440)",
@@ -3405,7 +4254,10 @@
     "pl": "Minuty przed usunięciem zgłoszenia (domyślnie: 5, maks.: 1440)",
     "pt-BR": "Minutos antes da exclusão do ticket (padrão: 5, máx.: 1440)",
     "ru": "Минут до удаления тикета (по умолчанию: 5, макс.: 1440)",
-    "zh-CN": "删除工单前的分钟数（默认：5，最多：1440）"
+    "zh-CN": "删除工单前的分钟数（默认：5，最多：1440）",
+    "tr": "Bilet silinmeden önceki dakikalar (varsayılan: 5, en fazla: 1440)",
+    "nl": "Minuten voor ticketverwijdering (standaard: 5, max: 1440)",
+    "id": "Menit sebelum penghapusan tiket (default: 5, maks: 1440)"
   },
   "Name of the saved server": {
     "de": "Name des gespeicherten Servers",
@@ -3417,7 +4269,10 @@
     "pl": "Nazwa zapisanego serwera",
     "pt-BR": "Nome do servidor salvo",
     "ru": "Имя сохранённого сервера",
-    "zh-CN": "已保存服务器的名称"
+    "zh-CN": "已保存服务器的名称",
+    "tr": "Kayıtlı sunucunun adı",
+    "nl": "Naam van de opgeslagen server",
+    "id": "Nama server tersimpan"
   },
   "New channel name": {
     "de": "Neuer Kanalname",
@@ -3429,7 +4284,10 @@
     "pl": "Nowa nazwa kanału",
     "pt-BR": "Novo nome do canal",
     "ru": "Новое имя канала",
-    "zh-CN": "新的频道名称"
+    "zh-CN": "新的频道名称",
+    "tr": "Yeni kanal adı",
+    "nl": "Nieuwe kanaalnaam",
+    "id": "Nama kanal baru"
   },
   "Only you can see the answer (default: false)": {
     "de": "Nur du kannst die Antwort sehen (Standard: false)",
@@ -3441,7 +4299,10 @@
     "pl": "Tylko Ty widzisz odpowiedź (domyślnie: false)",
     "pt-BR": "Somente você pode ver a resposta (padrão: false)",
     "ru": "Ответ видите только вы (по умолчанию: false)",
-    "zh-CN": "只有你能看到回答（默认：false）"
+    "zh-CN": "只有你能看到回答（默认：false）",
+    "tr": "Yanıtı yalnızca sen görebilirsin (varsayılan: false)",
+    "nl": "Alleen jij kunt het antwoord zien (standaard: false)",
+    "id": "Hanya kamu yang bisa melihat jawabannya (default: false)"
   },
   "Only you can see the summary (default: false)": {
     "de": "Nur du kannst die Zusammenfassung sehen (Standard: false)",
@@ -3453,7 +4314,10 @@
     "pl": "Tylko Ty widzisz podsumowanie (domyślnie: false)",
     "pt-BR": "Somente você pode ver o resumo (padrão: false)",
     "ru": "Сводку видите только вы (по умолчанию: false)",
-    "zh-CN": "只有你能看到摘要（默认：false）"
+    "zh-CN": "只有你能看到摘要（默认：false）",
+    "tr": "Özeti yalnızca sen görebilirsin (varsayılan: false)",
+    "nl": "Alleen jij kunt de samenvatting zien (standaard: false)",
+    "id": "Hanya kamu yang bisa melihat ringkasannya (default: false)"
   },
   "Panel description shown in the embed": {
     "de": "Panel-Beschreibung, die im Embed angezeigt wird",
@@ -3465,7 +4329,10 @@
     "pl": "Opis panelu wyświetlany w osadzeniu",
     "pt-BR": "Descrição do painel exibida no embed",
     "ru": "Описание панели, показываемое во вставке",
-    "zh-CN": "在嵌入中显示的面板描述"
+    "zh-CN": "在嵌入中显示的面板描述",
+    "tr": "Gömmede gösterilen panel açıklaması",
+    "nl": "Paneelbeschrijving getoond in de embed",
+    "id": "Deskripsi panel yang ditampilkan di embed"
   },
   "Panel name": {
     "de": "Panel-Name",
@@ -3477,7 +4344,10 @@
     "pl": "Nazwa panelu",
     "pt-BR": "Nome do painel",
     "ru": "Название панели",
-    "zh-CN": "面板名称"
+    "zh-CN": "面板名称",
+    "tr": "Panel adı",
+    "nl": "Paneelnaam",
+    "id": "Nama panel"
   },
   "Placeholder text": {
     "de": "Platzhaltertext",
@@ -3489,7 +4359,10 @@
     "pl": "Tekst zastępczy",
     "pt-BR": "Texto de espaço reservado",
     "ru": "Текст плейсхолдера",
-    "zh-CN": "占位符文本"
+    "zh-CN": "占位符文本",
+    "tr": "Yer tutucu metni",
+    "nl": "Plaatsaanduidingstekst",
+    "id": "Teks placeholder"
   },
   "Port number (uses default for game if omitted)": {
     "de": "Portnummer (verwendet Standard des Spiels, wenn ausgelassen)",
@@ -3501,7 +4374,10 @@
     "pl": "Numer portu (jeśli pominięto, używa domyślnego dla gry)",
     "pt-BR": "Número da porta (usa o padrão do jogo se omitido)",
     "ru": "Номер порта (если не указан, берётся по умолчанию для игры)",
-    "zh-CN": "端口号（省略时使用该游戏的默认值）"
+    "zh-CN": "端口号（省略时使用该游戏的默认值）",
+    "tr": "Port numarası (belirtilmezse oyun için varsayılanı kullanır)",
+    "nl": "Poortnummer (gebruikt standaard voor game indien weggelaten)",
+    "id": "Nomor port (menggunakan default untuk game jika dihilangkan)"
   },
   "Priority level": {
     "de": "Prioritätsstufe",
@@ -3513,7 +4389,10 @@
     "pl": "Poziom priorytetu",
     "pt-BR": "Nível de prioridade",
     "ru": "Уровень приоритета",
-    "zh-CN": "优先级"
+    "zh-CN": "优先级",
+    "tr": "Öncelik seviyesi",
+    "nl": "Prioriteitsniveau",
+    "id": "Tingkat prioritas"
   },
   "Query all saved servers and show a status summary": {
     "de": "Alle gespeicherten Server abfragen und eine Statuszusammenfassung anzeigen",
@@ -3525,7 +4404,10 @@
     "pl": "Odpytaj wszystkie zapisane serwery i pokaż podsumowanie statusu",
     "pt-BR": "Consultar todos os servidores salvos e mostrar um resumo de status",
     "ru": "Опросить все сохранённые серверы и показать сводку состояния",
-    "zh-CN": "查询所有已保存的服务器并显示状态摘要"
+    "zh-CN": "查询所有已保存的服务器并显示状态摘要",
+    "tr": "Tüm kayıtlı sunucuları sorgula ve bir durum özeti göster",
+    "nl": "Query alle opgeslagen servers en toon een statusoverzicht",
+    "id": "Kueri semua server tersimpan dan tampilkan ringkasan status"
   },
   "Question label": {
     "de": "Frage-Beschriftung",
@@ -3537,7 +4419,10 @@
     "pl": "Etykieta pytania",
     "pt-BR": "Rótulo da pergunta",
     "ru": "Надпись вопроса",
-    "zh-CN": "问题标签"
+    "zh-CN": "问题标签",
+    "tr": "Soru etiketi",
+    "nl": "Vraaglabel",
+    "id": "Label pertanyaan"
   },
   "Remove a saved server (requires Manage Server)": {
     "de": "Einen gespeicherten Server entfernen (benötigt Server verwalten)",
@@ -3549,7 +4434,10 @@
     "pl": "Usuń zapisany serwer (wymaga Zarządzania serwerem)",
     "pt-BR": "Remover um servidor salvo (requer Gerenciar servidor)",
     "ru": "Удалить сохранённый сервер (нужно «Управление сервером»)",
-    "zh-CN": "移除已保存的服务器（需要“管理服务器”）"
+    "zh-CN": "移除已保存的服务器（需要“管理服务器”）",
+    "tr": "Kayıtlı bir sunucuyu kaldır (Sunucuyu Yönet gerekir)",
+    "nl": "Verwijder een opgeslagen server (vereist Server Beheren)",
+    "id": "Hapus server tersimpan (perlu Kelola Server)"
   },
   "Remove a user from this ticket": {
     "de": "Einen Benutzer aus diesem Ticket entfernen",
@@ -3561,7 +4449,10 @@
     "pl": "Usuń użytkownika z tego zgłoszenia",
     "pt-BR": "Remover um usuário deste ticket",
     "ru": "Удалить пользователя из этого тикета",
-    "zh-CN": "从此工单移除用户"
+    "zh-CN": "从此工单移除用户",
+    "tr": "Bu biletten bir kullanıcıyı kaldır",
+    "nl": "Verwijder een gebruiker uit dit ticket",
+    "id": "Hapus pengguna dari tiket ini"
   },
   "Remove an SLA escalation level": {
     "de": "Eine SLA-Eskalationsstufe entfernen",
@@ -3573,7 +4464,10 @@
     "pl": "Usuń poziom eskalacji SLA",
     "pt-BR": "Remover um nível de escalonamento de SLA",
     "ru": "Удалить уровень эскалации SLA",
-    "zh-CN": "移除一个 SLA 升级级别"
+    "zh-CN": "移除一个 SLA 升级级别",
+    "tr": "Bir SLA yükseltme seviyesini kaldır",
+    "nl": "Verwijder een SLA-escalatieniveau",
+    "id": "Hapus level eskalasi SLA"
   },
   "Rename this ticket channel": {
     "de": "Diesen Ticket-Kanal umbenennen",
@@ -3585,7 +4479,10 @@
     "pl": "Zmień nazwę tego kanału zgłoszenia",
     "pt-BR": "Renomear este canal de ticket",
     "ru": "Переименовать этот канал тикета",
-    "zh-CN": "重命名此工单频道"
+    "zh-CN": "重命名此工单频道",
+    "tr": "Bu bilet kanalını yeniden adlandır",
+    "nl": "Hernoem dit ticketkanaal",
+    "id": "Ganti nama kanal tiket ini"
   },
   "Reopen a closed ticket": {
     "de": "Ein geschlossenes Ticket wieder öffnen",
@@ -3597,7 +4494,10 @@
     "pl": "Otwórz ponownie zamknięte zgłoszenie",
     "pt-BR": "Reabrir um ticket fechado",
     "ru": "Снова открыть закрытый тикет",
-    "zh-CN": "重新打开已关闭的工单"
+    "zh-CN": "重新打开已关闭的工单",
+    "tr": "Kapalı bir bileti yeniden aç",
+    "nl": "Heropen een gesloten ticket",
+    "id": "Buka kembali tiket yang ditutup"
   },
   "Role that can manage tickets": {
     "de": "Rolle, die Tickets verwalten kann",
@@ -3609,7 +4509,10 @@
     "pl": "Rola, która może zarządzać zgłoszeniami",
     "pt-BR": "Cargo que pode gerenciar tickets",
     "ru": "Роль, которая может управлять тикетами",
-    "zh-CN": "可以管理工单的身份组"
+    "zh-CN": "可以管理工单的身份组",
+    "tr": "Biletleri yönetebilecek rol",
+    "nl": "Rol die tickets kan beheren",
+    "id": "Peran yang bisa mengelola tiket"
   },
   "Role to assign on acceptance": {
     "de": "Rolle, die bei Annahme zugewiesen wird",
@@ -3621,7 +4524,10 @@
     "pl": "Rola przypisywana przy akceptacji",
     "pt-BR": "Cargo a atribuir na aceitação",
     "ru": "Роль, назначаемая при принятии",
-    "zh-CN": "接受时分配的身份组"
+    "zh-CN": "接受时分配的身份组",
+    "tr": "Kabulde atanacak rol",
+    "nl": "Rol om toe te wijzen bij acceptatie",
+    "id": "Peran yang ditetapkan saat penerimaan"
   },
   "Role to ping at this level": {
     "de": "Rolle, die auf dieser Stufe gepingt wird",
@@ -3633,7 +4539,10 @@
     "pl": "Rola do pingnięcia na tym poziomie",
     "pt-BR": "Cargo a mencionar neste nível",
     "ru": "Роль для пинга на этом уровне",
-    "zh-CN": "在此级别要提及的身份组"
+    "zh-CN": "在此级别要提及的身份组",
+    "tr": "Bu seviyede etiketlenecek rol",
+    "nl": "Rol om te pingen op dit niveau",
+    "id": "Peran yang di-ping pada level ini"
   },
   "Role to ping in the notification channel": {
     "de": "Rolle, die im Benachrichtigungskanal gepingt wird",
@@ -3645,7 +4554,10 @@
     "pl": "Rola do pingnięcia na kanale powiadomień",
     "pt-BR": "Cargo a mencionar no canal de notificações",
     "ru": "Роль для пинга в канале уведомлений",
-    "zh-CN": "在通知频道中要提及的身份组"
+    "zh-CN": "在通知频道中要提及的身份组",
+    "tr": "Bildirim kanalında etiketlenecek rol",
+    "nl": "Rol om te pingen in het meldingskanaal",
+    "id": "Peran yang di-ping di kanal notifikasi"
   },
   "Round-robin auto-assign new tickets to staff": {
     "de": "Neue Tickets reihum automatisch dem Team zuweisen",
@@ -3657,7 +4569,10 @@
     "pl": "Automatycznie przydzielaj nowe zgłoszenia personelowi rotacyjnie",
     "pt-BR": "Atribuir automaticamente novos tickets à equipe em rodízio",
     "ru": "Назначать новые тикеты персоналу по кругу автоматически",
-    "zh-CN": "轮流将新工单自动分配给工作人员"
+    "zh-CN": "轮流将新工单自动分配给工作人员",
+    "tr": "Yeni biletleri sırayla yetkililere otomatik ata",
+    "nl": "Round-robin auto-toewijzing van nieuwe tickets aan staf",
+    "id": "Tetapkan otomatis tiket baru ke staf secara bergiliran"
   },
   "Save a game server to this guild (requires Manage Server)": {
     "de": "Einen Spieleserver für diesen Server speichern (benötigt Server verwalten)",
@@ -3669,7 +4584,10 @@
     "pl": "Zapisz serwer gry na tym serwerze (wymaga Zarządzania serwerem)",
     "pt-BR": "Salvar um servidor de jogo neste servidor (requer Gerenciar servidor)",
     "ru": "Сохранить игровой сервер на этом сервере (нужно «Управление сервером»)",
-    "zh-CN": "将游戏服务器保存到此服务器（需要“管理服务器”）"
+    "zh-CN": "将游戏服务器保存到此服务器（需要“管理服务器”）",
+    "tr": "Bu sunucuya bir oyun sunucusu kaydet (Sunucuyu Yönet gerekir)",
+    "nl": "Sla een game-server op voor deze server (vereist Server Beheren)",
+    "id": "Simpan server game ke server ini (perlu Kelola Server)"
   },
   "Saved server name": {
     "de": "Name des gespeicherten Servers",
@@ -3681,7 +4599,10 @@
     "pl": "Nazwa zapisanego serwera",
     "pt-BR": "Nome do servidor salvo",
     "ru": "Имя сохранённого сервера",
-    "zh-CN": "已保存服务器名称"
+    "zh-CN": "已保存服务器名称",
+    "tr": "Kayıtlı sunucu adı",
+    "nl": "Naam opgeslagen server",
+    "id": "Nama server tersimpan"
   },
   "Send a canned response in this ticket": {
     "de": "Eine vorgefertigte Antwort in diesem Ticket senden",
@@ -3693,7 +4614,10 @@
     "pl": "Wyślij gotową odpowiedź w tym zgłoszeniu",
     "pt-BR": "Enviar uma resposta pronta neste ticket",
     "ru": "Отправить шаблонный ответ в этом тикете",
-    "zh-CN": "在此工单中发送预设回复"
+    "zh-CN": "在此工单中发送预设回复",
+    "tr": "Bu bilette bir hazır yanıt gönder",
+    "nl": "Verstuur een standaardantwoord in dit ticket",
+    "id": "Kirim balasan siap pakai di tiket ini"
   },
   "Send a panel message to a channel": {
     "de": "Eine Panel-Nachricht an einen Kanal senden",
@@ -3705,7 +4629,10 @@
     "pl": "Wyślij wiadomość panelu na kanał",
     "pt-BR": "Enviar uma mensagem de painel para um canal",
     "ru": "Отправить сообщение панели в канал",
-    "zh-CN": "向频道发送面板消息"
+    "zh-CN": "向频道发送面板消息",
+    "tr": "Bir kanala panel mesajı gönder",
+    "nl": "Verstuur een paneelbericht naar een kanaal",
+    "id": "Kirim pesan panel ke kanal"
   },
   "Send currency to another user": {
     "de": "Währung an einen anderen Benutzer senden",
@@ -3717,7 +4644,10 @@
     "pl": "Wyślij walutę innemu użytkownikowi",
     "pt-BR": "Enviar moeda para outro usuário",
     "ru": "Отправить валюту другому пользователю",
-    "zh-CN": "向其他用户发送货币"
+    "zh-CN": "向其他用户发送货币",
+    "tr": "Başka bir kullanıcıya para gönder",
+    "nl": "Verstuur valuta naar een andere gebruiker",
+    "id": "Kirim mata uang ke pengguna lain"
   },
   "Server IP or hostname": {
     "de": "Server-IP oder Hostname",
@@ -3729,7 +4659,10 @@
     "pl": "IP lub nazwa hosta serwera",
     "pt-BR": "IP ou nome de host do servidor",
     "ru": "IP или имя хоста сервера",
-    "zh-CN": "服务器 IP 或主机名"
+    "zh-CN": "服务器 IP 或主机名",
+    "tr": "Sunucu IP'si veya ana bilgisayar adı",
+    "nl": "Server-IP of hostnaam",
+    "id": "IP atau hostname server"
   },
   "Set the default channel for transcripts": {
     "de": "Den Standardkanal für Transkripte festlegen",
@@ -3741,7 +4674,10 @@
     "pl": "Ustaw domyślny kanał dla transkryptów",
     "pt-BR": "Definir o canal padrão para as transcrições",
     "ru": "Задать канал по умолчанию для стенограмм",
-    "zh-CN": "设置记录的默认频道"
+    "zh-CN": "设置记录的默认频道",
+    "tr": "Dökümler için varsayılan kanalı ayarla",
+    "nl": "Stel het standaardkanaal voor transcripties in",
+    "id": "Setel kanal default untuk transkrip"
   },
   "Set the priority of this ticket": {
     "de": "Die Priorität dieses Tickets festlegen",
@@ -3753,7 +4689,10 @@
     "pl": "Ustaw priorytet tego zgłoszenia",
     "pt-BR": "Definir a prioridade deste ticket",
     "ru": "Задать приоритет этого тикета",
-    "zh-CN": "设置此工单的优先级"
+    "zh-CN": "设置此工单的优先级",
+    "tr": "Bu biletin önceliğini ayarla",
+    "nl": "Stel de prioriteit van dit ticket in",
+    "id": "Setel prioritas tiket ini"
   },
   "Short description shown to applicants": {
     "de": "Kurzbeschreibung, die Bewerbern angezeigt wird",
@@ -3765,7 +4704,10 @@
     "pl": "Krótki opis wyświetlany kandydatom",
     "pt-BR": "Descrição breve mostrada aos candidatos",
     "ru": "Краткое описание, показываемое заявителям",
-    "zh-CN": "向申请者显示的简短描述"
+    "zh-CN": "向申请者显示的简短描述",
+    "tr": "Başvuranlara gösterilen kısa açıklama",
+    "nl": "Korte beschrijving getoond aan aanvragers",
+    "id": "Deskripsi singkat yang ditampilkan ke pelamar"
   },
   "Show current open PRs, issues, and recent commits right now": {
     "de": "Aktuelle offene PRs, Issues und letzte Commits jetzt anzeigen",
@@ -3777,7 +4719,10 @@
     "pl": "Pokaż teraz otwarte PR-y, zgłoszenia i ostatnie commity",
     "pt-BR": "Mostrar agora os PRs abertos, issues e commits recentes",
     "ru": "Показать сейчас открытые PR, задачи и недавние коммиты",
-    "zh-CN": "立即显示当前打开的 PR、issue 和最近的提交"
+    "zh-CN": "立即显示当前打开的 PR、issue 和最近的提交",
+    "tr": "Mevcut açık PR'ları, sorunları ve son commit'leri şimdi göster",
+    "nl": "Toon nu de huidige open PR's, issues en recente commits",
+    "id": "Tampilkan PR terbuka, isu, dan commit terbaru saat ini"
   },
   "Show the current GitHub Monitor configuration for this server": {
     "de": "Die aktuelle GitHub-Monitor-Konfiguration für diesen Server anzeigen",
@@ -3789,7 +4734,10 @@
     "pl": "Pokaż bieżącą konfigurację GitHub Monitor dla tego serwera",
     "pt-BR": "Mostrar a configuração atual do GitHub Monitor deste servidor",
     "ru": "Показать текущую конфигурацию GitHub Monitor этого сервера",
-    "zh-CN": "显示此服务器当前的 GitHub Monitor 配置"
+    "zh-CN": "显示此服务器当前的 GitHub Monitor 配置",
+    "tr": "Bu sunucu için mevcut GitHub İzleyici yapılandırmasını göster",
+    "nl": "Toon de huidige GitHub Monitor-configuratie voor deze server",
+    "id": "Tampilkan konfigurasi GitHub Monitor saat ini untuk server ini"
   },
   "Show ticket information": {
     "de": "Ticket-Informationen anzeigen",
@@ -3801,7 +4749,10 @@
     "pl": "Pokaż informacje o zgłoszeniu",
     "pt-BR": "Mostrar as informações do ticket",
     "ru": "Показать информацию о тикете",
-    "zh-CN": "显示工单信息"
+    "zh-CN": "显示工单信息",
+    "tr": "Bilet bilgilerini göster",
+    "nl": "Toon ticketinformatie",
+    "id": "Tampilkan informasi tiket"
   },
   "Staff member to transfer to": {
     "de": "Teammitglied, an das übertragen wird",
@@ -3813,7 +4764,10 @@
     "pl": "Członek personelu, któremu przekazać",
     "pt-BR": "Membro da equipe para transferir",
     "ru": "Сотрудник, которому передать",
-    "zh-CN": "要转交给的工作人员"
+    "zh-CN": "要转交给的工作人员",
+    "tr": "Aktarılacak yetkili",
+    "nl": "Staflid om naar over te dragen",
+    "id": "Anggota staf tujuan transfer"
   },
   "Submit an application": {
     "de": "Eine Bewerbung einreichen",
@@ -3825,7 +4779,10 @@
     "pl": "Prześlij aplikację",
     "pt-BR": "Enviar uma inscrição",
     "ru": "Отправить заявку",
-    "zh-CN": "提交申请"
+    "zh-CN": "提交申请",
+    "tr": "Bir başvuru gönder",
+    "nl": "Dien een aanvraag in",
+    "id": "Kirim aplikasi"
   },
   "Summarise the recent conversation in this channel": {
     "de": "Das aktuelle Gespräch in diesem Kanal zusammenfassen",
@@ -3837,7 +4794,10 @@
     "pl": "Podsumuj ostatnią rozmowę na tym kanale",
     "pt-BR": "Resumir a conversa recente neste canal",
     "ru": "Суммировать недавний разговор в этом канале",
-    "zh-CN": "总结此频道最近的对话"
+    "zh-CN": "总结此频道最近的对话",
+    "tr": "Bu kanaldaki son konuşmayı özetle",
+    "nl": "Vat het recente gesprek in dit kanaal samen",
+    "id": "Ringkas percakapan terbaru di kanal ini"
   },
   "Tag name": {
     "de": "Tag-Name",
@@ -3849,7 +4809,10 @@
     "pl": "Nazwa tagu",
     "pt-BR": "Nome da tag",
     "ru": "Название тега",
-    "zh-CN": "标签名称"
+    "zh-CN": "标签名称",
+    "tr": "Etiket adı",
+    "nl": "Tagnaam",
+    "id": "Nama tag"
   },
   "The user to check": {
     "de": "Zu prüfender Benutzer",
@@ -3861,7 +4824,10 @@
     "pl": "Użytkownik do sprawdzenia",
     "pt-BR": "Usuário a verificar",
     "ru": "Пользователь для проверки",
-    "zh-CN": "要查看的用户"
+    "zh-CN": "要查看的用户",
+    "tr": "Kontrol edilecek kullanıcı",
+    "nl": "De te bekijken gebruiker",
+    "id": "Pengguna yang diperiksa"
   },
   "The user to greet": {
     "de": "Der zu begrüßende Benutzer",
@@ -3873,7 +4839,10 @@
     "pl": "Użytkownik do przywitania",
     "pt-BR": "O usuário a cumprimentar",
     "ru": "Пользователь для приветствия",
-    "zh-CN": "要问候的用户"
+    "zh-CN": "要问候的用户",
+    "tr": "Selamlanacak kullanıcı",
+    "nl": "De te begroeten gebruiker",
+    "id": "Pengguna yang disapa"
   },
   "The user to pay": {
     "de": "Der zu bezahlende Benutzer",
@@ -3885,7 +4854,10 @@
     "pl": "Użytkownik, któremu zapłacić",
     "pt-BR": "O usuário a pagar",
     "ru": "Пользователь, которому заплатить",
-    "zh-CN": "要支付给的用户"
+    "zh-CN": "要支付给的用户",
+    "tr": "Ödeme yapılacak kullanıcı",
+    "nl": "De te betalen gebruiker",
+    "id": "Pengguna yang dibayar"
   },
   "Ticket management commands": {
     "de": "Ticket-Verwaltungsbefehle",
@@ -3897,7 +4869,10 @@
     "pl": "Polecenia zarządzania zgłoszeniami",
     "pt-BR": "Comandos de gerenciamento de tickets",
     "ru": "Команды управления тикетами",
-    "zh-CN": "工单管理命令"
+    "zh-CN": "工单管理命令",
+    "tr": "Bilet yönetimi komutları",
+    "nl": "Ticketbeheer-opdrachten",
+    "id": "Perintah pengelolaan tiket"
   },
   "Toggle waiting status on this ticket (staff only)": {
     "de": "Wartestatus für dieses Ticket umschalten (nur Team)",
@@ -3909,7 +4884,10 @@
     "pl": "Przełącz status oczekiwania tego zgłoszenia (tylko personel)",
     "pt-BR": "Alternar o status de espera deste ticket (apenas equipe)",
     "ru": "Переключить статус ожидания этого тикета (только персонал)",
-    "zh-CN": "切换此工单的等待状态（仅限工作人员）"
+    "zh-CN": "切换此工单的等待状态（仅限工作人员）",
+    "tr": "Bu bilette bekleme durumunu değiştir (yalnızca yetkili)",
+    "nl": "Wissel de wachtstatus op dit ticket (alleen staf)",
+    "id": "Alihkan status menunggu pada tiket ini (hanya staf)"
   },
   "Transcript channel": {
     "de": "Transkript-Kanal",
@@ -3921,7 +4899,10 @@
     "pl": "Kanał transkryptów",
     "pt-BR": "Canal de transcrições",
     "ru": "Канал стенограмм",
-    "zh-CN": "记录频道"
+    "zh-CN": "记录频道",
+    "tr": "Döküm kanalı",
+    "nl": "Transcriptkanaal",
+    "id": "Kanal transkrip"
   },
   "Transfer ownership of this ticket to another staff member": {
     "de": "Die Zuständigkeit für dieses Ticket an ein anderes Teammitglied übertragen",
@@ -3933,7 +4914,10 @@
     "pl": "Przekaż własność tego zgłoszenia innemu członkowi personelu",
     "pt-BR": "Transferir a propriedade deste ticket para outro membro da equipe",
     "ru": "Передать этот тикет другому сотруднику",
-    "zh-CN": "将此工单的所有权转交给另一位工作人员"
+    "zh-CN": "将此工单的所有权转交给另一位工作人员",
+    "tr": "Bu biletin sahipliğini başka bir yetkiliye aktar",
+    "nl": "Draag het eigenaarschap van dit ticket over aan een ander staflid",
+    "id": "Transfer kepemilikan tiket ini ke anggota staf lain"
   },
   "Unclaim this ticket": {
     "de": "Die Beanspruchung dieses Tickets aufheben",
@@ -3945,7 +4929,10 @@
     "pl": "Anuluj przypisanie tego zgłoszenia",
     "pt-BR": "Deixar de assumir este ticket",
     "ru": "Отказаться от этого тикета",
-    "zh-CN": "取消认领此工单"
+    "zh-CN": "取消认领此工单",
+    "tr": "Bu bileti bırak",
+    "nl": "Maak de claim op dit ticket ongedaan",
+    "id": "Batalkan klaim tiket ini"
   },
   "User to add": {
     "de": "Hinzuzufügender Benutzer",
@@ -3957,7 +4944,10 @@
     "pl": "Użytkownik do dodania",
     "pt-BR": "Usuário a adicionar",
     "ru": "Пользователь для добавления",
-    "zh-CN": "要添加的用户"
+    "zh-CN": "要添加的用户",
+    "tr": "Eklenecek kullanıcı",
+    "nl": "Toe te voegen gebruiker",
+    "id": "Pengguna yang ditambahkan"
   },
   "User to blacklist": {
     "de": "Auf die Blacklist zu setzender Benutzer",
@@ -3969,7 +4959,10 @@
     "pl": "Użytkownik do dodania na czarną listę",
     "pt-BR": "Usuário a colocar na lista negra",
     "ru": "Пользователь для чёрного списка",
-    "zh-CN": "要加入黑名单的用户"
+    "zh-CN": "要加入黑名单的用户",
+    "tr": "Kara listeye eklenecek kullanıcı",
+    "nl": "Op de zwarte lijst te zetten gebruiker",
+    "id": "Pengguna yang dimasukkan daftar hitam"
   },
   "User to remove": {
     "de": "Zu entfernender Benutzer",
@@ -3981,7 +4974,10 @@
     "pl": "Użytkownik do usunięcia",
     "pt-BR": "Usuário a remover",
     "ru": "Пользователь для удаления",
-    "zh-CN": "要移除的用户"
+    "zh-CN": "要移除的用户",
+    "tr": "Kaldırılacak kullanıcı",
+    "nl": "Te verwijderen gebruiker",
+    "id": "Pengguna yang dihapus"
   },
   "View all staff notes on this ticket (staff only, ephemeral)": {
     "de": "Alle Team-Notizen zu diesem Ticket ansehen (nur Team, ephemer)",
@@ -3993,7 +4989,10 @@
     "pl": "Zobacz wszystkie notatki personelu w tym zgłoszeniu (tylko personel, ulotne)",
     "pt-BR": "Ver todas as notas da equipe neste ticket (apenas equipe, efêmero)",
     "ru": "Посмотреть все заметки персонала по этому тикету (только персонал, эфемерно)",
-    "zh-CN": "查看此工单的所有工作人员备注（仅限工作人员，临时消息）"
+    "zh-CN": "查看此工单的所有工作人员备注（仅限工作人员，临时消息）",
+    "tr": "Bu bilete ait tüm yetkili notlarını görüntüle (yalnızca yetkili, geçici)",
+    "nl": "Bekijk alle stafnotities op dit ticket (alleen staf, tijdelijk)",
+    "id": "Lihat semua catatan staf pada tiket ini (hanya staf, sementara)"
   },
   "View the richest members": {
     "de": "Die reichsten Mitglieder ansehen",
@@ -4005,7 +5004,10 @@
     "pl": "Zobacz najbogatszych członków",
     "pt-BR": "Ver os membros mais ricos",
     "ru": "Посмотреть самых богатых участников",
-    "zh-CN": "查看最富有的成员"
+    "zh-CN": "查看最富有的成员",
+    "tr": "En zengin üyeleri görüntüle",
+    "nl": "Bekijk de rijkste leden",
+    "id": "Lihat anggota terkaya"
   },
   "What to do when a ticket is closed": {
     "de": "Was passiert, wenn ein Ticket geschlossen wird",
@@ -4017,7 +5019,10 @@
     "pl": "Co zrobić po zamknięciu zgłoszenia",
     "pt-BR": "O que fazer quando um ticket é fechado",
     "ru": "Что делать при закрытии тикета",
-    "zh-CN": "工单关闭时的处理方式"
+    "zh-CN": "工单关闭时的处理方式",
+    "tr": "Bir bilet kapatıldığında ne yapılacağı",
+    "nl": "Wat te doen wanneer een ticket wordt gesloten",
+    "id": "Apa yang dilakukan saat tiket ditutup"
   },
   "What would you like to ask?": {
     "de": "Was möchtest du fragen?",
@@ -4029,7 +5034,10 @@
     "pl": "O co chciałbyś zapytać?",
     "pt-BR": "O que você gostaria de perguntar?",
     "ru": "Что вы хотите спросить?",
-    "zh-CN": "你想问什么？"
+    "zh-CN": "你想问什么？",
+    "tr": "Ne sormak istersin?",
+    "nl": "Wat wil je vragen?",
+    "id": "Apa yang ingin kamu tanyakan?"
   },
   "Which application to submit": {
     "de": "Welche Bewerbung eingereicht werden soll",
@@ -4041,7 +5049,10 @@
     "pl": "Którą aplikację przesłać",
     "pt-BR": "Qual inscrição enviar",
     "ru": "Какую заявку отправить",
-    "zh-CN": "要提交哪个申请"
+    "zh-CN": "要提交哪个申请",
+    "tr": "Hangi başvurunun gönderileceği",
+    "nl": "Welke aanvraag in te dienen",
+    "id": "Aplikasi mana yang dikirim"
   },
   "add or remove": {
     "de": "hinzufügen oder entfernen",
@@ -4053,7 +5064,10 @@
     "pl": "dodaj lub usuń",
     "pt-BR": "adicionar ou remover",
     "ru": "добавить или удалить",
-    "zh-CN": "添加或移除"
+    "zh-CN": "添加或移除",
+    "tr": "ekle veya kaldır",
+    "nl": "toevoegen of verwijderen",
+    "id": "tambah atau hapus"
   },
   "Add": {
     "de": "Hinzufügen",
@@ -4065,7 +5079,10 @@
     "pl": "Dodaj",
     "pt-BR": "Adicionar",
     "ru": "Добавить",
-    "zh-CN": "添加"
+    "zh-CN": "添加",
+    "tr": "Ekle",
+    "nl": "Toevoegen",
+    "id": "Tambah"
   },
   "Remove": {
     "de": "Entfernen",
@@ -4077,7 +5094,10 @@
     "pl": "Usuń",
     "pt-BR": "Remover",
     "ru": "Удалить",
-    "zh-CN": "移除"
+    "zh-CN": "移除",
+    "tr": "Kaldır",
+    "nl": "Verwijderen",
+    "id": "Hapus"
   },
   "Archive channel": {
     "de": "Kanal archivieren",
@@ -4089,7 +5109,10 @@
     "pl": "Zarchiwizuj kanał",
     "pt-BR": "Arquivar canal",
     "ru": "Архивировать канал",
-    "zh-CN": "归档频道"
+    "zh-CN": "归档频道",
+    "tr": "Kanalı arşivle",
+    "nl": "Kanaal archiveren",
+    "id": "Arsipkan kanal"
   },
   "Auto-detect": {
     "de": "Automatisch erkennen",
@@ -4101,7 +5124,10 @@
     "pl": "Wykryj automatycznie",
     "pt-BR": "Detecção automática",
     "ru": "Автоопределение",
-    "zh-CN": "自动检测"
+    "zh-CN": "自动检测",
+    "tr": "Otomatik algıla",
+    "nl": "Automatisch detecteren",
+    "id": "Deteksi otomatis"
   },
   "Blurple (Primary)": {
     "de": "Blurple (Primär)",
@@ -4113,7 +5139,10 @@
     "pl": "Blurple (Główny)",
     "pt-BR": "Blurple (Primário)",
     "ru": "Blurple (Основной)",
-    "zh-CN": "Blurple（主要）"
+    "zh-CN": "Blurple（主要）",
+    "tr": "Mor (Birincil)",
+    "nl": "Blurple (Primair)",
+    "id": "Blurple (Utama)"
   },
   "Green (Success)": {
     "de": "Grün (Erfolg)",
@@ -4125,7 +5154,10 @@
     "pl": "Zielony (Sukces)",
     "pt-BR": "Verde (Sucesso)",
     "ru": "Зелёный (Успех)",
-    "zh-CN": "绿色（成功）"
+    "zh-CN": "绿色（成功）",
+    "tr": "Yeşil (Başarı)",
+    "nl": "Groen (Succes)",
+    "id": "Hijau (Sukses)"
   },
   "Grey (Secondary)": {
     "de": "Grau (Sekundär)",
@@ -4137,7 +5169,10 @@
     "pl": "Szary (Drugorzędny)",
     "pt-BR": "Cinza (Secundário)",
     "ru": "Серый (Вторичный)",
-    "zh-CN": "灰色（次要）"
+    "zh-CN": "灰色（次要）",
+    "tr": "Gri (İkincil)",
+    "nl": "Grijs (Secundair)",
+    "id": "Abu-abu (Sekunder)"
   },
   "Red (Danger)": {
     "de": "Rot (Gefahr)",
@@ -4149,7 +5184,10 @@
     "pl": "Czerwony (Niebezpieczeństwo)",
     "pt-BR": "Vermelho (Perigo)",
     "ru": "Красный (Опасность)",
-    "zh-CN": "红色（危险）"
+    "zh-CN": "红色（危险）",
+    "tr": "Kırmızı (Tehlike)",
+    "nl": "Rood (Gevaar)",
+    "id": "Merah (Bahaya)"
   },
   "Channel (default)": {
     "de": "Kanal (Standard)",
@@ -4161,7 +5199,10 @@
     "pl": "Kanał (domyślnie)",
     "pt-BR": "Canal (padrão)",
     "ru": "Канал (по умолчанию)",
-    "zh-CN": "频道（默认）"
+    "zh-CN": "频道（默认）",
+    "tr": "Kanal (varsayılan)",
+    "nl": "Kanaal (standaard)",
+    "id": "Kanal (default)"
   },
   "Delete channel": {
     "de": "Kanal löschen",
@@ -4173,7 +5214,10 @@
     "pl": "Usuń kanał",
     "pt-BR": "Excluir canal",
     "ru": "Удалить канал",
-    "zh-CN": "删除频道"
+    "zh-CN": "删除频道",
+    "tr": "Kanalı sil",
+    "nl": "Kanaal verwijderen",
+    "id": "Hapus kanal"
   },
   "Paragraph": {
     "de": "Absatz",
@@ -4185,7 +5229,10 @@
     "pl": "Akapit",
     "pt-BR": "Parágrafo",
     "ru": "Абзац",
-    "zh-CN": "段落"
+    "zh-CN": "段落",
+    "tr": "Paragraf",
+    "nl": "Alinea",
+    "id": "Paragraf"
   },
   "Short": {
     "de": "Kurz",
@@ -4197,7 +5244,10 @@
     "pl": "Krótki",
     "pt-BR": "Curto",
     "ru": "Короткий",
-    "zh-CN": "短"
+    "zh-CN": "短",
+    "tr": "Kısa",
+    "nl": "Kort",
+    "id": "Pendek"
   },
   "Thread": {
     "de": "Thread",
@@ -4209,7 +5259,10 @@
     "pl": "Wątek",
     "pt-BR": "Tópico",
     "ru": "Ветка",
-    "zh-CN": "帖子"
+    "zh-CN": "帖子",
+    "tr": "Konu",
+    "nl": "Thread",
+    "id": "Thread"
   },
   "🔴 Urgent": {
     "de": "🔴 Dringend",
@@ -4221,7 +5274,10 @@
     "pl": "🔴 Pilne",
     "pt-BR": "🔴 Urgente",
     "ru": "🔴 Срочно",
-    "zh-CN": "🔴 紧急"
+    "zh-CN": "🔴 紧急",
+    "tr": "🔴 Acil",
+    "nl": "🔴 Urgent",
+    "id": "🔴 Mendesak"
   },
   "🟠 High": {
     "de": "🟠 Hoch",
@@ -4233,7 +5289,10 @@
     "pl": "🟠 Wysoki",
     "pt-BR": "🟠 Alta",
     "ru": "🟠 Высокий",
-    "zh-CN": "🟠 高"
+    "zh-CN": "🟠 高",
+    "tr": "🟠 Yüksek",
+    "nl": "🟠 Hoog",
+    "id": "🟠 Tinggi"
   },
   "🟡 Medium": {
     "de": "🟡 Mittel",
@@ -4245,7 +5304,10 @@
     "pl": "🟡 Średni",
     "pt-BR": "🟡 Média",
     "ru": "🟡 Средний",
-    "zh-CN": "🟡 中"
+    "zh-CN": "🟡 中",
+    "tr": "🟡 Orta",
+    "nl": "🟡 Gemiddeld",
+    "id": "🟡 Sedang"
   },
   "🟢 Low": {
     "de": "🟢 Niedrig",
@@ -4257,6 +5319,9 @@
     "pl": "🟢 Niski",
     "pt-BR": "🟢 Baixa",
     "ru": "🟢 Низкий",
-    "zh-CN": "🟢 低"
+    "zh-CN": "🟢 低",
+    "tr": "🟢 Düşük",
+    "nl": "🟢 Laag",
+    "id": "🟢 Rendah"
   }
 }
