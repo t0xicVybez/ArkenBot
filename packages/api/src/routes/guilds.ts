@@ -3,6 +3,7 @@ import axios from 'axios';
 import { requireAuth, requireGuildAdmin } from '../middleware/auth.js';
 import { prisma } from '../database.js';
 import { AuthService } from '../services/AuthService.js';
+import { canManageGuild } from '../utils/guildAccess.js';
 
 export async function guildRoutes(server: FastifyInstance): Promise<void> {
   // GET /guilds - List guilds the user can manage
@@ -36,14 +37,7 @@ export async function guildRoutes(server: FastifyInstance): Promise<void> {
 
       // Access is granted to the server owner, or anyone with Administrator or
       // Manage Server — the standard "can configure this server" threshold.
-      const ADMINISTRATOR = BigInt(0x8);
-      const MANAGE_GUILD = BigInt(0x20);
-      const adminGuilds = allGuilds.filter((g) => {
-        const perms = BigInt(g.permissions);
-        const canManage =
-          (perms & ADMINISTRATOR) === ADMINISTRATOR || (perms & MANAGE_GUILD) === MANAGE_GUILD;
-        return canManage || g.owner;
-      });
+      const adminGuilds = allGuilds.filter((g) => canManageGuild(g.permissions, g.owner));
 
       // Enrich with bot presence
       const guildIds = adminGuilds.map((g) => g.id);
