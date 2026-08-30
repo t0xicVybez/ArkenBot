@@ -978,7 +978,18 @@
     "appealsEnabled": "Beroepen inschakelen",
     "appealsEnabledDesc": "Verbannen/gedempte leden krijgen een “Beroep”-knop in hun DM; goedkeuringen draaien de actie automatisch terug.",
     "appealChannel": "Beroepbeoordelingskanaal",
-    "appealChannelDesc": "Waar beroepen worden geplaatst voor de staf om goed te keuren of af te wijzen."
+    "appealChannelDesc": "Waar beroepen worden geplaatst voor de staf om goed te keuren of af te wijzen.",
+    "deleteDataTitle": "Alle servergegevens verwijderen",
+    "deleteDataDesc": "Verwijdert permanent alles wat ArkenBot voor deze server opslaat — instellingen, moderatiedossiers, levels, economie en meer. De bot blijft in je server maar begint met een schone lei.",
+    "deleteDataButton": "Alle gegevens verwijderen",
+    "deleteDataModalTitle": "Alle gegevens voor {server} verwijderen?",
+    "deleteDataModalBody": "Dit verwijdert permanent alle instellingen, moderatiezaken, waarschuwingen, levels, economiesaldi en elk ander record van deze server. Dit kan niet ongedaan worden gemaakt.",
+    "deleteDataConfirmLabel": "Typ de servernaam om te bevestigen:",
+    "deleteDataCancel": "Annuleren",
+    "deleteDataConfirm": "Permanent verwijderen",
+    "deleteDataConfirming": "Verwijderen…",
+    "deleteDataDone": "Alle servergegevens zijn verwijderd.",
+    "deleteDataError": "Servergegevens konden niet worden verwijderd."
   },
   "suggestionsPage": {
     "saved": "Suggestie-instellingen opgeslagen!",
@@ -1577,7 +1588,17 @@
     "revokeSession": "Trek deze sessie in",
     "sessionRevoked": "Sessie ingetrokken",
     "revokeError": "Kon sessie niet intrekken",
-    "logoutAllError": "Kon niet overal uitloggen"
+    "logoutAllError": "Kon niet overal uitloggen",
+    "yourData": "Jouw gegevens",
+    "yourDataDesc": "Download een kopie van alles wat ArkenBot over jou opslaat op alle servers, of verwijder je persoonlijke gegevens permanent (levels, economie, verjaardag, herinneringen en voorkeuren).",
+    "downloadData": "Mijn gegevens downloaden",
+    "deleteData": "Mijn persoonlijke gegevens verwijderen",
+    "deleteDataNote": "Verwijderen haalt je persoonlijke gegevens van elke server. Moderatiedossiers (waarschuwingen, zaken) blijven bij de servers die ze hebben uitgegeven.",
+    "deleteDataConfirm": "Je persoonlijke gegevens op alle servers permanent verwijderen? Dit kan niet ongedaan worden gemaakt.",
+    "dataDownloaded": "Het downloaden van je gegevensexport is gestart.",
+    "dataExportError": "Kon je gegevens niet exporteren.",
+    "dataDeleted": "Je persoonlijke gegevens zijn verwijderd.",
+    "dataDeleteError": "Kon je gegevens niet verwijderen."
   },
   "setupWizardPage": {
     "title": "Installatiewizard",

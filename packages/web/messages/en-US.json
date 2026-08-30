@@ -978,7 +978,18 @@
     "appealsEnabled": "Enable appeals",
     "appealsEnabledDesc": "Banned/muted members get an “Appeal” button in their DM; approvals auto-reverse the action.",
     "appealChannel": "Appeal review channel",
-    "appealChannelDesc": "Where appeals are posted for staff to approve or deny."
+    "appealChannelDesc": "Where appeals are posted for staff to approve or deny.",
+    "deleteDataTitle": "Delete all server data",
+    "deleteDataDesc": "Permanently erase everything ArkenBot stores for this server — settings, moderation records, levels, economy, and more. The bot stays in your server but starts from a clean slate.",
+    "deleteDataButton": "Delete all data",
+    "deleteDataModalTitle": "Delete all data for {server}?",
+    "deleteDataModalBody": "This permanently deletes all settings, moderation cases, warnings, levels, economy balances, and every other record for this server. It cannot be undone.",
+    "deleteDataConfirmLabel": "Type the server name to confirm:",
+    "deleteDataCancel": "Cancel",
+    "deleteDataConfirm": "Permanently delete",
+    "deleteDataConfirming": "Deleting…",
+    "deleteDataDone": "All server data has been deleted.",
+    "deleteDataError": "Failed to delete server data."
   },
   "suggestionsPage": {
     "saved": "Suggestions settings saved!",
@@ -1577,7 +1588,17 @@
     "revokeSession": "Revoke this session",
     "sessionRevoked": "Session revoked",
     "revokeError": "Failed to revoke session",
-    "logoutAllError": "Failed to log out everywhere"
+    "logoutAllError": "Failed to log out everywhere",
+    "yourData": "Your Data",
+    "yourDataDesc": "Download a copy of everything ArkenBot stores about you across all servers, or permanently delete your personal data (levels, economy, birthday, reminders, and preferences).",
+    "downloadData": "Download my data",
+    "deleteData": "Delete my personal data",
+    "deleteDataNote": "Deleting removes your personal data from every server. Moderation records (warnings, cases) stay with the servers that issued them.",
+    "deleteDataConfirm": "Permanently delete your personal data across all servers? This cannot be undone.",
+    "dataDownloaded": "Your data export has started downloading.",
+    "dataExportError": "Failed to export your data.",
+    "dataDeleted": "Your personal data has been deleted.",
+    "dataDeleteError": "Failed to delete your data."
   },
   "setupWizardPage": {
     "title": "Setup Wizard",

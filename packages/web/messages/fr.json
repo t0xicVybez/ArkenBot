@@ -978,7 +978,18 @@
     "appealsEnabled": "Activer les appels",
     "appealsEnabledDesc": "Les membres bannis/exclus reçoivent un bouton « Faire appel » en MP ; les approbations annulent automatiquement l’action.",
     "appealChannel": "Salon d’examen des appels",
-    "appealChannelDesc": "Où les appels sont publiés pour que le staff les approuve ou les refuse."
+    "appealChannelDesc": "Où les appels sont publiés pour que le staff les approuve ou les refuse.",
+    "deleteDataTitle": "Supprimer toutes les données du serveur",
+    "deleteDataDesc": "Efface définitivement tout ce qu’ArkenBot stocke pour ce serveur — paramètres, dossiers de modération, niveaux, économie et plus. Le bot reste sur ton serveur mais repart de zéro.",
+    "deleteDataButton": "Supprimer toutes les données",
+    "deleteDataModalTitle": "Supprimer toutes les données de {server} ?",
+    "deleteDataModalBody": "Ceci supprime définitivement tous les paramètres, dossiers de modération, avertissements, niveaux, soldes d’économie et tout autre enregistrement de ce serveur. Irréversible.",
+    "deleteDataConfirmLabel": "Saisis le nom du serveur pour confirmer :",
+    "deleteDataCancel": "Annuler",
+    "deleteDataConfirm": "Supprimer définitivement",
+    "deleteDataConfirming": "Suppression…",
+    "deleteDataDone": "Toutes les données du serveur ont été supprimées.",
+    "deleteDataError": "Échec de la suppression des données du serveur."
   },
   "suggestionsPage": {
     "saved": "Paramètres des suggestions enregistrés !",
@@ -1577,7 +1588,17 @@
     "revokeSession": "Révoquer cette session",
     "sessionRevoked": "Session révoquée",
     "revokeError": "Échec de la révocation de la session",
-    "logoutAllError": "Échec de la déconnexion partout"
+    "logoutAllError": "Échec de la déconnexion partout",
+    "yourData": "Tes données",
+    "yourDataDesc": "Télécharge une copie de tout ce qu’ArkenBot stocke à ton sujet sur tous les serveurs, ou supprime définitivement tes données personnelles (niveaux, économie, anniversaire, rappels et préférences).",
+    "downloadData": "Télécharger mes données",
+    "deleteData": "Supprimer mes données personnelles",
+    "deleteDataNote": "La suppression retire tes données personnelles de chaque serveur. Les dossiers de modération (avertissements, cas) restent sur les serveurs qui les ont émis.",
+    "deleteDataConfirm": "Supprimer définitivement tes données personnelles sur tous les serveurs ? Irréversible.",
+    "dataDownloaded": "Le téléchargement de tes données a commencé.",
+    "dataExportError": "Échec de l’export de tes données.",
+    "dataDeleted": "Tes données personnelles ont été supprimées.",
+    "dataDeleteError": "Échec de la suppression de tes données."
   },
   "setupWizardPage": {
     "title": "Assistant de configuration",

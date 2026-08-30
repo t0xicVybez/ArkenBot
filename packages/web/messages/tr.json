@@ -978,7 +978,18 @@
     "appealsEnabled": "İtirazları etkinleştir",
     "appealsEnabledDesc": "Yasaklı/susturulmuş üyeler DM’lerinde bir \"İtiraz\" düğmesi alır; onaylar işlemi otomatik olarak geri alır.",
     "appealChannel": "İtiraz inceleme kanalı",
-    "appealChannelDesc": "İtirazların yetkililerin onaylaması veya reddetmesi için yayınlandığı yer."
+    "appealChannelDesc": "İtirazların yetkililerin onaylaması veya reddetmesi için yayınlandığı yer.",
+    "deleteDataTitle": "Tüm sunucu verilerini sil",
+    "deleteDataDesc": "ArkenBot’un bu sunucu için sakladığı her şeyi kalıcı olarak siler — ayarlar, moderasyon kayıtları, seviyeler, ekonomi ve daha fazlası. Bot sunucunda kalır ama sıfırdan başlar.",
+    "deleteDataButton": "Tüm verileri sil",
+    "deleteDataModalTitle": "{server} için tüm veriler silinsin mi?",
+    "deleteDataModalBody": "Bu, bu sunucunun tüm ayarlarını, moderasyon vakalarını, uyarılarını, seviyelerini, ekonomi bakiyelerini ve diğer tüm kayıtlarını kalıcı olarak siler. Geri alınamaz.",
+    "deleteDataConfirmLabel": "Onaylamak için sunucu adını yaz:",
+    "deleteDataCancel": "İptal",
+    "deleteDataConfirm": "Kalıcı olarak sil",
+    "deleteDataConfirming": "Siliniyor…",
+    "deleteDataDone": "Tüm sunucu verileri silindi.",
+    "deleteDataError": "Sunucu verileri silinemedi."
   },
   "suggestionsPage": {
     "saved": "Öneri ayarları kaydedildi!",
@@ -1577,7 +1588,17 @@
     "revokeSession": "Bu oturumu iptal et",
     "sessionRevoked": "Oturum iptal edildi",
     "revokeError": "Oturum iptal edilemedi",
-    "logoutAllError": "Her yerden çıkış yapılamadı"
+    "logoutAllError": "Her yerden çıkış yapılamadı",
+    "yourData": "Verilerin",
+    "yourDataDesc": "ArkenBot’un tüm sunucularda senin hakkında sakladığı her şeyin bir kopyasını indir ya da kişisel verilerini (seviyeler, ekonomi, doğum günü, hatırlatmalar ve tercihler) kalıcı olarak sil.",
+    "downloadData": "Verilerimi indir",
+    "deleteData": "Kişisel verilerimi sil",
+    "deleteDataNote": "Silme, kişisel verilerini her sunucudan kaldırır. Moderasyon kayıtları (uyarılar, vakalar) onları veren sunucularda kalır.",
+    "deleteDataConfirm": "Tüm sunuculardaki kişisel verilerini kalıcı olarak sil? Geri alınamaz.",
+    "dataDownloaded": "Veri dışa aktarmanın indirilmesi başladı.",
+    "dataExportError": "Verilerin dışa aktarılamadı.",
+    "dataDeleted": "Kişisel verilerin silindi.",
+    "dataDeleteError": "Verilerin silinemedi."
   },
   "setupWizardPage": {
     "title": "Kurulum Sihirbazı",

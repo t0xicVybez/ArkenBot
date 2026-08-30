@@ -6,13 +6,13 @@
  * and offers a "log out everywhere" action. The session backing the current
  * browser is flagged and cannot be self-revoked from the list (use logout).
  */
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import { ArrowLeft, Loader2, LogOut, Monitor, ShieldCheck, Trash2 } from 'lucide-react';
-import { authApi, type ActiveSession } from '@/lib/api';
+import { ArrowLeft, Loader2, LogOut, Monitor, ShieldCheck, Trash2, Download, Database } from 'lucide-react';
+import { authApi, dataApi, type ActiveSession } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { useTranslations } from 'next-intl';
@@ -83,6 +83,41 @@ export default function AccountPage() {
     },
     onError: () => toast.error(t('logoutAllError')),
   });
+
+  const [exporting, setExporting] = useState(false);
+  const [deletingData, setDeletingData] = useState(false);
+
+  async function downloadMyData() {
+    setExporting(true);
+    try {
+      const res = await dataApi.exportMine();
+      const blob = new Blob([JSON.stringify(res.data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `arkenbot-my-data-${new Date().toISOString().slice(0, 10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      toast.success(t('dataDownloaded'));
+    } catch {
+      toast.error(t('dataExportError'));
+    } finally {
+      setExporting(false);
+    }
+  }
+
+  async function deleteMyData() {
+    if (!confirm(t('deleteDataConfirm'))) return;
+    setDeletingData(true);
+    try {
+      await dataApi.deleteMine();
+      toast.success(t('dataDeleted'));
+    } catch {
+      toast.error(t('dataDeleteError'));
+    } finally {
+      setDeletingData(false);
+    }
+  }
 
   if (status !== 'authenticated') return null;
 
@@ -163,6 +198,22 @@ export default function AccountPage() {
             ))}
           </ul>
         )}
+
+        <section className="mt-10">
+          <h2 className="text-lg font-semibold text-white flex items-center gap-2 mb-1">
+            <Database className="w-5 h-5 text-discord-blurple" /> {t('yourData')}
+          </h2>
+          <p className="text-sm text-gray-400 mb-4 max-w-2xl">{t('yourDataDesc')}</p>
+          <div className="card flex flex-wrap items-center gap-3">
+            <button onClick={downloadMyData} disabled={exporting} className="btn-primary flex items-center gap-2">
+              {exporting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />} {t('downloadData')}
+            </button>
+            <button onClick={deleteMyData} disabled={deletingData} className="btn-danger flex items-center gap-2">
+              {deletingData ? <Loader2 className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />} {t('deleteData')}
+            </button>
+          </div>
+          <p className="text-xs text-gray-500 mt-3 max-w-2xl">{t('deleteDataNote')}</p>
+        </section>
       </main>
     </div>
   );

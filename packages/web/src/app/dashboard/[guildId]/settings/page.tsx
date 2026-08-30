@@ -2,12 +2,12 @@
 
 import { useParams } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { settingsApi, guildsApi, personalizationApi, configTransferApi } from '@/lib/api';
+import { settingsApi, guildsApi, personalizationApi, configTransferApi, dataApi } from '@/lib/api';
 import { SettingsSection } from '@/components/SettingsSection';
 import toast from 'react-hot-toast';
 import { useState, useEffect, useRef } from 'react';
 import type { GuildSettings } from '@arkenbot/shared';
-import { Settings, Download, Upload } from 'lucide-react';
+import { Settings, Download, Upload, Trash2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 export default function SettingsPage() {
@@ -18,6 +18,15 @@ export default function SettingsPage() {
   const [nickname, setNickname] = useState('');
   const [botAvatarUrl, setBotAvatarUrl] = useState<string | null>(null);
   const avatarFileRef = useRef<HTMLInputElement>(null);
+  const [showDeleteData, setShowDeleteData] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState('');
+  const [deletingData, setDeletingData] = useState(false);
+
+  const { data: overviewRes } = useQuery({
+    queryKey: ['guild-overview', guildId],
+    queryFn: () => guildsApi.get(guildId),
+  });
+  const guildName = overviewRes?.data?.data?.name ?? guildId;
 
   const { data: settingsRes, isLoading } = useQuery({
     queryKey: ['settings', guildId],
@@ -415,7 +424,63 @@ export default function SettingsPage() {
         <p className="text-xs text-gray-500 mt-3">
           {t('dangerTip')}
         </p>
+
+        <div className="mt-5 pt-5 border-t border-[var(--border-subtle)]">
+          <h4 className="text-sm font-semibold text-red-400">{t('deleteDataTitle')}</h4>
+          <p className="text-xs text-gray-500 mt-1 mb-3 max-w-xl">{t('deleteDataDesc')}</p>
+          <button
+            onClick={() => { setDeleteConfirm(''); setShowDeleteData(true); }}
+            className="btn-danger flex items-center gap-2"
+          >
+            <Trash2 className="w-4 h-4" /> {t('deleteDataButton')}
+          </button>
+        </div>
       </SettingsSection>
+
+      {showDeleteData && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={() => !deletingData && setShowDeleteData(false)}>
+          <div className="card max-w-md w-full" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-lg font-semibold text-red-400 flex items-center gap-2">
+              <Trash2 className="w-5 h-5" /> {t('deleteDataModalTitle', { server: guildName })}
+            </h3>
+            <p className="text-sm text-gray-400 mt-2">{t('deleteDataModalBody')}</p>
+            <label className="block text-xs text-gray-400 mt-4 mb-1">
+              {t('deleteDataConfirmLabel')} <span className="text-white font-mono">{guildName}</span>
+            </label>
+            <input
+              autoFocus
+              value={deleteConfirm}
+              onChange={(e) => setDeleteConfirm(e.target.value)}
+              className="input w-full"
+              placeholder={guildName}
+            />
+            <div className="flex justify-end gap-2 mt-4">
+              <button className="btn-secondary" disabled={deletingData} onClick={() => setShowDeleteData(false)}>
+                {t('deleteDataCancel')}
+              </button>
+              <button
+                className="btn-danger"
+                disabled={deletingData || deleteConfirm.trim() !== guildName}
+                onClick={async () => {
+                  setDeletingData(true);
+                  try {
+                    await dataApi.deleteServerData(guildId);
+                    toast.success(t('deleteDataDone'));
+                    setShowDeleteData(false);
+                    queryClient.invalidateQueries();
+                  } catch {
+                    toast.error(t('deleteDataError'));
+                  } finally {
+                    setDeletingData(false);
+                  }
+                }}
+              >
+                {deletingData ? t('deleteDataConfirming') : t('deleteDataConfirm')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

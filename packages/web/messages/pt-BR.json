@@ -978,7 +978,18 @@
     "appealsEnabled": "Ativar recursos",
     "appealsEnabledDesc": "Membros banidos/silenciados recebem um botão “Recorrer” na DM; aprovações revertem a ação automaticamente.",
     "appealChannel": "Canal de análise de recursos",
-    "appealChannelDesc": "Onde os recursos são postados para a equipe aprovar ou negar."
+    "appealChannelDesc": "Onde os recursos são postados para a equipe aprovar ou negar.",
+    "deleteDataTitle": "Excluir todos os dados do servidor",
+    "deleteDataDesc": "Apaga permanentemente tudo o que o ArkenBot armazena deste servidor — configurações, registros de moderação, níveis, economia e mais. O bot permanece no seu servidor, mas começa do zero.",
+    "deleteDataButton": "Excluir todos os dados",
+    "deleteDataModalTitle": "Excluir todos os dados de {server}?",
+    "deleteDataModalBody": "Isto exclui permanentemente todas as configurações, casos de moderação, avisos, níveis, saldos de economia e todos os outros registros deste servidor. Não pode ser desfeito.",
+    "deleteDataConfirmLabel": "Digite o nome do servidor para confirmar:",
+    "deleteDataCancel": "Cancelar",
+    "deleteDataConfirm": "Excluir permanentemente",
+    "deleteDataConfirming": "Excluindo…",
+    "deleteDataDone": "Todos os dados do servidor foram excluídos.",
+    "deleteDataError": "Falha ao excluir os dados do servidor."
   },
   "suggestionsPage": {
     "saved": "Configurações de sugestões salvas!",
@@ -1577,7 +1588,17 @@
     "revokeSession": "Revogar esta sessão",
     "sessionRevoked": "Sessão revogada",
     "revokeError": "Falha ao revogar a sessão",
-    "logoutAllError": "Falha ao sair de todos os lugares"
+    "logoutAllError": "Falha ao sair de todos os lugares",
+    "yourData": "Seus dados",
+    "yourDataDesc": "Baixe uma cópia de tudo o que o ArkenBot armazena sobre você em todos os servidores, ou exclua permanentemente seus dados pessoais (níveis, economia, aniversário, lembretes e preferências).",
+    "downloadData": "Baixar meus dados",
+    "deleteData": "Excluir meus dados pessoais",
+    "deleteDataNote": "A exclusão remove seus dados pessoais de todos os servidores. Registros de moderação (avisos, casos) permanecem nos servidores que os emitiram.",
+    "deleteDataConfirm": "Excluir permanentemente seus dados pessoais em todos os servidores? Não pode ser desfeito.",
+    "dataDownloaded": "O download da exportação dos seus dados começou.",
+    "dataExportError": "Falha ao exportar seus dados.",
+    "dataDeleted": "Seus dados pessoais foram excluídos.",
+    "dataDeleteError": "Falha ao excluir seus dados."
   },
   "setupWizardPage": {
     "title": "Assistente de configuração",

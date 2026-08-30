@@ -978,7 +978,18 @@
     "appealsEnabled": "启用申诉",
     "appealsEnabledDesc": "被封禁/禁言的成员会在私信中收到“申诉”按钮；批准后自动撤销处罚。",
     "appealChannel": "申诉审核频道",
-    "appealChannelDesc": "申诉发布供工作人员批准或拒绝的位置。"
+    "appealChannelDesc": "申诉发布供工作人员批准或拒绝的位置。",
+    "deleteDataTitle": "删除所有服务器数据",
+    "deleteDataDesc": "永久删除 ArkenBot 为此服务器存储的一切——设置、管理记录、等级、经济等。机器人仍留在你的服务器中，但会从零开始。",
+    "deleteDataButton": "删除所有数据",
+    "deleteDataModalTitle": "删除 {server} 的所有数据？",
+    "deleteDataModalBody": "这将永久删除此服务器的所有设置、管理案件、警告、等级、经济余额及其他所有记录。此操作无法撤销。",
+    "deleteDataConfirmLabel": "输入服务器名称以确认：",
+    "deleteDataCancel": "取消",
+    "deleteDataConfirm": "永久删除",
+    "deleteDataConfirming": "删除中…",
+    "deleteDataDone": "已删除所有服务器数据。",
+    "deleteDataError": "删除服务器数据失败。"
   },
   "suggestionsPage": {
     "saved": "建议设置已保存！",
@@ -1577,7 +1588,17 @@
     "revokeSession": "撤销此会话",
     "sessionRevoked": "会话已撤销",
     "revokeError": "撤销会话失败",
-    "logoutAllError": "在所有设备登出失败"
+    "logoutAllError": "在所有设备登出失败",
+    "yourData": "你的数据",
+    "yourDataDesc": "下载 ArkenBot 在所有服务器上存储的关于你的全部内容的副本，或永久删除你的个人数据（等级、经济、生日、提醒和偏好）。",
+    "downloadData": "下载我的数据",
+    "deleteData": "删除我的个人数据",
+    "deleteDataNote": "删除会从每个服务器移除你的个人数据。管理记录（警告、案件）会保留在发出它们的服务器中。",
+    "deleteDataConfirm": "永久删除你在所有服务器上的个人数据？此操作无法撤销。",
+    "dataDownloaded": "你的数据导出已开始下载。",
+    "dataExportError": "导出你的数据失败。",
+    "dataDeleted": "已删除你的个人数据。",
+    "dataDeleteError": "删除你的数据失败。"
   },
   "setupWizardPage": {
     "title": "设置向导",

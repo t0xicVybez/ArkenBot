@@ -978,7 +978,18 @@
     "appealsEnabled": "이의 제기 활성화",
     "appealsEnabledDesc": "차단/뮤트된 멤버의 DM에 “이의 제기” 버튼이 표시되며, 승인 시 조치가 자동으로 취소됩니다.",
     "appealChannel": "이의 검토 채널",
-    "appealChannelDesc": "스태프가 승인/거부하도록 이의가 게시되는 곳."
+    "appealChannelDesc": "스태프가 승인/거부하도록 이의가 게시되는 곳.",
+    "deleteDataTitle": "서버의 모든 데이터 삭제",
+    "deleteDataDesc": "ArkenBot이 이 서버에 대해 저장한 모든 것(설정, 모더레이션 기록, 레벨, 경제 등)을 영구적으로 지웁니다. 봇은 서버에 남지만 처음부터 다시 시작합니다.",
+    "deleteDataButton": "모든 데이터 삭제",
+    "deleteDataModalTitle": "{server}의 모든 데이터를 삭제할까요?",
+    "deleteDataModalBody": "이 작업은 이 서버의 모든 설정, 모더레이션 사건, 경고, 레벨, 경제 잔액 및 기타 모든 기록을 영구적으로 삭제합니다. 되돌릴 수 없습니다.",
+    "deleteDataConfirmLabel": "확인을 위해 서버 이름을 입력하세요:",
+    "deleteDataCancel": "취소",
+    "deleteDataConfirm": "영구 삭제",
+    "deleteDataConfirming": "삭제 중…",
+    "deleteDataDone": "서버의 모든 데이터가 삭제되었습니다.",
+    "deleteDataError": "서버 데이터 삭제에 실패했습니다."
   },
   "suggestionsPage": {
     "saved": "건의 설정을 저장했습니다!",
@@ -1577,7 +1588,17 @@
     "revokeSession": "이 세션 해제",
     "sessionRevoked": "세션을 해제했습니다",
     "revokeError": "세션을 해제하지 못했습니다",
-    "logoutAllError": "모든 곳에서 로그아웃하지 못했습니다"
+    "logoutAllError": "모든 곳에서 로그아웃하지 못했습니다",
+    "yourData": "내 데이터",
+    "yourDataDesc": "ArkenBot이 모든 서버에서 나에 대해 저장한 모든 내용의 사본을 다운로드하거나, 개인 데이터(레벨, 경제, 생일, 리마인더, 환경설정)를 영구적으로 삭제하세요.",
+    "downloadData": "내 데이터 다운로드",
+    "deleteData": "내 개인 데이터 삭제",
+    "deleteDataNote": "삭제하면 모든 서버에서 개인 데이터가 제거됩니다. 모더레이션 기록(경고, 사건)은 이를 발행한 서버에 남습니다.",
+    "deleteDataConfirm": "모든 서버에서 개인 데이터를 영구적으로 삭제할까요? 되돌릴 수 없습니다.",
+    "dataDownloaded": "데이터 내보내기 다운로드가 시작되었습니다.",
+    "dataExportError": "데이터 내보내기에 실패했습니다.",
+    "dataDeleted": "개인 데이터가 삭제되었습니다.",
+    "dataDeleteError": "데이터 삭제에 실패했습니다."
   },
   "setupWizardPage": {
     "title": "설정 마법사",

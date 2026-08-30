@@ -978,7 +978,18 @@
     "appealsEnabled": "Activar apelaciones",
     "appealsEnabledDesc": "Los miembros baneados/silenciados reciben un botón «Apelar» en su MD; las aprobaciones revierten la acción automáticamente.",
     "appealChannel": "Canal de revisión de apelaciones",
-    "appealChannelDesc": "Dónde se publican las apelaciones para que el staff las apruebe o rechace."
+    "appealChannelDesc": "Dónde se publican las apelaciones para que el staff las apruebe o rechace.",
+    "deleteDataTitle": "Eliminar todos los datos del servidor",
+    "deleteDataDesc": "Borra permanentemente todo lo que ArkenBot almacena de este servidor: ajustes, registros de moderación, niveles, economía y más. El bot permanece en tu servidor pero empieza desde cero.",
+    "deleteDataButton": "Eliminar todos los datos",
+    "deleteDataModalTitle": "¿Eliminar todos los datos de {server}?",
+    "deleteDataModalBody": "Esto elimina permanentemente todos los ajustes, casos de moderación, avisos, niveles, saldos de economía y cualquier otro registro de este servidor. No se puede deshacer.",
+    "deleteDataConfirmLabel": "Escribe el nombre del servidor para confirmar:",
+    "deleteDataCancel": "Cancelar",
+    "deleteDataConfirm": "Eliminar permanentemente",
+    "deleteDataConfirming": "Eliminando…",
+    "deleteDataDone": "Se han eliminado todos los datos del servidor.",
+    "deleteDataError": "No se pudieron eliminar los datos del servidor."
   },
   "suggestionsPage": {
     "saved": "¡Ajustes de sugerencias guardados!",
@@ -1577,7 +1588,17 @@
     "revokeSession": "Revocar esta sesión",
     "sessionRevoked": "Sesión revocada",
     "revokeError": "No se pudo revocar la sesión",
-    "logoutAllError": "No se pudo cerrar sesión en todas partes"
+    "logoutAllError": "No se pudo cerrar sesión en todas partes",
+    "yourData": "Tus datos",
+    "yourDataDesc": "Descarga una copia de todo lo que ArkenBot almacena sobre ti en todos los servidores, o elimina permanentemente tus datos personales (niveles, economía, cumpleaños, recordatorios y preferencias).",
+    "downloadData": "Descargar mis datos",
+    "deleteData": "Eliminar mis datos personales",
+    "deleteDataNote": "La eliminación borra tus datos personales de todos los servidores. Los registros de moderación (avisos, casos) permanecen en los servidores que los emitieron.",
+    "deleteDataConfirm": "¿Eliminar permanentemente tus datos personales en todos los servidores? No se puede deshacer.",
+    "dataDownloaded": "La exportación de tus datos ha comenzado a descargarse.",
+    "dataExportError": "No se pudieron exportar tus datos.",
+    "dataDeleted": "Tus datos personales se han eliminado.",
+    "dataDeleteError": "No se pudieron eliminar tus datos."
   },
   "setupWizardPage": {
     "title": "Asistente de configuración",

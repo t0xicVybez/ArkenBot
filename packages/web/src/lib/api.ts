@@ -466,6 +466,13 @@ export const configTransferApi = {
   import: (guildId: string, data: object) => api.post(`/guilds/${guildId}/config-import`, data),
 };
 
+// ─── Self-service data controls (privacy / GDPR) ──────────────────
+export const dataApi = {
+  deleteServerData: (guildId: string) => api.delete(`/guilds/${guildId}/data`),
+  exportMine: () => api.get('/me/data-export'),
+  deleteMine: () => api.delete('/me/data'),
+};
+
 // ─── Dashboard Audit Log ──────────────────────────────────────────
 export const auditLogApi = {
   list: (guildId: string, page = 1) => api.get(`/guilds/${guildId}/audit-log`, { params: { page } }),
