@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { resolveLocale, isSupportedLocale, LOCALES, DEFAULT_LOCALE } from '../../packages/shared/src/index.js';
 
-const SHIPPED = ['en-US','es-ES','fr','de','pt-BR','ru','ja','ko','it','pl','zh-CN'];
+const SHIPPED = ['en-US','es-ES','fr','de','pt-BR','ru','ja','ko','it','pl','zh-CN','tr','nl','id'];
 
 describe('LOCALES registry', () => {
-  it('lists exactly the 11 shipped locales', () => {
+  it('lists exactly the shipped locales', () => {
     const codes = LOCALES.map((l) => l.code).sort();
     expect(codes).toEqual([...SHIPPED].sort());
   });

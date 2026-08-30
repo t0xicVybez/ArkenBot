@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { readFileSync, readdirSync } from 'fs';
 import { join } from 'path';
 
-const SHIPPED = ['en-US','es-ES','fr','de','pt-BR','ru','ja','ko','it','pl','zh-CN'];
+const SHIPPED = ['en-US','es-ES','fr','de','pt-BR','ru','ja','ko','it','pl','zh-CN','tr','nl','id'];
 
 /** Flatten a nested catalog into dotted keys (arrays indexed) → string leaves. */
 function flatten(obj: unknown, prefix = '', out: Record<string, string> = {}): Record<string, string> {
@@ -24,7 +24,7 @@ describe('bot i18n catalogs', () => {
   const en = load(join(dir, 'en-US.json'));
   const enKeys = Object.keys(en);
 
-  it('ships exactly the 11 expected locale files', () => {
+  it('ships exactly the expected locale files', () => {
     const files = readdirSync(dir).filter((f) => f.endsWith('.json')).map((f) => f.replace('.json', ''));
     expect(files.sort()).toEqual([...SHIPPED].sort());
   });
