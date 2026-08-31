@@ -28,7 +28,7 @@
     "test:ui": "vitest --ui"
   },
   "devDependencies": {
-    "@prisma/client": "7.9.1",
+    "@prisma/client": "7.10.0",
     "concurrently": "^9.2.4",
     "eslint": "^9.39.5",
     "eslint-plugin-unused-imports": "^4.4.1",
