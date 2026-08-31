@@ -1,8 +1,4 @@
-/**
- * Localized catalogs for the Game Server Admin addon (11 languages).
- * Generated — edit the source table if you regenerate.
- */
-
+/** Localized catalogs for the Game Server Admin addon. Falls back to en-US per key. */
 export const locales = {
   "en-US": {
     "gameadmin": {
@@ -298,6 +294,87 @@ export const locales = {
         "unban": "解封 — {server}",
         "save": "保存 — {server}",
         "stop": "停止 — {server}"
+      }
+    }
+  },
+  "tr": {
+    "gameadmin": {
+      "noKey": "Bu botta RCON parola depolaması ayarlanmamış — ana makineden ADDON_ENCRYPTION_KEY veya API_SECRET ayarlamasını iste.",
+      "nameTaken": "**{name}** adında bir sunucu zaten var.",
+      "pwModalTitle": "RCON Parolası",
+      "pwLabel": "RCON / yönetici parolası",
+      "pendingLost": "Bu istek süresi doldu — `/gameadmin add` komutunu tekrar çalıştır.",
+      "added": "✅ **{name}** ({game}) `{host}:{port}` adresinde eklendi.",
+      "notFound": "Bu adda bir sunucu yok — `/gameadmin list` kontrol et.",
+      "removed": "🗑️ **{name}** kaldırıldı.",
+      "listTitle": "Yapılandırılmış Oyun Sunucuları",
+      "listEmpty": "Henüz sunucu yok. `/gameadmin add` ile bir tane ekle.",
+      "execTitle": "Konsol — {server}",
+      "errorTitle": "RCON Hatası",
+      "notSupported": "**{action}**, {game} için yerleşik bir kısayol değil. Bunun yerine `/gameadmin exec` kullan.",
+      "noOutput": "(çıktı yok)",
+      "titles": {
+        "players": "Oyuncular — {server}",
+        "say": "Yayın — {server}",
+        "kick": "At — {server}",
+        "ban": "Yasakla — {server}",
+        "unban": "Yasağı Kaldır — {server}",
+        "save": "Kaydet — {server}",
+        "stop": "Durdur — {server}"
+      }
+    }
+  },
+  "nl": {
+    "gameadmin": {
+      "noKey": "RCON-wachtwoordopslag is niet ingesteld op deze bot — vraag de host om ADDON_ENCRYPTION_KEY of API_SECRET in te stellen.",
+      "nameTaken": "Er bestaat al een server met de naam **{name}**.",
+      "pwModalTitle": "RCON-wachtwoord",
+      "pwLabel": "RCON / beheerderswachtwoord",
+      "pendingLost": "Dat verzoek is verlopen — voer `/gameadmin add` opnieuw uit.",
+      "added": "✅ **{name}** ({game}) toegevoegd op `{host}:{port}`.",
+      "notFound": "Geen server met die naam — controleer `/gameadmin list`.",
+      "removed": "🗑️ **{name}** verwijderd.",
+      "listTitle": "Geconfigureerde Game-servers",
+      "listEmpty": "Nog geen servers. Voeg er een toe met `/gameadmin add`.",
+      "execTitle": "Console — {server}",
+      "errorTitle": "RCON-fout",
+      "notSupported": "**{action}** is geen ingebouwde snelkoppeling voor {game}. Gebruik in plaats daarvan `/gameadmin exec`.",
+      "noOutput": "(geen uitvoer)",
+      "titles": {
+        "players": "Spelers — {server}",
+        "say": "Uitzending — {server}",
+        "kick": "Kick — {server}",
+        "ban": "Ban — {server}",
+        "unban": "Ontban — {server}",
+        "save": "Opslaan — {server}",
+        "stop": "Stoppen — {server}"
+      }
+    }
+  },
+  "id": {
+    "gameadmin": {
+      "noKey": "Penyimpanan kata sandi RCON belum diatur di bot ini — minta host mengatur ADDON_ENCRYPTION_KEY atau API_SECRET.",
+      "nameTaken": "Server bernama **{name}** sudah ada.",
+      "pwModalTitle": "Kata Sandi RCON",
+      "pwLabel": "Kata sandi RCON / admin",
+      "pendingLost": "Permintaan itu kedaluwarsa — jalankan `/gameadmin add` lagi.",
+      "added": "✅ Menambahkan **{name}** ({game}) di `{host}:{port}`.",
+      "notFound": "Tidak ada server dengan nama itu — periksa `/gameadmin list`.",
+      "removed": "🗑️ Menghapus **{name}**.",
+      "listTitle": "Server Game Terkonfigurasi",
+      "listEmpty": "Belum ada server. Tambahkan satu dengan `/gameadmin add`.",
+      "execTitle": "Konsol — {server}",
+      "errorTitle": "Kesalahan RCON",
+      "notSupported": "**{action}** bukan pintasan bawaan untuk {game}. Gunakan `/gameadmin exec` sebagai gantinya.",
+      "noOutput": "(tidak ada keluaran)",
+      "titles": {
+        "players": "Pemain — {server}",
+        "say": "Siaran — {server}",
+        "kick": "Keluarkan — {server}",
+        "ban": "Blokir — {server}",
+        "unban": "Buka Blokir — {server}",
+        "save": "Simpan — {server}",
+        "stop": "Hentikan — {server}"
       }
     }
   }
