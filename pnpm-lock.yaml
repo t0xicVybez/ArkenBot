@@ -170,6 +170,25 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
+  addons/faq:
+    dependencies:
+      '@arkenbot/addon-sdk':
+        specifier: workspace:*
+        version: link:../../packages/addon-sdk
+      '@arkenbot/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
+    devDependencies:
+      '@types/node':
+        specifier: ^22.20.1
+        version: 22.20.1
+      discord.js:
+        specifier: ^14.27.0
+        version: 14.27.0
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
   addons/gameadmin:
     dependencies:
       '@arkenbot/addon-sdk':
