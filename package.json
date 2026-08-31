@@ -30,7 +30,7 @@
   "devDependencies": {
     "@prisma/client": "7.9.1",
     "concurrently": "^9.2.4",
-    "eslint": "^9.39.5",
+    "eslint": "^10.9.1",
     "eslint-plugin-unused-imports": "^4.4.1",
     "prisma": "7.9.1",
     "tsx": "^4.23.12",
