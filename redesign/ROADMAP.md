@@ -21,16 +21,16 @@
 - [x] Kitchen-sink route `/v2-kit` (client page, light/dark toggle) — dev preview, remove before cutover
 - [ ] Icon set standardized (Lucide) + audit
 
-## Phase 2 — App shell
-- [ ] Layout grid (sidebar + topbar + content), light/dark
-- [ ] Sidebar: regrouped IA, collapsible groups, active states, counts
-- [ ] Server switcher
-- [ ] Topbar: breadcrumbs, search, notifications, avatar menu, theme toggle
-- [ ] Command palette (⌘K) — rebuild/extend existing `CommandPalette.tsx` (pages + settings + actions)
-- [ ] Global search
-- [ ] Persistent Save bar (dirty-state tracking, diff count, discard/save)
-- [ ] Toast system
-- [ ] Theme provider + persistence
+## Phase 2 — App shell  →  live at /v2-app
+- [x] Layout grid (sidebar + topbar + content), light/dark — `components/shell/AppShell.tsx`
+- [x] Sidebar: regrouped IA (`shell/nav.ts`, all 5 groups/~40 items), collapsible groups, active states, counts — `shell/Sidebar.tsx`
+- [x] Server switcher (static for now) — in Sidebar
+- [x] Topbar: breadcrumbs, search trigger, notifications, avatar, theme toggle — `shell/Topbar.tsx`
+- [x] Command palette (⌘K) — `shell/CommandPalette.tsx` (global ⌘K, search over pages; actions TODO)
+- [x] Persistent Save bar (diff count, discard/save) — `shell/SaveBar.tsx` (renders when `dirty`)
+- [x] Theme provider + persistence — in AppShell (localStorage `v2-theme`)
+- [ ] Global search (beyond palette) · [ ] Toast system · [ ] Command-palette actions/settings
+- [ ] Beta-flag wiring on real routes (currently previewed via standalone `/v2-app`)
 
 ## Phase 3 — Composite components
 - [ ] SettingCard (icon/title/desc/control + expandable body)
