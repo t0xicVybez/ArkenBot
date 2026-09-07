@@ -39,15 +39,19 @@
   --warning: #fbbf24;
   --danger: #f87171;
   --info: #818cf8;
+  --success-soft: rgba(52,211,153,0.14);
+  --warning-soft: rgba(251,191,36,0.14);
+  --danger-soft: rgba(248,113,113,0.14);
+  --info-soft: rgba(129,140,248,0.14);
 
   /* Data-viz categorical ramp (recharts) — literal hex, not tokens, at use */
   --viz-1: #34d399;  --viz-2: #818cf8;  --viz-3: #22d3ee;
   --viz-4: #fbbf24;  --viz-5: #f472b6;  --viz-6: #94a3b8;
 
-  /* ── Typography ────────────────────────────────────────── */
-  --font-display: 'Space Grotesk', 'Manrope', system-ui, sans-serif;
-  --font-sans: 'Manrope', system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace;
+  /* ── Typography (families come from next/font vars wired in layout.tsx) ── */
+  --font-display: var(--font-space-grotesk), 'Space Grotesk', system-ui, sans-serif;
+  --font-sans: var(--font-manrope), 'Manrope', system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), 'JetBrains Mono', ui-monospace, monospace;
 
   --fs-xs: 11px;  --fs-sm: 12.5px; --fs-base: 14px; --fs-md: 15px;
   --fs-lg: 17px;  --fs-xl: 20px;   --fs-2xl: 24px;  --fs-3xl: 30px;  --fs-4xl: 40px;
@@ -78,7 +82,17 @@
   --z-sticky: 20; --z-savebar: 40; --z-overlay: 50; --z-modal: 60; --z-toast: 70;
 
   color-scheme: dark;
+
+  /* base surface + text + font for anything inside a .v2 subtree */
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
 }
+
+/* Type-role helpers (opt-in) */
+.v2 .u-display { font-family: var(--font-display); letter-spacing: var(--tracking-tight); }
+.v2 .u-mono { font-family: var(--font-mono); }
 
 /* ── Light mode ───────────────────────────────────────────── */
 .v2[data-theme="light"] {
