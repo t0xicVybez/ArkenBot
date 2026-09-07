@@ -32,7 +32,7 @@ export const NAV: NavGroup[] = [
     label: 'Safety',
     items: [
       { key: 'moderation', label: 'Moderation', icon: Shield, href: '#' },
-      { key: 'automod', label: 'Auto-Mod', icon: Bot, href: '#' },
+      { key: 'automod', label: 'Auto-Mod', icon: Bot, href: '/v2-app/automod' },
       { key: 'antinuke', label: 'Anti-Nuke', icon: ShieldAlert, href: '#' },
       { key: 'verification', label: 'Verification', icon: ShieldCheck, href: '#' },
       { key: 'reports', label: 'Reports', icon: Flag, href: '#', badge: '2' },
