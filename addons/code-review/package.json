@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "@arkenbot/addon-sdk": "workspace:*",
-    "@types/acorn": "^4.0.6",
+    "@types/acorn": "^6.0.4",
     "discord.js": "^14.27.0"
   }
 }
