@@ -24,7 +24,7 @@ export const NAV: NavGroup[] = [
     label: 'Home',
     items: [
       { key: 'overview', label: 'Overview', icon: LayoutGrid, href: '/v2-app' },
-      { key: 'analytics', label: 'Analytics', icon: BarChart3, href: '#' },
+      { key: 'analytics', label: 'Analytics', icon: BarChart3, href: '/v2-app/analytics' },
       { key: 'setup', label: 'Setup Wizard', icon: Wand2, href: '#' },
     ],
   },
