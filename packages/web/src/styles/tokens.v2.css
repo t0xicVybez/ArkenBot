@@ -106,6 +106,26 @@
 .v2 .u-display { font-family: var(--font-display); letter-spacing: var(--tracking-tight); }
 .v2 .u-mono { font-family: var(--font-mono); }
 
+/* ── Tier-2: refine the shared v1 component classes under .v2 ──────────────
+   These lift every page that uses the shared card/section/toggle/input/button
+   patterns to the polished v2 look, without touching v1 (all scoped to .v2). */
+.v2 h1, .v2 h2, .v2 h3,
+.v2 .page-head h1, .v2 .page-header h1, .v2 .section-title {
+  font-family: var(--font-display);
+  letter-spacing: var(--tracking-tight);
+}
+.v2 .card, .v2 .card-sm { border-radius: var(--r-lg); border-color: var(--border); }
+.v2 .input, .v2 select.input, .v2 textarea.input { border-radius: var(--r); }
+.v2 .input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+.v2 .btn, .v2 .btn-primary, .v2 .btn-secondary, .v2 .btn-ghost, .v2 .btn-danger { border-radius: var(--r); font-weight: 600; }
+.v2 .label { color: var(--text-secondary); font-weight: 600; }
+.v2 .page-head-icon { background: var(--accent-soft); color: var(--accent); border-radius: var(--r); }
+.v2 .toggle { border-radius: var(--r-pill); }
+.v2 .nav-item-active { background: var(--accent-soft); color: var(--accent); }
+/* keep section-header titles readable in light mode (v1 hardcodes white) */
+.v2[data-theme="light"] .card > div > h3.text-white,
+.v2[data-theme="light"] h3.text-white { color: var(--text-primary); }
+
 /* ── Light mode ───────────────────────────────────────────── */
 .v2[data-theme="light"] {
   --bg-base: #f5f6f8;
