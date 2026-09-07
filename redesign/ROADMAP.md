@@ -38,13 +38,13 @@
 - [x] LivePreview panel — `ui/LivePreview.tsx`
 - [x] Toast — `ui/Toast.tsx` (controlled; global Toaster TODO)
 - [x] Form field patterns: chips, slider (range + accent-color), Select — shown on Auto-Mod
-- [ ] ChartCard wrappers (area/bar/donut) — recharts 3, tokenized colors (build with Analytics)
+- [x] ChartCard wrapper (area/bar/donut via recharts 3, tokenized) — `ui/ChartCard.tsx`
 - [ ] EmptyState (+ enable CTA) · [ ] DataTable · [ ] Modal / Sheet / Drawer
 - [ ] Section component (replaces `SettingsSection`) · [ ] PageHeader component
 
 ## Phase 4 — Dashboard pages (50)
 ### Home
-- [ ] Overview · [ ] Analytics · [ ] Setup Wizard · [ ] Server select (root) · [ ] Account
+- [x] Overview · [x] Analytics · [ ] Setup Wizard · [ ] Server select (root) · [ ] Account
 ### Safety
 - [ ] Moderation · [x] Auto-Mod (live at /v2-app/automod — save bar + live preview) · [ ] Anti-Nuke · [ ] Auto-Slowmode · [ ] Verification · [ ] Reports · [ ] Appeals · [ ] Logs · [ ] Audit Log
 ### Community

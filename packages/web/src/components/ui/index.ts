@@ -14,3 +14,4 @@ export { StatTile } from './StatTile';
 export { SettingCard } from './SettingCard';
 export { LivePreview } from './LivePreview';
 export { Toast } from './Toast';
+export { ChartCard } from './ChartCard';
