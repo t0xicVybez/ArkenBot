@@ -47,9 +47,10 @@ export default tseslint.config(
     },
   },
   {
-    // CLI scripts and DB seeds are command-line tools, not long-running services
-    // — plain console output is the right thing there, not the structured logger.
-    files: ['**/scripts/**', 'prisma/**'],
+    // CLI scripts, DB seeds, and simulation/unit tests are command-line tools,
+    // not long-running services — plain console output is the right thing there
+    // (e.g. the house-edge sims print their results), not the structured logger.
+    files: ['**/scripts/**', 'prisma/**', 'tests/**'],
     rules: { 'no-console': 'off' },
   },
 );
