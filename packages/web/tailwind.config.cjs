@@ -5,16 +5,20 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        // Driven by CSS-variable RGB triplets so the whole app re-themes by
+        // scope: v1 values live on :root (globals.css), v2 values under `.v2`
+        // (tokens.v2.css). `<alpha-value>` keeps opacity utilities working
+        // (e.g. bg-discord-blurple/20).
         discord: {
-          blurple: '#7C8AFF',
-          green: '#43cf8c',
-          yellow: '#f2c14b',
-          red: '#f26d5f',
-          'base': '#0c0e13',
-          'surface': '#10131a',
-          'card': '#161a23',
-          'elevated': '#1c2130',
-          'hover': '#212737',
+          blurple: 'rgb(var(--blurple-rgb) / <alpha-value>)',
+          green: 'rgb(var(--green-rgb) / <alpha-value>)',
+          yellow: 'rgb(var(--yellow-rgb) / <alpha-value>)',
+          red: 'rgb(var(--red-rgb) / <alpha-value>)',
+          base: 'rgb(var(--base-rgb) / <alpha-value>)',
+          surface: 'rgb(var(--surface-rgb) / <alpha-value>)',
+          card: 'rgb(var(--card-rgb) / <alpha-value>)',
+          elevated: 'rgb(var(--elevated-rgb) / <alpha-value>)',
+          hover: 'rgb(var(--hover-rgb) / <alpha-value>)',
         },
       },
       fontFamily: {
