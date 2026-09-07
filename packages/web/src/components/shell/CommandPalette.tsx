@@ -3,12 +3,20 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { Search, CornerDownLeft } from 'lucide-react';
-import { NAV } from './nav';
+import { NAV, hrefFor } from './nav';
 import { cn } from '../ui/cn';
 
 const PAGES = NAV.flatMap((g) => g.items.map((it) => ({ ...it, group: g.label })));
 
-export function CommandPalette({ open, onClose }: { open: boolean; onClose: () => void }) {
+export function CommandPalette({
+  open,
+  onClose,
+  guildId,
+}: {
+  open: boolean;
+  onClose: () => void;
+  guildId?: string;
+}) {
   const [q, setQ] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -76,7 +84,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
             return (
               <Link
                 key={p.key}
-                href={p.href}
+                href={hrefFor(p, guildId)}
                 onClick={onClose}
                 className={cn(
                   'flex items-center gap-3 rounded-[10px] px-3 py-2.5 text-[14px]',

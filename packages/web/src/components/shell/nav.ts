@@ -10,6 +10,9 @@ export interface NavItem {
   key: string;
   label: string;
   icon: LucideIcon;
+  /** Real dashboard route segment (''=overview). Used to build /dashboard/<guildId>/<slug>. */
+  slug: string;
+  /** Static fallback href for the design previews (no guildId). */
   href: string;
   badge?: string;
 }
@@ -18,71 +21,90 @@ export interface NavGroup {
   items: NavItem[];
 }
 
+/** Build the real route for a nav item, or the static preview href when no guild. */
+export function hrefFor(item: NavItem, guildId?: string): string {
+  if (!guildId) return item.href;
+  return item.slug ? `/dashboard/${guildId}/${item.slug}` : `/dashboard/${guildId}`;
+}
+
+/** Which nav item matches the current pathname (for active state). */
+export function activeKeyForPath(pathname: string, guildId?: string): string | undefined {
+  if (!guildId) return undefined;
+  const base = `/dashboard/${guildId}`;
+  if (pathname === base || pathname === `${base}/`) return 'overview';
+  const rest = pathname.startsWith(base + '/') ? pathname.slice(base.length + 1) : '';
+  const seg = rest.split('/')[0];
+  const all = NAV.flatMap((g) => g.items);
+  return all.find((i) => i.slug && i.slug === seg)?.key;
+}
+
+const it = (key: string, label: string, icon: LucideIcon, slug: string, href = '#', badge?: string): NavItem => ({ key, label, icon, slug, href, badge });
+
 /** The regrouped v2 information architecture (30+ pages → 5 buckets). */
 export const NAV: NavGroup[] = [
   {
     label: 'Home',
     items: [
-      { key: 'overview', label: 'Overview', icon: LayoutGrid, href: '/v2-app' },
-      { key: 'analytics', label: 'Analytics', icon: BarChart3, href: '/v2-app/analytics' },
-      { key: 'setup', label: 'Setup Wizard', icon: Wand2, href: '#' },
+      it('overview', 'Overview', LayoutGrid, '', '/v2-app'),
+      it('analytics', 'Analytics', BarChart3, 'analytics', '/v2-app/analytics'),
+      it('setup', 'Setup Wizard', Wand2, 'setup'),
     ],
   },
   {
     label: 'Safety',
     items: [
-      { key: 'moderation', label: 'Moderation', icon: Shield, href: '#' },
-      { key: 'automod', label: 'Auto-Mod', icon: Bot, href: '/v2-app/automod' },
-      { key: 'antinuke', label: 'Anti-Nuke', icon: ShieldAlert, href: '#' },
-      { key: 'verification', label: 'Verification', icon: ShieldCheck, href: '#' },
-      { key: 'reports', label: 'Reports', icon: Flag, href: '#', badge: '2' },
-      { key: 'appeals', label: 'Appeals', icon: Gavel, href: '#' },
-      { key: 'logs', label: 'Logs', icon: ScrollText, href: '#' },
+      it('moderation', 'Moderation', Shield, 'moderation'),
+      it('automod', 'Auto-Mod', Bot, 'automod', '/v2-app/automod'),
+      it('antinuke', 'Anti-Nuke', ShieldAlert, 'anti-nuke'),
+      it('verification', 'Verification', ShieldCheck, 'verification'),
+      it('reports', 'Reports', Flag, 'reports', '#', '2'),
+      it('appeals', 'Appeals', Gavel, 'appeals'),
+      it('logs', 'Logs', ScrollText, 'logs'),
     ],
   },
   {
     label: 'Community',
     items: [
-      { key: 'leveling', label: 'Leveling', icon: TrendingUp, href: '#' },
-      { key: 'leaderboard', label: 'Leaderboard', icon: Trophy, href: '#' },
-      { key: 'welcome', label: 'Welcome', icon: Hand, href: '#' },
-      { key: 'reactionroles', label: 'Reaction Roles', icon: SmilePlus, href: '#' },
-      { key: 'selfroles', label: 'Self Roles', icon: Tags, href: '#' },
-      { key: 'birthdays', label: 'Birthdays', icon: Cake, href: '#' },
-      { key: 'polls', label: 'Polls', icon: Vote, href: '#' },
-      { key: 'suggestions', label: 'Suggestions', icon: Lightbulb, href: '#' },
-      { key: 'giveaways', label: 'Giveaways', icon: Gift, href: '#' },
-      { key: 'economy', label: 'Economy', icon: Coins, href: '#' },
-      { key: 'starboard', label: 'Starboard', icon: Star, href: '#' },
-      { key: 'invites', label: 'Invite Tracker', icon: Link2, href: '#' },
-      { key: 'voterewards', label: 'Vote Rewards', icon: ThumbsUp, href: '#' },
-      { key: 'counting', label: 'Counting', icon: Hash, href: '#' },
+      it('leveling', 'Leveling', TrendingUp, 'leveling'),
+      it('leaderboard', 'Leaderboard', Trophy, 'leaderboard'),
+      it('welcome', 'Welcome', Hand, 'welcome'),
+      it('reactionroles', 'Reaction Roles', SmilePlus, 'reaction-roles'),
+      it('selfroles', 'Self Roles', Tags, 'self-roles'),
+      it('birthdays', 'Birthdays', Cake, 'birthdays'),
+      it('polls', 'Polls', Vote, 'polls'),
+      it('suggestions', 'Suggestions', Lightbulb, 'suggestions'),
+      it('giveaways', 'Giveaways', Gift, 'giveaways'),
+      it('economy', 'Economy', Coins, 'economy'),
+      it('starboard', 'Starboard', Star, 'starboard'),
+      it('invites', 'Invite Tracker', Link2, 'invite-tracker'),
+      it('voterewards', 'Vote Rewards', ThumbsUp, 'voting'),
+      it('counting', 'Counting', Hash, 'counting'),
     ],
   },
   {
     label: 'Content & Tools',
     items: [
-      { key: 'music', label: 'Music', icon: Music, href: '#' },
-      { key: 'stats', label: 'Stats Channels', icon: Activity, href: '#' },
-      { key: 'embeds', label: 'Embed Builder', icon: Code2, href: '#' },
-      { key: 'scheduled', label: 'Scheduled Messages', icon: CalendarClock, href: '#' },
-      { key: 'tempvoice', label: 'Temp Voice', icon: Mic, href: '#' },
-      { key: 'commands', label: 'Commands', icon: Terminal, href: '#' },
-      { key: 'forum', label: 'Forum Management', icon: MessageSquare, href: '#' },
-      { key: 'members', label: 'Members', icon: Users, href: '#' },
-      { key: 'rss', label: 'RSS Feeds', icon: Rss, href: '#' },
-      { key: 'streams', label: 'Stream Alerts', icon: Radio, href: '#' },
-      { key: 'announcements', label: 'Announcements', icon: Megaphone, href: '#' },
+      it('music', 'Music', Music, 'music'),
+      it('stats', 'Stats Channels', Activity, 'stats-channels'),
+      it('embeds', 'Embed Builder', Code2, 'embeds'),
+      it('scheduled', 'Scheduled Messages', CalendarClock, 'scheduled-messages'),
+      it('tempvoice', 'Temp Voice', Mic, 'temp-voice'),
+      it('commands', 'Commands', Terminal, 'commands'),
+      it('forum', 'Forum Management', MessageSquare, 'forum-management'),
+      it('members', 'Members', Users, 'members'),
+      it('rss', 'RSS Feeds', Rss, 'rss-feeds'),
+      it('streams', 'Stream Alerts', Radio, 'stream-alerts'),
+      it('announcements', 'Announcements', Megaphone, 'announcements'),
     ],
   },
   {
     label: 'Extend',
     items: [
-      { key: 'addons', label: 'Add-ons', icon: Puzzle, href: '#', badge: '7' },
-      { key: 'tickets', label: 'Tickets', icon: Ticket, href: '#' },
-      { key: 'applications', label: 'Applications', icon: ClipboardList, href: '#' },
-      { key: 'monday', label: 'Monday.com', icon: SquareKanban, href: '#' },
-      { key: 'trello', label: 'Trello', icon: Trello, href: '#' },
+      it('addons', 'Add-ons', Puzzle, 'addons', '#', '7'),
+      it('tickets', 'Tickets', Ticket, 'tickets'),
+      it('applications', 'Applications', ClipboardList, 'applications'),
+      it('monday', 'Monday.com', SquareKanban, 'monday'),
+      it('trello', 'Trello', Trello, 'trello'),
     ],
   },
 ];
