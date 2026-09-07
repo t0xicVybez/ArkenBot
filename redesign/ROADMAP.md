@@ -43,6 +43,9 @@
 - [ ] Section component (replaces `SettingsSection`) · [ ] PageHeader component
 
 ## Phase 4 — Dashboard pages (50)
+**Tier 1 — theme migration: DONE for ALL pages.** The v2 shell (`DashboardShell`) + variable-driven tokens (component classes and `discord.*` colors now resolve to v2 vars under `.v2`) mean every page auto-restyles to the v2 design system (emerald, surfaces, fonts, shell) with full functionality (real data/save/i18n) intact — no per-page rewrite needed for the base look. Verify live via prod-behind-flag (`?v2=1`).
+**Tier 2 — per-page polish (the checkboxes below):** upgrade specific pages to the refined v2 composites (SettingCard, StatTile, save bar, live preview, ChartCard) and mockup-exact layouts. Overview/Auto-Mod/Analytics have full v2 builds at `/v2-app*` to port onto the real routes.
+
 ### Home
 - [x] Overview · [x] Analytics · [ ] Setup Wizard · [ ] Server select (root) · [ ] Account
 ### Safety
