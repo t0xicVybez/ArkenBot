@@ -44,6 +44,18 @@
   --danger-soft: rgba(248,113,113,0.14);
   --info-soft: rgba(129,140,248,0.14);
 
+  /* Remap the Tailwind discord.* colors used across v1 pages so they inherit
+     the v2 palette automatically (indigo → emerald, etc.) under `.v2`. */
+  --blurple-rgb: 52 211 153;   /* was indigo → emerald accent */
+  --green-rgb: 52 211 153;
+  --yellow-rgb: 251 191 36;
+  --red-rgb: 248 113 113;
+  --base-rgb: 11 12 14;
+  --surface-rgb: 14 16 20;
+  --card-rgb: 18 20 25;
+  --elevated-rgb: 26 29 34;
+  --hover-rgb: 32 36 44;
+
   /* Data-viz categorical ramp (recharts) — literal hex, not tokens, at use */
   --viz-1: #34d399;  --viz-2: #818cf8;  --viz-3: #22d3ee;
   --viz-4: #fbbf24;  --viz-5: #f472b6;  --viz-6: #94a3b8;
@@ -116,6 +128,16 @@
   --accent-contrast: #ffffff;
   --accent-glow: rgba(16,185,129,0.16);
   --accent-soft: rgba(16,185,129,0.12);
+
+  --blurple-rgb: 16 185 129;
+  --green-rgb: 16 185 129;
+  --yellow-rgb: 245 158 11;
+  --red-rgb: 239 68 68;
+  --base-rgb: 245 246 248;
+  --surface-rgb: 255 255 255;
+  --card-rgb: 255 255 255;
+  --elevated-rgb: 255 255 255;
+  --hover-rgb: 241 243 245;
 
   --sh-1: 0 1px 2px rgba(16,20,28,0.06);
   --sh-2: 0 10px 28px -14px rgba(16,20,28,0.20);
