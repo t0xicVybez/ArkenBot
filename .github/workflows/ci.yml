@@ -22,8 +22,14 @@ jobs:
     name: Typecheck & Build
     runs-on: ubuntu-latest
     env:
-      # prisma generate requires the var to be defined; it never connects here.
+      # These are import-time config guards (packages/{bot,api}/src/config.ts),
+      # not real credentials — tests exercise pure logic and never connect out.
+      # Dummy values just satisfy the required() checks so the suites can load.
       DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+      DISCORD_TOKEN: ci-dummy-token
+      DISCORD_CLIENT_ID: "000000000000000000"
+      DISCORD_CLIENT_SECRET: ci-dummy-secret
+      API_SECRET: ci-dummy-api-secret
     steps:
       - uses: actions/checkout@v7
 
