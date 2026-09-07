@@ -10,7 +10,7 @@
 ## Phase 0 — Setup
 - [x] Isolated worktree + `feat/v2-redesign` branch
 - [x] Master tracker (this file)
-- [ ] Feature-flag mechanism (v1/v2 coexist; opt-in beta) — **decided: opt-in beta on same routes, `.v2` class**
+- [x] Feature-flag mechanism — `arken_v2` cookie gates the per-guild layout to the v2 shell (`?v2=1`/`?v2=0` toggles); default off = v1
 - [x] `pnpm install` in worktree
 
 ## Phase 1 — Foundations (design system)
@@ -30,7 +30,7 @@
 - [x] Persistent Save bar (diff count, discard/save) — `shell/SaveBar.tsx` (renders when `dirty`)
 - [x] Theme provider + persistence — in AppShell (localStorage `v2-theme`)
 - [ ] Global search (beyond palette) · [ ] Toast system · [ ] Command-palette actions/settings
-- [ ] Beta-flag wiring on real routes (currently previewed via standalone `/v2-app`)
+- [x] Beta-flag wiring on real routes — `DashboardShell` behind `arken_v2` cookie; v1 pages render inside the v2 shell until each is migrated
 
 ## Phase 3 — Composite components
 - [x] SettingCard (icon/title/desc/control + expandable body)
