@@ -10,15 +10,15 @@
 ## Phase 0 — Setup
 - [x] Isolated worktree + `feat/v2-redesign` branch
 - [x] Master tracker (this file)
-- [ ] Feature-flag mechanism (v1/v2 coexist; opt-in beta)
-- [ ] `pnpm install` in worktree (when first build is needed)
+- [ ] Feature-flag mechanism (v1/v2 coexist; opt-in beta) — **decided: opt-in beta on same routes, `.v2` class**
+- [x] `pnpm install` in worktree
 
 ## Phase 1 — Foundations (design system)
 - [x] Design tokens: color (light+dark), type scale, spacing, radius, shadow, motion — `packages/web/src/styles/tokens.v2.css` (scoped `.v2`, dark + light, emerald accent). *Tailwind theme mapping still TODO.*
-- [ ] Fonts wired (Space Grotesk / Manrope / JetBrains Mono via next/font)
-- [ ] UI kit location decided (`packages/ui` vs `web/src/components/ui`)
-- [ ] Primitives: Button, IconButton, Input, Textarea, Select, Switch, Checkbox, Radio, Tabs, Badge, Tooltip, Avatar, Card, Skeleton, Kbd, Divider, ScrollArea
-- [ ] Kitchen-sink route (`/dashboard/_kit`) or Storybook documenting the kit
+- [x] Fonts wired (Space Grotesk / Manrope / JetBrains Mono via next/font in `layout.tsx`; families exposed as CSS vars, applied only under `.v2`)
+- [x] UI kit location decided → `packages/web/src/components/ui/`
+- [x] Primitives: Button, Input, Select, Switch, Tabs, Badge, Tooltip, Avatar, Card, Skeleton, Kbd (+ composites StatTile, SettingCard) — `components/ui/*`, barrel `index.ts`. *TODO later: Textarea, Checkbox, Radio, Divider, ScrollArea, IconButton.*
+- [x] Kitchen-sink route `/v2-kit` (client page, light/dark toggle) — dev preview, remove before cutover
 - [ ] Icon set standardized (Lucide) + audit
 
 ## Phase 2 — App shell
