@@ -1,0 +1,123 @@
+/*
+ * ArkenBot v2 — Design Tokens
+ * ---------------------------------------------------------------------------
+ * Scoped under `.v2` so it coexists with v1 (which keys off the same variable
+ * names in globals.css). Anything rendered inside a `.v2` subtree picks up the
+ * v2 palette automatically; add `data-theme="light"` on the same element (or an
+ * ancestor) for light mode. Nothing here is wired into the app yet — that's the
+ * shell/feature-flag work in Phase 2.
+ *
+ * Direction: dark-first, premium emerald accent, Space Grotesk / Manrope /
+ * JetBrains Mono. To keep the current indigo instead, change --accent* below.
+ */
+
+.v2 {
+  /* ── Surfaces ───────────────────────────────────────────── */
+  --bg-base: #0b0c0e;        /* canvas / app background */
+  --bg-surface: #0e1014;     /* page background */
+  --bg-card: #121419;        /* cards, sidebar */
+  --bg-elevated: #1a1d22;    /* popovers, inputs, nested */
+  --bg-hover: #20242c;       /* hover fills */
+
+  --border: rgba(255,255,255,0.07);
+  --border-subtle: rgba(255,255,255,0.05);
+  --border-strong: rgba(255,255,255,0.12);
+
+  --text-primary: #e7e9ec;
+  --text-secondary: #9aa0a8;
+  --text-muted: #6b7178;
+
+  /* ── Accent (emerald) + semantics ──────────────────────── */
+  --accent: #34d399;
+  --accent-2: #10b981;
+  --accent-hover: #2bbf89;
+  --accent-contrast: #04140d;            /* text on accent fills */
+  --accent-glow: rgba(52,211,153,0.14);
+  --accent-soft: rgba(52,211,153,0.13);  /* tinted fills / active nav */
+
+  --success: #34d399;
+  --warning: #fbbf24;
+  --danger: #f87171;
+  --info: #818cf8;
+
+  /* Data-viz categorical ramp (recharts) — literal hex, not tokens, at use */
+  --viz-1: #34d399;  --viz-2: #818cf8;  --viz-3: #22d3ee;
+  --viz-4: #fbbf24;  --viz-5: #f472b6;  --viz-6: #94a3b8;
+
+  /* ── Typography ────────────────────────────────────────── */
+  --font-display: 'Space Grotesk', 'Manrope', system-ui, sans-serif;
+  --font-sans: 'Manrope', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace;
+
+  --fs-xs: 11px;  --fs-sm: 12.5px; --fs-base: 14px; --fs-md: 15px;
+  --fs-lg: 17px;  --fs-xl: 20px;   --fs-2xl: 24px;  --fs-3xl: 30px;  --fs-4xl: 40px;
+  --lh-tight: 1.15; --lh-snug: 1.35; --lh-normal: 1.55;
+  --tracking-tight: -0.01em;
+
+  /* ── Radius ────────────────────────────────────────────── */
+  --r-sm: 8px; --r: 10px; --r-md: 12px; --r-lg: 14px; --r-xl: 18px; --r-pill: 999px;
+
+  /* ── Elevation ─────────────────────────────────────────── */
+  --sh-1: 0 1px 2px rgba(0,0,0,0.30);
+  --sh-2: 0 8px 24px -12px rgba(0,0,0,0.60);
+  --sh-pop: 0 24px 70px -20px rgba(0,0,0,0.72);
+  --sh-glow: 0 8px 24px -10px var(--accent);
+
+  /* ── Spacing scale (4px base) ──────────────────────────── */
+  --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px;
+  --sp-5: 20px; --sp-6: 24px; --sp-8: 32px; --sp-10: 40px; --sp-12: 48px;
+
+  /* ── Motion ────────────────────────────────────────────── */
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-1: 150ms; --dur-2: 220ms; --dur-3: 320ms;
+
+  /* ── Layout constants ──────────────────────────────────── */
+  --sidebar-w: 264px;
+  --topbar-h: 58px;
+  --z-sticky: 20; --z-savebar: 40; --z-overlay: 50; --z-modal: 60; --z-toast: 70;
+
+  color-scheme: dark;
+}
+
+/* ── Light mode ───────────────────────────────────────────── */
+.v2[data-theme="light"] {
+  --bg-base: #f5f6f8;
+  --bg-surface: #ffffff;
+  --bg-card: #ffffff;
+  --bg-elevated: #ffffff;
+  --bg-hover: #f1f3f5;
+
+  --border: rgba(12,14,20,0.10);
+  --border-subtle: rgba(12,14,20,0.06);
+  --border-strong: rgba(12,14,20,0.16);
+
+  --text-primary: #101319;
+  --text-secondary: #565d69;
+  --text-muted: #868d99;
+
+  --accent: #10b981;
+  --accent-2: #059669;
+  --accent-hover: #0d9f70;
+  --accent-contrast: #ffffff;
+  --accent-glow: rgba(16,185,129,0.16);
+  --accent-soft: rgba(16,185,129,0.12);
+
+  --sh-1: 0 1px 2px rgba(16,20,28,0.06);
+  --sh-2: 0 10px 28px -14px rgba(16,20,28,0.20);
+  --sh-pop: 0 24px 60px -22px rgba(16,20,28,0.28);
+
+  color-scheme: light;
+}
+
+/* Respect the OS preference when no explicit choice is set on a .v2 root. */
+@media (prefers-color-scheme: light) {
+  .v2:not([data-theme="dark"]):not([data-theme="light"]) {
+    --bg-base: #f5f6f8; --bg-surface: #ffffff; --bg-card: #ffffff; --bg-elevated: #ffffff; --bg-hover: #f1f3f5;
+    --border: rgba(12,14,20,0.10); --border-subtle: rgba(12,14,20,0.06); --border-strong: rgba(12,14,20,0.16);
+    --text-primary: #101319; --text-secondary: #565d69; --text-muted: #868d99;
+    --accent: #10b981; --accent-2: #059669; --accent-hover: #0d9f70; --accent-contrast: #ffffff;
+    --accent-glow: rgba(16,185,129,0.16); --accent-soft: rgba(16,185,129,0.12);
+    color-scheme: light;
+  }
+}
