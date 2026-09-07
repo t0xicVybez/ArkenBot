@@ -33,22 +33,20 @@
 - [ ] Beta-flag wiring on real routes (currently previewed via standalone `/v2-app`)
 
 ## Phase 3 — Composite components
-- [ ] SettingCard (icon/title/desc/control + expandable body)
-- [ ] Section (replaces `SettingsSection`)
-- [ ] StatTile (replaces `StatCard`) — sparkline + trend
-- [ ] ChartCard wrappers (area/bar/donut) — recharts 3, tokenized colors
-- [ ] EmptyState (+ enable CTA)
-- [ ] DataTable (sortable, paginated)
-- [ ] Modal / Sheet / Drawer
-- [ ] LivePreview panel (welcome cards, embeds, automod)
-- [ ] Form field patterns: inline validation, chips-input, slider
-- [ ] PageHeader (breadcrumb + title + actions)
+- [x] SettingCard (icon/title/desc/control + expandable body)
+- [x] StatTile (replaces `StatCard`) — trend
+- [x] LivePreview panel — `ui/LivePreview.tsx`
+- [x] Toast — `ui/Toast.tsx` (controlled; global Toaster TODO)
+- [x] Form field patterns: chips, slider (range + accent-color), Select — shown on Auto-Mod
+- [ ] ChartCard wrappers (area/bar/donut) — recharts 3, tokenized colors (build with Analytics)
+- [ ] EmptyState (+ enable CTA) · [ ] DataTable · [ ] Modal / Sheet / Drawer
+- [ ] Section component (replaces `SettingsSection`) · [ ] PageHeader component
 
 ## Phase 4 — Dashboard pages (50)
 ### Home
 - [ ] Overview · [ ] Analytics · [ ] Setup Wizard · [ ] Server select (root) · [ ] Account
 ### Safety
-- [ ] Moderation · [ ] Auto-Mod · [ ] Anti-Nuke · [ ] Auto-Slowmode · [ ] Verification · [ ] Reports · [ ] Appeals · [ ] Logs · [ ] Audit Log
+- [ ] Moderation · [x] Auto-Mod (live at /v2-app/automod — save bar + live preview) · [ ] Anti-Nuke · [ ] Auto-Slowmode · [ ] Verification · [ ] Reports · [ ] Appeals · [ ] Logs · [ ] Audit Log
 ### Community
 - [ ] Leveling · [ ] Leaderboard · [ ] Welcome · [ ] Reaction Roles · [ ] Self Roles · [ ] Birthdays · [ ] Polls · [ ] Suggestions · [ ] Giveaways · [ ] Economy · [ ] Starboard · [ ] Invite Tracker · [ ] Vote Rewards · [ ] Counting
 ### Content & Tools
