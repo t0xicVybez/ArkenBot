@@ -62,7 +62,7 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const locale = await getLocale();
   return (
-    <html lang={locale} className={`dark ${inter.variable} ${spaceGrotesk.variable} ${manrope.variable} ${jetbrainsMono.variable}`}>
+    <html lang={locale} className={`v2 dark ${inter.variable} ${spaceGrotesk.variable} ${manrope.variable} ${jetbrainsMono.variable}`}>
       <body className="antialiased">
         <NextIntlClientProvider locale={locale}>
           <Providers>{children}</Providers>
