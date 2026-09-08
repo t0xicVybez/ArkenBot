@@ -25,22 +25,23 @@ export default function GuildLayout({ children }: { children: React.ReactNode })
   const guildId = params.guildId as string;
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // v2 redesign opt-in beta flag: `?v2=1` sets a cookie (persists), `?v2=0` clears.
-  const [v2On, setV2On] = useState(false);
+  // v2 is now the PRIMARY theme (default on). `?v2=0` opts out to legacy v1
+  // (persisted, transitional escape hatch); `?v2=1` clears the opt-out.
+  const [v2On, setV2On] = useState(true);
   useEffect(() => {
     try {
       const q = new URLSearchParams(window.location.search).get('v2');
-      if (q === '1') {
-        document.cookie = 'arken_v2=1;path=/;max-age=31536000';
-        setV2On(true);
-        return;
-      }
       if (q === '0') {
-        document.cookie = 'arken_v2=;path=/;max-age=0';
+        document.cookie = 'arken_v2=0;path=/;max-age=31536000';
         setV2On(false);
         return;
       }
-      setV2On(document.cookie.split('; ').includes('arken_v2=1'));
+      if (q === '1') {
+        document.cookie = 'arken_v2=;path=/;max-age=0';
+        setV2On(true);
+        return;
+      }
+      setV2On(!document.cookie.split('; ').includes('arken_v2=0'));
     } catch {
       /* ignore */
     }
