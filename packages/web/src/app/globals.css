@@ -22,6 +22,18 @@
     --success: #43cf8c;
     --warning: #f2c14b;
     --danger: #f26d5f;
+
+    /* RGB triplets backing the Tailwind `discord.*` colors (v1 values, so v1
+       is visually unchanged). The `.v2` scope overrides these in tokens.v2.css. */
+    --blurple-rgb: 124 138 255;   /* #7C8AFF */
+    --green-rgb: 67 207 140;      /* #43cf8c */
+    --yellow-rgb: 242 193 75;     /* #f2c14b */
+    --red-rgb: 242 109 95;        /* #f26d5f */
+    --base-rgb: 12 14 19;         /* #0c0e13 */
+    --surface-rgb: 16 19 26;      /* #10131a */
+    --card-rgb: 22 26 35;         /* #161a23 */
+    --elevated-rgb: 28 33 48;     /* #1c2130 */
+    --hover-rgb: 33 39 55;        /* #212737 */
   }
 
   /* Staff portal keeps the system but shifts the accent to violet */

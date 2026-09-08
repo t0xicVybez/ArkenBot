@@ -13,6 +13,7 @@ import { wsClient } from '@/lib/socket';
 import { Sidebar } from '@/components/Sidebar';
 import { CommandPalette } from '@/components/CommandPalette';
 import { Topbar } from '@/components/Topbar';
+import { DashboardShell } from '@/components/shell/DashboardShell';
 import { Menu } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
@@ -23,6 +24,27 @@ export default function GuildLayout({ children }: { children: React.ReactNode })
   const params = useParams();
   const guildId = params.guildId as string;
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // v2 redesign opt-in beta flag: `?v2=1` sets a cookie (persists), `?v2=0` clears.
+  const [v2On, setV2On] = useState(false);
+  useEffect(() => {
+    try {
+      const q = new URLSearchParams(window.location.search).get('v2');
+      if (q === '1') {
+        document.cookie = 'arken_v2=1;path=/;max-age=31536000';
+        setV2On(true);
+        return;
+      }
+      if (q === '0') {
+        document.cookie = 'arken_v2=;path=/;max-age=0';
+        setV2On(false);
+        return;
+      }
+      setV2On(document.cookie.split('; ').includes('arken_v2=1'));
+    } catch {
+      /* ignore */
+    }
+  }, []);
 
   // The session cookie authenticates the WebSocket upgrade — no token needed.
   useEffect(() => {
@@ -46,6 +68,15 @@ export default function GuildLayout({ children }: { children: React.ReactNode })
   const guild = guildRes?.data?.data;
 
   if (status !== 'authenticated') return null;
+
+  // Beta: render the v2 shell (v1 pages still render inside it until migrated).
+  if (v2On) {
+    return (
+      <DashboardShell guildId={guildId} guildName={guild?.name} guildIcon={guild?.iconUrl}>
+        {children}
+      </DashboardShell>
+    );
+  }
 
   return (
     <div className="flex min-h-screen bg-discord-surface">
