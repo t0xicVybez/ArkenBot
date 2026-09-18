@@ -155,7 +155,8 @@ async function handleOpenTicket(
       new ActionRowBuilder<TextInputBuilder>().addComponents(
         new TextInputBuilder()
           .setCustomId(f.id)
-          .setLabel(f.label)
+          // Discord requires a 1–45 char label; guard empty/over-long values.
+          .setLabel((f.label?.trim() || 'Response').slice(0, 45))
           .setStyle(f.style === 'short' ? TextInputStyle.Short : TextInputStyle.Paragraph)
           .setRequired(f.required)
           .setMaxLength(f.maxLength ?? 1000)

@@ -4,6 +4,7 @@ import {
   TrendingUp, Trophy, Hand, SmilePlus, Tags, Cake, Vote, Lightbulb, Gift, Coins, Star, Link2,
   ThumbsUp, Hash, Music, Activity, Code2, CalendarClock, Mic, Terminal, MessageSquare, Users,
   Rss, Radio, Megaphone, Puzzle, Ticket, ClipboardList, SquareKanban, Trello,
+  Timer, History, Settings,
 } from 'lucide-react';
 
 export interface NavItem {
@@ -57,9 +58,11 @@ export const NAV: NavGroup[] = [
       it('automod', 'Auto-Mod', Bot, 'automod', '/v2-app/automod'),
       it('antinuke', 'Anti-Nuke', ShieldAlert, 'anti-nuke'),
       it('verification', 'Verification', ShieldCheck, 'verification'),
+      it('slowmode', 'Auto-Slowmode', Timer, 'slowmode'),
       it('reports', 'Reports', Flag, 'reports', '#', '2'),
       it('appeals', 'Appeals', Gavel, 'appeals'),
       it('logs', 'Logs', ScrollText, 'logs'),
+      it('audit', 'Audit Log', History, 'audit-log'),
     ],
   },
   {
@@ -105,6 +108,12 @@ export const NAV: NavGroup[] = [
       it('applications', 'Applications', ClipboardList, 'applications'),
       it('monday', 'Monday.com', SquareKanban, 'monday'),
       it('trello', 'Trello', Trello, 'trello'),
+    ],
+  },
+  {
+    label: 'Server',
+    items: [
+      it('settings', 'Server Settings', Settings, 'settings'),
     ],
   },
 ];
