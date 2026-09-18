@@ -25,7 +25,11 @@ export async function countingRoutes(server: FastifyInstance): Promise<void> {
       data: {
         installed: true,
         enabled:   !!state?.channelId,
-        settings:  { channelId: state?.channelId ?? null } as Record<string, unknown>,
+        settings:  {
+          channelId:     state?.channelId ?? null,
+          allowSameUser: state?.allowSameUser ?? false,
+          resetOnFail:   state?.resetOnFail ?? true,
+        } as Record<string, unknown>,
         currentCount: state?.currentCount ?? 0,
         bestCount:    state?.bestCount    ?? 0,
         lastUserId:   state?.lastUserId   ?? null,

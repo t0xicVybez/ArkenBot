@@ -31,14 +31,6 @@ function safeEval(expr: string): number {
   }
 }
 
-async function getAddonSettings(guildId: string): Promise<Record<string, unknown> | null> {
-  const ga = await prisma.guildAddon.findFirst({
-    where: { guildId, addon: { name: 'counting' }, enabled: true },
-    select: { settings: true },
-  }).catch(swallow);
-  return ga ? (ga.settings as Record<string, unknown>) : null;
-}
-
 export class CountingModule {
   /**
    * Validates a message posted in the guild's counting channel. Reacts with ✅
@@ -49,21 +41,19 @@ export class CountingModule {
     if (!message.guild || message.author.bot) return;
     if (!message.channel.isTextBased()) return;
 
-    const settings = await getAddonSettings(message.guild.id);
-    if (!settings?.channelId || settings.channelId !== message.channel.id) return;
-
     const state = await db.countingState.findUnique({
       where: { guildId: message.guild.id },
     }).catch(swallow);
+    if (!state?.channelId || state.channelId !== message.channel.id) return;
 
-    const expected = (state?.currentCount ?? 0) + 1;
+    const expected = (state.currentCount ?? 0) + 1;
     const raw = message.content.trim();
     // Silently ignore non-numeric messages so the channel can still be used for
     // bot output, reactions, etc. without triggering false failures.
     if (!/^[\d\s+\-*/.()]+$/.test(raw)) return;
     const num = safeEval(raw);
-    const allowSameUser = settings.allowSameUser === true;
-    const resetOnFail = settings.resetOnFail !== false;
+    const allowSameUser = state.allowSameUser === true;
+    const resetOnFail = state.resetOnFail !== false;
 
     const ch = message.channel as { send?: (t: string) => Promise<unknown> };
     const send = (text: string) => ch.send?.(text).catch(swallow) ?? Promise.resolve();
@@ -75,7 +65,7 @@ export class CountingModule {
         await db.countingState.upsert({
           where:  { guildId: message.guild.id },
           update: { currentCount: 0, lastUserId: null },
-          create: { guildId: message.guild.id, channelId: String(settings.channelId), currentCount: 0 },
+          create: { guildId: message.guild.id, channelId: state.channelId, currentCount: 0 },
         }).catch(swallow);
         await send(t('counting.ruined', loc, { user: `<@${message.author.id}>`, count: state?.currentCount ?? 0 }));
       }
@@ -88,7 +78,7 @@ export class CountingModule {
         await db.countingState.upsert({
           where:  { guildId: message.guild.id },
           update: { currentCount: 0, lastUserId: null },
-          create: { guildId: message.guild.id, channelId: String(settings.channelId), currentCount: 0 },
+          create: { guildId: message.guild.id, channelId: state.channelId, currentCount: 0 },
         }).catch(swallow);
         await send(t('counting.twiceInRow', loc, { user: `<@${message.author.id}>` }));
       }
@@ -101,7 +91,7 @@ export class CountingModule {
       update: { currentCount: num, lastUserId: message.author.id, bestCount: newBest },
       create: {
         guildId:      message.guild.id,
-        channelId:    String(settings.channelId),
+        channelId:    state.channelId,
         currentCount: num,
         lastUserId:   message.author.id,
         bestCount:    newBest,

@@ -1069,12 +1069,14 @@ model UserRankCardStyle {
 // Counting Game (Addon)
 // ─────────────────────────────────────────────
 model CountingState {
-  guildId      String  @id
-  guild        Guild   @relation(fields: [guildId], references: [id], onDelete: Cascade)
-  channelId    String?
-  currentCount Int     @default(0)
-  lastUserId   String?
-  bestCount    Int     @default(0)
+  guildId       String  @id
+  guild         Guild   @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  channelId     String?
+  currentCount  Int     @default(0)
+  lastUserId    String?
+  bestCount     Int     @default(0)
+  allowSameUser Boolean @default(false)
+  resetOnFail   Boolean @default(true)
 
   @@map("counting_states")
 }
