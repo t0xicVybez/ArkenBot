@@ -16,18 +16,6 @@ import { swallow } from '../../logger.js';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = prisma as any;
 
-/**
- * Retrieves the settings object for the counting addon in a given guild.
- * Returns null if the addon is not installed or not enabled.
- */
-async function getCountingSettings(guildId: string): Promise<Record<string, unknown> | null> {
-  const ga = await prisma.guildAddon.findFirst({
-    where: { guildId, addon: { name: 'counting' }, enabled: true },
-    select: { settings: true },
-  }).catch(swallow);
-  return ga ? (ga.settings as Record<string, unknown>) : null;
-}
-
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('startcounting')
@@ -44,24 +32,22 @@ const command: BotCommand = {
       return;
     }
 
-    const settings = await getCountingSettings(interaction.guild.id);
-    if (!settings?.channelId) {
-      await interaction.editReply({ embeds: [errorEmbed(t('cmd.startcounting.notConfiguredTitle', loc), t('cmd.startcounting.notConfigured', loc))] });
-      return;
-    }
-
-    const countingChannel = interaction.guild.channels.cache.get(String(settings.channelId)) as TextChannel | undefined;
-    if (!countingChannel?.isTextBased()) {
+    const countingChannel = interaction.channel as TextChannel | null;
+    if (!countingChannel?.isTextBased() || countingChannel.isDMBased()) {
       await interaction.editReply({ embeds: [errorEmbed(t('cmd.startcounting.channelNotFoundTitle', loc), t('cmd.startcounting.channelNotFound', loc))] });
       return;
     }
 
-    const state = await db.countingState.findUnique({
-      where: { guildId: interaction.guild.id },
+    // Counting is a core feature: set up (or move) it to the channel this was
+    // run in, so it works without any add-on. Existing counts are preserved.
+    const state = await db.countingState.upsert({
+      where:  { guildId: interaction.guild.id },
+      update: { channelId: countingChannel.id },
+      create: { guildId: interaction.guild.id, channelId: countingChannel.id, currentCount: 0 },
     }).catch(swallow);
 
-    const resetOnFail   = settings.resetOnFail !== false;
-    const allowSameUser = settings.allowSameUser === true;
+    const resetOnFail   = state?.resetOnFail !== false;
+    const allowSameUser = state?.allowSameUser === true;
 
     const embed = new EmbedBuilder()
       .setColor(COLORS.INFO)
