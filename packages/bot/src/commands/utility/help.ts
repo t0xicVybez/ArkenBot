@@ -140,7 +140,7 @@ async function buildPages(
       .map((c) => `\`/${(c.data as { name: string }).name}\``)
       .sort()
       .join('  ');
-    overview.addFields({ name: `${meta.emoji} ${meta.label}  ·  ${t('cmd.help.cmdCount', loc, { count: cmds.length })}`, value: names, inline: false });
+    overview.addFields({ name: `${meta.emoji} ${meta.label}  ·  ${t('cmd.help.cmdCount', loc, { count: cmds.length })}`.slice(0, 256), value: (names || '—').slice(0, 1024), inline: false });
   }
 
   pages.push(overview);
@@ -164,12 +164,15 @@ async function buildPages(
         (o) => o.type === SUB_COMMAND || o.type === SUB_COMMAND_GROUP,
       );
 
-      let value = json.description;
+      // Fallback + cap: an empty description or an over-long value makes
+      // EmbedBuilder.addFields throw ("Received one or more errors").
+      let value = json.description?.trim() || '—';
       if (subs.length > 0) {
         value += '\n> ' + subs.map((s) => `\`${s.name}\``).join('  ');
       }
+      value = value.slice(0, 1024);
 
-      embed.addFields({ name: `/${json.name}`, value, inline: false });
+      embed.addFields({ name: `/${json.name}`.slice(0, 256), value, inline: false });
     }
 
     pages.push(embed);

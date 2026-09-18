@@ -81,7 +81,6 @@ interface NavSection { labelKey?: string; items: NavItem[] }
 const buildNavSections = (guildId: string, installedAddons: string[]): NavSection[] => {
   const addonItems = [
     { href: `/dashboard/${guildId}/tickets`, key: 'tickets', icon: Ticket, addon: 'tickets' },
-    { href: `/dashboard/${guildId}/counting`, key: 'counting', icon: Hash, addon: 'counting' },
     { href: `/dashboard/${guildId}/applications`, key: 'applications', icon: ClipboardList, addon: 'applications' },
   ].filter((item) => installedAddons.includes(item.addon));
 
@@ -122,6 +121,7 @@ const buildNavSections = (guildId: string, installedAddons: string[]): NavSectio
         { href: `/dashboard/${guildId}/members`, key: 'members', icon: Users },
         { href: `/dashboard/${guildId}/invite-tracker`, key: 'invite-tracker', icon: UserPlus },
         { href: `/dashboard/${guildId}/voting`, key: 'voting', icon: ThumbsUp },
+        { href: `/dashboard/${guildId}/counting`, key: 'counting', icon: Hash },
       ],
     },
     {
