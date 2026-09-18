@@ -13,12 +13,14 @@ export function Sidebar({
   guildIcon,
   activeKey,
   onOpenPalette,
+  onNavigate,
 }: {
   guildId?: string;
   guildName?: string;
   guildIcon?: string | null;
   activeKey?: string;
   onOpenPalette?: () => void;
+  onNavigate?: () => void;
 }) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
@@ -89,6 +91,7 @@ export function Sidebar({
                     <Link
                       key={item.key}
                       href={hrefFor(item, guildId)}
+                      onClick={onNavigate}
                       className={cn(
                         'flex items-center gap-3 rounded-[9px] px-2.5 py-[7px] text-[13.5px] font-medium transition-colors',
                         isActive

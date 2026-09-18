@@ -6,6 +6,7 @@ import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
 import { CommandPalette } from './CommandPalette';
 import { NAV, activeKeyForPath } from './nav';
+import { cn } from '../ui/cn';
 
 /**
  * v2 dashboard shell for the real per-guild routes (behind the beta flag).
@@ -25,6 +26,7 @@ export function DashboardShell({
   const pathname = usePathname() ?? '';
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [paletteOpen, setPaletteOpen] = useState(false);
+  const [mobileNav, setMobileNav] = useState(false);
 
   useEffect(() => {
     try {
@@ -70,19 +72,39 @@ export function DashboardShell({
       data-theme={theme}
       style={{ background: 'var(--bg-surface)' }}
     >
-      <div className="grid h-full" style={{ gridTemplateColumns: 'var(--sidebar-w) 1fr' }}>
-        <Sidebar
-          guildId={guildId}
-          guildName={guildName}
-          guildIcon={guildIcon}
-          onOpenPalette={() => setPaletteOpen(true)}
-        />
-        <div className="relative flex min-w-0 flex-col overflow-hidden">
+      <div className="flex h-full">
+        {/* mobile backdrop */}
+        {mobileNav && (
+          <div
+            className="fixed inset-0 z-40 bg-black/55 md:hidden"
+            onClick={() => setMobileNav(false)}
+          />
+        )}
+        {/* sidebar: static on md+, off-canvas drawer on mobile */}
+        <div
+          className={cn(
+            'fixed inset-y-0 left-0 z-50 w-[var(--sidebar-w)] shrink-0 transition-transform duration-200 ease-out md:static md:z-auto md:translate-x-0',
+            mobileNav ? 'translate-x-0' : '-translate-x-full md:translate-x-0',
+          )}
+        >
+          <Sidebar
+            guildId={guildId}
+            guildName={guildName}
+            guildIcon={guildIcon}
+            onOpenPalette={() => {
+              setPaletteOpen(true);
+              setMobileNav(false);
+            }}
+            onNavigate={() => setMobileNav(false)}
+          />
+        </div>
+        <div className="relative flex min-w-0 flex-1 flex-col overflow-hidden">
           <Topbar
             breadcrumb={breadcrumb}
             theme={theme}
             onToggleTheme={toggleTheme}
             onOpenPalette={() => setPaletteOpen(true)}
+            onOpenSidebar={() => setMobileNav(true)}
           />
           <main className="flex-1 overflow-y-auto">{children}</main>
         </div>

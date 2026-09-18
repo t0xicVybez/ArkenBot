@@ -1,20 +1,31 @@
 'use client';
 
-import { Search, Bell, Sun, Moon } from 'lucide-react';
+import { Search, Bell, Sun, Moon, Menu } from 'lucide-react';
 
 export function Topbar({
   breadcrumb,
   theme,
   onToggleTheme,
   onOpenPalette,
+  onOpenSidebar,
 }: {
   breadcrumb: string[];
   theme: 'dark' | 'light';
   onToggleTheme: () => void;
   onOpenPalette: () => void;
+  onOpenSidebar?: () => void;
 }) {
   return (
-    <header className="flex h-[var(--topbar-h)] flex-none items-center gap-3 border-b border-[var(--border)] px-6">
+    <header className="flex h-[var(--topbar-h)] flex-none items-center gap-3 border-b border-[var(--border)] px-4 md:px-6">
+      {onOpenSidebar && (
+        <button
+          onClick={onOpenSidebar}
+          aria-label="Open menu"
+          className="-ml-1 grid h-[34px] w-[34px] place-items-center rounded-[9px] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] md:hidden"
+        >
+          <Menu className="h-[19px] w-[19px]" />
+        </button>
+      )}
       <nav className="flex items-center gap-2 text-[13px] text-[var(--text-secondary)]">
         {breadcrumb.map((c, i) => (
           <span key={i} className="flex items-center gap-2">
