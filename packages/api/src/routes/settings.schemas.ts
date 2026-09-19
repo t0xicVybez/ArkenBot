@@ -104,17 +104,62 @@ export const WelcomePatchSchema = z.object({
 }).strict();
 
 /**
+ * Common Discord emoji shortcodes people type into the emoji field (e.g. `:one:`)
+ * mapped to the actual Unicode emoji. Discord's REST API can only react with a
+ * real Unicode/custom emoji — the `:name:` shortcode is a client-only rendering,
+ * so a stored shortcode produces a panel with no reactable emoji. We convert the
+ * ones people actually use for reaction-role panels; regional-indicator letters
+ * are generated below.
+ */
+const EMOJI_SHORTCODES: Record<string, string> = {
+  zero: '0️⃣', one: '1️⃣', two: '2️⃣', three: '3️⃣', four: '4️⃣',
+  five: '5️⃣', six: '6️⃣', seven: '7️⃣', eight: '8️⃣', nine: '9️⃣', ten: '🔟',
+  keycap_ten: '🔟', hash: '#️⃣', asterisk: '*️⃣',
+  white_check_mark: '✅', heavy_check_mark: '✔️', ballot_box_with_check: '☑️',
+  x: '❌', negative_squared_cross_mark: '❎', o: '⭕', red_circle: '🔴',
+  green_circle: '🟢', blue_circle: '🔵', yellow_circle: '🟡', orange_circle: '🟠',
+  purple_circle: '🟣', brown_circle: '🟤', black_circle: '⚫', white_circle: '⚪',
+  star: '⭐', star2: '🌟', sparkles: '✨', fire: '🔥', boom: '💥', zap: '⚡',
+  tada: '🎉', confetti_ball: '🎊', gift: '🎁', balloon: '🎈', crown: '👑', gem: '💎',
+  heart: '❤️', orange_heart: '🧡', yellow_heart: '💛', green_heart: '💚',
+  blue_heart: '💙', purple_heart: '💜', black_heart: '🖤', white_heart: '🤍',
+  thumbsup: '👍', '+1': '👍', thumbsdown: '👎', '-1': '👎', wave: '👋', eyes: '👀',
+  bell: '🔔', lock: '🔒', key: '🔑', gear: '⚙️', shield: '🛡️', tools: '🛠️',
+  warning: '⚠️', question: '❓', grey_question: '❔', exclamation: '❗',
+  bulb: '💡', rocket: '🚀', crystal_ball: '🔮', game_die: '🎲', video_game: '🎮',
+  musical_note: '🎵', headphones: '🎧', microphone: '🎤', art: '🎨',
+  robot: '🤖', ghost: '👻', alien: '👽', skull: '💀', dog: '🐶', cat: '🐱',
+  speech_balloon: '💬', pushpin: '📌', calendar: '📅', clipboard: '📋', label: '🏷️',
+};
+
+/**
  * Normalise an emoji string to the canonical form used by Discord.js reaction events:
  *   - Custom emoji <:name:id> or <a:name:id>  → "name:id"
- *   - Unicode emoji (possibly with FE0F variation selector) → stripped Unicode character
+ *   - `:shortcode:` (e.g. `:one:`) → the actual Unicode emoji
+ *   - Unicode emoji → the variation selector (U+FE0F) stripped, matching the bot's
+ *     `emojiKey()`; the keycap mark (U+20E3) is KEPT so keycaps like `1️⃣` still match.
  */
 export function normalizeEmoji(raw: string): string {
-  const m = raw.match(/^<a?:([\w~]+):(\d+)>$/);
-  if (m) return `${m[1]}:${m[2]}`;
-  // Strip all Unicode variation selectors (U+FE00–U+FE0F, U+E0100–U+E01EF)
-  // and keycap combining enclosing mark (U+20E3)
-  return raw
-    .replace(/[︀-️⃣]/g, '')
-    .replace(/\uDB40[\uDC00-\uDCFF]/g, '') // U+E0100–U+E01EF (surrogate pair range)
+  let value = raw.trim();
+
+  const custom = value.match(/^<a?:([\w~]+):(\d+)>$/);
+  if (custom) return `${custom[1]}:${custom[2]}`;
+
+  // Resolve a :shortcode: (regional_indicator_a → 🇦, or the table above).
+  const shortcode = value.match(/^:([a-z0-9_+-]+):$/i);
+  if (shortcode) {
+    const key = shortcode[1].toLowerCase();
+    const ri = key.match(/^regional_indicator_([a-z])$/);
+    if (ri) value = String.fromCodePoint(0x1f1e6 + (ri[1].charCodeAt(0) - 97));
+    else if (EMOJI_SHORTCODES[key]) value = EMOJI_SHORTCODES[key];
+    // An unknown shortcode is left as-is; it won't be reactable, which the bot
+    // now surfaces as an alert rather than failing silently.
+  }
+
+  // Strip only the U+FE0F variation selector and E0100-range tags, matching
+  // emojiKey() on the bot side so stored and reacted forms are identical.
+  return value
+    .replace(/️/g, '')
+    .replace(/\uDB40[\uDC00-\uDCFF]/g, '')
     .trim();
 }

@@ -157,20 +157,31 @@ export class ReactionRolesModule {
 
     try {
       let discordMessageId: string | null = panel.messageId ?? null;
+      let failedReactions = 0;
+      let lastReactError: unknown = null;
 
-      // React to msg and return the canonical emoji key Discord uses in events
+      // React to msg and return the canonical emoji key Discord uses in events,
+      // or null if the reaction could not be added. Keycap emojis are stored
+      // without U+FE0F (to match reaction events), but the reaction API needs the
+      // full sequence — re-add it before reacting.
       const reactAndCanonicalise = async (
         msg: import('discord.js').Message,
         role: (typeof panel.roles)[number],
-      ): Promise<string> => {
-        const mr = await msg.react(role.emoji).catch(swallow);
+      ): Promise<string | null> => {
+        const reactable = role.emoji.replace(/([#*0-9])⃣/g, '$1️⃣');
+        const mr = await msg.react(reactable).catch((err: unknown) => {
+          failedReactions++;
+          lastReactError = err;
+          logger.warn({ err: (err as Error)?.message, emoji: role.emoji, panelId }, 'ReactionRoles: failed to add panel reaction');
+          return null;
+        });
         if (mr) {
           // Use the emoji Discord resolved to — this is what reaction events return
           return mr.emoji.id
             ? `${mr.emoji.name}:${mr.emoji.id}`
             : (mr.emoji.name?.replace(/\uFE0F/g, '').trim() ?? role.emoji);
         }
-        return role.emoji;
+        return null;
       };
 
       if (discordMessageId) {
@@ -180,7 +191,7 @@ export class ReactionRolesModule {
           await existing.reactions.removeAll();
           for (const role of panel.roles) {
             const canonical = await reactAndCanonicalise(existing, role);
-            if (canonical !== role.emoji) {
+            if (canonical && canonical !== role.emoji) {
               await prisma.reactionRole.update({ where: { id: role.id }, data: { emoji: canonical } }).catch(swallow);
             }
           }
@@ -194,7 +205,7 @@ export class ReactionRolesModule {
         discordMessageId = msg.id;
         for (const role of panel.roles) {
           const canonical = await reactAndCanonicalise(msg, role);
-          if (canonical !== role.emoji) {
+          if (canonical && canonical !== role.emoji) {
             await prisma.reactionRole.update({ where: { id: role.id }, data: { emoji: canonical } }).catch(swallow);
           }
         }
@@ -209,6 +220,18 @@ export class ReactionRolesModule {
         where: { panelId },
         data: { messageId: discordMessageId, channelId: panel.channelId },
       });
+
+      // Some reactions couldn't be added — the panel is posted but (partly)
+      // unclickable. Alert admins if it was a permission problem; the per-emoji
+      // warn log above covers the rest (e.g. an unresolvable emoji).
+      if (failedReactions > 0 && lastReactError) {
+        await notifyActionFailure(guild, {
+          action: 'addReaction',
+          error: lastReactError,
+          requiredPermission: 'Add Reactions',
+          channelId: panel.channelId,
+        });
+      }
 
       logger.info(`Deployed reaction role panel ${panelId} in guild ${panel.guildId}`);
     } catch (err) {
