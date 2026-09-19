@@ -9,6 +9,8 @@
 import { EmbedBuilder, type TextChannel, type VoiceChannel } from 'discord.js';
 import { computeNextOccurrence } from '@arkenbot/shared';
 import { postAnalytics } from '../commands/utility/analytics.js';
+import { buildPollEmbed, buildPollComponents } from '../commands/utility/poll.js';
+import { generatePollChart } from '../utils/pollChart.js';
 import { prisma } from '../database.js';
 import { redis } from '../redis.js';
 import { notifyActionFailure } from '../utils/permissionAlert.js';
@@ -69,6 +71,9 @@ export class BackgroundJobs {
 
     void this.runGiveaways();
     setTimeout(() => this.timers.push(setInterval(() => void this.runGiveaways(), 60 * 1000)), jitter());
+
+    void this.closePolls();
+    setTimeout(() => this.timers.push(setInterval(() => void this.closePolls(), 60 * 1000)), jitter());
 
     void this.runStreamAlerts();
     setTimeout(() => this.timers.push(setInterval(() => void this.runStreamAlerts(), 5 * 60 * 1000)), jitter());
@@ -550,6 +555,47 @@ export class BackgroundJobs {
       }
     } catch (err) {
       logger.error({ err }, 'Reminder delivery failed');
+    }
+  }
+
+  // ── Poll Auto-Close ─────────────────────────────────────────────────────────
+
+  /**
+   * Closes polls whose `endsAt` has passed and updates the poll message with the
+   * final results. Durable (reads `endsAt` from the DB) so it survives restarts
+   * and handles long durations that an in-process timer could not.
+   */
+  private async closePolls(): Promise<void> {
+    const now = new Date();
+    try {
+      const expired = await prisma.poll.findMany({
+        where: { closed: false, endsAt: { not: null, lte: now } },
+        include: { votes: true },
+      });
+      for (const poll of expired) {
+        await prisma.poll.update({ where: { id: poll.id }, data: { closed: true } });
+
+        const guild = this.client.guilds.cache.get(poll.guildId);
+        const channel = guild?.channels.cache.get(poll.channelId) as TextChannel | undefined;
+        if (!guild || !channel?.isTextBased() || !poll.messageId) continue;
+
+        const options = poll.options as string[];
+        const loc = await resolveUserLocale({ user: { id: '' }, guildId: poll.guildId, guildLocale: guild.preferredLocale });
+        try {
+          const embed = buildPollEmbed(poll.question, options, poll.votes, poll.endsAt, loc)
+            .setTitle(`📊 ${t('cmd.poll.ended', loc, { question: poll.question })}`)
+            .setColor(0x57f287);
+          const chart = await generatePollChart(poll.question, options, poll.votes).catch(swallow);
+          const msg = await channel.messages.fetch(poll.messageId);
+          await msg.edit({
+            embeds: [embed],
+            components: buildPollComponents(poll.id, options, true, loc),
+            files: chart ? [{ attachment: chart, name: 'poll-results.png' }] : [],
+          });
+        } catch { /* poll message may have been deleted */ }
+      }
+    } catch (err) {
+      logger.error({ err }, 'Poll auto-close failed');
     }
   }
 

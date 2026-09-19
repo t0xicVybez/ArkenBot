@@ -28,7 +28,7 @@ import { swallow } from '../../logger.js';
  * @param votes    - Current vote records used to compute counts and percentages.
  * @param endsAt   - Optional expiry timestamp rendered as a relative Discord timestamp.
  */
-function buildPollEmbed(question: string, options: string[], votes: { optionIndex: number }[], endsAt: Date | null | undefined, loc: string): EmbedBuilder {
+export function buildPollEmbed(question: string, options: string[], votes: { optionIndex: number }[], endsAt: Date | null | undefined, loc: string): EmbedBuilder {
   const total = votes.length;
   const description = options.map((opt, i) => {
     const count = votes.filter((v) => v.optionIndex === i).length;
@@ -56,7 +56,7 @@ function buildPollEmbed(question: string, options: string[], votes: { optionInde
  * @param options - Option labels used as button labels (truncated to 80 chars).
  * @param closed  - When true, all buttons are rendered as disabled.
  */
-function buildPollComponents(pollId: string, options: string[], closed: boolean, loc: string): ActionRowBuilder<ButtonBuilder>[] {
+export function buildPollComponents(pollId: string, options: string[], closed: boolean, loc: string): ActionRowBuilder<ButtonBuilder>[] {
   const rows: ActionRowBuilder<ButtonBuilder>[] = [];
   const buttons: ButtonBuilder[] = options.map((opt, i) =>
     new ButtonBuilder()
@@ -85,8 +85,18 @@ const command: BotCommand = {
     .setName('poll')
     .setDescription('Create a poll')
     .addStringOption((o) => o.setName('question').setDescription('Poll question').setRequired(true))
-    .addStringOption((o) => o.setName('options').setDescription('Options separated by | (e.g. Yes | No | Maybe)').setRequired(true))
-    .addIntegerOption((o) => o.setName('duration').setDescription('Duration in minutes (optional)').setMinValue(1).setMaxValue(10080))
+    .addStringOption((o) => o.setName('options').setDescription('Your choices, separated by | — 2 to 10 (e.g. Pizza | Tacos | Sushi)').setRequired(true))
+    .addIntegerOption((o) => o.setName('duration').setDescription('How long the poll stays open (optional)').addChoices(
+      { name: '30 minutes', value: 30 },
+      { name: '1 hour', value: 60 },
+      { name: '6 hours', value: 360 },
+      { name: '12 hours', value: 720 },
+      { name: '1 day', value: 1440 },
+      { name: '3 days', value: 4320 },
+      { name: '1 week', value: 10080 },
+      { name: '2 weeks', value: 20160 },
+      { name: '1 month', value: 43200 },
+    ))
     .addBooleanOption((o) => o.setName('multi').setDescription('Allow multiple votes per user')),
   category: 'utility',
   cooldown: 10,
@@ -123,27 +133,9 @@ const command: BotCommand = {
 
     await prisma.poll.update({ where: { id: poll.id }, data: { messageId: resource!.message!.id } });
 
-    // Schedule in-process auto-close. This is a best-effort convenience: if the
-    // process restarts before the timer fires, the poll will remain open until
-    // a moderator ends it manually via the button.
-    if (endsAt) {
-      setTimeout(async () => {
-        try {
-          await prisma.poll.update({ where: { id: poll.id }, data: { closed: true } });
-          const updatedPoll = await prisma.poll.findUnique({ where: { id: poll.id }, include: { votes: true } });
-          if (!updatedPoll) return;
-          const closedEmbed = buildPollEmbed(question, rawOptions, updatedPoll.votes, endsAt, loc)
-            .setTitle(`📊 ${t('cmd.poll.ended', loc, { question })}`)
-            .setColor(0x57f287);
-          const chartBuffer = await generatePollChart(question, rawOptions, updatedPoll.votes).catch(swallow);
-          await interaction.editReply({
-            embeds: [closedEmbed],
-            components: buildPollComponents(poll.id, rawOptions, true, loc),
-            files: chartBuffer ? [{ attachment: chartBuffer, name: 'poll-results.png' }] : [],
-          });
-        } catch { /* poll message may have been deleted */ }
-      }, duration! * 60 * 1000);
-    }
+    // Auto-close is handled durably by the BackgroundJobs poll sweep (closePolls),
+    // which reads endsAt — so it survives restarts and supports long durations
+    // (a month) that an in-process setTimeout could not.
   },
 
   async handleButton(interaction: ButtonInteraction, _client: BotClient) {
