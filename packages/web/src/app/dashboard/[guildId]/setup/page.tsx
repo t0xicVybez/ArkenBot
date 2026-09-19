@@ -11,7 +11,6 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 
 interface GuildChannel { id: string; name: string; type: number }
-interface GuildRole { id: string; name: string }
 
 const STEPS = [
   { id: 'welcome-msg', icon: MessageSquare },
@@ -44,16 +43,11 @@ export default function SetupWizardPage() {
     queryKey: ['channels', guildId],
     queryFn: () => guildsApi.channels(guildId),
   });
-  const { data: rolesRes } = useQuery({
-    queryKey: ['roles', guildId],
-    queryFn: () => guildsApi.roles(guildId),
-  });
 
   const settings   = settingsRes?.data?.data as Record<string, unknown> | undefined;
   const welcome    = welcomeRes?.data?.data as Record<string, unknown> | undefined;
   const automod    = automodRes?.data?.data as Record<string, unknown> | undefined;
   const channels   = ((channelsRes?.data?.data ?? []) as GuildChannel[]).filter((c) => c.type === 0);
-  const roles      = (rolesRes?.data?.data ?? []) as GuildRole[];
 
   const advance = () => {
     setCompleted((prev) => new Set([...prev, step]));
@@ -150,7 +144,6 @@ export default function SetupWizardPage() {
             guildId={guildId}
             settings={settings}
             channels={channels}
-            roles={roles}
             onNext={advance}
           />
         )}
@@ -263,19 +256,16 @@ function ModerationStep({
   guildId,
   settings,
   channels,
-  roles,
   onNext,
 }: {
   guildId: string;
   settings: Record<string, unknown> | undefined;
   channels: GuildChannel[];
-  roles: GuildRole[];
   onNext: () => void;
 }) {
   const t = useTranslations('setupWizardPage');
   const [enabled, setEnabled]     = useState<boolean>((settings?.moderationEnabled as boolean | undefined) ?? false);
-  const [logChannel, setLogChannel] = useState<string>((settings?.logChannelId as string | undefined) ?? '');
-  const [modRole, setModRole]     = useState<string>((settings?.modRoleId as string | undefined) ?? '');
+  const [logChannel, setLogChannel] = useState<string>((settings?.modLogChannelId as string | undefined) ?? '');
 
   const mut = useMutation({
     mutationFn: (data: object) => settingsApi.update(guildId, data),
@@ -283,7 +273,7 @@ function ModerationStep({
     onError: () => toast.error(t('moderationSaveError')),
   });
 
-  const save = () => mut.mutate({ moderationEnabled: enabled, logChannelId: logChannel || undefined, modRoleId: modRole || undefined });
+  const save = () => mut.mutate({ moderationEnabled: enabled, modLogChannelId: logChannel || undefined });
 
   return (
     <div className="space-y-5">
@@ -302,15 +292,6 @@ function ModerationStep({
               <option value="">{t('none')}</option>
               {channels.map((c) => (
                 <option key={c.id} value={c.id}>#{c.name}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="label">{t('moderatorRole')} <span className="text-gray-500">{t('optional')}</span></label>
-            <select className="input" value={modRole} onChange={(e) => setModRole(e.target.value)}>
-              <option value="">{t('none')}</option>
-              {roles.map((r) => (
-                <option key={r.id} value={r.id}>{r.name}</option>
               ))}
             </select>
           </div>
