@@ -200,6 +200,15 @@ const event: BotEvent = {
           return;
         }
 
+        // A giveaway created from the dashboard — post its announcement message
+        // and seed the entry reaction (slash-command giveaways post inline).
+        if (_channel === 'giveaway:start') {
+          const { giveawayId } = JSON.parse(message) as { guildId: string; giveawayId: string };
+          const { GiveawayModule } = await import('../modules/giveaway/GiveawayModule.js');
+          await GiveawayModule.post(client, giveawayId);
+          return;
+        }
+
         // Some channels (like 'api:events') publish JSON event objects, while
         // others (like 'cache:invalidate:settings') publish a plain guildId.
         if (_channel === 'cache:invalidate:settings') {
@@ -401,6 +410,7 @@ const event: BotEvent = {
     await sub.subscribe('api:events');
     await sub.subscribe('cache:invalidate:settings');
     await sub.subscribe('topgg:vote');
+    await sub.subscribe('giveaway:start');
 
 
     await ModmailModule.loadOpenThreads().catch(() => {});

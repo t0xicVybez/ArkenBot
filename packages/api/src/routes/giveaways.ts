@@ -97,6 +97,14 @@ export async function giveawayRoutes(server: FastifyInstance): Promise<void> {
     const portalUser = (request as unknown as { user?: { id: string; username: string } }).user;
     const hostId = portalUser?.id ?? 'portal';
 
+    // The winner draw reads bonus entries under the key `bonusEntries`; older
+    // dashboard payloads used `entries`. Normalise so bonus roles actually count.
+    const bonusRoleEntries = Array.isArray(body.bonusRoleEntries)
+      ? (body.bonusRoleEntries as Array<Record<string, unknown>>)
+          .filter((e) => e && typeof e.roleId === 'string')
+          .map((e) => ({ roleId: e.roleId as string, bonusEntries: Number(e.bonusEntries ?? e.entries ?? 1) }))
+      : undefined;
+
     const giveaway = await prisma.giveaway.create({
       data: {
         guildId,
@@ -107,7 +115,7 @@ export async function giveawayRoutes(server: FastifyInstance): Promise<void> {
         endsAt,
         winnerIds: [],
         ...(body.requiredRoleId && { requiredRoleId: body.requiredRoleId }),
-        ...(body.bonusRoleEntries !== undefined && { bonusRoleEntries: body.bonusRoleEntries as import('@prisma/client').Prisma.InputJsonValue }),
+        ...(bonusRoleEntries && bonusRoleEntries.length > 0 && { bonusRoleEntries: bonusRoleEntries as import('@prisma/client').Prisma.InputJsonValue }),
       },
     });
 
