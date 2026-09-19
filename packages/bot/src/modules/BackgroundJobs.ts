@@ -975,6 +975,9 @@ export class BackgroundJobs {
         const feedTitle = feed.title ?? t('streamAlert.rssFeedFallback', loc);
         const postFallback = t('streamAlert.rssPostFallback', loc);
         const message = alert.message
+          // {feed} is the RSS-appropriate name; {streamer} kept as an alias so
+          // messages saved before the rename keep working.
+          .replace(/\{feed\}/g, feedTitle)
           .replace(/\{streamer\}/g, feedTitle)
           .replace(/\{url\}/g, itemUrl)
           .replace(/\{title\}/g, latestItem.title ?? postFallback);
