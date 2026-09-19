@@ -12,6 +12,7 @@ import { config } from '../config.js';
 import { SessionService } from '../services/SessionService.js';
 import { setSessionCookie } from '../utils/sessionCookie.js';
 import { AuthService } from '../services/AuthService.js';
+import { getUserGuilds, GuildFetchRateLimited } from '../utils/userGuilds.js';
 
 declare module 'fastify' {
   interface FastifyRequest {
@@ -119,19 +120,10 @@ export async function requireGuildAdmin(request: FastifyRequest, reply: FastifyR
   }
 
   try {
-    const { default: axios } = await import('axios');
-    // Paginate /users/@me/guilds (200/page) and stop as soon as the target guild
-    // is found, so admins of 200+ servers can still open a recently-joined one.
-    type UserGuild = { id: string; permissions: string; owner?: boolean };
-    let guild: UserGuild | undefined;
-    let after: string | undefined;
-    for (let page = 0; page < 10 && !guild; page++) {
-      const url = `https://discord.com/api/v10/users/@me/guilds?limit=200${after ? `&after=${after}` : ''}`;
-      const guildsRes = await axios.get<UserGuild[]>(url, { headers: { Authorization: `Bearer ${accessToken}` } });
-      guild = guildsRes.data.find((g) => g.id === guildId);
-      if (guildsRes.data.length < 200) break;
-      after = guildsRes.data[guildsRes.data.length - 1].id;
-    }
+    // Cached + coalesced so a dashboard's parallel endpoint calls make at most
+    // one Discord `/users/@me/guilds` request per user, avoiding 429 → 500.
+    const guilds = await getUserGuilds(request.user!.id, accessToken);
+    const guild = guilds.find((g) => g.id === guildId);
     if (!guild) {
       reply.code(403).send({ success: false, error: 'You are not a member of this guild' });
       return;
@@ -146,7 +138,13 @@ export async function requireGuildAdmin(request: FastifyRequest, reply: FastifyR
     if (!canManage && guild.owner !== true) {
       reply.code(403).send({ success: false, error: 'Administrator or Manage Server permission required' });
     }
-  } catch {
+  } catch (err) {
+    if (err instanceof GuildFetchRateLimited) {
+      reply.header('Retry-After', String(err.retryAfterSeconds));
+      reply.code(429).send({ success: false, error: 'Discord is rate-limiting requests — please retry in a moment' });
+      return;
+    }
+    request.log.error({ err, guildId, userId: request.user?.id }, 'Failed to verify guild permissions');
     reply.code(500).send({ success: false, error: 'Failed to verify guild permissions' });
   }
 }
