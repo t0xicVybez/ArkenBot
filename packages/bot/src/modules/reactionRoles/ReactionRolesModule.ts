@@ -10,6 +10,7 @@ import { COLORS } from '@arkenbot/shared';
 import { logger, swallow} from '../../logger.js';
 import { getGuildSettings } from '../../utils/settings.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
+import { notifyActionFailure, isPermissionError } from '../../utils/permissionAlert.js';
 
 /**
  * Returns the canonical emoji key matching what the API stores in the DB:
@@ -211,7 +212,19 @@ export class ReactionRolesModule {
 
       logger.info(`Deployed reaction role panel ${panelId} in guild ${panel.guildId}`);
     } catch (err) {
-      logger.error({ err }, `Failed to deploy reaction role panel ${panelId}`);
+      // A missing-permission failure (bot can't post/react in the target
+      // channel) means the panel silently never appears — surface it to the
+      // guild's admins via the alert channel instead of only logging.
+      if (isPermissionError(err)) {
+        await notifyActionFailure(guild, {
+          action: 'sendMessage',
+          error: err,
+          requiredPermission: 'Send Messages / Add Reactions',
+          channelId: panel.channelId,
+        });
+      } else {
+        logger.error({ err }, `Failed to deploy reaction role panel ${panelId}`);
+      }
     }
   }
 
