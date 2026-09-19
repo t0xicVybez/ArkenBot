@@ -13,8 +13,8 @@ export default function RssFeedsPage() {
       badgeClass: 'bg-yellow-500/15 text-yellow-400',
       usernameLabel: t('usernameLabel'),
       usernamePlaceholder: 'https://example.com/feed.xml',
-      variables: '{streamer} = feed title · {title} = item title · {url} = item link',
-      messagePlaceholder: 'e.g. New post from {streamer}: {title} — {url}',
+      variables: '{feed} = feed title · {title} = item title · {url} = item link',
+      messagePlaceholder: 'e.g. New post from {feed}: {title} — {url}',
     },
   ];
   return (
