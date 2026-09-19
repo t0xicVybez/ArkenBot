@@ -3,6 +3,19 @@ import { requireGuildAdmin } from '../middleware/auth.js';
 import { prisma } from '../database.js';
 import { pub } from '../redis.js';
 
+/**
+ * Parses a human duration string (e.g. "1h", "3d", "30m") into milliseconds.
+ * Mirrors the bot's `/giveaway` duration parser so the dashboard and the slash
+ * command accept the same format. Returns `null` for an unrecognised string.
+ */
+function parseDurationMs(str: string): number | null {
+  const match = str.trim().match(/^(\d+)(s|m|h|d|w)$/i);
+  if (!match) return null;
+  const n = parseInt(match[1], 10);
+  const unit: Record<string, number> = { s: 1000, m: 60000, h: 3600000, d: 86400000, w: 604800000 };
+  return n * (unit[match[2].toLowerCase()] ?? 0);
+}
+
 async function resolveUsernames(userIds: string[]): Promise<Record<string, string>> {
   if (userIds.length === 0) return {};
   const token = process.env.DISCORD_TOKEN;
@@ -70,12 +83,15 @@ export async function giveawayRoutes(server: FastifyInstance): Promise<void> {
     };
 
     if (!body.prize?.trim()) return reply.code(400).send({ success: false, error: 'prize is required' });
-    if (!body.duration) return reply.code(400).send({ success: false, error: 'duration (endsAt ISO string) is required' });
+    if (!body.duration) return reply.code(400).send({ success: false, error: 'duration is required' });
     if (!body.channelId) return reply.code(400).send({ success: false, error: 'channelId is required' });
 
-    const endsAt = new Date(body.duration);
+    // The dashboard sends a human duration ("1h", "3d", "30m"); fall back to
+    // parsing an ISO date string for any other caller.
+    const durationMs = parseDurationMs(body.duration);
+    const endsAt = durationMs !== null ? new Date(Date.now() + durationMs) : new Date(body.duration);
     if (isNaN(endsAt.getTime()) || endsAt <= new Date()) {
-      return reply.code(400).send({ success: false, error: 'duration must be a valid future ISO date string' });
+      return reply.code(400).send({ success: false, error: 'duration must be a value like 1h, 3d, 30m (or a future ISO date)' });
     }
 
     const portalUser = (request as unknown as { user?: { id: string; username: string } }).user;
