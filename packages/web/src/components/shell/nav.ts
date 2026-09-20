@@ -18,6 +18,8 @@ export interface NavItem {
   badge?: string;
 }
 export interface NavGroup {
+  /** Stable i18n key (label is the English fallback / reference). */
+  key: string;
   label: string;
   items: NavItem[];
 }
@@ -44,7 +46,7 @@ const it = (key: string, label: string, icon: LucideIcon, slug: string, href = '
 /** The regrouped v2 information architecture (30+ pages → 5 buckets). */
 export const NAV: NavGroup[] = [
   {
-    label: 'Home',
+    key: 'home', label: 'Home',
     items: [
       it('overview', 'Overview', LayoutGrid, '', '/v2-app'),
       it('analytics', 'Analytics', BarChart3, 'analytics', '/v2-app/analytics'),
@@ -52,7 +54,7 @@ export const NAV: NavGroup[] = [
     ],
   },
   {
-    label: 'Safety',
+    key: 'safety', label: 'Safety',
     items: [
       it('moderation', 'Moderation', Shield, 'moderation'),
       it('automod', 'Auto-Mod', Bot, 'automod', '/v2-app/automod'),
@@ -66,7 +68,7 @@ export const NAV: NavGroup[] = [
     ],
   },
   {
-    label: 'Community',
+    key: 'community', label: 'Community',
     items: [
       it('leveling', 'Leveling', TrendingUp, 'leveling'),
       it('leaderboard', 'Leaderboard', Trophy, 'leaderboard'),
@@ -85,7 +87,7 @@ export const NAV: NavGroup[] = [
     ],
   },
   {
-    label: 'Content & Tools',
+    key: 'tools', label: 'Content & Tools',
     items: [
       it('music', 'Music', Music, 'music'),
       it('stats', 'Stats Channels', Activity, 'stats-channels'),
@@ -101,7 +103,7 @@ export const NAV: NavGroup[] = [
     ],
   },
   {
-    label: 'Extend',
+    key: 'extend', label: 'Extend',
     items: [
       it('addons', 'Add-ons', Puzzle, 'addons', '#', '7'),
       it('tickets', 'Tickets', Ticket, 'tickets'),
@@ -111,7 +113,7 @@ export const NAV: NavGroup[] = [
     ],
   },
   {
-    label: 'Server',
+    key: 'server', label: 'Server',
     items: [
       it('settings', 'Server Settings', Settings, 'settings'),
       it('permissions', 'Permission Health', KeyRound, 'permissions'),
