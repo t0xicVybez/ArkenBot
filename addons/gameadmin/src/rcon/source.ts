@@ -58,11 +58,13 @@ function sourceRconOnce(
     let authed = false;
     const parts: string[] = [];
     let settled = false;
+    let settleTimer: ReturnType<typeof setTimeout> | undefined;
 
     const done = (err: Error | null, value?: string): void => {
       if (settled) return;
       settled = true;
       clearTimeout(timer);
+      if (settleTimer) clearTimeout(settleTimer);
       socket.destroy();
       if (err) reject(err);
       else resolve(value ?? '');
@@ -107,7 +109,13 @@ function sourceRconOnce(
         return;
       }
       if (pkt.id === SENTINEL_ID) return done(null, parts.join('').trim());
-      if (pkt.type === SERVERDATA_RESPONSE_VALUE) parts.push(pkt.body);
+      if (pkt.type === SERVERDATA_RESPONSE_VALUE) {
+        parts.push(pkt.body);
+        // Palworld's RCON never echoes the sentinel packet, so it can't mark
+        // completion — resolve shortly after the last response packet instead.
+        if (settleTimer) clearTimeout(settleTimer);
+        settleTimer = setTimeout(() => done(null, parts.join('').trim()), 300);
+      }
     }
   });
 }
