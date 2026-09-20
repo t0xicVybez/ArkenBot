@@ -13,7 +13,7 @@ const CLIENT_ID = process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID ?? '';
 const SITE = {
   docsUrl: 'https://docs.arkenbot.app/',
   supportUrl: 'https://discord.gg/fXJnYPdHRX',
-  inviteUrl: `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&permissions=8824675416665207&integration_type=0&scope=bot+applications.commands`,
+  inviteUrl: `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&permissions=8824675953536247&integration_type=0&scope=bot+applications.commands`,
 };
 
 type Appealable = { guildId: string; guildName: string; guildIcon: string | null; type: string; reason: string; hasPending: boolean };

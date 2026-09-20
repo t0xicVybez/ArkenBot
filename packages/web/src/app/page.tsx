@@ -41,8 +41,8 @@ const SITE = {
   description:
     'Moderation, leveling, tickets, custom commands, auto-responses, temp voice channels, anti-nuke, verification gate, forum management, polls, music, giveaways, stream alerts, and a real-time web dashboard — fully free, no paywalls.',
   inviteUrl: CLIENT_ID
-    ? `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&permissions=8824675416665207&integration_type=0&scope=bot+applications.commands`
-    : 'https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=8824675416665207&integration_type=0&scope=bot+applications.commands',
+    ? `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&permissions=8824675953536247&integration_type=0&scope=bot+applications.commands`
+    : 'https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=8824675953536247&integration_type=0&scope=bot+applications.commands',
   docsUrl: 'https://docs.arkenbot.app/',
   supportUrl: 'https://discord.gg/fXJnYPdHRX',
 };
