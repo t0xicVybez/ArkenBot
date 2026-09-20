@@ -862,6 +862,16 @@
       "tooLow": "Du musst Level {level} erreichen, um zu prestigen (du bist Level {current}).",
       "title": "Prestige!",
       "desc": "Du hast dein Level zurückgesetzt und **Prestige {prestige}** ⭐ erreicht"
+    },
+    "permcheck": {
+      "title": "🔐 Berechtigungsprüfung",
+      "serverOnly": "Dieser Befehl kann nur auf einem Server verwendet werden.",
+      "allGoodAdmin": "ArkenBot hat **Administrator** und damit bereits alle benötigten Berechtigungen. ✅",
+      "allGood": "ArkenBot hat alle wichtigen Berechtigungen, die er auf diesem Server braucht. ✅",
+      "serverMissingTitle": "Fehlende serverweite Berechtigungen",
+      "reInvite": "Erteile sie mit einem Klick, indem du den Bot neu autorisierst – ohne ihn zu entfernen: [ArkenBot neu einladen]({url})",
+      "channelIssuesTitle": "Kanäle, die der Bot nicht vollständig nutzen kann",
+      "footer": "Stelle außerdem sicher, dass die Rolle von ArkenBot über den Rollen und Mitgliedern steht, die er verwaltet."
     }
   },
   "achievements": {

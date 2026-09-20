@@ -862,6 +862,16 @@
       "tooLow": "Musisz osiągnąć poziom {level}, aby zdobyć prestiż (masz poziom {current}).",
       "title": "Prestiż!",
       "desc": "Zresetowałeś poziom i osiągnąłeś **Prestiż {prestige}** ⭐"
+    },
+    "permcheck": {
+      "title": "🔐 Sprawdzanie uprawnień",
+      "serverOnly": "Tej komendy można używać tylko na serwerze.",
+      "allGoodAdmin": "ArkenBot ma uprawnienie **Administrator**, więc ma już wszystkie potrzebne uprawnienia. ✅",
+      "allGood": "ArkenBot ma wszystkie kluczowe uprawnienia potrzebne na tym serwerze. ✅",
+      "serverMissingTitle": "Brakujące uprawnienia na całym serwerze",
+      "reInvite": "Nadaj je jednym kliknięciem, ponownie autoryzując bota — bez wyrzucania go: [Zaproś ArkenBota ponownie]({url})",
+      "channelIssuesTitle": "Kanały, których bot nie może w pełni używać",
+      "footer": "Upewnij się też, że rola ArkenBota znajduje się nad rolami i członkami, którymi zarządza."
     }
   },
   "achievements": {

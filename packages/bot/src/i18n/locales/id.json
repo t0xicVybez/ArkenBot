@@ -862,6 +862,16 @@
       "tooLow": "Anda perlu mencapai level {level} untuk prestise (Anda level {current}).",
       "title": "Prestise!",
       "desc": "Anda mereset level Anda dan mencapai **Prestise {prestige}** ⭐"
+    },
+    "permcheck": {
+      "title": "🔐 Pemeriksaan Izin",
+      "serverOnly": "Perintah ini hanya dapat digunakan di dalam server.",
+      "allGoodAdmin": "ArkenBot memiliki **Administrator**, jadi sudah memiliki semua izin yang dibutuhkan. ✅",
+      "allGood": "ArkenBot memiliki semua izin penting yang dibutuhkan di server ini. ✅",
+      "serverMissingTitle": "Izin yang hilang di seluruh server",
+      "reInvite": "Berikan dengan sekali klik dengan mengotorisasi ulang bot, tanpa perlu mengeluarkannya: [Undang ulang ArkenBot]({url})",
+      "channelIssuesTitle": "Kanal yang tidak dapat digunakan bot sepenuhnya",
+      "footer": "Pastikan juga peran ArkenBot berada di atas peran dan anggota yang dikelolanya."
     }
   },
   "achievements": {

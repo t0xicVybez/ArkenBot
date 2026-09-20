@@ -862,6 +862,16 @@
       "tooLow": "Je moet level {level} bereiken om te prestigen (je bent level {current}).",
       "title": "Prestige!",
       "desc": "Je hebt je level gereset en **Prestige {prestige}** bereikt ⭐"
+    },
+    "permcheck": {
+      "title": "🔐 Rechtencontrole",
+      "serverOnly": "Deze opdracht kan alleen in een server worden gebruikt.",
+      "allGoodAdmin": "ArkenBot heeft **Beheerder**, dus beschikt al over alle benodigde rechten. ✅",
+      "allGood": "ArkenBot heeft alle belangrijke rechten die het op deze server nodig heeft. ✅",
+      "serverMissingTitle": "Ontbrekende serverbrede rechten",
+      "reInvite": "Verleen ze met één klik door de bot opnieuw te autoriseren — zonder hem te verwijderen: [ArkenBot opnieuw uitnodigen]({url})",
+      "channelIssuesTitle": "Kanalen die de bot niet volledig kan gebruiken",
+      "footer": "Zorg er ook voor dat de rol van ArkenBot boven de rollen en leden staat die het beheert."
     }
   },
   "achievements": {

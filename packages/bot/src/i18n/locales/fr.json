@@ -862,6 +862,16 @@
       "tooLow": "Tu dois atteindre le niveau {level} pour passer prestige (tu es niveau {current}).",
       "title": "Prestige !",
       "desc": "Tu as réinitialisé ton niveau et atteint **Prestige {prestige}** ⭐"
+    },
+    "permcheck": {
+      "title": "🔐 Vérification des permissions",
+      "serverOnly": "Cette commande ne peut être utilisée que dans un serveur.",
+      "allGoodAdmin": "ArkenBot possède **Administrateur**, il dispose donc déjà de toutes les permissions nécessaires. ✅",
+      "allGood": "ArkenBot possède toutes les permissions essentielles dont il a besoin sur ce serveur. ✅",
+      "serverMissingTitle": "Permissions manquantes à l’échelle du serveur",
+      "reInvite": "Accordez-les en un clic en ré-autorisant le bot, sans avoir à l’exclure : [Réinviter ArkenBot]({url})",
+      "channelIssuesTitle": "Salons que le bot ne peut pas pleinement utiliser",
+      "footer": "Vérifiez aussi que le rôle d’ArkenBot est au-dessus des rôles et membres qu’il gère."
     }
   },
   "achievements": {

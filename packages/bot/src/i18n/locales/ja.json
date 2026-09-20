@@ -862,6 +862,16 @@
       "tooLow": "プレステージにはレベル {level} が必要です（現在レベル {current}）。",
       "title": "プレステージ！",
       "desc": "レベルをリセットし、**プレステージ {prestige}** ⭐ に到達しました"
+    },
+    "permcheck": {
+      "title": "🔐 権限チェック",
+      "serverOnly": "このコマンドはサーバー内でのみ使用できます。",
+      "allGoodAdmin": "ArkenBot は **管理者** 権限を持っているため、必要な権限をすべて備えています。✅",
+      "allGood": "ArkenBot はこのサーバーで必要な主要な権限をすべて持っています。✅",
+      "serverMissingTitle": "サーバー全体で不足している権限",
+      "reInvite": "ボットを再認証すればワンクリックで付与できます（キックする必要はありません）: [ArkenBot を再招待]({url})",
+      "channelIssuesTitle": "ボットが十分に利用できないチャンネル",
+      "footer": "また、ArkenBot のロールが、管理対象のロールやメンバーより上にあることを確認してください。"
     }
   },
   "achievements": {

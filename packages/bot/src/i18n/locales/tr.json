@@ -862,6 +862,16 @@
       "tooLow": "Prestij için {level}. seviyeye ulaşman gerekiyor (şu anda {current}. seviyedesin).",
       "title": "Prestij!",
       "desc": "Seviyeni sıfırladın ve **Prestij {prestige}** seviyesine ulaştın ⭐"
+    },
+    "permcheck": {
+      "title": "🔐 İzin Kontrolü",
+      "serverOnly": "Bu komut yalnızca bir sunucuda kullanılabilir.",
+      "allGoodAdmin": "ArkenBot **Yönetici** iznine sahip, bu yüzden ihtiyaç duyduğu tüm izinlere zaten sahip. ✅",
+      "allGood": "ArkenBot bu sunucuda ihtiyaç duyduğu tüm temel izinlere sahip. ✅",
+      "serverMissingTitle": "Sunucu genelinde eksik izinler",
+      "reInvite": "Botu yeniden yetkilendirerek bunları tek tıkla verebilirsin; atmana gerek yok: [ArkenBot’u yeniden davet et]({url})",
+      "channelIssuesTitle": "Botun tam olarak kullanamadığı kanallar",
+      "footer": "Ayrıca ArkenBot’un rolünün, yönettiği rollerin ve üyelerin üzerinde olduğundan emin ol."
     }
   },
   "achievements": {
