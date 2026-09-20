@@ -401,7 +401,7 @@ function DoneStep({ guildId, completed }: { guildId: string; completed: Set<numb
     { href: `/dashboard/${guildId}/automod`,    label: t('quick_automod') },
     { href: `/dashboard/${guildId}/leveling`,   label: t('quick_leveling') },
     { href: `/dashboard/${guildId}/moderation`, label: t('quick_moderation') },
-    { href: `/dashboard/${guildId}/logging`,    label: t('quick_logging') },
+    { href: `/dashboard/${guildId}/logs`,       label: t('quick_logging') },
   ];
 
   return (
