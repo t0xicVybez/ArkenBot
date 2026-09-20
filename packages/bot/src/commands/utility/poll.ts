@@ -18,6 +18,7 @@ import type { BotCommand } from '../../types.js';
 import { prisma } from '../../database.js';
 import { generatePollChart } from '../../utils/pollChart.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
+import { ensureGuildExists } from '../../utils/settings.js';
 
 import { swallow } from '../../logger.js';
 /**
@@ -109,10 +110,17 @@ const command: BotCommand = {
     const multiVote = interaction.options.getBoolean('multi') ?? false;
 
     if (rawOptions.length < 2 || rawOptions.length > 10) {
-      void interaction.reply({ content: t('cmd.poll.optionCount', loc), flags: MessageFlags.Ephemeral });
+      await interaction.reply({ content: t('cmd.poll.optionCount', loc), flags: MessageFlags.Ephemeral });
+      return;
     }
 
     const endsAt = duration ? new Date(Date.now() + duration * 60 * 1000) : null;
+
+    // Guarantee the guild row exists before the poll's FK references it (a guild
+    // that never finished syncing would otherwise fail with a P2003).
+    if (interaction.guild) {
+      await ensureGuildExists(interaction.guild.id, interaction.guild.name, interaction.guild.ownerId, interaction.guild.iconURL() ?? undefined);
+    }
 
     const poll = await prisma.poll.create({
       data: {
