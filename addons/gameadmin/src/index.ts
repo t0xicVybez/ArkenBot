@@ -8,7 +8,11 @@ import type { AddonContext } from '@arkenbot/addon-sdk';
 import type { Interaction } from 'discord.js';
 import gameadminCommand from './commands/gameadmin.js';
 import { interactionHandler } from './events/interaction.js';
+import { runDueSchedules } from './admin.js';
 import { locales } from './locales.js';
+
+let schedTimer: ReturnType<typeof setInterval> | null = null;
+const SCHED_CHECK_MS = 60_000; // check due schedules every minute
 
 export default defineAddon({
   locales,
@@ -32,7 +36,7 @@ export default defineAddon({
       event: 'interactionCreate',
       handler: async (ctx: AddonContext, ...args: unknown[]): Promise<void> => {
         const interaction = args[0] as Interaction;
-        if (interaction.isModalSubmit()) {
+        if (interaction.isModalSubmit() || interaction.isButton()) {
           await interactionHandler.handle(ctx, interaction);
         }
       },
@@ -42,6 +46,10 @@ export default defineAddon({
   hooks: {
     onLoad(ctx: AddonContext): void {
       ctx.logger.info('Game Server Admin loaded.');
+      schedTimer = setInterval(() => void runDueSchedules(ctx), SCHED_CHECK_MS);
+    },
+    onUnload(): void {
+      if (schedTimer) { clearInterval(schedTimer); schedTimer = null; }
     },
   },
 });
