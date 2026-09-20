@@ -862,6 +862,16 @@
       "tooLow": "You need to reach level {level} to prestige (you are level {current}).",
       "title": "Prestige!",
       "desc": "You reset your level and reached **Prestige {prestige}** ⭐"
+    },
+    "permcheck": {
+      "title": "🔐 Permission Check",
+      "serverOnly": "This command can only be used in a server.",
+      "allGoodAdmin": "ArkenBot has **Administrator**, so it already has every permission it needs. ✅",
+      "allGood": "ArkenBot has all the key permissions it needs in this server. ✅",
+      "serverMissingTitle": "Missing server-wide permissions",
+      "reInvite": "Grant these in one click by re-authorizing the bot — no need to kick it: [Re-invite ArkenBot]({url})",
+      "channelIssuesTitle": "Channels the bot can’t fully use",
+      "footer": "Also make sure ArkenBot’s role sits above the roles and members it manages."
     }
   },
   "achievements": {

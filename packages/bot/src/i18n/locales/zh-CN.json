@@ -862,6 +862,16 @@
       "tooLow": "你需要达到等级 {level} 才能晋升威望（你当前等级 {current}）。",
       "title": "威望晋升！",
       "desc": "你重置了等级并达到 **威望 {prestige}** ⭐"
+    },
+    "permcheck": {
+      "title": "🔐 权限检查",
+      "serverOnly": "此命令只能在服务器中使用。",
+      "allGoodAdmin": "ArkenBot 拥有**管理员**权限，因此已具备所需的全部权限。✅",
+      "allGood": "ArkenBot 在此服务器上拥有所需的全部关键权限。✅",
+      "serverMissingTitle": "服务器范围内缺失的权限",
+      "reInvite": "重新授权机器人即可一键授予这些权限，无需将其移除：[重新邀请 ArkenBot]({url})",
+      "channelIssuesTitle": "机器人无法完全使用的频道",
+      "footer": "另请确保 ArkenBot 的身份组位于它所管理的身份组和成员之上。"
     }
   },
   "achievements": {

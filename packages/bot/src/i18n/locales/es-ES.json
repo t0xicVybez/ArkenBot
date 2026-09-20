@@ -862,6 +862,16 @@
       "tooLow": "Necesitas alcanzar el nivel {level} para hacer prestigio (estás en el nivel {current}).",
       "title": "¡Prestigio!",
       "desc": "Reiniciaste tu nivel y alcanzaste **Prestigio {prestige}** ⭐"
+    },
+    "permcheck": {
+      "title": "🔐 Comprobación de permisos",
+      "serverOnly": "Este comando solo puede usarse en un servidor.",
+      "allGoodAdmin": "ArkenBot tiene **Administrador**, así que ya cuenta con todos los permisos que necesita. ✅",
+      "allGood": "ArkenBot tiene todos los permisos clave que necesita en este servidor. ✅",
+      "serverMissingTitle": "Permisos faltantes en todo el servidor",
+      "reInvite": "Concédelos con un clic volviendo a autorizar el bot, sin necesidad de expulsarlo: [Volver a invitar a ArkenBot]({url})",
+      "channelIssuesTitle": "Canales que el bot no puede usar por completo",
+      "footer": "Asegúrate también de que el rol de ArkenBot esté por encima de los roles y miembros que gestiona."
     }
   },
   "achievements": {
