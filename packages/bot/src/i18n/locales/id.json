@@ -148,7 +148,8 @@
     "kickLive": "{streamer} sedang siaran langsung di Kick!",
     "rssNewPost": "Postingan baru dari **{feed}**",
     "rssFeedFallback": "Umpan RSS",
-    "rssPostFallback": "Postingan baru"
+    "rssPostFallback": "Postingan baru",
+    "youtubeUpload": "{streamer} mengunggah video baru!"
   },
   "announcement": {
     "author": "Pengumuman ArkenBot",

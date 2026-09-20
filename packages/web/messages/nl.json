@@ -110,7 +110,11 @@
     "title": "Streammeldingen",
     "description": "Breng de community op de hoogte wanneer makers live gaan of iets plaatsen — Twitch, Kick, YouTube, RSS.",
     "channelUsername": "Kanaalgebruikersnaam",
-    "channelHandle": "Kanaalhandle"
+    "channelHandle": "Kanaalhandle",
+    "notifyOn": "Melden bij",
+    "notifyLive": "Livestreams",
+    "notifyUploads": "Nieuwe video’s",
+    "pickAtLeastOne": "Kies ten minste één optie: livestreams of video’s."
   },
   "counting": {
     "title": "Tellen",

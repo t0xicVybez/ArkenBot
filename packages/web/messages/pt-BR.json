@@ -110,7 +110,11 @@
     "title": "Alertas de live",
     "description": "Avise a comunidade quando os criadores entram ao vivo ou publicam — Twitch, Kick, YouTube, RSS.",
     "channelUsername": "Nome de usuário do canal",
-    "channelHandle": "Identificador do canal"
+    "channelHandle": "Identificador do canal",
+    "notifyOn": "Notificar em",
+    "notifyLive": "Transmissões ao vivo",
+    "notifyUploads": "Novos vídeos",
+    "pickAtLeastOne": "Escolha ao menos uma opção: transmissões ou vídeos."
   },
   "counting": {
     "title": "Contagem",

@@ -148,7 +148,8 @@
     "kickLive": "{streamer} 正在 Kick 直播！",
     "rssNewPost": "**{feed}** 的新帖子",
     "rssFeedFallback": "RSS 源",
-    "rssPostFallback": "新帖子"
+    "rssPostFallback": "新帖子",
+    "youtubeUpload": "{streamer} 发布了新视频！"
   },
   "announcement": {
     "author": "ArkenBot 公告",

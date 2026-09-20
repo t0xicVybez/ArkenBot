@@ -110,7 +110,11 @@
     "title": "Alertas de directos",
     "description": "Avisa a la comunidad cuando los creadores emiten en directo o publican — Twitch, Kick, YouTube, RSS.",
     "channelUsername": "Nombre de usuario del canal",
-    "channelHandle": "Identificador del canal"
+    "channelHandle": "Identificador del canal",
+    "notifyOn": "Notificar en",
+    "notifyLive": "Directos",
+    "notifyUploads": "Nuevos vídeos",
+    "pickAtLeastOne": "Elige al menos una opción: directos o vídeos."
   },
   "counting": {
     "title": "Conteo",

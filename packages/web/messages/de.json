@@ -110,7 +110,11 @@
     "title": "Stream-Benachrichtigungen",
     "description": "Benachrichtige die Community, wenn Creator live gehen oder posten — Twitch, Kick, YouTube, RSS.",
     "channelUsername": "Kanal-Benutzername",
-    "channelHandle": "Kanal-Handle"
+    "channelHandle": "Kanal-Handle",
+    "notifyOn": "Benachrichtigen bei",
+    "notifyLive": "Livestreams",
+    "notifyUploads": "Neue Videos",
+    "pickAtLeastOne": "Wähle mindestens eins: Livestreams oder Videos."
   },
   "counting": {
     "title": "Zählen",

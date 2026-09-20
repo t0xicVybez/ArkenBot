@@ -110,7 +110,11 @@
     "title": "配信アラート",
     "description": "配信者がライブを始めたり投稿したときにコミュニティへ通知 — Twitch、Kick、YouTube、RSS。",
     "channelUsername": "チャンネルのユーザー名",
-    "channelHandle": "チャンネルのハンドル"
+    "channelHandle": "チャンネルのハンドル",
+    "notifyOn": "通知する対象",
+    "notifyLive": "ライブ配信",
+    "notifyUploads": "新しい動画",
+    "pickAtLeastOne": "少なくとも1つ選んでください：ライブ配信または動画。"
   },
   "counting": {
     "title": "カウント",

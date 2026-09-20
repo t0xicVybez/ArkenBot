@@ -110,7 +110,11 @@
     "title": "Alertes de live",
     "description": "Préviens la communauté quand les créateurs passent en direct ou publient — Twitch, Kick, YouTube, RSS.",
     "channelUsername": "Nom d'utilisateur de la chaîne",
-    "channelHandle": "Identifiant de la chaîne"
+    "channelHandle": "Identifiant de la chaîne",
+    "notifyOn": "Notifier pour",
+    "notifyLive": "Directs",
+    "notifyUploads": "Nouvelles vidéos",
+    "pickAtLeastOne": "Choisissez au moins une option : directs ou vidéos."
   },
   "counting": {
     "title": "Comptage",

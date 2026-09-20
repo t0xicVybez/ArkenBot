@@ -1182,7 +1182,10 @@ model StreamAlert {
   discordChannelId     String
   message              String   @default("{streamer} is now live! {url}")
   enabled              Boolean  @default(true)
-  lastStreamId         String? // last known stream/video ID to detect new streams
+  lastStreamId         String? // last known LIVE stream/video ID (cleared when the stream ends)
+  lastUploadId         String? // last YouTube upload video ID alerted (upload dedup)
+  notifyLive           Boolean  @default(true) // YouTube: alert when the channel goes live
+  notifyUploads        Boolean  @default(true) // YouTube: alert on new (non-stream) uploads
   lastMessageId        String?
   lastMessageChannelId String?
   failureCount         Int      @default(0) // consecutive delivery failures; auto-disabled at 5
@@ -1192,7 +1195,25 @@ model StreamAlert {
 
   @@unique([guildId, platform, channelUsername])
   @@index([guildId, platform, enabled])
+  @@index([platform, channelId, enabled]) // fan-out: all guilds watching a YouTube channel
   @@map("stream_alerts")
+}
+
+/// One PubSubHubbub (WebSub) subscription per unique YouTube channel we watch.
+/// Which channels to subscribe is derived from enabled youtube StreamAlerts;
+/// this row holds the WebSub lease + HMAC secret for the callback.
+model YoutubeSubscription {
+  channelId      String    @id // YouTube channel ID (UC…)
+  secret         String // per-subscription HMAC secret for X-Hub-Signature verification
+  status         String    @default("pending") // pending | active | failed
+  leaseExpiresAt DateTime? // when the WebSub lease lapses and must be renewed
+  verifiedAt     DateTime? // last successful hub verification (GET challenge)
+  lastNotifiedAt DateTime? // last push received (health/debug)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @default(now()) @updatedAt
+
+  @@index([status, leaseExpiresAt])
+  @@map("youtube_subscriptions")
 }
 
 // ─────────────────────────────────────────────

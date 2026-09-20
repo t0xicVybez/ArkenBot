@@ -148,7 +148,8 @@
     "kickLive": "{streamer} Kick'te canlı yayında!",
     "rssNewPost": "**{feed}** kaynağından yeni gönderi",
     "rssFeedFallback": "RSS Kaynağı",
-    "rssPostFallback": "Yeni gönderi"
+    "rssPostFallback": "Yeni gönderi",
+    "youtubeUpload": "{streamer} yeni bir video paylaştı!"
   },
   "announcement": {
     "author": "ArkenBot Duyuruları",

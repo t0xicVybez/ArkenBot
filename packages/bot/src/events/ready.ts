@@ -209,6 +209,14 @@ const event: BotEvent = {
           return;
         }
 
+        // A YouTube channel went live / posted a new video (from the WebSub
+        // callback or a backstop poll) — fan out to every guild watching it.
+        if (_channel === 'youtube:live' || _channel === 'youtube:upload') {
+          const { handleYouTubeEvent } = await import('../modules/streamAlerts/YouTubeAlerts.js');
+          await handleYouTubeEvent(client, _channel === 'youtube:live' ? 'live' : 'upload', message);
+          return;
+        }
+
         // Some channels (like 'api:events') publish JSON event objects, while
         // others (like 'cache:invalidate:settings') publish a plain guildId.
         if (_channel === 'cache:invalidate:settings') {
@@ -411,6 +419,8 @@ const event: BotEvent = {
     await sub.subscribe('cache:invalidate:settings');
     await sub.subscribe('topgg:vote');
     await sub.subscribe('giveaway:start');
+    await sub.subscribe('youtube:live');
+    await sub.subscribe('youtube:upload');
 
 
     await ModmailModule.loadOpenThreads().catch(() => {});
