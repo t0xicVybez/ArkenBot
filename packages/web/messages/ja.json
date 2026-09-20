@@ -61,7 +61,9 @@
       "trello": "Trello",
       "settings": "サーバー設定",
       "permissions": "権限の状態",
-      "staffPortal": "スタッフポータル"
+      "staffPortal": "スタッフポータル",
+      "gameservers": "ゲームサーバー",
+      "gameadmin": "ゲーム管理"
     },
     "palette": {
       "placeholder": "どこへでも移動…",
@@ -3525,5 +3527,43 @@
     "channelIssuesTitle": "チャンネルのアクセスの問題",
     "channelIssuesDesc": "ボットはこれらのチャンネルで十分に動作できません。ArkenBot が投稿できるよう、チャンネルの権限設定を調整してください。",
     "roleHint": "ヒント: ArkenBot のロールが、管理対象のロールやメンバーより上にあることも確認してください。"
+  },
+  "gameServersPage": {
+    "title": "ゲームサーバー",
+    "description": "保存したゲームサーバーのライブ状態と監視。",
+    "notInstalled": "このサーバーに「ゲームサーバー状態」アドオンがインストールされていません。",
+    "monitorTitle": "監視",
+    "monitorDesc": "状態・アラート・プレイヤー数が投稿される場所。",
+    "board": "ステータスボード",
+    "alerts": "ダウン通知",
+    "statChannel": "プレイヤー数",
+    "none": "未設定",
+    "serversTitle": "保存済みサーバー",
+    "empty": "保存されたサーバーはまだありません。Discord で /server add を使って追加してください。",
+    "players": "{n} 人"
+  },
+  "gameAdminPage": {
+    "title": "ゲーム管理",
+    "description": "RCON サーバー、監査ログ、予約アクション。",
+    "notInstalled": "このサーバーに「ゲームサーバー管理」アドオンがインストールされていません。",
+    "auditTitle": "監査ログ",
+    "auditChannel": "操作は {channel} に記録されます",
+    "none": "未設定",
+    "serversTitle": "RCON サーバー",
+    "empty": "設定済みのサーバーはまだありません。Discord で /gameadmin add を使って追加してください。",
+    "schedulesTitle": "予約アクション",
+    "schedulesEmpty": "予約はまだありません。/gameadmin schedule で追加してください。",
+    "next": "次回:",
+    "action": {
+      "save": "セーブ",
+      "restart": "再起動",
+      "broadcast": "アナウンス"
+    },
+    "every": {
+      "hourly": "毎時",
+      "every6h": "6時間ごと",
+      "every12h": "12時間ごと",
+      "daily": "毎日"
+    }
   }
 }

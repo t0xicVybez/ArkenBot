@@ -61,7 +61,9 @@
       "trello": "Trello",
       "settings": "Serverinstellingen",
       "permissions": "Rechtenstatus",
-      "staffPortal": "Staffportaal"
+      "staffPortal": "Staffportaal",
+      "gameservers": "Gameservers",
+      "gameadmin": "Gamebeheer"
     },
     "palette": {
       "placeholder": "Spring naar alles…",
@@ -3525,5 +3527,43 @@
     "channelIssuesTitle": "Problemen met kanaaltoegang",
     "channelIssuesDesc": "De bot kan in deze kanalen niet volledig werken. Pas de rechtenuitzonderingen van het kanaal aan zodat ArkenBot er kan posten.",
     "roleHint": "Tip: zorg er ook voor dat de rol van ArkenBot boven de rollen en leden staat die het beheert."
+  },
+  "gameServersPage": {
+    "title": "Gameservers",
+    "description": "Livestatus en monitoring voor je opgeslagen gameservers.",
+    "notInstalled": "De add-on Gameserverstatus is niet geïnstalleerd op deze server.",
+    "monitorTitle": "Monitoring",
+    "monitorDesc": "Waar status, meldingen en spelersaantallen worden geplaatst.",
+    "board": "Statusbord",
+    "alerts": "Downmeldingen",
+    "statChannel": "Spelersaantal",
+    "none": "Niet ingesteld",
+    "serversTitle": "Opgeslagen servers",
+    "empty": "Nog geen servers opgeslagen. Voeg er een toe in Discord met /server add.",
+    "players": "{n} spelers"
+  },
+  "gameAdminPage": {
+    "title": "Gamebeheer",
+    "description": "RCON-servers, auditlogboek en geplande acties.",
+    "notInstalled": "De add-on Gameserverbeheer is niet geïnstalleerd op deze server.",
+    "auditTitle": "Auditlogboek",
+    "auditChannel": "Acties gelogd naar {channel}",
+    "none": "Niet ingesteld",
+    "serversTitle": "RCON-servers",
+    "empty": "Nog geen servers geconfigureerd. Voeg er een toe in Discord met /gameadmin add.",
+    "schedulesTitle": "Geplande acties",
+    "schedulesEmpty": "Nog geen planningen. Voeg er een toe met /gameadmin schedule.",
+    "next": "Volgende:",
+    "action": {
+      "save": "Opslaan",
+      "restart": "Herstarten",
+      "broadcast": "Omroepen"
+    },
+    "every": {
+      "hourly": "Elk uur",
+      "every6h": "Elke 6 uur",
+      "every12h": "Elke 12 uur",
+      "daily": "Dagelijks"
+    }
   }
 }

@@ -61,7 +61,9 @@
       "trello": "Trello",
       "settings": "Configurações do servidor",
       "permissions": "Estado das permissões",
-      "staffPortal": "Portal da equipe"
+      "staffPortal": "Portal da equipe",
+      "gameservers": "Servidores de jogo",
+      "gameadmin": "Admin de jogo"
     },
     "palette": {
       "placeholder": "Ir para qualquer lugar…",
@@ -3525,5 +3527,43 @@
     "channelIssuesTitle": "Problemas de acesso a canais",
     "channelIssuesDesc": "O bot não consegue operar por completo nesses canais. Ajuste as exceções de permissão do canal para o ArkenBot poder publicar.",
     "roleHint": "Dica: verifique também se o cargo do ArkenBot está acima dos cargos e membros que ele gerencia."
+  },
+  "gameServersPage": {
+    "title": "Servidores de jogo",
+    "description": "Status ao vivo e monitoramento dos seus servidores salvos.",
+    "notInstalled": "O complemento Status de Servidores não está instalado neste servidor.",
+    "monitorTitle": "Monitoramento",
+    "monitorDesc": "Onde status, alertas e contagem de jogadores são publicados.",
+    "board": "Painel de status",
+    "alerts": "Alertas de queda",
+    "statChannel": "Nº de jogadores",
+    "none": "Não definido",
+    "serversTitle": "Servidores salvos",
+    "empty": "Ainda não há servidores. Adicione um no Discord com /server add.",
+    "players": "{n} jogadores"
+  },
+  "gameAdminPage": {
+    "title": "Admin de jogo",
+    "description": "Servidores RCON, registro de auditoria e ações agendadas.",
+    "notInstalled": "O complemento Admin de Servidores não está instalado neste servidor.",
+    "auditTitle": "Registro de auditoria",
+    "auditChannel": "Ações registradas em {channel}",
+    "none": "Não definido",
+    "serversTitle": "Servidores RCON",
+    "empty": "Ainda não há servidores. Adicione um no Discord com /gameadmin add.",
+    "schedulesTitle": "Ações agendadas",
+    "schedulesEmpty": "Ainda não há agendamentos. Adicione um com /gameadmin schedule.",
+    "next": "Próxima:",
+    "action": {
+      "save": "Salvar",
+      "restart": "Reiniciar",
+      "broadcast": "Anunciar"
+    },
+    "every": {
+      "hourly": "A cada hora",
+      "every6h": "A cada 6 horas",
+      "every12h": "A cada 12 horas",
+      "daily": "Diariamente"
+    }
   }
 }

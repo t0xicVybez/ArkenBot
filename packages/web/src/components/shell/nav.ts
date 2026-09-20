@@ -4,7 +4,7 @@ import {
   TrendingUp, Trophy, Hand, SmilePlus, Tags, Cake, Vote, Lightbulb, Gift, Coins, Star, Link2,
   ThumbsUp, Hash, Music, Activity, Code2, CalendarClock, Mic, Terminal, MessageSquare, Users,
   Rss, Radio, Megaphone, Puzzle, Ticket, ClipboardList, SquareKanban, Trello,
-  Timer, History, Settings, KeyRound,
+  Timer, History, Settings, KeyRound, Gamepad2, ServerCog,
 } from 'lucide-react';
 
 export interface NavItem {
@@ -100,6 +100,8 @@ export const NAV: NavGroup[] = [
       it('rss', 'RSS Feeds', Rss, 'rss-feeds'),
       it('streams', 'Stream Alerts', Radio, 'stream-alerts'),
       it('announcements', 'Announcements', Megaphone, 'announcements'),
+      it('gameservers', 'Game Servers', Gamepad2, 'game-servers'),
+      it('gameadmin', 'Game Admin', ServerCog, 'game-admin'),
     ],
   },
   {

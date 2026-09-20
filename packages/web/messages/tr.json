@@ -61,7 +61,9 @@
       "trello": "Trello",
       "settings": "Sunucu Ayarları",
       "permissions": "İzin Durumu",
-      "staffPortal": "Yetkili Portalı"
+      "staffPortal": "Yetkili Portalı",
+      "gameservers": "Oyun Sunucuları",
+      "gameadmin": "Oyun Yönetimi"
     },
     "palette": {
       "placeholder": "Herhangi bir yere atla…",
@@ -3525,5 +3527,43 @@
     "channelIssuesTitle": "Kanal erişim sorunları",
     "channelIssuesDesc": "Bot bu kanallarda tam olarak çalışamıyor. ArkenBot’un mesaj gönderebilmesi için kanalın izin ayarlarını düzenleyin.",
     "roleHint": "İpucu: ayrıca ArkenBot’un rolünün, yönettiği rollerin ve üyelerin üzerinde olduğundan emin olun."
+  },
+  "gameServersPage": {
+    "title": "Oyun Sunucuları",
+    "description": "Kayıtlı oyun sunucuların için canlı durum ve izleme.",
+    "notInstalled": "Oyun Sunucu Durumu eklentisi bu sunucuda kurulu değil.",
+    "monitorTitle": "İzleme",
+    "monitorDesc": "Durum, uyarılar ve oyuncu sayısının yayınlandığı yer.",
+    "board": "Durum panosu",
+    "alerts": "Çökme uyarıları",
+    "statChannel": "Oyuncu sayısı",
+    "none": "Ayarlanmadı",
+    "serversTitle": "Kayıtlı Sunucular",
+    "empty": "Henüz kayıtlı sunucu yok. Discord’da /server add ile ekle.",
+    "players": "{n} oyuncu"
+  },
+  "gameAdminPage": {
+    "title": "Oyun Yönetimi",
+    "description": "RCON sunucuları, denetim kaydı ve zamanlanmış işlemler.",
+    "notInstalled": "Oyun Sunucu Yönetimi eklentisi bu sunucuda kurulu değil.",
+    "auditTitle": "Denetim kaydı",
+    "auditChannel": "İşlemler {channel} kanalına kaydedilir",
+    "none": "Ayarlanmadı",
+    "serversTitle": "RCON Sunucuları",
+    "empty": "Henüz yapılandırılmış sunucu yok. Discord’da /gameadmin add ile ekle.",
+    "schedulesTitle": "Zamanlanmış İşlemler",
+    "schedulesEmpty": "Henüz zamanlama yok. /gameadmin schedule ile ekle.",
+    "next": "Sonraki:",
+    "action": {
+      "save": "Kaydet",
+      "restart": "Yeniden başlat",
+      "broadcast": "Duyur"
+    },
+    "every": {
+      "hourly": "Saatlik",
+      "every6h": "6 saatte bir",
+      "every12h": "12 saatte bir",
+      "daily": "Günlük"
+    }
   }
 }

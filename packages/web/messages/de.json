@@ -61,7 +61,9 @@
       "trello": "Trello",
       "settings": "Servereinstellungen",
       "permissions": "Berechtigungsstatus",
-      "staffPortal": "Staff-Portal"
+      "staffPortal": "Staff-Portal",
+      "gameservers": "Spielserver",
+      "gameadmin": "Spieladmin"
     },
     "palette": {
       "placeholder": "Zu allem springen…",
@@ -3525,5 +3527,43 @@
     "channelIssuesTitle": "Probleme mit dem Kanalzugriff",
     "channelIssuesDesc": "Der Bot kann in diesen Kanälen nicht vollständig arbeiten. Passe die Kanalberechtigungen an, damit ArkenBot dort posten kann.",
     "roleHint": "Tipp: Stelle außerdem sicher, dass die Rolle von ArkenBot über den Rollen und Mitgliedern steht, die er verwaltet."
+  },
+  "gameServersPage": {
+    "title": "Spielserver",
+    "description": "Live-Status und Überwachung für deine gespeicherten Spielserver.",
+    "notInstalled": "Das Add-on „Game Server Status“ ist auf diesem Server nicht installiert.",
+    "monitorTitle": "Überwachung",
+    "monitorDesc": "Wo Live-Status, Benachrichtigungen und Spielerzahlen gepostet werden.",
+    "board": "Statustafel",
+    "alerts": "Ausfall-Benachrichtigungen",
+    "statChannel": "Spielerzahl",
+    "none": "Nicht festgelegt",
+    "serversTitle": "Gespeicherte Server",
+    "empty": "Noch keine Server gespeichert. Füge in Discord einen mit /server add hinzu.",
+    "players": "{n} Spieler"
+  },
+  "gameAdminPage": {
+    "title": "Spieladmin",
+    "description": "RCON-Server, Audit-Log und geplante Aktionen.",
+    "notInstalled": "Das Add-on „Game Server Admin“ ist auf diesem Server nicht installiert.",
+    "auditTitle": "Audit-Log",
+    "auditChannel": "Aktionen werden in {channel} protokolliert",
+    "none": "Nicht festgelegt",
+    "serversTitle": "RCON-Server",
+    "empty": "Noch keine Server konfiguriert. Füge in Discord einen mit /gameadmin add hinzu.",
+    "schedulesTitle": "Geplante Aktionen",
+    "schedulesEmpty": "Noch keine Planungen. Füge eine mit /gameadmin schedule hinzu.",
+    "next": "Nächste:",
+    "action": {
+      "save": "Speichern",
+      "restart": "Neustart",
+      "broadcast": "Ansage"
+    },
+    "every": {
+      "hourly": "Stündlich",
+      "every6h": "Alle 6 Stunden",
+      "every12h": "Alle 12 Stunden",
+      "daily": "Täglich"
+    }
   }
 }

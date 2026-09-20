@@ -61,7 +61,9 @@
       "trello": "Trello",
       "settings": "Server Settings",
       "permissions": "Permission Health",
-      "staffPortal": "Staff Portal"
+      "staffPortal": "Staff Portal",
+      "gameservers": "Game Servers",
+      "gameadmin": "Game Admin"
     },
     "palette": {
       "placeholder": "Jump to anything…",
@@ -3525,5 +3527,43 @@
     "channelIssuesTitle": "Channel access issues",
     "channelIssuesDesc": "The bot can’t fully operate in these channels. Fix the channel’s permission overrides so ArkenBot can post there.",
     "roleHint": "Tip: also make sure ArkenBot’s role sits above the roles and members it manages."
+  },
+  "gameServersPage": {
+    "title": "Game Servers",
+    "description": "Live status and monitoring for your saved game servers.",
+    "notInstalled": "The Game Server Status add-on isn’t installed on this server.",
+    "monitorTitle": "Monitoring",
+    "monitorDesc": "Where live status, alerts, and player counts are posted.",
+    "board": "Status board",
+    "alerts": "Down alerts",
+    "statChannel": "Player count",
+    "none": "Not set",
+    "serversTitle": "Saved Servers",
+    "empty": "No servers saved yet. Add one in Discord with /server add.",
+    "players": "{n} players"
+  },
+  "gameAdminPage": {
+    "title": "Game Admin",
+    "description": "RCON servers, audit log, and scheduled actions.",
+    "notInstalled": "The Game Server Admin add-on isn’t installed on this server.",
+    "auditTitle": "Audit log",
+    "auditChannel": "Actions logged to {channel}",
+    "none": "Not set",
+    "serversTitle": "RCON Servers",
+    "empty": "No servers configured yet. Add one in Discord with /gameadmin add.",
+    "schedulesTitle": "Scheduled Actions",
+    "schedulesEmpty": "No schedules yet. Add one with /gameadmin schedule.",
+    "next": "Next:",
+    "action": {
+      "save": "Save",
+      "restart": "Restart",
+      "broadcast": "Broadcast"
+    },
+    "every": {
+      "hourly": "Hourly",
+      "every6h": "Every 6 hours",
+      "every12h": "Every 12 hours",
+      "daily": "Daily"
+    }
   }
 }
