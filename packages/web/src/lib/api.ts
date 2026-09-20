@@ -478,6 +478,10 @@ export const auditLogApi = {
   list: (guildId: string, page = 1) => api.get(`/guilds/${guildId}/audit-log`, { params: { page } }),
 };
 
+export const permissionHealthApi = {
+  get: (guildId: string) => api.get(`/guilds/${guildId}/permission-health`),
+};
+
 // ─── Admin ────────────────────────────────────────────────────────
 export const appealsApi = {
   appealable: () => api.get('/me/appealable'),

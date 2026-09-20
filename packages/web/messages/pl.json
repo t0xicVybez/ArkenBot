@@ -3446,5 +3446,22 @@
     "how4": "Kanał jest tworzony w wybranej kategorii lub w kategorii wyzwalacza.",
     "how5": "Każda osoba, która dołączy do wyzwalacza, otrzymuje własny kanał.",
     "how6": "Gdy tymczasowy kanał jest pusty, ArkenBot usuwa go automatycznie."
+  },
+  "permissionHealth": {
+    "title": "Stan uprawnień",
+    "description": "Zobacz dokładnie, których uprawnień brakuje ArkenBotowi na tym serwerze.",
+    "refresh": "Odśwież",
+    "loadError": "Nie udało się wczytać stanu uprawnień. Spróbuj ponownie.",
+    "notInServer": "ArkenBota nie ma na tym serwerze.",
+    "allGoodTitle": "Wszystko w porządku",
+    "allGoodAdmin": "ArkenBot ma uprawnienie Administrator, więc ma wszystkie potrzebne uprawnienia.",
+    "allGood": "ArkenBot ma tu wszystkie kluczowe uprawnienia.",
+    "serverMissingTitle": "Brakujące uprawnienia na całym serwerze",
+    "serverMissingDesc": "Wpływają na funkcje na całym serwerze. Autoryzuj bota ponownie, aby nadać je wszystkie naraz — nie musisz go usuwać.",
+    "reInvite": "Zaproś ArkenBota ponownie",
+    "reInviteHint": "Otwiera ekran autoryzacji Discorda. Istniejące ustawienia i dane są zachowywane.",
+    "channelIssuesTitle": "Problemy z dostępem do kanałów",
+    "channelIssuesDesc": "Bot nie może w pełni działać na tych kanałach. Dostosuj wyjątki uprawnień kanału, aby ArkenBot mógł tam pisać.",
+    "roleHint": "Wskazówka: upewnij się też, że rola ArkenBota znajduje się nad rolami i członkami, którymi zarządza."
   }
 }

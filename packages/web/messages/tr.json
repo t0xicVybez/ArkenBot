@@ -3446,5 +3446,22 @@
     "how4": "Kanal, seçtiğiniz kategoride veya tetikleyicinin kategorisinde oluşturulur.",
     "how5": "Tetikleyiciye katılan herkes kendi kanalını alır.",
     "how6": "Geçici bir kanal boşaldığında, ArkenBot onu otomatik olarak siler."
+  },
+  "permissionHealth": {
+    "title": "İzin Durumu",
+    "description": "ArkenBot’un bu sunucuda tam olarak hangi izinlere sahip olmadığını görün.",
+    "refresh": "Yenile",
+    "loadError": "İzin durumu yüklenemedi. Tekrar deneyin.",
+    "notInServer": "ArkenBot bu sunucuda değil.",
+    "allGoodTitle": "Her şey yolunda",
+    "allGoodAdmin": "ArkenBot Yönetici iznine sahip, bu yüzden ihtiyaç duyduğu tüm izinlere sahip.",
+    "allGood": "ArkenBot burada ihtiyaç duyduğu tüm temel izinlere sahip.",
+    "serverMissingTitle": "Sunucu genelinde eksik izinler",
+    "serverMissingDesc": "Bunlar tüm sunucudaki özellikleri etkiler. Hepsini tek seferde vermek için botu yeniden yetkilendirin — atmanıza gerek yok.",
+    "reInvite": "ArkenBot’u yeniden davet et",
+    "reInviteHint": "Discord’un yetkilendirme ekranını açar. Mevcut ayarlar ve veriler korunur.",
+    "channelIssuesTitle": "Kanal erişim sorunları",
+    "channelIssuesDesc": "Bot bu kanallarda tam olarak çalışamıyor. ArkenBot’un mesaj gönderebilmesi için kanalın izin ayarlarını düzenleyin.",
+    "roleHint": "İpucu: ayrıca ArkenBot’un rolünün, yönettiği rollerin ve üyelerin üzerinde olduğundan emin olun."
   }
 }

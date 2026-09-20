@@ -14,6 +14,7 @@ import { captureError } from './sentry.js';
 import { redis } from './redis.js';
 import { authRoutes } from './routes/auth.js';
 import { guildRoutes } from './routes/guilds.js';
+import { permissionHealthRoutes } from './routes/permissionHealth.js';
 import { economyRoutes } from './routes/economy.js';
 import { appealsRoutes } from './routes/appeals.js';
 import { settingsRoutes } from './routes/settings.js';
@@ -165,6 +166,7 @@ export async function createServer() {
   // ─── Routes ───────────────────────────────────────────────────────
   await server.register(authRoutes);
   await server.register(guildRoutes);
+  await server.register(permissionHealthRoutes);
   await server.register(settingsRoutes);
   await server.register(economyRoutes);
   await server.register(appealsRoutes);

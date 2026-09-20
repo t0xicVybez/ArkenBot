@@ -3446,5 +3446,22 @@
     "how4": "The channel is created in the category you pick, or the trigger’s own category.",
     "how5": "Everyone who joins the trigger gets their own channel.",
     "how6": "When a temporary channel is empty, ArkenBot deletes it automatically."
+  },
+  "permissionHealth": {
+    "title": "Permission Health",
+    "description": "See exactly which permissions ArkenBot is missing in this server.",
+    "refresh": "Refresh",
+    "loadError": "Couldn’t load permission status. Try again.",
+    "notInServer": "ArkenBot isn’t in this server.",
+    "allGoodTitle": "All good",
+    "allGoodAdmin": "ArkenBot has Administrator, so it has every permission it needs.",
+    "allGood": "ArkenBot has all the key permissions it needs here.",
+    "serverMissingTitle": "Missing server-wide permissions",
+    "serverMissingDesc": "These affect features across the whole server. Re-authorize the bot to grant them all at once — you don’t need to remove it.",
+    "reInvite": "Re-invite ArkenBot",
+    "reInviteHint": "Opens Discord’s authorize screen. Existing settings and data are kept.",
+    "channelIssuesTitle": "Channel access issues",
+    "channelIssuesDesc": "The bot can’t fully operate in these channels. Fix the channel’s permission overrides so ArkenBot can post there.",
+    "roleHint": "Tip: also make sure ArkenBot’s role sits above the roles and members it manages."
   }
 }

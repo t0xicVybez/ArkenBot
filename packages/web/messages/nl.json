@@ -3446,5 +3446,22 @@
     "how4": "Het kanaal wordt aangemaakt in de door jou gekozen categorie, of die van de trigger.",
     "how5": "Iedereen die de trigger binnenkomt, krijgt een eigen kanaal.",
     "how6": "Wanneer een tijdelijk kanaal leeg is, verwijdert ArkenBot het automatisch."
+  },
+  "permissionHealth": {
+    "title": "Rechtenstatus",
+    "description": "Zie precies welke rechten ArkenBot mist op deze server.",
+    "refresh": "Vernieuwen",
+    "loadError": "Kon de rechtenstatus niet laden. Probeer het opnieuw.",
+    "notInServer": "ArkenBot zit niet op deze server.",
+    "allGoodTitle": "Alles in orde",
+    "allGoodAdmin": "ArkenBot heeft Beheerder, dus beschikt over alle benodigde rechten.",
+    "allGood": "ArkenBot heeft hier alle belangrijke rechten.",
+    "serverMissingTitle": "Ontbrekende serverbrede rechten",
+    "serverMissingDesc": "Deze beïnvloeden functies op de hele server. Autoriseer de bot opnieuw om ze allemaal tegelijk te verlenen — je hoeft hem niet te verwijderen.",
+    "reInvite": "ArkenBot opnieuw uitnodigen",
+    "reInviteHint": "Opent het autorisatiescherm van Discord. Bestaande instellingen en gegevens blijven behouden.",
+    "channelIssuesTitle": "Problemen met kanaaltoegang",
+    "channelIssuesDesc": "De bot kan in deze kanalen niet volledig werken. Pas de rechtenuitzonderingen van het kanaal aan zodat ArkenBot er kan posten.",
+    "roleHint": "Tip: zorg er ook voor dat de rol van ArkenBot boven de rollen en leden staat die het beheert."
   }
 }

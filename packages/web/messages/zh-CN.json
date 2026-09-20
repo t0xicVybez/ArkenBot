@@ -3446,5 +3446,22 @@
     "how4": "频道会在你选择的分类，或触发频道所在的分类中创建。",
     "how5": "每个加入触发频道的人都会获得自己的频道。",
     "how6": "当临时频道为空时，ArkenBot 会自动删除它。"
+  },
+  "permissionHealth": {
+    "title": "权限状态",
+    "description": "查看 ArkenBot 在此服务器中确切缺少哪些权限。",
+    "refresh": "刷新",
+    "loadError": "无法加载权限状态，请重试。",
+    "notInServer": "ArkenBot 不在此服务器中。",
+    "allGoodTitle": "一切正常",
+    "allGoodAdmin": "ArkenBot 拥有管理员权限，因此具备所需的全部权限。",
+    "allGood": "ArkenBot 在此拥有所需的全部关键权限。",
+    "serverMissingTitle": "服务器范围内缺失的权限",
+    "serverMissingDesc": "这些会影响整个服务器的功能。重新授权机器人即可一次性授予全部权限，无需将其移除。",
+    "reInvite": "重新邀请 ArkenBot",
+    "reInviteHint": "将打开 Discord 的授权页面。现有设置和数据都会保留。",
+    "channelIssuesTitle": "频道访问问题",
+    "channelIssuesDesc": "机器人无法在这些频道完全运作。请调整频道的权限覆盖，让 ArkenBot 能够发言。",
+    "roleHint": "提示：另请确保 ArkenBot 的身份组位于它所管理的身份组和成员之上。"
   }
 }

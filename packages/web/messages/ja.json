@@ -3446,5 +3446,22 @@
     "how4": "チャンネルは選んだカテゴリー、またはトリガーのカテゴリーに作成されます。",
     "how5": "トリガーに参加した人それぞれが自分専用のチャンネルを持てます。",
     "how6": "一時チャンネルが空になると、ArkenBot が自動的に削除します。"
+  },
+  "permissionHealth": {
+    "title": "権限の状態",
+    "description": "このサーバーで ArkenBot に不足している権限を正確に確認できます。",
+    "refresh": "更新",
+    "loadError": "権限の状態を読み込めませんでした。もう一度お試しください。",
+    "notInServer": "ArkenBot はこのサーバーにいません。",
+    "allGoodTitle": "問題ありません",
+    "allGoodAdmin": "ArkenBot は管理者権限を持っているため、必要な権限をすべて備えています。",
+    "allGood": "ArkenBot はここで必要な主要な権限をすべて持っています。",
+    "serverMissingTitle": "サーバー全体で不足している権限",
+    "serverMissingDesc": "これらはサーバー全体の機能に影響します。ボットを再認証すると一度にすべて付与できます（削除する必要はありません）。",
+    "reInvite": "ArkenBot を再招待",
+    "reInviteHint": "Discord の認証画面が開きます。既存の設定やデータは保持されます。",
+    "channelIssuesTitle": "チャンネルのアクセスの問題",
+    "channelIssuesDesc": "ボットはこれらのチャンネルで十分に動作できません。ArkenBot が投稿できるよう、チャンネルの権限設定を調整してください。",
+    "roleHint": "ヒント: ArkenBot のロールが、管理対象のロールやメンバーより上にあることも確認してください。"
   }
 }

@@ -3446,5 +3446,22 @@
     "how4": "Le salon est créé dans la catégorie que vous choisissez, ou celle du déclencheur.",
     "how5": "Chaque personne qui rejoint le déclencheur obtient son propre salon.",
     "how6": "Quand un salon temporaire est vide, ArkenBot le supprime automatiquement."
+  },
+  "permissionHealth": {
+    "title": "État des permissions",
+    "description": "Voyez exactement quelles permissions manquent à ArkenBot sur ce serveur.",
+    "refresh": "Actualiser",
+    "loadError": "Impossible de charger l’état des permissions. Réessayez.",
+    "notInServer": "ArkenBot n’est pas sur ce serveur.",
+    "allGoodTitle": "Tout est bon",
+    "allGoodAdmin": "ArkenBot possède Administrateur, il dispose donc de toutes les permissions nécessaires.",
+    "allGood": "ArkenBot possède toutes les permissions essentielles ici.",
+    "serverMissingTitle": "Permissions manquantes à l’échelle du serveur",
+    "serverMissingDesc": "Elles affectent des fonctionnalités sur tout le serveur. Ré-autorisez le bot pour toutes les accorder d’un coup — pas besoin de l’exclure.",
+    "reInvite": "Réinviter ArkenBot",
+    "reInviteHint": "Ouvre l’écran d’autorisation de Discord. Vos réglages et données sont conservés.",
+    "channelIssuesTitle": "Problèmes d’accès aux salons",
+    "channelIssuesDesc": "Le bot ne peut pas pleinement fonctionner dans ces salons. Ajustez les autorisations du salon pour qu’ArkenBot puisse y publier.",
+    "roleHint": "Astuce : vérifiez aussi que le rôle d’ArkenBot est au-dessus des rôles et membres qu’il gère."
   }
 }
