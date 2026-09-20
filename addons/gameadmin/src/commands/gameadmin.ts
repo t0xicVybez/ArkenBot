@@ -5,16 +5,24 @@ import {
   TextInputBuilder,
   TextInputStyle,
   ActionRowBuilder,
+  ChannelType,
   MessageFlags,
   type ChatInputCommandInteraction,
   type ContextMenuCommandInteraction,
   type AutocompleteInteraction,
+  type TextChannel,
 } from 'discord.js';
+import { randomUUID } from 'crypto';
 import type { AddonContext, AddonCommandDefinition } from '@arkenbot/addon-sdk';
 import { GAMES, GAME_CHOICES, runGameCommand } from '../games.js';
 import { canStoreCredentials, decryptCredential } from '../crypto.js';
 import { getServers, findServer, deleteServer, setPending } from '../storage.js';
 import { buildResultEmbed, buildServerListEmbed } from '../utils/embeds.js';
+import {
+  getConfig, setConfig, getSchedules, setSchedules, postAudit,
+  SCHEDULE_INTERVALS, type Schedule, type ScheduleAction,
+} from '../admin.js';
+import { buildControlPanel } from '../panel.js';
 import { RconError } from '../rcon/source.js';
 
 type Action = 'players' | 'say' | 'kick' | 'ban' | 'unban' | 'save' | 'stop';
@@ -65,7 +73,27 @@ const command: AddonCommandDefinition = {
         .addStringOption((o) => o.setName('server').setDescription('Which server').setRequired(true).setAutocomplete(true)))
     .addSubcommand((s) =>
       s.setName('stop').setDescription('Stop / shut down the server')
-        .addStringOption((o) => o.setName('server').setDescription('Which server').setRequired(true).setAutocomplete(true))) as unknown as SlashCommandBuilder,
+        .addStringOption((o) => o.setName('server').setDescription('Which server').setRequired(true).setAutocomplete(true)))
+    // ── control panel + audit + scheduling ──────────────────────────────────────
+    .addSubcommand((s) =>
+      s.setName('panel').setDescription('Post a control panel with buttons for a server')
+        .addStringOption((o) => o.setName('server').setDescription('Which server').setRequired(true).setAutocomplete(true)))
+    .addSubcommand((s) =>
+      s.setName('logchannel').setDescription('Log every RCON action to a channel (or clear it)')
+        .addChannelOption((o) => o.setName('channel').setDescription('Audit-log channel (leave empty to clear)').addChannelTypes(ChannelType.GuildText)))
+    .addSubcommand((s) =>
+      s.setName('schedule').setDescription('Run a recurring action (save/restart/broadcast) on a server')
+        .addStringOption((o) => o.setName('server').setDescription('Which server').setRequired(true).setAutocomplete(true))
+        .addStringOption((o) => o.setName('action').setDescription('What to run').setRequired(true)
+          .addChoices({ name: 'Save', value: 'save' }, { name: 'Restart (warn → save → stop)', value: 'restart' }, { name: 'Broadcast a message', value: 'broadcast' }))
+        .addStringOption((o) => o.setName('every').setDescription('How often').setRequired(true)
+          .addChoices({ name: 'Hourly', value: 'hourly' }, { name: 'Every 6 hours', value: 'every6h' }, { name: 'Every 12 hours', value: 'every12h' }, { name: 'Daily', value: 'daily' }))
+        .addStringOption((o) => o.setName('message').setDescription('Message (for broadcast)')))
+    .addSubcommand((s) =>
+      s.setName('schedules').setDescription('List scheduled actions for this server'))
+    .addSubcommand((s) =>
+      s.setName('unschedule').setDescription('Remove a scheduled action')
+        .addStringOption((o) => o.setName('id').setDescription('Schedule ID (from /gameadmin schedules)').setRequired(true))) as unknown as SlashCommandBuilder,
 
   async execute(interaction: ChatInputCommandInteraction | ContextMenuCommandInteraction, ctx: AddonContext): Promise<void> {
     if (!interaction.isChatInputCommand() || !interaction.guildId) return;
@@ -113,6 +141,69 @@ const command: AddonCommandDefinition = {
       return;
     }
 
+    if (sub === 'panel') {
+      const server = await findServer(ctx.storage, guildId, interaction.options.getString('server', true));
+      if (!server) { await interaction.reply({ content: t('gameadmin.notFound'), flags: MessageFlags.Ephemeral }); return; }
+      const { embeds, components } = buildControlPanel(server, t);
+      await interaction.reply({ embeds, components });
+      return;
+    }
+
+    if (sub === 'logchannel') {
+      const channel = interaction.options.getChannel('channel') as TextChannel | null;
+      const cfg = await getConfig(ctx.storage, guildId);
+      cfg.logChannelId = channel?.id;
+      await setConfig(ctx.storage, guildId, cfg);
+      await interaction.reply({
+        content: channel ? t('gameadmin.logChannelSet', { channel: `<#${channel.id}>` }) : t('gameadmin.logChannelCleared'),
+        flags: MessageFlags.Ephemeral,
+      });
+      return;
+    }
+
+    if (sub === 'schedule') {
+      const server = await findServer(ctx.storage, guildId, interaction.options.getString('server', true));
+      if (!server) { await interaction.reply({ content: t('gameadmin.notFound'), flags: MessageFlags.Ephemeral }); return; }
+      const action = interaction.options.getString('action', true) as ScheduleAction;
+      const every = interaction.options.getString('every', true);
+      const message = interaction.options.getString('message') ?? undefined;
+      const intervalMs = SCHEDULE_INTERVALS[every];
+      if (!intervalMs) { await interaction.reply({ content: t('gameadmin.scheduleBadInterval'), flags: MessageFlags.Ephemeral }); return; }
+      if (action === 'broadcast' && !message) { await interaction.reply({ content: t('gameadmin.scheduleNeedMessage'), flags: MessageFlags.Ephemeral }); return; }
+      const schedules = await getSchedules(ctx.storage, guildId);
+      if (schedules.length >= 25) { await interaction.reply({ content: t('gameadmin.scheduleMax'), flags: MessageFlags.Ephemeral }); return; }
+      const sch: Schedule = { id: randomUUID().slice(0, 8), serverId: server.id, action, message, intervalMs, nextRun: Date.now() + intervalMs };
+      schedules.push(sch);
+      await setSchedules(ctx.storage, guildId, schedules);
+      await interaction.reply({
+        content: t('gameadmin.scheduleAdded', { action, server: server.name, every: t(`gameadmin.every.${every}`), id: sch.id }),
+        flags: MessageFlags.Ephemeral,
+      });
+      return;
+    }
+
+    if (sub === 'schedules') {
+      const schedules = await getSchedules(ctx.storage, guildId);
+      if (schedules.length === 0) { await interaction.reply({ content: t('gameadmin.scheduleListEmpty'), flags: MessageFlags.Ephemeral }); return; }
+      const servers = await getServers(ctx.storage, guildId);
+      const lines = schedules.map((s) => {
+        const srv = servers.find((x) => x.id === s.serverId);
+        return t('gameadmin.scheduleLine', { id: s.id, action: s.action, server: srv?.name ?? s.serverId, next: `<t:${Math.floor(s.nextRun / 1000)}:R>` });
+      });
+      await interaction.reply({ content: `${t('gameadmin.scheduleListHeader')}\n${lines.join('\n')}`, flags: MessageFlags.Ephemeral });
+      return;
+    }
+
+    if (sub === 'unschedule') {
+      const id = interaction.options.getString('id', true);
+      const schedules = await getSchedules(ctx.storage, guildId);
+      const next = schedules.filter((s) => s.id !== id);
+      if (next.length === schedules.length) { await interaction.reply({ content: t('gameadmin.scheduleNotFound'), flags: MessageFlags.Ephemeral }); return; }
+      await setSchedules(ctx.storage, guildId, next);
+      await interaction.reply({ content: t('gameadmin.scheduleRemoved', { id }), flags: MessageFlags.Ephemeral });
+      return;
+    }
+
     // ── everything else runs a command against a saved server ──
     const server = await findServer(ctx.storage, guildId, interaction.options.getString('server', true));
     if (!server) { await interaction.reply({ content: t('gameadmin.notFound'), flags: MessageFlags.Ephemeral }); return; }
@@ -143,9 +234,11 @@ const command: AddonCommandDefinition = {
       const password = decryptCredential(server.password);
       const output = await runGameCommand(server.game, server.host, server.port, password, rawCommand);
       await interaction.editReply({ embeds: [buildResultEmbed(server, title, output, t)] });
+      if (interaction.guild) await postAudit(ctx, interaction.guild, { userId: interaction.user.id, server, action: sub === 'exec' ? rawCommand : sub, ok: true });
     } catch (err) {
       const msg = err instanceof RconError ? err.message : (err as Error).message;
       await interaction.editReply({ embeds: [buildResultEmbed(server, t('gameadmin.errorTitle'), msg, t, true)] });
+      if (interaction.guild) await postAudit(ctx, interaction.guild, { userId: interaction.user.id, server, action: sub, detail: msg, ok: false });
     }
   },
 
