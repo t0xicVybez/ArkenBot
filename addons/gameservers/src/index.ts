@@ -8,12 +8,15 @@ import type { AddonContext } from '@arkenbot/addon-sdk';
 import { MessageFlags, type AutocompleteInteraction, type Interaction, type ModalSubmitInteraction } from 'discord.js';
 
 import serverCommand from './commands/server.js';
+import { pollAllGuilds, POLL_INTERVAL_MS } from './monitor.js';
 import { SUPPORTED_GAMES, PALWORLD_REST_PORT, queryServer } from './query.js';
 import { getServers, addServer, takePending } from './utils/storage.js';
 import { buildStatusEmbed } from './utils/embeds.js';
 import { encryptCredential } from './utils/crypto.js';
 import { CREDENTIAL_MODAL_PREFIX, FIELD_PASSWORD, FIELD_QUERY_PORT } from './utils/modal.js';
 import { locales } from './locales.js';
+
+let pollTimer: ReturnType<typeof setInterval> | null = null;
 
 export default defineAddon({
   locales,
@@ -51,6 +54,12 @@ export default defineAddon({
   hooks: {
     onLoad(ctx: AddonContext): void {
       ctx.logger.info(`Game Server Status addon loaded — ${Object.keys(SUPPORTED_GAMES).length} game types supported.`);
+      // Live monitoring: status board, up/down alerts, player-count stat channel.
+      setTimeout(() => void pollAllGuilds(ctx), 15_000); // first pass after startup settles
+      pollTimer = setInterval(() => void pollAllGuilds(ctx), POLL_INTERVAL_MS);
+    },
+    onUnload(): void {
+      if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
     },
   },
 });

@@ -1,9 +1,12 @@
 import {
   SlashCommandBuilder,
   PermissionFlagsBits,
+  ChannelType,
+  MessageFlags,
   type ChatInputCommandInteraction,
   type ContextMenuCommandInteraction,
 } from 'discord.js';
+import { getMonitorConfig, setMonitorConfig } from '../monitor.js';
 import type { AddonContext, AddonCommandDefinition } from '@arkenbot/addon-sdk';
 import { SUPPORTED_GAMES, AUTHENTICATED_GAMES, queryServer } from '../query.js';
 import { getServers, getServerByName, addServer, removeServer, setPending } from '../utils/storage.js';
@@ -113,6 +116,22 @@ const command: AddonCommandDefinition = {
     // ── /server checkall ───────────────────────────────────────────────────────
     .addSubcommand((s) =>
       s.setName('checkall').setDescription('Query all saved servers and show a status summary'),
+    )
+    // ── monitoring ───────────────────────────────────────────────────────────────
+    .addSubcommand((s) =>
+      s.setName('board').setDescription('Post a live status board that auto-updates (admin)')
+        .addChannelOption((o) => o.setName('channel').setDescription('Channel for the status board').addChannelTypes(ChannelType.GuildText).setRequired(true)),
+    )
+    .addSubcommand((s) =>
+      s.setName('alerts').setDescription('Get a message when a server goes down or recovers (admin)')
+        .addChannelOption((o) => o.setName('channel').setDescription('Channel for up/down alerts').addChannelTypes(ChannelType.GuildText).setRequired(true)),
+    )
+    .addSubcommand((s) =>
+      s.setName('statchannel').setDescription('Show total online players in a voice channel name (admin)')
+        .addChannelOption((o) => o.setName('channel').setDescription('Voice channel to rename').addChannelTypes(ChannelType.GuildVoice).setRequired(true)),
+    )
+    .addSubcommand((s) =>
+      s.setName('monitoroff').setDescription('Turn off the live board, alerts and stat channel (admin)'),
     ) as unknown as SlashCommandBuilder,
 
   async execute(
@@ -301,6 +320,40 @@ const command: AddonCommandDefinition = {
       );
 
       await interaction.editReply({ embeds: [buildCheckAllEmbed(results, interaction.guild?.name ?? t('thisServer'), t)] });
+    }
+
+    // ── monitoring setup (admin only) ────────────────────────────────────────────
+    if (sub === 'board' || sub === 'alerts' || sub === 'statchannel' || sub === 'monitoroff') {
+      const member = interaction.member;
+      const perms = member && typeof member.permissions !== 'string' ? member.permissions : null;
+      if (!perms?.has(PermissionFlagsBits.ManageGuild)) {
+        await interaction.reply({ content: t('monitorNoPerms'), flags: MessageFlags.Ephemeral });
+        return;
+      }
+
+      const cfg = await getMonitorConfig(ctx.storage, interaction.guildId);
+
+      if (sub === 'monitoroff') {
+        await setMonitorConfig(ctx.storage, interaction.guildId, {});
+        await interaction.reply({ content: t('monitorOff'), flags: MessageFlags.Ephemeral });
+        return;
+      }
+
+      const channel = interaction.options.getChannel('channel', true);
+      if (sub === 'board') {
+        cfg.boardChannelId = channel.id;
+        cfg.boardMessageId = undefined; // re-post on next poll
+        await setMonitorConfig(ctx.storage, interaction.guildId, cfg);
+        await interaction.reply({ content: t('boardSet', { channel: `<#${channel.id}>` }), flags: MessageFlags.Ephemeral });
+      } else if (sub === 'alerts') {
+        cfg.alertChannelId = channel.id;
+        await setMonitorConfig(ctx.storage, interaction.guildId, cfg);
+        await interaction.reply({ content: t('alertsSet', { channel: `<#${channel.id}>` }), flags: MessageFlags.Ephemeral });
+      } else if (sub === 'statchannel') {
+        cfg.statChannelId = channel.id;
+        await setMonitorConfig(ctx.storage, interaction.guildId, cfg);
+        await interaction.reply({ content: t('statChannelSet', { channel: `<#${channel.id}>` }), flags: MessageFlags.Ephemeral });
+      }
     }
   },
 };
