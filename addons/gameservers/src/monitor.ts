@@ -29,13 +29,46 @@ type Translate = (key: string, vars?: Record<string, string | number>) => string
 
 const CFG_KEY = 'monitor';
 const STATE_KEY = 'monitorState';
+const HISTORY_KEY = 'history';
+const MAX_SAMPLES = 96; // ~4.8h at a 3-min poll
 export const POLL_INTERVAL_MS = 3 * 60 * 1000;
 // Discord rate-limits channel renames hard (~2 per 10 min); only rename when the
 // value changed and at least this long since the last rename.
 const STAT_RENAME_COOLDOWN_MS = 5 * 60 * 1000;
 
+export interface Sample { t: number; p: number }
+
 export async function getMonitorConfig(storage: AddonStorage, guildId: string): Promise<MonitorConfig> {
   return (await storage.get<MonitorConfig>(CFG_KEY, guildId)) ?? {};
+}
+
+/** Player-count history per server, capped to the most recent {@link MAX_SAMPLES}. */
+export async function getHistory(storage: AddonStorage, guildId: string, serverId: string): Promise<Sample[]> {
+  const all = (await storage.get<Record<string, Sample[]>>(HISTORY_KEY, guildId)) ?? {};
+  return all[serverId] ?? [];
+}
+
+async function recordHistory(storage: AddonStorage, guildId: string, results: Result[]): Promise<void> {
+  const all = (await storage.get<Record<string, Sample[]>>(HISTORY_KEY, guildId)) ?? {};
+  const now = Date.now();
+  for (const { server, status } of results) {
+    if (!status.online) continue; // only record reachable samples
+    const list = all[server.id] ?? [];
+    list.push({ t: now, p: (status as QueryResult).players });
+    if (list.length > MAX_SAMPLES) list.splice(0, list.length - MAX_SAMPLES);
+    all[server.id] = list;
+  }
+  await storage.set(HISTORY_KEY, all, guildId);
+}
+
+/** A compact Unicode sparkline of the given values. */
+export function sparkline(values: number[]): string {
+  if (values.length === 0) return '';
+  const bars = '▁▂▃▄▅▆▇█';
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const span = max - min || 1;
+  return values.map((v) => bars[Math.min(bars.length - 1, Math.floor(((v - min) / span) * (bars.length - 1)))]).join('');
 }
 export async function setMonitorConfig(storage: AddonStorage, guildId: string, cfg: MonitorConfig): Promise<void> {
   await storage.set(CFG_KEY, cfg, guildId);
@@ -67,12 +100,12 @@ async function queryAll(servers: SavedServer[]): Promise<Result[]> {
 export async function pollAllGuilds(ctx: AddonContext): Promise<void> {
   for (const guild of ctx.client.guilds.cache.values()) {
     try {
-      const cfg = await getMonitorConfig(ctx.storage, guild.id);
-      if (!cfg.boardChannelId && !cfg.alertChannelId && !cfg.statChannelId) continue;
       const servers = await getServers(ctx.storage, guild.id);
       if (servers.length === 0) continue;
+      const cfg = await getMonitorConfig(ctx.storage, guild.id);
 
       const results = await queryAll(servers);
+      await recordHistory(ctx.storage, guild.id, results); // always, so /server graph has data
       const state = (await ctx.storage.get<MonitorState>(STATE_KEY, guild.id)) ?? { online: {} };
       const loc = await ctx.resolveLocale({ user: { id: '' }, guildId: guild.id, guildLocale: guild.preferredLocale });
       const t: Translate = (k, v) => ctx.t(k, loc, v);

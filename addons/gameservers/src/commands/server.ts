@@ -6,7 +6,8 @@ import {
   type ChatInputCommandInteraction,
   type ContextMenuCommandInteraction,
 } from 'discord.js';
-import { getMonitorConfig, setMonitorConfig } from '../monitor.js';
+import { EmbedBuilder } from 'discord.js';
+import { getMonitorConfig, setMonitorConfig, getHistory, sparkline } from '../monitor.js';
 import type { AddonContext, AddonCommandDefinition } from '@arkenbot/addon-sdk';
 import { SUPPORTED_GAMES, AUTHENTICATED_GAMES, queryServer } from '../query.js';
 import { getServers, getServerByName, addServer, removeServer, setPending } from '../utils/storage.js';
@@ -116,6 +117,11 @@ const command: AddonCommandDefinition = {
     // ── /server checkall ───────────────────────────────────────────────────────
     .addSubcommand((s) =>
       s.setName('checkall').setDescription('Query all saved servers and show a status summary'),
+    )
+    // ── /server graph ────────────────────────────────────────────────────────────
+    .addSubcommand((s) =>
+      s.setName('graph').setDescription('Show a player-count history graph for a saved server')
+        .addStringOption((o) => o.setName('name').setDescription('Saved server name').setRequired(true).setAutocomplete(true)),
     )
     // ── monitoring ───────────────────────────────────────────────────────────────
     .addSubcommand((s) =>
@@ -320,6 +326,35 @@ const command: AddonCommandDefinition = {
       );
 
       await interaction.editReply({ embeds: [buildCheckAllEmbed(results, interaction.guild?.name ?? t('thisServer'), t)] });
+    }
+
+    // ── graph ────────────────────────────────────────────────────────────────────
+    if (sub === 'graph') {
+      const name = interaction.options.getString('name', true);
+      const server = await getServerByName(ctx.storage, interaction.guildId, name);
+      if (!server) { await interaction.reply({ content: t('noSavedNamed', { name }), ephemeral: true }); return; }
+
+      const history = await getHistory(ctx.storage, interaction.guildId, server.id);
+      if (history.length < 2) { await interaction.reply({ content: t('graphNoData'), ephemeral: true }); return; }
+
+      const values = history.map((h) => h.p);
+      const current = values[values.length - 1];
+      const peak = Math.max(...values);
+      const avg = Math.round(values.reduce((a, b) => a + b, 0) / values.length);
+      const info = SUPPORTED_GAMES[server.game];
+      const embed = new EmbedBuilder()
+        .setTitle(t('graphTitle', { name: server.name }))
+        .setColor(0x5865f2)
+        .setDescription(`${info?.emoji ?? '🎮'} \`\`\`\n${sparkline(values)}\n\`\`\``)
+        .addFields(
+          { name: t('graphCurrent'), value: `**${current}**`, inline: true },
+          { name: t('graphPeak'), value: `**${peak}**`, inline: true },
+          { name: t('graphAvg'), value: `**${avg}**`, inline: true },
+        )
+        .setFooter({ text: `${t('graphFooter', { count: values.length })} · ${t('linkHint', { name: server.name })}` })
+        .setTimestamp();
+      await interaction.reply({ embeds: [embed] });
+      return;
     }
 
     // ── monitoring setup (admin only) ────────────────────────────────────────────
