@@ -19,7 +19,7 @@ import { canStoreCredentials, decryptCredential } from '../crypto.js';
 import { getServers, findServer, deleteServer, setPending } from '../storage.js';
 import { buildResultEmbed, buildServerListEmbed } from '../utils/embeds.js';
 import {
-  getConfig, setConfig, getSchedules, setSchedules, postAudit,
+  getConfig, setConfig, getSchedules, setSchedules, postAudit, resolvePlayerTarget,
   SCHEDULE_INTERVALS, type Schedule, type ScheduleAction,
 } from '../admin.js';
 import { buildControlPanel } from '../panel.js';
@@ -225,8 +225,13 @@ const command: AddonCommandDefinition = {
           return;
         }
         if (action === 'say') rawCommand = (builder as (m: string) => string)(interaction.options.getString('message', true));
-        else if (action === 'kick' || action === 'ban') rawCommand = (builder as (t: string, r?: string) => string)(interaction.options.getString('player', true), interaction.options.getString('reason') ?? undefined);
-        else if (action === 'unban') rawCommand = (builder as (t: string) => string)(interaction.options.getString('player', true));
+        else if (action === 'kick' || action === 'ban') {
+          const target = await resolvePlayerTarget(server, interaction.options.getString('player', true));
+          rawCommand = (builder as (t: string, r?: string) => string)(target, interaction.options.getString('reason') ?? undefined);
+        } else if (action === 'unban') {
+          const target = await resolvePlayerTarget(server, interaction.options.getString('player', true));
+          rawCommand = (builder as (t: string) => string)(target);
+        }
         else rawCommand = builder as string; // players / save / stop
         title = t(`gameadmin.titles.${action}`, { server: server.name });
       }
