@@ -11,6 +11,7 @@ export default function StaffLogsPage() {
   const [page, setPage] = useState(1);
   const [guildId, setGuildId] = useState('');
   const [type, setType] = useState('');
+  const [expanded, setExpanded] = useState<string | null>(null);
 
   const { data: logsRes, isLoading } = useQuery({
     queryKey: ['admin-logs', page, guildId, type],
@@ -81,24 +82,41 @@ export default function StaffLogsPage() {
           ) : logs.length === 0 ? (
             <div className="px-4 py-8 text-center text-gray-500">{t('noLogs')}</div>
           ) : (
-            logs.map((log) => (
-              <div key={log.id} className="px-4 py-2.5 hover:bg-white/[0.02] flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-3">
-                <div className="flex items-center gap-3 flex-shrink-0">
-                  <span className="text-gray-600 text-xs w-20 flex-shrink-0">
-                    {new Date(log.createdAt).toLocaleTimeString()}
-                  </span>
-                  <span className={`text-xs w-28 flex-shrink-0 ${typeColors[log.type] ?? 'text-gray-400'}`}>
-                    {log.type}
-                  </span>
-                  <span className="text-gray-500 text-xs w-16 flex-shrink-0 truncate">
-                    {log.guildId.slice(-6)}
-                  </span>
-                </div>
-                <span className="text-gray-300 text-xs break-all sm:truncate min-w-0">
-                  {JSON.stringify(log.data).slice(0, 100)}
-                </span>
-              </div>
-            ))
+            logs.map((log) => {
+              const isOpen = expanded === log.id;
+              return (
+                <button
+                  key={log.id}
+                  type="button"
+                  onClick={() => setExpanded(isOpen ? null : log.id)}
+                  className="w-full px-4 py-2.5 text-left hover:bg-white/[0.02]"
+                >
+                  <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-3">
+                    <div className="flex items-center gap-3 flex-shrink-0">
+                      <span className="text-gray-600 text-xs w-20 flex-shrink-0">
+                        {new Date(log.createdAt).toLocaleTimeString()}
+                      </span>
+                      <span className={`text-xs w-28 flex-shrink-0 ${typeColors[log.type] ?? 'text-gray-400'}`}>
+                        {log.type}
+                      </span>
+                      <span className="text-gray-500 text-xs w-16 flex-shrink-0 truncate">
+                        {log.guildId.slice(-6)}
+                      </span>
+                    </div>
+                    {!isOpen && (
+                      <span className="text-gray-300 text-xs break-all sm:truncate min-w-0">
+                        {JSON.stringify(log.data)}
+                      </span>
+                    )}
+                  </div>
+                  {isOpen && (
+                    <pre className="mt-2 overflow-x-auto whitespace-pre-wrap break-all rounded-md bg-black/30 p-3 text-[11px] leading-relaxed text-gray-300">
+                      {JSON.stringify(log.data, null, 2)}
+                    </pre>
+                  )}
+                </button>
+              );
+            })
           )}
         </div>
 
