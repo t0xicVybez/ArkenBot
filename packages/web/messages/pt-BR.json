@@ -3446,5 +3446,22 @@
     "how4": "O canal é criado na categoria que você escolher, ou na do próprio gatilho.",
     "how5": "Cada pessoa que entra no gatilho ganha o seu próprio canal.",
     "how6": "Quando um canal temporário fica vazio, o ArkenBot o exclui automaticamente."
+  },
+  "permissionHealth": {
+    "title": "Estado das permissões",
+    "description": "Veja exatamente quais permissões faltam ao ArkenBot neste servidor.",
+    "refresh": "Atualizar",
+    "loadError": "Não foi possível carregar o estado das permissões. Tente novamente.",
+    "notInServer": "O ArkenBot não está neste servidor.",
+    "allGoodTitle": "Tudo certo",
+    "allGoodAdmin": "O ArkenBot tem Administrador, então possui todas as permissões de que precisa.",
+    "allGood": "O ArkenBot tem todas as permissões essenciais aqui.",
+    "serverMissingTitle": "Permissões ausentes em todo o servidor",
+    "serverMissingDesc": "Elas afetam recursos em todo o servidor. Reautorize o bot para concedê-las de uma vez — não é preciso removê-lo.",
+    "reInvite": "Reconvidar o ArkenBot",
+    "reInviteHint": "Abre a tela de autorização do Discord. As configurações e dados existentes são mantidos.",
+    "channelIssuesTitle": "Problemas de acesso a canais",
+    "channelIssuesDesc": "O bot não consegue operar por completo nesses canais. Ajuste as exceções de permissão do canal para o ArkenBot poder publicar.",
+    "roleHint": "Dica: verifique também se o cargo do ArkenBot está acima dos cargos e membros que ele gerencia."
   }
 }

@@ -4,7 +4,7 @@ import {
   TrendingUp, Trophy, Hand, SmilePlus, Tags, Cake, Vote, Lightbulb, Gift, Coins, Star, Link2,
   ThumbsUp, Hash, Music, Activity, Code2, CalendarClock, Mic, Terminal, MessageSquare, Users,
   Rss, Radio, Megaphone, Puzzle, Ticket, ClipboardList, SquareKanban, Trello,
-  Timer, History, Settings,
+  Timer, History, Settings, KeyRound,
 } from 'lucide-react';
 
 export interface NavItem {
@@ -114,6 +114,7 @@ export const NAV: NavGroup[] = [
     label: 'Server',
     items: [
       it('settings', 'Server Settings', Settings, 'settings'),
+      it('permissions', 'Permission Health', KeyRound, 'permissions'),
     ],
   },
 ];

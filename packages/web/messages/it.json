@@ -3446,5 +3446,22 @@
     "how4": "Il canale viene creato nella categoria scelta, o in quella dell’attivatore.",
     "how5": "Ogni persona che entra nell’attivatore ottiene il proprio canale.",
     "how6": "Quando un canale temporaneo è vuoto, ArkenBot lo elimina automaticamente."
+  },
+  "permissionHealth": {
+    "title": "Stato dei permessi",
+    "description": "Vedi esattamente quali permessi mancano ad ArkenBot in questo server.",
+    "refresh": "Aggiorna",
+    "loadError": "Impossibile caricare lo stato dei permessi. Riprova.",
+    "notInServer": "ArkenBot non è in questo server.",
+    "allGoodTitle": "Tutto a posto",
+    "allGoodAdmin": "ArkenBot ha Amministratore, quindi dispone di tutti i permessi necessari.",
+    "allGood": "ArkenBot ha tutti i permessi principali necessari qui.",
+    "serverMissingTitle": "Permessi mancanti a livello di server",
+    "serverMissingDesc": "Interessano le funzioni di tutto il server. Riautorizza il bot per concederli tutti in una volta — non serve rimuoverlo.",
+    "reInvite": "Reinvita ArkenBot",
+    "reInviteHint": "Apre la schermata di autorizzazione di Discord. Le impostazioni e i dati esistenti vengono mantenuti.",
+    "channelIssuesTitle": "Problemi di accesso ai canali",
+    "channelIssuesDesc": "Il bot non può operare completamente in questi canali. Modifica le eccezioni dei permessi del canale così ArkenBot può pubblicare.",
+    "roleHint": "Suggerimento: assicurati anche che il ruolo di ArkenBot sia sopra i ruoli e i membri che gestisce."
   }
 }

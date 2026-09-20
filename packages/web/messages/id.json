@@ -3446,5 +3446,22 @@
     "how4": "Saluran dibuat di kategori yang kamu pilih, atau kategori pemicunya.",
     "how5": "Setiap orang yang bergabung ke pemicu mendapatkan salurannya sendiri.",
     "how6": "Saat saluran sementara kosong, ArkenBot menghapusnya otomatis."
+  },
+  "permissionHealth": {
+    "title": "Status Izin",
+    "description": "Lihat persis izin apa yang tidak dimiliki ArkenBot di server ini.",
+    "refresh": "Segarkan",
+    "loadError": "Tidak dapat memuat status izin. Coba lagi.",
+    "notInServer": "ArkenBot tidak ada di server ini.",
+    "allGoodTitle": "Semua beres",
+    "allGoodAdmin": "ArkenBot memiliki Administrator, jadi memiliki semua izin yang dibutuhkan.",
+    "allGood": "ArkenBot memiliki semua izin penting yang dibutuhkan di sini.",
+    "serverMissingTitle": "Izin yang hilang di seluruh server",
+    "serverMissingDesc": "Ini memengaruhi fitur di seluruh server. Otorisasi ulang bot untuk memberikan semuanya sekaligus — tanpa perlu mengeluarkannya.",
+    "reInvite": "Undang ulang ArkenBot",
+    "reInviteHint": "Membuka layar otorisasi Discord. Pengaturan dan data yang ada tetap dipertahankan.",
+    "channelIssuesTitle": "Masalah akses kanal",
+    "channelIssuesDesc": "Bot tidak dapat beroperasi sepenuhnya di kanal ini. Sesuaikan pengaturan izin kanal agar ArkenBot bisa mengirim pesan.",
+    "roleHint": "Tips: pastikan juga peran ArkenBot berada di atas peran dan anggota yang dikelolanya."
   }
 }

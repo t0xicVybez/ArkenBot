@@ -3446,5 +3446,22 @@
     "how4": "Der Kanal wird in der von dir gewählten Kategorie erstellt oder in der des Auslösers.",
     "how5": "Jede Person, die dem Auslöser beitritt, erhält einen eigenen Kanal.",
     "how6": "Wenn ein temporärer Kanal leer ist, löscht ArkenBot ihn automatisch."
+  },
+  "permissionHealth": {
+    "title": "Berechtigungsstatus",
+    "description": "Sieh genau, welche Berechtigungen ArkenBot auf diesem Server fehlen.",
+    "refresh": "Aktualisieren",
+    "loadError": "Berechtigungsstatus konnte nicht geladen werden. Versuche es erneut.",
+    "notInServer": "ArkenBot ist nicht auf diesem Server.",
+    "allGoodTitle": "Alles in Ordnung",
+    "allGoodAdmin": "ArkenBot hat Administrator und damit alle benötigten Berechtigungen.",
+    "allGood": "ArkenBot hat hier alle wichtigen Berechtigungen.",
+    "serverMissingTitle": "Fehlende serverweite Berechtigungen",
+    "serverMissingDesc": "Diese betreffen Funktionen auf dem gesamten Server. Autorisiere den Bot neu, um sie alle auf einmal zu erteilen – du musst ihn nicht entfernen.",
+    "reInvite": "ArkenBot neu einladen",
+    "reInviteHint": "Öffnet den Autorisierungsbildschirm von Discord. Vorhandene Einstellungen und Daten bleiben erhalten.",
+    "channelIssuesTitle": "Probleme mit dem Kanalzugriff",
+    "channelIssuesDesc": "Der Bot kann in diesen Kanälen nicht vollständig arbeiten. Passe die Kanalberechtigungen an, damit ArkenBot dort posten kann.",
+    "roleHint": "Tipp: Stelle außerdem sicher, dass die Rolle von ArkenBot über den Rollen und Mitgliedern steht, die er verwaltet."
   }
 }
