@@ -61,7 +61,9 @@
       "trello": "Trello",
       "settings": "服务器设置",
       "permissions": "权限状态",
-      "staffPortal": "员工门户"
+      "staffPortal": "员工门户",
+      "gameservers": "游戏服务器",
+      "gameadmin": "游戏管理"
     },
     "palette": {
       "placeholder": "跳转到任意位置…",
@@ -3525,5 +3527,43 @@
     "channelIssuesTitle": "频道访问问题",
     "channelIssuesDesc": "机器人无法在这些频道完全运作。请调整频道的权限覆盖，让 ArkenBot 能够发言。",
     "roleHint": "提示：另请确保 ArkenBot 的身份组位于它所管理的身份组和成员之上。"
+  },
+  "gameServersPage": {
+    "title": "游戏服务器",
+    "description": "已保存游戏服务器的实时状态与监控。",
+    "notInstalled": "此服务器未安装“游戏服务器状态”插件。",
+    "monitorTitle": "监控",
+    "monitorDesc": "状态、提醒和玩家数量的发布位置。",
+    "board": "状态板",
+    "alerts": "掉线提醒",
+    "statChannel": "玩家数量",
+    "none": "未设置",
+    "serversTitle": "已保存的服务器",
+    "empty": "还没有保存的服务器。在 Discord 中用 /server add 添加。",
+    "players": "{n} 名玩家"
+  },
+  "gameAdminPage": {
+    "title": "游戏管理",
+    "description": "RCON 服务器、审计日志和计划操作。",
+    "notInstalled": "此服务器未安装“游戏服务器管理”插件。",
+    "auditTitle": "审计日志",
+    "auditChannel": "操作记录到 {channel}",
+    "none": "未设置",
+    "serversTitle": "RCON 服务器",
+    "empty": "还没有配置服务器。在 Discord 中用 /gameadmin add 添加。",
+    "schedulesTitle": "计划操作",
+    "schedulesEmpty": "还没有计划。用 /gameadmin schedule 添加。",
+    "next": "下次：",
+    "action": {
+      "save": "保存",
+      "restart": "重启",
+      "broadcast": "广播"
+    },
+    "every": {
+      "hourly": "每小时",
+      "every6h": "每 6 小时",
+      "every12h": "每 12 小时",
+      "daily": "每天"
+    }
   }
 }

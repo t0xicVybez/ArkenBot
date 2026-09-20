@@ -61,7 +61,9 @@
       "trello": "Trello",
       "settings": "Ajustes del servidor",
       "permissions": "Estado de permisos",
-      "staffPortal": "Portal del staff"
+      "staffPortal": "Portal del staff",
+      "gameservers": "Servidores de juego",
+      "gameadmin": "Admin de juego"
     },
     "palette": {
       "placeholder": "Salta a cualquier sitio…",
@@ -3525,5 +3527,43 @@
     "channelIssuesTitle": "Problemas de acceso a canales",
     "channelIssuesDesc": "El bot no puede operar por completo en estos canales. Ajusta las excepciones de permisos del canal para que ArkenBot pueda publicar.",
     "roleHint": "Consejo: asegúrate también de que el rol de ArkenBot esté por encima de los roles y miembros que gestiona."
+  },
+  "gameServersPage": {
+    "title": "Servidores de juego",
+    "description": "Estado en vivo y monitorización de tus servidores guardados.",
+    "notInstalled": "El complemento Estado de Servidores no está instalado en este servidor.",
+    "monitorTitle": "Monitorización",
+    "monitorDesc": "Dónde se publican el estado, las alertas y el número de jugadores.",
+    "board": "Tablón de estado",
+    "alerts": "Alertas de caída",
+    "statChannel": "Nº de jugadores",
+    "none": "Sin definir",
+    "serversTitle": "Servidores guardados",
+    "empty": "Aún no hay servidores. Añade uno en Discord con /server add.",
+    "players": "{n} jugadores"
+  },
+  "gameAdminPage": {
+    "title": "Admin de juego",
+    "description": "Servidores RCON, registro de auditoría y acciones programadas.",
+    "notInstalled": "El complemento Admin de Servidores no está instalado en este servidor.",
+    "auditTitle": "Registro de auditoría",
+    "auditChannel": "Acciones registradas en {channel}",
+    "none": "Sin definir",
+    "serversTitle": "Servidores RCON",
+    "empty": "Aún no hay servidores. Añade uno en Discord con /gameadmin add.",
+    "schedulesTitle": "Acciones programadas",
+    "schedulesEmpty": "Aún no hay programaciones. Añade una con /gameadmin schedule.",
+    "next": "Próxima:",
+    "action": {
+      "save": "Guardar",
+      "restart": "Reiniciar",
+      "broadcast": "Anunciar"
+    },
+    "every": {
+      "hourly": "Cada hora",
+      "every6h": "Cada 6 horas",
+      "every12h": "Cada 12 horas",
+      "daily": "A diario"
+    }
   }
 }

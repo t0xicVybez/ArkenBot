@@ -61,7 +61,9 @@
       "trello": "Trello",
       "settings": "서버 설정",
       "permissions": "권한 상태",
-      "staffPortal": "스태프 포털"
+      "staffPortal": "스태프 포털",
+      "gameservers": "게임 서버",
+      "gameadmin": "게임 관리"
     },
     "palette": {
       "placeholder": "어디로든 이동…",
@@ -3525,5 +3527,43 @@
     "channelIssuesTitle": "채널 접근 문제",
     "channelIssuesDesc": "봇이 이 채널들에서 완전히 작동할 수 없습니다. ArkenBot이 게시할 수 있도록 채널 권한 설정을 조정하세요.",
     "roleHint": "팁: ArkenBot의 역할이 관리 대상 역할과 멤버보다 위에 있는지도 확인하세요."
+  },
+  "gameServersPage": {
+    "title": "게임 서버",
+    "description": "저장한 게임 서버의 실시간 상태 및 모니터링.",
+    "notInstalled": "이 서버에 게임 서버 상태 애드온이 설치되어 있지 않습니다.",
+    "monitorTitle": "모니터링",
+    "monitorDesc": "상태, 알림, 플레이어 수가 게시되는 위치.",
+    "board": "상태 보드",
+    "alerts": "다운 알림",
+    "statChannel": "플레이어 수",
+    "none": "설정 안 됨",
+    "serversTitle": "저장된 서버",
+    "empty": "저장된 서버가 없습니다. Discord에서 /server add로 추가하세요.",
+    "players": "{n}명"
+  },
+  "gameAdminPage": {
+    "title": "게임 관리",
+    "description": "RCON 서버, 감사 로그, 예약 작업.",
+    "notInstalled": "이 서버에 게임 서버 관리 애드온이 설치되어 있지 않습니다.",
+    "auditTitle": "감사 로그",
+    "auditChannel": "작업이 {channel}에 기록됩니다",
+    "none": "설정 안 됨",
+    "serversTitle": "RCON 서버",
+    "empty": "구성된 서버가 없습니다. Discord에서 /gameadmin add로 추가하세요.",
+    "schedulesTitle": "예약 작업",
+    "schedulesEmpty": "예약이 없습니다. /gameadmin schedule로 추가하세요.",
+    "next": "다음:",
+    "action": {
+      "save": "저장",
+      "restart": "재시작",
+      "broadcast": "공지"
+    },
+    "every": {
+      "hourly": "매시간",
+      "every6h": "6시간마다",
+      "every12h": "12시간마다",
+      "daily": "매일"
+    }
   }
 }

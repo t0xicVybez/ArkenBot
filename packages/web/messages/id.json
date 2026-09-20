@@ -61,7 +61,9 @@
       "trello": "Trello",
       "settings": "Pengaturan Server",
       "permissions": "Status Izin",
-      "staffPortal": "Portal Staf"
+      "staffPortal": "Portal Staf",
+      "gameservers": "Server Game",
+      "gameadmin": "Admin Game"
     },
     "palette": {
       "placeholder": "Lompat ke mana saja…",
@@ -3525,5 +3527,43 @@
     "channelIssuesTitle": "Masalah akses kanal",
     "channelIssuesDesc": "Bot tidak dapat beroperasi sepenuhnya di kanal ini. Sesuaikan pengaturan izin kanal agar ArkenBot bisa mengirim pesan.",
     "roleHint": "Tips: pastikan juga peran ArkenBot berada di atas peran dan anggota yang dikelolanya."
+  },
+  "gameServersPage": {
+    "title": "Server Game",
+    "description": "Status langsung dan pemantauan untuk server game tersimpan.",
+    "notInstalled": "Add-on Status Server Game tidak terpasang di server ini.",
+    "monitorTitle": "Pemantauan",
+    "monitorDesc": "Tempat status, peringatan, dan jumlah pemain diposting.",
+    "board": "Papan status",
+    "alerts": "Peringatan mati",
+    "statChannel": "Jumlah pemain",
+    "none": "Belum diatur",
+    "serversTitle": "Server Tersimpan",
+    "empty": "Belum ada server. Tambahkan di Discord dengan /server add.",
+    "players": "{n} pemain"
+  },
+  "gameAdminPage": {
+    "title": "Admin Game",
+    "description": "Server RCON, log audit, dan tindakan terjadwal.",
+    "notInstalled": "Add-on Admin Server Game tidak terpasang di server ini.",
+    "auditTitle": "Log audit",
+    "auditChannel": "Tindakan dicatat ke {channel}",
+    "none": "Belum diatur",
+    "serversTitle": "Server RCON",
+    "empty": "Belum ada server. Tambahkan di Discord dengan /gameadmin add.",
+    "schedulesTitle": "Tindakan Terjadwal",
+    "schedulesEmpty": "Belum ada jadwal. Tambahkan dengan /gameadmin schedule.",
+    "next": "Berikutnya:",
+    "action": {
+      "save": "Simpan",
+      "restart": "Mulai ulang",
+      "broadcast": "Umumkan"
+    },
+    "every": {
+      "hourly": "Tiap jam",
+      "every6h": "Tiap 6 jam",
+      "every12h": "Tiap 12 jam",
+      "daily": "Harian"
+    }
   }
 }

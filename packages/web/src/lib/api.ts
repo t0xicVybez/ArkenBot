@@ -482,6 +482,14 @@ export const permissionHealthApi = {
   get: (guildId: string) => api.get(`/guilds/${guildId}/permission-health`),
 };
 
+export const gameServersApi = {
+  get: (guildId: string) => api.get(`/guilds/${guildId}/addons/gameservers`),
+};
+
+export const gameAdminApi = {
+  get: (guildId: string) => api.get(`/guilds/${guildId}/addons/gameadmin`),
+};
+
 // ─── Admin ────────────────────────────────────────────────────────
 export const appealsApi = {
   appealable: () => api.get('/me/appealable'),

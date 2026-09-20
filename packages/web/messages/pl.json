@@ -61,7 +61,9 @@
       "trello": "Trello",
       "settings": "Ustawienia serwera",
       "permissions": "Stan uprawnień",
-      "staffPortal": "Portal personelu"
+      "staffPortal": "Portal personelu",
+      "gameservers": "Serwery gier",
+      "gameadmin": "Admin gier"
     },
     "palette": {
       "placeholder": "Przejdź do dowolnego miejsca…",
@@ -3525,5 +3527,43 @@
     "channelIssuesTitle": "Problemy z dostępem do kanałów",
     "channelIssuesDesc": "Bot nie może w pełni działać na tych kanałach. Dostosuj wyjątki uprawnień kanału, aby ArkenBot mógł tam pisać.",
     "roleHint": "Wskazówka: upewnij się też, że rola ArkenBota znajduje się nad rolami i członkami, którymi zarządza."
+  },
+  "gameServersPage": {
+    "title": "Serwery gier",
+    "description": "Status na żywo i monitorowanie zapisanych serwerów.",
+    "notInstalled": "Dodatek Status Serwerów nie jest zainstalowany na tym serwerze.",
+    "monitorTitle": "Monitorowanie",
+    "monitorDesc": "Gdzie publikowane są status, alerty i liczba graczy.",
+    "board": "Tablica statusu",
+    "alerts": "Alerty awarii",
+    "statChannel": "Liczba graczy",
+    "none": "Nie ustawiono",
+    "serversTitle": "Zapisane serwery",
+    "empty": "Brak zapisanych serwerów. Dodaj na Discordzie przez /server add.",
+    "players": "{n} graczy"
+  },
+  "gameAdminPage": {
+    "title": "Admin gier",
+    "description": "Serwery RCON, dziennik audytu i zaplanowane akcje.",
+    "notInstalled": "Dodatek Admin Serwerów nie jest zainstalowany na tym serwerze.",
+    "auditTitle": "Dziennik audytu",
+    "auditChannel": "Akcje zapisywane w {channel}",
+    "none": "Nie ustawiono",
+    "serversTitle": "Serwery RCON",
+    "empty": "Brak skonfigurowanych serwerów. Dodaj na Discordzie przez /gameadmin add.",
+    "schedulesTitle": "Zaplanowane akcje",
+    "schedulesEmpty": "Brak harmonogramów. Dodaj przez /gameadmin schedule.",
+    "next": "Następna:",
+    "action": {
+      "save": "Zapisz",
+      "restart": "Restart",
+      "broadcast": "Ogłoś"
+    },
+    "every": {
+      "hourly": "Co godzinę",
+      "every6h": "Co 6 godzin",
+      "every12h": "Co 12 godzin",
+      "daily": "Codziennie"
+    }
   }
 }
