@@ -108,7 +108,7 @@ export default function DashboardPage() {
               {t('noServersDesc')}
             </p>
             <a
-              href={`https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&permissions=8824675416665207&integration_type=0&scope=bot%20applications.commands`}
+              href={`https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&permissions=8824675953536247&integration_type=0&scope=bot%20applications.commands`}
               target="_blank"
               rel="noreferrer"
               className="btn-primary"
@@ -145,7 +145,7 @@ export default function DashboardPage() {
                     <div key={guild.id} className="card group">
                       <GuildCard guild={guild} />
                       <a
-                        href={`https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&guild_id=${guild.id}&permissions=8824675416665207&integration_type=0&scope=bot%20applications.commands`}
+                        href={`https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&guild_id=${guild.id}&permissions=8824675953536247&integration_type=0&scope=bot%20applications.commands`}
                         target="_blank"
                         rel="noreferrer"
                         className="btn-primary text-xs py-1"

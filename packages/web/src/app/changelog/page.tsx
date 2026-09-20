@@ -17,8 +17,8 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.arkenbot.app';
 
 const SITE = {
   inviteUrl: CLIENT_ID
-    ? `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&permissions=8824675416665207&integration_type=0&scope=bot+applications.commands`
-    : 'https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=8824675416665207&integration_type=0&scope=bot+applications.commands',
+    ? `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&permissions=8824675953536247&integration_type=0&scope=bot+applications.commands`
+    : 'https://discord.com/oauth2/authorize?client_id=YOUR_CLIENT_ID&permissions=8824675953536247&integration_type=0&scope=bot+applications.commands',
   docsUrl: 'https://docs.arkenbot.app/',
   supportUrl: 'https://discord.gg/fXJnYPdHRX',
 };
