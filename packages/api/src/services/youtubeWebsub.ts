@@ -171,3 +171,30 @@ export async function reconcileSubscriptions(): Promise<void> {
     if (!wanted.has(channelId)) await removeSubscriptionIfUnused(channelId);
   }
 }
+
+/**
+ * Frequent, lightweight retry of subscriptions stuck `failed`/`pending` — e.g.
+ * while Google's hub is 503-ing "Transient error" (retry-after ~120s). Only
+ * re-POSTs (no YouTube Data API quota) for channels an enabled alert still
+ * wants, so push latches on within minutes of the hub recovering instead of
+ * waiting for the hourly reconcile.
+ */
+export async function retryPendingSubscriptions(): Promise<void> {
+  const stuck = await prisma.youtubeSubscription.findMany({
+    where: { status: { in: ['failed', 'pending'] } },
+    select: { channelId: true },
+    take: 200, // safety cap; the hub is gentle to spam either way
+  });
+  if (!stuck.length) return;
+
+  const wantedRows = await prisma.streamAlert.findMany({
+    where: { platform: 'youtube', enabled: true, channelId: { in: stuck.map((s) => s.channelId) } },
+    select: { channelId: true },
+    distinct: ['channelId'],
+  });
+  const wanted = new Set(wantedRows.map((r) => r.channelId));
+
+  for (const { channelId } of stuck) {
+    if (wanted.has(channelId)) await ensureSubscription(channelId);
+  }
+}
