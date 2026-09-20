@@ -110,7 +110,11 @@
     "title": "Оповещения о стримах",
     "description": "Уведомляй сообщество, когда авторы выходят в эфир или публикуют — Twitch, Kick, YouTube, RSS.",
     "channelUsername": "Имя пользователя канала",
-    "channelHandle": "Идентификатор канала"
+    "channelHandle": "Идентификатор канала",
+    "notifyOn": "Уведомлять о",
+    "notifyLive": "Трансляции",
+    "notifyUploads": "Новые видео",
+    "pickAtLeastOne": "Выберите хотя бы одно: трансляции или видео."
   },
   "counting": {
     "title": "Счёт",

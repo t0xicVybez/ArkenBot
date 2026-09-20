@@ -110,7 +110,11 @@
     "title": "Yayın Uyarıları",
     "description": "İçerik üreticileri canlı yayına geçtiğinde veya paylaşım yaptığında topluluğu bilgilendir — Twitch, Kick, YouTube, RSS.",
     "channelUsername": "Kanal Kullanıcı Adı",
-    "channelHandle": "Kanal Etiketi"
+    "channelHandle": "Kanal Etiketi",
+    "notifyOn": "Şunlarda bildir",
+    "notifyLive": "Canlı yayınlar",
+    "notifyUploads": "Yeni videolar",
+    "pickAtLeastOne": "En az birini seç: canlı yayınlar veya videolar."
   },
   "counting": {
     "title": "Sayım",

@@ -110,7 +110,11 @@
     "title": "Avvisi di live",
     "description": "Avvisa la community quando i creator vanno in diretta o pubblicano — Twitch, Kick, YouTube, RSS.",
     "channelUsername": "Nome utente del canale",
-    "channelHandle": "Handle del canale"
+    "channelHandle": "Handle del canale",
+    "notifyOn": "Notifica per",
+    "notifyLive": "Dirette",
+    "notifyUploads": "Nuovi video",
+    "pickAtLeastOne": "Scegli almeno un’opzione: dirette o video."
   },
   "counting": {
     "title": "Conteggio",

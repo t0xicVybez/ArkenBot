@@ -62,6 +62,16 @@ export const config = {
   },
 
   /**
+   * Public base URL of THIS API, reachable from the internet. Used as the
+   * PubSubHubbub (WebSub) callback for YouTube push notifications. Falls back to
+   * NEXT_PUBLIC_API_URL (the same origin the dashboard already calls).
+   */
+  publicApiUrl: (optional('PUBLIC_API_URL') || optional('NEXT_PUBLIC_API_URL', 'http://localhost:4000')).replace(/\/$/, ''),
+
+  /** YouTube Data API key (shared with the bot) — for handle→channelId + videos.list. */
+  youtubeApiKey: optional('YOUTUBE_API_KEY', ''),
+
+  /**
    * Opaque session cookie. `secure` is enabled in production only so the flow
    * still works over plain HTTP during local development. `sameSite: 'lax'` is
    * sufficient because the dashboard and API are same-site (shared registrable

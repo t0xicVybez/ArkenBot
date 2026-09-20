@@ -110,7 +110,11 @@
     "title": "直播提醒",
     "description": "当创作者开播或发布内容时通知社区 — Twitch、Kick、YouTube、RSS。",
     "channelUsername": "频道用户名",
-    "channelHandle": "频道句柄"
+    "channelHandle": "频道句柄",
+    "notifyOn": "通知时机",
+    "notifyLive": "直播",
+    "notifyUploads": "新视频",
+    "pickAtLeastOne": "请至少选择一项：直播或视频。"
   },
   "counting": {
     "title": "计数",

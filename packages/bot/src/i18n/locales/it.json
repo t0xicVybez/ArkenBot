@@ -148,7 +148,8 @@
     "kickLive": "{streamer} è in diretta su Kick!",
     "rssNewPost": "Nuovo post da **{feed}**",
     "rssFeedFallback": "Feed RSS",
-    "rssPostFallback": "Nuovo post"
+    "rssPostFallback": "Nuovo post",
+    "youtubeUpload": "{streamer} ha pubblicato un nuovo video!"
   },
   "announcement": {
     "author": "Annunci ArkenBot",

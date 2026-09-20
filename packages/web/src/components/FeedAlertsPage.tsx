@@ -63,7 +63,7 @@ export function FeedAlertsPage({ title, description, icon: Icon, platforms, noti
   const defaultPlatform = platforms[0].value;
 
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ platform: defaultPlatform, username: '', discordChannelId: '', message: '' });
+  const [form, setForm] = useState({ platform: defaultPlatform, username: '', discordChannelId: '', message: '', notifyLive: true, notifyUploads: true });
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState({ username: '', message: '' });
   const [filter, setFilter] = useState<string>('all');
@@ -94,9 +94,12 @@ export function FeedAlertsPage({ title, description, icon: Icon, platforms, noti
       toast.success(t('created'));
       queryClient.invalidateQueries({ queryKey });
       setShowForm(false);
-      setForm({ platform: defaultPlatform, username: '', discordChannelId: '', message: '' });
+      setForm({ platform: defaultPlatform, username: '', discordChannelId: '', message: '', notifyLive: true, notifyUploads: true });
     },
-    onError: () => toast.error(t('createError')),
+    onError: (err: unknown) => {
+      const msg = (err as { response?: { data?: { error?: string } } })?.response?.data?.error;
+      toast.error(msg || t('createError'));
+    },
   });
 
   const toggleMutation = useMutation({
@@ -130,11 +133,15 @@ export function FeedAlertsPage({ title, description, icon: Icon, platforms, noti
     e.preventDefault();
     if (!form.discordChannelId) return toast.error(t('channelRequired'));
     if (!form.username.trim()) return toast.error(t('sourceRequired'));
+    if (form.platform === 'youtube' && !form.notifyLive && !form.notifyUploads) {
+      return toast.error(t('pickAtLeastOne'));
+    }
     createMutation.mutate({
       platform: form.platform,
       channelUsername: form.username.trim(),
       discordChannelId: form.discordChannelId,
       message: form.message.trim() || undefined,
+      ...(form.platform === 'youtube' ? { notifyLive: form.notifyLive, notifyUploads: form.notifyUploads } : {}),
     });
   };
 
@@ -258,6 +265,29 @@ export function FeedAlertsPage({ title, description, icon: Icon, platforms, noti
               />
               <p className="text-xs text-gray-500 mt-1">{t('variables')} {currentPlatformConfig.variables}</p>
             </div>
+            {form.platform === 'youtube' && (
+              <div>
+                <label className="label">{t('notifyOn')}</label>
+                <div className="flex flex-wrap gap-4">
+                  <label className="flex items-center gap-2 text-sm text-gray-300">
+                    <input
+                      type="checkbox"
+                      checked={form.notifyLive}
+                      onChange={(e) => setForm((f) => ({ ...f, notifyLive: e.target.checked }))}
+                    />
+                    {t('notifyLive')}
+                  </label>
+                  <label className="flex items-center gap-2 text-sm text-gray-300">
+                    <input
+                      type="checkbox"
+                      checked={form.notifyUploads}
+                      onChange={(e) => setForm((f) => ({ ...f, notifyUploads: e.target.checked }))}
+                    />
+                    {t('notifyUploads')}
+                  </label>
+                </div>
+              </div>
+            )}
             <div className="flex gap-2">
               <button type="submit" disabled={createMutation.isPending} className="btn-primary">
                 {createMutation.isPending ? t('creating') : t('createButton')}

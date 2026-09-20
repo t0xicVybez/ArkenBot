@@ -27,6 +27,7 @@ import { EconomyModule } from './economy/EconomyModule.js';
 import { EventsModule } from './events/EventsModule.js';
 import { ModmailModule } from './modmail/ModmailModule.js';
 import { AnalyticsModule } from './AnalyticsModule.js';
+import { pollUpcoming, pollUnsubscribed, pollSafetyNet } from './streamAlerts/YouTubeAlerts.js';
 import RSSParser from 'rss-parser';
 
 export class BackgroundJobs {
@@ -77,6 +78,16 @@ export class BackgroundJobs {
 
     void this.runStreamAlerts();
     setTimeout(() => this.timers.push(setInterval(() => void this.runStreamAlerts(), 5 * 60 * 1000)), jitter());
+
+    // YouTube alerts are push-driven (WebSub). These quota-budgeted polls back it
+    // up: track scheduled streams to go-live (~90s); cover channels push isn't
+    // reaching — e.g. while Google's hub is degraded — at a brisk cadence (~2min,
+    // near-zero quota when push is healthy); and a full missed-push sweep (~30min).
+    if (process.env.YOUTUBE_API_KEY) {
+      setTimeout(() => this.timers.push(setInterval(() => void pollUpcoming().catch(() => {}), 90 * 1000)), jitter());
+      setTimeout(() => this.timers.push(setInterval(() => void pollUnsubscribed().catch(() => {}), 2 * 60 * 1000)), jitter());
+      setTimeout(() => this.timers.push(setInterval(() => void pollSafetyNet().catch(() => {}), 30 * 60 * 1000)), jitter());
+    }
 
     setTimeout(() => this.timers.push(setInterval(() => void XPDecayModule.runDecay(), 24 * 60 * 60 * 1000)), jitter());
 
@@ -691,20 +702,14 @@ export class BackgroundJobs {
   private async runStreamAlerts(): Promise<void> {
     const twitchClientId = process.env.TWITCH_CLIENT_ID;
     const twitchClientSecret = process.env.TWITCH_CLIENT_SECRET;
-    const youtubeApiKey = process.env.YOUTUBE_API_KEY;
 
     try {
-      const alerts = await prisma.streamAlert.findMany({ where: { enabled: true } });
-      if (!alerts.length) return;
-
-      // YouTube alerts are deduplicated by channel — one pair of API calls per
-      // unique channel serves every server watching that creator.
-      const youtubeAlerts = alerts.filter((a) => a.platform === 'youtube');
-      const otherAlerts = alerts.filter((a) => a.platform !== 'youtube');
-
-      if (youtubeAlerts.length > 0 && youtubeApiKey) {
-        await this.runYouTubeAlerts(youtubeAlerts, youtubeApiKey);
-      }
+      // YouTube alerts are handled separately (WebSub push + backstop polls);
+      // this timer covers only Twitch, Kick, and RSS.
+      const otherAlerts = await prisma.streamAlert.findMany({
+        where: { enabled: true, platform: { not: 'youtube' } },
+      });
+      if (!otherAlerts.length) return;
 
       // Obtain a Twitch app token once up-front so every Twitch alert in this
       // cycle can reuse it rather than each alert hitting the token endpoint.
@@ -734,173 +739,6 @@ export class BackgroundJobs {
       }
     } catch (err) {
       logger.error({ err }, 'Stream alerts check failed');
-    }
-  }
-
-  // ── YouTube Live Alerts ─────────────────────────────────────────────────────
-
-  private async runYouTubeAlerts(
-    alerts: Awaited<ReturnType<typeof prisma.streamAlert.findMany>>,
-    apiKey: string,
-  ): Promise<void> {
-    // Resolve channel IDs lazily for any alert that hasn't been resolved yet.
-    for (const alert of alerts) {
-      if (alert.channelId) continue;
-      try {
-        const handle = alert.channelUsername.replace(/^@/, '');
-        const res = await fetch(
-          `https://www.googleapis.com/youtube/v3/channels?part=id&forHandle=${encodeURIComponent(handle)}&key=${apiKey}`,
-        ).catch(swallow);
-        if (!res?.ok) continue;
-        const data = await res.json() as { items?: Array<{ id: string }> };
-        const channelId = data.items?.[0]?.id;
-        if (!channelId) continue;
-        await prisma.streamAlert.update({ where: { id: alert.id }, data: { channelId } });
-        alert.channelId = channelId;
-        logger.info({ alertId: alert.id, channelId }, 'Resolved YouTube channel ID');
-      } catch (err) {
-        logger.error({ err, alertId: alert.id }, 'Failed to resolve YouTube channel ID');
-      }
-    }
-
-    // Group resolved alerts by unique channelId — one API call pair per channel.
-    const byChannel = new Map<string, typeof alerts>();
-    for (const alert of alerts) {
-      if (!alert.channelId) continue;
-      const group = byChannel.get(alert.channelId) ?? [];
-      group.push(alert);
-      byChannel.set(alert.channelId, group);
-    }
-
-    for (const [channelId, channelAlerts] of byChannel) {
-      try {
-        // The uploads playlist ID is always derived from the channel ID (UC→UU).
-        const uploadsPlaylistId = `UU${channelId.slice(2)}`;
-
-        const playlistRes = await fetch(
-          `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${uploadsPlaylistId}&maxResults=5&key=${apiKey}`,
-        ).catch(swallow);
-        if (!playlistRes?.ok) continue;
-
-        const playlistData = await playlistRes.json() as {
-          items?: Array<{ snippet: { resourceId: { videoId: string } } }>;
-        };
-        const videoIds = (playlistData.items ?? [])
-          .map((i) => i.snippet?.resourceId?.videoId)
-          .filter(Boolean) as string[];
-        if (!videoIds.length) continue;
-
-        const videosRes = await fetch(
-          `https://www.googleapis.com/youtube/v3/videos?part=snippet,liveStreamingDetails&id=${videoIds.join(',')}&key=${apiKey}`,
-        ).catch(swallow);
-        if (!videosRes?.ok) continue;
-
-        const videosData = await videosRes.json() as {
-          items?: Array<{
-            id: string;
-            snippet: {
-              title: string;
-              channelTitle: string;
-              liveBroadcastContent: string;
-              thumbnails: { maxres?: { url: string }; high?: { url: string }; medium?: { url: string } };
-            };
-          }>;
-        };
-
-        const liveVideo = videosData.items?.find(
-          (v) => v.snippet.liveBroadcastContent === 'live',
-        ) ?? null;
-
-        for (const alert of channelAlerts) {
-          await this.processYouTubeAlert(alert, liveVideo);
-        }
-      } catch (err) {
-        logger.error({ err, channelId }, 'YouTube channel live check failed');
-      }
-    }
-
-    // YouTube ToS compliance: purge any lastStreamId that has been stored for >30 days.
-    // Under normal operation, lastStreamId is cleared within minutes of a stream ending;
-    // this is a safety net for edge cases (bot outage, etc.).
-    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-    await prisma.streamAlert.updateMany({
-      where: { platform: 'youtube', lastStreamId: { not: null }, createdAt: { lt: thirtyDaysAgo } },
-      data: { lastStreamId: null },
-    }).catch((err: unknown) => logger.warn({ err }, 'YouTube 30-day lastStreamId cleanup failed'));
-  }
-
-  private async processYouTubeAlert(
-    alert: Awaited<ReturnType<typeof prisma.streamAlert.findFirst>> & object,
-    liveVideo: {
-      id: string;
-      snippet: {
-        title: string;
-        channelTitle: string;
-        thumbnails: { maxres?: { url: string }; high?: { url: string }; medium?: { url: string } };
-      };
-    } | null,
-  ): Promise<void> {
-    try {
-      if (!liveVideo) {
-        if (alert.lastStreamId) {
-          await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastStreamId: null } });
-        }
-        return;
-      }
-
-      if (liveVideo.id === alert.lastStreamId) return;
-      await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastStreamId: liveVideo.id } });
-
-      const guild = this.client.guilds.cache.get(alert.guildId);
-      if (!guild) return;
-      const channel = guild.channels.cache.get(alert.discordChannelId) as TextChannel | undefined;
-      if (!channel?.isTextBased()) {
-        await this.recordAlertFailure(alert.id, 'Channel not found — deleted or the bot lost access');
-        return;
-      }
-
-      const alertSettings = await getGuildSettings(alert.guildId);
-      const loc = await resolveUserLocale({ user: { id: '' }, guildId: alert.guildId });
-      const alertColor = alertSettings?.streamAlertColor
-        ? parseInt(alertSettings.streamAlertColor.replace('#', ''), 16)
-        : null;
-
-      const videoUrl = `https://www.youtube.com/watch?v=${liveVideo.id}`;
-      const channelName = liveVideo.snippet.channelTitle;
-      const streamTitle = liveVideo.snippet.title;
-      const thumbnail =
-        liveVideo.snippet.thumbnails.maxres?.url ??
-        liveVideo.snippet.thumbnails.high?.url ??
-        liveVideo.snippet.thumbnails.medium?.url ??
-        null;
-
-      const message = alert.message
-        .replace(/\{streamer\}/g, channelName)
-        .replace(/\{url\}/g, videoUrl)
-        .replace(/\{title\}/g, streamTitle)
-        .replace(/\{game\}/g, '')
-        .replace(/\s{2,}/g, ' ')
-        .trim();
-
-      const embed = new EmbedBuilder()
-        .setTitle(t('streamAlert.youtubeLive', loc, { streamer: channelName }))
-        .setDescription(streamTitle)
-        .setURL(videoUrl)
-        .setColor(alertColor ?? 0xff0000)
-        .setFooter({ text: 'YouTube' })
-        .setTimestamp();
-
-      if (thumbnail) embed.setImage(thumbnail);
-
-      const alertMsg = await channel.send({ content: message, embeds: [embed] });
-      await prisma.streamAlert.update({
-        where: { id: alert.id },
-        data: { lastMessageId: alertMsg.id, lastMessageChannelId: alertMsg.channelId, failureCount: 0, lastError: null },
-      }).catch(swallow);
-      logger.info({ guildId: alert.guildId, channelId: alert.channelId }, 'YouTube live alert sent');
-    } catch (err) {
-      logger.error({ err, alertId: alert.id }, 'Failed to process YouTube alert');
-      await this.recordAlertPermissionFailure(alert.id, err);
     }
   }
 

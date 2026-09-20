@@ -22,7 +22,7 @@ done
 
 if [ "$RUN_PRISMA" -eq 1 ]; then
   echo "── prisma db push + generate ──"
-  npx prisma db push --skip-generate
+  npx prisma db push
   npx prisma generate
 fi
 

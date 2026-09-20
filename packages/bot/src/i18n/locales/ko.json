@@ -148,7 +148,8 @@
     "kickLive": "{streamer}님이 Kick에서 라이브 중입니다!",
     "rssNewPost": "**{feed}**의 새 게시물",
     "rssFeedFallback": "RSS 피드",
-    "rssPostFallback": "새 게시물"
+    "rssPostFallback": "새 게시물",
+    "youtubeUpload": "{streamer} 님이 새 영상을 올렸어요!"
   },
   "announcement": {
     "author": "ArkenBot 공지",

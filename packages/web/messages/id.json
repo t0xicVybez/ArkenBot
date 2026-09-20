@@ -110,7 +110,11 @@
     "title": "Peringatan Siaran",
     "description": "Beri tahu komunitas saat kreator siaran langsung atau memposting — Twitch, Kick, YouTube, RSS.",
     "channelUsername": "Nama Pengguna Kanal",
-    "channelHandle": "Handle Kanal"
+    "channelHandle": "Handle Kanal",
+    "notifyOn": "Beri tahu saat",
+    "notifyLive": "Siaran langsung",
+    "notifyUploads": "Video baru",
+    "pickAtLeastOne": "Pilih setidaknya satu: siaran langsung atau video."
   },
   "counting": {
     "title": "Menghitung",

@@ -9,6 +9,7 @@ import { connectDatabase, disconnectDatabase } from './database.js';
 import { connectRedis, disconnectRedis } from './redis.js';
 import { createServer } from './server.js';
 import { initSentry, captureError } from './sentry.js';
+import { reconcileSubscriptions } from './services/youtubeWebsub.js';
 
 async function main() {
   logger.info('Starting API server...');
@@ -21,6 +22,15 @@ async function main() {
 
   await server.listen({ port: config.port, host: config.host });
   logger.info(`API server listening on port ${config.port}`);
+
+  // YouTube WebSub: reconcile + renew subscriptions on startup and hourly. The
+  // hourly cadence also retries channels stuck 'failed'/'pending' — e.g. while
+  // Google's public hub is 503-ing — so push resumes automatically when it
+  // recovers. WebSub (un)subscribe costs no YouTube Data API quota.
+  if (config.youtubeApiKey) {
+    setTimeout(() => void reconcileSubscriptions().catch((err) => logger.warn({ err }, 'YouTube WebSub reconcile failed')), 30_000);
+    setInterval(() => void reconcileSubscriptions().catch((err) => logger.warn({ err }, 'YouTube WebSub reconcile failed')), 60 * 60 * 1000);
+  }
 
   const shutdown = async (signal: string) => {
     logger.info(`Received ${signal}, shutting down...`);

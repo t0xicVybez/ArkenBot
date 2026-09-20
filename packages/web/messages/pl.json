@@ -110,7 +110,11 @@
     "title": "Alerty transmisji",
     "description": "Powiadom społeczność, gdy twórcy wchodzą na żywo lub publikują — Twitch, Kick, YouTube, RSS.",
     "channelUsername": "Nazwa użytkownika kanału",
-    "channelHandle": "Uchwyt kanału"
+    "channelHandle": "Uchwyt kanału",
+    "notifyOn": "Powiadamiaj o",
+    "notifyLive": "Transmisje na żywo",
+    "notifyUploads": "Nowe filmy",
+    "pickAtLeastOne": "Wybierz co najmniej jedno: transmisje lub filmy."
   },
   "counting": {
     "title": "Liczenie",
