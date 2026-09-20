@@ -68,20 +68,23 @@ export async function runServerCommand(server: SavedGameServer, rawCommand: stri
 const STEAMID_GAMES = new Set(['palworld']);
 
 /**
- * For SteamID-based games (Palworld), resolves an online player's name to their
- * SteamID via ShowPlayers so kick/ban work with a name. Passes the input through
- * unchanged when it's already a 17-digit SteamID, the game uses names, or no
- * online match is found (so the command fails visibly rather than silently).
+ * For SteamID-based games (Palworld), turns a player name or SteamID into the
+ * `steam_<steamid>` identifier Palworld's RCON kick/ban commands require. Accepts
+ * a name (resolved to its SteamID via ShowPlayers), a bare 17-digit SteamID, or
+ * an already-prefixed `steam_…`. Passes the input through unchanged when the game
+ * uses names, or when a name can't be matched online (so it fails visibly).
  */
 export async function resolvePlayerTarget(server: SavedGameServer, player: string): Promise<string> {
   if (!STEAMID_GAMES.has(server.game)) return player;
-  if (/^\d{17}$/.test(player.trim())) return player.trim();
+  const p = player.trim();
+  if (/^steam_\d{17}$/i.test(p)) return p;      // already the Palworld form
+  if (/^\d{17}$/.test(p)) return `steam_${p}`;  // bare SteamID → prefix it
   try {
     const out = await runServerCommand(server, 'ShowPlayers'); // CSV: name,playeruid,steamid
     for (const line of out.split('\n').slice(1)) {
       const cols = line.split(',');
-      if (cols.length >= 3 && cols[0].trim().toLowerCase() === player.trim().toLowerCase()) {
-        return cols[cols.length - 1].trim();
+      if (cols.length >= 3 && cols[0].trim().toLowerCase() === p.toLowerCase()) {
+        return `steam_${cols[cols.length - 1].trim()}`;
       }
     }
   } catch { /* fall through — let the command fail with a clear server error */ }
