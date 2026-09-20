@@ -6,6 +6,7 @@
  * so it derives this from REST data with the bot token).
  */
 import type { FastifyInstance } from 'fastify';
+import { isSnowflake } from '@arkenbot/shared';
 import { requireGuildAdmin } from '../middleware/auth.js';
 
 const F = {
@@ -64,6 +65,9 @@ function channelPerms(base: bigint, isAdmin: boolean, ch: Channel, guildId: stri
 export async function permissionHealthRoutes(server: FastifyInstance): Promise<void> {
   server.get('/guilds/:guildId/permission-health', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
+    // Constrain guildId to a Discord snowflake before it flows into any outbound
+    // request URL (prevents SSRF / path injection via the route param).
+    if (!isSnowflake(guildId)) return reply.code(400).send({ success: false, error: 'Invalid guild ID' });
     const token = process.env.DISCORD_TOKEN;
     const botId = process.env.DISCORD_CLIENT_ID;
     if (!token || !botId) return reply.code(500).send({ success: false, error: 'Bot credentials not configured' });
