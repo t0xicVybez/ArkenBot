@@ -15,7 +15,7 @@ import { encryptCredential } from '../crypto.js';
 import { saveServer, takePending, newServerId, findServer } from '../storage.js';
 import { GAMES } from '../games.js';
 import { buildResultEmbed } from '../utils/embeds.js';
-import { buildActionCommand, runServerCommand, postAudit, type RconAction } from '../admin.js';
+import { buildActionCommand, runServerCommand, postAudit, resolvePlayerTarget, type RconAction } from '../admin.js';
 import { buildActionModal } from '../panel.js';
 import { RconError } from '../rcon/source.js';
 import type { SavedGameServer } from '../types.js';
@@ -50,6 +50,7 @@ async function runAndReply(
 ): Promise<void> {
   const loc = await ctx.resolveLocale(interaction);
   const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
+  if (args.player) args = { ...args, player: await resolvePlayerTarget(server, args.player) };
   const raw = buildActionCommand(server, action, args);
   if (raw === null) {
     await interaction.reply({ content: t('gameadmin.notSupported', { action, game: GAMES[server.game]?.label ?? server.game }), flags: MessageFlags.Ephemeral });
