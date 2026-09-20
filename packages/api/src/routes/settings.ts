@@ -137,11 +137,17 @@ export async function settingsRoutes(server: FastifyInstance): Promise<void> {
       type: 'toggle' | 'add' | 'remove';
     };
 
-    const role = await prisma.reactionRole.create({
-      data: { guildId, channelId, messageId, emoji: normalizeEmoji(emoji), roleId, type: type ?? 'toggle' },
-    });
-
-    return reply.code(201).send({ success: true, data: role });
+    try {
+      const role = await prisma.reactionRole.create({
+        data: { guildId, channelId, messageId, emoji: normalizeEmoji(emoji), roleId, type: type ?? 'toggle' },
+      });
+      return reply.code(201).send({ success: true, data: role });
+    } catch (err) {
+      if ((err as { code?: string }).code === 'P2002') {
+        return reply.code(409).send({ success: false, error: 'That emoji is already assigned on this message.' });
+      }
+      throw err;
+    }
   });
 
   // DELETE /guilds/:guildId/reaction-roles/:id
@@ -237,17 +243,25 @@ export async function settingsRoutes(server: FastifyInstance): Promise<void> {
     // Use the panel's current messageId if deployed, else use panelId as placeholder
     const placeholderMsgId = panel.messageId ?? panelId;
 
-    const role = await prisma.reactionRole.create({
-      data: {
-        guildId,
-        channelId: panel.channelId,
-        messageId: placeholderMsgId,
-        emoji: normalizeEmoji(emoji),
-        roleId,
-        type: type ?? 'toggle',
-        panelId,
-      },
-    });
+    let role;
+    try {
+      role = await prisma.reactionRole.create({
+        data: {
+          guildId,
+          channelId: panel.channelId,
+          messageId: placeholderMsgId,
+          emoji: normalizeEmoji(emoji),
+          roleId,
+          type: type ?? 'toggle',
+          panelId,
+        },
+      });
+    } catch (err) {
+      if ((err as { code?: string }).code === 'P2002') {
+        return reply.code(409).send({ success: false, error: 'That emoji is already used on this panel.' });
+      }
+      throw err;
+    }
 
     await pub.publish('api:events', JSON.stringify({ type: 'reaction-role:panel-upsert', data: { panelId } }));
     return reply.code(201).send({ success: true, data: role });
