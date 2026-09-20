@@ -27,7 +27,7 @@ import { EconomyModule } from './economy/EconomyModule.js';
 import { EventsModule } from './events/EventsModule.js';
 import { ModmailModule } from './modmail/ModmailModule.js';
 import { AnalyticsModule } from './AnalyticsModule.js';
-import { pollUpcoming, pollUnsubscribed, pollSafetyNet } from './streamAlerts/YouTubeAlerts.js';
+import { pollUpcoming, pollFeeds } from './streamAlerts/YouTubeAlerts.js';
 import RSSParser from 'rss-parser';
 
 export class BackgroundJobs {
@@ -79,14 +79,13 @@ export class BackgroundJobs {
     void this.runStreamAlerts();
     setTimeout(() => this.timers.push(setInterval(() => void this.runStreamAlerts(), 5 * 60 * 1000)), jitter());
 
-    // YouTube alerts are push-driven (WebSub). These quota-budgeted polls back it
-    // up: track scheduled streams to go-live (~90s); cover channels push isn't
-    // reaching — e.g. while Google's hub is degraded — at a brisk cadence (~2min,
-    // near-zero quota when push is healthy); and a full missed-push sweep (~30min).
+    // YouTube alerts: the primary detector is a quota-free poll of each channel's
+    // public Atom feed (~2min) — reliable and independent of Google's WebSub hub;
+    // WebSub push, when the hub is healthy, just wins the race for near-instant
+    // delivery (deduped). pollUpcoming (~90s) carries scheduled streams to go-live.
     if (process.env.YOUTUBE_API_KEY) {
       setTimeout(() => this.timers.push(setInterval(() => void pollUpcoming().catch(() => {}), 90 * 1000)), jitter());
-      setTimeout(() => this.timers.push(setInterval(() => void pollUnsubscribed().catch(() => {}), 2 * 60 * 1000)), jitter());
-      setTimeout(() => this.timers.push(setInterval(() => void pollSafetyNet().catch(() => {}), 30 * 60 * 1000)), jitter());
+      setTimeout(() => this.timers.push(setInterval(() => void pollFeeds().catch(() => {}), 2 * 60 * 1000)), jitter());
     }
 
     setTimeout(() => this.timers.push(setInterval(() => void XPDecayModule.runDecay(), 24 * 60 * 60 * 1000)), jitter());
