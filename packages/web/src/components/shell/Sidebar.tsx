@@ -3,9 +3,10 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ChevronDown, Search, ChevronsUpDown } from 'lucide-react';
+import { ChevronDown, Search, ChevronsUpDown, ShieldCheck } from 'lucide-react';
 import { NAV, hrefFor, activeKeyForPath } from './nav';
 import { cn } from '../ui/cn';
+import { useAuth } from '@/lib/auth';
 
 export function Sidebar({
   guildId,
@@ -23,6 +24,8 @@ export function Sidebar({
   onNavigate?: () => void;
 }) {
   const pathname = usePathname();
+  const { user } = useAuth();
+  const isStaff = user?.isStaff || user?.isBotOwner;
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   const toggle = (g: string) => setCollapsed((c) => ({ ...c, [g]: !c[g] }));
 
@@ -111,6 +114,17 @@ export function Sidebar({
           );
         })}
       </nav>
+
+      {isStaff && (
+        <Link
+          href="/staff"
+          onClick={onNavigate}
+          className="flex items-center gap-2.5 rounded-[9px] px-2.5 py-2 text-[13.5px] font-medium text-[#a78bfa] transition-colors hover:bg-[rgb(139_92_246/0.12)] hover:text-[#c4b5fd]"
+        >
+          <ShieldCheck className="h-[17px] w-[17px] flex-none" />
+          Staff Portal
+        </Link>
+      )}
 
       <div className="flex items-center gap-2.5 border-t border-[var(--border)] pt-3">
         <span className="h-[30px] w-[30px] rounded-[8px]" style={{ background: 'linear-gradient(135deg,#c94b6b,#8a5cf6)' }} />
