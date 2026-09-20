@@ -71,7 +71,9 @@
       "open": "open",
       "toggle": "toggle",
       "menu": "ArkenBot command menu"
-    }
+    },
+    "owner": "Owner",
+    "staff": "Staff"
   },
   "language": {
     "label": "Language",

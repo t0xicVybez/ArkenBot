@@ -129,10 +129,28 @@ export function Sidebar({
       )}
 
       <div className="flex items-center gap-2.5 border-t border-[var(--border)] pt-3">
-        <span className="h-[30px] w-[30px] rounded-[8px]" style={{ background: 'linear-gradient(135deg,#c94b6b,#8a5cf6)' }} />
-        <div className="flex-1">
-          <div className="text-[13px] font-semibold">RagingTrucker</div>
-          <div className="text-[11px] text-[var(--accent)]">Owner</div>
+        {user?.avatar ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`}
+            alt=""
+            className="h-[30px] w-[30px] rounded-[8px] object-cover"
+          />
+        ) : (
+          <span
+            className="grid h-[30px] w-[30px] place-items-center rounded-[8px] text-[12px] font-bold text-white"
+            style={{ background: 'linear-gradient(135deg,#c94b6b,#8a5cf6)' }}
+          >
+            {user?.username?.[0]?.toUpperCase() ?? 'U'}
+          </span>
+        )}
+        <div className="min-w-0 flex-1">
+          <div className="truncate text-[13px] font-semibold">{user?.username ?? '…'}</div>
+          {(user?.isBotOwner || user?.isStaff) && (
+            <div className="text-[11px] text-[var(--accent)]">
+              {user?.isBotOwner ? tn('owner') : tn('staff')}
+            </div>
+          )}
         </div>
       </div>
     </aside>
