@@ -44,8 +44,8 @@ interface Packet {
   body: string;
 }
 
-/** Run a single command against a Source RCON server and return its text output. */
-export function sourceRconCommand(
+/** One attempt: run a command against a Source RCON server, return its text output. */
+function sourceRconOnce(
   host: string,
   port: number,
   password: string,
@@ -110,4 +110,26 @@ export function sourceRconCommand(
       if (pkt.type === SERVERDATA_RESPONSE_VALUE) parts.push(pkt.body);
     }
   });
+}
+
+/**
+ * Runs a Source RCON command, retrying once on a transient failure. Palworld's
+ * RCON in particular drops or stalls the occasional connection; a single retry
+ * turns those intermittent timeouts into a success. Auth failures are never
+ * retried (a wrong password won't fix itself).
+ */
+export async function sourceRconCommand(
+  host: string,
+  port: number,
+  password: string,
+  command: string,
+  timeoutMs = 8000,
+): Promise<string> {
+  try {
+    return await sourceRconOnce(host, port, password, command, timeoutMs);
+  } catch (err) {
+    if (err instanceof RconError && /Authentication failed/i.test(err.message)) throw err;
+    await new Promise((r) => setTimeout(r, 600));
+    return sourceRconOnce(host, port, password, command, timeoutMs);
+  }
 }
