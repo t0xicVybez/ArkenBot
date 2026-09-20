@@ -1,6 +1,13 @@
 /** Localized catalogs for the Game Server Status addon. Falls back to en-US per key. */
 export const locales = {
   "en-US": {
+    "graphTitle": "📈 Player History — {name}",
+    "graphNoData": "❌ No history yet. Player counts are recorded every few minutes — check back soon.",
+    "graphCurrent": "Current",
+    "graphPeak": "Peak",
+    "graphAvg": "Average",
+    "graphFooter": "Last {count} readings",
+    "linkHint": "RCON: /gameadmin panel {name}",
     "monitorNoPerms": "❌ You need the **Manage Server** permission to manage monitoring.",
     "monitorOff": "✅ Monitoring turned off — the status board, alerts and stat channel are cleared.",
     "boardSet": "✅ Live status board set up in {channel}. It’ll post and auto-update within a few minutes.",
@@ -48,6 +55,13 @@ export const locales = {
     "thisServer": "This Server"
   },
   "de": {
+    "graphTitle": "📈 Spielerverlauf — {name}",
+    "graphNoData": "❌ Noch kein Verlauf. Spielerzahlen werden alle paar Minuten erfasst — schau bald wieder vorbei.",
+    "graphCurrent": "Aktuell",
+    "graphPeak": "Höchststand",
+    "graphAvg": "Durchschnitt",
+    "graphFooter": "Letzte {count} Messungen",
+    "linkHint": "RCON: /gameadmin panel {name}",
     "monitorNoPerms": "❌ Du brauchst die Berechtigung **Server verwalten**, um die Überwachung zu verwalten.",
     "monitorOff": "✅ Überwachung deaktiviert — Statustafel, Benachrichtigungen und Statistikkanal wurden entfernt.",
     "boardSet": "✅ Live-Statustafel in {channel} eingerichtet. Sie wird innerhalb weniger Minuten gepostet und automatisch aktualisiert.",
@@ -95,6 +109,13 @@ export const locales = {
     "thisServer": "Dieser Server"
   },
   "es-ES": {
+    "graphTitle": "📈 Historial de jugadores — {name}",
+    "graphNoData": "❌ Aún no hay historial. Los recuentos se registran cada pocos minutos — vuelve pronto.",
+    "graphCurrent": "Actual",
+    "graphPeak": "Máximo",
+    "graphAvg": "Media",
+    "graphFooter": "Últimas {count} lecturas",
+    "linkHint": "RCON: /gameadmin panel {name}",
     "monitorNoPerms": "❌ Necesitas el permiso **Gestionar servidor** para gestionar la monitorización.",
     "monitorOff": "✅ Monitorización desactivada — se han borrado el tablón de estado, las alertas y el canal de estadísticas.",
     "boardSet": "✅ Tablón de estado en vivo configurado en {channel}. Se publicará y actualizará automáticamente en unos minutos.",
@@ -142,6 +163,13 @@ export const locales = {
     "thisServer": "Este servidor"
   },
   "fr": {
+    "graphTitle": "📈 Historique des joueurs — {name}",
+    "graphNoData": "❌ Pas encore d’historique. Les nombres de joueurs sont enregistrés toutes les quelques minutes — revenez bientôt.",
+    "graphCurrent": "Actuel",
+    "graphPeak": "Pic",
+    "graphAvg": "Moyenne",
+    "graphFooter": "{count} dernières mesures",
+    "linkHint": "RCON : /gameadmin panel {name}",
     "monitorNoPerms": "❌ Vous avez besoin de la permission **Gérer le serveur** pour gérer la surveillance.",
     "monitorOff": "✅ Surveillance désactivée — le tableau de statut, les alertes et le salon de statistiques ont été effacés.",
     "boardSet": "✅ Tableau de statut en direct configuré dans {channel}. Il sera publié et mis à jour automatiquement d’ici quelques minutes.",
@@ -189,6 +217,13 @@ export const locales = {
     "thisServer": "Ce serveur"
   },
   "it": {
+    "graphTitle": "📈 Cronologia giocatori — {name}",
+    "graphNoData": "❌ Nessuna cronologia ancora. I conteggi vengono registrati ogni pochi minuti — riprova a breve.",
+    "graphCurrent": "Attuale",
+    "graphPeak": "Picco",
+    "graphAvg": "Media",
+    "graphFooter": "Ultime {count} letture",
+    "linkHint": "RCON: /gameadmin panel {name}",
     "monitorNoPerms": "❌ Ti serve il permesso **Gestisci server** per gestire il monitoraggio.",
     "monitorOff": "✅ Monitoraggio disattivato — bacheca di stato, avvisi e canale statistiche azzerati.",
     "boardSet": "✅ Bacheca di stato in tempo reale configurata in {channel}. Verrà pubblicata e aggiornata automaticamente entro pochi minuti.",
@@ -236,6 +271,13 @@ export const locales = {
     "thisServer": "Questo server"
   },
   "ja": {
+    "graphTitle": "📈 プレイヤー履歴 — {name}",
+    "graphNoData": "❌ まだ履歴がありません。プレイヤー数は数分ごとに記録されます — 後で確認してください。",
+    "graphCurrent": "現在",
+    "graphPeak": "ピーク",
+    "graphAvg": "平均",
+    "graphFooter": "直近 {count} 回の記録",
+    "linkHint": "RCON: /gameadmin panel {name}",
     "monitorNoPerms": "❌ 監視を管理するには **サーバー管理** 権限が必要です。",
     "monitorOff": "✅ 監視をオフにしました — ステータスボード、アラート、統計チャンネルをクリアしました。",
     "boardSet": "✅ {channel} にライブステータスボードを設定しました。数分以内に投稿され、自動更新されます。",
@@ -283,6 +325,13 @@ export const locales = {
     "thisServer": "このサーバー"
   },
   "ko": {
+    "graphTitle": "📈 플레이어 기록 — {name}",
+    "graphNoData": "❌ 아직 기록이 없습니다. 플레이어 수는 몇 분마다 기록됩니다 — 잠시 후 다시 확인하세요.",
+    "graphCurrent": "현재",
+    "graphPeak": "최고",
+    "graphAvg": "평균",
+    "graphFooter": "최근 {count}회 기록",
+    "linkHint": "RCON: /gameadmin panel {name}",
     "monitorNoPerms": "❌ 모니터링을 관리하려면 **서버 관리** 권한이 필요합니다.",
     "monitorOff": "✅ 모니터링을 껐습니다 — 상태 보드, 알림, 통계 채널이 초기화되었습니다.",
     "boardSet": "✅ {channel}에 라이브 상태 보드를 설정했습니다. 몇 분 내에 게시되고 자동으로 업데이트됩니다.",
@@ -330,6 +379,13 @@ export const locales = {
     "thisServer": "이 서버"
   },
   "pl": {
+    "graphTitle": "📈 Historia graczy — {name}",
+    "graphNoData": "❌ Brak historii. Liczba graczy jest zapisywana co kilka minut — wróć wkrótce.",
+    "graphCurrent": "Obecnie",
+    "graphPeak": "Szczyt",
+    "graphAvg": "Średnia",
+    "graphFooter": "Ostatnie {count} odczytów",
+    "linkHint": "RCON: /gameadmin panel {name}",
     "monitorNoPerms": "❌ Potrzebujesz uprawnienia **Zarządzanie serwerem**, aby zarządzać monitorowaniem.",
     "monitorOff": "✅ Monitorowanie wyłączone — tablica statusu, alerty i kanał statystyk zostały wyczyszczone.",
     "boardSet": "✅ Tablica statusu na żywo skonfigurowana w {channel}. Zostanie opublikowana i zaktualizowana automatycznie w ciągu kilku minut.",
@@ -377,6 +433,13 @@ export const locales = {
     "thisServer": "Ten serwer"
   },
   "pt-BR": {
+    "graphTitle": "📈 Histórico de jogadores — {name}",
+    "graphNoData": "❌ Ainda não há histórico. As contagens são registradas a cada poucos minutos — volte em breve.",
+    "graphCurrent": "Atual",
+    "graphPeak": "Pico",
+    "graphAvg": "Média",
+    "graphFooter": "Últimas {count} leituras",
+    "linkHint": "RCON: /gameadmin panel {name}",
     "monitorNoPerms": "❌ Você precisa da permissão **Gerenciar servidor** para gerenciar o monitoramento.",
     "monitorOff": "✅ Monitoramento desativado — o painel de status, os alertas e o canal de estatísticas foram limpos.",
     "boardSet": "✅ Painel de status ao vivo configurado em {channel}. Ele será publicado e atualizado automaticamente em alguns minutos.",
@@ -424,6 +487,13 @@ export const locales = {
     "thisServer": "Este servidor"
   },
   "ru": {
+    "graphTitle": "📈 История игроков — {name}",
+    "graphNoData": "❌ Истории пока нет. Число игроков записывается каждые несколько минут — загляните позже.",
+    "graphCurrent": "Сейчас",
+    "graphPeak": "Пик",
+    "graphAvg": "Среднее",
+    "graphFooter": "Последние {count} измерений",
+    "linkHint": "RCON: /gameadmin panel {name}",
     "monitorNoPerms": "❌ Для управления мониторингом нужно право **Управление сервером**.",
     "monitorOff": "✅ Мониторинг отключён — доска статуса, оповещения и канал статистики очищены.",
     "boardSet": "✅ Живая доска статуса настроена в {channel}. Она появится и будет обновляться автоматически в течение нескольких минут.",
@@ -471,6 +541,13 @@ export const locales = {
     "thisServer": "Этот сервер"
   },
   "zh-CN": {
+    "graphTitle": "📈 玩家历史 — {name}",
+    "graphNoData": "❌ 暂无历史记录。玩家数量每隔几分钟记录一次——请稍后再来查看。",
+    "graphCurrent": "当前",
+    "graphPeak": "峰值",
+    "graphAvg": "平均",
+    "graphFooter": "最近 {count} 次记录",
+    "linkHint": "RCON：/gameadmin panel {name}",
     "monitorNoPerms": "❌ 你需要 **管理服务器** 权限才能管理监控。",
     "monitorOff": "✅ 已关闭监控——状态板、提醒和统计频道已清除。",
     "boardSet": "✅ 已在 {channel} 设置实时状态板。它将在几分钟内发布并自动更新。",
@@ -518,6 +595,13 @@ export const locales = {
     "thisServer": "此服务器"
   },
   "tr": {
+    "graphTitle": "📈 Oyuncu Geçmişi — {name}",
+    "graphNoData": "❌ Henüz geçmiş yok. Oyuncu sayıları birkaç dakikada bir kaydedilir — birazdan tekrar bak.",
+    "graphCurrent": "Şu an",
+    "graphPeak": "Zirve",
+    "graphAvg": "Ortalama",
+    "graphFooter": "Son {count} ölçüm",
+    "linkHint": "RCON: /gameadmin panel {name}",
     "monitorNoPerms": "❌ İzlemeyi yönetmek için **Sunucuyu Yönet** iznine ihtiyacın var.",
     "monitorOff": "✅ İzleme kapatıldı — durum panosu, uyarılar ve istatistik kanalı temizlendi.",
     "boardSet": "✅ {channel} kanalında canlı durum panosu kuruldu. Birkaç dakika içinde gönderilip otomatik güncellenecek.",
@@ -565,6 +649,13 @@ export const locales = {
     "thisServer": "Bu Sunucu"
   },
   "nl": {
+    "graphTitle": "📈 Spelersgeschiedenis — {name}",
+    "graphNoData": "❌ Nog geen geschiedenis. Spelersaantallen worden om de paar minuten vastgelegd — kom snel terug.",
+    "graphCurrent": "Huidig",
+    "graphPeak": "Piek",
+    "graphAvg": "Gemiddeld",
+    "graphFooter": "Laatste {count} metingen",
+    "linkHint": "RCON: /gameadmin panel {name}",
     "monitorNoPerms": "❌ Je hebt de rechten **Server beheren** nodig om monitoring te beheren.",
     "monitorOff": "✅ Monitoring uitgeschakeld — het statusbord, de meldingen en het statistiekkanaal zijn gewist.",
     "boardSet": "✅ Live statusbord ingesteld in {channel}. Het wordt binnen enkele minuten geplaatst en automatisch bijgewerkt.",
@@ -612,6 +703,13 @@ export const locales = {
     "thisServer": "Deze Server"
   },
   "id": {
+    "graphTitle": "📈 Riwayat Pemain — {name}",
+    "graphNoData": "❌ Belum ada riwayat. Jumlah pemain dicatat setiap beberapa menit — periksa lagi nanti.",
+    "graphCurrent": "Saat ini",
+    "graphPeak": "Puncak",
+    "graphAvg": "Rata-rata",
+    "graphFooter": "{count} pembacaan terakhir",
+    "linkHint": "RCON: /gameadmin panel {name}",
     "monitorNoPerms": "❌ Kamu memerlukan izin **Kelola Server** untuk mengelola pemantauan.",
     "monitorOff": "✅ Pemantauan dimatikan — papan status, peringatan, dan kanal statistik telah dibersihkan.",
     "boardSet": "✅ Papan status langsung disiapkan di {channel}. Akan diposting dan diperbarui otomatis dalam beberapa menit.",
