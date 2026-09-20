@@ -29,29 +29,8 @@ async function main() {
     },
   });
 
-  await prisma.addon.upsert({
-    where: { name: 'example-economy' },
-    update: {},
-    create: {
-      name: 'example-economy',
-      displayName: 'Economy System',
-      version: '1.0.0',
-      description: 'Full economy system with currency, shop, and transactions.',
-      author: 'Example Author',
-      homepage: 'https://github.com/example/economy-addon',
-      enabled: true,
-      verified: true,
-      manifest: {
-        commands: ['balance', 'pay', 'daily', 'shop'],
-        events: ['messageCreate'],
-        settings: [
-          { key: 'currencyName', type: 'string', default: 'Coins', label: 'Currency Name' },
-          { key: 'currencyEmoji', type: 'string', default: '🪙', label: 'Currency Emoji' },
-          { key: 'dailyAmount', type: 'number', default: 100, label: 'Daily Reward Amount' },
-        ],
-      },
-    },
-  });
+  // example-economy is retired (superseded by the core economy) and no longer
+  // seeded; the core economy is the real feature.
 
   console.log('Seeding complete.');
 }
