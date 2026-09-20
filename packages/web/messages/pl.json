@@ -71,7 +71,9 @@
       "open": "otwórz",
       "toggle": "przełącz",
       "menu": "Menu komend ArkenBot"
-    }
+    },
+    "owner": "Właściciel",
+    "staff": "Zespół"
   },
   "language": {
     "label": "Język",

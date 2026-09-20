@@ -71,7 +71,9 @@
       "open": "öffnen",
       "toggle": "umschalten",
       "menu": "ArkenBot-Befehlsmenü"
-    }
+    },
+    "owner": "Inhaber",
+    "staff": "Team"
   },
   "language": {
     "label": "Sprache",

@@ -71,7 +71,9 @@
       "open": "打开",
       "toggle": "切换",
       "menu": "ArkenBot 命令菜单"
-    }
+    },
+    "owner": "所有者",
+    "staff": "员工"
   },
   "language": {
     "label": "语言",

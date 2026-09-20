@@ -71,7 +71,9 @@
       "open": "aç",
       "toggle": "değiştir",
       "menu": "ArkenBot komut menüsü"
-    }
+    },
+    "owner": "Sahip",
+    "staff": "Yetkili"
   },
   "language": {
     "label": "Dil",

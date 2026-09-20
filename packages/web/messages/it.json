@@ -71,7 +71,9 @@
       "open": "apri",
       "toggle": "attiva/disattiva",
       "menu": "Menu comandi ArkenBot"
-    }
+    },
+    "owner": "Proprietario",
+    "staff": "Staff"
   },
   "language": {
     "label": "Lingua",

@@ -71,7 +71,9 @@
       "open": "openen",
       "toggle": "schakelen",
       "menu": "ArkenBot-opdrachtmenu"
-    }
+    },
+    "owner": "Eigenaar",
+    "staff": "Staff"
   },
   "language": {
     "label": "Taal",

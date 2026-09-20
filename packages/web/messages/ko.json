@@ -71,7 +71,9 @@
       "open": "열기",
       "toggle": "전환",
       "menu": "ArkenBot 명령 메뉴"
-    }
+    },
+    "owner": "소유자",
+    "staff": "스태프"
   },
   "language": {
     "label": "언어",

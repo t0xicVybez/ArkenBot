@@ -71,7 +71,9 @@
       "open": "abrir",
       "toggle": "alternar",
       "menu": "Menu de comandos do ArkenBot"
-    }
+    },
+    "owner": "Dono",
+    "staff": "Equipe"
   },
   "language": {
     "label": "Idioma",

@@ -71,7 +71,9 @@
       "open": "buka",
       "toggle": "alihkan",
       "menu": "Menu perintah ArkenBot"
-    }
+    },
+    "owner": "Pemilik",
+    "staff": "Staf"
   },
   "language": {
     "label": "Bahasa",
