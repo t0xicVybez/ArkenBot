@@ -3,10 +3,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { Search, CornerDownLeft } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { NAV, hrefFor } from './nav';
 import { cn } from '../ui/cn';
 
-const PAGES = NAV.flatMap((g) => g.items.map((it) => ({ ...it, group: g.label })));
+const PAGES = NAV.flatMap((g) => g.items.map((it) => ({ ...it, groupKey: g.key })));
 
 export function CommandPalette({
   open,
@@ -17,6 +18,7 @@ export function CommandPalette({
   onClose: () => void;
   guildId?: string;
 }) {
+  const tn = useTranslations('nav');
   const [q, setQ] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -38,13 +40,18 @@ export function CommandPalette({
     return () => window.removeEventListener('keydown', onKey);
   }, [open, onClose]);
 
+  const items = useMemo(
+    () => PAGES.map((p) => ({ ...p, tlabel: tn(`items.${p.key}`), tgroup: tn(`groups.${p.groupKey}`) })),
+    [tn],
+  );
+
   const results = useMemo(() => {
     const term = q.trim().toLowerCase();
-    if (!term) return PAGES.slice(0, 7);
-    return PAGES.filter(
-      (p) => p.label.toLowerCase().includes(term) || p.group.toLowerCase().includes(term),
+    if (!term) return items.slice(0, 7);
+    return items.filter(
+      (p) => p.tlabel.toLowerCase().includes(term) || p.tgroup.toLowerCase().includes(term),
     ).slice(0, 8);
-  }, [q]);
+  }, [q, items]);
 
   if (!open) return null;
 
@@ -64,7 +71,7 @@ export function CommandPalette({
             ref={inputRef}
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Jump to anything…"
+            placeholder={tn('palette.placeholder')}
             className="flex-1 bg-transparent text-[16px] text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)]"
           />
           <kbd
@@ -77,7 +84,7 @@ export function CommandPalette({
 
         <div className="max-h-[380px] overflow-y-auto p-2">
           <div className="px-3 pb-1 pt-2 text-[10.5px] font-bold uppercase tracking-[1.2px] text-[var(--text-muted)]">
-            Pages
+            {tn('palette.pages')}
           </div>
           {results.map((p, i) => {
             const Icon = p.icon;
@@ -101,24 +108,24 @@ export function CommandPalette({
                 >
                   <Icon className="h-4 w-4" />
                 </span>
-                {p.label}
-                <span className="ml-1 text-[12px] text-[var(--text-muted)]">{p.group}</span>
+                {p.tlabel}
+                <span className="ml-1 text-[12px] text-[var(--text-muted)]">{p.tgroup}</span>
                 {i === 0 && <CornerDownLeft className="ml-auto h-3.5 w-3.5 text-[var(--text-muted)]" />}
               </Link>
             );
           })}
           {results.length === 0 && (
             <div className="px-3 py-6 text-center text-[13px] text-[var(--text-muted)]">
-              No matches for “{q}”.
+              {tn('palette.noMatches', { q })}
             </div>
           )}
         </div>
 
         <div className="flex items-center gap-4 border-t border-[var(--border)] px-4 py-2.5 text-[11.5px] text-[var(--text-muted)]">
-          <span>↑↓ navigate</span>
-          <span>↵ open</span>
-          <span>⌘K toggle</span>
-          <span className="ml-auto">ArkenBot command menu</span>
+          <span>↑↓ {tn('palette.navigate')}</span>
+          <span>↵ {tn('palette.open')}</span>
+          <span>⌘K {tn('palette.toggle')}</span>
+          <span className="ml-auto">{tn('palette.menu')}</span>
         </div>
       </div>
     </div>

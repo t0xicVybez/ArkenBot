@@ -7,6 +7,7 @@ import { ChevronDown, Search, ChevronsUpDown, ShieldCheck } from 'lucide-react';
 import { NAV, hrefFor, activeKeyForPath } from './nav';
 import { cn } from '../ui/cn';
 import { useAuth } from '@/lib/auth';
+import { useTranslations } from 'next-intl';
 
 export function Sidebar({
   guildId,
@@ -24,6 +25,7 @@ export function Sidebar({
   onNavigate?: () => void;
 }) {
   const pathname = usePathname();
+  const tn = useTranslations('nav');
   const { user } = useAuth();
   const isStaff = user?.isStaff || user?.isBotOwner;
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
@@ -65,7 +67,7 @@ export function Sidebar({
         className="flex items-center gap-2 rounded-[var(--r)] border border-[var(--border)] bg-[var(--bg-elevated)] px-2.5 py-2 text-[13px] text-[var(--text-muted)] hover:bg-[var(--bg-hover)]"
       >
         <Search className="h-3.5 w-3.5" />
-        Search…
+        {tn('search')}
         <kbd
           className="ml-auto rounded-[6px] border border-[var(--border)] bg-[var(--bg-base)] px-1.5 py-0.5 text-[11px] text-[var(--text-secondary)]"
           style={{ fontFamily: 'var(--font-mono)' }}
@@ -76,14 +78,14 @@ export function Sidebar({
 
       <nav className="-mr-1 flex flex-1 flex-col gap-0.5 overflow-y-auto pr-1">
         {NAV.map((group) => {
-          const isCollapsed = collapsed[group.label];
+          const isCollapsed = collapsed[group.key];
           return (
-            <div key={group.label}>
+            <div key={group.key}>
               <button
-                onClick={() => toggle(group.label)}
+                onClick={() => toggle(group.key)}
                 className="flex w-full items-center gap-1 px-2 pb-1 pt-3 text-[10.5px] font-bold uppercase tracking-[1.2px] text-[var(--text-muted)] hover:text-[var(--text-secondary)]"
               >
-                {group.label}
+                {tn(`groups.${group.key}`)}
                 <ChevronDown className={cn('ml-auto h-3 w-3 transition-transform', isCollapsed && '-rotate-90')} />
               </button>
               {!isCollapsed &&
@@ -103,7 +105,7 @@ export function Sidebar({
                       )}
                     >
                       <Icon className="h-[17px] w-[17px] flex-none" />
-                      {item.label}
+                      {tn(`items.${item.key}`)}
                       {item.badge && (
                         <span className="ml-auto text-[11px] text-[var(--text-muted)]">{item.badge}</span>
                       )}
@@ -122,7 +124,7 @@ export function Sidebar({
           className="flex items-center gap-2.5 rounded-[9px] px-2.5 py-2 text-[13.5px] font-medium text-[#a78bfa] transition-colors hover:bg-[rgb(139_92_246/0.12)] hover:text-[#c4b5fd]"
         >
           <ShieldCheck className="h-[17px] w-[17px] flex-none" />
-          Staff Portal
+          {tn('items.staffPortal')}
         </Link>
       )}
 
