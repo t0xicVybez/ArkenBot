@@ -9,7 +9,7 @@ import { connectDatabase, disconnectDatabase } from './database.js';
 import { connectRedis, disconnectRedis } from './redis.js';
 import { createServer } from './server.js';
 import { initSentry, captureError } from './sentry.js';
-import { reconcileSubscriptions } from './services/youtubeWebsub.js';
+import { reconcileSubscriptions, retryPendingSubscriptions } from './services/youtubeWebsub.js';
 
 async function main() {
   logger.info('Starting API server...');
@@ -30,6 +30,9 @@ async function main() {
   if (config.youtubeApiKey) {
     setTimeout(() => void reconcileSubscriptions().catch((err) => logger.warn({ err }, 'YouTube WebSub reconcile failed')), 30_000);
     setInterval(() => void reconcileSubscriptions().catch((err) => logger.warn({ err }, 'YouTube WebSub reconcile failed')), 60 * 60 * 1000);
+    // Tighter retry for subscriptions stuck failed/pending (Google hub 503s):
+    // re-POST every 10 min so push latches on within minutes of recovery.
+    setInterval(() => void retryPendingSubscriptions().catch((err) => logger.warn({ err }, 'YouTube WebSub retry failed')), 10 * 60 * 1000);
   }
 
   const shutdown = async (signal: string) => {
