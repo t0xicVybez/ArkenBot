@@ -75,6 +75,11 @@ async function buildPages(
 
     if (disabledSet.has(name)) continue;
 
+    // Skip right-click (context-menu) commands — they aren't typeable and
+    // duplicate their slash equivalents; users find them by right-clicking.
+    const cmdType = (cmd.data as { toJSON?: () => { type?: number } }).toJSON?.().type;
+    if (cmdType === 2 || cmdType === 3) continue;
+
     if (cmd.ownerOnly && member) {
       const ownerIds = (await import('../../config.js')).config.owners;
       if (!ownerIds.includes(member.id)) continue;
