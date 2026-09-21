@@ -28,6 +28,7 @@ import { EventsModule } from './events/EventsModule.js';
 import { ModmailModule } from './modmail/ModmailModule.js';
 import { AnalyticsModule } from './AnalyticsModule.js';
 import { pollUpcoming, pollFeeds } from './streamAlerts/YouTubeAlerts.js';
+import { runRedditAlerts } from './streamAlerts/RedditAlerts.js';
 import RSSParser from 'rss-parser';
 
 export class BackgroundJobs {
@@ -703,10 +704,11 @@ export class BackgroundJobs {
     const twitchClientSecret = process.env.TWITCH_CLIENT_SECRET;
 
     try {
-      // YouTube alerts are handled separately (WebSub push + backstop polls);
-      // this timer covers only Twitch, Kick, and RSS.
+      // YouTube (WebSub + feed poll) and Reddit (grouped RSS poll) are handled
+      // separately; this timer covers Twitch, Kick, and RSS per-alert.
+      void runRedditAlerts(this.client).catch((err) => logger.error({ err }, 'Reddit alerts check failed'));
       const otherAlerts = await prisma.streamAlert.findMany({
-        where: { enabled: true, platform: { not: 'youtube' } },
+        where: { enabled: true, platform: { notIn: ['youtube', 'reddit'] } },
       });
       if (!otherAlerts.length) return;
 

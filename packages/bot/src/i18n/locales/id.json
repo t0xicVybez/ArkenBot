@@ -149,7 +149,8 @@
     "rssNewPost": "Postingan baru dari **{feed}**",
     "rssFeedFallback": "Umpan RSS",
     "rssPostFallback": "Postingan baru",
-    "youtubeUpload": "{streamer} mengunggah video baru!"
+    "youtubeUpload": "{streamer} mengunggah video baru!",
+    "redditNewPost": "Postingan baru di **r/{sub}**"
   },
   "announcement": {
     "author": "Pengumuman ArkenBot",

@@ -34,6 +34,15 @@ export default function StreamAlertsPage() {
       variables: '{streamer} = channel name · {title} = stream title · {url} = stream URL · (note: {game} is not supported on YouTube)',
       messagePlaceholder: 'e.g. @everyone {streamer} is live on YouTube! {url}',
     },
+    {
+      value: 'reddit',
+      label: 'Reddit',
+      badgeClass: 'bg-orange-500/15 text-orange-400',
+      usernameLabel: t('subreddit'),
+      usernamePlaceholder: 'e.g. gaming or r/gaming',
+      variables: '{feed} = subreddit · {title} = post title · {url} = post link',
+      messagePlaceholder: 'e.g. New post in {feed}: {title} — {url}',
+    },
   ];
   return (
     <FeedAlertsPage

@@ -149,7 +149,8 @@
     "rssNewPost": "Nouvelle publication de **{feed}**",
     "rssFeedFallback": "Flux RSS",
     "rssPostFallback": "Nouvelle publication",
-    "youtubeUpload": "{streamer} a publié une nouvelle vidéo !"
+    "youtubeUpload": "{streamer} a publié une nouvelle vidéo !",
+    "redditNewPost": "Nouveau post sur **r/{sub}**"
   },
   "announcement": {
     "author": "Annonces ArkenBot",

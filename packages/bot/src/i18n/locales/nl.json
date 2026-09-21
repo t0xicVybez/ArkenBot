@@ -149,7 +149,8 @@
     "rssNewPost": "Nieuw bericht van **{feed}**",
     "rssFeedFallback": "RSS-feed",
     "rssPostFallback": "Nieuw bericht",
-    "youtubeUpload": "{streamer} heeft een nieuwe video geplaatst!"
+    "youtubeUpload": "{streamer} heeft een nieuwe video geplaatst!",
+    "redditNewPost": "Nieuw bericht in **r/{sub}**"
   },
   "announcement": {
     "author": "ArkenBot Aankondigingen",

@@ -114,7 +114,8 @@
     "notifyOn": "Şunlarda bildir",
     "notifyLive": "Canlı yayınlar",
     "notifyUploads": "Yeni videolar",
-    "pickAtLeastOne": "En az birini seç: canlı yayınlar veya videolar."
+    "pickAtLeastOne": "En az birini seç: canlı yayınlar veya videolar.",
+    "subreddit": "Subreddit"
   },
   "counting": {
     "title": "Sayım",

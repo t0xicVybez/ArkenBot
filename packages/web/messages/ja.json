@@ -114,7 +114,8 @@
     "notifyOn": "通知する対象",
     "notifyLive": "ライブ配信",
     "notifyUploads": "新しい動画",
-    "pickAtLeastOne": "少なくとも1つ選んでください：ライブ配信または動画。"
+    "pickAtLeastOne": "少なくとも1つ選んでください：ライブ配信または動画。",
+    "subreddit": "サブレディット"
   },
   "counting": {
     "title": "カウント",

@@ -114,7 +114,8 @@
     "notifyOn": "Notify on",
     "notifyLive": "Live streams",
     "notifyUploads": "New uploads",
-    "pickAtLeastOne": "Pick at least one: live streams or uploads."
+    "pickAtLeastOne": "Pick at least one: live streams or uploads.",
+    "subreddit": "Subreddit"
   },
   "counting": {
     "title": "Counting",

@@ -114,7 +114,8 @@
     "notifyOn": "通知时机",
     "notifyLive": "直播",
     "notifyUploads": "新视频",
-    "pickAtLeastOne": "请至少选择一项：直播或视频。"
+    "pickAtLeastOne": "请至少选择一项：直播或视频。",
+    "subreddit": "版块（Subreddit）"
   },
   "counting": {
     "title": "计数",

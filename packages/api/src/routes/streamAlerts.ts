@@ -34,8 +34,8 @@ export async function streamAlertRoutes(server: FastifyInstance): Promise<void> 
     if (!platform || !discordChannelId) {
       return reply.code(400).send({ success: false, error: 'platform and discordChannelId are required' });
     }
-    if (!['twitch', 'kick', 'rss', 'youtube'].includes(platform as string)) {
-      return reply.code(400).send({ success: false, error: 'platform must be twitch, kick, rss, or youtube' });
+    if (!['twitch', 'kick', 'rss', 'youtube', 'reddit'].includes(platform as string)) {
+      return reply.code(400).send({ success: false, error: 'platform must be twitch, kick, rss, youtube, or reddit' });
     }
 
     // Per-guild YouTube cap — an abuse/hygiene guardrail, not a quota limit.
@@ -58,6 +58,17 @@ export async function streamAlertRoutes(server: FastifyInstance): Promise<void> 
         .replace(/^@/, '')
         .trim();
       normalizedUsername = `@${normalizedUsername}`;
+    } else if (platform === 'reddit') {
+      // Accept "gaming", "r/gaming", "/r/gaming", or a full reddit URL → store
+      // the bare subreddit name. Validate Reddit's naming rules (3–21 chars).
+      normalizedUsername = normalizedUsername
+        .replace(/^https?:\/\/(www\.|old\.|np\.)?reddit\.com\//i, '')
+        .replace(/^\/?r\//i, '')
+        .replace(/\/.*$/, '')
+        .trim();
+      if (!/^[A-Za-z0-9_]{3,21}$/.test(normalizedUsername)) {
+        return reply.code(400).send({ success: false, error: 'Enter a valid subreddit (e.g. "gaming" or "r/gaming").' });
+      }
     } else {
       normalizedUsername = normalizedUsername.toLowerCase();
     }
@@ -148,6 +159,16 @@ export async function streamAlertRoutes(server: FastifyInstance): Promise<void> 
         data.channelId = newChannelId;
         data.lastStreamId = null;
         data.lastUploadId = null;
+      } else if (existing.platform === 'reddit') {
+        newUsername = newUsername
+          .replace(/^https?:\/\/(www\.|old\.|np\.)?reddit\.com\//i, '')
+          .replace(/^\/?r\//i, '')
+          .replace(/\/.*$/, '')
+          .trim();
+        if (!/^[A-Za-z0-9_]{3,21}$/.test(newUsername)) {
+          return reply.code(400).send({ success: false, error: 'Enter a valid subreddit (e.g. "gaming" or "r/gaming").' });
+        }
+        data.lastStreamId = null; // reset dedup for the new subreddit
       } else {
         newUsername = newUsername.toLowerCase();
       }

@@ -149,7 +149,8 @@
     "rssNewPost": "**{feed}** の新しい投稿",
     "rssFeedFallback": "RSSフィード",
     "rssPostFallback": "新しい投稿",
-    "youtubeUpload": "{streamer} が新しい動画を投稿しました！"
+    "youtubeUpload": "{streamer} が新しい動画を投稿しました！",
+    "redditNewPost": "**r/{sub}** に新しい投稿"
   },
   "announcement": {
     "author": "ArkenBot のお知らせ",
