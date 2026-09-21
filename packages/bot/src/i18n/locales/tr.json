@@ -149,7 +149,8 @@
     "rssNewPost": "**{feed}** kaynağından yeni gönderi",
     "rssFeedFallback": "RSS Kaynağı",
     "rssPostFallback": "Yeni gönderi",
-    "youtubeUpload": "{streamer} yeni bir video paylaştı!"
+    "youtubeUpload": "{streamer} yeni bir video paylaştı!",
+    "redditNewPost": "**r/{sub}** içinde yeni gönderi"
   },
   "announcement": {
     "author": "ArkenBot Duyuruları",

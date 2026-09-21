@@ -149,7 +149,8 @@
     "rssNewPost": "**{feed}** 的新帖子",
     "rssFeedFallback": "RSS 源",
     "rssPostFallback": "新帖子",
-    "youtubeUpload": "{streamer} 发布了新视频！"
+    "youtubeUpload": "{streamer} 发布了新视频！",
+    "redditNewPost": "**r/{sub}** 有新帖子"
   },
   "announcement": {
     "author": "ArkenBot 公告",

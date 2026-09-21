@@ -114,7 +114,8 @@
     "notifyOn": "알림 대상",
     "notifyLive": "라이브 방송",
     "notifyUploads": "새 동영상",
-    "pickAtLeastOne": "라이브 방송 또는 동영상 중 하나 이상을 선택하세요."
+    "pickAtLeastOne": "라이브 방송 또는 동영상 중 하나 이상을 선택하세요.",
+    "subreddit": "서브레딧"
   },
   "counting": {
     "title": "카운팅",

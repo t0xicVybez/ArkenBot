@@ -114,7 +114,8 @@
     "notifyOn": "Notificar em",
     "notifyLive": "Transmissões ao vivo",
     "notifyUploads": "Novos vídeos",
-    "pickAtLeastOne": "Escolha ao menos uma opção: transmissões ou vídeos."
+    "pickAtLeastOne": "Escolha ao menos uma opção: transmissões ou vídeos.",
+    "subreddit": "Subreddit"
   },
   "counting": {
     "title": "Contagem",

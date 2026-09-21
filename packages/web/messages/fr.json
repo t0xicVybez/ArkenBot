@@ -114,7 +114,8 @@
     "notifyOn": "Notifier pour",
     "notifyLive": "Directs",
     "notifyUploads": "Nouvelles vidéos",
-    "pickAtLeastOne": "Choisissez au moins une option : directs ou vidéos."
+    "pickAtLeastOne": "Choisissez au moins une option : directs ou vidéos.",
+    "subreddit": "Subreddit"
   },
   "counting": {
     "title": "Comptage",

@@ -114,7 +114,8 @@
     "notifyOn": "Powiadamiaj o",
     "notifyLive": "Transmisje na żywo",
     "notifyUploads": "Nowe filmy",
-    "pickAtLeastOne": "Wybierz co najmniej jedno: transmisje lub filmy."
+    "pickAtLeastOne": "Wybierz co najmniej jedno: transmisje lub filmy.",
+    "subreddit": "Subreddit"
   },
   "counting": {
     "title": "Liczenie",

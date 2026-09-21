@@ -149,7 +149,8 @@
     "rssNewPost": "**{feed}**의 새 게시물",
     "rssFeedFallback": "RSS 피드",
     "rssPostFallback": "새 게시물",
-    "youtubeUpload": "{streamer} 님이 새 영상을 올렸어요!"
+    "youtubeUpload": "{streamer} 님이 새 영상을 올렸어요!",
+    "redditNewPost": "**r/{sub}**에 새 게시물"
   },
   "announcement": {
     "author": "ArkenBot 공지",

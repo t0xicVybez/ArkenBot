@@ -114,7 +114,8 @@
     "notifyOn": "Melden bij",
     "notifyLive": "Livestreams",
     "notifyUploads": "Nieuwe video’s",
-    "pickAtLeastOne": "Kies ten minste één optie: livestreams of video’s."
+    "pickAtLeastOne": "Kies ten minste één optie: livestreams of video’s.",
+    "subreddit": "Subreddit"
   },
   "counting": {
     "title": "Tellen",

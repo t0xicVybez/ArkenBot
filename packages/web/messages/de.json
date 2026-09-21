@@ -114,7 +114,8 @@
     "notifyOn": "Benachrichtigen bei",
     "notifyLive": "Livestreams",
     "notifyUploads": "Neue Videos",
-    "pickAtLeastOne": "Wähle mindestens eins: Livestreams oder Videos."
+    "pickAtLeastOne": "Wähle mindestens eins: Livestreams oder Videos.",
+    "subreddit": "Subreddit"
   },
   "counting": {
     "title": "Zählen",

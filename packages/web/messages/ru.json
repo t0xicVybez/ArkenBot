@@ -114,7 +114,8 @@
     "notifyOn": "Уведомлять о",
     "notifyLive": "Трансляции",
     "notifyUploads": "Новые видео",
-    "pickAtLeastOne": "Выберите хотя бы одно: трансляции или видео."
+    "pickAtLeastOne": "Выберите хотя бы одно: трансляции или видео.",
+    "subreddit": "Сабреддит"
   },
   "counting": {
     "title": "Счёт",

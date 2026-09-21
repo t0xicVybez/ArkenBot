@@ -149,7 +149,8 @@
     "rssNewPost": "New post from **{feed}**",
     "rssFeedFallback": "RSS Feed",
     "rssPostFallback": "New post",
-    "youtubeUpload": "{streamer} posted a new video!"
+    "youtubeUpload": "{streamer} posted a new video!",
+    "redditNewPost": "New post in **r/{sub}**"
   },
   "announcement": {
     "author": "ArkenBot Announcements",

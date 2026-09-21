@@ -114,7 +114,8 @@
     "notifyOn": "Beri tahu saat",
     "notifyLive": "Siaran langsung",
     "notifyUploads": "Video baru",
-    "pickAtLeastOne": "Pilih setidaknya satu: siaran langsung atau video."
+    "pickAtLeastOne": "Pilih setidaknya satu: siaran langsung atau video.",
+    "subreddit": "Subreddit"
   },
   "counting": {
     "title": "Menghitung",

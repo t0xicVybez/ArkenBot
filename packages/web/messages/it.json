@@ -114,7 +114,8 @@
     "notifyOn": "Notifica per",
     "notifyLive": "Dirette",
     "notifyUploads": "Nuovi video",
-    "pickAtLeastOne": "Scegli almeno un’opzione: dirette o video."
+    "pickAtLeastOne": "Scegli almeno un’opzione: dirette o video.",
+    "subreddit": "Subreddit"
   },
   "counting": {
     "title": "Conteggio",
