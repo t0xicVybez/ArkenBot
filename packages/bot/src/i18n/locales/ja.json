@@ -1251,14 +1251,15 @@
     "banFailed": "BANできませんでした。権限不足か、対象の役職が上位の可能性があります。",
     "bannedBy": "{user} を {mod} がBANしました。",
     "dismissedBy": "{mod} が警告を却下しました。",
-    "checkNone": "{user} はBANネットワークで報告されていません。",
-    "checkFlagged": "{user} はネットワーク上の他の **{count}** 個のサーバーでBANされています。",
+    "checkNone": "{user} はBANネットワークでBANされていません。",
+    "checkFlagged": "{user} はネットワークの **{count}** 個のサーバーでBANされています。",
     "scanNone": "✅ 現在のメンバーでBANネットワークに報告されている人はいません。",
     "scanTitle": "🚩 BANネットワークのスキャン",
     "scanDesc": "現在のメンバーのうち **{count}** 人がネットワークで報告されています：",
     "scanBans": "{count}個のサーバーでBAN済み",
     "scanMore": "…他 {n} 人",
     "scanBanAll": "全員をBAN（{count}）",
-    "banAllDone": "🔨 報告された **{count}** 人のメンバーをBANしました。"
+    "banAllDone": "🔨 報告された **{count}** 人のメンバーをBANしました。",
+    "checkThreshold": "通知のしきい値（{threshold}）に達しています。"
   }
 }

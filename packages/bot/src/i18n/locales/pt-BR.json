@@ -1251,14 +1251,15 @@
     "banFailed": "Não foi possível banir: posso não ter permissão ou o usuário é superior a mim.",
     "bannedBy": "{user} foi banido por {mod}.",
     "dismissedBy": "Alerta dispensado por {mod}.",
-    "checkNone": "{user} não está sinalizado na rede de banimentos.",
-    "checkFlagged": "{user} está banido em **{count}** outros servidores da rede.",
+    "checkNone": "{user} não está banido na rede de banimentos.",
+    "checkFlagged": "{user} está banido em **{count}** servidores da rede.",
     "scanNone": "✅ Nenhum membro atual está sinalizado na rede de banimentos.",
     "scanTitle": "🚩 Varredura da rede de banimentos",
     "scanDesc": "**{count}** membros atuais estão sinalizados na rede:",
     "scanBans": "banido em {count} servidores",
     "scanMore": "…e mais {n}",
     "scanBanAll": "Banir todos os {count}",
-    "banAllDone": "🔨 **{count}** membros sinalizados banidos."
+    "banAllDone": "🔨 **{count}** membros sinalizados banidos.",
+    "checkThreshold": "Atinge seu limite de sinalização ({threshold})."
   }
 }

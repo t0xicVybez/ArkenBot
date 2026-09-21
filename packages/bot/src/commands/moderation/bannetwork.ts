@@ -40,14 +40,17 @@ const command: BotCommand = {
 
     if (sub === 'check') {
       const user = interaction.options.getUser('user', true);
-      const info = await BanNetworkModule.userBanInfo(user.id, interaction.guild.id);
+      // Count ALL network servers (including this one) so a user you banned shows.
+      const info = await BanNetworkModule.userBanInfo(user.id, '');
       if (info.count === 0) {
         await interaction.reply({ content: t('banNetwork.checkNone', loc, { user: `<@${user.id}>` }), flags: MessageFlags.Ephemeral });
         return;
       }
+      let desc = t('banNetwork.checkFlagged', loc, { user: `<@${user.id}>`, count: info.count });
+      if (info.count >= threshold) desc += `\n⚠️ ${t('banNetwork.checkThreshold', loc, { threshold })}`;
       const embed = new EmbedBuilder()
         .setColor(0xfaa61a)
-        .setDescription(t('banNetwork.checkFlagged', loc, { user: `<@${user.id}>`, count: info.count }))
+        .setDescription(desc)
         .addFields({
           name: t('banNetwork.reasons', loc),
           value: info.reasons.length ? info.reasons.map((r) => `• ${r.slice(0, 200)}`).join('\n').slice(0, 1024) : t('banNetwork.noReasons', loc),

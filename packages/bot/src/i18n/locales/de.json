@@ -1251,14 +1251,15 @@
     "banFailed": "Bann fehlgeschlagen — evtl. fehlt mir die Berechtigung oder der Nutzer steht über mir.",
     "bannedBy": "{user} wurde von {mod} gebannt.",
     "dismissedBy": "Meldung von {mod} verworfen.",
-    "checkNone": "{user} ist im Bann-Netzwerk nicht markiert.",
-    "checkFlagged": "{user} ist in **{count}** weiteren Netzwerk-Servern gebannt.",
+    "checkNone": "{user} ist im Bann-Netzwerk nicht gebannt.",
+    "checkFlagged": "{user} ist in **{count}** Netzwerk-Servern gebannt.",
     "scanNone": "✅ Keine aktuellen Mitglieder sind im Bann-Netzwerk markiert.",
     "scanTitle": "🚩 Bann-Netzwerk-Scan",
     "scanDesc": "**{count}** aktuelle Mitglieder sind im Netzwerk markiert:",
     "scanBans": "in {count} Servern gebannt",
     "scanMore": "…und {n} weitere",
     "scanBanAll": "Alle {count} bannen",
-    "banAllDone": "🔨 **{count}** markierte Mitglieder gebannt."
+    "banAllDone": "🔨 **{count}** markierte Mitglieder gebannt.",
+    "checkThreshold": "Erreicht deine Melde-Schwelle ({threshold})."
   }
 }

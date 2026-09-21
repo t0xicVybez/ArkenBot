@@ -1251,14 +1251,15 @@
     "banFailed": "Kon niet verbannen — mogelijk mis ik rechten of staat de gebruiker boven mij.",
     "bannedBy": "{user} is verbannen door {mod}.",
     "dismissedBy": "Melding genegeerd door {mod}.",
-    "checkNone": "{user} is niet gemarkeerd in het bannetwerk.",
-    "checkFlagged": "{user} is verbannen op **{count}** andere netwerkservers.",
+    "checkNone": "{user} is niet verbannen in het bannetwerk.",
+    "checkFlagged": "{user} is verbannen op **{count}** netwerkservers.",
     "scanNone": "✅ Geen huidige leden zijn gemarkeerd in het bannetwerk.",
     "scanTitle": "🚩 Bannetwerk-scan",
     "scanDesc": "**{count}** huidige leden zijn gemarkeerd in het netwerk:",
     "scanBans": "verbannen op {count} servers",
     "scanMore": "…en nog {n}",
     "scanBanAll": "Verban alle {count}",
-    "banAllDone": "🔨 **{count}** gemarkeerde leden verbannen."
+    "banAllDone": "🔨 **{count}** gemarkeerde leden verbannen.",
+    "checkThreshold": "Bereikt je meldingsdrempel ({threshold})."
   }
 }
