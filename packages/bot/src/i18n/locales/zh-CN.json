@@ -1250,6 +1250,15 @@
     "banByStaff": "封禁网络 — 由 {mod} 处理",
     "banFailed": "无法封禁 — 我可能缺少权限，或该用户身份组高于我。",
     "bannedBy": "{user} 已被 {mod} 封禁。",
-    "dismissedBy": "{mod} 已忽略该提醒。"
+    "dismissedBy": "{mod} 已忽略该提醒。",
+    "checkNone": "{user} 未在封禁网络中被标记。",
+    "checkFlagged": "{user} 已在网络中另外 **{count}** 个服务器被封禁。",
+    "scanNone": "✅ 当前没有成员在封禁网络中被标记。",
+    "scanTitle": "🚩 封禁网络扫描",
+    "scanDesc": "当前有 **{count}** 名成员在网络中被标记：",
+    "scanBans": "在 {count} 个服务器被封禁",
+    "scanMore": "…还有 {n} 名",
+    "scanBanAll": "全部封禁（{count}）",
+    "banAllDone": "🔨 已封禁 **{count}** 名被标记的成员。"
   }
 }

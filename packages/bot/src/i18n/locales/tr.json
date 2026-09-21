@@ -1250,6 +1250,15 @@
     "banByStaff": "Ban ağı — {mod} tarafından",
     "banFailed": "Yasaklanamadı — iznim olmayabilir ya da kullanıcının rolü üstün.",
     "bannedBy": "{user}, {mod} tarafından yasaklandı.",
-    "dismissedBy": "Uyarı {mod} tarafından yoksayıldı."
+    "dismissedBy": "Uyarı {mod} tarafından yoksayıldı.",
+    "checkNone": "{user} ban ağında işaretli değil.",
+    "checkFlagged": "{user} ağdaki **{count}** başka sunucuda yasaklı.",
+    "scanNone": "✅ Mevcut üyelerin hiçbiri ban ağında işaretli değil.",
+    "scanTitle": "🚩 Ban Ağı Taraması",
+    "scanDesc": "**{count}** mevcut üye ağda işaretli:",
+    "scanBans": "{count} sunucuda yasaklı",
+    "scanMore": "…ve {n} tane daha",
+    "scanBanAll": "Hepsini yasakla ({count})",
+    "banAllDone": "🔨 **{count}** işaretli üye yasaklandı."
   }
 }

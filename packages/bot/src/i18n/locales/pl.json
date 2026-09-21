@@ -1250,6 +1250,15 @@
     "banByStaff": "Sieć banów — działanie {mod}",
     "banFailed": "Nie udało się zbanować — może brakować uprawnień lub użytkownik ma wyższą rolę.",
     "bannedBy": "{user} został zbanowany przez {mod}.",
-    "dismissedBy": "Alert odrzucony przez {mod}."
+    "dismissedBy": "Alert odrzucony przez {mod}.",
+    "checkNone": "{user} nie jest oznaczony w sieci banów.",
+    "checkFlagged": "{user} jest zbanowany na **{count}** innych serwerach sieci.",
+    "scanNone": "✅ Żaden obecny członek nie jest oznaczony w sieci banów.",
+    "scanTitle": "🚩 Skan sieci banów",
+    "scanDesc": "**{count}** obecnych członków jest oznaczonych w sieci:",
+    "scanBans": "zbanowany na {count} serwerach",
+    "scanMore": "…i {n} więcej",
+    "scanBanAll": "Zbanuj wszystkich ({count})",
+    "banAllDone": "🔨 Zbanowano **{count}** oznaczonych członków."
   }
 }
