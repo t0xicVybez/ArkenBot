@@ -1251,14 +1251,15 @@
     "banFailed": "No se pudo banear: puede que me falten permisos o el usuario tenga un rol superior.",
     "bannedBy": "{user} fue baneado por {mod}.",
     "dismissedBy": "Alerta descartada por {mod}.",
-    "checkNone": "{user} no está marcado en la red de baneos.",
-    "checkFlagged": "{user} está baneado en **{count}** otros servidores de la red.",
+    "checkNone": "{user} no está baneado en la red de baneos.",
+    "checkFlagged": "{user} está baneado en **{count}** servidores de la red.",
     "scanNone": "✅ Ningún miembro actual está marcado en la red de baneos.",
     "scanTitle": "🚩 Escaneo de la red de baneos",
     "scanDesc": "**{count}** miembros actuales están marcados en la red:",
     "scanBans": "baneado en {count} servidores",
     "scanMore": "…y {n} más",
     "scanBanAll": "Banear a los {count}",
-    "banAllDone": "🔨 Se baneó a **{count}** miembros marcados."
+    "banAllDone": "🔨 Se baneó a **{count}** miembros marcados.",
+    "checkThreshold": "Alcanza tu umbral de alerta ({threshold})."
   }
 }

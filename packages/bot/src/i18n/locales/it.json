@@ -1251,14 +1251,15 @@
     "banFailed": "Impossibile bannare: potrei non avere il permesso o l’utente è sopra di me.",
     "bannedBy": "{user} è stato bannato da {mod}.",
     "dismissedBy": "Avviso ignorato da {mod}.",
-    "checkNone": "{user} non è segnalato nella rete ban.",
-    "checkFlagged": "{user} è bannato in **{count}** altri server della rete.",
+    "checkNone": "{user} non è bannato nella rete ban.",
+    "checkFlagged": "{user} è bannato in **{count}** server della rete.",
     "scanNone": "✅ Nessun membro attuale è segnalato nella rete ban.",
     "scanTitle": "🚩 Scansione rete ban",
     "scanDesc": "**{count}** membri attuali sono segnalati nella rete:",
     "scanBans": "bannato in {count} server",
     "scanMore": "…e altri {n}",
     "scanBanAll": "Banna tutti ({count})",
-    "banAllDone": "🔨 Bannati **{count}** membri segnalati."
+    "banAllDone": "🔨 Bannati **{count}** membri segnalati.",
+    "checkThreshold": "Raggiunge la tua soglia di segnalazione ({threshold})."
   }
 }
