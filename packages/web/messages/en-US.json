@@ -1058,7 +1058,20 @@
     "deleteDataConfirm": "Permanently delete",
     "deleteDataConfirming": "Deleting…",
     "deleteDataDone": "All server data has been deleted.",
-    "deleteDataError": "Failed to delete server data."
+    "deleteDataError": "Failed to delete server data.",
+    "banNetworkTitle": "Cross-Server Ban Network",
+    "banNetworkDesc": "Get flagged about users banned across other opted-in ArkenBot servers.",
+    "banNetworkEnabled": "Enable ban network",
+    "banNetworkEnabledDesc": "Join the opt-in network. Only users banned in several servers are flagged.",
+    "banNetworkContribute": "Share our bans",
+    "banNetworkContributeDesc": "Contribute this server’s bans to the network (removed automatically on unban).",
+    "banNetworkAction": "When a flagged user joins",
+    "banNetworkActionAlert": "Alert staff (recommended)",
+    "banNetworkActionBan": "Automatically ban",
+    "banNetworkThreshold": "Flag threshold",
+    "banNetworkThresholdDesc": "How many other servers must have banned a user before flagging (default 3).",
+    "banNetworkChannel": "Alert channel",
+    "banNetworkChannelDesc": "Where flags are posted (falls back to your mod-log / log channel)."
   },
   "suggestionsPage": {
     "saved": "Suggestions settings saved!",

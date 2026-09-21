@@ -1236,5 +1236,20 @@
     "cancelled": "**{title}** cancelado.",
     "reminderTitle": "⏰ Começa em breve: {title}",
     "reminderDesc": "Este evento começa {time}. Até lá!"
+  },
+  "banNetwork": {
+    "banReason": "Rede de banimentos: banido em {count} servidores",
+    "flagTitle": "Alerta da rede de banimentos",
+    "flagDesc": "{user} ({tag}) foi banido em **{count}** outros servidores da rede.",
+    "reasons": "Motivos relatados",
+    "noReasons": "Nenhum motivo informado",
+    "autoBanned": "Banido automaticamente conforme as configurações da rede deste servidor.",
+    "btnBan": "Banir",
+    "btnDismiss": "Dispensar",
+    "needBan": "Você precisa da permissão Banir membros para isso.",
+    "banByStaff": "Rede de banimentos — ação de {mod}",
+    "banFailed": "Não foi possível banir: posso não ter permissão ou o usuário é superior a mim.",
+    "bannedBy": "{user} foi banido por {mod}.",
+    "dismissedBy": "Alerta dispensado por {mod}."
   }
 }

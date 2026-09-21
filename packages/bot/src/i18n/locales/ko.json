@@ -1236,5 +1236,20 @@
     "cancelled": "**{title}**을(를) 취소했습니다.",
     "reminderTitle": "⏰ 곧 시작: {title}",
     "reminderDesc": "이 이벤트는 {time}에 시작합니다. 거기서 만나요!"
+  },
+  "banNetwork": {
+    "banReason": "밴 네트워크: {count}개 서버에서 차단됨",
+    "flagTitle": "밴 네트워크 경고",
+    "flagDesc": "{user}({tag}) 님은 네트워크의 다른 **{count}**개 서버에서 차단되었습니다.",
+    "reasons": "신고된 사유",
+    "noReasons": "사유 없음",
+    "autoBanned": "이 서버의 밴 네트워크 설정에 따라 자동으로 차단되었습니다.",
+    "btnBan": "차단",
+    "btnDismiss": "무시",
+    "needBan": "그 작업에는 멤버 차단 권한이 필요합니다.",
+    "banByStaff": "밴 네트워크 — {mod} 처리",
+    "banFailed": "차단하지 못했습니다 — 권한이 없거나 대상의 역할이 더 높을 수 있습니다.",
+    "bannedBy": "{user} 님이 {mod} 님에 의해 차단되었습니다.",
+    "dismissedBy": "{mod} 님이 경고를 무시했습니다."
   }
 }

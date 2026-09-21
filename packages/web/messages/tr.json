@@ -1058,7 +1058,20 @@
     "deleteDataConfirm": "Kalıcı olarak sil",
     "deleteDataConfirming": "Siliniyor…",
     "deleteDataDone": "Tüm sunucu verileri silindi.",
-    "deleteDataError": "Sunucu verileri silinemedi."
+    "deleteDataError": "Sunucu verileri silinemedi.",
+    "banNetworkTitle": "Sunucular arası ban ağı",
+    "banNetworkDesc": "Ağa katılan diğer ArkenBot sunucularında yasaklanan kullanıcılar hakkında uyarı al.",
+    "banNetworkEnabled": "Ban ağını etkinleştir",
+    "banNetworkEnabledDesc": "İsteğe bağlı ağa katıl. Yalnızca birkaç sunucuda yasaklı kullanıcılar işaretlenir.",
+    "banNetworkContribute": "Yasaklamalarımızı paylaş",
+    "banNetworkContributeDesc": "Bu sunucunun yasaklamalarını ağa ekle (yasak kalkınca kaldırılır).",
+    "banNetworkAction": "İşaretli kullanıcı katılınca",
+    "banNetworkActionAlert": "Yetkilileri uyar (önerilir)",
+    "banNetworkActionBan": "Otomatik yasakla",
+    "banNetworkThreshold": "İşaretleme eşiği",
+    "banNetworkThresholdDesc": "Bir kullanıcının kaç başka sunucuda yasaklı olması gerektiği (varsayılan 3).",
+    "banNetworkChannel": "Uyarı kanalı",
+    "banNetworkChannelDesc": "Uyarıların gönderileceği yer (yoksa log kanalın)."
   },
   "suggestionsPage": {
     "saved": "Öneri ayarları kaydedildi!",

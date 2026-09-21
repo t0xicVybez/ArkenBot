@@ -1236,5 +1236,20 @@
     "cancelled": "Membatalkan **{title}**.",
     "reminderTitle": "⏰ Segera dimulai: {title}",
     "reminderDesc": "Acara ini dimulai {time}. Sampai jumpa di sana!"
+  },
+  "banNetwork": {
+    "banReason": "Jaringan ban: diblokir di {count} server",
+    "flagTitle": "Peringatan Jaringan Ban",
+    "flagDesc": "{user} ({tag}) telah diblokir di **{count}** server lain dalam jaringan.",
+    "reasons": "Alasan yang dilaporkan",
+    "noReasons": "Tidak ada alasan",
+    "autoBanned": "Diblokir otomatis sesuai pengaturan jaringan server ini.",
+    "btnBan": "Blokir",
+    "btnDismiss": "Abaikan",
+    "needBan": "Kamu butuh izin Blokir Anggota untuk itu.",
+    "banByStaff": "Jaringan ban — tindakan {mod}",
+    "banFailed": "Gagal memblokir — mungkin izin kurang atau peran pengguna lebih tinggi.",
+    "bannedBy": "{user} diblokir oleh {mod}.",
+    "dismissedBy": "Peringatan diabaikan oleh {mod}."
   }
 }

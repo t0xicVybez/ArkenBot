@@ -1058,7 +1058,20 @@
     "deleteDataConfirm": "Dauerhaft löschen",
     "deleteDataConfirming": "Löschen…",
     "deleteDataDone": "Alle Serverdaten wurden gelöscht.",
-    "deleteDataError": "Serverdaten konnten nicht gelöscht werden."
+    "deleteDataError": "Serverdaten konnten nicht gelöscht werden.",
+    "banNetworkTitle": "Server-übergreifendes Bann-Netzwerk",
+    "banNetworkDesc": "Werde über Nutzer informiert, die auf anderen teilnehmenden ArkenBot-Servern gebannt wurden.",
+    "banNetworkEnabled": "Bann-Netzwerk aktivieren",
+    "banNetworkEnabledDesc": "Tritt dem optionalen Netzwerk bei. Nur auf mehreren Servern gebannte Nutzer werden gemeldet.",
+    "banNetworkContribute": "Unsere Banns teilen",
+    "banNetworkContributeDesc": "Banns dieses Servers zum Netzwerk beitragen (beim Entbannen automatisch entfernt).",
+    "banNetworkAction": "Wenn ein gemeldeter Nutzer beitritt",
+    "banNetworkActionAlert": "Team benachrichtigen (empfohlen)",
+    "banNetworkActionBan": "Automatisch bannen",
+    "banNetworkThreshold": "Melde-Schwelle",
+    "banNetworkThresholdDesc": "Auf wie vielen anderen Servern ein Nutzer gebannt sein muss (Standard 3).",
+    "banNetworkChannel": "Melde-Kanal",
+    "banNetworkChannelDesc": "Wo Meldungen gepostet werden (sonst dein Mod-Log/Log-Kanal)."
   },
   "suggestionsPage": {
     "saved": "Vorschlags-Einstellungen gespeichert!",

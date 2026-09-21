@@ -1236,5 +1236,20 @@
     "cancelled": "**{title}** を中止しました。",
     "reminderTitle": "⏰ まもなく開始：{title}",
     "reminderDesc": "このイベントは {time} に始まります。お楽しみに！"
+  },
+  "banNetwork": {
+    "banReason": "BANネットワーク：{count}個のサーバーでBAN済み",
+    "flagTitle": "BANネットワークの警告",
+    "flagDesc": "{user}（{tag}）はネットワーク上の他の**{count}**個のサーバーでBANされています。",
+    "reasons": "報告された理由",
+    "noReasons": "理由の記載なし",
+    "autoBanned": "このサーバーのBANネットワーク設定により自動的にBANしました。",
+    "btnBan": "BAN",
+    "btnDismiss": "却下",
+    "needBan": "その操作にはメンバーをBANする権限が必要です。",
+    "banByStaff": "BANネットワーク — {mod} が対応",
+    "banFailed": "BANできませんでした。権限不足か、対象の役職が上位の可能性があります。",
+    "bannedBy": "{user} を {mod} がBANしました。",
+    "dismissedBy": "{mod} が警告を却下しました。"
   }
 }

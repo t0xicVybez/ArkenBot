@@ -17,6 +17,7 @@ import { parseDuration, formatDuration } from '@arkenbot/shared';
 import { prisma } from '../../database.js';
 import { getNextCaseNumber, getGuildSettings } from '../../utils/settings.js';
 import { LoggingModule } from '../../modules/logging/LoggingModule.js';
+import { BanNetworkModule } from '../../modules/moderation/BanNetworkModule.js';
 
 import { swallow } from '../../logger.js';
 const command: BotCommand = {
@@ -140,6 +141,9 @@ const command: BotCommand = {
         reason: `${reason} | Moderator: ${interaction.user.tag}`,
         deleteMessageSeconds: deleteMessages * 86400,
       });
+
+      // Contribute to the cross-server ban network (no-op unless opted in).
+      void BanNetworkModule.recordBan(interaction.guild.id, targetUser.id, reason);
 
       const caseNumber = await getNextCaseNumber(interaction.guild.id);
       await prisma.moderationCase.create({

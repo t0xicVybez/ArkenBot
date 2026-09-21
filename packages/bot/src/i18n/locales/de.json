@@ -1236,5 +1236,20 @@
     "cancelled": "**{title}** abgesagt.",
     "reminderTitle": "⏰ Beginnt bald: {title}",
     "reminderDesc": "Dieses Event beginnt {time}. Bis gleich!"
+  },
+  "banNetwork": {
+    "banReason": "Bann-Netzwerk: in {count} Servern gebannt",
+    "flagTitle": "Bann-Netzwerk-Meldung",
+    "flagDesc": "{user} ({tag}) wurde in **{count}** weiteren Servern des Netzwerks gebannt.",
+    "reasons": "Gemeldete Gründe",
+    "noReasons": "Kein Grund angegeben",
+    "autoBanned": "Automatisch gemäß den Netzwerk-Einstellungen dieses Servers gebannt.",
+    "btnBan": "Bannen",
+    "btnDismiss": "Verwerfen",
+    "needBan": "Dafür brauchst du die Berechtigung „Mitglieder bannen“.",
+    "banByStaff": "Bann-Netzwerk — Aktion von {mod}",
+    "banFailed": "Bann fehlgeschlagen — evtl. fehlt mir die Berechtigung oder der Nutzer steht über mir.",
+    "bannedBy": "{user} wurde von {mod} gebannt.",
+    "dismissedBy": "Meldung von {mod} verworfen."
   }
 }

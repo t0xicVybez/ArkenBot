@@ -47,6 +47,11 @@ export interface GuildSettings {
   permissionAlertRoleId?: string;
   appealsEnabled?: boolean;
   appealChannelId?: string | null;
+  banNetworkEnabled?: boolean;
+  banNetworkContribute?: boolean;
+  banNetworkAction?: string;
+  banNetworkThreshold?: number;
+  banNetworkChannelId?: string | null;
 
   // Leveling
   xpPerMessage: number;

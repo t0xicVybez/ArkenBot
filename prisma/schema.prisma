@@ -131,6 +131,14 @@ model GuildSettings {
   appealsEnabled  Boolean @default(false)
   appealChannelId String?
 
+  // Cross-server ban network (opt-in). A user is flagged only once banned in
+  // >= threshold opted-in servers, neutralising a single rogue admin.
+  banNetworkEnabled    Boolean @default(false) // participate (receive flags)
+  banNetworkContribute Boolean @default(true) // share this server's bans to the network
+  banNetworkAction     String  @default("alert") // alert | ban
+  banNetworkThreshold  Int     @default(3) // min opted-in servers that must have banned the user
+  banNetworkChannelId  String? // where flags post (falls back to mod-log/log channel)
+
   // Leveling config
   xpPerMessage      Int     @default(15)
   xpCooldown        Int     @default(60)
@@ -1197,6 +1205,21 @@ model StreamAlert {
   @@index([guildId, platform, enabled])
   @@index([platform, channelId, enabled]) // fan-out: all guilds watching a YouTube channel
   @@map("stream_alerts")
+}
+
+/// A ban contributed to the cross-server ban network by an opted-in guild.
+/// A user is network-flagged only once they appear here for >= threshold
+/// distinct guilds. Removed when the contributing guild unbans the user.
+model FederatedBan {
+  id        String   @id @default(cuid())
+  userId    String // the banned user
+  guildId   String // the contributing guild (that banned them)
+  reason    String? // ban reason, shown to receiving staff
+  createdAt DateTime @default(now())
+
+  @@unique([userId, guildId])
+  @@index([userId]) // threshold counts per user
+  @@map("federated_bans")
 }
 
 /// One PubSubHubbub (WebSub) subscription per unique YouTube channel we watch.

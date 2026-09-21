@@ -1058,7 +1058,20 @@
     "deleteDataConfirm": "完全に削除",
     "deleteDataConfirming": "削除中…",
     "deleteDataDone": "サーバーの全データを削除しました。",
-    "deleteDataError": "サーバーデータの削除に失敗しました。"
+    "deleteDataError": "サーバーデータの削除に失敗しました。",
+    "banNetworkTitle": "サーバー横断BANネットワーク",
+    "banNetworkDesc": "参加中の他のArkenBotサーバーでBANされたユーザーを通知します。",
+    "banNetworkEnabled": "BANネットワークを有効化",
+    "banNetworkEnabledDesc": "任意参加のネットワークに参加します。複数サーバーでBANされたユーザーのみ通知されます。",
+    "banNetworkContribute": "自サーバーのBANを共有",
+    "banNetworkContributeDesc": "このサーバーのBANをネットワークに提供します（BAN解除で自動削除）。",
+    "banNetworkAction": "該当ユーザーが参加したとき",
+    "banNetworkActionAlert": "スタッフに通知（推奨）",
+    "banNetworkActionBan": "自動的にBAN",
+    "banNetworkThreshold": "通知のしきい値",
+    "banNetworkThresholdDesc": "通知前に必要な、他サーバーでのBAN数（既定3）。",
+    "banNetworkChannel": "通知チャンネル",
+    "banNetworkChannelDesc": "通知の投稿先（未設定ならログチャンネル）。"
   },
   "suggestionsPage": {
     "saved": "提案の設定を保存しました！",

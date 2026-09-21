@@ -289,6 +289,81 @@ export default function SettingsPage() {
         )}
       </SettingsSection>
 
+      <SettingsSection title={t('banNetworkTitle')} description={t('banNetworkDesc')}>
+        <label className="flex items-start gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            className="h-4 w-4 mt-1 accent-discord-blurple"
+            checked={settings.banNetworkEnabled ?? false}
+            onChange={(e) => {
+              const v = e.target.checked;
+              setSettings((s) => ({ ...s, banNetworkEnabled: v }));
+              handleSave({ banNetworkEnabled: v });
+            }}
+          />
+          <span>
+            <span className="label !mb-0">{t('banNetworkEnabled')}</span>
+            <span className="block text-sm text-[var(--text-muted)]">{t('banNetworkEnabledDesc')}</span>
+          </span>
+        </label>
+        {settings.banNetworkEnabled && (
+          <>
+            <label className="flex items-start gap-3 cursor-pointer mt-2">
+              <input
+                type="checkbox"
+                className="h-4 w-4 mt-1 accent-discord-blurple"
+                checked={settings.banNetworkContribute ?? true}
+                onChange={(e) => {
+                  const v = e.target.checked;
+                  setSettings((s) => ({ ...s, banNetworkContribute: v }));
+                  handleSave({ banNetworkContribute: v });
+                }}
+              />
+              <span>
+                <span className="label !mb-0">{t('banNetworkContribute')}</span>
+                <span className="block text-sm text-[var(--text-muted)]">{t('banNetworkContributeDesc')}</span>
+              </span>
+            </label>
+            <div>
+              <label className="label">{t('banNetworkAction')}</label>
+              <select
+                className="input"
+                value={settings.banNetworkAction ?? 'alert'}
+                onChange={(e) => { const v = e.target.value; setSettings((s) => ({ ...s, banNetworkAction: v })); handleSave({ banNetworkAction: v }); }}
+              >
+                <option value="alert">{t('banNetworkActionAlert')}</option>
+                <option value="ban">{t('banNetworkActionBan')}</option>
+              </select>
+            </div>
+            <div>
+              <label className="label">{t('banNetworkThreshold')}</label>
+              <input
+                type="number"
+                min={1}
+                max={50}
+                className="input"
+                value={settings.banNetworkThreshold ?? 3}
+                onChange={(e) => setSettings((s) => ({ ...s, banNetworkThreshold: Number(e.target.value) }))}
+                onBlur={(e) => { const v = Math.min(50, Math.max(1, Number(e.target.value) || 3)); setSettings((s) => ({ ...s, banNetworkThreshold: v })); handleSave({ banNetworkThreshold: v }); }}
+              />
+              <p className="text-sm text-[var(--text-muted)] mt-1">{t('banNetworkThresholdDesc')}</p>
+            </div>
+            <div>
+              <label className="label">{t('banNetworkChannel')}</label>
+              <select
+                className="input"
+                value={settings.banNetworkChannelId ?? ''}
+                onChange={(e) => { const v = e.target.value || null; setSettings((s) => ({ ...s, banNetworkChannelId: v })); handleSave({ banNetworkChannelId: v }); }}
+              >
+                <option value="">{t('none')}</option>
+                {textChannels.map((c) => (<option key={c.id} value={c.id}>#{c.name}</option>))}
+              </select>
+              <p className="text-sm text-[var(--text-muted)] mt-1">{t('banNetworkChannelDesc')}</p>
+            </div>
+          </>
+        )}
+      </SettingsSection>
+
       <SettingsSection title={t('highlightsTitle')} description={t('highlightsDesc')}>
         <label className="flex items-start gap-3 cursor-pointer">
           <input

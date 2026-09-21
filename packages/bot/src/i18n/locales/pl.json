@@ -1236,5 +1236,20 @@
     "cancelled": "Anulowano **{title}**.",
     "reminderTitle": "⏰ Wkrótce start: {title}",
     "reminderDesc": "To wydarzenie zaczyna się {time}. Do zobaczenia!"
+  },
+  "banNetwork": {
+    "banReason": "Sieć banów: zbanowany na {count} serwerach",
+    "flagTitle": "Alert sieci banów",
+    "flagDesc": "{user} ({tag}) został zbanowany na **{count}** innych serwerach w sieci.",
+    "reasons": "Zgłoszone powody",
+    "noReasons": "Nie podano powodu",
+    "autoBanned": "Zbanowany automatycznie zgodnie z ustawieniami sieci tego serwera.",
+    "btnBan": "Zbanuj",
+    "btnDismiss": "Odrzuć",
+    "needBan": "Potrzebujesz uprawnienia Banowanie członków.",
+    "banByStaff": "Sieć banów — działanie {mod}",
+    "banFailed": "Nie udało się zbanować — może brakować uprawnień lub użytkownik ma wyższą rolę.",
+    "bannedBy": "{user} został zbanowany przez {mod}.",
+    "dismissedBy": "Alert odrzucony przez {mod}."
   }
 }

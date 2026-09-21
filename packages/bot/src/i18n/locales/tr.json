@@ -1236,5 +1236,20 @@
     "cancelled": "**{title}** iptal edildi.",
     "reminderTitle": "⏰ Yakında başlıyor: {title}",
     "reminderDesc": "Bu etkinlik {time} başlıyor. Orada görüşürüz!"
+  },
+  "banNetwork": {
+    "banReason": "Ban ağı: {count} sunucuda yasaklı",
+    "flagTitle": "Ban Ağı Uyarısı",
+    "flagDesc": "{user} ({tag}) ağdaki **{count}** başka sunucuda yasaklanmış.",
+    "reasons": "Bildirilen sebepler",
+    "noReasons": "Sebep belirtilmemiş",
+    "autoBanned": "Bu sunucunun ban ağı ayarlarına göre otomatik olarak yasaklandı.",
+    "btnBan": "Yasakla",
+    "btnDismiss": "Yoksay",
+    "needBan": "Bunun için Üyeleri Yasakla iznine ihtiyacın var.",
+    "banByStaff": "Ban ağı — {mod} tarafından",
+    "banFailed": "Yasaklanamadı — iznim olmayabilir ya da kullanıcının rolü üstün.",
+    "bannedBy": "{user}, {mod} tarafından yasaklandı.",
+    "dismissedBy": "Uyarı {mod} tarafından yoksayıldı."
   }
 }
