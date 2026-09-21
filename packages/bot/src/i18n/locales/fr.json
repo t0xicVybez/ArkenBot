@@ -1250,6 +1250,15 @@
     "banByStaff": "Réseau de bans — action de {mod}",
     "banFailed": "Impossible de bannir : permission manquante ou l’utilisateur est au-dessus de moi.",
     "bannedBy": "{user} a été banni par {mod}.",
-    "dismissedBy": "Alerte ignorée par {mod}."
+    "dismissedBy": "Alerte ignorée par {mod}.",
+    "checkNone": "{user} n’est pas signalé sur le réseau de bans.",
+    "checkFlagged": "{user} est banni sur **{count}** autres serveurs du réseau.",
+    "scanNone": "✅ Aucun membre actuel n’est signalé sur le réseau de bans.",
+    "scanTitle": "🚩 Analyse du réseau de bans",
+    "scanDesc": "**{count}** membres actuels sont signalés sur le réseau :",
+    "scanBans": "banni sur {count} serveurs",
+    "scanMore": "…et {n} de plus",
+    "scanBanAll": "Bannir les {count}",
+    "banAllDone": "🔨 {count} membres signalés bannis."
   }
 }

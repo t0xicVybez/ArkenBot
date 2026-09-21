@@ -1250,6 +1250,15 @@
     "banByStaff": "Ban network — actioned by {mod}",
     "banFailed": "Couldn’t ban — I may lack permission or the user outranks me.",
     "bannedBy": "{user} was banned by {mod}.",
-    "dismissedBy": "Flag dismissed by {mod}."
+    "dismissedBy": "Flag dismissed by {mod}.",
+    "checkNone": "{user} isn’t flagged on the ban network.",
+    "checkFlagged": "{user} is banned in **{count}** other network servers.",
+    "scanNone": "✅ No current members are flagged on the ban network.",
+    "scanTitle": "🚩 Ban Network Scan",
+    "scanDesc": "**{count}** current members are flagged on the network:",
+    "scanBans": "banned in {count} servers",
+    "scanMore": "…and {n} more",
+    "scanBanAll": "Ban all {count}",
+    "banAllDone": "🔨 Banned **{count}** flagged members."
   }
 }

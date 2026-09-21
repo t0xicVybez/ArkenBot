@@ -44,6 +44,51 @@ export class BanNetworkModule {
     await prisma.federatedBan.deleteMany({ where: { guildId, userId } }).catch(swallow);
   }
 
+  /** Network ban count + sample reasons for one user (excluding a guild). */
+  static async userBanInfo(userId: string, excludeGuildId: string): Promise<{ count: number; reasons: string[] }> {
+    const bans = await prisma.federatedBan.findMany({
+      where: { userId, guildId: { not: excludeGuildId } },
+      select: { reason: true },
+    });
+    const reasons = [...new Set(bans.map((b) => b.reason?.trim()).filter(Boolean) as string[])].slice(0, 5);
+    return { count: bans.length, reasons };
+  }
+
+  /** User IDs banned in >= threshold guilds other than excludeGuildId. */
+  static async flaggedUserIds(excludeGuildId: string, threshold: number): Promise<string[]> {
+    const groups = await prisma.federatedBan.groupBy({
+      by: ['userId'],
+      where: { guildId: { not: excludeGuildId } },
+      _count: { userId: true },
+      having: { userId: { _count: { gte: Math.max(1, threshold) } } },
+    });
+    return groups.map((g) => g.userId);
+  }
+
+  /** Members currently in the guild who are network-flagged (fetches only them). */
+  static async scanGuild(guild: import('discord.js').Guild, threshold: number): Promise<GuildMember[]> {
+    const ids = await this.flaggedUserIds(guild.id, threshold);
+    if (!ids.length) return [];
+    const present: GuildMember[] = [];
+    for (let i = 0; i < ids.length; i += 100) {
+      const fetched = await guild.members.fetch({ user: ids.slice(i, i + 100) }).catch(() => null);
+      if (fetched) present.push(...fetched.values());
+    }
+    return present;
+  }
+
+  /** Ban every currently-present flagged member. Returns how many were banned. */
+  static async banAllFlagged(guild: import('discord.js').Guild, threshold: number, moderatorTag: string): Promise<number> {
+    const members = await this.scanGuild(guild, threshold);
+    let banned = 0;
+    for (const m of members.slice(0, 200)) {
+      if (!m.bannable) continue;
+      const ok = await m.ban({ reason: `Ban network scan — actioned by ${moderatorTag}` }).then(() => true).catch(() => false);
+      if (ok) banned++;
+    }
+    return banned;
+  }
+
   /** On join: flag / auto-ban a member banned in >= threshold other guilds. */
   static async checkMember(member: GuildMember): Promise<void> {
     try {
@@ -117,6 +162,14 @@ export class BanNetworkModule {
       return;
     }
     const [, action, userId] = interaction.customId.split(':');
+
+    if (action === 'banall') {
+      await interaction.deferUpdate();
+      const settings = await getGuildSettings(interaction.guild.id);
+      const banned = await this.banAllFlagged(interaction.guild, settings?.banNetworkThreshold ?? 3, interaction.user.tag);
+      await interaction.editReply({ content: t('banNetwork.banAllDone', loc, { count: banned }), embeds: [], components: [] }).catch(swallow);
+      return;
+    }
 
     if (action === 'ban') {
       try {
