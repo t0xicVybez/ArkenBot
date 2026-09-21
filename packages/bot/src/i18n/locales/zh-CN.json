@@ -1236,5 +1236,20 @@
     "cancelled": "已取消 **{title}**。",
     "reminderTitle": "⏰ 即将开始：{title}",
     "reminderDesc": "该活动将于 {time} 开始。到时见！"
+  },
+  "banNetwork": {
+    "banReason": "封禁网络：已在 {count} 个服务器被封禁",
+    "flagTitle": "封禁网络提醒",
+    "flagDesc": "{user}（{tag}）已在网络中另外 **{count}** 个服务器被封禁。",
+    "reasons": "举报的原因",
+    "noReasons": "未提供原因",
+    "autoBanned": "已根据本服务器的封禁网络设置自动封禁。",
+    "btnBan": "封禁",
+    "btnDismiss": "忽略",
+    "needBan": "你需要“封禁成员”权限才能执行此操作。",
+    "banByStaff": "封禁网络 — 由 {mod} 处理",
+    "banFailed": "无法封禁 — 我可能缺少权限，或该用户身份组高于我。",
+    "bannedBy": "{user} 已被 {mod} 封禁。",
+    "dismissedBy": "{mod} 已忽略该提醒。"
   }
 }

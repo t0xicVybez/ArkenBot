@@ -230,6 +230,17 @@ export class InteractionHandler {
       return;
     }
 
+    // Cross-server ban network flag buttons (Ban / Dismiss).
+    if (interaction.customId.startsWith('bannet:')) {
+      try {
+        const { BanNetworkModule } = await import('../modules/moderation/BanNetworkModule.js');
+        await BanNetworkModule.handleButton(interaction, interaction.client);
+      } catch (err) {
+        logger.error({ err }, 'Ban network button error');
+      }
+      return;
+    }
+
     // Ban/mute appeal buttons (start from a DM; approve/deny from the staff channel).
     if (interaction.customId.startsWith('appeal:')) {
       const [, sub] = interaction.customId.split(':');

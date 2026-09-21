@@ -1236,5 +1236,20 @@
     "cancelled": "**{title}** annulé.",
     "reminderTitle": "⏰ Bientôt : {title}",
     "reminderDesc": "Cet événement commence {time}. À tout de suite !"
+  },
+  "banNetwork": {
+    "banReason": "Réseau de bans : banni sur {count} serveurs",
+    "flagTitle": "Alerte du réseau de bans",
+    "flagDesc": "{user} ({tag}) a été banni sur **{count}** autres serveurs du réseau.",
+    "reasons": "Raisons signalées",
+    "noReasons": "Aucune raison fournie",
+    "autoBanned": "Banni automatiquement selon les réglages du réseau de ce serveur.",
+    "btnBan": "Bannir",
+    "btnDismiss": "Ignorer",
+    "needBan": "Il vous faut la permission Bannir des membres pour cela.",
+    "banByStaff": "Réseau de bans — action de {mod}",
+    "banFailed": "Impossible de bannir : permission manquante ou l’utilisateur est au-dessus de moi.",
+    "bannedBy": "{user} a été banni par {mod}.",
+    "dismissedBy": "Alerte ignorée par {mod}."
   }
 }

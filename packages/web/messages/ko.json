@@ -1058,7 +1058,20 @@
     "deleteDataConfirm": "영구 삭제",
     "deleteDataConfirming": "삭제 중…",
     "deleteDataDone": "서버의 모든 데이터가 삭제되었습니다.",
-    "deleteDataError": "서버 데이터 삭제에 실패했습니다."
+    "deleteDataError": "서버 데이터 삭제에 실패했습니다.",
+    "banNetworkTitle": "서버 간 밴 네트워크",
+    "banNetworkDesc": "참여 중인 다른 ArkenBot 서버에서 차단된 사용자를 알려드립니다.",
+    "banNetworkEnabled": "밴 네트워크 사용",
+    "banNetworkEnabledDesc": "선택형 네트워크에 참여합니다. 여러 서버에서 차단된 사용자만 표시됩니다.",
+    "banNetworkContribute": "우리 차단 공유",
+    "banNetworkContributeDesc": "이 서버의 차단을 네트워크에 제공합니다(차단 해제 시 자동 삭제).",
+    "banNetworkAction": "표시된 사용자가 입장할 때",
+    "banNetworkActionAlert": "스태프에게 알림(권장)",
+    "banNetworkActionBan": "자동 차단",
+    "banNetworkThreshold": "표시 기준",
+    "banNetworkThresholdDesc": "표시 전 다른 서버에서 차단되어야 하는 수(기본 3).",
+    "banNetworkChannel": "알림 채널",
+    "banNetworkChannelDesc": "알림이 게시되는 곳(없으면 로그 채널)."
   },
   "suggestionsPage": {
     "saved": "건의 설정을 저장했습니다!",

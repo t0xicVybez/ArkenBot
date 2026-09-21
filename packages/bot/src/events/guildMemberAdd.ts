@@ -12,6 +12,7 @@ import { ensureGuildExists } from '../utils/settings.js';
 import { AnalyticsModule } from '../modules/AnalyticsModule.js';
 import { InviteTrackerModule } from '../modules/inviteTracker/InviteTrackerModule.js';
 import { VerificationModule } from '../modules/verification/VerificationModule.js';
+import { BanNetworkModule } from '../modules/moderation/BanNetworkModule.js';
 
 const event: BotEvent = {
   name: 'guildMemberAdd',
@@ -30,6 +31,7 @@ const event: BotEvent = {
       AnalyticsModule.trackJoin(member.guild.id),
       InviteTrackerModule.handleJoin(member),
       VerificationModule.handleJoin(member),
+      BanNetworkModule.checkMember(member),
     ]);
   },
 };

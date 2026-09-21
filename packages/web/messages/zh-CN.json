@@ -1058,7 +1058,20 @@
     "deleteDataConfirm": "永久删除",
     "deleteDataConfirming": "删除中…",
     "deleteDataDone": "已删除所有服务器数据。",
-    "deleteDataError": "删除服务器数据失败。"
+    "deleteDataError": "删除服务器数据失败。",
+    "banNetworkTitle": "跨服务器封禁网络",
+    "banNetworkDesc": "当用户在其他加入网络的 ArkenBot 服务器被封禁时收到提醒。",
+    "banNetworkEnabled": "启用封禁网络",
+    "banNetworkEnabledDesc": "加入可选网络。只有在多个服务器被封禁的用户才会被标记。",
+    "banNetworkContribute": "共享本服封禁",
+    "banNetworkContributeDesc": "将本服务器的封禁贡献到网络（解封时自动移除）。",
+    "banNetworkAction": "当被标记用户加入时",
+    "banNetworkActionAlert": "提醒管理组（推荐）",
+    "banNetworkActionBan": "自动封禁",
+    "banNetworkThreshold": "标记阈值",
+    "banNetworkThresholdDesc": "标记前该用户需在多少个其他服务器被封禁（默认 3）。",
+    "banNetworkChannel": "提醒频道",
+    "banNetworkChannelDesc": "提醒发布的位置（未设置则用日志频道）。"
   },
   "suggestionsPage": {
     "saved": "建议设置已保存！",

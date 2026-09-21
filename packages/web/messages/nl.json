@@ -1058,7 +1058,20 @@
     "deleteDataConfirm": "Permanent verwijderen",
     "deleteDataConfirming": "Verwijderen…",
     "deleteDataDone": "Alle servergegevens zijn verwijderd.",
-    "deleteDataError": "Servergegevens konden niet worden verwijderd."
+    "deleteDataError": "Servergegevens konden niet worden verwijderd.",
+    "banNetworkTitle": "Server-overstijgend bannetwerk",
+    "banNetworkDesc": "Word gewaarschuwd over gebruikers die op andere deelnemende ArkenBot-servers zijn verbannen.",
+    "banNetworkEnabled": "Bannetwerk inschakelen",
+    "banNetworkEnabledDesc": "Doe mee met het optionele netwerk. Alleen op meerdere servers verbannen gebruikers worden gemeld.",
+    "banNetworkContribute": "Onze bans delen",
+    "banNetworkContributeDesc": "Deel de bans van deze server met het netwerk (verwijderd bij ontbannen).",
+    "banNetworkAction": "Wanneer een gemarkeerde gebruiker binnenkomt",
+    "banNetworkActionAlert": "Staff waarschuwen (aanbevolen)",
+    "banNetworkActionBan": "Automatisch verbannen",
+    "banNetworkThreshold": "Meldingsdrempel",
+    "banNetworkThresholdDesc": "Hoeveel andere servers een gebruiker moeten hebben verbannen (standaard 3).",
+    "banNetworkChannel": "Meldingskanaal",
+    "banNetworkChannelDesc": "Waar meldingen worden geplaatst (anders je logkanaal)."
   },
   "suggestionsPage": {
     "saved": "Suggestie-instellingen opgeslagen!",

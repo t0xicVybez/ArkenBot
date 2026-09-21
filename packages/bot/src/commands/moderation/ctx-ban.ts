@@ -24,6 +24,7 @@ import { canModerate } from '../../utils/permissions.js';
 import { getNextCaseNumber, getGuildSettings } from '../../utils/settings.js';
 import { prisma } from '../../database.js';
 import { LoggingModule } from '../../modules/logging/LoggingModule.js';
+import { BanNetworkModule } from '../../modules/moderation/BanNetworkModule.js';
 
 import { swallow } from '../../logger.js';
 const command: BotCommand = {
@@ -102,6 +103,7 @@ const command: BotCommand = {
     }).catch(swallow);
 
     await guild.members.ban(targetUser, { reason: `${interaction.user.tag}: ${reason}` }).catch(swallow);
+    void BanNetworkModule.recordBan(guild.id, typeof targetUser === 'string' ? targetUser : targetUser.id, reason);
 
     const caseNumber = await getNextCaseNumber(guild.id);
     await prisma.moderationCase.create({

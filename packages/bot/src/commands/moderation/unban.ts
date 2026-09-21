@@ -13,6 +13,7 @@ import { successEmbed, errorEmbed } from '../../utils/embed.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 import { prisma } from '../../database.js';
 import { getNextCaseNumber, getGuildSettings } from '../../utils/settings.js';
+import { BanNetworkModule } from '../../modules/moderation/BanNetworkModule.js';
 
 import { swallow } from '../../logger.js';
 const command: BotCommand = {
@@ -61,6 +62,9 @@ const command: BotCommand = {
       }
 
       await interaction.guild.members.unban(userId, `${reason} | Moderator: ${interaction.user.tag}`);
+
+      // Reversing a ban withdraws our contribution to the ban network.
+      void BanNetworkModule.removeBan(interaction.guild.id, userId);
 
       // Mark existing active ban/tempban cases as resolved so dashboards reflect the change.
       await prisma.moderationCase.updateMany({

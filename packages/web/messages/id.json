@@ -1058,7 +1058,20 @@
     "deleteDataConfirm": "Hapus permanen",
     "deleteDataConfirming": "Menghapus…",
     "deleteDataDone": "Semua data server telah dihapus.",
-    "deleteDataError": "Gagal menghapus data server."
+    "deleteDataError": "Gagal menghapus data server.",
+    "banNetworkTitle": "Jaringan ban antar-server",
+    "banNetworkDesc": "Dapatkan peringatan tentang pengguna yang diblokir di server ArkenBot lain yang ikut serta.",
+    "banNetworkEnabled": "Aktifkan jaringan ban",
+    "banNetworkEnabledDesc": "Gabung ke jaringan opsional. Hanya pengguna yang diblokir di beberapa server yang ditandai.",
+    "banNetworkContribute": "Bagikan ban kami",
+    "banNetworkContributeDesc": "Sumbangkan ban server ini ke jaringan (dihapus saat unban).",
+    "banNetworkAction": "Saat pengguna bertanda bergabung",
+    "banNetworkActionAlert": "Beri tahu staf (disarankan)",
+    "banNetworkActionBan": "Blokir otomatis",
+    "banNetworkThreshold": "Ambang penandaan",
+    "banNetworkThresholdDesc": "Berapa banyak server lain yang harus memblokir pengguna sebelum ditandai (bawaan 3).",
+    "banNetworkChannel": "Kanal peringatan",
+    "banNetworkChannelDesc": "Tempat peringatan dikirim (jika kosong, memakai kanal log)."
   },
   "suggestionsPage": {
     "saved": "Pengaturan saran disimpan!",

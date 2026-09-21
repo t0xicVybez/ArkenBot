@@ -1236,5 +1236,20 @@
     "cancelled": "Cancelled **{title}**.",
     "reminderTitle": "⏰ Starting soon: {title}",
     "reminderDesc": "This event starts {time}. See you there!"
+  },
+  "banNetwork": {
+    "banReason": "Ban network: banned in {count} servers",
+    "flagTitle": "Ban Network Flag",
+    "flagDesc": "{user} ({tag}) has been banned in **{count}** other servers on the ban network.",
+    "reasons": "Reported reasons",
+    "noReasons": "No reasons provided",
+    "autoBanned": "Automatically banned per this server’s ban-network settings.",
+    "btnBan": "Ban",
+    "btnDismiss": "Dismiss",
+    "needBan": "You need the Ban Members permission to do that.",
+    "banByStaff": "Ban network — actioned by {mod}",
+    "banFailed": "Couldn’t ban — I may lack permission or the user outranks me.",
+    "bannedBy": "{user} was banned by {mod}.",
+    "dismissedBy": "Flag dismissed by {mod}."
   }
 }

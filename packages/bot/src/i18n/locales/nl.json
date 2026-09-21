@@ -1236,5 +1236,20 @@
     "cancelled": "**{title}** geannuleerd.",
     "reminderTitle": "⏰ Begint binnenkort: {title}",
     "reminderDesc": "Dit evenement begint {time}. Tot dan!"
+  },
+  "banNetwork": {
+    "banReason": "Bannetwerk: verbannen op {count} servers",
+    "flagTitle": "Bannetwerk-melding",
+    "flagDesc": "{user} ({tag}) is verbannen op **{count}** andere servers in het netwerk.",
+    "reasons": "Gemelde redenen",
+    "noReasons": "Geen reden opgegeven",
+    "autoBanned": "Automatisch verbannen volgens de netwerkinstellingen van deze server.",
+    "btnBan": "Verban",
+    "btnDismiss": "Negeren",
+    "needBan": "Je hebt de rechten “Leden verbannen” nodig.",
+    "banByStaff": "Bannetwerk — actie door {mod}",
+    "banFailed": "Kon niet verbannen — mogelijk mis ik rechten of staat de gebruiker boven mij.",
+    "bannedBy": "{user} is verbannen door {mod}.",
+    "dismissedBy": "Melding genegeerd door {mod}."
   }
 }

@@ -1058,7 +1058,20 @@
     "deleteDataConfirm": "Eliminar permanentemente",
     "deleteDataConfirming": "Eliminando…",
     "deleteDataDone": "Se han eliminado todos los datos del servidor.",
-    "deleteDataError": "No se pudieron eliminar los datos del servidor."
+    "deleteDataError": "No se pudieron eliminar los datos del servidor.",
+    "banNetworkTitle": "Red de baneos entre servidores",
+    "banNetworkDesc": "Recibe alertas sobre usuarios baneados en otros servidores de ArkenBot que participan.",
+    "banNetworkEnabled": "Activar la red de baneos",
+    "banNetworkEnabledDesc": "Únete a la red opcional. Solo se alerta de usuarios baneados en varios servidores.",
+    "banNetworkContribute": "Compartir nuestros baneos",
+    "banNetworkContributeDesc": "Aporta los baneos de este servidor a la red (se eliminan al desbanear).",
+    "banNetworkAction": "Cuando entra un usuario marcado",
+    "banNetworkActionAlert": "Avisar al staff (recomendado)",
+    "banNetworkActionBan": "Banear automáticamente",
+    "banNetworkThreshold": "Umbral de alerta",
+    "banNetworkThresholdDesc": "Cuántos otros servidores deben haber baneado al usuario antes de alertar (predet. 3).",
+    "banNetworkChannel": "Canal de alertas",
+    "banNetworkChannelDesc": "Dónde se publican las alertas (usa tu canal de registro si no se indica)."
   },
   "suggestionsPage": {
     "saved": "¡Ajustes de sugerencias guardados!",
