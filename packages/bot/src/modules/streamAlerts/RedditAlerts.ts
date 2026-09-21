@@ -145,13 +145,10 @@ export async function runRedditAlerts(client: BotClient): Promise<void> {
     if (!itemId) continue;
 
     for (const alert of subAlerts) {
+      // Already alerted this post → skip. Otherwise post it (on a brand-new alert
+      // this fires the subreddit's current latest post, confirming setup works —
+      // matching how RSS alerts behave), then remember it for dedup.
       if (alert.lastStreamId === itemId) continue;
-      // Baseline: first post we ever see for this alert is the current newest —
-      // seed it silently so setup doesn't fire a stale post; alert only on the next.
-      if (alert.lastStreamId === null) {
-        await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastStreamId: itemId } }).catch(swallow);
-        continue;
-      }
       await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastStreamId: itemId } }).catch(swallow);
       await postAlert(client, alert, sub, item as { title?: string; link?: string; creator?: string; author?: string });
     }
