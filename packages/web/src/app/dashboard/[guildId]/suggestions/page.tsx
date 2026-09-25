@@ -160,7 +160,7 @@ export default function SuggestionsPage() {
                 className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${
                   activeTab === tab.key
                     ? 'bg-discord-blurple text-white'
-                    : 'bg-[var(--bg-base)] text-gray-400 hover:text-gray-200'
+                    : 'bg-(--bg-base) text-gray-400 hover:text-gray-200'
                 }`}
               >
                 {tab.key === 'all' ? t('tab_all') : t(`status_${tab.key}`)}
@@ -172,7 +172,7 @@ export default function SuggestionsPage() {
         {suggestionsLoading ? (
           <div className="space-y-3">
             {[...Array(4)].map((_, i) => (
-              <div key={i} className="h-20 bg-gray-700 rounded animate-pulse" />
+              <div key={i} className="h-20 bg-gray-700 rounded-sm animate-pulse" />
             ))}
           </div>
         ) : suggestions.length === 0 ? (
@@ -182,7 +182,7 @@ export default function SuggestionsPage() {
         ) : (
           <div className="space-y-3">
             {suggestions.map((s) => (
-              <div key={s.id} className="p-4 rounded-lg bg-[var(--bg-base)] border border-[var(--border-subtle)]">
+              <div key={s.id} className="p-4 rounded-lg bg-(--bg-base) border border-(--border-subtle)">
                 <div className="flex items-start gap-3">
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-gray-100 leading-relaxed">{s.content}</p>

@@ -125,7 +125,7 @@ export default function AccountPage() {
 
   return (
     <div className="min-h-screen bg-discord-darkest-bg">
-      <header className="bg-[var(--bg-card)] border-b border-[var(--border-subtle)] px-6 py-4">
+      <header className="bg-(--bg-card) border-b border-(--border-subtle) px-6 py-4">
         <div className="max-w-3xl mx-auto flex items-center gap-3">
           <Link href="/dashboard" className="text-gray-400 hover:text-white">
             <ArrowLeft className="w-5 h-5" />
@@ -138,7 +138,7 @@ export default function AccountPage() {
       </header>
 
       <main className="max-w-3xl mx-auto px-6 py-8">
-        <section className="mb-8 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-card)] p-5">
+        <section className="mb-8 rounded-lg border border-(--border-subtle) bg-(--bg-card) p-5">
           <LanguageSwitcher />
         </section>
 

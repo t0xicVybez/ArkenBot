@@ -259,13 +259,13 @@ export default function TrelloPage() {
       {/* Alert list */}
       {alerts.length > 0 && (
         <div className="card p-0 overflow-hidden">
-          <div className="px-4 py-3 border-b border-[var(--border-subtle)]">
+          <div className="px-4 py-3 border-b border-(--border-subtle)">
             <span className="text-[13px] font-bold text-white">{t('boardsCount', { count: alerts.length })}</span>
           </div>
           {alerts.map((alert) => {
             const ch = textChannels.find((c) => c.id === alert.discordChannelId);
             return (
-              <div key={alert.id} className="border-b border-[var(--border-subtle)] last:border-0">
+              <div key={alert.id} className="border-b border-(--border-subtle) last:border-0">
                 <div className="group flex items-center gap-3.5 px-4 py-3 hover:bg-white/[0.018] transition-colors">
                   <div className="w-9 h-9 rounded-lg grid place-items-center flex-shrink-0" style={{ background: 'rgba(0,121,191,0.16)' }}>
                     <svg style={{ width: 17, height: 17 }} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -278,7 +278,7 @@ export default function TrelloPage() {
                     <p className="text-[13.5px] font-semibold text-white truncate">
                       {alert.boardName ?? <span className="text-gray-500 italic font-normal">{t('unknownBoard')}</span>}
                     </p>
-                    <p className="text-[12px] text-[var(--text-muted)] truncate">
+                    <p className="text-[12px] text-(--text-muted) truncate">
                       {t('postsTo', { channel: ch ? `#${ch.name}` : alert.discordChannelId })}
                       {' · '}
                       {alert.events.length === 0 ? t('allEventsLower') : t('eventCount', { count: alert.events.length })}
@@ -296,7 +296,7 @@ export default function TrelloPage() {
                     disabled={toggleMutation.isPending}
                   />
                   <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button onClick={() => handleEditOpen(alert)} className="p-1.5 rounded-md text-gray-400 hover:text-white hover:bg-white/[0.06]" title={t('edit')}>
+                    <button onClick={() => handleEditOpen(alert)} className="p-1.5 rounded-md text-gray-400 hover:text-white hover:bg-white/6" title={t('edit')}>
                       <Pencil className="w-3.5 h-3.5" />
                     </button>
                     <button onClick={() => deleteMutation.mutate(alert.id)} disabled={deleteMutation.isPending} className="p-1.5 rounded-md text-gray-500 hover:text-red-400 hover:bg-red-500/10" title={t('delete')}>
@@ -306,7 +306,7 @@ export default function TrelloPage() {
                 </div>
 
                 {editingId === alert.id && (
-                  <div className="px-4 py-4 bg-[var(--bg-base)]/60 border-t border-[var(--border-subtle)]">
+                  <div className="px-4 py-4 bg-(--bg-base)/60 border-t border-(--border-subtle)">
                     <form onSubmit={handleUpdate} className="space-y-4">
                       <div className="flex items-center justify-between mb-1">
                         <p className="text-sm font-semibold text-white">{t('editAlert')}</p>

@@ -152,13 +152,13 @@ export default function ScheduledMessagesPage() {
       </div>
 
       <div className="card mb-6 p-0 overflow-hidden">
-        <div className="px-4 py-3 border-b border-[var(--border-subtle)]">
+        <div className="px-4 py-3 border-b border-(--border-subtle)">
           <h2 className="text-lg font-semibold text-white">{t('title')}</h2>
         </div>
         {isLoading ? (
           <div className="p-4 space-y-3">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="h-14 bg-gray-700 rounded animate-pulse" />
+              <div key={i} className="h-14 bg-gray-700 rounded-sm animate-pulse" />
             ))}
           </div>
         ) : messages.length === 0 ? (
@@ -169,7 +169,7 @@ export default function ScheduledMessagesPage() {
         ) : (
           <div className="overflow-x-auto">
           <table className="w-full min-w-[600px]">
-            <thead className="bg-[var(--bg-base)]">
+            <thead className="bg-(--bg-base)">
               <tr>
                 <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colChannel')}</th>
                 <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colContent')}</th>
@@ -179,9 +179,9 @@ export default function ScheduledMessagesPage() {
                 <th className="px-4 py-3" />
               </tr>
             </thead>
-            <tbody className="divide-y divide-[var(--border-subtle)]">
+            <tbody className="divide-y divide-(--border-subtle)">
               {messages.map((msg) => (
-                <tr key={msg.id} className="hover:bg-white/[0.02] transition-colors">
+                <tr key={msg.id} className="hover:bg-white/2 transition-colors">
                   <td className="px-4 py-3 text-sm text-gray-200">{getChannelName(msg.channelId)}</td>
                   <td className="px-4 py-3 text-sm text-gray-400 max-w-[200px] truncate">
                     {msg.content.length > 50 ? `${msg.content.slice(0, 50)}…` : msg.content}
@@ -293,7 +293,7 @@ export default function ScheduledMessagesPage() {
                     key={d}
                     type="button"
                     onClick={() => toggleDay(d)}
-                    className={`px-3 py-1.5 rounded-md text-sm border capitalize ${newDays.includes(d) ? 'bg-discord-blurple border-discord-blurple text-white' : 'border-[var(--border-subtle)] text-gray-300 hover:border-discord-blurple/50'}`}
+                    className={`px-3 py-1.5 rounded-md text-sm border capitalize ${newDays.includes(d) ? 'bg-discord-blurple border-discord-blurple text-white' : 'border-(--border-subtle) text-gray-300 hover:border-discord-blurple/50'}`}
                   >
                     {dayName(d)}
                   </button>

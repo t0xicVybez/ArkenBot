@@ -174,7 +174,7 @@ export default function LogsPage() {
         </div>
         {(userIdFilter || dateFrom || dateTo) && (
           <button
-            className="px-3 py-1.5 text-xs bg-white/[0.06] text-gray-400 hover:text-white rounded-lg transition-colors h-8"
+            className="px-3 py-1.5 text-xs bg-white/6 text-gray-400 hover:text-white rounded-lg transition-colors h-8"
             onClick={() => { setUserIdFilter(''); setDateFrom(''); setDateTo(''); }}
           >
             {t('clear')}
@@ -186,7 +186,7 @@ export default function LogsPage() {
       <div className="flex flex-wrap gap-2 mb-4">
         <button
           onClick={() => setTypeFilter('')}
-          className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${typeFilter === '' ? 'bg-discord-blurple text-white' : 'bg-white/[0.06] text-gray-400 hover:text-white'}`}
+          className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${typeFilter === '' ? 'bg-discord-blurple text-white' : 'bg-white/6 text-gray-400 hover:text-white'}`}
         >
           {t('all')}
         </button>
@@ -194,7 +194,7 @@ export default function LogsPage() {
           <button
             key={key}
             onClick={() => setTypeFilter(typeFilter === key ? '' : key)}
-            className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${typeFilter === key ? 'bg-discord-blurple text-white' : 'bg-white/[0.06] text-gray-400 hover:text-white'}`}
+            className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${typeFilter === key ? 'bg-discord-blurple text-white' : 'bg-white/6 text-gray-400 hover:text-white'}`}
           >
             {t(`type_${key}`)}
           </button>
@@ -204,7 +204,7 @@ export default function LogsPage() {
       <div className="card overflow-hidden p-0">
         <div className="overflow-x-auto">
         <table className="w-full min-w-[600px]">
-          <thead className="bg-[var(--bg-base)]">
+          <thead className="bg-(--bg-base)">
             <tr>
               <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colEvent')}</th>
               <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colUser')}</th>
@@ -212,12 +212,12 @@ export default function LogsPage() {
               <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colTime')}</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[var(--border-subtle)]">
+          <tbody className="divide-y divide-(--border-subtle)">
             {isLoading ? (
               [...Array(8)].map((_, i) => (
                 <tr key={i} className="animate-pulse">
                   <td colSpan={4} className="px-4 py-3">
-                    <div className="h-4 bg-gray-700 rounded w-full" />
+                    <div className="h-4 bg-gray-700 rounded-sm w-full" />
                   </td>
                 </tr>
               ))
@@ -229,7 +229,7 @@ export default function LogsPage() {
               </tr>
             ) : (
               logs.map((log) => (
-                <tr key={log.id} className="hover:bg-white/[0.02] transition-colors">
+                <tr key={log.id} className="hover:bg-white/2 transition-colors">
                   <td className="px-4 py-3">
                     <span className="text-sm text-white">
                       {TYPE_KEYS.includes(log.type) ? t(`type_${log.type}`) : log.type}

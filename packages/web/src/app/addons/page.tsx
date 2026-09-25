@@ -67,7 +67,7 @@ export default async function AddonsPage() {
       {/* ── Hero ── */}
       <section className="relative overflow-hidden px-6 pt-20 pb-16 text-center">
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-fuchsia-500/[0.05] rounded-full blur-3xl" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-fuchsia-500/5 rounded-full blur-3xl" />
         </div>
         <div className="relative z-10 max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-fuchsia-500/10 border border-fuchsia-500/20 text-fuchsia-400 text-xs font-medium mb-6">
@@ -77,7 +77,7 @@ export default async function AddonsPage() {
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
             {t.rich('heroTitle', {
               hl: (c) => (
-                <span className="bg-gradient-to-r from-fuchsia-400 via-purple-400 to-blue-400 bg-clip-text text-transparent">
+                <span className="bg-linear-to-r from-fuchsia-400 via-purple-400 to-blue-400 bg-clip-text text-transparent">
                   {c}
                 </span>
               ),
@@ -93,14 +93,14 @@ export default async function AddonsPage() {
               <a
                 key={a.id}
                 href={`#${a.id}`}
-                className="px-3 py-1 rounded-full bg-white/[0.05] border border-white/[0.08] text-xs text-gray-400 hover:text-white hover:bg-white/[0.08] transition-colors"
+                className="px-3 py-1 rounded-full bg-white/5 border border-white/8 text-xs text-gray-400 hover:text-white hover:bg-white/8 transition-colors"
               >
                 {t(`addons.${a.id}.title`)}
               </a>
             ))}
             <a
               href="#sdk"
-              className="px-3 py-1 rounded-full bg-white/[0.05] border border-white/[0.08] text-xs text-gray-400 hover:text-white hover:bg-white/[0.08] transition-colors"
+              className="px-3 py-1 rounded-full bg-white/5 border border-white/8 text-xs text-gray-400 hover:text-white hover:bg-white/8 transition-colors"
             >
               {t('buildYourOwn')}
             </a>
@@ -116,12 +116,12 @@ export default async function AddonsPage() {
             <section
               key={a.id}
               id={a.id}
-              className={`rounded-2xl border border-white/[0.08] overflow-hidden scroll-mt-20 ${
+              className={`rounded-2xl border border-white/8 overflow-hidden scroll-mt-20 ${
                 idx % 2 === 0 ? 'bg-discord-darker-bg' : 'bg-discord-darker-bg/60'
               }`}
             >
               {/* Header */}
-              <div className={`flex items-start gap-4 p-6 border-b border-white/[0.06] ${a.bg}`}>
+              <div className={`flex items-start gap-4 p-6 border-b border-white/6 ${a.bg}`}>
                 <div className={`w-11 h-11 rounded-xl ${a.bg} border ${a.accentBorder} flex items-center justify-center flex-shrink-0`}>
                   <Icon className={`w-5 h-5 ${a.color}`} />
                 </div>
@@ -156,7 +156,7 @@ export default async function AddonsPage() {
       </div>
 
       {/* ── SDK section ── */}
-      <section id="sdk" className="scroll-mt-20 border-t border-white/[0.06] bg-discord-darker-bg/30 py-20 px-6">
+      <section id="sdk" className="scroll-mt-20 border-t border-white/6 bg-discord-darker-bg/30 py-20 px-6">
         <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
@@ -184,7 +184,7 @@ export default async function AddonsPage() {
               {SDK_ICONS.map((SIcon, i) => (
                 <div
                   key={i}
-                  className="flex items-start gap-3 p-4 rounded-xl bg-discord-darker-bg border border-white/[0.06]"
+                  className="flex items-start gap-3 p-4 rounded-xl bg-discord-darker-bg border border-white/6"
                 >
                   <div className="w-8 h-8 rounded-lg bg-fuchsia-500/10 border border-fuchsia-500/20 flex items-center justify-center flex-shrink-0">
                     <SIcon className="w-4 h-4 text-fuchsia-400" />
@@ -198,7 +198,7 @@ export default async function AddonsPage() {
       </section>
 
       {/* ── CTA ── */}
-      <section className="py-20 px-6 text-center border-t border-white/[0.04] bg-discord-darker-bg/30">
+      <section className="py-20 px-6 text-center border-t border-white/4 bg-discord-darker-bg/30">
         <div className="max-w-2xl mx-auto">
           <h2 className="text-3xl font-bold text-white mb-3 tracking-tight">
             {t('ctaHeading')}
@@ -223,7 +223,7 @@ export default async function AddonsPage() {
       </section>
 
       {/* ── Footer ── */}
-      <footer className="border-t border-white/[0.06] py-8 px-6">
+      <footer className="border-t border-white/6 py-8 px-6">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 bg-discord-blurple rounded-md flex items-center justify-center">

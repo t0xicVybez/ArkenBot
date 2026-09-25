@@ -177,7 +177,7 @@ export default function CannedResponsesPage() {
                     <span className="text-white font-semibold text-sm">{r.name}</span>
                     <span className="badge-secondary text-xs">/{r.name}</span>
                   </div>
-                  <p className="text-gray-400 text-sm mt-1 whitespace-pre-wrap break-words line-clamp-3">{r.content}</p>
+                  <p className="text-gray-400 text-sm mt-1 whitespace-pre-wrap wrap-break-word line-clamp-3">{r.content}</p>
                   <p className="text-gray-600 text-xs mt-1">
                     {t('created', { date: new Date(r.createdAt).toLocaleDateString() })}
                     {r.createdByTag && t('byTag', { tag: r.createdByTag })}
@@ -186,14 +186,14 @@ export default function CannedResponsesPage() {
                 <div className="flex gap-1 flex-shrink-0">
                   <button
                     onClick={() => startEdit(r)}
-                    className="text-gray-400 hover:text-white p-1.5 rounded hover:bg-gray-700/50 transition-colors"
+                    className="text-gray-400 hover:text-white p-1.5 rounded-sm hover:bg-gray-700/50 transition-colors"
                     title={t('edit')}
                   >
                     <Pencil className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => { if (confirm(t('confirmDelete', { name: r.name }))) deleteMut.mutate(r.id); }}
-                    className="text-gray-400 hover:text-red-400 p-1.5 rounded hover:bg-gray-700/50 transition-colors"
+                    className="text-gray-400 hover:text-red-400 p-1.5 rounded-sm hover:bg-gray-700/50 transition-colors"
                     title={t('delete')}
                   >
                     <Trash2 className="w-4 h-4" />

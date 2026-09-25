@@ -40,7 +40,7 @@ function CopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={handleCopy}
-      className="shrink-0 p-1.5 rounded text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
+      className="shrink-0 p-1.5 rounded-sm text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
       title={t('copyWebhook')}
     >
       {copied ? <Check className="w-3.5 h-3.5 text-green-400" /> : <Copy className="w-3.5 h-3.5" />}
@@ -275,14 +275,14 @@ export default function MondayPage() {
       {/* Alert list */}
       {alerts.length > 0 && (
         <div className="card p-0 overflow-hidden">
-          <div className="px-4 py-3 border-b border-[var(--border-subtle)]">
+          <div className="px-4 py-3 border-b border-(--border-subtle)">
             <span className="text-[13px] font-bold text-white">{t('alertCount', { count: alerts.length })}</span>
           </div>
           {alerts.map((alert) => {
             const ch = textChannels.find((c) => c.id === alert.discordChannelId);
             const webhookUrl = `${API_URL}/monday/webhook/${alert.webhookToken}`;
             return (
-              <div key={alert.id} className="border-b border-[var(--border-subtle)] last:border-0">
+              <div key={alert.id} className="border-b border-(--border-subtle) last:border-0">
                 <div className="group flex items-center gap-3.5 px-4 py-3 hover:bg-white/[0.018] transition-colors">
                   <div className="w-9 h-9 rounded-lg grid place-items-center flex-shrink-0" style={{ background: 'rgba(255,203,0,0.10)' }}>
                     <svg className="w-4.5 h-4.5" style={{ width: 18, height: 18 }} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -292,14 +292,14 @@ export default function MondayPage() {
                   <div className="flex-1 min-w-0">
                     <p className="text-[13.5px] font-semibold text-white truncate">
                       {alert.boardName ?? <span className="text-gray-500 italic font-normal">{t('allBoards')}</span>}
-                      <span className="font-normal text-[var(--text-muted)]">{t('postsTo', { channel: ch ? `#${ch.name}` : alert.discordChannelId })}</span>
+                      <span className="font-normal text-(--text-muted)">{t('postsTo', { channel: ch ? `#${ch.name}` : alert.discordChannelId })}</span>
                     </p>
                     <div className="flex items-center gap-1 mt-0.5 max-w-md">
-                      <span className="text-[11px] text-[var(--text-muted)] font-mono truncate">{webhookUrl}</span>
+                      <span className="text-[11px] text-(--text-muted) font-mono truncate">{webhookUrl}</span>
                       <CopyButton text={webhookUrl} />
                     </div>
                   </div>
-                  <span className="text-[11.5px] text-[var(--text-muted)] hidden sm:block flex-shrink-0">
+                  <span className="text-[11.5px] text-(--text-muted) hidden sm:block flex-shrink-0">
                     {alert.events.length === 0 ? t('allEvents') : t('eventCount', { count: alert.events.length })}
                   </span>
                   {alert.hasApiToken && <span className="badge-success flex-shrink-0">{t('namesBadge')}</span>}
@@ -309,7 +309,7 @@ export default function MondayPage() {
                     disabled={toggleMutation.isPending}
                   />
                   <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button onClick={() => handleEditOpen(alert)} className="p-1.5 rounded-md text-gray-400 hover:text-white hover:bg-white/[0.06]" title={t('edit')}>
+                    <button onClick={() => handleEditOpen(alert)} className="p-1.5 rounded-md text-gray-400 hover:text-white hover:bg-white/6" title={t('edit')}>
                       <Pencil className="w-3.5 h-3.5" />
                     </button>
                     <button onClick={() => deleteMutation.mutate(alert.id)} disabled={deleteMutation.isPending} className="p-1.5 rounded-md text-gray-500 hover:text-red-400 hover:bg-red-500/10" title={t('delete')}>
@@ -319,7 +319,7 @@ export default function MondayPage() {
                 </div>
 
                 {editingId === alert.id && (
-                  <div className="px-4 py-4 bg-[var(--bg-base)]/60 border-t border-[var(--border-subtle)]">
+                  <div className="px-4 py-4 bg-(--bg-base)/60 border-t border-(--border-subtle)">
                     <form onSubmit={handleUpdate} className="space-y-4">
                       <div className="flex items-center justify-between mb-1">
                         <p className="text-sm font-semibold text-white">{t('editAlert')}</p>

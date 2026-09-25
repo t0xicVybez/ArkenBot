@@ -48,7 +48,7 @@ export default function PermissionHealthPage() {
 
       {isLoading ? (
         <div className="card space-y-3">
-          {[...Array(3)].map((_, i) => <div key={i} className="h-12 bg-gray-700 rounded animate-pulse" />)}
+          {[...Array(3)].map((_, i) => <div key={i} className="h-12 bg-gray-700 rounded-sm animate-pulse" />)}
         </div>
       ) : isError ? (
         <div className="card text-center text-red-400 py-8">{t('loadError')}</div>
@@ -99,7 +99,7 @@ export default function PermissionHealthPage() {
                     <span className="font-medium text-white">#{c.name}</span>
                     <span className="text-gray-500">—</span>
                     {c.missing.map((m) => (
-                      <span key={m} className="px-2 py-0.5 rounded text-xs bg-gray-700/60 text-gray-300">{m}</span>
+                      <span key={m} className="px-2 py-0.5 rounded-sm text-xs bg-gray-700/60 text-gray-300">{m}</span>
                     ))}
                   </div>
                 ))}

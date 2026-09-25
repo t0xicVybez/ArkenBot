@@ -117,7 +117,7 @@ export default function SetupWizardPage() {
                     ? 'bg-discord-blurple text-white'
                     : done
                     ? 'bg-green-500/20 text-green-400'
-                    : 'bg-[var(--bg-card)] text-gray-500'
+                    : 'bg-(--bg-card) text-gray-500'
                 }`}
               >
                 {done && !active ? <Check className="w-3 h-3" /> : <Icon className="w-3 h-3" />}
@@ -130,7 +130,7 @@ export default function SetupWizardPage() {
       </div>
 
       {/* Step panels */}
-      <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl p-6">
+      <div className="bg-(--bg-card) border border-(--border-subtle) rounded-xl p-6">
         {step === 0 && (
           <WelcomeStep
             guildId={guildId}
@@ -423,7 +423,7 @@ function DoneStep({ guildId, completed }: { guildId: string; completed: Set<numb
           <Link
             key={l.href}
             href={l.href}
-            className="flex items-center justify-between px-4 py-2.5 rounded-lg bg-[var(--bg-base)] border border-white/[0.04] hover:border-discord-blurple/40 transition-colors group"
+            className="flex items-center justify-between px-4 py-2.5 rounded-lg bg-(--bg-base) border border-white/4 hover:border-discord-blurple/40 transition-colors group"
           >
             <span className="text-gray-300 text-sm group-hover:text-white transition-colors">{l.label}</span>
             <ChevronRight className="w-4 h-4 text-gray-600 group-hover:text-discord-blurple transition-colors" />

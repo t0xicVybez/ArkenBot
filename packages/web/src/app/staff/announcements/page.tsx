@@ -214,7 +214,7 @@ export default function AnnouncementsPage() {
                 <div key={a.id} className="card p-4 space-y-2">
                   <div className="flex items-start justify-between gap-2">
                     <p className="text-white font-medium text-sm">{a.title}</p>
-                    <span className={`px-2 py-0.5 rounded text-xs font-medium flex-shrink-0 ${TYPE_BADGE[a.type] ?? TYPE_BADGE.update}`}>
+                    <span className={`px-2 py-0.5 rounded-sm text-xs font-medium flex-shrink-0 ${TYPE_BADGE[a.type] ?? TYPE_BADGE.update}`}>
                       {a.type}
                     </span>
                   </div>

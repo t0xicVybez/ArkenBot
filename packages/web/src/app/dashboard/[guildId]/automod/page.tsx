@@ -42,7 +42,7 @@ function AutoModStats({ guildId }: { guildId: string }) {
 
   if (isLoading) {
     return (
-      <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl p-5 mb-6 animate-pulse h-48" />
+      <div className="bg-(--bg-card) border border-(--border-subtle) rounded-xl p-5 mb-6 animate-pulse h-48" />
     );
   }
 
@@ -55,7 +55,7 @@ function AutoModStats({ guildId }: { guildId: string }) {
   }));
 
   return (
-    <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl p-5 mb-6 space-y-4">
+    <div className="bg-(--bg-card) border border-(--border-subtle) rounded-xl p-5 mb-6 space-y-4">
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-2">
           <BarChart2 className="w-4 h-4 text-discord-blurple" />
@@ -104,7 +104,7 @@ function AutoModStats({ guildId }: { guildId: string }) {
                 return (
                   <div key={reason} className="flex items-center gap-2">
                     <span className="text-gray-300 text-xs w-28 truncate flex-shrink-0">{label}</span>
-                    <div className="flex-1 bg-[var(--bg-base)] rounded-full h-1.5 overflow-hidden">
+                    <div className="flex-1 bg-(--bg-base) rounded-full h-1.5 overflow-hidden">
                       <div
                         className="h-full bg-discord-blurple rounded-full"
                         style={{ width: `${pct}%` }}
@@ -285,7 +285,7 @@ export default function AutoModPage() {
                 {(config.filteredWords ?? []).map((word, i) => (
                   <span
                     key={`${word}-${i}`}
-                    className="inline-flex items-center gap-1 bg-red-900/30 text-red-400 border border-red-700/50 rounded px-2 py-0.5 text-xs"
+                    className="inline-flex items-center gap-1 bg-red-900/30 text-red-400 border border-red-700/50 rounded-sm px-2 py-0.5 text-xs"
                   >
                     {word}
                     <button onClick={() => removeWord(word)} className="hover:text-red-300 ml-1">×</button>
@@ -298,7 +298,7 @@ export default function AutoModPage() {
             </div>
 
             {/* Escalation thresholds */}
-            <div className="border-t border-[var(--border-subtle)] pt-4">
+            <div className="border-t border-(--border-subtle) pt-4">
               <p className="text-sm font-medium text-white mb-3">{t('escalation')}</p>
               <p className="text-xs text-gray-500 mb-3">
                 {t('escalationDesc')}
@@ -353,7 +353,7 @@ export default function AutoModPage() {
               </div>
 
               {/* Summary */}
-              <div className="mt-3 p-3 rounded bg-[var(--bg-card)] text-xs text-gray-400 space-y-1">
+              <div className="mt-3 p-3 rounded-sm bg-(--bg-card) text-xs text-gray-400 space-y-1">
                 <p>{t('sum1Prefix', { max: (config.filterWarnBeforeTimeout ?? 3) - 1 })} <span className="text-yellow-400">{t('deleteWarn')}</span></p>
                 <p>{t('sum2Prefix', { from: config.filterWarnBeforeTimeout ?? 3, to: (config.filterWarnBeforeKick ?? 5) - 1 })} <span className="text-orange-400">{t('timeoutLabel', { min: Math.ceil((config.filterTimeoutDuration ?? 300) / 60) })}</span></p>
                 <p>{t('sum3Prefix', { n: config.filterWarnBeforeKick ?? 5 })} <span className="text-red-400">{t('kickLabel')}</span></p>
@@ -361,7 +361,7 @@ export default function AutoModPage() {
             </div>
 
             {/* Custom messages */}
-            <div className="border-t border-[var(--border-subtle)] pt-4 space-y-4">
+            <div className="border-t border-(--border-subtle) pt-4 space-y-4">
               <p className="text-sm font-medium text-white">{t('messages')}</p>
               <p className="text-xs text-gray-500 -mt-2">
                 {t('variablesLabel')} <code className="text-gray-400">{'{user}'}</code> <code className="text-gray-400">{'{count}'}</code> <code className="text-gray-400">{'{server}'}</code>
@@ -621,7 +621,7 @@ export default function AutoModPage() {
               return (
                 <span
                   key={roleId}
-                  className="inline-flex items-center gap-1 bg-discord-blurple/20 text-discord-blurple border border-discord-blurple/40 rounded px-2 py-0.5 text-xs"
+                  className="inline-flex items-center gap-1 bg-discord-blurple/20 text-discord-blurple border border-discord-blurple/40 rounded-sm px-2 py-0.5 text-xs"
                 >
                   @{role?.name ?? roleId}
                   <button onClick={() => toggleExemptRole(roleId)} className="hover:text-white ml-1"><X className="w-3 h-3" /></button>
@@ -658,7 +658,7 @@ export default function AutoModPage() {
               return (
                 <span
                   key={channelId}
-                  className="inline-flex items-center gap-1 bg-green-900/30 text-green-400 border border-green-700/50 rounded px-2 py-0.5 text-xs"
+                  className="inline-flex items-center gap-1 bg-green-900/30 text-green-400 border border-green-700/50 rounded-sm px-2 py-0.5 text-xs"
                 >
                   #{channel?.name ?? channelId}
                   <button onClick={() => toggleExemptChannel(channelId)} className="hover:text-white ml-1"><X className="w-3 h-3" /></button>

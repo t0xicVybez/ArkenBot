@@ -31,7 +31,7 @@ export default function GameAdminPage() {
       </div>
 
       {isLoading ? (
-        <div className="card space-y-3">{[...Array(3)].map((_, i) => <div key={i} className="h-12 bg-gray-700 rounded animate-pulse" />)}</div>
+        <div className="card space-y-3">{[...Array(3)].map((_, i) => <div key={i} className="h-12 bg-gray-700 rounded-sm animate-pulse" />)}</div>
       ) : !d?.installed ? (
         <div className="card text-center text-gray-400 py-8">{t('notInstalled')}</div>
       ) : (
@@ -49,7 +49,7 @@ export default function GameAdminPage() {
             {d.servers.length === 0 ? (
               <p className="text-sm text-gray-500 py-4 text-center">{t('empty')}</p>
             ) : (
-              <div className="divide-y divide-[var(--border-subtle)]">
+              <div className="divide-y divide-(--border-subtle)">
                 {d.servers.map((s) => (
                   <div key={s.id} className="py-3">
                     <div className="font-medium text-white">{s.name}</div>
@@ -65,7 +65,7 @@ export default function GameAdminPage() {
             {d.schedules.length === 0 ? (
               <p className="text-sm text-gray-500 py-4 text-center">{t('schedulesEmpty')}</p>
             ) : (
-              <div className="divide-y divide-[var(--border-subtle)]">
+              <div className="divide-y divide-(--border-subtle)">
                 {d.schedules.map((s) => (
                   <div key={s.id} className="flex flex-wrap items-center gap-x-2 gap-y-1 py-3 text-sm">
                     <span className="font-medium text-white">{t(`action.${s.action}`)}</span>

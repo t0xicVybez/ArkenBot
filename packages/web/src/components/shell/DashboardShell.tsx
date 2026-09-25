@@ -83,7 +83,7 @@ export function DashboardShell({
         {/* sidebar: static on md+, off-canvas drawer on mobile */}
         <div
           className={cn(
-            'fixed inset-y-0 left-0 z-50 w-[var(--sidebar-w)] shrink-0 transition-transform duration-200 ease-out md:static md:z-auto md:translate-x-0',
+            'fixed inset-y-0 left-0 z-50 w-(--sidebar-w) shrink-0 transition-transform duration-200 ease-out md:static md:z-auto md:translate-x-0',
             mobileNav ? 'translate-x-0' : '-translate-x-full md:translate-x-0',
           )}
         >

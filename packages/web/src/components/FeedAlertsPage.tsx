@@ -202,8 +202,8 @@ export function FeedAlertsPage({ title, description, icon: Icon, platforms, noti
               onClick={() => setFilter(p.value)}
               className={`text-[11.5px] font-semibold px-3 py-1 rounded-full border transition-colors ${
                 filter === p.value
-                  ? 'bg-[var(--accent-glow)] text-[var(--accent)] border-[var(--accent)]/40'
-                  : 'text-[var(--text-muted)] border-[var(--border)] hover:text-[var(--text-secondary)]'
+                  ? 'bg-(--accent-glow) text-(--accent) border-(--accent)/40'
+                  : 'text-(--text-muted) border-(--border) hover:text-(--text-secondary)'
               }`}
             >
               {p.label}
@@ -310,7 +310,7 @@ export function FeedAlertsPage({ title, description, icon: Icon, platforms, noti
       {/* Alert list — rows, not a table */}
       {visibleAlerts.length > 0 && (
         <div className="card p-0 overflow-hidden">
-          <div className="px-4 py-3 border-b border-[var(--border-subtle)]">
+          <div className="px-4 py-3 border-b border-(--border-subtle)">
             <span className="text-[13px] font-bold text-white">
               {t('alertCount', { count: visibleAlerts.length })}
             </span>
@@ -321,7 +321,7 @@ export function FeedAlertsPage({ title, description, icon: Icon, platforms, noti
             const vis = PLATFORM_VISUALS[alert.platform] ?? { glyph: '•', bg: 'var(--bg-elevated)', fg: 'var(--text-secondary)' };
             const isLive = LIVE_PLATFORMS.has(alert.platform) && !!alert.lastStreamId && alert.enabled;
             return (
-              <div key={alert.id} className="border-b border-[var(--border-subtle)] last:border-0">
+              <div key={alert.id} className="border-b border-(--border-subtle) last:border-0">
                 <div className="group flex items-center gap-3.5 px-4 py-3 hover:bg-white/[0.018] transition-colors">
                   <div
                     className="w-9 h-9 rounded-lg grid place-items-center flex-shrink-0 text-[13px] font-bold"
@@ -331,7 +331,7 @@ export function FeedAlertsPage({ title, description, icon: Icon, platforms, noti
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-[13.5px] font-semibold text-white truncate">{alert.channelUsername}</p>
-                    <p className="text-[12px] text-[var(--text-muted)] truncate">
+                    <p className="text-[12px] text-(--text-muted) truncate">
                       {pc?.label ?? alert.platform} · {t('postsTo')} {ch ? `#${ch.name}` : alert.discordChannelId}
                     </p>
                     {!alert.enabled && alert.lastError && (
@@ -352,7 +352,7 @@ export function FeedAlertsPage({ title, description, icon: Icon, platforms, noti
                     disabled={toggleMutation.isPending}
                   />
                   <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button onClick={() => handleEditOpen(alert)} className="p-1.5 rounded-md text-gray-400 hover:text-white hover:bg-white/[0.06]" title={t('edit')}>
+                    <button onClick={() => handleEditOpen(alert)} className="p-1.5 rounded-md text-gray-400 hover:text-white hover:bg-white/6" title={t('edit')}>
                       <Pencil className="w-3.5 h-3.5" />
                     </button>
                     <button onClick={() => deleteMutation.mutate(alert.id)} disabled={deleteMutation.isPending} className="p-1.5 rounded-md text-gray-500 hover:text-red-400 hover:bg-red-500/10" title={t('delete')}>
@@ -362,7 +362,7 @@ export function FeedAlertsPage({ title, description, icon: Icon, platforms, noti
                 </div>
 
                 {editingId === alert.id && (
-                  <div className="px-4 py-4 bg-[var(--bg-base)]/60 border-t border-[var(--border-subtle)]">
+                  <div className="px-4 py-4 bg-(--bg-base)/60 border-t border-(--border-subtle)">
                     <form onSubmit={handleUpdate} className="space-y-3">
                       <div className="flex items-center justify-between mb-1">
                         <p className="text-sm font-semibold text-white">{t('editAlert')}</p>

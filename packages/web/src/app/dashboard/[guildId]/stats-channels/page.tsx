@@ -96,7 +96,7 @@ export default function StatsChannelsPage() {
         {statsLoading ? (
           <div className="space-y-3">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="h-14 bg-gray-700 rounded animate-pulse" />
+              <div key={i} className="h-14 bg-gray-700 rounded-sm animate-pulse" />
             ))}
           </div>
         ) : statsChannels.length === 0 ? (
@@ -108,7 +108,7 @@ export default function StatsChannelsPage() {
               return (
                 <div
                   key={sc.id}
-                  className="flex items-center justify-between px-4 py-3 rounded-lg bg-[var(--bg-base)] border border-[var(--border-subtle)]"
+                  className="flex items-center justify-between px-4 py-3 rounded-lg bg-(--bg-base) border border-(--border-subtle)"
                 >
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-gray-200">

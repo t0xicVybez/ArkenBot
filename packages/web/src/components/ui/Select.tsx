@@ -8,7 +8,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectHTMLAttributes<HTMLSel
         <select
           ref={ref}
           className={cn(
-            'w-full appearance-none bg-[var(--bg-elevated)] border border-[var(--border)] rounded-[var(--r)] pl-3 pr-9 py-2.5 text-sm text-[var(--text-primary)] outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-glow)]',
+            'w-full appearance-none bg-(--bg-elevated) border border-(--border) rounded-(--r) pl-3 pr-9 py-2.5 text-sm text-(--text-primary) outline-hidden focus:border-(--accent) focus:ring-2 focus:ring-(--accent-glow)',
             className,
           )}
           {...props}
@@ -16,7 +16,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectHTMLAttributes<HTMLSel
           {children}
         </select>
         <svg
-          className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)]"
+          className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-(--text-muted)"
           width="14"
           height="14"
           viewBox="0 0 24 24"

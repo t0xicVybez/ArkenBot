@@ -146,7 +146,7 @@ export default function BirthdaysPage() {
         {birthdaysLoading ? (
           <div className="space-y-2">
             {[...Array(5)].map((_, i) => (
-              <div key={i} className="h-10 bg-gray-700 rounded animate-pulse" />
+              <div key={i} className="h-10 bg-gray-700 rounded-sm animate-pulse" />
             ))}
           </div>
         ) : birthdays.length === 0 ? (
@@ -154,10 +154,10 @@ export default function BirthdaysPage() {
             {t('noBirthdays')}
           </p>
         ) : (
-          <div className="overflow-hidden rounded-lg border border-[var(--border-subtle)]">
+          <div className="overflow-hidden rounded-lg border border-(--border-subtle)">
             <div className="overflow-x-auto">
             <table className="w-full min-w-[500px]">
-              <thead className="bg-[var(--bg-base)]">
+              <thead className="bg-(--bg-base)">
                 <tr>
                   <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colUser')}</th>
                   <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colMonth')}</th>
@@ -165,9 +165,9 @@ export default function BirthdaysPage() {
                   <th className="px-4 py-3" />
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[var(--border-subtle)]">
+              <tbody className="divide-y divide-(--border-subtle)">
                 {birthdays.map((b) => (
-                  <tr key={b.userId} className="hover:bg-white/[0.02] transition-colors">
+                  <tr key={b.userId} className="hover:bg-white/2 transition-colors">
                     <td className="px-4 py-3 text-sm text-gray-300">{b.username}</td>
                     <td className="px-4 py-3 text-sm text-gray-200">{b.month >= 1 && b.month <= 12 ? t(`month_${b.month}`) : b.month}</td>
                     <td className="px-4 py-3 text-sm text-gray-200">{b.day}</td>

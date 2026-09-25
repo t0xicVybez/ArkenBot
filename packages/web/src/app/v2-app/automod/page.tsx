@@ -41,7 +41,7 @@ export default function AutoModPage() {
             <h1 className="text-[23px] font-semibold" style={{ fontFamily: 'var(--font-display)' }}>
               Auto-Moderation
             </h1>
-            <p className="mt-1 text-[13.5px] text-[var(--text-secondary)]">
+            <p className="mt-1 text-[13.5px] text-(--text-secondary)">
               Automatically scan messages and act on spam, filtered words, and malicious links.
             </p>
           </div>
@@ -52,17 +52,17 @@ export default function AutoModPage() {
             description="Delete messages containing blocked words, then warn — escalating to timeout on repeat."
             control={<Switch checked={s.word} onChange={(v) => set('word', v)} />}
           >
-            <div className="text-[12px] font-semibold text-[var(--text-secondary)]">Blocked terms · 12</div>
+            <div className="text-[12px] font-semibold text-(--text-secondary)">Blocked terms · 12</div>
             <div className="mt-2 flex flex-wrap gap-2">
               {['scam', 'free nitro', 'airdrop'].map((t) => (
                 <span
                   key={t}
-                  className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-elevated)] px-2.5 py-1 text-[12px]"
+                  className="rounded-[7px] border border-(--border) bg-(--bg-elevated) px-2.5 py-1 text-[12px]"
                 >
                   {t}
                 </span>
               ))}
-              <span className="rounded-[7px] border border-dashed border-[var(--border)] px-2.5 py-1 text-[12px] text-[var(--text-muted)]">
+              <span className="rounded-[7px] border border-dashed border-(--border) px-2.5 py-1 text-[12px] text-(--text-muted)">
                 + Add term
               </span>
             </div>
@@ -74,7 +74,7 @@ export default function AutoModPage() {
             description="Trigger when a member sends too many messages in a short window."
             control={<Switch checked={s.spam} onChange={(v) => set('spam', v)} />}
           >
-            <div className="text-[12px] font-semibold text-[var(--text-secondary)]">
+            <div className="text-[12px] font-semibold text-(--text-secondary)">
               Threshold · {s.threshold} messages / 5s
             </div>
             <input
@@ -86,7 +86,7 @@ export default function AutoModPage() {
               className="mt-3 w-full"
               style={{ accentColor: 'var(--accent)' }}
             />
-            <div className="mt-1 flex justify-between text-[11px] text-[var(--text-muted)]">
+            <div className="mt-1 flex justify-between text-[11px] text-(--text-muted)">
               <span>Relaxed</span>
               <span>Strict</span>
             </div>
@@ -98,7 +98,7 @@ export default function AutoModPage() {
             description="Detect and remove known scam / phishing domains automatically."
             control={<Switch checked={s.phish} onChange={(v) => set('phish', v)} />}
           >
-            <div className="mb-2 text-[12px] font-semibold text-[var(--text-secondary)]">On detection</div>
+            <div className="mb-2 text-[12px] font-semibold text-(--text-secondary)">On detection</div>
             <Select value={s.action} onChange={(e) => set('action', e.target.value)}>
               <option value="delete">Delete message</option>
               <option value="timeout">Delete message + timeout 10 min</option>
@@ -128,7 +128,7 @@ export default function AutoModPage() {
                   <div>
                     <div>
                       <span className="font-bold">riskyuser</span>
-                      <span className="ml-1.5 text-[11px] text-[var(--text-muted)]">Today at 4:02 PM</span>
+                      <span className="ml-1.5 text-[11px] text-(--text-muted)">Today at 4:02 PM</span>
                     </div>
                     <div className="mt-0.5 text-[#b8bcc4]">
                       <span className="text-[#6b7178] line-through">
@@ -149,9 +149,9 @@ export default function AutoModPage() {
                       <span className="ml-1.5 rounded-[4px] bg-[#5865f2] px-1.5 py-px text-[9.5px] font-bold text-white">
                         APP
                       </span>
-                      <span className="ml-1.5 text-[11px] text-[var(--text-muted)]">Today at 4:02 PM</span>
+                      <span className="ml-1.5 text-[11px] text-(--text-muted)">Today at 4:02 PM</span>
                     </div>
-                    <div className="mt-1.5 rounded-[6px] border-l-[3px] border-[var(--danger)] bg-[var(--danger-soft)] px-3 py-2.5">
+                    <div className="mt-1.5 rounded-[6px] border-l-[3px] border-(--danger) bg-(--danger-soft) px-3 py-2.5">
                       <div className="text-[13px] font-semibold text-[#ffd7d7]">Message removed · @riskyuser</div>
                       <div className="mt-0.5 text-[12px] text-[#c9a3a3]">
                         {s.phish ? 'Filtered word + phishing link' : 'Filtered word'} · violation #1.
@@ -161,7 +161,7 @@ export default function AutoModPage() {
                   </div>
                 </div>
               </div>
-              <p className="mt-3 text-[11.5px] leading-relaxed text-[var(--text-muted)]">
+              <p className="mt-3 text-[11.5px] leading-relaxed text-(--text-muted)">
                 This is exactly what members and your mod-log will see with the current settings.
               </p>
             </LivePreview>

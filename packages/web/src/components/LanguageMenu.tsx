@@ -56,7 +56,7 @@ export function LanguageMenu({ className }: { className?: string }) {
         aria-label={t('label')}
         aria-haspopup="listbox"
         aria-expanded={open}
-        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-white/[0.04] transition-colors disabled:opacity-60"
+        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-sm text-(--text-secondary) hover:text-(--text-primary) hover:bg-white/4 transition-colors disabled:opacity-60"
       >
         <Globe className="w-4 h-4" />
         <span className="hidden sm:inline">{current?.native}</span>
@@ -65,7 +65,7 @@ export function LanguageMenu({ className }: { className?: string }) {
       {open && (
         <div
           role="listbox"
-          className="absolute right-0 mt-1 min-w-[11rem] max-h-[70vh] overflow-y-auto rounded-lg border border-[var(--border)] bg-[var(--bg-elevated)] py-1 shadow-xl z-50"
+          className="absolute right-0 mt-1 min-w-44 max-h-[70vh] overflow-y-auto rounded-lg border border-(--border) bg-(--bg-elevated) py-1 shadow-xl z-50"
         >
           {LOCALES.map((l) => {
             const active = l.code === locale;
@@ -79,11 +79,11 @@ export function LanguageMenu({ className }: { className?: string }) {
                 className={clsx(
                   'flex w-full items-center justify-between gap-3 px-3 py-2 text-sm text-left transition-colors',
                   active
-                    ? 'text-white bg-white/[0.06]'
-                    : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-white/[0.04]',
+                    ? 'text-white bg-white/6'
+                    : 'text-(--text-secondary) hover:text-(--text-primary) hover:bg-white/4',
                 )}
               >
-                <span>{l.native} <span className="text-[var(--text-muted)]">({l.name})</span></span>
+                <span>{l.native} <span className="text-(--text-muted)">({l.name})</span></span>
                 {active && <Check className="w-3.5 h-3.5 shrink-0 text-discord-blurple" />}
               </button>
             );

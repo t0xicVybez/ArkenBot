@@ -119,7 +119,7 @@ export default function LeaderboardDashboardPage() {
 
       {/* Period selector + Reset */}
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-        <div className="flex gap-1.5 bg-[var(--bg-base)] rounded-lg p-1">
+        <div className="flex gap-1.5 bg-(--bg-base) rounded-lg p-1">
           {(['all', 'weekly', 'monthly'] as Period[]).map((p) => (
             <button
               key={p}
@@ -145,7 +145,7 @@ export default function LeaderboardDashboardPage() {
         ) : (
           <button
             onClick={() => setConfirmReset(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs bg-white/[0.06] text-gray-400 hover:text-red-400 rounded-lg transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs bg-white/6 text-gray-400 hover:text-red-400 rounded-lg transition-colors"
           >
             <RotateCcw className="w-3 h-3" />
             {t('resetInactive')}
@@ -169,10 +169,10 @@ export default function LeaderboardDashboardPage() {
 
       {/* Loading */}
       {isLoading && (
-        <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl overflow-hidden">
+        <div className="bg-(--bg-card) border border-(--border-subtle) rounded-xl overflow-hidden">
           {[...Array(10)].map((_, i) => (
-            <div key={i} className="px-4 py-3 border-b border-white/[0.04] last:border-0 animate-pulse">
-              <div className="h-4 bg-gray-700/50 rounded w-1/2" />
+            <div key={i} className="px-4 py-3 border-b border-white/4 last:border-0 animate-pulse">
+              <div className="h-4 bg-gray-700/50 rounded-sm w-1/2" />
             </div>
           ))}
         </div>
@@ -180,7 +180,7 @@ export default function LeaderboardDashboardPage() {
 
       {/* Error */}
       {isError && (
-        <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl text-center py-12">
+        <div className="bg-(--bg-card) border border-(--border-subtle) rounded-xl text-center py-12">
           <Trophy className="w-10 h-10 text-gray-600 mx-auto mb-3" />
           <p className="text-gray-400">{t('unavailable')}</p>
           <p className="text-gray-600 text-sm mt-1">{t('unavailableHint')}</p>
@@ -189,7 +189,7 @@ export default function LeaderboardDashboardPage() {
 
       {/* Empty */}
       {!isLoading && !isError && allEntries.length === 0 && (
-        <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl text-center py-12">
+        <div className="bg-(--bg-card) border border-(--border-subtle) rounded-xl text-center py-12">
           <Star className="w-10 h-10 text-gray-600 mx-auto mb-3" />
           <p className="text-gray-400">{t('noRanked')}</p>
           <p className="text-gray-600 text-sm mt-1">{t('noRankedHint')}</p>
@@ -198,17 +198,17 @@ export default function LeaderboardDashboardPage() {
 
       {/* Entries */}
       {!isLoading && !isError && entries.length > 0 && (
-        <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl overflow-hidden">
+        <div className="bg-(--bg-card) border border-(--border-subtle) rounded-xl overflow-hidden">
           <div className="overflow-x-auto">
           {/* Table header */}
-          <div className="grid grid-cols-[2rem_1fr_6rem_5rem] gap-4 px-4 py-2.5 bg-[var(--bg-base)] border-b border-white/[0.06] min-w-[340px]">
+          <div className="grid grid-cols-[2rem_1fr_6rem_5rem] gap-4 px-4 py-2.5 bg-(--bg-base) border-b border-white/6 min-w-[340px]">
             <span className="text-xs font-medium text-gray-400 uppercase">#</span>
             <span className="text-xs font-medium text-gray-400 uppercase">{t('colMember')}</span>
             <span className="text-xs font-medium text-gray-400 uppercase text-right">{t('colLevel')}</span>
             <span className="text-xs font-medium text-gray-400 uppercase text-right">{t('colMessages')}</span>
           </div>
 
-          <div className="divide-y divide-white/[0.04] min-w-[340px]">
+          <div className="divide-y divide-white/4 min-w-[340px]">
             {entries.map((entry) => {
               const pct = entry.xpForNext > 0
                 ? Math.min(100, Math.round((entry.xpIntoLevel / entry.xpForNext) * 100))
@@ -218,7 +218,7 @@ export default function LeaderboardDashboardPage() {
               return (
                 <div
                   key={entry.userId}
-                  className={`grid grid-cols-[2rem_1fr_6rem_5rem] gap-4 px-4 py-3 items-center transition-colors hover:bg-white/[0.02] ${
+                  className={`grid grid-cols-[2rem_1fr_6rem_5rem] gap-4 px-4 py-3 items-center transition-colors hover:bg-white/2 ${
                     top3 ? `${top3.bg} ring-inset ring-1 ${top3.ring}` : ''
                   }`}
                 >
@@ -267,7 +267,7 @@ export default function LeaderboardDashboardPage() {
 
           {/* Pagination footer */}
           {(page > 1 || hasMore) && (
-            <div className="px-4 py-3 border-t border-white/[0.06] flex items-center justify-between">
+            <div className="px-4 py-3 border-t border-white/6 flex items-center justify-between">
               <p className="text-xs text-gray-400">
                 {t('showing', { from: pageStart.toLocaleString(), to: pageEnd.toLocaleString(), total: total.toLocaleString() })}
               </p>
@@ -294,7 +294,7 @@ export default function LeaderboardDashboardPage() {
 
       {/* Search no results */}
       {!isLoading && !isError && allEntries.length > 0 && entries.length === 0 && (
-        <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl text-center py-12">
+        <div className="bg-(--bg-card) border border-(--border-subtle) rounded-xl text-center py-12">
           <Search className="w-8 h-8 text-gray-600 mx-auto mb-2" />
           <p className="text-gray-400">{t('noMatch', { search })}</p>
         </div>

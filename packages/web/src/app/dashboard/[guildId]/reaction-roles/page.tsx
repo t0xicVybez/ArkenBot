@@ -215,7 +215,7 @@ export default function ReactionRolesPage() {
           const isFormValid = roleForm.emoji.trim() && roleForm.roleId;
 
           return (
-            <div key={panel.id} className="card border border-[var(--border-subtle)]">
+            <div key={panel.id} className="card border border-(--border-subtle)">
               <button
                 className="w-full flex items-center justify-between p-4 text-left"
                 onClick={() => togglePanel(panel.id)}
@@ -250,7 +250,7 @@ export default function ReactionRolesPage() {
               </button>
 
               {expanded && (
-                <div className="px-4 pb-4 space-y-4 border-t border-[var(--border-subtle)] pt-4">
+                <div className="px-4 pb-4 space-y-4 border-t border-(--border-subtle) pt-4">
                   <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <div>
                       <label className="label">{t('titleLabel')}</label>
@@ -282,7 +282,7 @@ export default function ReactionRolesPage() {
                       {panel.roles.map((r) => (
                         <div
                           key={r.id}
-                          className="flex items-center justify-between bg-[var(--bg-base)] rounded-lg px-3 py-2"
+                          className="flex items-center justify-between bg-(--bg-base) rounded-lg px-3 py-2"
                         >
                           <div className="flex items-center gap-3">
                             <span className="text-xl leading-none">{r.emoji}</span>

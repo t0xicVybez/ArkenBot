@@ -76,8 +76,8 @@ export default function SelfRolesPage() {
         <div className="min-w-0">
           <h1>{t('title')}</h1>
           <div className="page-head-desc">{t.rich('description', {
-            assign: (c) => <code className="bg-gray-700 px-1 rounded text-xs">{c}</code>,
-            remove: (c) => <code className="bg-gray-700 px-1 rounded text-xs">{c}</code>,
+            assign: (c) => <code className="bg-gray-700 px-1 rounded-sm text-xs">{c}</code>,
+            remove: (c) => <code className="bg-gray-700 px-1 rounded-sm text-xs">{c}</code>,
           })}</div>
         </div>
       </div>
@@ -111,7 +111,7 @@ export default function SelfRolesPage() {
               onChange={(e) => setForm((f) => ({ ...f, name: e.target.value.toLowerCase().replace(/\s+/g, '-') }))}
             />
             <p className="text-xs text-gray-500 mt-1">{t.rich('willRun', {
-              code: (c) => <code className="bg-gray-700 px-1 rounded">{c}</code>,
+              code: (c) => <code className="bg-gray-700 px-1 rounded-sm">{c}</code>,
               name: form.name || t('namePlaceholder'),
             })}</p>
           </div>
@@ -134,11 +134,11 @@ export default function SelfRolesPage() {
               return (
                 <div
                   key={sr.id}
-                  className="flex items-center justify-between bg-[var(--bg-base)] rounded-lg px-4 py-3"
+                  className="flex items-center justify-between bg-(--bg-base) rounded-lg px-4 py-3"
                 >
                   <div>
                     <p className="text-white text-sm font-medium">
-                      <code className="bg-gray-700 px-1.5 py-0.5 rounded text-xs mr-2">{sr.name}</code>
+                      <code className="bg-gray-700 px-1.5 py-0.5 rounded-sm text-xs mr-2">{sr.name}</code>
                       {roleName ? (
                         <span className="text-gray-300">@{roleName}</span>
                       ) : (

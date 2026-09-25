@@ -19,13 +19,13 @@ export function SettingCard({
   return (
     <div
       className={cn(
-        'bg-[var(--bg-card)] border border-[var(--border)] rounded-[var(--r-lg)] p-4',
+        'bg-(--bg-card) border border-(--border) rounded-(--r-lg) p-4',
         className,
       )}
     >
       <div className="flex items-start gap-3">
         {icon && (
-          <div className="flex-none w-9 h-9 rounded-[var(--r)] bg-[var(--bg-elevated)] grid place-items-center text-[var(--accent)]">
+          <div className="flex-none w-9 h-9 rounded-(--r) bg-(--bg-elevated) grid place-items-center text-(--accent)">
             {icon}
           </div>
         )}
@@ -34,7 +34,7 @@ export function SettingCard({
             {title}
           </h3>
           {description && (
-            <p className="mt-0.5 text-[13px] leading-snug text-[var(--text-secondary)]">
+            <p className="mt-0.5 text-[13px] leading-snug text-(--text-secondary)">
               {description}
             </p>
           )}
@@ -42,7 +42,7 @@ export function SettingCard({
         {control && <div className="flex-none">{control}</div>}
       </div>
       {children && (
-        <div className="mt-3.5 pt-3.5 border-t border-[var(--border)]">{children}</div>
+        <div className="mt-3.5 pt-3.5 border-t border-(--border)">{children}</div>
       )}
     </div>
   );

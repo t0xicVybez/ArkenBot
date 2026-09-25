@@ -62,7 +62,7 @@ export default function AppealsPage() {
       <div className="flex gap-2 mb-4">
         {(['pending', 'approved', 'denied', 'all'] as const).map((f) => (
           <button key={f} onClick={() => setFilter(f)}
-            className={`text-sm px-3 py-1.5 rounded-lg border ${filter === f ? 'bg-discord-blurple/20 border-discord-blurple text-white' : 'border-[var(--border-subtle)] text-[var(--text-muted)]'}`}>
+            className={`text-sm px-3 py-1.5 rounded-lg border ${filter === f ? 'bg-discord-blurple/20 border-discord-blurple text-white' : 'border-(--border-subtle) text-(--text-muted)'}`}>
             {t(`filter.${f}`)}
           </button>
         ))}
@@ -87,7 +87,7 @@ export default function AppealsPage() {
                 </div>
                 {a.status === 'pending' && (
                   <div className="flex gap-2 shrink-0">
-                    <button className="btn-primary !bg-green-600 hover:!bg-green-700 flex items-center gap-1 text-sm" disabled={decide.isPending}
+                    <button className="btn-primary bg-green-600! hover:bg-green-700! flex items-center gap-1 text-sm" disabled={decide.isPending}
                       onClick={() => decide.mutate({ id: a.id, action: 'approve' })}>
                       <Check className="w-4 h-4" /> {t('approve')}
                     </button>

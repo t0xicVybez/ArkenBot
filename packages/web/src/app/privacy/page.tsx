@@ -25,8 +25,8 @@ const CONTACT_EMAIL = 'support@arkenbot.app';
 function Section({ id, title, children }: { id: string; title: string; children: ReactNode }) {
   return (
     <section id={id} className="mb-10">
-      <h2 className="text-lg font-semibold text-white mb-3 pb-2 border-b border-[var(--border-subtle)]">{title}</h2>
-      <div className="space-y-3 text-sm text-[var(--text-secondary)] leading-relaxed">{children}</div>
+      <h2 className="text-lg font-semibold text-white mb-3 pb-2 border-b border-(--border-subtle)">{title}</h2>
+      <div className="space-y-3 text-sm text-(--text-secondary) leading-relaxed">{children}</div>
     </section>
   );
 }
@@ -43,23 +43,23 @@ const fmt = {
   b: (chunks: ReactNode) => <span className="text-white font-medium">{chunks}</span>,
   w: (chunks: ReactNode) => <span className="text-white">{chunks}</span>,
   strong: (chunks: ReactNode) => <strong>{chunks}</strong>,
-  code: (chunks: ReactNode) => <code className="text-xs bg-white/10 px-1 py-0.5 rounded">{chunks}</code>,
+  code: (chunks: ReactNode) => <code className="text-xs bg-white/10 px-1 py-0.5 rounded-sm">{chunks}</code>,
 };
 
 export default async function PrivacyPage() {
   const t = await getTranslations('privacyPage');
 
   return (
-    <div className="min-h-screen bg-[var(--bg-base)] text-[var(--text-primary)]">
+    <div className="min-h-screen bg-(--bg-base) text-(--text-primary)">
       <LandingNav docsUrl={SITE.docsUrl} supportUrl={SITE.supportUrl} inviteUrl={SITE.inviteUrl} />
 
       <main className="max-w-3xl mx-auto px-6 py-16">
         <div className="mb-10">
           <h1 className="text-3xl font-bold text-white mb-2">{t('title')}</h1>
-          <p className="text-sm text-[var(--text-muted)]">{t('lastUpdated', { date: LAST_UPDATED })}</p>
+          <p className="text-sm text-(--text-muted)">{t('lastUpdated', { date: LAST_UPDATED })}</p>
         </div>
 
-        <p className="text-sm text-[var(--text-secondary)] leading-relaxed mb-10">
+        <p className="text-sm text-(--text-secondary) leading-relaxed mb-10">
           {t.rich('intro', { ...fmt, site: extLink('https://arkenbot.app') })}
         </p>
 

@@ -104,13 +104,13 @@ export default function SlowmodePage() {
       </div>
 
       <div className="card mb-6 p-0 overflow-hidden">
-        <div className="px-4 py-3 border-b border-[var(--border-subtle)]">
+        <div className="px-4 py-3 border-b border-(--border-subtle)">
           <h2 className="text-lg font-semibold text-white">{t('listTitle')}</h2>
         </div>
         {isLoading ? (
           <div className="p-4 space-y-3">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="h-12 bg-gray-700 rounded animate-pulse" />
+              <div key={i} className="h-12 bg-gray-700 rounded-sm animate-pulse" />
             ))}
           </div>
         ) : configs.length === 0 ? (
@@ -121,7 +121,7 @@ export default function SlowmodePage() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-[var(--bg-base)]">
+              <thead className="bg-(--bg-base)">
                 <tr>
                   <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colChannel')}</th>
                   <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colThreshold')}</th>
@@ -132,9 +132,9 @@ export default function SlowmodePage() {
                   <th className="px-4 py-3" />
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[var(--border-subtle)]">
+              <tbody className="divide-y divide-(--border-subtle)">
                 {configs.map((cfg) => (
-                  <tr key={cfg.id} className="hover:bg-white/[0.02] transition-colors">
+                  <tr key={cfg.id} className="hover:bg-white/2 transition-colors">
                     <td className="px-4 py-3 text-sm text-gray-200">{getChannelName(cfg.channelId)}</td>
                     <td className="px-4 py-3 text-sm text-gray-400">{t('msgsValue', { count: cfg.threshold })}</td>
                     <td className="px-4 py-3 text-sm text-gray-400">{cfg.window}s</td>

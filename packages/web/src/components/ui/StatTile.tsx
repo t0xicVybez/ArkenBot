@@ -18,18 +18,18 @@ export function StatTile({
 }) {
   const tone =
     trendTone === 'down'
-      ? 'text-[var(--danger)]'
+      ? 'text-(--danger)'
       : trendTone === 'flat'
-        ? 'text-[var(--text-secondary)]'
-        : 'text-[var(--accent)]';
+        ? 'text-(--text-secondary)'
+        : 'text-(--accent)';
   return (
     <div
       className={cn(
-        'bg-[var(--bg-card)] border border-[var(--border)] rounded-[var(--r-lg)] p-4',
+        'bg-(--bg-card) border border-(--border) rounded-(--r-lg) p-4',
         className,
       )}
     >
-      <div className="flex items-center gap-2 text-[12.5px] font-semibold text-[var(--text-secondary)]">
+      <div className="flex items-center gap-2 text-[12.5px] font-semibold text-(--text-secondary)">
         {icon}
         {label}
       </div>

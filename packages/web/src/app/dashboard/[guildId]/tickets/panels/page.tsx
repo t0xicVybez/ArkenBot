@@ -86,7 +86,7 @@ function StaffRolesInput({ roles, onChange }: { roles: string[]; onChange: (role
       {roles.length > 0 && (
         <div className="flex flex-wrap gap-1.5">
           {roles.map((id) => (
-            <span key={id} className="flex items-center gap-1 bg-gray-700/50 text-gray-200 text-xs font-mono rounded px-2 py-1">
+            <span key={id} className="flex items-center gap-1 bg-gray-700/50 text-gray-200 text-xs font-mono rounded-sm px-2 py-1">
               {id}
               <button type="button" onClick={() => onChange(roles.filter((r) => r !== id))} className="text-gray-500 hover:text-red-400 ml-1">×</button>
             </span>
@@ -124,11 +124,11 @@ function EmbedPreview({ draft }: { draft: PanelDraft }) {
           <p className="text-white font-bold text-sm mb-1">
             {draft.emoji ? `${draft.emoji} ` : ''}{draft.name || t('panelNameFallback')}
           </p>
-          <p className="text-[#dcddde] text-xs leading-relaxed whitespace-pre-wrap break-words">
+          <p className="text-[#dcddde] text-xs leading-relaxed whitespace-pre-wrap wrap-break-word">
             {draft.description || t('descFallback')}
           </p>
           {draft.embedImageUrl && (
-            <img src={draft.embedImageUrl} alt="embed" className="mt-2 max-w-full rounded max-h-48 object-cover" />
+            <img src={draft.embedImageUrl} alt="embed" className="mt-2 max-w-full rounded-sm max-h-48 object-cover" />
           )}
           {(draft.embedFooterText) && (
             <div className="flex items-center gap-1 mt-2">
@@ -138,7 +138,7 @@ function EmbedPreview({ draft }: { draft: PanelDraft }) {
           )}
         </div>
         {draft.embedThumbnailUrl && (
-          <img src={draft.embedThumbnailUrl} alt="thumb" className="w-16 h-16 rounded object-cover flex-shrink-0" />
+          <img src={draft.embedThumbnailUrl} alt="thumb" className="w-16 h-16 rounded-sm object-cover flex-shrink-0" />
         )}
       </div>
       {/* Buttons */}
@@ -146,7 +146,7 @@ function EmbedPreview({ draft }: { draft: PanelDraft }) {
         {activeButtons.map((b) => (
           <button
             key={b.id}
-            className="px-3 py-1.5 rounded text-white text-xs font-medium"
+            className="px-3 py-1.5 rounded-sm text-white text-xs font-medium"
             style={{ background: btnHex(b.color) }}
           >
             {b.emoji ? `${b.emoji} ` : ''}{b.label}
@@ -171,7 +171,7 @@ function ButtonStaffRoles({ roles, onChange }: { roles: string[]; onChange: (r: 
   return (
     <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
       {roles.map((id) => (
-        <span key={id} className="flex items-center gap-1 bg-gray-600/50 text-gray-300 text-xs font-mono rounded px-1.5 py-0.5">
+        <span key={id} className="flex items-center gap-1 bg-gray-600/50 text-gray-300 text-xs font-mono rounded-sm px-1.5 py-0.5">
           {id}
           <button type="button" onClick={() => onChange(roles.filter((r) => r !== id))} className="text-gray-500 hover:text-red-400">×</button>
         </span>
@@ -360,7 +360,7 @@ function PanelForm({
       {/* Left: form */}
       <div className="flex-1 min-w-0 space-y-4 overflow-y-auto pr-1">
         {/* Tab bar */}
-        <div className="flex gap-1 border-b border-[var(--border-subtle)] pb-0">
+        <div className="flex gap-1 border-b border-(--border-subtle) pb-0">
           {tabs.map((tab) => (
             <button
               key={tab}
@@ -397,7 +397,7 @@ function PanelForm({
                 <div className="flex gap-2 items-center">
                   <input
                     type="color"
-                    className="w-9 h-9 rounded cursor-pointer border-0 bg-transparent"
+                    className="w-9 h-9 rounded-sm cursor-pointer border-0 bg-transparent"
                     value={draft.embedColor ?? '#5865F2'}
                     onChange={(e) => set('embedColor', e.target.value)}
                   />
@@ -442,7 +442,7 @@ function PanelForm({
             </p>
 
             {(draft.buttons ?? []).length === 0 && (
-              <div className="space-y-3 border border-[var(--border-subtle)] rounded-lg p-3">
+              <div className="space-y-3 border border-(--border-subtle) rounded-lg p-3">
                 <p className="text-gray-500 text-xs uppercase tracking-wider">{t('defaultButton')}</p>
                 <div className="grid grid-cols-2 gap-3">
                   <Row label={t('buttonLabelLabel')}>
@@ -568,7 +568,7 @@ function PanelForm({
                 <span className="text-gray-300 text-sm">{draft.enabled ? t('enabledOn') : t('disabledOff')}</span>
               </label>
             </Row>
-            <div className="pt-2 border-t border-[var(--border-subtle)]">
+            <div className="pt-2 border-t border-(--border-subtle)">
               <p className="text-gray-500 text-xs mb-2">{t('discordIdsHint')}</p>
               <div className="grid grid-cols-1 gap-2">
                 {[
@@ -590,7 +590,7 @@ function PanelForm({
         )}
 
         {/* Save / Cancel */}
-        <div className="flex gap-3 pt-2 border-t border-[var(--border-subtle)] sticky bottom-0 bg-discord-dark-bg py-3">
+        <div className="flex gap-3 pt-2 border-t border-(--border-subtle) sticky bottom-0 bg-discord-dark-bg py-3">
           <button
             onClick={() => saveMutation.mutate()}
             disabled={saveMutation.isPending || !draft.name.trim() || !draft.description.trim()}
@@ -609,7 +609,7 @@ function PanelForm({
         <div className="card text-xs text-gray-500 space-y-1">
           <p>{t('previewNote1')}</p>
           <p>{t('previewNote2')}</p>
-          <code className="block bg-gray-700/40 rounded px-2 py-1 text-discord-blurple font-mono">/ticket-setup panel send</code>
+          <code className="block bg-gray-700/40 rounded-sm px-2 py-1 text-discord-blurple font-mono">/ticket-setup panel send</code>
         </div>
       </div>
     </div>
@@ -717,7 +717,7 @@ export default function PanelsPage() {
       {/* Slash command reminder */}
       <div className="card border-gray-700/30 bg-gray-700/10 text-sm text-gray-400 space-y-1">
         <p className="text-gray-300 font-medium">{t('reminderTitle')}</p>
-        <p>{t.rich('reminderText', { code: (c) => <code className="bg-gray-700/60 px-1.5 rounded text-discord-blurple font-mono">{c}</code> })}</p>
+        <p>{t.rich('reminderText', { code: (c) => <code className="bg-gray-700/60 px-1.5 rounded-sm text-discord-blurple font-mono">{c}</code> })}</p>
       </div>
     </div>
   );
@@ -768,7 +768,7 @@ function PanelCard({ panel, onEdit, onDelete }: { panel: TicketPanel; onEdit: ()
       )}
 
       {/* Actions */}
-      <div className="flex gap-2 pt-1 border-t border-[var(--border-subtle)]">
+      <div className="flex gap-2 pt-1 border-t border-(--border-subtle)">
         <button onClick={onEdit} className="btn-secondary flex-1 text-xs py-1.5 flex items-center justify-center gap-1.5">
           <Edit className="w-3 h-3" /> {t('edit')}
         </button>
@@ -782,7 +782,7 @@ function PanelCard({ panel, onEdit, onDelete }: { panel: TicketPanel; onEdit: ()
 
 function Chip({ label, value }: { label: string; value: string }) {
   return (
-    <div className="bg-gray-700/30 rounded p-1.5 text-center">
+    <div className="bg-gray-700/30 rounded-sm p-1.5 text-center">
       <p className="text-gray-500">{label}</p>
       <p className="text-gray-200 font-medium truncate">{value}</p>
     </div>

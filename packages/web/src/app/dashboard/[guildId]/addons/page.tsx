@@ -211,7 +211,7 @@ function AddonSettingsModal({
                 <div className="flex items-center gap-3">
                   <input
                     type="color"
-                    className="w-10 h-10 rounded cursor-pointer border-0 bg-transparent"
+                    className="w-10 h-10 rounded-sm cursor-pointer border-0 bg-transparent"
                     value={String(values[field.key] ?? '#5865F2')}
                     onChange={(e) => set(field.key, e.target.value)}
                   />
@@ -241,7 +241,7 @@ function AddonSettingsModal({
         </div>
 
         {/* Footer */}
-        <div className="flex gap-3 mt-6 pt-4 border-t border-[var(--border-subtle)]">
+        <div className="flex gap-3 mt-6 pt-4 border-t border-(--border-subtle)">
           <button
             onClick={() => saveMutation.mutate()}
             disabled={saveMutation.isPending}

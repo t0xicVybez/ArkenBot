@@ -89,12 +89,12 @@ export default function AuditLogPage() {
               }
               return groups.map((group) => (
                 <div key={group.day}>
-                  <div className="px-4 pt-4 pb-1.5 text-[10.5px] font-bold uppercase tracking-widest text-[var(--text-muted)]">{group.day}</div>
+                  <div className="px-4 pt-4 pb-1.5 text-[10.5px] font-bold uppercase tracking-widest text-(--text-muted)">{group.day}</div>
                   {group.items.map((entry) => {
                     const initials = (entry.username ?? '??').slice(0, 2);
                     return (
-                      <div key={entry.id} className="flex items-start gap-3 px-4 py-2.5 border-b border-[var(--border-subtle)] last:border-0">
-                        <div className="w-7 h-7 rounded-full grid place-items-center flex-shrink-0 text-[10px] font-extrabold bg-[var(--accent-glow)] text-[var(--accent)]">
+                      <div key={entry.id} className="flex items-start gap-3 px-4 py-2.5 border-b border-(--border-subtle) last:border-0">
+                        <div className="w-7 h-7 rounded-full grid place-items-center flex-shrink-0 text-[10px] font-extrabold bg-(--accent-glow) text-(--accent)">
                           {initials}
                         </div>
                         <div className="flex-1 min-w-0 text-[13px]">
@@ -103,9 +103,9 @@ export default function AuditLogPage() {
                             {methodVerb(entry.method)}
                           </span>{' '}
                           <span className="text-gray-300">{humanizeSection(entry.section)}</span>
-                          <div className="font-mono text-[10.5px] text-[var(--text-muted)] truncate">{entry.path}</div>
+                          <div className="font-mono text-[10.5px] text-(--text-muted) truncate">{entry.path}</div>
                         </div>
-                        <time className="text-[11.5px] text-[var(--text-muted)] tabular flex-shrink-0 pt-0.5" title={new Date(entry.createdAt).toISOString()}>
+                        <time className="text-[11.5px] text-(--text-muted) tabular flex-shrink-0 pt-0.5" title={new Date(entry.createdAt).toISOString()}>
                           {new Date(entry.createdAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}
                         </time>
                       </div>

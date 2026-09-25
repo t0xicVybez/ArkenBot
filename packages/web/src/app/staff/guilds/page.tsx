@@ -75,7 +75,7 @@ export default function StaffGuildsPage() {
       <div className="card overflow-hidden p-0">
         <div className="overflow-x-auto">
         <table className="w-full min-w-[600px]">
-          <thead className="bg-[var(--bg-base)]">
+          <thead className="bg-(--bg-base)">
             <tr>
               <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colGuild')}</th>
               <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colId')}</th>
@@ -84,12 +84,12 @@ export default function StaffGuildsPage() {
               <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colActions')}</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[var(--border-subtle)]">
+          <tbody className="divide-y divide-(--border-subtle)">
             {isLoading ? (
               [...Array(10)].map((_, i) => (
                 <tr key={i} className="animate-pulse">
                   <td colSpan={5} className="px-4 py-3">
-                    <div className="h-4 bg-gray-700 rounded" />
+                    <div className="h-4 bg-gray-700 rounded-sm" />
                   </td>
                 </tr>
               ))
@@ -101,7 +101,7 @@ export default function StaffGuildsPage() {
               </tr>
             ) : (
               guilds.map((guild) => (
-                <tr key={guild.id} className="hover:bg-white/[0.02] transition-colors">
+                <tr key={guild.id} className="hover:bg-white/2 transition-colors">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
                       {guild.iconUrl ? (
@@ -157,7 +157,7 @@ export default function StaffGuildsPage() {
         </div>
 
         {total > 20 && (
-          <div className="px-4 py-3 border-t border-[var(--border-subtle)] flex items-center justify-between">
+          <div className="px-4 py-3 border-t border-(--border-subtle) flex items-center justify-between">
             <p className="text-xs text-gray-400">
               {t('pageInfo', { page, total })}
             </p>

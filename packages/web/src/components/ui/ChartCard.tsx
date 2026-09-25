@@ -15,7 +15,7 @@ export function ChartCard({
   return (
     <div
       className={cn(
-        'rounded-[var(--r-lg)] border border-[var(--border)] bg-[var(--bg-card)] p-[18px]',
+        'rounded-(--r-lg) border border-(--border) bg-(--bg-card) p-[18px]',
         className,
       )}
     >
