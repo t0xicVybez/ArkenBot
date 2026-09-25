@@ -45,7 +45,19 @@ jobs:
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        # Human PRs use a strict frozen install so lockfile drift fails CI.
+        # Dependabot strips the pnpm `overrides` from the lockfile (a known
+        # Dependabot/pnpm limitation) which breaks a frozen install; for its
+        # PRs only, fall back to a regenerating install so they still get full
+        # typecheck/build/test coverage. Overrides stay enforced either way —
+        # pnpm re-applies them from package.json on install.
+        run: |
+          if [ "${{ github.actor }}" = "dependabot[bot]" ]; then
+            echo "Dependabot PR — using non-frozen install (see workflow comment)."
+            pnpm install --no-frozen-lockfile
+          else
+            pnpm install --frozen-lockfile
+          fi
 
       - name: Generate Prisma client
         run: pnpm db:generate

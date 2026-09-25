@@ -1251,14 +1251,15 @@
     "banFailed": "Gagal memblokir — mungkin izin kurang atau peran pengguna lebih tinggi.",
     "bannedBy": "{user} diblokir oleh {mod}.",
     "dismissedBy": "Peringatan diabaikan oleh {mod}.",
-    "checkNone": "{user} tidak ditandai di jaringan ban.",
-    "checkFlagged": "{user} diblokir di **{count}** server jaringan lainnya.",
+    "checkNone": "{user} tidak diblokir di jaringan ban.",
+    "checkFlagged": "{user} diblokir di **{count}** server jaringan.",
     "scanNone": "✅ Tidak ada anggota saat ini yang ditandai di jaringan ban.",
     "scanTitle": "🚩 Pindai Jaringan Ban",
     "scanDesc": "**{count}** anggota saat ini ditandai di jaringan:",
     "scanBans": "diblokir di {count} server",
     "scanMore": "…dan {n} lainnya",
     "scanBanAll": "Blokir semua {count}",
-    "banAllDone": "🔨 Memblokir **{count}** anggota bertanda."
+    "banAllDone": "🔨 Memblokir **{count}** anggota bertanda.",
+    "checkThreshold": "Mencapai ambang penandaanmu ({threshold})."
   }
 }
