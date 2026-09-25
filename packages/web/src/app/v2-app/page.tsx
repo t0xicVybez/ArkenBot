@@ -23,7 +23,7 @@ export default function V2App() {
           <h1 className="text-[24px] font-semibold" style={{ fontFamily: 'var(--font-display)' }}>
             Good evening, RagingTrucker
           </h1>
-          <p className="mt-1 text-[13.5px] text-[var(--text-secondary)]">
+          <p className="mt-1 text-[13.5px] text-(--text-secondary)">
             Here&rsquo;s what happened in Ronin Empire over the last 24 hours.
           </p>
         </div>
@@ -37,12 +37,12 @@ export default function V2App() {
 
         <div className="grid grid-cols-[1.55fr_1fr] gap-5">
           {/* activity chart */}
-          <div className="rounded-[var(--r-lg)] border border-[var(--border)] bg-[var(--bg-card)] p-[18px]">
+          <div className="rounded-(--r-lg) border border-(--border) bg-(--bg-card) p-[18px]">
             <div className="mb-3.5 flex items-center gap-2.5">
               <h3 className="text-[15px] font-semibold" style={{ fontFamily: 'var(--font-display)' }}>
                 Message activity
               </h3>
-              <span className="rounded-[var(--r-pill)] border border-[var(--border)] px-2.5 py-0.5 text-[11px] text-[var(--text-secondary)]">
+              <span className="rounded-(--r-pill) border border-(--border) px-2.5 py-0.5 text-[11px] text-(--text-secondary)">
                 Last 14 days
               </span>
             </div>
@@ -73,12 +73,12 @@ export default function V2App() {
           </div>
 
           {/* feature health + live feed */}
-          <div className="rounded-[var(--r-lg)] border border-[var(--border)] bg-[var(--bg-card)] p-[18px]">
+          <div className="rounded-(--r-lg) border border-(--border) bg-(--bg-card) p-[18px]">
             <div className="mb-3 flex items-center">
               <h3 className="text-[15px] font-semibold" style={{ fontFamily: 'var(--font-display)' }}>
                 Feature health
               </h3>
-              <span className="ml-auto rounded-[var(--r-pill)] border border-[var(--border)] px-2.5 py-0.5 text-[11px] text-[var(--text-secondary)]">
+              <span className="ml-auto rounded-(--r-pill) border border-(--border) px-2.5 py-0.5 text-[11px] text-(--text-secondary)">
                 8 / 8 core on
               </span>
             </div>
@@ -103,7 +103,7 @@ export default function V2App() {
               ))}
             </div>
 
-            <div className="my-3.5 border-t border-[var(--border)]" />
+            <div className="my-3.5 border-t border-(--border)" />
             <h3 className="mb-2 text-[14px] font-semibold" style={{ fontFamily: 'var(--font-display)' }}>
               Live activity
             </h3>
@@ -115,12 +115,12 @@ export default function V2App() {
               ].map((e, i) => {
                 const Icon = e.icon;
                 return (
-                  <div key={i} className="flex items-center gap-3 rounded-[9px] px-1.5 py-2 hover:bg-[var(--bg-hover)]">
-                    <span className="grid h-[30px] w-[30px] flex-none place-items-center rounded-[8px] bg-[var(--bg-elevated)] text-[var(--text-secondary)]">
+                  <div key={i} className="flex items-center gap-3 rounded-[9px] px-1.5 py-2 hover:bg-(--bg-hover)">
+                    <span className="grid h-[30px] w-[30px] flex-none place-items-center rounded-[8px] bg-(--bg-elevated) text-(--text-secondary)">
                       <Icon className="h-4 w-4" />
                     </span>
                     <span className="flex-1 text-[13px]">{e.text}</span>
-                    <span className="text-[11px] text-[var(--text-muted)]">{e.time}</span>
+                    <span className="text-[11px] text-(--text-muted)">{e.time}</span>
                   </div>
                 );
               })}

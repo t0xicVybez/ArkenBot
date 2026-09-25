@@ -91,7 +91,7 @@ export default function VotingPage() {
           <div className="mt-4 space-y-5">
             <div>
               <label className="label">{t('voterRole')}</label>
-              <p className="text-xs text-[var(--text-muted)] mb-2">{t('voterRoleDesc')}</p>
+              <p className="text-xs text-(--text-muted) mb-2">{t('voterRoleDesc')}</p>
               <div className="flex flex-col sm:flex-row gap-3">
                 <select
                   className="input flex-1"
@@ -108,14 +108,14 @@ export default function VotingPage() {
                     value={config.voterRoleHours ?? 12}
                     onChange={(e) => save({ voterRoleHours: Math.max(1, Math.min(168, parseInt(e.target.value) || 12)) })}
                   />
-                  <span className="text-sm text-[var(--text-muted)]">{t('hours')}</span>
+                  <span className="text-sm text-(--text-muted)">{t('hours')}</span>
                 </div>
               </div>
             </div>
 
             <div>
               <label className="label">{t('bonusXp')}</label>
-              <p className="text-xs text-[var(--text-muted)] mb-2">{t('bonusXpDesc')}</p>
+              <p className="text-xs text-(--text-muted) mb-2">{t('bonusXpDesc')}</p>
               <input
                 type="number" min={0} max={100000}
                 className="input w-40"
@@ -133,7 +133,7 @@ export default function VotingPage() {
 
             <div>
               <label className="label">{t('voteLink')}</label>
-              <p className="text-xs text-[var(--text-muted)] mb-2">
+              <p className="text-xs text-(--text-muted) mb-2">
                 {t.rich('voteLinkDesc', { guildId, code: (c) => <code>{c}</code> })}
               </p>
               <input
@@ -146,9 +146,9 @@ export default function VotingPage() {
               />
             </div>
 
-            <div className="rounded-lg border border-[var(--border-subtle)] bg-white/[0.02] p-4">
+            <div className="rounded-lg border border-(--border-subtle) bg-white/2 p-4">
               <label className="label">{t('webhookSecret')}</label>
-              <p className="text-xs text-[var(--text-muted)] mb-2">
+              <p className="text-xs text-(--text-muted) mb-2">
                 {t.rich('webhookSecretDesc', {
                   code: (c) => <code>{c}</code>,
                   b: (c) => <strong>{c}</strong>,
@@ -163,12 +163,12 @@ export default function VotingPage() {
                 autoComplete="off"
                 onBlur={(e) => { const v = e.target.value.trim(); if (v) { save({ webhookSecret: v }); e.target.value = ''; } }}
               />
-              <p className="text-[11px] text-[var(--text-muted)] mt-1">{t('webhookSecretNote')}</p>
+              <p className="text-[11px] text-(--text-muted) mt-1">{t('webhookSecretNote')}</p>
             </div>
 
             <div>
               <label className="label">{t('announceChannel')}</label>
-              <p className="text-xs text-[var(--text-muted)] mb-2">{t('announceChannelDesc')}</p>
+              <p className="text-xs text-(--text-muted) mb-2">{t('announceChannelDesc')}</p>
               <select
                 className="input"
                 value={config.announceChannelId ?? ''}
@@ -182,7 +182,7 @@ export default function VotingPage() {
             {config.announceChannelId && (
               <div>
                 <label className="label">{t('announceMessage')}</label>
-                <p className="text-xs text-[var(--text-muted)] mb-2">{t.rich('announceMessageDesc', { code: (c) => <code>{c}</code> })}</p>
+                <p className="text-xs text-(--text-muted) mb-2">{t.rich('announceMessageDesc', { code: (c) => <code>{c}</code> })}</p>
                 <textarea
                   className="input min-h-20"
                   value={config.announceMessage ?? ''}
@@ -198,24 +198,24 @@ export default function VotingPage() {
 
       <SettingsSection title={t('topVoters')} description={t('topVotersDesc')}>
         <div className="flex gap-6 mb-4 text-sm">
-          <div><span className="text-2xl font-bold text-white">{leaderboard.totalVotes}</span><span className="text-[var(--text-muted)] ml-2">{t('totalVotes')}</span></div>
-          <div><span className="text-2xl font-bold text-white">{leaderboard.uniqueVoters}</span><span className="text-[var(--text-muted)] ml-2">{t('uniqueVoters')}</span></div>
+          <div><span className="text-2xl font-bold text-white">{leaderboard.totalVotes}</span><span className="text-(--text-muted) ml-2">{t('totalVotes')}</span></div>
+          <div><span className="text-2xl font-bold text-white">{leaderboard.uniqueVoters}</span><span className="text-(--text-muted) ml-2">{t('uniqueVoters')}</span></div>
         </div>
         {leaderboard.voters.length === 0 ? (
-          <p className="text-sm text-[var(--text-muted)]">{t('noVotes')}</p>
+          <p className="text-sm text-(--text-muted)">{t('noVotes')}</p>
         ) : (
-          <div className="divide-y divide-[var(--border-subtle)]">
+          <div className="divide-y divide-(--border-subtle)">
             {leaderboard.voters.map((v, i) => (
               <div key={v.userId} className="flex items-center justify-between py-2 text-sm">
                 <span className="text-gray-300">{['🥇','🥈','🥉'][i] ?? `${i + 1}.`} <span className="font-mono text-xs text-gray-500">{v.userId}</span></span>
-                <span className="text-[var(--text-secondary)]">{t('votesStreak', { votes: v.totalVotes, streak: v.currentStreak })}</span>
+                <span className="text-(--text-secondary)">{t('votesStreak', { votes: v.totalVotes, streak: v.currentStreak })}</span>
               </div>
             ))}
           </div>
         )}
       </SettingsSection>
 
-      <p className="text-xs text-[var(--text-muted)]">
+      <p className="text-xs text-(--text-muted)">
         {t.rich('footer', {
           code: (c) => <code>{c}</code>,
           a: (c) => <a className="text-discord-blurple hover:underline" href="https://top.gg" target="_blank" rel="noopener noreferrer">{c}</a>,

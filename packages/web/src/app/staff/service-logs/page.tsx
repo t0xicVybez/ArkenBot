@@ -27,8 +27,8 @@ const LEVEL_STYLES: Record<string, string> = {
   error: 'text-red-400 bg-red-500/10',
   warn: 'text-yellow-400 bg-yellow-500/10',
   info: 'text-sky-400 bg-sky-500/10',
-  debug: 'text-gray-400 bg-white/[0.04]',
-  trace: 'text-gray-500 bg-white/[0.04]',
+  debug: 'text-gray-400 bg-white/4',
+  trace: 'text-gray-500 bg-white/4',
 };
 
 const SERVICE_STYLES: Record<string, string> = {
@@ -100,10 +100,10 @@ export default function ServiceLogsPage() {
       </div>
 
       <div className="card overflow-hidden p-0">
-        <div className="divide-y divide-[var(--border-subtle)] font-mono text-xs">
+        <div className="divide-y divide-(--border-subtle) font-mono text-xs">
           {isLoading ? (
             [...Array(20)].map((_, i) => (
-              <div key={i} className="px-4 py-2 animate-pulse"><div className="h-3 bg-gray-700 rounded w-full" /></div>
+              <div key={i} className="px-4 py-2 animate-pulse"><div className="h-3 bg-gray-700 rounded-sm w-full" /></div>
             ))
           ) : logs.length === 0 ? (
             <div className="px-4 py-8 text-center text-gray-500 font-sans">{t('noEntries')}</div>
@@ -112,11 +112,11 @@ export default function ServiceLogsPage() {
               const hasDetail = !!(log.error || log.stack);
               const isOpen = expanded === i;
               return (
-                <div key={i} className={hasDetail ? 'hover:bg-white/[0.02]' : ''}>
+                <div key={i} className={hasDetail ? 'hover:bg-white/2' : ''}>
                   <button
                     type="button"
                     onClick={() => hasDetail && setExpanded(isOpen ? null : i)}
-                    className={`w-full text-left px-3 py-2 flex items-start gap-2.5 ${hasDetail ? 'cursor-pointer' : 'cursor-default'} hover:bg-white/[0.02]`}
+                    className={`w-full text-left px-3 py-2 flex items-start gap-2.5 ${hasDetail ? 'cursor-pointer' : 'cursor-default'} hover:bg-white/2`}
                   >
                     <ChevronRight
                       className={`w-3 h-3 mt-1 flex-shrink-0 transition-transform ${isOpen ? 'rotate-90' : ''} ${hasDetail ? 'text-gray-500' : 'opacity-0'}`}
@@ -124,14 +124,14 @@ export default function ServiceLogsPage() {
                     <span className="text-gray-600 w-16 flex-shrink-0 tabular-nums">
                       {new Date(log.time).toLocaleTimeString()}
                     </span>
-                    <span className={`px-1.5 rounded uppercase text-[10px] font-semibold w-11 text-center flex-shrink-0 ${SERVICE_STYLES[log.service]}`}>
+                    <span className={`px-1.5 rounded-sm uppercase text-[10px] font-semibold w-11 text-center flex-shrink-0 ${SERVICE_STYLES[log.service]}`}>
                       {log.service}
                     </span>
-                    <span className={`px-1.5 rounded uppercase text-[10px] font-semibold w-12 text-center flex-shrink-0 ${LEVEL_STYLES[log.level]}`}>
+                    <span className={`px-1.5 rounded-sm uppercase text-[10px] font-semibold w-12 text-center flex-shrink-0 ${LEVEL_STYLES[log.level]}`}>
                       {log.level}
                     </span>
                     {log.error && (
-                      <span className="px-1.5 rounded text-[10px] font-semibold flex-shrink-0 bg-white/[0.06] text-gray-300">
+                      <span className="px-1.5 rounded-sm text-[10px] font-semibold flex-shrink-0 bg-white/6 text-gray-300">
                         {t.has(`category_${log.error.category}`) ? t(`category_${log.error.category}`) : log.error.category}
                       </span>
                     )}
@@ -151,7 +151,7 @@ export default function ServiceLogsPage() {
                   </button>
 
                   {isOpen && hasDetail && (
-                    <div className="px-3 pb-3 pl-[4.5rem] space-y-2 text-[11px]">
+                    <div className="px-3 pb-3 pl-18 space-y-2 text-[11px]">
                       {log.error?.hint && (
                         <p className="text-yellow-300/80"><span className="text-gray-500">{t('hint')}</span> {log.error.hint}</p>
                       )}
@@ -175,7 +175,7 @@ export default function ServiceLogsPage() {
                         </p>
                       )}
                       {log.stack && (
-                        <pre className="whitespace-pre-wrap text-gray-500 bg-black/30 rounded p-2 overflow-x-auto max-h-64">
+                        <pre className="whitespace-pre-wrap text-gray-500 bg-black/30 rounded-sm p-2 overflow-x-auto max-h-64">
                           {log.stack}
                         </pre>
                       )}

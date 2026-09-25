@@ -26,13 +26,13 @@ export function LanguageSwitcher() {
 
   return (
     <label className="flex flex-col gap-1 text-sm">
-      <span className="font-medium text-[var(--text-primary)]">{t('label')}</span>
-      <span className="text-xs text-[var(--text-secondary)]">{t('description')}</span>
+      <span className="font-medium text-(--text-primary)">{t('label')}</span>
+      <span className="text-xs text-(--text-secondary)">{t('description')}</span>
       <select
         value={locale}
         onChange={(e) => change(e.target.value)}
         disabled={pending}
-        className="mt-1 w-full max-w-xs rounded-md border border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-2 text-[var(--text-primary)] disabled:opacity-60"
+        className="mt-1 w-full max-w-xs rounded-md border border-(--border) bg-(--bg-elevated) px-3 py-2 text-(--text-primary) disabled:opacity-60"
       >
         {LOCALES.map((l) => (
           <option key={l.code} value={l.code}>

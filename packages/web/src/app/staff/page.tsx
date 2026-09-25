@@ -11,8 +11,8 @@ import { useWebSocket } from '@/lib/socket';
 /** Mock-pattern stat tile: uppercase label, big tabular value. */
 function StatTile({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl px-4 pt-[15px] pb-3">
-      <p className="text-[11px] uppercase tracking-[0.05em] text-[var(--text-muted)] font-semibold">{label}</p>
+    <div className="bg-(--bg-card) border border-(--border-subtle) rounded-xl px-4 pt-[15px] pb-3">
+      <p className="text-[11px] uppercase tracking-wider text-(--text-muted) font-semibold">{label}</p>
       <p className="text-2xl font-bold text-white leading-tight tracking-tight tabular mt-[3px]">
         {typeof value === 'number' ? value.toLocaleString() : value}
       </p>
@@ -56,7 +56,7 @@ export default function StaffDashboard() {
       {isLoading ? (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 mb-6">
           {[...Array(8)].map((_, i) => (
-            <div key={i} className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl h-[76px] animate-pulse" />
+            <div key={i} className="bg-(--bg-card) border border-(--border-subtle) rounded-xl h-[76px] animate-pulse" />
           ))}
         </div>
       ) : (
@@ -74,8 +74,8 @@ export default function StaffDashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Quick actions */}
-        <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl p-0 overflow-hidden">
-          <div className="px-[18px] py-[13px] border-b border-[var(--border-subtle)]">
+        <div className="bg-(--bg-card) border border-(--border-subtle) rounded-xl p-0 overflow-hidden">
+          <div className="px-[18px] py-[13px] border-b border-(--border-subtle)">
             <h2 className="text-[13.5px] font-bold text-white">{t('quickActions')}</h2>
           </div>
           <div>
@@ -88,27 +88,27 @@ export default function StaffDashboard() {
               <Link
                 key={action.href}
                 href={action.href}
-                className="flex items-center gap-3 px-[18px] py-3 border-b border-[var(--border-subtle)] last:border-0 hover:bg-white/[0.02] transition-colors group"
+                className="flex items-center gap-3 px-[18px] py-3 border-b border-(--border-subtle) last:border-0 hover:bg-white/2 transition-colors group"
               >
-                <span className="w-[34px] h-[34px] rounded-[9px] bg-[var(--bg-elevated)] grid place-items-center flex-shrink-0">
-                  <action.icon className="w-4 h-4 text-[var(--accent)]" />
+                <span className="w-[34px] h-[34px] rounded-[9px] bg-(--bg-elevated) grid place-items-center flex-shrink-0">
+                  <action.icon className="w-4 h-4 text-(--accent)" />
                 </span>
                 <span className="flex-1 min-w-0">
                   <span className="block text-[13.5px] font-semibold text-gray-200 group-hover:text-white transition-colors">{action.label}</span>
-                  <span className="block text-[12px] text-[var(--text-muted)] truncate">{action.sub}</span>
+                  <span className="block text-[12px] text-(--text-muted) truncate">{action.sub}</span>
                 </span>
-                <ArrowRight className="w-3.5 h-3.5 text-[var(--text-muted)] opacity-0 group-hover:opacity-100 transition-opacity" />
+                <ArrowRight className="w-3.5 h-3.5 text-(--text-muted) opacity-0 group-hover:opacity-100 transition-opacity" />
               </Link>
             ))}
           </div>
         </div>
 
         {/* System health */}
-        <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl p-0 overflow-hidden">
-          <div className="flex items-center px-[18px] py-[13px] border-b border-[var(--border-subtle)]">
+        <div className="bg-(--bg-card) border border-(--border-subtle) rounded-xl p-0 overflow-hidden">
+          <div className="flex items-center px-[18px] py-[13px] border-b border-(--border-subtle)">
             <h2 className="text-[13.5px] font-bold text-white">{t('systemHealth')}</h2>
-            <span className="ml-auto inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-0.5 rounded-full text-[var(--success)] bg-[var(--success)]/10 border border-[var(--success)]/30">
-              <span className="w-[7px] h-[7px] rounded-full bg-[var(--success)]" />
+            <span className="ml-auto inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-0.5 rounded-full text-(--success) bg-(--success)/10 border border-(--success)/30">
+              <span className="w-[7px] h-[7px] rounded-full bg-(--success)" />
               {t('operational')}
             </span>
           </div>
@@ -120,10 +120,10 @@ export default function StaffDashboard() {
               { label: t('healthMemory'), value: stats?.memoryUsage ? t('memoryHeap', { mb: stats.memoryUsage }) : '—' },
               { label: t('healthEnvironment'), value: process.env.NODE_ENV ?? 'development' },
             ].map((row) => (
-              <div key={row.label} className="flex items-center gap-2.5 py-3 border-b border-[var(--border-subtle)] last:border-0">
-                <span className="w-[7px] h-[7px] rounded-full bg-[var(--success)] flex-shrink-0" />
+              <div key={row.label} className="flex items-center gap-2.5 py-3 border-b border-(--border-subtle) last:border-0">
+                <span className="w-[7px] h-[7px] rounded-full bg-(--success) flex-shrink-0" />
                 <span className="text-[13px] font-semibold text-gray-200">{row.label}</span>
-                <span className={`ml-auto text-[12px] text-[var(--text-muted)] ${row.mono ? 'font-mono' : ''}`}>{row.value}</span>
+                <span className={`ml-auto text-[12px] text-(--text-muted) ${row.mono ? 'font-mono' : ''}`}>{row.value}</span>
               </div>
             ))}
           </div>

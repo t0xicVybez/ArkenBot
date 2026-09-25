@@ -58,13 +58,13 @@ export default async function ChangelogPage() {
   const t = await getTranslations('changelogPage');
 
   return (
-    <div className="min-h-screen bg-[var(--bg-base)] text-[var(--text-primary)]">
+    <div className="min-h-screen bg-(--bg-base) text-(--text-primary)">
       <LandingNav docsUrl={SITE.docsUrl} supportUrl={SITE.supportUrl} inviteUrl={SITE.inviteUrl} />
 
       <main className="max-w-3xl mx-auto px-6 py-16">
         <div className="mb-10">
           <h1 className="text-3xl font-bold text-white mb-2">{t('title')}</h1>
-          <p className="text-sm text-[var(--text-secondary)]">
+          <p className="text-sm text-(--text-secondary)">
             {t.rich('intro', {
               highlight: (c) => <span className="text-white">{c}</span>,
             })}
@@ -72,24 +72,24 @@ export default async function ChangelogPage() {
         </div>
 
         {entries.length === 0 ? (
-          <p className="text-sm text-[var(--text-muted)]">{t('empty')}</p>
+          <p className="text-sm text-(--text-muted)">{t('empty')}</p>
         ) : (
-          <div className="relative border-l border-[var(--border-subtle)] ml-2 space-y-10">
+          <div className="relative border-l border-(--border-subtle) ml-2 space-y-10">
             {entries.map((entry) => {
               const badge = TYPE_BADGES[entry.type] ?? TYPE_BADGES.update;
               return (
                 <article key={entry.id} className="relative pl-8">
-                  <span className="absolute -left-[5px] top-2 w-2.5 h-2.5 rounded-full bg-discord-blurple" aria-hidden />
+                  <span className="absolute left-[-5px] top-2 w-2.5 h-2.5 rounded-full bg-discord-blurple" aria-hidden />
                   <div className="flex flex-wrap items-center gap-3 mb-2">
                     <span className={`text-[11px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full border ${badge.classes}`}>
                       {t(badge.labelKey)}
                     </span>
-                    <time dateTime={entry.sentAt} className="text-xs text-[var(--text-muted)]">
+                    <time dateTime={entry.sentAt} className="text-xs text-(--text-muted)">
                       {formatDate(entry.sentAt)}
                     </time>
                   </div>
                   <h2 className="text-lg font-semibold text-white mb-2">{entry.title}</h2>
-                  <div className="text-sm text-[var(--text-secondary)] leading-relaxed whitespace-pre-line">
+                  <div className="text-sm text-(--text-secondary) leading-relaxed whitespace-pre-line">
                     {entry.body}
                   </div>
                 </article>

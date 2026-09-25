@@ -201,7 +201,7 @@ export default function ReportsPage() {
                     {new Date(report.createdAt).toLocaleString()}
                   </p>
                   {report.staffNote && (
-                    <p className="text-xs text-gray-400 mt-1 border-t border-[var(--border-subtle)] pt-1">
+                    <p className="text-xs text-gray-400 mt-1 border-t border-(--border-subtle) pt-1">
                       {t('staffNotePrefix')} {report.staffNote}
                     </p>
                   )}
@@ -209,7 +209,7 @@ export default function ReportsPage() {
                 {report.status === 'pending' && (
                   <button
                     onClick={() => setExpandedNote(expandedNote === report.id ? null : report.id)}
-                    className="text-xs text-gray-400 hover:text-white transition-colors px-2 py-1 rounded border border-gray-600 hover:border-gray-400 flex-shrink-0"
+                    className="text-xs text-gray-400 hover:text-white transition-colors px-2 py-1 rounded-sm border border-gray-600 hover:border-gray-400 flex-shrink-0"
                   >
                     {expandedNote === report.id ? t('cancel') : t('markReviewed')}
                   </button>
@@ -217,7 +217,7 @@ export default function ReportsPage() {
               </div>
 
               {expandedNote === report.id && (
-                <div className="mt-3 border-t border-[var(--border-subtle)] pt-3 space-y-2">
+                <div className="mt-3 border-t border-(--border-subtle) pt-3 space-y-2">
                   <textarea
                     className="input min-h-[60px] resize-none"
                     placeholder={t('staffNotePlaceholder')}

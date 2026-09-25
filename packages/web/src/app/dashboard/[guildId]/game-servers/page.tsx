@@ -39,7 +39,7 @@ export default function GameServersPage() {
       </div>
 
       {isLoading ? (
-        <div className="card space-y-3">{[...Array(3)].map((_, i) => <div key={i} className="h-12 bg-gray-700 rounded animate-pulse" />)}</div>
+        <div className="card space-y-3">{[...Array(3)].map((_, i) => <div key={i} className="h-12 bg-gray-700 rounded-sm animate-pulse" />)}</div>
       ) : !d?.installed ? (
         <div className="card text-center text-gray-400 py-8">{t('notInstalled')}</div>
       ) : (
@@ -53,7 +53,7 @@ export default function GameServersPage() {
                 { icon: Bell, label: t('alerts'), val: chName(d.monitor.alertChannelId) },
                 { icon: Volume2, label: t('statChannel'), val: chName(d.monitor.statChannelId) },
               ].map(({ icon: Icon, label, val }) => (
-                <div key={label} className="rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-elevated)] p-3">
+                <div key={label} className="rounded-lg border border-(--border-subtle) bg-(--bg-elevated) p-3">
                   <div className="flex items-center gap-2 text-xs text-gray-400"><Icon className="w-3.5 h-3.5" />{label}</div>
                   <div className="mt-1 text-sm font-medium text-white truncate">{val}</div>
                 </div>
@@ -66,7 +66,7 @@ export default function GameServersPage() {
             {d.servers.length === 0 ? (
               <p className="text-sm text-gray-500 py-4 text-center">{t('empty')}</p>
             ) : (
-              <div className="divide-y divide-[var(--border-subtle)]">
+              <div className="divide-y divide-(--border-subtle)">
                 {d.servers.map((s) => (
                   <div key={s.id} className="flex items-center gap-3 py-3">
                     <div className="min-w-0 flex-1">

@@ -109,7 +109,7 @@ export default function TempVoicePage() {
                   <button
                     onClick={() => removeMutation.mutate(trig.channelId)}
                     disabled={removeMutation.isPending}
-                    className="ml-3 p-1.5 rounded text-gray-400 hover:text-red-400 hover:bg-red-400/10 transition-colors"
+                    className="ml-3 p-1.5 rounded-sm text-gray-400 hover:text-red-400 hover:bg-red-400/10 transition-colors"
                     aria-label={t('removeTrigger')}
                   >
                     <Trash2 className="w-4 h-4" />

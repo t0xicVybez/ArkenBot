@@ -53,8 +53,8 @@ export default function DashboardPage() {
   );
 
   return (
-    <div className="min-h-screen bg-[var(--bg-base)]">
-      <header className="bg-[var(--bg-card)] border-b border-[var(--border-subtle)] px-6 py-4">
+    <div className="min-h-screen bg-(--bg-base)">
+      <header className="bg-(--bg-card) border-b border-(--border-subtle) px-6 py-4">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div>
             <h1 className="text-xl font-bold text-white">{t('selectServer')}</h1>
@@ -93,8 +93,8 @@ export default function DashboardPage() {
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-full bg-gray-700" />
                   <div className="flex-1 space-y-2">
-                    <div className="h-4 bg-gray-700 rounded w-3/4" />
-                    <div className="h-3 bg-gray-700 rounded w-1/2" />
+                    <div className="h-4 bg-gray-700 rounded-sm w-3/4" />
+                    <div className="h-3 bg-gray-700 rounded-sm w-1/2" />
                   </div>
                 </div>
               </div>

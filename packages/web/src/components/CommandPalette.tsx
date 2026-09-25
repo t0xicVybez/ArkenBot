@@ -90,8 +90,8 @@ export function CommandPalette({ guildId }: { guildId: string }) {
   return (
     <div className="cmdk-overlay" onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }}>
       <div className="cmdk">
-        <div className="flex items-center gap-3 px-4 border-b border-[var(--border-subtle)]">
-          <Search className="w-4 h-4 text-[var(--text-muted)]" />
+        <div className="flex items-center gap-3 px-4 border-b border-(--border-subtle)">
+          <Search className="w-4 h-4 text-(--text-muted)" />
           <input
             ref={inputRef}
             value={query}
@@ -102,13 +102,13 @@ export function CommandPalette({ guildId }: { guildId: string }) {
               if (e.key === 'Enter' && hits[selected]) go(hits[selected]);
             }}
             placeholder={t('placeholder')}
-            className="flex-1 bg-transparent outline-none py-4 text-[15px] placeholder:text-[var(--text-muted)]"
+            className="flex-1 bg-transparent outline-hidden py-4 text-[15px] placeholder:text-(--text-muted)"
           />
-          <kbd className="text-[10px] font-mono text-[var(--text-muted)] border border-[var(--border)] rounded px-1.5 py-0.5">esc</kbd>
+          <kbd className="text-[10px] font-mono text-(--text-muted) border border-(--border) rounded-sm px-1.5 py-0.5">esc</kbd>
         </div>
         <div className="max-h-80 overflow-y-auto p-1.5">
           {hits.length === 0 && (
-            <div className="px-4 py-6 text-sm text-[var(--text-muted)]">{t('noMatch', { query })}</div>
+            <div className="px-4 py-6 text-sm text-(--text-muted)">{t('noMatch', { query })}</div>
           )}
           {hits.map((h, i) => (
             <button
@@ -116,15 +116,15 @@ export function CommandPalette({ guildId }: { guildId: string }) {
               onClick={() => go(h)}
               onMouseEnter={() => setSelected(i)}
               className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-[13.5px] text-left transition-colors ${
-                i === selected ? 'bg-[var(--accent-glow)] text-[var(--text-primary)]' : 'text-[var(--text-secondary)]'
+                i === selected ? 'bg-(--accent-glow) text-(--text-primary)' : 'text-(--text-secondary)'
               }`}
             >
               {h.label}
-              <span className="ml-auto text-[11px] text-[var(--text-muted)]">{h.section}</span>
+              <span className="ml-auto text-[11px] text-(--text-muted)">{h.section}</span>
             </button>
           ))}
         </div>
-        <div className="flex gap-4 px-4 py-2.5 border-t border-[var(--border-subtle)] text-[11px] text-[var(--text-muted)]">
+        <div className="flex gap-4 px-4 py-2.5 border-t border-(--border-subtle) text-[11px] text-(--text-muted)">
           <span>{t('navigate')}</span><span>{t('openHint')}</span><span>{t('closeHint')}</span>
         </div>
       </div>

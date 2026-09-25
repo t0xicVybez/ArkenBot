@@ -269,12 +269,12 @@ export default function TicketStatsPage() {
       {/* Per-panel table */}
       {stats && stats.byPanel.length > 0 && (
         <div className="card overflow-hidden p-0">
-          <div className="px-4 py-3 border-b border-[var(--border-subtle)]">
+          <div className="px-4 py-3 border-b border-(--border-subtle)">
             <h2 className="text-white font-semibold">{t('panelDetails')}</h2>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full min-w-[600px]">
-              <thead className="text-left text-xs text-gray-500 uppercase tracking-wider border-b border-[var(--border-subtle)]">
+              <thead className="text-left text-xs text-gray-500 uppercase tracking-wider border-b border-(--border-subtle)">
                 <tr>
                   <th className="px-4 py-3">{t('colPanel')}</th>
                   <th className="px-4 py-3">{t('colTotal')}</th>

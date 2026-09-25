@@ -94,7 +94,7 @@ export default function StaffMetricsPage() {
               { label: t('memoryUsage'), value: stats?.memoryUsage ? `${stats.memoryUsage} MB` : '—' },
               { label: t('uptime'), value: stats?.uptime ? `${Math.floor(stats.uptime / 3600)}h ${Math.floor((stats.uptime % 3600) / 60)}m` : '—' },
             ].map((item) => (
-              <div key={item.label} className="flex justify-between items-center py-1 border-b border-[var(--border-subtle)]">
+              <div key={item.label} className="flex justify-between items-center py-1 border-b border-(--border-subtle)">
                 <dt className="text-gray-400 text-sm">{item.label}</dt>
                 <dd className="text-white font-mono text-sm">{String(item.value)}</dd>
               </div>

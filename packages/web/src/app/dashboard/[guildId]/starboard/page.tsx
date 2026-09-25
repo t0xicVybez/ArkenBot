@@ -161,7 +161,7 @@ export default function StarboardPage() {
         {entriesLoading ? (
           <div className="space-y-3">
             {[...Array(5)].map((_, i) => (
-              <div key={i} className="h-16 bg-gray-700 rounded animate-pulse" />
+              <div key={i} className="h-16 bg-gray-700 rounded-sm animate-pulse" />
             ))}
           </div>
         ) : entries.length === 0 ? (
@@ -169,10 +169,10 @@ export default function StarboardPage() {
             {t('noEntries')}
           </p>
         ) : (
-          <div className="overflow-hidden rounded-lg border border-[var(--border-subtle)]">
+          <div className="overflow-hidden rounded-lg border border-(--border-subtle)">
             <div className="overflow-x-auto">
             <table className="w-full min-w-[600px]">
-              <thead className="bg-[var(--bg-base)]">
+              <thead className="bg-(--bg-base)">
                 <tr>
                   <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colStars')}</th>
                   <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colAuthor')}</th>
@@ -180,9 +180,9 @@ export default function StarboardPage() {
                   <th className="px-4 py-3" />
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[var(--border-subtle)]">
+              <tbody className="divide-y divide-(--border-subtle)">
                 {entries.map((entry) => (
-                  <tr key={entry.id} className="hover:bg-white/[0.02] transition-colors">
+                  <tr key={entry.id} className="hover:bg-white/2 transition-colors">
                     <td className="px-4 py-3">
                       <span className="flex items-center gap-1 text-yellow-400 font-semibold text-sm">
                         ⭐ {entry.starCount}

@@ -288,7 +288,7 @@ export default function TicketDetailPage() {
         <button
           onClick={downloadTranscript}
           disabled={downloadingTranscript}
-          className="flex items-center gap-2 text-sm px-3 py-1.5 rounded text-gray-400 hover:text-white hover:bg-white/5 border border-white/10 transition-colors disabled:opacity-40"
+          className="flex items-center gap-2 text-sm px-3 py-1.5 rounded-sm text-gray-400 hover:text-white hover:bg-white/5 border border-white/10 transition-colors disabled:opacity-40"
         >
           <Download className="w-4 h-4" />
           {downloadingTranscript ? t('exporting') : t('transcript')}
@@ -296,7 +296,7 @@ export default function TicketDetailPage() {
         <button
           onClick={() => { if (confirm(t('confirmDelete', { number: ticket.number }))) deleteMut.mutate(); }}
           disabled={deleteMut.isPending}
-          className="flex items-center gap-2 text-sm px-3 py-1.5 rounded text-red-400 hover:text-red-300 hover:bg-red-500/10 border border-red-500/20 transition-colors"
+          className="flex items-center gap-2 text-sm px-3 py-1.5 rounded-sm text-red-400 hover:text-red-300 hover:bg-red-500/10 border border-red-500/20 transition-colors"
         >
           <Trash2 className="w-4 h-4" />
           {deleteMut.isPending ? t('deleting') : t('delete')}
@@ -356,7 +356,7 @@ export default function TicketDetailPage() {
       {/* Actions (only for open/claimed tickets) */}
       {ticket.status !== 'closed' && (
         <div className="card space-y-4">
-          <h2 className="text-white font-semibold border-b border-[var(--border-subtle)] pb-2">{t('staffActions')}</h2>
+          <h2 className="text-white font-semibold border-b border-(--border-subtle) pb-2">{t('staffActions')}</h2>
 
           {/* Claim / Unclaim */}
           <div className="flex items-center gap-3 flex-wrap">
@@ -420,7 +420,7 @@ export default function TicketDetailPage() {
               {ticket.tags.filter((t) => t !== 'sla-warned').length > 0 && (
                 <div className="flex flex-wrap gap-1.5">
                   {ticket.tags.filter((t) => t !== 'sla-warned').map((tag) => (
-                    <span key={tag} className="flex items-center gap-1 bg-gray-700/50 text-gray-200 text-xs rounded px-2 py-1">
+                    <span key={tag} className="flex items-center gap-1 bg-gray-700/50 text-gray-200 text-xs rounded-sm px-2 py-1">
                       {tag}
                       <button onClick={() => removeTagMut.mutate(tag)} className="text-gray-500 hover:text-red-400 ml-1">×</button>
                     </span>
@@ -553,13 +553,13 @@ function MessageRow({ msg }: { msg: TicketMessage }) {
           <span className="text-gray-500 text-xs">{time}</span>
         </div>
         {msg.content && (
-          <p className="text-gray-300 text-sm whitespace-pre-wrap break-words">{msg.content}</p>
+          <p className="text-gray-300 text-sm whitespace-pre-wrap wrap-break-word">{msg.content}</p>
         )}
         {msg.attachments.map((url, j) => {
           const isImage = /\.(png|jpe?g|gif|webp)(\?.*)?$/i.test(url);
           return isImage ? (
             <a key={j} href={url} target="_blank" rel="noreferrer">
-              <img src={url} alt={t('attachment')} className="mt-1 max-h-32 rounded" />
+              <img src={url} alt={t('attachment')} className="mt-1 max-h-32 rounded-sm" />
             </a>
           ) : (
             <a key={j} href={url} target="_blank" rel="noreferrer" className="text-discord-blurple text-xs hover:underline block mt-1">

@@ -252,7 +252,7 @@ export default function TicketsPage() {
           ) : (
             <div className="overflow-x-auto">
             <table className="w-full min-w-[500px]">
-              <thead className="border-b border-[var(--border-subtle)] text-left text-xs text-gray-500 uppercase tracking-wider">
+              <thead className="border-b border-(--border-subtle) text-left text-xs text-gray-500 uppercase tracking-wider">
                 <tr>
                   <th className="px-4 py-3">#</th>
                   <th className="px-4 py-3">{t('colUsername')}</th>

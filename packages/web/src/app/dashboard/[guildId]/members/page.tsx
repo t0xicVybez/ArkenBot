@@ -49,19 +49,19 @@ export default function MembersPage() {
       <div className="card overflow-hidden p-0">
         <div className="overflow-x-auto">
         <table className="w-full min-w-[500px]">
-          <thead className="bg-[var(--bg-base)]">
+          <thead className="bg-(--bg-base)">
             <tr>
               <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colUser')}</th>
               <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colLevel')}</th>
               <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colXp')}</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[var(--border-subtle)]">
+          <tbody className="divide-y divide-(--border-subtle)">
             {isLoading ? (
               [...Array(8)].map((_, i) => (
                 <tr key={i} className="animate-pulse">
                   <td colSpan={3} className="px-4 py-3">
-                    <div className="h-4 bg-gray-700 rounded w-full" />
+                    <div className="h-4 bg-gray-700 rounded-sm w-full" />
                   </td>
                 </tr>
               ))
@@ -73,7 +73,7 @@ export default function MembersPage() {
               </tr>
             ) : (
               members.map((m) => (
-                <tr key={m.userId} className="hover:bg-white/[0.02] transition-colors">
+                <tr key={m.userId} className="hover:bg-white/2 transition-colors">
                   <td className="px-4 py-3">
                     <div>
                       <p className="text-sm text-white">{m.userTag}</p>

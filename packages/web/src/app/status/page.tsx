@@ -36,7 +36,7 @@ function formatUptime(seconds: number): string {
 function StatusRow({ name, online, detail }: { name: string; online: boolean | null; detail?: string }) {
   const t = useTranslations('statusPage');
   return (
-    <div className="flex items-center justify-between py-4 border-b border-[var(--border-subtle)] last:border-0">
+    <div className="flex items-center justify-between py-4 border-b border-(--border-subtle) last:border-0">
       <div className="flex items-center gap-3">
         <span
           className={`w-2.5 h-2.5 rounded-full ${
@@ -47,7 +47,7 @@ function StatusRow({ name, online, detail }: { name: string; online: boolean | n
         <span className="text-sm font-medium text-white">{name}</span>
       </div>
       <div className="flex items-center gap-4">
-        {detail && <span className="text-xs text-[var(--text-muted)]">{detail}</span>}
+        {detail && <span className="text-xs text-(--text-muted)">{detail}</span>}
         <span className={`text-xs font-semibold ${online === null ? 'text-gray-500' : online ? 'text-green-400' : 'text-red-400'}`}>
           {online === null ? t('checking') : online ? t('operational') : t('down')}
         </span>
@@ -86,13 +86,13 @@ export default function StatusPage() {
   const allUp = apiReachable === true && !!status && status.database.online && status.cache.online && status.bot.online;
 
   return (
-    <div className="min-h-screen bg-[var(--bg-base)] text-[var(--text-primary)]">
+    <div className="min-h-screen bg-(--bg-base) text-(--text-primary)">
       <LandingNav docsUrl={SITE.docsUrl} supportUrl={SITE.supportUrl} inviteUrl={SITE.inviteUrl} />
 
       <main className="max-w-2xl mx-auto px-6 py-16">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-white mb-2">{t('title')}</h1>
-          <p className="text-sm text-[var(--text-secondary)]">
+          <p className="text-sm text-(--text-secondary)">
             {t('subtitle')}
           </p>
         </div>
@@ -101,7 +101,7 @@ export default function StatusPage() {
         <div
           className={`rounded-lg border px-5 py-4 mb-8 text-sm font-semibold ${
             apiReachable === null
-              ? 'border-[var(--border-subtle)] bg-white/[0.03] text-[var(--text-muted)]'
+              ? 'border-(--border-subtle) bg-white/3 text-(--text-muted)'
               : allUp
                 ? 'border-green-500/30 bg-green-500/10 text-green-400'
                 : 'border-yellow-500/30 bg-yellow-500/10 text-yellow-400'
@@ -116,7 +116,7 @@ export default function StatusPage() {
                 : t('bannerPartial')}
         </div>
 
-        <div className="card border border-[var(--border-subtle)] rounded-lg px-5">
+        <div className="card border border-(--border-subtle) rounded-lg px-5">
           <StatusRow
             name={t('serviceBot')}
             online={apiReachable === null ? null : (status?.bot.online ?? false)}
@@ -150,12 +150,12 @@ export default function StatusPage() {
         </div>
 
         {status && (
-          <p className="text-xs text-[var(--text-muted)] mt-4">
+          <p className="text-xs text-(--text-muted) mt-4">
             {t('lastChecked', { time: new Date(status.checkedAt).toLocaleTimeString() })}
           </p>
         )}
 
-        <p className="text-sm text-[var(--text-secondary)] mt-8">
+        <p className="text-sm text-(--text-secondary) mt-8">
           {t('reportIssue')}{' '}
           <a href={SITE.supportUrl} target="_blank" rel="noopener noreferrer" className="text-discord-blurple hover:underline">
             {t('supportServerLink')}

@@ -66,9 +66,9 @@ export function Footer({
 
   if (variant === 'full') {
     const columnLink =
-      'block text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors';
+      'block text-xs text-(--text-secondary) hover:text-(--text-primary) transition-colors';
     return (
-      <footer className="border-t border-[var(--border)] py-10 px-6 bg-[var(--bg-base)]">
+      <footer className="border-t border-(--border) py-10 px-6 bg-(--bg-base)">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
             <div>
@@ -78,13 +78,13 @@ export function Footer({
                 </div>
                 <span className="font-semibold text-white text-sm tracking-tight">{SITE_NAME}</span>
               </div>
-              <p className="text-[var(--text-muted)] text-xs leading-relaxed max-w-xs">
+              <p className="text-(--text-muted) text-xs leading-relaxed max-w-xs">
                 {t('brandDesc')}
               </p>
             </div>
 
             <div>
-              <p className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-widest mb-3">{t('links')}</p>
+              <p className="text-xs font-semibold text-(--text-muted) uppercase tracking-widest mb-3">{t('links')}</p>
               <div className="space-y-2">
                 <Link href="/features" className={columnLink}>{t('features')}</Link>
                 <Link href="/addons" className={columnLink}>{t('addons')}</Link>
@@ -94,7 +94,7 @@ export function Footer({
             </div>
 
             <div>
-              <p className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-widest mb-3">{t('community')}</p>
+              <p className="text-xs font-semibold text-(--text-muted) uppercase tracking-widest mb-3">{t('community')}</p>
               <div className="space-y-2">
                 <a href={supportUrl} target="_blank" rel="noopener noreferrer" className={columnLink}>{t('supportServer')}</a>
                 <a href={inviteUrl} target="_blank" rel="noopener noreferrer" className={columnLink}>{t('addToServer')}</a>
@@ -102,11 +102,11 @@ export function Footer({
             </div>
           </div>
 
-          <div className="border-t border-[var(--border-subtle)] pt-6 flex flex-col sm:flex-row items-center justify-between gap-2">
-            <span className="text-[var(--text-muted)] text-xs">{t('rights', { year, siteName: SITE_NAME })}</span>
+          <div className="border-t border-(--border-subtle) pt-6 flex flex-col sm:flex-row items-center justify-between gap-2">
+            <span className="text-(--text-muted) text-xs">{t('rights', { year, siteName: SITE_NAME })}</span>
             <div className="flex items-center gap-4">
-              <UtilityLinks className="text-[var(--text-muted)] text-xs hover:text-[var(--text-secondary)] transition-colors" />
-              <span className="text-[var(--text-muted)] text-xs">{t('madeWith')}</span>
+              <UtilityLinks className="text-(--text-muted) text-xs hover:text-(--text-secondary) transition-colors" />
+              <span className="text-(--text-muted) text-xs">{t('madeWith')}</span>
             </div>
           </div>
         </div>
@@ -114,11 +114,11 @@ export function Footer({
     );
   }
 
-  const rowLink = 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors';
+  const rowLink = 'text-(--text-secondary) hover:text-(--text-primary) transition-colors';
   return (
-    <footer className="border-t border-[var(--border)] py-8 px-6 bg-[var(--bg-base)]">
+    <footer className="border-t border-(--border) py-8 px-6 bg-(--bg-base)">
       <div className={`${maxWidthClass} mx-auto flex flex-col sm:flex-row items-center justify-between gap-2`}>
-        <span className="text-[var(--text-muted)] text-xs">{t('rights', { year, siteName: SITE_NAME })}</span>
+        <span className="text-(--text-muted) text-xs">{t('rights', { year, siteName: SITE_NAME })}</span>
         <div className="flex items-center gap-4 text-xs">
           <UtilityLinks className={rowLink} />
           {supportUrl && (

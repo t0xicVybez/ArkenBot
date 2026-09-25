@@ -149,7 +149,7 @@ function ImageInput({
         )}
       </div>
       {isData && (
-        <img src={value} alt="" className="mt-1.5 h-10 w-10 rounded object-cover border border-gray-700" />
+        <img src={value} alt="" className="mt-1.5 h-10 w-10 rounded-sm object-cover border border-gray-700" />
       )}
       <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFile} />
     </div>
@@ -178,21 +178,21 @@ function DiscordPreview({ form }: { form: FormState }) {
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5 mb-1">
             <span className="text-white text-sm font-semibold">Arken</span>
-            <span className="bg-discord-blurple text-white text-[9px] px-1 py-0.5 rounded font-semibold leading-none">
+            <span className="bg-discord-blurple text-white text-[9px] px-1 py-0.5 rounded-sm font-semibold leading-none">
               APP
             </span>
             <span className="text-gray-500 text-xs">{t('todayAt')}</span>
           </div>
 
           {form.messageContent && (
-            <p className="text-[#dcddde] text-sm mb-1.5 whitespace-pre-wrap break-words">
+            <p className="text-[#dcddde] text-sm mb-1.5 whitespace-pre-wrap wrap-break-word">
               {form.messageContent}
             </p>
           )}
 
           {hasEmbed && (
             <div
-              className="rounded overflow-hidden max-w-[520px]"
+              className="rounded-sm overflow-hidden max-w-[520px]"
               style={{ borderLeft: `4px solid ${color}`, backgroundColor: '#2b2d31' }}
             >
               <div className="p-3">
@@ -211,16 +211,16 @@ function DiscordPreview({ form }: { form: FormState }) {
                         {form.embedAuthorIconUrl?.startsWith('data:') && (
                           <img src={form.embedAuthorIconUrl} alt="" className="w-5 h-5 rounded-full object-cover flex-shrink-0" />
                         )}
-                        <span className="text-white text-xs font-semibold break-words">{form.embedAuthorName}</span>
+                        <span className="text-white text-xs font-semibold wrap-break-word">{form.embedAuthorName}</span>
                       </div>
                     )}
 
                     {form.embedTitle && (
-                      <p className="text-white font-semibold text-sm break-words mb-0.5">{form.embedTitle}</p>
+                      <p className="text-white font-semibold text-sm wrap-break-word mb-0.5">{form.embedTitle}</p>
                     )}
 
                     {form.embedDescription && (
-                      <p className="text-[#dbdee1] text-sm whitespace-pre-wrap break-words mt-0.5">
+                      <p className="text-[#dbdee1] text-sm whitespace-pre-wrap wrap-break-word mt-0.5">
                         {form.embedDescription}
                       </p>
                     )}
@@ -230,7 +230,7 @@ function DiscordPreview({ form }: { form: FormState }) {
                     <img
                       src={form.embedThumbnailUrl}
                       alt="thumbnail"
-                      className="w-16 h-16 rounded object-cover flex-shrink-0"
+                      className="w-16 h-16 rounded-sm object-cover flex-shrink-0"
                       onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                     />
                   )}
@@ -241,7 +241,7 @@ function DiscordPreview({ form }: { form: FormState }) {
                     {form.embedFields.map((f, i) => (
                       <div key={i} className={f.inline ? '' : 'col-span-3'}>
                         <p className="text-white text-xs font-semibold mb-0.5">{f.name || t('fieldNameFallback')}</p>
-                        <p className="text-[#dbdee1] text-xs break-words">{f.value || t('fieldValueFallback')}</p>
+                        <p className="text-[#dbdee1] text-xs wrap-break-word">{f.value || t('fieldValueFallback')}</p>
                       </div>
                     ))}
                   </div>
@@ -251,7 +251,7 @@ function DiscordPreview({ form }: { form: FormState }) {
                   <img
                     src={form.embedImageUrl}
                     alt="embed image"
-                    className="w-full rounded mt-2 max-h-64 object-contain"
+                    className="w-full rounded-sm mt-2 max-h-64 object-contain"
                     onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                   />
                 )}
@@ -266,7 +266,7 @@ function DiscordPreview({ form }: { form: FormState }) {
                         onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                       />
                     )}
-                    <span className="text-[#949ba4] text-xs break-words">
+                    <span className="text-[#949ba4] text-xs wrap-break-word">
                       {[
                         form.embedFooterText,
                         form.embedTimestamp ? new Date().toLocaleString() : '',
@@ -491,7 +491,7 @@ export default function EmbedsPage() {
             />
           </div>
 
-          <div className="border-t border-[var(--border-subtle)] pt-4">
+          <div className="border-t border-(--border-subtle) pt-4">
             <h3 className="text-sm font-semibold text-gray-300 mb-3">{t('embedContent')}</h3>
             <div className="flex gap-3 items-end mb-4">
               <div className="flex-shrink-0">
@@ -499,7 +499,7 @@ export default function EmbedsPage() {
                 <div className="flex items-center gap-2">
                   <input
                     type="color"
-                    className="h-9 w-12 rounded cursor-pointer border border-gray-600 bg-transparent p-0.5"
+                    className="h-9 w-12 rounded-sm cursor-pointer border border-gray-600 bg-transparent p-0.5"
                     value={form.embedColor}
                     onChange={(e) => set('embedColor', e.target.value)}
                   />
@@ -536,7 +536,7 @@ export default function EmbedsPage() {
             </div>
           </div>
 
-          <div className="border-t border-[var(--border-subtle)] pt-4">
+          <div className="border-t border-(--border-subtle) pt-4">
             <h3 className="text-sm font-semibold text-gray-300 mb-3">{t('authorSection')}</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
@@ -557,7 +557,7 @@ export default function EmbedsPage() {
             </div>
           </div>
 
-          <div className="border-t border-[var(--border-subtle)] pt-4">
+          <div className="border-t border-(--border-subtle) pt-4">
             <h3 className="text-sm font-semibold text-gray-300 mb-3">{t('imagesSection')}</h3>
             <div className="space-y-4">
               <ImageInput
@@ -573,7 +573,7 @@ export default function EmbedsPage() {
             </div>
           </div>
 
-          <div className="border-t border-[var(--border-subtle)] pt-4">
+          <div className="border-t border-(--border-subtle) pt-4">
             <h3 className="text-sm font-semibold text-gray-300 mb-3">{t('footerSection')}</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-3">
               <div>
@@ -595,7 +595,7 @@ export default function EmbedsPage() {
             <label className="flex items-center gap-2.5 cursor-pointer select-none">
               <input
                 type="checkbox"
-                className="w-4 h-4 rounded border-gray-600 bg-[var(--bg-base)] text-discord-blurple focus:ring-discord-blurple focus:ring-offset-discord-darkest-bg"
+                className="w-4 h-4 rounded-sm border-gray-600 bg-(--bg-base) text-discord-blurple focus:ring-discord-blurple focus:ring-offset-discord-darkest-bg"
                 checked={form.embedTimestamp}
                 onChange={(e) => set('embedTimestamp', e.target.checked)}
               />
@@ -603,7 +603,7 @@ export default function EmbedsPage() {
             </label>
           </div>
 
-          <div className="border-t border-[var(--border-subtle)] pt-4">
+          <div className="border-t border-(--border-subtle) pt-4">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-semibold text-gray-300">
                 {t('fieldsCount', { count: form.embedFields.length })}
@@ -618,7 +618,7 @@ export default function EmbedsPage() {
             {form.embedFields.length > 0 && (
               <div className="space-y-3">
                 {form.embedFields.map((field, i) => (
-                  <div key={i} className="bg-[var(--bg-base)] rounded-md p-3 space-y-2">
+                  <div key={i} className="bg-(--bg-base) rounded-md p-3 space-y-2">
                     <div className="flex items-start gap-2">
                       <div className="flex-1 grid grid-cols-2 gap-2">
                         <input
@@ -647,7 +647,7 @@ export default function EmbedsPage() {
                     <label className="flex items-center gap-2 cursor-pointer select-none">
                       <input
                         type="checkbox"
-                        className="w-3.5 h-3.5 rounded border-gray-600 bg-[var(--bg-base)] text-discord-blurple focus:ring-discord-blurple"
+                        className="w-3.5 h-3.5 rounded-sm border-gray-600 bg-(--bg-base) text-discord-blurple focus:ring-discord-blurple"
                         checked={field.inline}
                         onChange={(e) => updateField(i, { inline: e.target.checked })}
                       />
@@ -659,7 +659,7 @@ export default function EmbedsPage() {
             )}
           </div>
 
-          <div className="border-t border-[var(--border-subtle)] pt-4 flex flex-wrap gap-3">
+          <div className="border-t border-(--border-subtle) pt-4 flex flex-wrap gap-3">
             <button
               type="button"
               onClick={handleSave}
@@ -699,14 +699,14 @@ export default function EmbedsPage() {
       </div>
 
       <div className="card p-0 overflow-hidden">
-        <div className="px-4 py-3 border-b border-[var(--border-subtle)]">
+        <div className="px-4 py-3 border-b border-(--border-subtle)">
           <h2 className="text-lg font-semibold text-white">{t('savedEmbeds')}</h2>
         </div>
 
         {isLoading ? (
           <div className="p-4 space-y-3">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="h-12 bg-gray-700 rounded animate-pulse" />
+              <div key={i} className="h-12 bg-gray-700 rounded-sm animate-pulse" />
             ))}
           </div>
         ) : embeds.length === 0 ? (
@@ -717,7 +717,7 @@ export default function EmbedsPage() {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[560px]">
-              <thead className="bg-[var(--bg-base)]">
+              <thead className="bg-(--bg-base)">
                 <tr>
                   <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">
                     {t('colName')}
@@ -733,11 +733,11 @@ export default function EmbedsPage() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[var(--border-subtle)]">
+              <tbody className="divide-y divide-(--border-subtle)">
                 {embeds.map((embed) => (
                   <tr
                     key={embed.id}
-                    className={`hover:bg-white/[0.02] transition-colors ${
+                    className={`hover:bg-white/2 transition-colors ${
                       editingId === embed.id ? 'bg-discord-blurple/5' : ''
                     }`}
                   >

@@ -53,7 +53,7 @@ function BlacklistInput({ users, onChange }: { users: string[]; onChange: (u: st
       {users.length > 0 && (
         <div className="flex flex-wrap gap-1.5">
           {users.map((id) => (
-            <span key={id} className="flex items-center gap-1 bg-gray-700/50 text-gray-200 text-xs font-mono rounded px-2 py-1">
+            <span key={id} className="flex items-center gap-1 bg-gray-700/50 text-gray-200 text-xs font-mono rounded-sm px-2 py-1">
               {id}
               <button type="button" onClick={() => onChange(users.filter((u) => u !== id))} className="text-gray-500 hover:text-red-400 ml-1">×</button>
             </span>
@@ -81,10 +81,10 @@ function SlaLevelsEditor({ levels, roles, onChange }: { levels: SlaLevel[]; role
   return (
     <div className="space-y-3">
       {levels.length > 0 && (
-        <div className="overflow-hidden rounded-lg border border-[var(--border-subtle)]">
+        <div className="overflow-hidden rounded-lg border border-(--border-subtle)">
           <div className="overflow-x-auto">
           <table className="w-full min-w-[500px] text-sm">
-            <thead className="bg-[var(--bg-base)]">
+            <thead className="bg-(--bg-base)">
               <tr>
                 <th className="text-left px-3 py-2 text-xs text-gray-400 uppercase">{t('colHours')}</th>
                 <th className="text-left px-3 py-2 text-xs text-gray-400 uppercase">{t('colPingRole')}</th>
@@ -92,9 +92,9 @@ function SlaLevelsEditor({ levels, roles, onChange }: { levels: SlaLevel[]; role
                 <th className="px-3 py-2" />
               </tr>
             </thead>
-            <tbody className="divide-y divide-[var(--border-subtle)]">
+            <tbody className="divide-y divide-(--border-subtle)">
               {levels.map((lvl) => (
-                <tr key={lvl.hours} className="hover:bg-white/[0.02]">
+                <tr key={lvl.hours} className="hover:bg-white/2">
                   <td className="px-3 py-2 font-mono text-yellow-400">{lvl.hours}h</td>
                   <td className="px-3 py-2 text-gray-300">{roles.find((r) => r.id === lvl.pingRoleId)?.name ?? lvl.pingRoleId ?? '—'}</td>
                   <td className="px-3 py-2 text-gray-400 max-w-[200px] truncate">{lvl.message ?? '—'}</td>
@@ -207,7 +207,7 @@ export default function TicketSettingsPage() {
 
       {/* General */}
       <div className="card space-y-5">
-        <h2 className="text-white font-semibold border-b border-[var(--border-subtle)] pb-2">{t('general')}</h2>
+        <h2 className="text-white font-semibold border-b border-(--border-subtle) pb-2">{t('general')}</h2>
         <Row label={t('transcriptChannel')} hint={t('transcriptHint')}>
           <select className="input" value={draft.transcriptChannelId ?? ''} onChange={(e) => set('transcriptChannelId', e.target.value)}>
             <option value="">{t('disabled')}</option>
@@ -224,7 +224,7 @@ export default function TicketSettingsPage() {
 
       {/* Staff Notifications */}
       <div className="card space-y-5">
-        <h2 className="text-white font-semibold border-b border-[var(--border-subtle)] pb-2">{t('staffNotifications')}</h2>
+        <h2 className="text-white font-semibold border-b border-(--border-subtle) pb-2">{t('staffNotifications')}</h2>
         <p className="text-gray-400 text-sm">{t('staffNotifyDesc')}</p>
         <Row label={t('notificationChannel')}>
           <select className="input" value={draft.staffNotifyChannelId ?? ''} onChange={(e) => set('staffNotifyChannelId', e.target.value)}>
@@ -247,7 +247,7 @@ export default function TicketSettingsPage() {
 
       {/* SLA */}
       <div className="card space-y-5">
-        <h2 className="text-white font-semibold border-b border-[var(--border-subtle)] pb-2">{t('slaEscalation')}</h2>
+        <h2 className="text-white font-semibold border-b border-(--border-subtle) pb-2">{t('slaEscalation')}</h2>
         <p className="text-gray-400 text-sm">{t('slaEscalationDesc')}</p>
         <Row label={t('legacySla')} hint={t('legacySlaHint')}>
           <input type="number" min={0} max={720} className="input w-28" value={draft.slaHours ?? 0} onChange={(e) => set('slaHours', Number(e.target.value))} />
@@ -260,7 +260,7 @@ export default function TicketSettingsPage() {
 
       {/* Blacklist */}
       <div className="card space-y-5">
-        <h2 className="text-white font-semibold border-b border-[var(--border-subtle)] pb-2">{t('blacklistedUsers')}</h2>
+        <h2 className="text-white font-semibold border-b border-(--border-subtle) pb-2">{t('blacklistedUsers')}</h2>
         <p className="text-gray-400 text-sm">{t('blacklistDesc')}</p>
         <BlacklistInput users={draft.blacklistedUsers} onChange={(u) => set('blacklistedUsers', u)} />
       </div>

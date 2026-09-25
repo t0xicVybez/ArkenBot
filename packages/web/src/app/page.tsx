@@ -111,7 +111,7 @@ export default async function LandingPage() {
   const dashBullets = t.raw('dashBullets') as string[];
 
   return (
-    <div className="min-h-screen bg-[var(--bg-surface)] text-[var(--text-primary)] flex flex-col">
+    <div className="min-h-screen bg-(--bg-surface) text-(--text-primary) flex flex-col">
 
       <LandingNav docsUrl={SITE.docsUrl} supportUrl={SITE.supportUrl} inviteUrl={SITE.inviteUrl} />
 
@@ -119,9 +119,9 @@ export default async function LandingPage() {
       <section className="relative overflow-hidden px-6 pt-24 pb-20">
         {/* Background glows */}
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1100px] h-[650px] bg-discord-blurple/[0.08] rounded-full blur-3xl" />
-          <div className="absolute top-32 left-1/4 w-[400px] h-[300px] bg-purple-500/[0.04] rounded-full blur-3xl" />
-          <div className="absolute top-32 right-1/4 w-[400px] h-[300px] bg-blue-500/[0.04] rounded-full blur-3xl" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1100px] h-[650px] bg-discord-blurple/8 rounded-full blur-3xl" />
+          <div className="absolute top-32 left-1/4 w-[400px] h-[300px] bg-purple-500/4 rounded-full blur-3xl" />
+          <div className="absolute top-32 right-1/4 w-[400px] h-[300px] bg-blue-500/4 rounded-full blur-3xl" />
           {/* Subtle CSS grid pattern */}
           <div
             className="absolute inset-0 opacity-[0.03]"
@@ -141,11 +141,11 @@ export default async function LandingPage() {
           <h1 className="text-4xl sm:text-5xl lg:text-[56px] font-bold leading-[1.12] tracking-tight mb-6 text-white">
             {t.rich('heroTitle', {
               br: () => <br />,
-              hl: (c) => <span className="bg-gradient-to-r from-[var(--accent)] to-[var(--accent-2)] bg-clip-text text-transparent">{c}</span>,
+              hl: (c) => <span className="bg-linear-to-r from-(--accent) to-(--accent-2) bg-clip-text text-transparent">{c}</span>,
             })}
           </h1>
 
-          <p className="text-lg text-[var(--text-secondary)] mb-9 max-w-xl mx-auto leading-relaxed">
+          <p className="text-lg text-(--text-secondary) mb-9 max-w-xl mx-auto leading-relaxed">
             {t('heroSubtitle')}
           </p>
 
@@ -173,7 +173,7 @@ export default async function LandingPage() {
             ].map((s) => (
               <div key={s.label} className="flex flex-col items-center">
                 <span className="text-[22px] font-bold text-white leading-tight tabular">{s.value}</span>
-                <span className="text-[12px] text-[var(--text-muted)] mt-0.5">{s.label}</span>
+                <span className="text-[12px] text-(--text-muted) mt-0.5">{s.label}</span>
               </div>
             ))}
           </div>
@@ -181,13 +181,13 @@ export default async function LandingPage() {
           {/* Mini feature cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
             {[Shield, Zap, TrendingUp, LayoutDashboard].map((Icon, i) => ({ icon: Icon, title: heroCards[i].title, desc: heroCards[i].desc })).map((f) => (
-              <div key={f.title} className="flex gap-3.5 bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl p-5">
-                <span className="w-9 h-9 rounded-[10px] bg-[var(--accent-glow)] grid place-items-center flex-shrink-0">
-                  <f.icon className="w-4 h-4 text-[var(--accent)]" />
+              <div key={f.title} className="flex gap-3.5 bg-(--bg-card) border border-(--border-subtle) rounded-xl p-5">
+                <span className="w-9 h-9 rounded-[10px] bg-(--accent-glow) grid place-items-center flex-shrink-0">
+                  <f.icon className="w-4 h-4 text-(--accent)" />
                 </span>
                 <div>
                   <h3 className="text-white font-bold text-[14.5px] tracking-tight">{f.title}</h3>
-                  <p className="text-[var(--text-secondary)] text-[13px] leading-relaxed mt-1">{f.desc}</p>
+                  <p className="text-(--text-secondary) text-[13px] leading-relaxed mt-1">{f.desc}</p>
                 </div>
               </div>
             ))}
@@ -196,11 +196,11 @@ export default async function LandingPage() {
       </section>
 
       {/* ── Trust bar ── */}
-      <div className="border-y border-[var(--border-subtle)] bg-[var(--bg-card)]/30 py-4 px-6">
+      <div className="border-y border-(--border-subtle) bg-(--bg-card)/30 py-4 px-6">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
           {[Check, Zap, Shield, Globe].map((Icon, i) => ({ icon: Icon, text: trustBar[i] })).map(({ icon: Icon, text }, i) => (
-            <div key={text} className="flex items-center gap-2 text-xs text-[var(--text-secondary)]">
-              {i > 0 && <span className="hidden sm:block w-1 h-1 rounded-full bg-[var(--text-muted)] mr-6" />}
+            <div key={text} className="flex items-center gap-2 text-xs text-(--text-secondary)">
+              {i > 0 && <span className="hidden sm:block w-1 h-1 rounded-full bg-(--text-muted) mr-6" />}
               <Icon className="w-3.5 h-3.5 text-discord-blurple flex-shrink-0" />
               {text}
             </div>
@@ -209,7 +209,7 @@ export default async function LandingPage() {
       </div>
 
       {/* ── Features ── */}
-      <section id="features" className="py-24 px-6 bg-[var(--bg-surface)]">
+      <section id="features" className="py-24 px-6 bg-(--bg-surface)">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-14">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-discord-blurple/10 border border-discord-blurple/20 text-discord-blurple text-xs font-semibold uppercase tracking-widest mb-4">
@@ -218,7 +218,7 @@ export default async function LandingPage() {
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight">
               {t('featuresHeading')}
             </h2>
-            <p className="text-[var(--text-secondary)] max-w-lg mx-auto">
+            <p className="text-(--text-secondary) max-w-lg mx-auto">
               {t('featuresSubtitle')}
             </p>
           </div>
@@ -230,13 +230,13 @@ export default async function LandingPage() {
               return (
                 <div
                   key={i}
-                  className="bg-[var(--bg-card)] rounded-xl border border-[var(--border)] p-5 hover:border-[var(--border-strong)] hover:-translate-y-0.5 transition-all duration-200 shadow-sm"
+                  className="bg-(--bg-card) rounded-xl border border-(--border) p-5 hover:border-(--border-strong) hover:-translate-y-0.5 transition-all duration-200 shadow-xs"
                 >
                   <div className={`w-10 h-10 rounded-xl ${f.bg} border ${f.border} flex items-center justify-center mb-4`}>
                     <Icon className={`w-4.5 h-4.5 ${f.color}`} />
                   </div>
                   <h3 className="text-white font-semibold text-sm mb-1.5 tracking-tight">{txt.title}</h3>
-                  <p className="text-[var(--text-muted)] text-xs leading-relaxed">{txt.desc}</p>
+                  <p className="text-(--text-muted) text-xs leading-relaxed">{txt.desc}</p>
                 </div>
               );
             })}
@@ -245,7 +245,7 @@ export default async function LandingPage() {
       </section>
 
       {/* ── Ticket System spotlight ── */}
-      <section className="py-24 px-6 border-y border-[var(--border-subtle)] bg-[var(--bg-card)]/20">
+      <section className="py-24 px-6 border-y border-(--border-subtle) bg-(--bg-card)/20">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
           <div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-semibold uppercase tracking-widest mb-4">
@@ -254,12 +254,12 @@ export default async function LandingPage() {
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-5 tracking-tight">
               {t('ticketHeading')}
             </h2>
-            <p className="text-[var(--text-secondary)] mb-8 leading-relaxed text-sm">
+            <p className="text-(--text-secondary) mb-8 leading-relaxed text-sm">
               {t('ticketSubtitle')}
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2.5 mb-8">
               {ticketHighlights.map((item) => (
-                <div key={item} className="flex items-start gap-2.5 text-sm text-[var(--text-secondary)]">
+                <div key={item} className="flex items-start gap-2.5 text-sm text-(--text-secondary)">
                   <span className="w-4 h-4 rounded-full bg-cyan-500/15 border border-cyan-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
                     <Check className="w-2.5 h-2.5 text-cyan-400" />
                   </span>
@@ -275,24 +275,24 @@ export default async function LandingPage() {
           {/* Ticket mock UI */}
           <div className="space-y-3">
             {/* Panel embed mock */}
-            <div className="bg-[#1e1f22] rounded-xl border border-white/[0.06] overflow-hidden shadow-xl shadow-black/30 p-4">
-              <p className="text-[10px] text-[var(--text-muted)] uppercase tracking-wider mb-3 font-semibold">{t('mockPanelPreview')}</p>
+            <div className="bg-[#1e1f22] rounded-xl border border-white/6 overflow-hidden shadow-xl shadow-black/30 p-4">
+              <p className="text-[10px] text-(--text-muted) uppercase tracking-wider mb-3 font-semibold">{t('mockPanelPreview')}</p>
               <div className="bg-[#2b2d31] rounded-lg overflow-hidden" style={{ borderLeft: '4px solid #00b0f4' }}>
                 <div className="p-3">
                   <p className="text-white text-sm font-semibold mb-1">🎫 {t('mockSupportCenter')}</p>
-                  <p className="text-[var(--text-secondary)] text-xs leading-relaxed">{t('mockSupportDesc')}</p>
+                  <p className="text-(--text-secondary) text-xs leading-relaxed">{t('mockSupportDesc')}</p>
                   <div className="flex gap-2 mt-3">
-                    <span className="bg-[#5865f2] text-white text-[11px] font-medium px-3 py-1.5 rounded">🛠️ {t('mockTechnical')}</span>
-                    <span className="bg-[#3ecf8e] text-[#111] text-[11px] font-medium px-3 py-1.5 rounded">💳 {t('mockBilling')}</span>
-                    <span className="bg-[#4f545c] text-white text-[11px] font-medium px-3 py-1.5 rounded">📋 {t('mockReport')}</span>
+                    <span className="bg-[#5865f2] text-white text-[11px] font-medium px-3 py-1.5 rounded-sm">🛠️ {t('mockTechnical')}</span>
+                    <span className="bg-[#3ecf8e] text-[#111] text-[11px] font-medium px-3 py-1.5 rounded-sm">💳 {t('mockBilling')}</span>
+                    <span className="bg-[#4f545c] text-white text-[11px] font-medium px-3 py-1.5 rounded-sm">📋 {t('mockReport')}</span>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* SLA levels mock */}
-            <div className="bg-[var(--bg-card)] rounded-xl border border-[var(--border)] p-4 shadow-lg shadow-black/20">
-              <p className="text-[10px] text-[var(--text-muted)] uppercase tracking-wider mb-3 font-semibold">{t('mockSlaTitle')}</p>
+            <div className="bg-(--bg-card) rounded-xl border border-(--border) p-4 shadow-lg shadow-black/20">
+              <p className="text-[10px] text-(--text-muted) uppercase tracking-wider mb-3 font-semibold">{t('mockSlaTitle')}</p>
               <div className="space-y-2">
                 {[
                   { hours: '2h', role: '@Support', msg: t('mockSla1'), color: 'text-yellow-400 bg-yellow-500/10' },
@@ -300,9 +300,9 @@ export default async function LandingPage() {
                   { hours: '24h', role: '@Manager', msg: t('mockSla3'), color: 'text-red-400 bg-red-500/10' },
                 ].map((l) => (
                   <div key={l.hours} className="flex items-center gap-3 text-xs">
-                    <span className={`font-mono font-bold px-1.5 py-0.5 rounded ${l.color}`}>{l.hours}</span>
+                    <span className={`font-mono font-bold px-1.5 py-0.5 rounded-sm ${l.color}`}>{l.hours}</span>
                     <span className="text-discord-blurple">{l.role}</span>
-                    <span className="text-[var(--text-muted)] truncate">{l.msg}</span>
+                    <span className="text-(--text-muted) truncate">{l.msg}</span>
                   </div>
                 ))}
               </div>
@@ -315,9 +315,9 @@ export default async function LandingPage() {
                 { label: t('mockStatReply'), value: '14m', color: 'text-blue-400' },
                 { label: t('mockStatRating'), value: '4.8★', color: 'text-yellow-400' },
               ].map((s) => (
-                <div key={s.label} className="bg-[var(--bg-card)] rounded-lg p-3 border border-[var(--border)] text-center">
+                <div key={s.label} className="bg-(--bg-card) rounded-lg p-3 border border-(--border) text-center">
                   <p className={`text-base font-bold ${s.color}`}>{s.value}</p>
-                  <p className="text-[10px] text-[var(--text-muted)] mt-0.5">{s.label}</p>
+                  <p className="text-[10px] text-(--text-muted) mt-0.5">{s.label}</p>
                 </div>
               ))}
             </div>
@@ -326,7 +326,7 @@ export default async function LandingPage() {
       </section>
 
       {/* ── Feature comparison ── */}
-      <section id="compare" className="py-24 px-6 bg-[var(--bg-surface)]">
+      <section id="compare" className="py-24 px-6 bg-(--bg-surface)">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-14">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-discord-blurple/10 border border-discord-blurple/20 text-discord-blurple text-xs font-semibold uppercase tracking-widest mb-4">
@@ -335,25 +335,25 @@ export default async function LandingPage() {
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight">
               {t('compareHeading')}
             </h2>
-            <p className="text-[var(--text-secondary)] max-w-md mx-auto">
+            <p className="text-(--text-secondary) max-w-md mx-auto">
               {t('compareSubtitle')}
             </p>
           </div>
 
-          <div className="bg-[var(--bg-card)] rounded-2xl border border-[var(--border)] overflow-hidden shadow-xl shadow-black/20">
+          <div className="bg-(--bg-card) rounded-2xl border border-(--border) overflow-hidden shadow-xl shadow-black/20">
             {/* Header */}
-            <div className="grid grid-cols-[1fr_auto] px-5 py-3 border-b border-[var(--border-subtle)] bg-black/10">
-              <span className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider">{t('compareColFeature')}</span>
+            <div className="grid grid-cols-[1fr_auto] px-5 py-3 border-b border-(--border-subtle) bg-black/10">
+              <span className="text-xs font-semibold text-(--text-secondary) uppercase tracking-wider">{t('compareColFeature')}</span>
               <span className="text-xs font-semibold text-discord-blurple uppercase tracking-wider text-center w-28">{t('compareColArken')}</span>
             </div>
             {/* Rows */}
             {comparison.map((row, i) => (
               <div
                 key={row.feature}
-                className={`grid grid-cols-[1fr_auto] items-center px-5 py-3 ${i % 2 === 0 ? 'bg-white/[0.01]' : ''} border-b border-[var(--border-subtle)] last:border-0`}
+                className={`grid grid-cols-[1fr_auto] items-center px-5 py-3 ${i % 2 === 0 ? 'bg-white/1' : ''} border-b border-(--border-subtle) last:border-0`}
               >
                 <div className="flex items-center gap-2">
-                  <span className="text-sm text-[var(--text-secondary)]">{row.feature}</span>
+                  <span className="text-sm text-(--text-secondary)">{row.feature}</span>
                   {row.note && (
                     <span className="text-[10px] text-discord-blurple bg-discord-blurple/10 border border-discord-blurple/20 px-1.5 py-0.5 rounded-full">
                       {row.note}
@@ -372,7 +372,7 @@ export default async function LandingPage() {
       </section>
 
       {/* ── Dashboard spotlight ── */}
-      <section className="py-24 px-6 border-y border-[var(--border-subtle)] bg-[var(--bg-card)]/20">
+      <section className="py-24 px-6 border-y border-(--border-subtle) bg-(--bg-card)/20">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div>
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-discord-blurple/10 border border-discord-blurple/20 text-discord-blurple text-xs font-semibold uppercase tracking-widest mb-4">
@@ -381,12 +381,12 @@ export default async function LandingPage() {
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-5 tracking-tight">
               {t('dashHeading')}
             </h2>
-            <p className="text-[var(--text-secondary)] mb-8 leading-relaxed text-sm">
+            <p className="text-(--text-secondary) mb-8 leading-relaxed text-sm">
               {t('dashSubtitle')}
             </p>
             <ul className="space-y-2.5 mb-8">
               {dashBullets.map((item) => (
-                <li key={item} className="flex items-center gap-3 text-sm text-[var(--text-secondary)]">
+                <li key={item} className="flex items-center gap-3 text-sm text-(--text-secondary)">
                   <span className="w-4 h-4 rounded-full bg-discord-green/15 border border-discord-green/20 flex items-center justify-center flex-shrink-0">
                     <Check className="w-2.5 h-2.5 text-discord-green" />
                   </span>
@@ -400,21 +400,21 @@ export default async function LandingPage() {
           </div>
 
           {/* Mock dashboard preview */}
-          <div className="bg-[var(--bg-card)] rounded-xl border border-[var(--border)] overflow-hidden shadow-2xl shadow-black/40">
-            <div className="flex items-center gap-1.5 px-4 py-3 border-b border-[var(--border-subtle)] bg-black/20">
+          <div className="bg-(--bg-card) rounded-xl border border-(--border) overflow-hidden shadow-2xl shadow-black/40">
+            <div className="flex items-center gap-1.5 px-4 py-3 border-b border-(--border-subtle) bg-black/20">
               <div className="w-2.5 h-2.5 rounded-full bg-discord-red/60" />
               <div className="w-2.5 h-2.5 rounded-full bg-discord-yellow/60" />
               <div className="w-2.5 h-2.5 rounded-full bg-discord-green/60" />
-              <span className="ml-2 text-[11px] text-[var(--text-muted)]">arkenbot.app/dashboard</span>
+              <span className="ml-2 text-[11px] text-(--text-muted)">arkenbot.app/dashboard</span>
             </div>
             <div className="flex">
               {/* Mini sidebar */}
-              <div className="w-36 border-r border-[var(--border-subtle)] p-2 space-y-0.5 bg-[var(--bg-elevated)]">
+              <div className="w-36 border-r border-(--border-subtle) p-2 space-y-0.5 bg-(--bg-elevated)">
                 <div className="flex items-center gap-2 px-2 py-1.5 mb-2">
                   <div className="w-5 h-5 rounded-lg bg-discord-blurple/80" />
                   <div className="flex-1 space-y-1">
-                    <div className="h-1.5 bg-[var(--bg-hover)] rounded w-3/4" />
-                    <div className="h-1 bg-[var(--bg-hover)] rounded w-1/2" />
+                    <div className="h-1.5 bg-(--bg-hover) rounded-sm w-3/4" />
+                    <div className="h-1 bg-(--bg-hover) rounded-sm w-1/2" />
                   </div>
                 </div>
                 {[
@@ -429,34 +429,34 @@ export default async function LandingPage() {
                   { label: t('dashMockAddons'), section: t('dashSecAddons') },
                 ].map((item, idx) => (
                   <div key={idx}>
-                    {item.section && <p className="px-2 text-[8px] text-[var(--text-muted)] font-semibold uppercase tracking-widest mt-2 mb-0.5">{item.section}</p>}
-                    <div className={`px-2 py-1 rounded text-[10px] ${item.active ? 'bg-discord-blurple/15 text-discord-blurple border-l-2 border-discord-blurple' : 'text-[var(--text-muted)]'}`}>
+                    {item.section && <p className="px-2 text-[8px] text-(--text-muted) font-semibold uppercase tracking-widest mt-2 mb-0.5">{item.section}</p>}
+                    <div className={`px-2 py-1 rounded-sm text-[10px] ${item.active ? 'bg-discord-blurple/15 text-discord-blurple border-l-2 border-discord-blurple' : 'text-(--text-muted)'}`}>
                       {item.label}
                     </div>
                   </div>
                 ))}
               </div>
               {/* Content */}
-              <div className="flex-1 p-3 space-y-2 bg-[var(--bg-surface)]">
+              <div className="flex-1 p-3 space-y-2 bg-(--bg-surface)">
                 <div className="grid grid-cols-2 gap-1.5">
                   {[t('dashStatMod'), t('dashStatMembers'), t('dashStatTickets'), t('dashStatEvents')].map((label) => (
-                    <div key={label} className="bg-[var(--bg-card)] rounded-lg px-2.5 py-2 border border-[var(--border-subtle)]">
-                      <p className="text-[9px] text-[var(--text-muted)]">{label}</p>
+                    <div key={label} className="bg-(--bg-card) rounded-lg px-2.5 py-2 border border-(--border-subtle)">
+                      <p className="text-[9px] text-(--text-muted)">{label}</p>
                       <p className="text-base font-bold text-white">—</p>
                     </div>
                   ))}
                 </div>
-                <div className="bg-[var(--bg-card)] rounded-lg p-2.5 border border-[var(--border-subtle)]">
-                  <p className="text-[9px] text-[var(--text-muted)] mb-2">{t('dashActivity')}</p>
+                <div className="bg-(--bg-card) rounded-lg p-2.5 border border-(--border-subtle)">
+                  <p className="text-[9px] text-(--text-muted) mb-2">{t('dashActivity')}</p>
                   <div className="flex items-end gap-0.5 h-10">
                     {[3, 6, 4, 8, 5, 9, 7, 12, 6, 10, 8, 11, 9, 14].map((h, i) => (
-                      <div key={i} className="flex-1 bg-discord-blurple/40 rounded-sm" style={{ height: `${h * 6}%` }} />
+                      <div key={i} className="flex-1 bg-discord-blurple/40 rounded-xs" style={{ height: `${h * 6}%` }} />
                     ))}
                   </div>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <Settings className="w-3 h-3 text-[var(--text-muted)]" />
-                  <span className="text-[10px] text-[var(--text-muted)]">{t('dashInstant')}</span>
+                  <Settings className="w-3 h-3 text-(--text-muted)" />
+                  <span className="text-[10px] text-(--text-muted)">{t('dashInstant')}</span>
                 </div>
               </div>
             </div>
@@ -465,7 +465,7 @@ export default async function LandingPage() {
       </section>
 
       {/* ── Open source / GameQuery ── */}
-      <section className="py-24 px-6 bg-[var(--bg-surface)]">
+      <section className="py-24 px-6 bg-(--bg-surface)">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold uppercase tracking-widest mb-4">
@@ -475,12 +475,12 @@ export default async function LandingPage() {
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight">
               {t('osHeading')}
             </h2>
-            <p className="text-[var(--text-secondary)] max-w-xl mx-auto">
+            <p className="text-(--text-secondary) max-w-xl mx-auto">
               {t('osSubtitle')}
             </p>
           </div>
 
-          <div className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-card)]/40 p-8 md:p-10">
+          <div className="rounded-2xl border border-(--border-subtle) bg-(--bg-card)/40 p-8 md:p-10">
             <div className="flex flex-col md:flex-row md:items-start gap-8">
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-3">
@@ -489,13 +489,13 @@ export default async function LandingPage() {
                   </div>
                   <div>
                     <h3 className="text-white font-bold text-xl tracking-tight">GameQuery</h3>
-                    <p className="text-[var(--text-secondary)] text-xs">
+                    <p className="text-(--text-secondary) text-xs">
                       {t('osTagline')}
                     </p>
                   </div>
                 </div>
 
-                <p className="text-[var(--text-secondary)] text-sm leading-relaxed mb-5">
+                <p className="text-(--text-secondary) text-sm leading-relaxed mb-5">
                   {t.rich('osDesc', {
                     code: (c) => <code className="text-emerald-400">{c}</code>,
                   })}
@@ -509,10 +509,10 @@ export default async function LandingPage() {
                   ].map((s) => (
                     <div
                       key={s.l}
-                      className="rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-surface)]/60 px-3 py-2.5 text-center"
+                      className="rounded-lg border border-(--border-subtle) bg-(--bg-surface)/60 px-3 py-2.5 text-center"
                     >
                       <div className="text-white font-bold text-lg leading-none">{s.n}</div>
-                      <div className="text-[var(--text-secondary)] text-[11px] mt-1">{s.l}</div>
+                      <div className="text-(--text-secondary) text-[11px] mt-1">{s.l}</div>
                     </div>
                   ))}
                 </div>
@@ -531,7 +531,7 @@ export default async function LandingPage() {
                     href="https://github.com/t0xicVybez/GameQuery"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-[var(--border-subtle)] hover:border-emerald-500/40 text-white font-semibold text-sm transition-colors"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-(--border-subtle) hover:border-emerald-500/40 text-white font-semibold text-sm transition-colors"
                   >
                     {t('osViewSource')}
                     <ExternalLink className="w-3.5 h-3.5" />
@@ -540,13 +540,13 @@ export default async function LandingPage() {
               </div>
 
               <div className="md:w-72 shrink-0">
-                <div className="rounded-xl border border-[var(--border-subtle)] bg-[#0e1320] p-4 font-mono text-[12px] leading-relaxed overflow-x-auto">
+                <div className="rounded-xl border border-(--border-subtle) bg-[#0e1320] p-4 font-mono text-[12px] leading-relaxed overflow-x-auto">
                   <div className="text-[#5c6b8a] mb-1"># install it yourself</div>
                   <div className="text-[#c3e88d] mb-3">npm i @t0xicvybez/gamequery</div>
                   <div className="text-[#5c6b8a] mb-1"># or for PHP</div>
                   <div className="text-[#c3e88d]">composer require t0xicvybez/gamequery</div>
                 </div>
-                <p className="text-[var(--text-secondary)] text-[11px] mt-3 text-center">
+                <p className="text-(--text-secondary) text-[11px] mt-3 text-center">
                   {t('osLicense')}
                 </p>
               </div>
@@ -567,10 +567,10 @@ export default async function LandingPage() {
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight">
             {t('ctaHeading')}
           </h2>
-          <p className="text-[var(--text-secondary)] mb-3 text-sm max-w-lg mx-auto">
+          <p className="text-(--text-secondary) mb-3 text-sm max-w-lg mx-auto">
             {t('ctaSubtitle')}
           </p>
-          <p className="text-[var(--text-muted)] text-xs mb-10">{t('ctaNote')}</p>
+          <p className="text-(--text-muted) text-xs mb-10">{t('ctaNote')}</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <a
               href={SITE.inviteUrl}

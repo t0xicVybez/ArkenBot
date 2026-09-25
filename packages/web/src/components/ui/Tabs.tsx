@@ -15,7 +15,7 @@ export function Tabs<T extends string>({
   return (
     <div
       className={cn(
-        'inline-flex gap-1 p-1 rounded-[var(--r)] bg-[var(--bg-elevated)] border border-[var(--border)]',
+        'inline-flex gap-1 p-1 rounded-(--r) bg-(--bg-elevated) border border-(--border)',
         className,
       )}
     >
@@ -25,10 +25,10 @@ export function Tabs<T extends string>({
           type="button"
           onClick={() => onValueChange?.(o.value)}
           className={cn(
-            'px-3 py-1.5 text-[13px] font-medium rounded-[var(--r-sm)] transition-colors',
+            'px-3 py-1.5 text-[13px] font-medium rounded-(--r-sm) transition-colors',
             value === o.value
-              ? 'bg-[var(--accent-soft)] text-[var(--accent)]'
-              : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]',
+              ? 'bg-(--accent-soft) text-(--accent)'
+              : 'text-(--text-secondary) hover:text-(--text-primary)',
           )}
         >
           {o.label}

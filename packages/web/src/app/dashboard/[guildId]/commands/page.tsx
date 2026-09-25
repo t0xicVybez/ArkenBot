@@ -256,10 +256,10 @@ export default function CommandsPage() {
       <div className="p-3 sm:p-6 max-w-4xl space-y-6">
         {[...Array(3)].map((_, i) => (
           <div key={i} className="card animate-pulse">
-            <div className="h-5 bg-gray-700 rounded w-32 mb-4" />
+            <div className="h-5 bg-gray-700 rounded-sm w-32 mb-4" />
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {[...Array(6)].map((_, j) => (
-                <div key={j} className="h-12 bg-gray-700 rounded" />
+                <div key={j} className="h-12 bg-gray-700 rounded-sm" />
               ))}
             </div>
           </div>
@@ -294,7 +294,7 @@ export default function CommandsPage() {
         </div>
 
         {showForm && (
-          <form onSubmit={handleCreateSubmit} className="mb-5 p-4 rounded-lg bg-[var(--bg-base)] border border-[var(--border-subtle)] space-y-4">
+          <form onSubmit={handleCreateSubmit} className="mb-5 p-4 rounded-lg bg-(--bg-base) border border-(--border-subtle) space-y-4">
             <h3 className="text-sm font-semibold text-white">{t('createCustomCommand')}</h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -366,7 +366,7 @@ export default function CommandsPage() {
                   <div className="flex items-center gap-2">
                     <input
                       type="color"
-                      className="w-10 h-9 rounded cursor-pointer bg-transparent border border-gray-600"
+                      className="w-10 h-9 rounded-sm cursor-pointer bg-transparent border border-gray-600"
                       value={form.embedColor}
                       onChange={(e) => setForm((f) => ({ ...f, embedColor: e.target.value }))}
                     />
@@ -397,7 +397,7 @@ export default function CommandsPage() {
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
-                    className="w-4 h-4 rounded accent-discord-blurple"
+                    className="w-4 h-4 rounded-sm accent-discord-blurple"
                     checked={form.deleteInvoking}
                     onChange={(e) => setForm((f) => ({ ...f, deleteInvoking: e.target.checked }))}
                   />
@@ -408,7 +408,7 @@ export default function CommandsPage() {
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
-                    className="w-4 h-4 rounded accent-discord-blurple"
+                    className="w-4 h-4 rounded-sm accent-discord-blurple"
                     checked={form.dmResponse}
                     onChange={(e) => setForm((f) => ({ ...f, dmResponse: e.target.checked }))}
                   />
@@ -441,10 +441,10 @@ export default function CommandsPage() {
             {t('noCustom')}
           </p>
         ) : (
-          <div className="overflow-hidden rounded-lg border border-[var(--border-subtle)]">
+          <div className="overflow-hidden rounded-lg border border-(--border-subtle)">
             <div className="overflow-x-auto">
             <table className="w-full min-w-[600px]">
-              <thead className="bg-[var(--bg-base)]">
+              <thead className="bg-(--bg-base)">
                 <tr>
                   <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colCommand')}</th>
                   <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colResponse')}</th>
@@ -454,15 +454,15 @@ export default function CommandsPage() {
                   <th className="px-4 py-3" />
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[var(--border-subtle)]">
+              <tbody className="divide-y divide-(--border-subtle)">
                 {customCommands.map((cmd) => (
-                  <tr key={cmd.id} className="hover:bg-white/[0.02] transition-colors">
+                  <tr key={cmd.id} className="hover:bg-white/2 transition-colors">
                     <td className="px-4 py-3">
                       <span className="text-sm font-mono text-gray-200">!{cmd.name}</span>
                       {cmd.aliases.length > 0 && (
                         <div className="flex flex-wrap gap-1 mt-1">
                           {cmd.aliases.map((a) => (
-                            <span key={a} className="text-xs bg-gray-700 text-gray-400 px-1.5 py-0.5 rounded font-mono">!{a}</span>
+                            <span key={a} className="text-xs bg-gray-700 text-gray-400 px-1.5 py-0.5 rounded-sm font-mono">!{a}</span>
                           ))}
                         </div>
                       )}
@@ -470,10 +470,10 @@ export default function CommandsPage() {
                     <td className="px-4 py-3 text-sm text-gray-400 max-w-[200px] truncate">{cmd.response}</td>
                     <td className="px-4 py-3">
                       <div className="flex flex-wrap gap-1">
-                        {cmd.embed && <span className="text-xs bg-indigo-500/20 text-indigo-300 px-1.5 py-0.5 rounded">{t('optEmbed')}</span>}
-                        {cmd.deleteInvoking && <span className="text-xs bg-red-500/20 text-red-300 px-1.5 py-0.5 rounded">{t('optDelMsg')}</span>}
-                        {cmd.dmResponse && <span className="text-xs bg-green-500/20 text-green-300 px-1.5 py-0.5 rounded">{t('optDM')}</span>}
-                        {cmd.cooldown > 0 && <span className="text-xs bg-yellow-500/20 text-yellow-300 px-1.5 py-0.5 rounded">{cmd.cooldown}s</span>}
+                        {cmd.embed && <span className="text-xs bg-indigo-500/20 text-indigo-300 px-1.5 py-0.5 rounded-sm">{t('optEmbed')}</span>}
+                        {cmd.deleteInvoking && <span className="text-xs bg-red-500/20 text-red-300 px-1.5 py-0.5 rounded-sm">{t('optDelMsg')}</span>}
+                        {cmd.dmResponse && <span className="text-xs bg-green-500/20 text-green-300 px-1.5 py-0.5 rounded-sm">{t('optDM')}</span>}
+                        {cmd.cooldown > 0 && <span className="text-xs bg-yellow-500/20 text-yellow-300 px-1.5 py-0.5 rounded-sm">{cmd.cooldown}s</span>}
                       </div>
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-500">{cmd.uses.toLocaleString()}</td>
@@ -529,7 +529,7 @@ export default function CommandsPage() {
         </div>
 
         {showArForm && (
-          <form onSubmit={handleArSubmit} className="mb-5 p-4 rounded-lg bg-[var(--bg-base)] border border-[var(--border-subtle)] space-y-4">
+          <form onSubmit={handleArSubmit} className="mb-5 p-4 rounded-lg bg-(--bg-base) border border-(--border-subtle) space-y-4">
             <h3 className="text-sm font-semibold text-white">{t('createAutoResponse')}</h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -581,7 +581,7 @@ export default function CommandsPage() {
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
-                  className="w-4 h-4 rounded accent-discord-blurple"
+                  className="w-4 h-4 rounded-sm accent-discord-blurple"
                   checked={arForm.deleteMessage}
                   onChange={(e) => setArForm((f) => ({ ...f, deleteMessage: e.target.checked }))}
                 />
@@ -595,7 +595,7 @@ export default function CommandsPage() {
                 <div className="flex items-center gap-2 max-w-[220px]">
                   <input
                     type="color"
-                    className="w-10 h-9 rounded cursor-pointer bg-transparent border border-gray-600"
+                    className="w-10 h-9 rounded-sm cursor-pointer bg-transparent border border-gray-600"
                     value={arForm.embedColor}
                     onChange={(e) => setArForm((f) => ({ ...f, embedColor: e.target.value }))}
                   />
@@ -633,10 +633,10 @@ export default function CommandsPage() {
             {t('noAutoResponses')}
           </p>
         ) : (
-          <div className="overflow-hidden rounded-lg border border-[var(--border-subtle)]">
+          <div className="overflow-hidden rounded-lg border border-(--border-subtle)">
             <div className="overflow-x-auto">
               <table className="w-full min-w-[540px]">
-                <thead className="bg-[var(--bg-base)]">
+                <thead className="bg-(--bg-base)">
                   <tr>
                     <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colPattern')}</th>
                     <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colResponse')}</th>
@@ -646,9 +646,9 @@ export default function CommandsPage() {
                     <th className="px-4 py-3" />
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[var(--border-subtle)]">
+                <tbody className="divide-y divide-(--border-subtle)">
                   {autoResponses.map((ar) => (
-                    <tr key={ar.id} className="hover:bg-white/[0.02] transition-colors">
+                    <tr key={ar.id} className="hover:bg-white/2 transition-colors">
                       <td className="px-4 py-3">
                         <span className="text-sm font-mono text-gray-200">{ar.pattern}</span>
                         <span className="ml-1.5 text-xs text-gray-600 font-mono">/{ar.flags}</span>
@@ -656,8 +656,8 @@ export default function CommandsPage() {
                       <td className="px-4 py-3 text-sm text-gray-400 max-w-[180px] truncate">{ar.response}</td>
                       <td className="px-4 py-3">
                         <div className="flex flex-wrap gap-1">
-                          {ar.embed && <span className="text-xs bg-indigo-500/20 text-indigo-300 px-1.5 py-0.5 rounded">{t('optEmbed')}</span>}
-                          {ar.deleteMessage && <span className="text-xs bg-red-500/20 text-red-300 px-1.5 py-0.5 rounded">{t('optDelMsg')}</span>}
+                          {ar.embed && <span className="text-xs bg-indigo-500/20 text-indigo-300 px-1.5 py-0.5 rounded-sm">{t('optEmbed')}</span>}
+                          {ar.deleteMessage && <span className="text-xs bg-red-500/20 text-red-300 px-1.5 py-0.5 rounded-sm">{t('optDelMsg')}</span>}
                         </div>
                       </td>
                       <td className="px-4 py-3 text-sm text-gray-500">{ar.uses.toLocaleString()}</td>
@@ -706,7 +706,7 @@ export default function CommandsPage() {
                   return (
                     <div
                       key={cmd.name}
-                      className="flex items-center justify-between px-3 py-2 rounded-lg bg-[var(--bg-base)] border border-[var(--border-subtle)]"
+                      className="flex items-center justify-between px-3 py-2 rounded-lg bg-(--bg-base) border border-(--border-subtle)"
                     >
                       <span className="text-sm font-mono text-gray-200">/{cmd.name}</span>
                       <button
@@ -765,13 +765,13 @@ export default function CommandsPage() {
               <svg className={`w-3.5 h-3.5 text-gray-500 transition-transform ${roleDropdownOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
             </button>
             {roleDropdownOpen && (
-              <div className="absolute z-20 top-full left-0 right-0 mt-1 bg-[var(--bg-base)] border border-white/[0.08] rounded-lg shadow-xl max-h-52 overflow-y-auto">
+              <div className="absolute z-20 top-full left-0 right-0 mt-1 bg-(--bg-base) border border-white/8 rounded-lg shadow-xl max-h-52 overflow-y-auto">
                 {roles.map((r) => {
                   const checked = permForm.roleIds.includes(r.id);
                   return (
                     <label
                       key={r.id}
-                      className="flex items-center gap-2.5 px-3 py-2 hover:bg-white/[0.04] cursor-pointer"
+                      className="flex items-center gap-2.5 px-3 py-2 hover:bg-white/4 cursor-pointer"
                     >
                       <input
                         type="checkbox"
@@ -827,7 +827,7 @@ export default function CommandsPage() {
             ).map((group) => (
               <div
                 key={group.key}
-                className="flex items-center gap-3 px-3 py-2 rounded-lg bg-[var(--bg-base)] border border-white/[0.04]"
+                className="flex items-center gap-3 px-3 py-2 rounded-lg bg-(--bg-base) border border-white/4"
               >
                 <span className="text-xs font-mono text-gray-300 w-32 flex-shrink-0 truncate">/{group.commandName}</span>
                 <div className="flex flex-wrap gap-1 flex-1">
@@ -835,7 +835,7 @@ export default function CommandsPage() {
                     const rawName = roles.find((r) => r.id === p.roleId)?.name ?? p.roleId;
                     const roleName = rawName.startsWith('@') ? rawName : `@${rawName}`;
                     return (
-                      <span key={p.id} className="flex items-center gap-1 text-[11px] bg-white/[0.06] text-gray-300 px-2 py-0.5 rounded-full">
+                      <span key={p.id} className="flex items-center gap-1 text-[11px] bg-white/6 text-gray-300 px-2 py-0.5 rounded-full">
                         {roleName}
                         <button
                           onClick={() => removePermMutation.mutate(p.id)}

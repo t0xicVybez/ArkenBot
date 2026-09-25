@@ -63,7 +63,7 @@ export default function StaffUsersPage() {
       <div className="card overflow-hidden p-0">
         <div className="overflow-x-auto">
         <table className="w-full min-w-[600px]">
-          <thead className="bg-[var(--bg-base)]">
+          <thead className="bg-(--bg-base)">
             <tr>
               <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colUser')}</th>
               <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colId')}</th>
@@ -72,17 +72,17 @@ export default function StaffUsersPage() {
               <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colActions')}</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[var(--border-subtle)]">
+          <tbody className="divide-y divide-(--border-subtle)">
             {isLoading ? (
               [...Array(5)].map((_, i) => (
                 <tr key={i} className="animate-pulse">
                   <td colSpan={5} className="px-4 py-3">
-                    <div className="h-4 bg-gray-700 rounded" />
+                    <div className="h-4 bg-gray-700 rounded-sm" />
                   </td>
                 </tr>
               ))
             ) : users.map((user) => (
-              <tr key={user.id} className="hover:bg-white/[0.02] transition-colors">
+              <tr key={user.id} className="hover:bg-white/2 transition-colors">
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-3">
                     {user.avatar ? (
@@ -116,7 +116,7 @@ export default function StaffUsersPage() {
                   {!user.isBotOwner && (
                     <button
                       onClick={() => updateMutation.mutate({ id: user.id, isStaff: !user.isStaff })}
-                      className={`text-xs py-1 px-2 rounded ${user.isStaff ? 'btn-danger' : 'btn-primary'}`}
+                      className={`text-xs py-1 px-2 rounded-sm ${user.isStaff ? 'btn-danger' : 'btn-primary'}`}
                     >
                       {user.isStaff ? t('removeStaff') : t('makeStaff')}
                     </button>

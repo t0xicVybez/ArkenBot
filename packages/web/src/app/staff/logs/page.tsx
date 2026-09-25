@@ -72,11 +72,11 @@ export default function StaffLogsPage() {
       </div>
 
       <div className="card overflow-hidden p-0">
-        <div className="divide-y divide-[var(--border-subtle)] font-mono text-sm">
+        <div className="divide-y divide-(--border-subtle) font-mono text-sm">
           {isLoading ? (
             [...Array(20)].map((_, i) => (
               <div key={i} className="px-4 py-2 animate-pulse">
-                <div className="h-3 bg-gray-700 rounded w-full" />
+                <div className="h-3 bg-gray-700 rounded-sm w-full" />
               </div>
             ))
           ) : logs.length === 0 ? (
@@ -89,7 +89,7 @@ export default function StaffLogsPage() {
                   key={log.id}
                   type="button"
                   onClick={() => setExpanded(isOpen ? null : log.id)}
-                  className="w-full px-4 py-2.5 text-left hover:bg-white/[0.02]"
+                  className="w-full px-4 py-2.5 text-left hover:bg-white/2"
                 >
                   <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-3">
                     <div className="flex items-center gap-3 flex-shrink-0">
@@ -121,7 +121,7 @@ export default function StaffLogsPage() {
         </div>
 
         {total > 100 && (
-          <div className="px-4 py-3 border-t border-[var(--border-subtle)] flex items-center justify-between">
+          <div className="px-4 py-3 border-t border-(--border-subtle) flex items-center justify-between">
             <p className="text-xs text-gray-400">{t('pageOf', { page, pages: Math.ceil(total / 100) })}</p>
             <div className="flex gap-2">
               <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page <= 1} className="btn-secondary text-xs py-1 px-3">

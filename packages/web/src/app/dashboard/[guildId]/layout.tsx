@@ -92,15 +92,15 @@ export default function GuildLayout({ children }: { children: React.ReactNode })
         onClose={() => setSidebarOpen(false)}
       />
       <main className="flex-1 overflow-auto flex flex-col min-w-0">
-        <div className="md:hidden flex items-center gap-3 px-4 py-3 border-b bg-discord-elevated border-[var(--border-subtle)]">
+        <div className="md:hidden flex items-center gap-3 px-4 py-3 border-b bg-discord-elevated border-(--border-subtle)">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="p-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-white/[0.06] transition-colors"
+            className="p-1.5 rounded-lg text-(--text-muted) hover:text-(--text-primary) hover:bg-white/6 transition-colors"
             aria-label={t('openMenu')}
           >
             <Menu className="w-5 h-5" />
           </button>
-          <p className="text-[var(--text-primary)] font-semibold text-sm truncate tracking-tight">
+          <p className="text-(--text-primary) font-semibold text-sm truncate tracking-tight">
             {guild?.name ?? t('dashboardFallback')}
           </p>
         </div>

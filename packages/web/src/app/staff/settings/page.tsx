@@ -75,8 +75,8 @@ export default function StaffSettingsPage() {
         </div>
         <p className="text-gray-400 text-sm mb-6">
           {t.rich('presenceDesc', {
-            servers: () => <code className="bg-gray-700 px-1 rounded text-xs">{'{servers}'}</code>,
-            users: () => <code className="bg-gray-700 px-1 rounded text-xs">{'{users}'}</code>,
+            servers: () => <code className="bg-gray-700 px-1 rounded-sm text-xs">{'{servers}'}</code>,
+            users: () => <code className="bg-gray-700 px-1 rounded-sm text-xs">{'{users}'}</code>,
           })}
         </p>
 
@@ -128,7 +128,7 @@ export default function StaffSettingsPage() {
             </div>
 
             {/* Preview */}
-            <div className="bg-gray-800/50 rounded-lg p-3 border border-[var(--border-subtle)]">
+            <div className="bg-gray-800/50 rounded-lg p-3 border border-(--border-subtle)">
               <p className="text-xs text-gray-400 mb-1">{t('preview')}</p>
               <p className="text-white text-sm">
                 <span className="text-gray-400">{activityType} </span>

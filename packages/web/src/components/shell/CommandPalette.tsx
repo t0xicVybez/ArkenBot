@@ -63,19 +63,19 @@ export function CommandPalette({
       <div className="absolute inset-0 bg-black/55" />
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-[640px] overflow-hidden rounded-[16px] border border-[var(--border-strong)] bg-[var(--bg-elevated)] shadow-[var(--sh-pop)]"
+        className="relative w-full max-w-[640px] overflow-hidden rounded-[16px] border border-(--border-strong) bg-(--bg-elevated) shadow-(--sh-pop)"
       >
-        <div className="flex items-center gap-3 border-b border-[var(--border)] px-5 py-4">
-          <Search className="h-5 w-5 text-[var(--text-secondary)]" />
+        <div className="flex items-center gap-3 border-b border-(--border) px-5 py-4">
+          <Search className="h-5 w-5 text-(--text-secondary)" />
           <input
             ref={inputRef}
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder={tn('palette.placeholder')}
-            className="flex-1 bg-transparent text-[16px] text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)]"
+            className="flex-1 bg-transparent text-[16px] text-(--text-primary) outline-hidden placeholder:text-(--text-muted)"
           />
           <kbd
-            className="rounded-[6px] border border-[var(--border)] px-2 py-0.5 text-[11px] text-[var(--text-secondary)]"
+            className="rounded-[6px] border border-(--border) px-2 py-0.5 text-[11px] text-(--text-secondary)"
             style={{ fontFamily: 'var(--font-mono)' }}
           >
             esc
@@ -83,7 +83,7 @@ export function CommandPalette({
         </div>
 
         <div className="max-h-[380px] overflow-y-auto p-2">
-          <div className="px-3 pb-1 pt-2 text-[10.5px] font-bold uppercase tracking-[1.2px] text-[var(--text-muted)]">
+          <div className="px-3 pb-1 pt-2 text-[10.5px] font-bold uppercase tracking-[1.2px] text-(--text-muted)">
             {tn('palette.pages')}
           </div>
           {results.map((p, i) => {
@@ -96,32 +96,32 @@ export function CommandPalette({
                 className={cn(
                   'flex items-center gap-3 rounded-[10px] px-3 py-2.5 text-[14px]',
                   i === 0
-                    ? 'bg-[var(--accent-soft)] text-[var(--text-primary)]'
-                    : 'text-[var(--text-primary)] hover:bg-[var(--bg-hover)]',
+                    ? 'bg-(--accent-soft) text-(--text-primary)'
+                    : 'text-(--text-primary) hover:bg-(--bg-hover)',
                 )}
               >
                 <span
                   className={cn(
                     'grid h-[30px] w-[30px] flex-none place-items-center rounded-[8px]',
-                    i === 0 ? 'bg-[var(--accent-soft)] text-[var(--accent)]' : 'bg-[var(--bg-card)] text-[var(--text-secondary)]',
+                    i === 0 ? 'bg-(--accent-soft) text-(--accent)' : 'bg-(--bg-card) text-(--text-secondary)',
                   )}
                 >
                   <Icon className="h-4 w-4" />
                 </span>
                 {p.tlabel}
-                <span className="ml-1 text-[12px] text-[var(--text-muted)]">{p.tgroup}</span>
-                {i === 0 && <CornerDownLeft className="ml-auto h-3.5 w-3.5 text-[var(--text-muted)]" />}
+                <span className="ml-1 text-[12px] text-(--text-muted)">{p.tgroup}</span>
+                {i === 0 && <CornerDownLeft className="ml-auto h-3.5 w-3.5 text-(--text-muted)" />}
               </Link>
             );
           })}
           {results.length === 0 && (
-            <div className="px-3 py-6 text-center text-[13px] text-[var(--text-muted)]">
+            <div className="px-3 py-6 text-center text-[13px] text-(--text-muted)">
               {tn('palette.noMatches', { q })}
             </div>
           )}
         </div>
 
-        <div className="flex items-center gap-4 border-t border-[var(--border)] px-4 py-2.5 text-[11.5px] text-[var(--text-muted)]">
+        <div className="flex items-center gap-4 border-t border-(--border) px-4 py-2.5 text-[11.5px] text-(--text-muted)">
           <span>↑↓ {tn('palette.navigate')}</span>
           <span>↵ {tn('palette.open')}</span>
           <span>⌘K {tn('palette.toggle')}</span>

@@ -53,7 +53,7 @@ export default function AnalyticsPage() {
             <h1 className="text-[23px] font-semibold" style={{ fontFamily: 'var(--font-display)' }}>
               Analytics
             </h1>
-            <p className="mt-1 text-[13.5px] text-[var(--text-secondary)]">
+            <p className="mt-1 text-[13.5px] text-(--text-secondary)">
               Growth, activity and moderation trends across the last 30 days.
             </p>
           </div>
@@ -78,7 +78,7 @@ export default function AnalyticsPage() {
 
         <ChartCard
           title="Member growth"
-          right={<span className="flex items-center gap-1.5 text-[11.5px] text-[var(--text-secondary)]"><Dot c="#34d399" /> Total members</span>}
+          right={<span className="flex items-center gap-1.5 text-[11.5px] text-(--text-secondary)"><Dot c="#34d399" /> Total members</span>}
         >
           <ResponsiveContainer width="100%" height={260}>
             <AreaChart data={growth} margin={{ top: 8, right: 8, left: -12, bottom: 0 }}>
@@ -101,7 +101,7 @@ export default function AnalyticsPage() {
           <ChartCard
             title="Activity"
             right={
-              <span className="flex items-center gap-3 text-[11.5px] text-[var(--text-secondary)]">
+              <span className="flex items-center gap-3 text-[11.5px] text-(--text-secondary)">
                 <span className="flex items-center gap-1.5"><Dot c="#34d399" /> Msgs</span>
                 <span className="flex items-center gap-1.5"><Dot c="#818cf8" /> Cmds</span>
               </span>
@@ -129,12 +129,12 @@ export default function AnalyticsPage() {
                   <Tooltip contentStyle={tipStyle} />
                 </PieChart>
               </ResponsiveContainer>
-              <div className="flex flex-1 flex-col gap-2 text-[12.5px] text-[var(--text-secondary)]">
+              <div className="flex flex-1 flex-col gap-2 text-[12.5px] text-(--text-secondary)">
                 {byFeature.map((e) => (
                   <div key={e.name} className="flex items-center gap-2">
                     <Dot c={e.color} />
                     {e.name}
-                    <b className="ml-auto text-[var(--text-primary)]" style={{ fontFamily: 'var(--font-display)' }}>
+                    <b className="ml-auto text-(--text-primary)" style={{ fontFamily: 'var(--font-display)' }}>
                       {e.value}%
                     </b>
                   </div>
@@ -146,14 +146,14 @@ export default function AnalyticsPage() {
           <ChartCard title="Most active members">
             <div className="flex flex-col">
               {mostActive.map(([name, lvl, msgs, color], i) => (
-                <div key={name} className="flex items-center gap-3 border-t border-[var(--border)] py-[9px] text-[13px] first:border-t-0">
-                  <span className="w-4 text-[12px] text-[var(--text-muted)]" style={{ fontFamily: 'var(--font-mono)' }}>{i + 1}</span>
+                <div key={name} className="flex items-center gap-3 border-t border-(--border) py-[9px] text-[13px] first:border-t-0">
+                  <span className="w-4 text-[12px] text-(--text-muted)" style={{ fontFamily: 'var(--font-mono)' }}>{i + 1}</span>
                   <span className="h-[26px] w-[26px] rounded-full" style={{ background: color }} />
                   {name}
-                  <span className="ml-auto rounded-[6px] bg-[var(--accent-soft)] px-[7px] py-0.5 text-[11px] font-semibold text-[var(--accent)]">
+                  <span className="ml-auto rounded-[6px] bg-(--accent-soft) px-[7px] py-0.5 text-[11px] font-semibold text-(--accent)">
                     Lv {lvl}
                   </span>
-                  <span className="w-[52px] text-right text-[13px] text-[var(--text-secondary)]" style={{ fontFamily: 'var(--font-display)' }}>
+                  <span className="w-[52px] text-right text-[13px] text-(--text-secondary)" style={{ fontFamily: 'var(--font-display)' }}>
                     {msgs}
                   </span>
                 </div>

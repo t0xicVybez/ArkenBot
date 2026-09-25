@@ -222,7 +222,7 @@ export default function ModerationPage() {
           <div className="card overflow-hidden p-0">
             <div className="overflow-x-auto">
             <table className="w-full min-w-[600px]">
-              <thead className="bg-[var(--bg-base)]">
+              <thead className="bg-(--bg-base)">
                 <tr>
                   <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">#</th>
                   <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colType')}</th>
@@ -232,12 +232,12 @@ export default function ModerationPage() {
                   <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colDate')}</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[var(--border-subtle)]">
+              <tbody className="divide-y divide-(--border-subtle)">
                 {casesLoading ? (
                   [...Array(10)].map((_, i) => (
                     <tr key={i} className="animate-pulse">
                       <td colSpan={6} className="px-4 py-3">
-                        <div className="h-4 bg-gray-700 rounded w-full" />
+                        <div className="h-4 bg-gray-700 rounded-sm w-full" />
                       </td>
                     </tr>
                   ))
@@ -258,7 +258,7 @@ export default function ModerationPage() {
                     reason: string;
                     createdAt: string;
                   }) => (
-                    <tr key={c.id} className="hover:bg-white/[0.02] transition-colors">
+                    <tr key={c.id} className="hover:bg-white/2 transition-colors">
                       <td className="px-4 py-3 text-sm text-gray-400">#{c.caseNumber}</td>
                       <td className="px-4 py-3">
                         <span className={`badge ${typeColors[c.type] ?? 'badge-info'}`}>
@@ -279,7 +279,7 @@ export default function ModerationPage() {
             </div>
 
             {total > 20 && (
-              <div className="px-4 py-3 border-t border-[var(--border-subtle)] flex items-center justify-between">
+              <div className="px-4 py-3 border-t border-(--border-subtle) flex items-center justify-between">
                 <p className="text-xs text-gray-400">
                   {t('showing', { from: Math.min((page - 1) * 20 + 1, total), to: Math.min(page * 20, total), total })}
                 </p>
@@ -340,7 +340,7 @@ export default function ModerationPage() {
             <div className="space-y-4">
               {Object.entries(warningsByUser).map(([userId, userWarnings]) => (
                 <div key={userId} className="card p-0 overflow-hidden">
-                  <div className="px-4 py-3 bg-[var(--bg-base)] flex items-center justify-between">
+                  <div className="px-4 py-3 bg-(--bg-base) flex items-center justify-between">
                     <div>
                       <p className="text-sm font-medium text-white">
                         {userWarnings[0].userTag || userId}
@@ -356,7 +356,7 @@ export default function ModerationPage() {
                       {t('clearAll')}
                     </button>
                   </div>
-                  <div className="divide-y divide-[var(--border-subtle)]">
+                  <div className="divide-y divide-(--border-subtle)">
                     {userWarnings.map((w) => (
                       <div key={w.id} className="px-4 py-3 flex items-start justify-between gap-4">
                         <div className="flex-1 min-w-0">
@@ -396,7 +396,7 @@ export default function ModerationPage() {
             {escalations.length > 0 ? (
               <div className="space-y-2 mb-4">
                 {[...escalations].sort((a, b) => a.count - b.count).map((rule, i) => (
-                  <div key={i} className="flex items-center justify-between bg-white/[0.04] rounded-lg px-3 py-2">
+                  <div key={i} className="flex items-center justify-between bg-white/4 rounded-lg px-3 py-2">
                     <span className="text-sm text-gray-200">
                       {t('ruleAtPrefix')} <strong className="text-white">{rule.count}</strong> {t('ruleWarningsArrow')} <strong className="text-discord-blurple capitalize">{rule.action}</strong>
                       {rule.duration ? <span className="text-gray-400"> {t('ruleDuration', { duration: rule.duration })}</span> : null}
@@ -432,7 +432,7 @@ export default function ModerationPage() {
                 setEscalations(updated);
                 saveEscalationMutation.mutate(updated);
               }}
-              className="flex flex-wrap items-end gap-3 border-t border-[var(--border-subtle)] pt-4"
+              className="flex flex-wrap items-end gap-3 border-t border-(--border-subtle) pt-4"
             >
               <div className="w-24">
                 <label className="label">{t('atWarningsLabel')}</label>

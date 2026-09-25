@@ -15,14 +15,14 @@ export function SaveBar({
 }) {
   if (!dirty) return null;
   return (
-    <div className="absolute inset-x-6 bottom-5 z-40 flex items-center gap-4 rounded-[14px] border border-[var(--border-strong)] bg-[var(--bg-elevated)] px-4 py-3 shadow-[var(--sh-pop)]">
+    <div className="absolute inset-x-6 bottom-5 z-40 flex items-center gap-4 rounded-[14px] border border-(--border-strong) bg-(--bg-elevated) px-4 py-3 shadow-(--sh-pop)">
       <span
-        className="h-2 w-2 flex-none rounded-full bg-[var(--warning)]"
+        className="h-2 w-2 flex-none rounded-full bg-(--warning)"
         style={{ boxShadow: '0 0 8px var(--warning)' }}
       />
       <div className="text-[13.5px] font-semibold">
         Unsaved changes{' '}
-        <span className="font-normal text-[var(--text-secondary)]">· {count} settings modified</span>
+        <span className="font-normal text-(--text-secondary)">· {count} settings modified</span>
       </div>
       <div className="flex-1" />
       <Button variant="ghost" onClick={onDiscard}>

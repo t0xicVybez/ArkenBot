@@ -235,8 +235,8 @@ export default function SettingsPage() {
             }}
           />
           <span>
-            <span className="label !mb-0">{t('permAlertsEnabled')}</span>
-            <span className="block text-sm text-[var(--text-muted)]">{t('permAlertsEnabledDesc')}</span>
+            <span className="label mb-0!">{t('permAlertsEnabled')}</span>
+            <span className="block text-sm text-(--text-muted)">{t('permAlertsEnabledDesc')}</span>
           </span>
         </label>
         <div>
@@ -252,7 +252,7 @@ export default function SettingsPage() {
               <option key={r.id} value={r.id}>{r.name}</option>
             ))}
           </select>
-          <p className="text-sm text-[var(--text-muted)] mt-1">{t('permAlertRoleDesc')}</p>
+          <p className="text-sm text-(--text-muted) mt-1">{t('permAlertRoleDesc')}</p>
         </div>
       </SettingsSection>
 
@@ -269,8 +269,8 @@ export default function SettingsPage() {
             }}
           />
           <span>
-            <span className="label !mb-0">{t('appealsEnabled')}</span>
-            <span className="block text-sm text-[var(--text-muted)]">{t('appealsEnabledDesc')}</span>
+            <span className="label mb-0!">{t('appealsEnabled')}</span>
+            <span className="block text-sm text-(--text-muted)">{t('appealsEnabledDesc')}</span>
           </span>
         </label>
         {settings.appealsEnabled && (
@@ -284,7 +284,7 @@ export default function SettingsPage() {
               <option value="">{t('none')}</option>
               {textChannels.map((c) => (<option key={c.id} value={c.id}>#{c.name}</option>))}
             </select>
-            <p className="text-sm text-[var(--text-muted)] mt-1">{t('appealChannelDesc')}</p>
+            <p className="text-sm text-(--text-muted) mt-1">{t('appealChannelDesc')}</p>
           </div>
         )}
       </SettingsSection>
@@ -302,8 +302,8 @@ export default function SettingsPage() {
             }}
           />
           <span>
-            <span className="label !mb-0">{t('banNetworkEnabled')}</span>
-            <span className="block text-sm text-[var(--text-muted)]">{t('banNetworkEnabledDesc')}</span>
+            <span className="label mb-0!">{t('banNetworkEnabled')}</span>
+            <span className="block text-sm text-(--text-muted)">{t('banNetworkEnabledDesc')}</span>
           </span>
         </label>
         {settings.banNetworkEnabled && (
@@ -320,8 +320,8 @@ export default function SettingsPage() {
                 }}
               />
               <span>
-                <span className="label !mb-0">{t('banNetworkContribute')}</span>
-                <span className="block text-sm text-[var(--text-muted)]">{t('banNetworkContributeDesc')}</span>
+                <span className="label mb-0!">{t('banNetworkContribute')}</span>
+                <span className="block text-sm text-(--text-muted)">{t('banNetworkContributeDesc')}</span>
               </span>
             </label>
             <div>
@@ -346,7 +346,7 @@ export default function SettingsPage() {
                 onChange={(e) => setSettings((s) => ({ ...s, banNetworkThreshold: Number(e.target.value) }))}
                 onBlur={(e) => { const v = Math.min(50, Math.max(1, Number(e.target.value) || 3)); setSettings((s) => ({ ...s, banNetworkThreshold: v })); handleSave({ banNetworkThreshold: v }); }}
               />
-              <p className="text-sm text-[var(--text-muted)] mt-1">{t('banNetworkThresholdDesc')}</p>
+              <p className="text-sm text-(--text-muted) mt-1">{t('banNetworkThresholdDesc')}</p>
             </div>
             <div>
               <label className="label">{t('banNetworkChannel')}</label>
@@ -358,7 +358,7 @@ export default function SettingsPage() {
                 <option value="">{t('none')}</option>
                 {textChannels.map((c) => (<option key={c.id} value={c.id}>#{c.name}</option>))}
               </select>
-              <p className="text-sm text-[var(--text-muted)] mt-1">{t('banNetworkChannelDesc')}</p>
+              <p className="text-sm text-(--text-muted) mt-1">{t('banNetworkChannelDesc')}</p>
             </div>
           </>
         )}
@@ -377,8 +377,8 @@ export default function SettingsPage() {
             }}
           />
           <span>
-            <span className="label !mb-0">{t('highlightsEnabled')}</span>
-            <span className="block text-sm text-[var(--text-muted)]">{t('highlightsEnabledDesc')}</span>
+            <span className="label mb-0!">{t('highlightsEnabled')}</span>
+            <span className="block text-sm text-(--text-muted)">{t('highlightsEnabledDesc')}</span>
           </span>
         </label>
         {settings.highlightsEnabled && (
@@ -392,7 +392,7 @@ export default function SettingsPage() {
               <option value="">{t('none')}</option>
               {textChannels.map((c) => (<option key={c.id} value={c.id}>#{c.name}</option>))}
             </select>
-            <p className="text-sm text-[var(--text-muted)] mt-1">{t('highlightsChannelDesc')}</p>
+            <p className="text-sm text-(--text-muted) mt-1">{t('highlightsChannelDesc')}</p>
           </div>
         )}
       </SettingsSection>
@@ -420,7 +420,7 @@ export default function SettingsPage() {
             <div key={key} className="flex items-center gap-3">
               <input
                 type="color"
-                className="w-10 h-10 rounded cursor-pointer border border-gray-600 bg-transparent p-0.5"
+                className="w-10 h-10 rounded-sm cursor-pointer border border-gray-600 bg-transparent p-0.5"
                 value={isEmpty ? '#5865F2' : currentValue}
                 onChange={(e) => setSettings((s) => ({ ...s, [key]: e.target.value }))}
                 onBlur={() => handleSave({ [key]: (settings[key] as string | undefined) ?? defaultColor })}
@@ -500,7 +500,7 @@ export default function SettingsPage() {
           {t('dangerTip')}
         </p>
 
-        <div className="mt-5 pt-5 border-t border-[var(--border-subtle)]">
+        <div className="mt-5 pt-5 border-t border-(--border-subtle)">
           <h4 className="text-sm font-semibold text-red-400">{t('deleteDataTitle')}</h4>
           <p className="text-xs text-gray-500 mt-1 mb-3 max-w-xl">{t('deleteDataDesc')}</p>
           <button

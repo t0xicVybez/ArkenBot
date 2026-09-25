@@ -300,7 +300,7 @@ function GiveawayCard({ giveaway, roles }: { giveaway: Giveaway; roles: Array<{ 
             <div className="mt-2">
               <span className="text-xs text-gray-400">{t('winnersResult', { count: giveaway.winnerNames.length })} </span>
               {giveaway.winnerNames.map((name, i) => (
-                <span key={i} className="text-xs font-medium bg-yellow-500/10 text-yellow-400 px-1.5 py-0.5 rounded mr-1">{name}</span>
+                <span key={i} className="text-xs font-medium bg-yellow-500/10 text-yellow-400 px-1.5 py-0.5 rounded-sm mr-1">{name}</span>
               ))}
             </div>
           )}

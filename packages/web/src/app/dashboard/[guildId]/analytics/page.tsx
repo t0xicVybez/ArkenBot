@@ -60,7 +60,7 @@ export default function AnalyticsPage() {
       <div className="flex gap-2">
         {RANGES.map((r) => (
           <button key={r} onClick={() => setDays(r)}
-            className={`text-sm px-3 py-1.5 rounded-lg border ${days === r ? 'bg-discord-blurple/20 border-discord-blurple text-white' : 'border-[var(--border-subtle)] text-[var(--text-muted)]'}`}>
+            className={`text-sm px-3 py-1.5 rounded-lg border ${days === r ? 'bg-discord-blurple/20 border-discord-blurple text-white' : 'border-(--border-subtle) text-(--text-muted)'}`}>
             {t('rangeDays', { days: r })}
           </button>
         ))}

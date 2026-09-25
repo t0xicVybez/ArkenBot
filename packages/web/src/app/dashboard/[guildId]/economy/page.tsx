@@ -349,12 +349,12 @@ export default function EconomyPage() {
             <p className="text-gray-500 text-sm text-center py-4">{t('incomeEmpty')}</p>
           ) : (
             incomeRoles.map((ir) => (
-              <div key={ir.id} className="flex items-center justify-between gap-3 p-3 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-base)]">
+              <div key={ir.id} className="flex items-center justify-between gap-3 p-3 rounded-lg border border-(--border-subtle) bg-(--bg-base)">
                 <div className="text-sm text-white">
                   @{roles.find((r) => r.id === ir.roleId)?.name ?? ir.roleId}
                   <span className="text-yellow-400"> · {(config.currencySymbol ?? '🪙')} {ir.amount.toLocaleString()}/{t('incomePerDay')}</span>
                 </div>
-                <button className="text-gray-500 hover:text-[var(--error)] transition-colors" title={t('deleteItem')}
+                <button className="text-gray-500 hover:text-(--error) transition-colors" title={t('deleteItem')}
                   onClick={() => deleteIncomeMutation.mutate(ir.roleId)}>
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -391,7 +391,7 @@ export default function EconomyPage() {
             <p className="text-gray-500 text-sm text-center py-6">{t('shopEmpty')}</p>
           ) : (
             shopItems.map((item) => (
-              <div key={item.id} className="flex items-center justify-between gap-3 p-3 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-base)]">
+              <div key={item.id} className="flex items-center justify-between gap-3 p-3 rounded-lg border border-(--border-subtle) bg-(--bg-base)">
                 <div className="min-w-0">
                   <div className="text-sm font-medium text-white truncate">
                     {item.name} <span className="text-yellow-400">· {(config.currencySymbol ?? '🪙')} {item.price.toLocaleString()}</span>
@@ -400,7 +400,7 @@ export default function EconomyPage() {
                   {item.description && <div className="text-xs text-gray-500 truncate">{item.description}</div>}
                   {item.roleId && <div className="text-xs text-discord-blurple">@{roles.find((r) => r.id === item.roleId)?.name ?? item.roleId}</div>}
                 </div>
-                <button className="text-gray-500 hover:text-[var(--error)] transition-colors" title={t('deleteItem')}
+                <button className="text-gray-500 hover:text-(--error) transition-colors" title={t('deleteItem')}
                   onClick={() => deleteMutation.mutate(item.id)}>
                   <Trash2 className="w-4 h-4" />
                 </button>

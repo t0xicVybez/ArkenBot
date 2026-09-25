@@ -353,7 +353,7 @@ export default function LevelingPage() {
         {levelRolesLoading ? (
           <div className="space-y-2">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="h-10 bg-gray-700 rounded animate-pulse" />
+              <div key={i} className="h-10 bg-gray-700 rounded-sm animate-pulse" />
             ))}
           </div>
         ) : sortedLevelRoles.length === 0 ? (
@@ -361,21 +361,21 @@ export default function LevelingPage() {
             {t('noLevelRoles')}
           </p>
         ) : (
-          <div className="overflow-hidden rounded-lg border border-[var(--border-subtle)]">
+          <div className="overflow-hidden rounded-lg border border-(--border-subtle)">
             <div className="overflow-x-auto">
             <table className="w-full min-w-[500px]">
-              <thead className="bg-[var(--bg-base)]">
+              <thead className="bg-(--bg-base)">
                 <tr>
                   <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('levelLabel')}</th>
                   <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('roleLabel')}</th>
                   <th className="px-4 py-3" />
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[var(--border-subtle)]">
+              <tbody className="divide-y divide-(--border-subtle)">
                 {sortedLevelRoles.map((lr) => {
                   const role = roles.find((r) => r.id === lr.roleId);
                   return (
-                    <tr key={lr.id} className="hover:bg-white/[0.02] transition-colors">
+                    <tr key={lr.id} className="hover:bg-white/2 transition-colors">
                       <td className="px-4 py-3 text-sm font-semibold text-gray-200">{t('levelValue', { level: lr.level })}</td>
                       <td className="px-4 py-3 text-sm text-gray-300">
                         {role ? `@${role.name}` : <span className="font-mono text-gray-600 text-xs">{lr.roleId}</span>}
@@ -409,7 +409,7 @@ export default function LevelingPage() {
             {xpMultipliers.map((m) => {
               const role = roles.find((r) => r.id === m.roleId);
               return (
-                <div key={m.id} className="flex items-center justify-between bg-white/[0.04] rounded-lg px-3 py-2">
+                <div key={m.id} className="flex items-center justify-between bg-white/4 rounded-lg px-3 py-2">
                   <span className="text-sm text-gray-200">@{role?.name ?? m.roleId}</span>
                   <div className="flex items-center gap-3">
                     <span className="text-sm font-semibold text-discord-blurple">{m.multiplier}×</span>
@@ -475,7 +475,7 @@ export default function LevelingPage() {
             {xpChannelMultipliers.map((m) => {
               const ch = textChannels.find((c) => c.id === m.channelId);
               return (
-                <div key={m.id} className="flex items-center justify-between bg-white/[0.04] rounded-lg px-3 py-2">
+                <div key={m.id} className="flex items-center justify-between bg-white/4 rounded-lg px-3 py-2">
                   <span className="text-sm text-gray-200">#{ch?.name ?? m.channelId}</span>
                   <div className="flex items-center gap-3">
                     <span className="text-sm font-semibold text-discord-blurple">{m.multiplier}×</span>

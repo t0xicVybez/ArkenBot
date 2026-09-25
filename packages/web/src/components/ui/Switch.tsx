@@ -20,8 +20,8 @@ export function Switch({
       disabled={disabled}
       onClick={() => onChange?.(!checked)}
       className={cn(
-        'relative inline-flex h-6 w-11 flex-none items-center rounded-full transition-colors duration-150 disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-glow)]',
-        checked ? 'bg-[var(--accent)]' : 'bg-[var(--bg-hover)]',
+        'relative inline-flex h-6 w-11 flex-none items-center rounded-full transition-colors duration-150 disabled:opacity-50 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-(--accent-glow)',
+        checked ? 'bg-(--accent)' : 'bg-(--bg-hover)',
         className,
       )}
     >
@@ -29,8 +29,8 @@ export function Switch({
         className={cn(
           'inline-block h-[18px] w-[18px] rounded-full transition-transform duration-150',
           checked
-            ? 'translate-x-[22px] bg-[var(--accent-contrast)]'
-            : 'translate-x-[3px] bg-[var(--text-secondary)]',
+            ? 'translate-x-[22px] bg-(--accent-contrast)'
+            : 'translate-x-[3px] bg-(--text-secondary)',
         )}
       />
     </button>

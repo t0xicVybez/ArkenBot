@@ -79,11 +79,11 @@ export default function CountingPage() {
 
       <SettingsSection title={t('liveStatsTitle')} description={t('liveStatsDesc')}>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-          <div className="rounded-lg bg-white/[0.03] border border-white/[0.06] p-4 text-center">
+          <div className="rounded-lg bg-white/3 border border-white/6 p-4 text-center">
             <p className="text-gray-400 text-xs mb-1">{t('currentCount')}</p>
             <p className="text-white text-3xl font-bold">{data.currentCount.toLocaleString()}</p>
           </div>
-          <div className="rounded-lg bg-white/[0.03] border border-white/[0.06] p-4 text-center">
+          <div className="rounded-lg bg-white/3 border border-white/6 p-4 text-center">
             <p className="text-gray-400 text-xs mb-1 flex items-center justify-center gap-1"><Trophy className="w-3 h-3" /> {t('bestCount')}</p>
             <p className="text-yellow-400 text-3xl font-bold">{data.bestCount.toLocaleString()}</p>
           </div>

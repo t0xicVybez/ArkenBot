@@ -34,9 +34,9 @@ const UsersIcon = () => (
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="border-t border-[var(--border)] pt-6">
+    <section className="border-t border-(--border) pt-6">
       <div
-        className="text-[11px] tracking-[1.4px] uppercase font-bold text-[var(--text-muted)] mb-4"
+        className="text-[11px] tracking-[1.4px] uppercase font-bold text-(--text-muted) mb-4"
       >
         {title}
       </div>
@@ -57,7 +57,7 @@ export default function V2Kit() {
         {/* header */}
         <div className="flex items-center gap-4">
           <div
-            className="w-10 h-10 rounded-[11px] grid place-items-center font-bold text-[var(--accent-contrast)]"
+            className="w-10 h-10 rounded-[11px] grid place-items-center font-bold text-(--accent-contrast)"
             style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-2))', fontFamily: 'var(--font-display)' }}
           >
             A
@@ -66,7 +66,7 @@ export default function V2Kit() {
             <h1 className="text-[24px] font-semibold" style={{ fontFamily: 'var(--font-display)' }}>
               ArkenBot v2 — Component Kit
             </h1>
-            <div className="text-[13px] text-[var(--text-secondary)]">
+            <div className="text-[13px] text-(--text-secondary)">
               Phase 1 foundations · emerald · Space Grotesk / Manrope / JetBrains Mono
             </div>
           </div>
@@ -107,7 +107,7 @@ export default function V2Kit() {
             <div className="flex items-center gap-4">
               <Switch checked={sw1} onChange={setSw1} />
               <Switch checked={sw2} onChange={setSw2} />
-              <span className="text-[13px] text-[var(--text-secondary)]">controlled</span>
+              <span className="text-[13px] text-(--text-secondary)">controlled</span>
             </div>
             <Tabs
               value={tab}
@@ -133,7 +133,7 @@ export default function V2Kit() {
               <Avatar initials="RE" />
               <Avatar initials="A" size={40} />
             </div>
-            <div className="flex items-center gap-2 text-[13px] text-[var(--text-secondary)]">
+            <div className="flex items-center gap-2 text-[13px] text-(--text-secondary)">
               Press <Kbd>⌘</Kbd> <Kbd>K</Kbd>
             </div>
             <Tooltip label="This is a tooltip">
@@ -166,12 +166,12 @@ export default function V2Kit() {
               {['scam', 'free nitro', 'airdrop'].map((t) => (
                 <span
                   key={t}
-                  className="text-[12px] bg-[var(--bg-elevated)] border border-[var(--border)] rounded-[7px] px-2.5 py-1"
+                  className="text-[12px] bg-(--bg-elevated) border border-(--border) rounded-[7px] px-2.5 py-1"
                 >
                   {t}
                 </span>
               ))}
-              <span className="text-[12px] text-[var(--text-muted)] border border-dashed border-[var(--border)] rounded-[7px] px-2.5 py-1">
+              <span className="text-[12px] text-(--text-muted) border border-dashed border-(--border) rounded-[7px] px-2.5 py-1">
                 + Add term
               </span>
             </div>
@@ -183,7 +183,7 @@ export default function V2Kit() {
             <h3 className="text-[15px] font-semibold" style={{ fontFamily: 'var(--font-display)' }}>
               A plain card
             </h3>
-            <p className="mt-1 text-[13px] text-[var(--text-secondary)]">
+            <p className="mt-1 text-[13px] text-(--text-secondary)">
               The base surface every panel is built on — tokenized background, border, radius and padding.
             </p>
           </Card>

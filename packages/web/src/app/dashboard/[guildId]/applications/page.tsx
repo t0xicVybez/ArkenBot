@@ -347,7 +347,7 @@ export default function ApplicationsPage() {
                     </span>
                     <button
                       onClick={() => updateFormMutation.mutate({ formId: form.id, data: { enabled: !form.enabled } })}
-                      className="text-xs text-gray-400 hover:text-white transition-colors px-2 py-1 rounded border border-gray-600 hover:border-gray-400"
+                      className="text-xs text-gray-400 hover:text-white transition-colors px-2 py-1 rounded-sm border border-gray-600 hover:border-gray-400"
                     >
                       {form.enabled ? t('btnClose') : t('btnOpen')}
                     </button>
@@ -365,13 +365,13 @@ export default function ApplicationsPage() {
                   </div>
 
                   {expanded && (
-                    <div className="border-t border-[var(--border-subtle)] px-4 py-3 space-y-3">
+                    <div className="border-t border-(--border-subtle) px-4 py-3 space-y-3">
                       {form.fields.length === 0 ? (
                         <p className="text-sm text-gray-500">{t('noFields')}</p>
                       ) : (
                         <div className="space-y-2">
                           {form.fields.map((field) => (
-                            <div key={field.id} className="flex items-center justify-between bg-white/[0.04] rounded-lg px-3 py-2">
+                            <div key={field.id} className="flex items-center justify-between bg-white/4 rounded-lg px-3 py-2">
                               <div>
                                 <p className="text-sm text-gray-200">{field.label}</p>
                                 <p className="text-xs text-gray-500">
@@ -391,7 +391,7 @@ export default function ApplicationsPage() {
                       )}
 
                       {addFieldFormId === form.id ? (
-                        <div className="border border-[var(--border-subtle)] rounded-lg p-3 space-y-2">
+                        <div className="border border-(--border-subtle) rounded-lg p-3 space-y-2">
                           <p className="text-xs font-semibold text-gray-400 uppercase">{t('addFieldTitle')}</p>
                           <input
                             type="text"
@@ -524,7 +524,7 @@ export default function ApplicationsPage() {
             <div className="card p-0 overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[500px]">
-                  <thead className="bg-[var(--bg-base)]">
+                  <thead className="bg-(--bg-base)">
                     <tr>
                       <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colSubmittedBy')}</th>
                       <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colForm')}</th>
@@ -533,7 +533,7 @@ export default function ApplicationsPage() {
                       <th className="px-4 py-3" />
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[var(--border-subtle)]">
+                  <tbody className="divide-y divide-(--border-subtle)">
                     {submissions.map((sub) => {
                       const form = forms.find((f) => f.id === sub.formId);
                       const isExpanded = expandedSubmissions.has(sub.id);
@@ -542,7 +542,7 @@ export default function ApplicationsPage() {
                         <>
                           <tr
                             key={sub.id}
-                            className="hover:bg-white/[0.02] transition-colors cursor-pointer"
+                            className="hover:bg-white/2 transition-colors cursor-pointer"
                             onClick={() => toggleSubmission(sub.id)}
                           >
                             <td className="px-4 py-3 text-sm text-gray-200">{sub.userTag}</td>
@@ -574,7 +574,7 @@ export default function ApplicationsPage() {
                                     </div>
                                   ))}
                                   {sub.reviewNote && (
-                                    <div className="border-t border-[var(--border-subtle)] pt-2">
+                                    <div className="border-t border-(--border-subtle) pt-2">
                                       <p className="text-xs text-gray-500">
                                         {t.rich('reviewedBy', { reviewer: sub.reviewerTag ?? '', note: sub.reviewNote, b: (c) => <span className="text-gray-400">{c}</span> })}
                                       </p>
@@ -599,7 +599,7 @@ export default function ApplicationsPage() {
                                     </div>
                                   )}
                                   {isPendingReview && (
-                                    <div className="border border-[var(--border-subtle)] rounded-lg p-3 space-y-2" onClick={(e) => e.stopPropagation()}>
+                                    <div className="border border-(--border-subtle) rounded-lg p-3 space-y-2" onClick={(e) => e.stopPropagation()}>
                                       <p className="text-xs font-semibold text-gray-400 uppercase">
                                         {t('reviewNoteTitle', { action: pendingReview.action === 'accept' ? t('accept') : t('deny') })}
                                       </p>

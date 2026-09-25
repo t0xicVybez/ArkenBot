@@ -36,9 +36,9 @@ function InviterRow({ row, rank }: { row: InviteRow; rank: number }) {
   const left      = invitees.filter((i) => i.leftAt).length;
 
   return (
-    <div className="rounded-lg bg-white/[0.03] border border-white/[0.04] overflow-hidden">
+    <div className="rounded-lg bg-white/3 border border-white/4 overflow-hidden">
       <button
-        className="w-full flex items-center justify-between px-3 py-2.5 hover:bg-white/[0.03] transition-colors text-left"
+        className="w-full flex items-center justify-between px-3 py-2.5 hover:bg-white/3 transition-colors text-left"
         onClick={() => setExpanded((v) => !v)}
       >
         <div className="flex items-center gap-3">
@@ -66,14 +66,14 @@ function InviterRow({ row, rank }: { row: InviteRow; rank: number }) {
       </button>
 
       {expanded && invitees.length > 0 && (
-        <div className="border-t border-white/[0.04] px-3 py-2 space-y-1.5 bg-black/20">
+        <div className="border-t border-white/4 px-3 py-2 space-y-1.5 bg-black/20">
           <p className="text-[10px] uppercase tracking-widest text-gray-600 font-semibold mb-2">
             {t('invitedMembers', { stillHere, left })}
           </p>
           {invitees.map((invitee) => (
             <div
               key={invitee.userId}
-              className="flex items-center justify-between px-2.5 py-1.5 rounded-md bg-white/[0.03]"
+              className="flex items-center justify-between px-2.5 py-1.5 rounded-md bg-white/3"
             >
               <div className="flex items-center gap-2">
                 {invitee.leftAt

@@ -47,14 +47,14 @@ export default function AppealPage() {
   });
 
   return (
-    <div className="min-h-screen bg-[var(--bg-base)]">
+    <div className="min-h-screen bg-(--bg-base)">
       <LandingNav docsUrl={SITE.docsUrl} supportUrl={SITE.supportUrl} inviteUrl={SITE.inviteUrl} />
       <div className="max-w-2xl mx-auto px-4 py-12">
         <div className="flex items-center gap-3 mb-2">
           <ShieldAlert className="w-7 h-7 text-discord-blurple" />
           <h1 className="text-2xl font-bold text-white">{t('title')}</h1>
         </div>
-        <p className="text-[var(--text-muted)] mb-8">{t('subtitle')}</p>
+        <p className="text-(--text-muted) mb-8">{t('subtitle')}</p>
 
         {meLoading ? (
           <div className="card h-40 animate-pulse bg-gray-700" />
@@ -74,7 +74,7 @@ export default function AppealPage() {
                 <div className="flex items-center gap-3 mb-3">
                   {s.guildIcon
                     ? <Image src={s.guildIcon} alt="" width={40} height={40} className="rounded-full" unoptimized />
-                    : <div className="w-10 h-10 rounded-full bg-[var(--bg-elevated)] flex items-center justify-center text-sm text-gray-400">{s.guildName.slice(0, 2)}</div>}
+                    : <div className="w-10 h-10 rounded-full bg-(--bg-elevated) flex items-center justify-center text-sm text-gray-400">{s.guildName.slice(0, 2)}</div>}
                   <div className="min-w-0">
                     <div className="font-medium text-white truncate">{s.guildName}</div>
                     <div className="text-xs text-gray-500">{t(`type.${s.type}`)}</div>
