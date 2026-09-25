@@ -334,8 +334,8 @@ importers:
         specifier: ^5.81.3
         version: 5.81.3
       dotenv:
-        specifier: ^17.4.2
-        version: 17.4.2
+        specifier: ^18.0.3
+        version: 18.0.3
       fastify:
         specifier: ^5.12.5
         version: 5.12.5
@@ -401,8 +401,8 @@ importers:
         specifier: ^14.27.0
         version: 14.27.0
       dotenv:
-        specifier: ^17.4.2
-        version: 17.4.2
+        specifier: ^18.0.3
+        version: 18.0.3
       ioredis:
         specifier: ^6.0.0
         version: 6.0.0
@@ -5175,6 +5175,11 @@ packages:
     resolution: {integrity: sha512-nI4U3TottKAcAD9LLud4Cb7b2QztQMUEfHbvhTH09bqXTxnSie8WnjPALV/WMCrJZ6UV/qHJ6L03OqO3LcdYZw==}
     engines: {node: '>=12'}
 
+  dotenv@18.0.3:
+    resolution: {integrity: sha512-/8CJTyL817qPnfbQrJgOEcrU3fDrJkRIoXBE566wHuvIXKOCHUZhPqGPbCPi9SogjdGnreF0TlvnTgK6J/8zpA==}
+    engines: {node: '>=12'}
+    hasBin: true
+
   dunder-proto@1.0.1:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
     engines: {node: '>= 0.4'}
@@ -9765,7 +9770,7 @@ snapshots:
     dependencies:
       '@babel/compat-data': 7.29.7
       '@babel/helper-validator-option': 7.29.7
-      browserslist: 4.28.8
+      browserslist: 4.29.1
       lru-cache: 5.1.1
       semver: 6.3.1
 
@@ -14458,7 +14463,7 @@ snapshots:
 
   caniuse-api@3.0.0:
     dependencies:
-      browserslist: 4.28.8
+      browserslist: 4.29.1
       caniuse-lite: 1.0.30001810
       lodash.memoize: 4.1.2
       lodash.uniq: 4.5.0
@@ -14799,7 +14804,7 @@ snapshots:
 
   cssnano-preset-default@6.1.2(postcss@8.5.28):
     dependencies:
-      browserslist: 4.28.8
+      browserslist: 4.29.1
       css-declaration-sorter: 7.4.0(postcss@8.5.28)
       cssnano-utils: 4.0.2(postcss@8.5.28)
       postcss: 8.5.28
@@ -15095,6 +15100,8 @@ snapshots:
       is-obj: 2.0.0
 
   dotenv@17.4.2: {}
+
+  dotenv@18.0.3: {}
 
   dunder-proto@1.0.1:
     dependencies:
@@ -18063,7 +18070,7 @@ snapshots:
 
   postcss-colormin@6.1.0(postcss@8.5.28):
     dependencies:
-      browserslist: 4.28.8
+      browserslist: 4.29.1
       caniuse-api: 3.0.0
       colord: 2.10.0
       postcss: 8.5.28
@@ -18071,7 +18078,7 @@ snapshots:
 
   postcss-convert-values@6.1.0(postcss@8.5.28):
     dependencies:
-      browserslist: 4.28.8
+      browserslist: 4.29.1
       postcss: 8.5.28
       postcss-value-parser: 4.2.0
 
@@ -18215,7 +18222,7 @@ snapshots:
 
   postcss-merge-rules@6.1.1(postcss@8.5.28):
     dependencies:
-      browserslist: 4.28.8
+      browserslist: 4.29.1
       caniuse-api: 3.0.0
       cssnano-utils: 4.0.2(postcss@8.5.28)
       postcss: 8.5.28
@@ -18235,7 +18242,7 @@ snapshots:
 
   postcss-minify-params@6.1.0(postcss@8.5.28):
     dependencies:
-      browserslist: 4.28.8
+      browserslist: 4.29.1
       cssnano-utils: 4.0.2(postcss@8.5.28)
       postcss: 8.5.28
       postcss-value-parser: 4.2.0
@@ -18309,7 +18316,7 @@ snapshots:
 
   postcss-normalize-unicode@6.1.0(postcss@8.5.28):
     dependencies:
-      browserslist: 4.28.8
+      browserslist: 4.29.1
       postcss: 8.5.28
       postcss-value-parser: 4.2.0
 
@@ -18434,7 +18441,7 @@ snapshots:
 
   postcss-reduce-initial@6.1.0(postcss@8.5.28):
     dependencies:
-      browserslist: 4.28.8
+      browserslist: 4.29.1
       caniuse-api: 3.0.0
       postcss: 8.5.28
 
@@ -19595,7 +19602,7 @@ snapshots:
 
   stylehacks@6.1.1(postcss@8.5.28):
     dependencies:
-      browserslist: 4.28.8
+      browserslist: 4.29.1
       postcss: 8.5.28
       postcss-selector-parser: 6.1.4
 
