@@ -26,7 +26,7 @@
     "axios": "^1.20.0",
     "bullmq": "^5.81.3",
     "discord.js": "^14.27.0",
-    "dotenv": "^17.4.2",
+    "dotenv": "^18.0.3",
     "ioredis": "^6.0.0",
     "libsodium-wrappers": "^0.8.4",
     "mediaplex": "^0.0.8",
