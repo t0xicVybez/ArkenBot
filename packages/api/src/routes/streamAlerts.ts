@@ -46,7 +46,7 @@ export async function streamAlertRoutes(server: FastifyInstance): Promise<void> 
       }
     }
 
-    if (!channelUsername) {
+    if (!channelUsername || typeof channelUsername !== 'string' || channelUsername.length > 300) {
       return reply.code(400).send({ success: false, error: 'platform, channelUsername and discordChannelId are required' });
     }
 
@@ -64,7 +64,7 @@ export async function streamAlertRoutes(server: FastifyInstance): Promise<void> 
       normalizedUsername = normalizedUsername
         .replace(/^https?:\/\/(www\.|old\.|np\.)?reddit\.com\//i, '')
         .replace(/^\/?r\//i, '')
-        .replace(/\/.*$/, '')
+        .split('/')[0] // keep only the first path segment (was /\/.*$/ — avoids ReDoS heuristic)
         .trim();
       if (!/^[A-Za-z0-9_]{3,21}$/.test(normalizedUsername)) {
         return reply.code(400).send({ success: false, error: 'Enter a valid subreddit (e.g. "gaming" or "r/gaming").' });
@@ -144,7 +144,10 @@ export async function streamAlertRoutes(server: FastifyInstance): Promise<void> 
 
     let newChannelId: string | null | undefined; // undefined = channel unchanged
     if (body.channelUsername) {
-      let newUsername = (body.channelUsername as string).trim();
+      if (typeof body.channelUsername !== 'string' || body.channelUsername.length > 300) {
+        return reply.code(400).send({ success: false, error: 'channelUsername is invalid' });
+      }
+      let newUsername = body.channelUsername.trim();
       if (existing.platform === 'youtube') {
         newUsername = newUsername
           .replace(/^https?:\/\/(www\.)?youtube\.com\//i, '')
@@ -163,7 +166,7 @@ export async function streamAlertRoutes(server: FastifyInstance): Promise<void> 
         newUsername = newUsername
           .replace(/^https?:\/\/(www\.|old\.|np\.)?reddit\.com\//i, '')
           .replace(/^\/?r\//i, '')
-          .replace(/\/.*$/, '')
+          .split('/')[0] // keep only the first path segment (was /\/.*$/ — avoids ReDoS heuristic)
           .trim();
         if (!/^[A-Za-z0-9_]{3,21}$/.test(newUsername)) {
           return reply.code(400).send({ success: false, error: 'Enter a valid subreddit (e.g. "gaming" or "r/gaming").' });
