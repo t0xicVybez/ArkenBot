@@ -30,7 +30,8 @@
   "welcome": {
     "title": "👋 {server} sunucusuna hoş geldin!",
     "accountAge": "📅 Hesap Yaşı",
-    "memberCount": "👥 Üye Sayısı"
+    "memberCount": "👥 Üye Sayısı",
+    "testPrefix": "🧪 Test karşılaması — yeni üyeler böyle karşılanır:"
   },
   "leveling": {
     "levelUp": "Seviye Atladın!",

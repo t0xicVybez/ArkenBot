@@ -84,6 +84,21 @@ export async function settingsRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: updated });
   });
 
+  // POST /guilds/:guildId/settings/welcome/test — bot posts a sample welcome to
+  // the configured channel, rendered for the requesting admin (setup wizard).
+  server.post('/guilds/:guildId/settings/welcome/test', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
+    const { guildId } = request.params as { guildId: string };
+    const config = await prisma.welcomeConfig.findUnique({ where: { guildId }, select: { welcomeChannelId: true } });
+    if (!config?.welcomeChannelId) {
+      return reply.code(400).send({ success: false, error: 'Set and save a welcome channel first.' });
+    }
+    await pub.publish('api:events', JSON.stringify({
+      type: 'welcome:test',
+      data: { guildId, userId: request.user!.id },
+    }));
+    return reply.code(202).send({ success: true });
+  });
+
   // GET /guilds/:guildId/settings/announcements
   server.get('/guilds/:guildId/settings/announcements', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };

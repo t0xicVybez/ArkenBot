@@ -325,6 +325,16 @@ const event: BotEvent = {
         } else if (event.type === 'stats-channels:refresh') {
           // Stats channels are updated by the BackgroundJobs scheduler on a 5-minute cycle;
           // this event is acknowledged but requires no immediate action.
+        } else if (event.type === 'welcome:test') {
+          const { guildId, userId } = event.data as { guildId: string; userId: string };
+          const guild = client.guilds.cache.get(guildId);
+          if (guild) {
+            const member = await guild.members.fetch(userId).catch(() => null);
+            if (member) {
+              const { WelcomeModule } = await import('../modules/welcome/WelcomeModule.js');
+              await WelcomeModule.sendTest(guild, member);
+            }
+          }
         } else if (event.type === 'embeds:send') {
           const { guildId, channelId, embed } = event.data as {
             guildId: string;

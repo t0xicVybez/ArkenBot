@@ -70,6 +70,8 @@ export const guildsApi = {
   list: () => api.get<ApiResponse<GuildOverview[]>>('/guilds'),
   get: (guildId: string) => api.get<ApiResponse<GuildOverview>>(`/guilds/${guildId}`),
   channels: (guildId: string) => api.get<ApiResponse<unknown[]>>(`/guilds/${guildId}/channels`),
+  createChannel: (guildId: string, name: string) =>
+    api.post<ApiResponse<{ id: string; name: string; type: number }>>(`/guilds/${guildId}/channels`, { name }),
   roles: (guildId: string) => api.get<ApiResponse<unknown[]>>(`/guilds/${guildId}/roles`),
   analytics: (guildId: string) => api.get<ApiResponse<import('@arkenbot/shared').GuildAnalytics>>(`/guilds/${guildId}/analytics`),
   automodAnalytics: (guildId: string, days = 14) => api.get(`/guilds/${guildId}/analytics/automod`, { params: { days } }),
@@ -86,6 +88,7 @@ export const settingsApi = {
   getWelcome: (guildId: string) => api.get<ApiResponse<WelcomeConfig>>(`/guilds/${guildId}/settings/welcome`),
   updateWelcome: (guildId: string, data: Partial<WelcomeConfig>) =>
     api.patch<ApiResponse<WelcomeConfig>>(`/guilds/${guildId}/settings/welcome`, data),
+  testWelcome: (guildId: string) => api.post(`/guilds/${guildId}/settings/welcome/test`),
   getReactionRoles: (guildId: string) => api.get(`/guilds/${guildId}/reaction-roles`),
   createReactionRole: (guildId: string, data: object) =>
     api.post(`/guilds/${guildId}/reaction-roles`, data),

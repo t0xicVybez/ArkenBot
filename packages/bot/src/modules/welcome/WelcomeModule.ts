@@ -73,6 +73,48 @@ export class WelcomeModule {
     }
   }
 
+  /** Posts a one-off sample welcome to the configured channel (setup wizard "test"). */
+  static async sendTest(guild: Guild, member: GuildMember): Promise<void> {
+    const config = await prisma.welcomeConfig.findUnique({ where: { guildId: guild.id } });
+    if (!config?.welcomeChannelId) return;
+    const channel = guild.channels.cache.get(config.welcomeChannelId);
+    if (!channel?.isTextBased()) return;
+    const textChannel = channel as TextChannel;
+
+    const loc = await resolveUserLocale({ user: { id: '' }, guildId: guild.id, guildLocale: guild.preferredLocale });
+    const variables = {
+      user: `@${member.displayName}`,
+      username: member.user.username,
+      server: guild.name,
+      memberCount: guild.memberCount,
+      userId: member.id,
+    };
+    const message = formatTemplate(config.welcomeMessage, variables);
+    const prefix = t('welcome.testPrefix', loc);
+
+    if (config.welcomeEmbed) {
+      const accountAgeDays = Math.floor((Date.now() - member.user.createdTimestamp) / 86_400_000);
+      const accountAge = accountAgeDays >= 365
+        ? `${Math.floor(accountAgeDays / 365)}y ${Math.floor((accountAgeDays % 365) / 30)}mo`
+        : `${accountAgeDays}d`;
+      const embed = new EmbedBuilder()
+        .setColor(config.welcomeColor as `#${string}`)
+        .setAuthor({ name: member.user.username, iconURL: member.user.displayAvatarURL({ size: 64 }) })
+        .setTitle(t('welcome.title', loc, { server: guild.name }))
+        .setDescription(message)
+        .setThumbnail(member.user.displayAvatarURL({ size: 256 }))
+        .addFields(
+          { name: t('welcome.accountAge', loc), value: accountAge, inline: true },
+          { name: t('welcome.memberCount', loc), value: `#${guild.memberCount}`, inline: true },
+        )
+        .setFooter({ text: `ID: ${member.id}`, iconURL: guild.iconURL() ?? undefined })
+        .setTimestamp();
+      await textChannel.send({ content: prefix, embeds: [embed] }).catch(swallow);
+    } else {
+      await textChannel.send({ content: `${prefix}\n${message}` }).catch(swallow);
+    }
+  }
+
   static async handleLeave(guild: Guild, member: GuildMember): Promise<void> {
     const config = await prisma.welcomeConfig.findUnique({ where: { guildId: guild.id } });
     if (!config?.leaveEnabled || !config.leaveChannelId) return;
