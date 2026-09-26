@@ -50,3 +50,6 @@ CLAUDE.md
 .prisma-monitor.state
 .prisma-rollback-done
 .prisma-monitor.off
+
+# v2 redesign roadmap/tracker — internal, do not publish
+redesign/
