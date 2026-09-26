@@ -60,7 +60,7 @@ async function sendWelcomeMessage(guild: Guild): Promise<void> {
     .setTimestamp();
 
   const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-    new ButtonBuilder().setStyle(ButtonStyle.Link).setLabel(t('onboarding.buttonDashboard', loc)).setURL(DASHBOARD_URL),
+    new ButtonBuilder().setStyle(ButtonStyle.Link).setLabel(t('onboarding.buttonDashboard', loc)).setURL(`${DASHBOARD_URL}/${guild.id}/setup`),
     new ButtonBuilder().setStyle(ButtonStyle.Link).setLabel(t('onboarding.buttonDocs', loc)).setURL(DOCS_URL),
     new ButtonBuilder().setStyle(ButtonStyle.Link).setLabel(t('onboarding.buttonSupport', loc)).setURL(SUPPORT_URL),
   );

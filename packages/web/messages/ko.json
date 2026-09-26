@@ -1738,7 +1738,12 @@
     "quick_leveling": "XP 비율 및 레벨 역할 구성",
     "quick_moderation": "모더레이션 설정",
     "quick_logging": "로그 채널 설정",
-    "goToOverview": "개요로 이동"
+    "goToOverview": "개요로 이동",
+    "recommendedTitle": "권장 설정 사용",
+    "recommendedDesc": "모더레이션, 스팸 방지 및 레이드 방지, 레벨링, 환영 메시지를 합리적인 기본값으로 켭니다. 나중에 무엇이든 세부 조정할 수 있습니다.",
+    "recommendedApply": "적용",
+    "recommendedApplied": "권장 설정을 적용했습니다!",
+    "recommendedFailed": "권장 설정을 적용하지 못했습니다."
   },
   "applicationsPage": {
     "formCreated": "양식을 만들었습니다!",

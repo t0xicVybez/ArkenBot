@@ -1738,7 +1738,12 @@
     "quick_leveling": "XP-Raten & Level-Rollen konfigurieren",
     "quick_moderation": "Moderations-Einstellungen",
     "quick_logging": "Protokollkanäle einrichten",
-    "goToOverview": "Zur Übersicht"
+    "goToOverview": "Zur Übersicht",
+    "recommendedTitle": "Empfohlene Einrichtung verwenden",
+    "recommendedDesc": "Aktiviere Moderation, Anti-Spam & Anti-Raid, Leveling und Willkommensnachrichten mit sinnvollen Standardwerten — alles später anpassbar.",
+    "recommendedApply": "Anwenden",
+    "recommendedApplied": "Empfohlene Einstellungen angewendet!",
+    "recommendedFailed": "Empfohlene Einstellungen konnten nicht angewendet werden."
   },
   "applicationsPage": {
     "formCreated": "Formular erstellt!",

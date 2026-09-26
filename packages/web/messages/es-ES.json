@@ -1738,7 +1738,12 @@
     "quick_leveling": "Configurar tasas de XP y roles de nivel",
     "quick_moderation": "Ajustes de moderación",
     "quick_logging": "Configurar los canales de registro",
-    "goToOverview": "Ir al resumen"
+    "goToOverview": "Ir al resumen",
+    "recommendedTitle": "Usar configuración recomendada",
+    "recommendedDesc": "Activa moderación, anti-spam y anti-raid, niveles y mensajes de bienvenida con valores predeterminados sensatos; ajusta lo que quieras después.",
+    "recommendedApply": "Aplicar",
+    "recommendedApplied": "¡Configuración recomendada aplicada!",
+    "recommendedFailed": "No se pudo aplicar la configuración recomendada."
   },
   "applicationsPage": {
     "formCreated": "¡Formulario creado!",

@@ -5,8 +5,8 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import { settingsApi, guildsApi, configTransferApi } from '@/lib/api';
 import { Toggle } from '@/components/Toggle';
 import toast from 'react-hot-toast';
-import { useState } from 'react';
-import { Check, ChevronRight, ChevronLeft, Sparkles, MessageSquare, Shield, Bot, TrendingUp, PartyPopper, Upload } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Check, ChevronRight, ChevronLeft, Sparkles, MessageSquare, Shield, Bot, TrendingUp, PartyPopper, Upload, Wand2 } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 
@@ -49,9 +49,71 @@ export default function SetupWizardPage() {
   const automod    = automodRes?.data?.data as Record<string, unknown> | undefined;
   const channels   = ((channelsRes?.data?.data ?? []) as GuildChannel[]).filter((c) => c.type === 0);
 
+  const [applying, setApplying] = useState(false);
+  const [seeded, setSeeded] = useState(false);
+
+  // Persist wizard progress so a refresh resumes where the admin left off, and
+  // the Overview can show a "finish setup" banner until it's completed.
+  const persist = (data: { setupStep?: number; setupCompletedAt?: string }) => {
+    settingsApi.update(guildId, data).catch(() => {/* non-blocking */});
+  };
+
+  // #3 — reflect what's already configured so returning admins don't restart
+  // from a blank slate. A step counts as "done" when its module is enabled.
+  const stepConfigured = (i: number): boolean => {
+    switch (i) {
+      case 0: return Boolean(welcome?.welcomeEnabled);
+      case 1: return Boolean(settings?.moderationEnabled);
+      case 2: return Boolean(automod?.antiSpamEnabled || automod?.filterEnabled || automod?.antiMentionEnabled || automod?.antiRaidEnabled);
+      case 3: return Boolean(settings?.levelingEnabled);
+      default: return false;
+    }
+  };
+
+  // Seed completed-set + resume point once the live data has loaded (once only).
+  useEffect(() => {
+    if (seeded || !settings || !welcome || !automod) return;
+    const done = new Set<number>();
+    for (let i = 0; i < STEPS.length - 1; i++) if (stepConfigured(i)) done.add(i);
+    setCompleted(done);
+    if (settings.setupCompletedAt) {
+      setStep(STEPS.length - 1); // already finished → land on the summary
+    } else {
+      const saved = typeof settings.setupStep === 'number' ? settings.setupStep : 0;
+      setStep(Math.min(Math.max(saved, 0), STEPS.length - 1));
+    }
+    setSeeded(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [seeded, settings, welcome, automod]);
+
   const advance = () => {
     setCompleted((prev) => new Set([...prev, step]));
-    if (step < STEPS.length - 1) setStep((s) => s + 1);
+    if (step < STEPS.length - 1) {
+      const next = step + 1;
+      setStep(next);
+      persist(next === STEPS.length - 1 ? { setupStep: next, setupCompletedAt: new Date().toISOString() } : { setupStep: next });
+    }
+  };
+
+  // #2 — one-click "recommended" that turns on sensible defaults across every
+  // module, marks the wizard complete, and jumps to the summary.
+  const applyRecommended = async () => {
+    setApplying(true);
+    try {
+      await Promise.all([
+        settingsApi.update(guildId, { moderationEnabled: true, levelingEnabled: true }),
+        settingsApi.updateAutoMod(guildId, { antiSpamEnabled: true, antiRaidEnabled: true }),
+        settingsApi.updateWelcome(guildId, { welcomeEnabled: true }),
+      ]);
+      setCompleted(new Set([0, 1, 2, 3]));
+      setStep(STEPS.length - 1);
+      persist({ setupStep: STEPS.length - 1, setupCompletedAt: new Date().toISOString() });
+      toast.success(t('recommendedApplied'));
+    } catch {
+      toast.error(t('recommendedFailed'));
+    } finally {
+      setApplying(false);
+    }
   };
 
   const isLast = step === STEPS.length - 1;
@@ -66,6 +128,25 @@ export default function SetupWizardPage() {
           <div className="page-head-desc">{t('subtitle')}</div>
         </div>
       </div>
+
+      {/* One-click recommended setup */}
+      {step === 0 && !settings?.setupCompletedAt && (
+        <div className="mb-4 rounded-xl border border-discord-green/30 bg-discord-green/5 p-4 flex flex-col sm:flex-row sm:items-center gap-3">
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-white flex items-center gap-1.5">
+              <Wand2 className="w-4 h-4 text-discord-green" /> {t('recommendedTitle')}
+            </p>
+            <p className="text-xs text-gray-400 mt-0.5">{t('recommendedDesc')}</p>
+          </div>
+          <button
+            onClick={applyRecommended}
+            disabled={applying}
+            className="btn-primary flex items-center gap-2 whitespace-nowrap disabled:opacity-60"
+          >
+            <Wand2 className="w-4 h-4" /> {applying ? t('saving') : t('recommendedApply')}
+          </button>
+        </div>
+      )}
 
       {/* Restore from a backup instead of configuring from scratch */}
       {step === 0 && (

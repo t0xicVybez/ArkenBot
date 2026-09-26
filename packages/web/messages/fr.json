@@ -1738,7 +1738,12 @@
     "quick_leveling": "Configurer les taux d’XP et les rôles de niveau",
     "quick_moderation": "Paramètres de modération",
     "quick_logging": "Configurer les salons de journaux",
-    "goToOverview": "Aller à l’aperçu"
+    "goToOverview": "Aller à l’aperçu",
+    "recommendedTitle": "Utiliser la configuration recommandée",
+    "recommendedDesc": "Activez la modération, l’anti-spam et l’anti-raid, la progression et les messages de bienvenue avec des réglages par défaut adaptés — ajustez tout plus tard.",
+    "recommendedApply": "Appliquer",
+    "recommendedApplied": "Configuration recommandée appliquée !",
+    "recommendedFailed": "Impossible d’appliquer la configuration recommandée."
   },
   "applicationsPage": {
     "formCreated": "Formulaire créé !",

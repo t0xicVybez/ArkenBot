@@ -1738,7 +1738,12 @@
     "quick_leveling": "配置经验倍率和等级身份组",
     "quick_moderation": "管理设置",
     "quick_logging": "设置日志频道",
-    "goToOverview": "前往概览"
+    "goToOverview": "前往概览",
+    "recommendedTitle": "使用推荐设置",
+    "recommendedDesc": "以合理的默认值开启管理、反垃圾与反入侵、等级和欢迎消息 — 之后可随时微调。",
+    "recommendedApply": "应用",
+    "recommendedApplied": "已应用推荐设置！",
+    "recommendedFailed": "无法应用推荐设置。"
   },
   "applicationsPage": {
     "formCreated": "表单已创建！",

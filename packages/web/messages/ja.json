@@ -1738,7 +1738,12 @@
     "quick_leveling": "XP レートとレベルロールを設定",
     "quick_moderation": "モデレーション設定",
     "quick_logging": "ログチャンネルを設定",
-    "goToOverview": "概要へ移動"
+    "goToOverview": "概要へ移動",
+    "recommendedTitle": "おすすめ設定を使う",
+    "recommendedDesc": "モデレーション、スパム対策とレイド対策、レベリング、ようこそメッセージを適切な初期値で有効化します。あとから細かく調整できます。",
+    "recommendedApply": "適用",
+    "recommendedApplied": "おすすめ設定を適用しました！",
+    "recommendedFailed": "おすすめ設定を適用できませんでした。"
   },
   "applicationsPage": {
     "formCreated": "フォームを作成しました！",

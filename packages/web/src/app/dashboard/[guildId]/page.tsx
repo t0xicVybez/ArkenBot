@@ -153,7 +153,8 @@ export default function GuildOverviewPage() {
         ];
         const doneCount = steps.filter((st) => st.done).length;
         const pct = Math.round((doneCount / steps.length) * 100);
-        if (checklistDismissed || doneCount === steps.length || !guild) return null;
+        const setupDone = !!(guild?.settings as { setupCompletedAt?: string | null } | undefined)?.setupCompletedAt;
+        if (checklistDismissed || doneCount === steps.length || setupDone || !guild) return null;
         return (
           <div className="card p-0 mb-6">
             <div className="flex items-center gap-5 px-5 py-4">

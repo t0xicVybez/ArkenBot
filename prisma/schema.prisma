@@ -105,6 +105,10 @@ model GuildSettings {
   reactionRolesEnabled Boolean @default(false)
   highlightsEnabled    Boolean @default(false)
 
+  // Onboarding / setup wizard
+  setupStep        Int       @default(0) // last wizard step the admin reached (for resume)
+  setupCompletedAt DateTime? // set when the wizard is finished; null = not yet completed
+
   // Channel IDs
   logChannelId          String?
   modLogChannelId       String?

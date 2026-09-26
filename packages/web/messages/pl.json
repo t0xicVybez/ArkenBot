@@ -1738,7 +1738,12 @@
     "quick_leveling": "Skonfiguruj tempo XP i role poziomów",
     "quick_moderation": "Ustawienia moderacji",
     "quick_logging": "Skonfiguruj kanały logów",
-    "goToOverview": "Przejdź do przeglądu"
+    "goToOverview": "Przejdź do przeglądu",
+    "recommendedTitle": "Użyj zalecanej konfiguracji",
+    "recommendedDesc": "Włącz moderację, anti-spam i anti-raid, poziomy oraz wiadomości powitalne z rozsądnymi ustawieniami domyślnymi — wszystko dostroisz później.",
+    "recommendedApply": "Zastosuj",
+    "recommendedApplied": "Zastosowano zalecane ustawienia!",
+    "recommendedFailed": "Nie udało się zastosować zalecanych ustawień."
   },
   "applicationsPage": {
     "formCreated": "Utworzono formularz!",

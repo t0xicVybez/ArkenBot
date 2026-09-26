@@ -1738,7 +1738,12 @@
     "quick_leveling": "Konfigurasikan tarif XP & peran level",
     "quick_moderation": "Pengaturan moderasi",
     "quick_logging": "Atur kanal pencatatan",
-    "goToOverview": "Ke Ikhtisar"
+    "goToOverview": "Ke Ikhtisar",
+    "recommendedTitle": "Gunakan pengaturan yang direkomendasikan",
+    "recommendedDesc": "Aktifkan moderasi, anti-spam & anti-raid, leveling, dan pesan sambutan dengan default yang masuk akal — sesuaikan apa pun nanti.",
+    "recommendedApply": "Terapkan",
+    "recommendedApplied": "Pengaturan yang direkomendasikan diterapkan!",
+    "recommendedFailed": "Tidak dapat menerapkan pengaturan yang direkomendasikan."
   },
   "applicationsPage": {
     "formCreated": "Formulir dibuat!",

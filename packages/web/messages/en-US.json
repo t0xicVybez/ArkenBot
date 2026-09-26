@@ -1738,7 +1738,12 @@
     "quick_leveling": "Configure XP rates & level roles",
     "quick_moderation": "Moderation settings",
     "quick_logging": "Set up logging channels",
-    "goToOverview": "Go to Overview"
+    "goToOverview": "Go to Overview",
+    "recommendedTitle": "Use recommended setup",
+    "recommendedDesc": "Turn on moderation, anti-spam & anti-raid, leveling, and welcome messages with sensible defaults — fine-tune anything later.",
+    "recommendedApply": "Apply",
+    "recommendedApplied": "Recommended settings applied!",
+    "recommendedFailed": "Couldn’t apply recommended settings."
   },
   "applicationsPage": {
     "formCreated": "Form created!",

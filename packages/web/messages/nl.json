@@ -1738,7 +1738,12 @@
     "quick_leveling": "XP-tarieven en levelrollen configureren",
     "quick_moderation": "Moderatie-instellingen",
     "quick_logging": "Logkanalen instellen",
-    "goToOverview": "Ga naar Overzicht"
+    "goToOverview": "Ga naar Overzicht",
+    "recommendedTitle": "Aanbevolen configuratie gebruiken",
+    "recommendedDesc": "Schakel moderatie, anti-spam en anti-raid, niveaus en welkomstberichten in met verstandige standaardinstellingen — pas later alles aan.",
+    "recommendedApply": "Toepassen",
+    "recommendedApplied": "Aanbevolen instellingen toegepast!",
+    "recommendedFailed": "Kan aanbevolen instellingen niet toepassen."
   },
   "applicationsPage": {
     "formCreated": "Formulier aangemaakt!",
