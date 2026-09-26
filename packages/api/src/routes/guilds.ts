@@ -1,6 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import axios from 'axios';
 import { requireAuth, requireGuildAdmin } from '../middleware/auth.js';
+import { isSnowflake } from '@arkenbot/shared';
 import { prisma } from '../database.js';
 import { AuthService } from '../services/AuthService.js';
 import { canManageGuild } from '../utils/guildAccess.js';
@@ -112,6 +113,31 @@ export async function guildRoutes(server: FastifyInstance): Promise<void> {
       return reply.send({ success: true, data: res.data });
     } catch {
       return reply.code(500).send({ success: false, error: 'Failed to fetch channels' });
+    }
+  });
+
+  // POST /guilds/:guildId/channels - Create a text channel (setup wizard "create for me")
+  server.post('/guilds/:guildId/channels', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
+    const { guildId } = request.params as { guildId: string };
+    if (!isSnowflake(guildId)) return reply.code(400).send({ success: false, error: 'Invalid guild ID' });
+    const body = (request.body ?? {}) as { name?: string };
+    // Normalise to Discord's text-channel naming rules (lowercase, dashes).
+    const name = (body.name ?? '').trim().toLowerCase().replace(/[^a-z0-9_-]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 90);
+    if (!name) return reply.code(400).send({ success: false, error: 'A valid channel name is required' });
+    try {
+      const { default: axiosInstance } = await import('axios');
+      const res = await axiosInstance.post(
+        `https://discord.com/api/v10/guilds/${guildId}/channels`,
+        { name, type: 0 },
+        { headers: { Authorization: `Bot ${process.env.DISCORD_TOKEN}`, 'Content-Type': 'application/json' }, validateStatus: () => true },
+      );
+      if (res.status >= 400) {
+        const err = res.status === 403 ? 'The bot needs the Manage Channels permission to create a channel.' : 'Failed to create channel';
+        return reply.code(res.status === 403 ? 403 : 502).send({ success: false, error: err });
+      }
+      return reply.send({ success: true, data: { id: res.data.id, name: res.data.name, type: res.data.type } });
+    } catch {
+      return reply.code(500).send({ success: false, error: 'Failed to create channel' });
     }
   });
 

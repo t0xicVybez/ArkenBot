@@ -20,6 +20,8 @@ export const GuildSettingsPatchSchema = z.object({
   musicEnabled:         z.boolean().optional(),
   reactionRolesEnabled: z.boolean().optional(),
   highlightsEnabled:    z.boolean().optional(),
+  setupStep:            z.number().int().min(0).max(20).optional(),
+  setupCompletedAt:     z.coerce.date().nullable().optional(),
   highlightsChannelId:  z.string().nullable().optional(),
   voiceXpEnabled:       z.boolean().optional(),
   voiceXpPerMinute:     z.number().int().min(1).max(100).optional(),

@@ -29,6 +29,10 @@ export interface GuildSettings {
   reactionRolesEnabled: boolean;
   highlightsEnabled: boolean;
 
+  // Onboarding / setup wizard
+  setupStep?: number;
+  setupCompletedAt?: string | null;
+
   // Channels
   logChannelId?: string;
   modLogChannelId?: string;

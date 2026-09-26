@@ -30,7 +30,8 @@
   "welcome": {
     "title": "👋 ¡Bienvenido a {server}!",
     "accountAge": "📅 Antigüedad de la cuenta",
-    "memberCount": "👥 Número de miembros"
+    "memberCount": "👥 Número de miembros",
+    "testPrefix": "🧪 Bienvenida de prueba — así se saluda a los nuevos miembros:"
   },
   "leveling": {
     "levelUp": "¡Subida de nivel!",

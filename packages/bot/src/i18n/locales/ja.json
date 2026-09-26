@@ -30,7 +30,8 @@
   "welcome": {
     "title": "👋 {server} へようこそ！",
     "accountAge": "📅 アカウント作成からの期間",
-    "memberCount": "👥 メンバー数"
+    "memberCount": "👥 メンバー数",
+    "testPrefix": "🧪 テストのようこそメッセージ — 新しいメンバーはこのように迎えられます："
   },
   "leveling": {
     "levelUp": "レベルアップ！",

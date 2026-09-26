@@ -1,24 +1,63 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
-import { useQuery, useMutation } from '@tanstack/react-query';
-import { settingsApi, guildsApi, configTransferApi } from '@/lib/api';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { settingsApi, guildsApi, configTransferApi, permissionHealthApi } from '@/lib/api';
 import { Toggle } from '@/components/Toggle';
 import toast from 'react-hot-toast';
-import { useState } from 'react';
-import { Check, ChevronRight, ChevronLeft, Sparkles, MessageSquare, Shield, Bot, TrendingUp, PartyPopper, Upload } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Check, ChevronRight, ChevronLeft, Sparkles, MessageSquare, Shield, Bot, TrendingUp, PartyPopper, Upload, Wand2, Plus, ScrollText, AlertTriangle, Ticket, Coins, Star, Gift, Radio } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 
 interface GuildChannel { id: string; name: string; type: number }
 
+const CLIENT_ID = process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID ?? '';
+const INVITE_URL = `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&permissions=8824675953536247&integration_type=0&scope=bot+applications.commands`;
+
 const STEPS = [
   { id: 'welcome-msg', icon: MessageSquare },
   { id: 'moderation',  icon: Shield },
   { id: 'automod',     icon: Bot },
+  { id: 'logging',     icon: ScrollText },
   { id: 'leveling',    icon: TrendingUp },
   { id: 'done',        icon: PartyPopper },
 ];
+
+// Reusable channel dropdown with a "create it for me" button (#5).
+function ChannelPicker({ guildId, channels, value, onChange, defaultName, allowNone }: {
+  guildId: string; channels: GuildChannel[]; value: string;
+  onChange: (id: string) => void; defaultName: string; allowNone?: boolean;
+}) {
+  const t = useTranslations('setupWizardPage');
+  const qc = useQueryClient();
+  const [creating, setCreating] = useState(false);
+  const create = async () => {
+    setCreating(true);
+    try {
+      const res = await guildsApi.createChannel(guildId, defaultName);
+      const ch = (res.data as { data?: { id: string } })?.data;
+      if (ch?.id) {
+        await qc.invalidateQueries({ queryKey: ['channels', guildId] });
+        onChange(ch.id);
+        toast.success(t('channelCreated', { name: defaultName }));
+      }
+    } catch (e) {
+      toast.error((e as { response?: { data?: { error?: string } } })?.response?.data?.error ?? t('channelCreateFailed'));
+    } finally { setCreating(false); }
+  };
+  return (
+    <div className="flex flex-col sm:flex-row gap-2">
+      <select className="input flex-1" value={value} onChange={(e) => onChange(e.target.value)}>
+        <option value="">{allowNone ? t('none') : t('selectChannel')}</option>
+        {channels.map((c) => <option key={c.id} value={c.id}>#{c.name}</option>)}
+      </select>
+      <button type="button" onClick={create} disabled={creating} className="btn-secondary whitespace-nowrap flex items-center justify-center gap-1.5">
+        <Plus className="w-4 h-4" /> {creating ? t('creating') : t('createNamed', { name: defaultName })}
+      </button>
+    </div>
+  );
+}
 
 export default function SetupWizardPage() {
   const { guildId } = useParams() as { guildId: string };
@@ -43,15 +82,83 @@ export default function SetupWizardPage() {
     queryKey: ['channels', guildId],
     queryFn: () => guildsApi.channels(guildId),
   });
+  const { data: permHealthRes } = useQuery({
+    queryKey: ['permHealth', guildId],
+    queryFn: () => permissionHealthApi.get(guildId),
+  });
 
   const settings   = settingsRes?.data?.data as Record<string, unknown> | undefined;
   const welcome    = welcomeRes?.data?.data as Record<string, unknown> | undefined;
   const automod    = automodRes?.data?.data as Record<string, unknown> | undefined;
   const channels   = ((channelsRes?.data?.data ?? []) as GuildChannel[]).filter((c) => c.type === 0);
+  const permHealth = (permHealthRes?.data as { data?: { botInGuild: boolean; administrator: boolean; missing: string[] } } | undefined)?.data;
+
+  const [applying, setApplying] = useState(false);
+  const [seeded, setSeeded] = useState(false);
+
+  // Persist wizard progress so a refresh resumes where the admin left off, and
+  // the Overview can show a "finish setup" banner until it's completed.
+  const persist = (data: { setupStep?: number; setupCompletedAt?: string }) => {
+    settingsApi.update(guildId, data).catch(() => {/* non-blocking */});
+  };
+
+  // #3 — reflect what's already configured so returning admins don't restart
+  // from a blank slate. A step counts as "done" when its module is enabled.
+  const stepConfigured = (i: number): boolean => {
+    switch (i) {
+      case 0: return Boolean(welcome?.welcomeEnabled);
+      case 1: return Boolean(settings?.moderationEnabled);
+      case 2: return Boolean(automod?.antiSpamEnabled || automod?.filterEnabled || automod?.antiMentionEnabled || automod?.antiRaidEnabled);
+      case 3: return Boolean(settings?.loggingEnabled);
+      case 4: return Boolean(settings?.levelingEnabled);
+      default: return false;
+    }
+  };
+
+  // Seed completed-set + resume point once the live data has loaded (once only).
+  useEffect(() => {
+    if (seeded || !settings || !welcome || !automod) return;
+    const done = new Set<number>();
+    for (let i = 0; i < STEPS.length - 1; i++) if (stepConfigured(i)) done.add(i);
+    setCompleted(done);
+    if (settings.setupCompletedAt) {
+      setStep(STEPS.length - 1); // already finished → land on the summary
+    } else {
+      const saved = typeof settings.setupStep === 'number' ? settings.setupStep : 0;
+      setStep(Math.min(Math.max(saved, 0), STEPS.length - 1));
+    }
+    setSeeded(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [seeded, settings, welcome, automod]);
 
   const advance = () => {
     setCompleted((prev) => new Set([...prev, step]));
-    if (step < STEPS.length - 1) setStep((s) => s + 1);
+    if (step < STEPS.length - 1) {
+      const next = step + 1;
+      setStep(next);
+      persist(next === STEPS.length - 1 ? { setupStep: next, setupCompletedAt: new Date().toISOString() } : { setupStep: next });
+    }
+  };
+
+  // #2 — one-click "recommended" that turns on sensible defaults across every
+  // module, marks the wizard complete, and jumps to the summary.
+  const applyRecommended = async () => {
+    setApplying(true);
+    try {
+      await Promise.all([
+        settingsApi.update(guildId, { moderationEnabled: true, levelingEnabled: true }),
+        settingsApi.updateAutoMod(guildId, { antiSpamEnabled: true, antiRaidEnabled: true }),
+        settingsApi.updateWelcome(guildId, { welcomeEnabled: true }),
+      ]);
+      setCompleted(new Set([0, 1, 2, 4]));
+      setStep(STEPS.length - 1);
+      persist({ setupStep: STEPS.length - 1, setupCompletedAt: new Date().toISOString() });
+      toast.success(t('recommendedApplied'));
+    } catch {
+      toast.error(t('recommendedFailed'));
+    } finally {
+      setApplying(false);
+    }
   };
 
   const isLast = step === STEPS.length - 1;
@@ -66,6 +173,43 @@ export default function SetupWizardPage() {
           <div className="page-head-desc">{t('subtitle')}</div>
         </div>
       </div>
+
+      {/* #7 — permission preflight: warn if the bot can't do what setup enables */}
+      {permHealth && !permHealth.administrator && (!permHealth.botInGuild || permHealth.missing?.length > 0) && (
+        <div className="mb-4 rounded-xl border border-amber-500/30 bg-amber-500/5 p-4 flex flex-col sm:flex-row sm:items-center gap-3">
+          <AlertTriangle className="w-5 h-5 text-amber-400 flex-shrink-0" />
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold text-white">{permHealth.botInGuild ? t('permWarnTitle') : t('permBotMissingTitle')}</p>
+            <p className="text-xs text-gray-400 mt-0.5">
+              {permHealth.botInGuild ? t('permWarnDesc', { perms: permHealth.missing.join(', ') }) : t('permBotMissingDesc')}
+            </p>
+          </div>
+          {permHealth.botInGuild ? (
+            <Link href={`/dashboard/${guildId}/permissions`} className="btn-secondary whitespace-nowrap text-sm">{t('permFix')}</Link>
+          ) : (
+            <a href={INVITE_URL} target="_blank" rel="noopener noreferrer" className="btn-secondary whitespace-nowrap text-sm">{t('permReinvite')}</a>
+          )}
+        </div>
+      )}
+
+      {/* One-click recommended setup */}
+      {step === 0 && !settings?.setupCompletedAt && (
+        <div className="mb-4 rounded-xl border border-discord-green/30 bg-discord-green/5 p-4 flex flex-col sm:flex-row sm:items-center gap-3">
+          <div className="flex-1">
+            <p className="text-sm font-semibold text-white flex items-center gap-1.5">
+              <Wand2 className="w-4 h-4 text-discord-green" /> {t('recommendedTitle')}
+            </p>
+            <p className="text-xs text-gray-400 mt-0.5">{t('recommendedDesc')}</p>
+          </div>
+          <button
+            onClick={applyRecommended}
+            disabled={applying}
+            className="btn-primary flex items-center gap-2 whitespace-nowrap disabled:opacity-60"
+          >
+            <Wand2 className="w-4 h-4" /> {applying ? t('saving') : t('recommendedApply')}
+          </button>
+        </div>
+      )}
 
       {/* Restore from a backup instead of configuring from scratch */}
       {step === 0 && (
@@ -155,13 +299,21 @@ export default function SetupWizardPage() {
           />
         )}
         {step === 3 && (
+          <LoggingStep
+            guildId={guildId}
+            settings={settings}
+            channels={channels}
+            onNext={advance}
+          />
+        )}
+        {step === 4 && (
           <LevelingStep
             guildId={guildId}
             settings={settings}
             onNext={advance}
           />
         )}
-        {step === 4 && (
+        {step === 5 && (
           <DoneStep guildId={guildId} completed={completed} />
         )}
       </div>
@@ -211,6 +363,14 @@ function WelcomeStep({
 
   const save = () => mut.mutate({ welcomeEnabled: enabled, welcomeChannelId: channelId, welcomeMessage: message });
 
+  const [testing, setTesting] = useState(false);
+  const sendTest = async () => {
+    setTesting(true);
+    try { await settingsApi.testWelcome(guildId); toast.success(t('testSent')); }
+    catch (e) { toast.error((e as { response?: { data?: { error?: string } } })?.response?.data?.error ?? t('testFailed')); }
+    finally { setTesting(false); }
+  };
+
   return (
     <div className="space-y-5">
       <div>
@@ -224,12 +384,7 @@ function WelcomeStep({
         <>
           <div>
             <label className="label">{t('welcomeChannel')}</label>
-            <select className="input" value={channelId} onChange={(e) => setChannelId(e.target.value)}>
-              <option value="">{t('selectChannel')}</option>
-              {channels.map((c) => (
-                <option key={c.id} value={c.id}>#{c.name}</option>
-              ))}
-            </select>
+            <ChannelPicker guildId={guildId} channels={channels} value={channelId} onChange={setChannelId} defaultName="welcome" />
           </div>
           <div>
             <label className="label">{t('messageLabel')}</label>
@@ -240,6 +395,11 @@ function WelcomeStep({
               onChange={(e) => setMessage(e.target.value)}
             />
           </div>
+          {welcome?.welcomeChannelId ? (
+            <button type="button" onClick={sendTest} disabled={testing} className="btn-secondary w-full flex items-center justify-center gap-2 text-sm">
+              <MessageSquare className="w-4 h-4" /> {testing ? t('testSending') : t('testWelcome')}
+            </button>
+          ) : null}
         </>
       )}
 
@@ -288,12 +448,7 @@ function ModerationStep({
         <>
           <div>
             <label className="label">{t('modLogChannel')} <span className="text-gray-500">{t('optional')}</span></label>
-            <select className="input" value={logChannel} onChange={(e) => setLogChannel(e.target.value)}>
-              <option value="">{t('none')}</option>
-              {channels.map((c) => (
-                <option key={c.id} value={c.id}>#{c.name}</option>
-              ))}
-            </select>
+            <ChannelPicker guildId={guildId} channels={channels} value={logChannel} onChange={setLogChannel} defaultName="mod-logs" allowNone />
           </div>
         </>
       )}
@@ -343,6 +498,54 @@ function AutoModStep({
         <Toggle label={t('antiMention')} enabled={mention} onChange={setMention} />
         <Toggle label={t('antiRaid')} enabled={raid} onChange={setRaid} />
       </div>
+
+      <button onClick={save} disabled={mut.isPending} className="btn-primary w-full">
+        {mut.isPending ? t('saving') : t('saveContinue')}
+      </button>
+    </div>
+  );
+}
+
+// ─── Step: Logging ────────────────────────────────────────────────────────────
+
+function LoggingStep({
+  guildId,
+  settings,
+  channels,
+  onNext,
+}: {
+  guildId: string;
+  settings: Record<string, unknown> | undefined;
+  channels: GuildChannel[];
+  onNext: () => void;
+}) {
+  const t = useTranslations('setupWizardPage');
+  const [enabled, setEnabled] = useState<boolean>((settings?.loggingEnabled as boolean | undefined) ?? false);
+  const [logChannel, setLogChannel] = useState<string>((settings?.logChannelId as string | undefined) ?? '');
+
+  const mut = useMutation({
+    mutationFn: (data: object) => settingsApi.update(guildId, data),
+    onSuccess: () => { toast.success(t('loggingSaved')); onNext(); },
+    onError: () => toast.error(t('loggingSaveError')),
+  });
+
+  const save = () => mut.mutate({ loggingEnabled: enabled, logChannelId: enabled ? (logChannel || undefined) : undefined });
+
+  return (
+    <div className="space-y-5">
+      <div>
+        <h2 className="text-white font-semibold text-lg mb-1">{t('loggingTitle')}</h2>
+        <p className="text-gray-500 text-sm">{t('loggingDesc')}</p>
+      </div>
+
+      <Toggle label={t('enableLogging')} enabled={enabled} onChange={setEnabled} />
+
+      {enabled && (
+        <div>
+          <label className="label">{t('logChannel')}</label>
+          <ChannelPicker guildId={guildId} channels={channels} value={logChannel} onChange={setLogChannel} defaultName="server-logs" />
+        </div>
+      )}
 
       <button onClick={save} disabled={mut.isPending} className="btn-primary w-full">
         {mut.isPending ? t('saving') : t('saveContinue')}
@@ -429,6 +632,26 @@ function DoneStep({ guildId, completed }: { guildId: string; completed: Set<numb
             <ChevronRight className="w-4 h-4 text-gray-600 group-hover:text-discord-blurple transition-colors" />
           </Link>
         ))}
+      </div>
+
+      {/* #6 — discover more modules beyond the core wizard steps */}
+      <div className="text-left">
+        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">{t('exploreMore')}</p>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          {[
+            { href: 'tickets', label: t('extra_tickets'), Icon: Ticket },
+            { href: 'economy', label: t('extra_economy'), Icon: Coins },
+            { href: 'starboard', label: t('extra_starboard'), Icon: Star },
+            { href: 'giveaways', label: t('extra_giveaways'), Icon: Gift },
+            { href: 'reaction-roles', label: t('extra_reactionRoles'), Icon: Sparkles },
+            { href: 'stream-alerts', label: t('extra_streamAlerts'), Icon: Radio },
+          ].map(({ href, label, Icon }) => (
+            <Link key={href} href={`/dashboard/${guildId}/${href}`} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-(--bg-base) border border-white/4 hover:border-discord-blurple/40 transition-colors group">
+              <Icon className="w-4 h-4 text-discord-blurple flex-shrink-0" />
+              <span className="text-xs text-gray-300 group-hover:text-white truncate">{label}</span>
+            </Link>
+          ))}
+        </div>
       </div>
 
       <button
