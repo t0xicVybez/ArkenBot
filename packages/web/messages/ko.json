@@ -2249,7 +2249,8 @@
     "serverDashboard": "서버 대시보드",
     "logout": "로그아웃",
     "openMenu": "메뉴 열기",
-    "staffPortal": "스태프 포털"
+    "staffPortal": "스태프 포털",
+    "moderation": "모더레이션"
   },
   "staffDashboard": {
     "title": "플릿 개요",
@@ -3615,5 +3616,29 @@
       "every12h": "12시간마다",
       "daily": "매일"
     }
+  },
+  "staffModeration": {
+    "title": "모더레이션",
+    "total": "{total}개 기록",
+    "tabCases": "제재 사례",
+    "tabWarnings": "경고",
+    "searchPlaceholder": "사용자, 모더레이터, 사유 또는 ID 검색…",
+    "allTypes": "모든 유형",
+    "allStatus": "모든 상태",
+    "statusActive": "활성",
+    "statusInactive": "비활성",
+    "colServer": "서버",
+    "colCase": "사례",
+    "colType": "유형",
+    "colUser": "사용자",
+    "colReason": "사유",
+    "colModerator": "모더레이터",
+    "colDate": "날짜",
+    "colStatus": "상태",
+    "noCases": "제재 사례가 없습니다.",
+    "noWarnings": "경고가 없습니다.",
+    "pageInfo": "{page} 페이지 · 총 {total}개",
+    "previous": "이전",
+    "next": "다음"
   }
 }

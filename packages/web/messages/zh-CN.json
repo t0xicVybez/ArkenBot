@@ -2249,7 +2249,8 @@
     "serverDashboard": "服务器控制面板",
     "logout": "登出",
     "openMenu": "打开菜单",
-    "staffPortal": "员工门户"
+    "staffPortal": "员工门户",
+    "moderation": "管理"
   },
   "staffDashboard": {
     "title": "机群概览",
@@ -3615,5 +3616,29 @@
       "every12h": "每 12 小时",
       "daily": "每天"
     }
+  },
+  "staffModeration": {
+    "title": "管理",
+    "total": "{total} 条记录",
+    "tabCases": "处罚记录",
+    "tabWarnings": "警告",
+    "searchPlaceholder": "搜索用户、管理员、原因或 ID…",
+    "allTypes": "所有类型",
+    "allStatus": "所有状态",
+    "statusActive": "生效中",
+    "statusInactive": "已失效",
+    "colServer": "服务器",
+    "colCase": "编号",
+    "colType": "类型",
+    "colUser": "用户",
+    "colReason": "原因",
+    "colModerator": "管理员",
+    "colDate": "日期",
+    "colStatus": "状态",
+    "noCases": "未找到处罚记录。",
+    "noWarnings": "未找到警告。",
+    "pageInfo": "第 {page} 页 · 共 {total} 条",
+    "previous": "上一页",
+    "next": "下一页"
   }
 }

@@ -2249,7 +2249,8 @@
     "serverDashboard": "サーバーダッシュボード",
     "logout": "ログアウト",
     "openMenu": "メニューを開く",
-    "staffPortal": "スタッフポータル"
+    "staffPortal": "スタッフポータル",
+    "moderation": "モデレーション"
   },
   "staffDashboard": {
     "title": "フリート概要",
@@ -3615,5 +3616,29 @@
       "every12h": "12時間ごと",
       "daily": "毎日"
     }
+  },
+  "staffModeration": {
+    "title": "モデレーション",
+    "total": "{total} 件",
+    "tabCases": "処罰ケース",
+    "tabWarnings": "警告",
+    "searchPlaceholder": "ユーザー・モデレーター・理由・IDで検索…",
+    "allTypes": "すべての種類",
+    "allStatus": "すべての状態",
+    "statusActive": "有効",
+    "statusInactive": "無効",
+    "colServer": "サーバー",
+    "colCase": "ケース",
+    "colType": "種類",
+    "colUser": "ユーザー",
+    "colReason": "理由",
+    "colModerator": "モデレーター",
+    "colDate": "日付",
+    "colStatus": "状態",
+    "noCases": "処罰ケースが見つかりません。",
+    "noWarnings": "警告が見つかりません。",
+    "pageInfo": "ページ {page} · 合計 {total}",
+    "previous": "前へ",
+    "next": "次へ"
   }
 }

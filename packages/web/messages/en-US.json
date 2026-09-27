@@ -2249,7 +2249,8 @@
     "serverDashboard": "Server Dashboard",
     "logout": "Logout",
     "openMenu": "Open menu",
-    "staffPortal": "Staff Portal"
+    "staffPortal": "Staff Portal",
+    "moderation": "Moderation"
   },
   "staffDashboard": {
     "title": "Fleet overview",
@@ -3615,5 +3616,29 @@
       "every12h": "Every 12 hours",
       "daily": "Daily"
     }
+  },
+  "staffModeration": {
+    "title": "Moderation",
+    "total": "{total} records",
+    "tabCases": "Mod Cases",
+    "tabWarnings": "Warnings",
+    "searchPlaceholder": "Search user, moderator, reason, or ID…",
+    "allTypes": "All types",
+    "allStatus": "All statuses",
+    "statusActive": "Active",
+    "statusInactive": "Inactive",
+    "colServer": "Server",
+    "colCase": "Case",
+    "colType": "Type",
+    "colUser": "User",
+    "colReason": "Reason",
+    "colModerator": "Moderator",
+    "colDate": "Date",
+    "colStatus": "Status",
+    "noCases": "No moderation cases found.",
+    "noWarnings": "No warnings found.",
+    "pageInfo": "Page {page} · {total} total",
+    "previous": "Previous",
+    "next": "Next"
   }
 }

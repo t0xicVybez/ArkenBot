@@ -2249,7 +2249,8 @@
     "serverDashboard": "Sunucu Paneli",
     "logout": "Çıkış Yap",
     "openMenu": "Menüyü aç",
-    "staffPortal": "Yetkili Portalı"
+    "staffPortal": "Yetkili Portalı",
+    "moderation": "Moderasyon"
   },
   "staffDashboard": {
     "title": "Filo genel bakışı",
@@ -3615,5 +3616,29 @@
       "every12h": "12 saatte bir",
       "daily": "Günlük"
     }
+  },
+  "staffModeration": {
+    "title": "Moderasyon",
+    "total": "{total} kayıt",
+    "tabCases": "Vakalar",
+    "tabWarnings": "Uyarılar",
+    "searchPlaceholder": "Kullanıcı, moderatör, sebep veya ID ara…",
+    "allTypes": "Tüm türler",
+    "allStatus": "Tüm durumlar",
+    "statusActive": "Aktif",
+    "statusInactive": "Pasif",
+    "colServer": "Sunucu",
+    "colCase": "Vaka",
+    "colType": "Tür",
+    "colUser": "Kullanıcı",
+    "colReason": "Sebep",
+    "colModerator": "Moderatör",
+    "colDate": "Tarih",
+    "colStatus": "Durum",
+    "noCases": "Moderasyon vakası bulunamadı.",
+    "noWarnings": "Uyarı bulunamadı.",
+    "pageInfo": "Sayfa {page} · toplam {total}",
+    "previous": "Önceki",
+    "next": "Sonraki"
   }
 }
