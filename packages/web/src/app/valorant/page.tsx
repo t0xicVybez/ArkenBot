@@ -50,7 +50,7 @@ export default async function ValorantPage() {
             <span className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold" style={{ background: `${VAL_RED}1a`, color: VAL_RED }}>
               <Gamepad2 className="h-3.5 w-3.5" /> {t('badge')}
             </span>
-            <h1 className="mt-4 text-4xl font-bold leading-tight text-white">{t('heroTitle')}</h1>
+            <h1 className="mt-4 text-4xl font-bold leading-tight text-(--text-primary)">{t('heroTitle')}</h1>
             <p className="mt-4 text-base leading-relaxed text-(--text-secondary)">{t('heroSub')}</p>
             <div className="mt-6 flex flex-wrap gap-3">
               <a href={SITE.inviteUrl} target="_blank" rel="noopener noreferrer" className="btn-primary flex items-center gap-2">
@@ -65,7 +65,7 @@ export default async function ValorantPage() {
             <div className="flex items-center gap-3">
               <div className="grid h-11 w-11 place-items-center rounded-lg font-bold text-white" style={{ background: VAL_RED }}>V</div>
               <div className="min-w-0">
-                <p className="truncate text-sm font-semibold text-white">Sova#NA1</p>
+                <p className="truncate text-sm font-semibold text-(--text-primary)">Sova#NA1</p>
                 <p className="text-xs text-(--text-muted)">{t('mockRegion')}</p>
               </div>
               <span className="ml-auto rounded-md px-2 py-1 text-xs font-bold" style={{ background: `${VAL_RED}1a`, color: VAL_RED }}>Immortal 2</span>
@@ -73,7 +73,7 @@ export default async function ValorantPage() {
             <div className="mt-4 grid grid-cols-3 gap-2 text-center">
               {[['47', 'RR'], ['1.42', 'K/D'], ['Radiant', t('mockPeak')]].map(([v, l]) => (
                 <div key={l} className="rounded-lg bg-(--bg-base) py-2">
-                  <p className="text-sm font-bold text-white">{v}</p>
+                  <p className="text-sm font-bold text-(--text-primary)">{v}</p>
                   <p className="text-[10px] uppercase tracking-wide text-(--text-muted)">{l}</p>
                 </div>
               ))}
@@ -82,7 +82,7 @@ export default async function ValorantPage() {
         </div>
 
         {/* How it works */}
-        <h2 className="mt-20 mb-8 text-center text-2xl font-bold text-white">{t('howTitle')}</h2>
+        <h2 className="mt-20 mb-8 text-center text-2xl font-bold text-(--text-primary)">{t('howTitle')}</h2>
         <div className="space-y-4">
           {steps.map(({ icon: Icon, key }, i) => (
             <div key={key} className="grid items-center gap-5 rounded-xl border border-(--border) bg-(--bg-card) p-5 md:grid-cols-[1fr_1.1fr]">
@@ -93,7 +93,7 @@ export default async function ValorantPage() {
                   </span>
                   <span className="text-xs font-bold uppercase tracking-wider text-(--text-muted)">{t('stepLabel', { n: i + 1 })}</span>
                 </div>
-                <h3 className="mt-3 text-lg font-semibold text-white">{t(`${key}Title`)}</h3>
+                <h3 className="mt-3 text-lg font-semibold text-(--text-primary)">{t(`${key}Title`)}</h3>
                 <p className="mt-1 text-sm leading-relaxed text-(--text-secondary)">{t(`${key}Desc`)}</p>
               </div>
 
@@ -122,7 +122,7 @@ export default async function ValorantPage() {
                     <div className="space-y-1.5 text-xs">
                       {[['Radiant', '@Radiant'], ['Immortal', '@Immortal'], ['Diamond', '@Diamond']].map(([tier, role]) => (
                         <div key={tier} className="flex items-center justify-between rounded-md bg-(--bg-base) px-3 py-1.5">
-                          <span className="font-semibold text-white">{tier}</span>
+                          <span className="font-semibold text-(--text-primary)">{tier}</span>
                           <ArrowRight className="h-3 w-3 text-(--text-muted)" />
                           <span style={{ color: VAL_RED }}>{role}</span>
                         </div>
@@ -136,7 +136,7 @@ export default async function ValorantPage() {
                       {[['1', 'Jett#EU', 'Radiant'], ['2', 'Sova#NA1', 'Immortal 2'], ['3', 'Sage#AP', 'Diamond 3']].map(([n, name, rank]) => (
                         <div key={n} className="flex items-center gap-3 rounded-md bg-(--bg-base) px-3 py-1.5">
                           <span className="w-4 font-bold text-(--text-muted)">{n}</span>
-                          <span className="flex-1 truncate text-white">{name}</span>
+                          <span className="flex-1 truncate text-(--text-primary)">{name}</span>
                           <span style={{ color: VAL_RED }}>{rank}</span>
                         </div>
                       ))}
