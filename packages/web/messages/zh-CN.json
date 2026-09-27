@@ -2071,7 +2071,14 @@
     "s13Title": "12. 本政策的变更",
     "s13p1": "我们可能会不时更新本隐私政策。本页面顶部的“最后更新”日期反映了最近一次变更的时间。在变更发布后继续使用 Arken Bot 即构成对更新后政策的接受。",
     "s14Title": "13. 联系我们",
-    "s14p1": "如果您对本隐私政策有疑问，或想请求删除数据，请通过 <email>support@arkenbot.app</email> 与我们联系，或加入我们的 <support>支持服务器</support>。"
+    "s14p1": "如果您对本隐私政策有疑问，或想请求删除数据，请通过 <email>support@arkenbot.app</email> 与我们联系，或加入我们的 <support>支持服务器</support>。",
+    "sValTitle": "VALORANT / Riot Games 数据",
+    "sValp1": "如果你关联 Riot 账号，ArkenBot 会通过官方的 <b>Riot Sign-On（RSO）</b> 连接到 <riot>Riot Games</riot>。你在 Riot 自己的登录页面授权连接 — <b>我们绝不会看到或存储你的 Riot 密码</b>。你对 Riot 数据的使用还受 Riot 的 <tos>服务条款</tos> 和 <privacy>隐私声明</privacy> 约束。",
+    "sValp2": "通过 RSO，我们会获取你的 <b>PUUID</b>（匿名的 Riot 账号标识）、你的 <b>Riot ID</b>（名称和标签），以及为你启用的功能所需的 VALORANT <b>竞技段位和近期对局数据</b>。",
+    "sValp3": "这些数据仅用于显示你的段位和数据、分配基于段位的身份组、生成服务器排行榜，以及发送你选择开启的对局通知。我们绝不出售这些数据，也不用于广告。",
+    "sValp4": "你可随时在仪表盘中解除 Riot 账号关联，这会删除已存储的关联和令牌。你也可以联系 <email>support@arkenbot.app</email> 请求删除。",
+    "sValDisclaimer": "ArkenBot 未获得 Riot Games 的认可，也不代表 Riot Games 或任何正式参与制作或管理 Riot Games 资产者的观点或意见。Riot Games 及所有相关资产均为 Riot Games, Inc. 的商标或注册商标。",
+    "s9ItemVal": "<b>Riot Games</b> — 当你关联 Riot 账号时（见 <sec>VALORANT 部分</sec>）。"
   },
   "pages": {
     "overview": "概览",

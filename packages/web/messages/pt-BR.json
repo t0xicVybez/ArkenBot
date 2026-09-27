@@ -2071,7 +2071,14 @@
     "s13Title": "12. Alterações nesta política",
     "s13p1": "Podemos atualizar esta Política de Privacidade periodicamente. A data de “Última atualização” no topo desta página reflete quando as alterações mais recentes foram feitas. O uso continuado do Arken Bot após a publicação das alterações constitui aceitação da política atualizada.",
     "s14Title": "13. Contato",
-    "s14p1": "Se você tiver dúvidas sobre esta Política de Privacidade ou quiser solicitar a exclusão de dados, entre em contato conosco em <email>support@arkenbot.app</email> ou entre no nosso <support>servidor de suporte</support>."
+    "s14p1": "Se você tiver dúvidas sobre esta Política de Privacidade ou quiser solicitar a exclusão de dados, entre em contato conosco em <email>support@arkenbot.app</email> ou entre no nosso <support>servidor de suporte</support>.",
+    "sValTitle": "Dados do VALORANT / Riot Games",
+    "sValp1": "Se você vincular sua conta Riot, o ArkenBot se conecta à <riot>Riot Games</riot> pelo sistema oficial <b>Riot Sign-On (RSO)</b>. Você autoriza a conexão na própria página de login da Riot — <b>nunca vemos nem armazenamos sua senha da Riot</b>. O uso dos dados da Riot também é regido pelos <tos>Termos de Serviço</tos> e pelo <privacy>Aviso de Privacidade</privacy> da Riot.",
+    "sValp2": "Pelo RSO recebemos seu <b>PUUID</b> (um identificador anônimo da conta Riot), seu <b>Riot ID</b> (nome e tag) e — para os recursos que você ativar — seu <b>ranque competitivo e dados de partidas recentes</b> do VALORANT.",
+    "sValp3": "Esses dados são usados apenas para mostrar seu ranque e estatísticas, atribuir cargos por ranque, criar rankings do servidor e enviar notificações de partidas que você optar por receber. Nunca os vendemos nem os usamos para publicidade.",
+    "sValp4": "Você pode desvincular sua conta Riot a qualquer momento pelo painel, o que apaga o vínculo e os tokens armazenados. Também é possível solicitar a exclusão contatando <email>support@arkenbot.app</email>.",
+    "sValDisclaimer": "O ArkenBot não é endossado pela Riot Games e não reflete as opiniões da Riot Games nem de qualquer pessoa oficialmente envolvida na produção ou gestão das propriedades da Riot Games. Riot Games e todas as propriedades associadas são marcas comerciais ou marcas registradas da Riot Games, Inc.",
+    "s9ItemVal": "<b>Riot Games</b> — quando você vincula uma conta Riot (consulte <sec>a seção do VALORANT</sec>)."
   },
   "pages": {
     "overview": "Visão geral",

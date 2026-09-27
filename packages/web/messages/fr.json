@@ -2071,7 +2071,14 @@
     "s13Title": "12. Modifications de cette politique",
     "s13p1": "Nous pouvons mettre à jour cette politique de confidentialité de temps à autre. La date « Dernière mise à jour » en haut de cette page indique quand les modifications les plus récentes ont été apportées. La poursuite de l’utilisation d’Arken Bot après la publication des modifications constitue une acceptation de la politique mise à jour.",
     "s14Title": "13. Contact",
-    "s14p1": "Si vous avez des questions concernant cette politique de confidentialité ou souhaitez demander la suppression de vos données, contactez-nous à <email>support@arkenbot.app</email> ou rejoignez notre <support>serveur de support</support>."
+    "s14p1": "Si vous avez des questions concernant cette politique de confidentialité ou souhaitez demander la suppression de vos données, contactez-nous à <email>support@arkenbot.app</email> ou rejoignez notre <support>serveur de support</support>.",
+    "sValTitle": "Données VALORANT / Riot Games",
+    "sValp1": "Si vous liez votre compte Riot, ArkenBot se connecte à <riot>Riot Games</riot> via le système officiel <b>Riot Sign-On (RSO)</b>. Vous autorisez la connexion sur la page de connexion de Riot — <b>nous ne voyons ni ne stockons jamais votre mot de passe Riot</b>. Votre utilisation des données Riot est également régie par les <tos>Conditions d’utilisation</tos> et l’<privacy>Avis de confidentialité</privacy> de Riot.",
+    "sValp2": "Via RSO, nous recevons votre <b>PUUID</b> (un identifiant anonyme de compte Riot), votre <b>Riot ID</b> (nom et tag) et — pour les fonctionnalités que vous activez — votre <b>rang compétitif et vos données de parties récentes</b> VALORANT.",
+    "sValp3": "Ces données servent uniquement à afficher votre rang et vos statistiques, attribuer des rôles selon le rang, créer des classements de serveur et envoyer les notifications de parties que vous activez. Nous ne les vendons jamais et ne les utilisons pas à des fins publicitaires.",
+    "sValp4": "Vous pouvez délier votre compte Riot à tout moment depuis le tableau de bord, ce qui supprime le lien et les jetons stockés. Vous pouvez aussi demander la suppression en contactant <email>support@arkenbot.app</email>.",
+    "sValDisclaimer": "ArkenBot n’est pas approuvé par Riot Games et ne reflète pas les opinions de Riot Games ni de quiconque officiellement impliqué dans la production ou la gestion des propriétés de Riot Games. Riot Games et toutes les propriétés associées sont des marques commerciales ou déposées de Riot Games, Inc.",
+    "s9ItemVal": "<b>Riot Games</b> — lorsque vous liez un compte Riot (voir <sec>la section VALORANT</sec>)."
   },
   "pages": {
     "overview": "Aperçu",

@@ -118,6 +118,14 @@ export default async function PrivacyPage() {
           <p>{t.rich('s7p6', fmt)}</p>
         </Section>
 
+        <Section id="valorant" title={t('sValTitle')}>
+          <p>{t.rich('sValp1', { ...fmt, riot: extLink('https://www.riotgames.com'), tos: extLink('https://www.riotgames.com/en/terms-of-service'), privacy: extLink('https://www.riotgames.com/en/privacy-notice') })}</p>
+          <p>{t.rich('sValp2', fmt)}</p>
+          <p>{t.rich('sValp3', fmt)}</p>
+          <p>{t.rich('sValp4', { ...fmt, email: extLink(`mailto:${CONTACT_EMAIL}`) })}</p>
+          <p className="text-xs text-(--text-muted)">{t('sValDisclaimer')}</p>
+        </Section>
+
         <Section id="how-we-use" title={t('s8Title')}>
           <ul className="list-disc list-inside space-y-1.5 pl-2">
             {(t.raw('s8list') as string[]).map((item) => <li key={item}>{item}</li>)}
@@ -133,6 +141,7 @@ export default async function PrivacyPage() {
             <li>{t.rich('s9Item4', { ...fmt, sec: intLink('#monday') })}</li>
             <li>{t.rich('s9Item5', { ...fmt, sec: intLink('#trello') })}</li>
             <li>{t.rich('s9Item6', { ...fmt, sec: intLink('#ai') })}</li>
+            <li>{t.rich('s9ItemVal', { ...fmt, sec: intLink('#valorant') })}</li>
             <li>{t.rich('s9Item7', fmt)}</li>
           </ul>
         </Section>

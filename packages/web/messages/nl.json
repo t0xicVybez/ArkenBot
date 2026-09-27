@@ -2071,7 +2071,14 @@
     "s13Title": "12. Wijzigingen in Dit Beleid",
     "s13p1": "We kunnen dit Privacybeleid van tijd tot tijd bijwerken. De datum “Laatst bijgewerkt” bovenaan deze pagina geeft aan wanneer de meest recente wijzigingen zijn aangebracht. Voortgezet gebruik van Arken Bot nadat wijzigingen zijn geplaatst, houdt aanvaarding van het bijgewerkte beleid in.",
     "s14Title": "13. Contact",
-    "s14p1": "Als je vragen hebt over dit Privacybeleid of gegevensverwijdering wilt aanvragen, neem contact op via <email>support@arkenbot.app</email> of word lid van onze <support>supportserver</support>."
+    "s14p1": "Als je vragen hebt over dit Privacybeleid of gegevensverwijdering wilt aanvragen, neem contact op via <email>support@arkenbot.app</email> of word lid van onze <support>supportserver</support>.",
+    "sValTitle": "VALORANT-/Riot Games-gegevens",
+    "sValp1": "Als je je Riot-account koppelt, maakt ArkenBot verbinding met <riot>Riot Games</riot> via het officiële <b>Riot Sign-On (RSO)</b>. Je autoriseert de verbinding op de inlogpagina van Riot zelf — <b>we zien of bewaren je Riot-wachtwoord nooit</b>. Je gebruik van Riot-gegevens valt ook onder Riots <tos>Servicevoorwaarden</tos> en <privacy>Privacyverklaring</privacy>.",
+    "sValp2": "Via RSO ontvangen we je <b>PUUID</b> (een anonieme Riot-account-identificatie), je <b>Riot ID</b> (naam en tag) en — voor de functies die je inschakelt — je VALORANT <b>competitieve rang en recente matchgegevens</b>.",
+    "sValp3": "Deze gegevens worden alleen gebruikt om je rang en statistieken te tonen, rang-rollen toe te kennen, serverranglijsten te maken en matchmeldingen te sturen waarvoor je kiest. We verkopen ze nooit en gebruiken ze niet voor advertenties.",
+    "sValp4": "Je kunt je Riot-account op elk moment ontkoppelen via het dashboard; dat verwijdert de opgeslagen koppeling en tokens. Je kunt verwijdering ook aanvragen via <email>support@arkenbot.app</email>.",
+    "sValDisclaimer": "ArkenBot wordt niet ondersteund door Riot Games en weerspiegelt niet de standpunten of meningen van Riot Games of van iemand die officieel betrokken is bij het produceren of beheren van Riot Games-eigendommen. Riot Games en alle bijbehorende eigendommen zijn handelsmerken of geregistreerde handelsmerken van Riot Games, Inc.",
+    "s9ItemVal": "<b>Riot Games</b> — wanneer je een Riot-account koppelt (zie <sec>de VALORANT-sectie</sec>)."
   },
   "pages": {
     "overview": "Overzicht",

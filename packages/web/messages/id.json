@@ -2071,7 +2071,14 @@
     "s13Title": "12. Perubahan pada Kebijakan Ini",
     "s13p1": "Kami mungkin memperbarui Kebijakan Privasi ini dari waktu ke waktu. Tanggal “Terakhir diperbarui” di bagian atas halaman ini mencerminkan kapan perubahan terbaru dilakukan. Penggunaan berlanjut Arken Bot setelah perubahan diposting merupakan penerimaan kebijakan yang diperbarui.",
     "s14Title": "13. Kontak",
-    "s14p1": "Jika kamu punya pertanyaan tentang Kebijakan Privasi ini atau ingin meminta penghapusan data, hubungi kami di <email>support@arkenbot.app</email> atau gabung <support>server dukungan</support> kami."
+    "s14p1": "Jika kamu punya pertanyaan tentang Kebijakan Privasi ini atau ingin meminta penghapusan data, hubungi kami di <email>support@arkenbot.app</email> atau gabung <support>server dukungan</support> kami.",
+    "sValTitle": "Data VALORANT / Riot Games",
+    "sValp1": "Jika kamu menautkan akun Riot, ArkenBot terhubung ke <riot>Riot Games</riot> melalui <b>Riot Sign-On (RSO)</b> resmi. Kamu mengizinkan koneksi di halaman login Riot sendiri — <b>kami tidak pernah melihat atau menyimpan kata sandi Riot-mu</b>. Penggunaan data Riot juga tunduk pada <tos>Ketentuan Layanan</tos> dan <privacy>Pemberitahuan Privasi</privacy> Riot.",
+    "sValp2": "Melalui RSO kami menerima <b>PUUID</b>-mu (pengidentifikasi akun Riot anonim), <b>Riot ID</b>-mu (nama dan tag), dan — untuk fitur yang kamu aktifkan — <b>peringkat kompetitif serta data pertandingan terbaru</b> VALORANT-mu.",
+    "sValp3": "Data ini hanya digunakan untuk menampilkan peringkat dan statistikmu, memberi peran berdasarkan peringkat, membuat papan peringkat server, dan mengirim notifikasi pertandingan yang kamu pilih. Kami tidak pernah menjualnya atau menggunakannya untuk iklan.",
+    "sValp4": "Kamu dapat memutuskan tautan akun Riot kapan saja dari dasbor, yang menghapus tautan dan token tersimpan. Kamu juga bisa meminta penghapusan dengan menghubungi <email>support@arkenbot.app</email>.",
+    "sValDisclaimer": "ArkenBot tidak didukung oleh Riot Games dan tidak mencerminkan pandangan atau pendapat Riot Games maupun siapa pun yang secara resmi terlibat dalam memproduksi atau mengelola properti Riot Games. Riot Games dan semua properti terkait adalah merek dagang atau merek dagang terdaftar dari Riot Games, Inc.",
+    "s9ItemVal": "<b>Riot Games</b> — saat kamu menautkan akun Riot (lihat <sec>bagian VALORANT</sec>)."
   },
   "pages": {
     "overview": "Ikhtisar",

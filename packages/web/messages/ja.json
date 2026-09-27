@@ -2071,7 +2071,14 @@
     "s13Title": "12. 本ポリシーの変更",
     "s13p1": "当社は、本プライバシーポリシーを随時更新することがあります。このページの上部にある「最終更新日」は、最新の変更が行われた時期を示しています。変更が掲載された後にArken Botを継続して利用することは、更新されたポリシーへの同意とみなされます。",
     "s14Title": "13. お問い合わせ",
-    "s14p1": "本プライバシーポリシーについてご質問がある場合、またはデータの削除を請求したい場合は、<email>support@arkenbot.app</email>までお問い合わせいただくか、当社の<support>サポートサーバー</support>にご参加ください。"
+    "s14p1": "本プライバシーポリシーについてご質問がある場合、またはデータの削除を請求したい場合は、<email>support@arkenbot.app</email>までお問い合わせいただくか、当社の<support>サポートサーバー</support>にご参加ください。",
+    "sValTitle": "VALORANT / Riot Games のデータ",
+    "sValp1": "Riotアカウントを連携すると、ArkenBotは公式の <b>Riot Sign-On (RSO)</b> を通じて <riot>Riot Games</riot> に接続します。連携はRiot自身のログインページで承認します — <b>あなたのRiotパスワードを見ることも保存することもありません</b>。Riotデータの利用はRiotの <tos>利用規約</tos> と <privacy>プライバシー通知</privacy> にも従います。",
+    "sValp2": "RSOを通じて、<b>PUUID</b>（匿名のRiotアカウント識別子）、<b>Riot ID</b>（名前とタグ）、そして有効化した機能のための VALORANT の <b>competitiveランクと最近の試合データ</b> を受け取ります。",
+    "sValp3": "このデータは、ランクや統計の表示、ランクに応じたロール付与、サーバーのリーダーボード作成、あなたが希望した試合通知の送信にのみ使用します。販売したり広告に使用したりすることは一切ありません。",
+    "sValp4": "ダッシュボードからいつでもRiotアカウントの連携を解除でき、保存された連携とトークンは削除されます。<email>support@arkenbot.app</email> に連絡して削除を依頼することもできます。",
+    "sValDisclaimer": "ArkenBotはRiot Gamesの承認を受けておらず、Riot GamesやRiot Gamesの資産の制作・管理に公式に関与する者の見解や意見を反映するものではありません。Riot Gamesおよび関連するすべての資産は、Riot Games, Inc. の商標または登録商標です。",
+    "s9ItemVal": "<b>Riot Games</b> — Riotアカウントを連携したとき（<sec>VALORANTのセクション</sec>を参照）。"
   },
   "pages": {
     "overview": "概要",

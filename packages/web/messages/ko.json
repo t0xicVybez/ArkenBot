@@ -2071,7 +2071,14 @@
     "s13Title": "12. 본 방침의 변경",
     "s13p1": "당사는 본 개인정보 처리방침을 수시로 업데이트할 수 있습니다. 이 페이지 상단의 “최종 업데이트” 날짜는 가장 최근의 변경이 이루어진 시점을 반영합니다. 변경 사항이 게시된 후 Arken Bot을 계속 사용하는 것은 업데이트된 방침에 대한 동의를 구성합니다.",
     "s14Title": "13. 문의",
-    "s14p1": "본 개인정보 처리방침에 관하여 질문이 있거나 데이터 삭제를 요청하고 싶으시면 <email>support@arkenbot.app</email>으로 문의하시거나 당사의 <support>지원 서버</support>에 참여해 주십시오."
+    "s14p1": "본 개인정보 처리방침에 관하여 질문이 있거나 데이터 삭제를 요청하고 싶으시면 <email>support@arkenbot.app</email>으로 문의하시거나 당사의 <support>지원 서버</support>에 참여해 주십시오.",
+    "sValTitle": "VALORANT / Riot Games 데이터",
+    "sValp1": "Riot 계정을 연결하면 ArkenBot은 공식 <b>Riot Sign-On(RSO)</b>을 통해 <riot>Riot Games</riot>에 연결됩니다. 연결은 Riot의 로그인 페이지에서 직접 승인합니다 — <b>Riot 비밀번호를 보거나 저장하지 않습니다</b>. Riot 데이터 사용에는 Riot의 <tos>서비스 약관</tos>과 <privacy>개인정보 처리방침</privacy>도 적용됩니다.",
+    "sValp2": "RSO를 통해 <b>PUUID</b>(익명 Riot 계정 식별자), <b>Riot ID</b>(이름과 태그), 그리고 사용자가 켠 기능을 위해 VALORANT <b>경쟁전 랭크 및 최근 매치 데이터</b>를 받습니다.",
+    "sValp3": "이 데이터는 랭크와 통계 표시, 랭크 기반 역할 부여, 서버 리더보드 작성, 사용자가 선택한 매치 알림 전송에만 사용됩니다. 절대 판매하거나 광고에 사용하지 않습니다.",
+    "sValp4": "대시보드에서 언제든지 Riot 계정 연결을 해제할 수 있으며, 저장된 연결과 토큰이 삭제됩니다. <email>support@arkenbot.app</email>로 연락해 삭제를 요청할 수도 있습니다.",
+    "sValDisclaimer": "ArkenBot은 Riot Games의 보증을 받지 않았으며, Riot Games 또는 Riot Games 자산의 제작·관리에 공식적으로 관여한 사람의 견해나 의견을 반영하지 않습니다. Riot Games 및 모든 관련 자산은 Riot Games, Inc.의 상표 또는 등록 상표입니다.",
+    "s9ItemVal": "<b>Riot Games</b> — Riot 계정을 연결할 때(<sec>VALORANT 섹션</sec> 참조)."
   },
   "pages": {
     "overview": "개요",
