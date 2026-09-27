@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
 import { CommandPalette } from './CommandPalette';
-import { NAV, activeKeyForPath } from './nav';
+import { NAV, activeKeyForPath, hrefFor } from './nav';
 import { cn } from '../ui/cn';
 
 /**
@@ -61,10 +61,17 @@ export function DashboardShell({
   }, []);
 
   const activeKey = activeKeyForPath(pathname, guildId);
-  const item = NAV.flatMap((g) => g.items.map((i) => ({ ...i, group: g.label }))).find(
-    (i) => i.key === activeKey,
-  );
-  const breadcrumb = [guildName ?? 'Server', ...(item ? [item.group, item.label] : [])];
+  const group = NAV.find((g) => g.items.some((i) => i.key === activeKey));
+  const item = group?.items.find((i) => i.key === activeKey);
+  const breadcrumb: Array<{ label: string; href?: string }> = [
+    { label: guildName ?? 'Server', href: `/dashboard/${guildId}` },
+    ...(group && item
+      ? [
+          { label: group.label, href: hrefFor(group.items[0], guildId) },
+          { label: item.label },
+        ]
+      : []),
+  ];
 
   return (
     <div

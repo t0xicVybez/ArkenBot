@@ -186,10 +186,18 @@ export async function featureRoutes(server: FastifyInstance): Promise<void> {
   server.patch('/guilds/:guildId/birthdays/config', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const body = request.body as { enabled?: boolean; channelId?: string | null; birthdayRoleId?: string | null; message?: string };
+    // Whitelist known columns — never spread the raw body into Prisma (a stray
+    // field, e.g. an older client sending `roleId`, would otherwise throw).
+    const data = {
+      ...(body.enabled !== undefined ? { enabled: body.enabled } : {}),
+      ...(body.channelId !== undefined ? { channelId: body.channelId } : {}),
+      ...(body.birthdayRoleId !== undefined ? { birthdayRoleId: body.birthdayRoleId } : {}),
+      ...(body.message !== undefined ? { message: body.message } : {}),
+    };
     const cfg = await prisma.birthdayConfig.upsert({
       where: { guildId },
-      update: { ...body },
-      create: { guildId, ...body },
+      update: data,
+      create: { guildId, ...data },
     });
     return reply.send({ success: true, data: cfg });
   });

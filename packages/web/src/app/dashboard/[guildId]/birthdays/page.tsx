@@ -13,7 +13,7 @@ import { useTranslations } from 'next-intl';
 type BirthdayConfig = {
   enabled?: boolean;
   channelId?: string;
-  roleId?: string;
+  birthdayRoleId?: string;
 };
 
 type Birthday = {
@@ -129,8 +129,8 @@ export default function BirthdaysPage() {
           <label className="label">{t('role')}</label>
           <select
             className="input"
-            value={config.roleId ?? ''}
-            onChange={(e) => handleConfigChange({ roleId: e.target.value || undefined })}
+            value={config.birthdayRoleId ?? ''}
+            onChange={(e) => handleConfigChange({ birthdayRoleId: e.target.value || undefined })}
           >
             <option value="">{t('noRole')}</option>
             {roles.map((r) => (
