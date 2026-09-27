@@ -2071,7 +2071,14 @@
     "s13Title": "12. Zmiany w niniejszej polityce",
     "s13p1": "Od czasu do czasu możemy aktualizować niniejszą Politykę prywatności. Data „Ostatnia aktualizacja” u góry tej strony odzwierciedla, kiedy wprowadzono najnowsze zmiany. Dalsze korzystanie z Arken Bot po opublikowaniu zmian stanowi akceptację zaktualizowanej polityki.",
     "s14Title": "13. Kontakt",
-    "s14p1": "Jeśli masz pytania dotyczące niniejszej Polityki prywatności lub chcesz zażądać usunięcia danych, skontaktuj się z nami pod adresem <email>support@arkenbot.app</email> lub dołącz do naszego <support>serwera wsparcia</support>."
+    "s14p1": "Jeśli masz pytania dotyczące niniejszej Polityki prywatności lub chcesz zażądać usunięcia danych, skontaktuj się z nami pod adresem <email>support@arkenbot.app</email> lub dołącz do naszego <support>serwera wsparcia</support>.",
+    "sValTitle": "Dane VALORANT / Riot Games",
+    "sValp1": "Po połączeniu konta Riot, ArkenBot łączy się z <riot>Riot Games</riot> przez oficjalny system <b>Riot Sign-On (RSO)</b>. Autoryzujesz połączenie na stronie logowania Riot — <b>nigdy nie widzimy ani nie przechowujemy Twojego hasła Riot</b>. Korzystanie z danych Riot podlega także <tos>Warunkom korzystania</tos> i <privacy>Informacji o prywatności</privacy> Riot.",
+    "sValp2": "Przez RSO otrzymujemy Twój <b>PUUID</b> (anonimowy identyfikator konta Riot), Twój <b>Riot ID</b> (nazwa i tag) oraz — dla włączonych funkcji — Twój <b>ranking rankingowy i dane ostatnich meczów</b> w VALORANT.",
+    "sValp3": "Dane te służą wyłącznie do wyświetlania rangi i statystyk, przyznawania ról według rangi, tworzenia rankingów serwera oraz wysyłania powiadomień o meczach, które włączysz. Nigdy ich nie sprzedajemy ani nie używamy do reklam.",
+    "sValp4": "Konto Riot możesz odłączyć w dowolnej chwili w panelu, co usuwa zapisane powiązanie i tokeny. Usunięcie możesz też zgłosić, pisząc na <email>support@arkenbot.app</email>.",
+    "sValDisclaimer": "ArkenBot nie jest wspierany przez Riot Games i nie odzwierciedla poglądów ani opinii Riot Games ani nikogo oficjalnie zaangażowanego w tworzenie lub zarządzanie własnością Riot Games. Riot Games i wszystkie powiązane własności są znakami towarowymi lub zastrzeżonymi znakami towarowymi Riot Games, Inc.",
+    "s9ItemVal": "<b>Riot Games</b> — gdy łączysz konto Riot (zobacz <sec>sekcję VALORANT</sec>)."
   },
   "pages": {
     "overview": "Przegląd",

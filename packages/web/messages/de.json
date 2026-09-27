@@ -2071,7 +2071,14 @@
     "s13Title": "12. Änderungen an dieser Richtlinie",
     "s13p1": "Wir können diese Datenschutzrichtlinie von Zeit zu Zeit aktualisieren. Das Datum „Zuletzt aktualisiert“ oben auf dieser Seite gibt an, wann die letzten Änderungen vorgenommen wurden. Die fortgesetzte Nutzung von Arken Bot nach der Veröffentlichung von Änderungen gilt als Annahme der aktualisierten Richtlinie.",
     "s14Title": "13. Kontakt",
-    "s14p1": "Wenn Sie Fragen zu dieser Datenschutzrichtlinie haben oder eine Datenlöschung beantragen möchten, kontaktieren Sie uns unter <email>support@arkenbot.app</email> oder treten Sie unserem <support>Support-Server</support> bei."
+    "s14p1": "Wenn Sie Fragen zu dieser Datenschutzrichtlinie haben oder eine Datenlöschung beantragen möchten, kontaktieren Sie uns unter <email>support@arkenbot.app</email> oder treten Sie unserem <support>Support-Server</support> bei.",
+    "sValTitle": "VALORANT-/Riot-Games-Daten",
+    "sValp1": "Wenn du dein Riot-Konto verknüpfst, verbindet sich ArkenBot über das offizielle <b>Riot Sign-On (RSO)</b> mit <riot>Riot Games</riot>. Du autorisierst die Verbindung auf der Login-Seite von Riot — <b>wir sehen oder speichern dein Riot-Passwort niemals</b>. Deine Nutzung der Riot-Daten unterliegt außerdem den <tos>Nutzungsbedingungen</tos> und dem <privacy>Datenschutzhinweis</privacy> von Riot.",
+    "sValp2": "Über RSO erhalten wir deine <b>PUUID</b> (eine anonyme Riot-Konto-Kennung), deine <b>Riot-ID</b> (Name und Tag) und — für die von dir aktivierten Funktionen — deinen <b>Wettbewerbsrang und aktuelle Match-Daten</b> aus VALORANT.",
+    "sValp3": "Diese Daten werden nur genutzt, um deinen Rang und deine Statistiken anzuzeigen, rangbasierte Rollen zu vergeben, Server-Bestenlisten zu erstellen und die von dir aktivierten Match-Benachrichtigungen zu senden. Wir verkaufen sie nie und nutzen sie nicht für Werbung.",
+    "sValp4": "Du kannst dein Riot-Konto jederzeit im Dashboard trennen; dabei werden die gespeicherte Verknüpfung und die Tokens gelöscht. Du kannst die Löschung auch über <email>support@arkenbot.app</email> anfordern.",
+    "sValDisclaimer": "ArkenBot wird nicht von Riot Games unterstützt und gibt nicht die Ansichten oder Meinungen von Riot Games oder von offiziell an der Produktion oder Verwaltung von Riot-Games-Eigentum beteiligten Personen wieder. Riot Games und alle zugehörigen Eigentumsrechte sind Marken oder eingetragene Marken von Riot Games, Inc.",
+    "s9ItemVal": "<b>Riot Games</b> — wenn du ein Riot-Konto verknüpfst (siehe <sec>den VALORANT-Abschnitt</sec>)."
   },
   "pages": {
     "overview": "Übersicht",

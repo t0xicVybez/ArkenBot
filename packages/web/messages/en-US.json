@@ -2071,7 +2071,14 @@
     "s13Title": "12. Changes to This Policy",
     "s13p1": "We may update this Privacy Policy from time to time. The “Last updated” date at the top of this page reflects when the most recent changes were made. Continued use of Arken Bot after changes are posted constitutes acceptance of the updated policy.",
     "s14Title": "13. Contact",
-    "s14p1": "If you have questions about this Privacy Policy or want to request data deletion, contact us at <email>support@arkenbot.app</email> or join our <support>support server</support>."
+    "s14p1": "If you have questions about this Privacy Policy or want to request data deletion, contact us at <email>support@arkenbot.app</email> or join our <support>support server</support>.",
+    "sValTitle": "VALORANT / Riot Games Data",
+    "sValp1": "If you link your Riot account, ArkenBot connects to <riot>Riot Games</riot> through official <b>Riot Sign-On (RSO)</b>. You authorize the connection on Riot’s own login page — <b>we never see or store your Riot password</b>. Your use of Riot data is also governed by Riot’s <tos>Terms of Service</tos> and <privacy>Privacy Notice</privacy>.",
+    "sValp2": "Through RSO we receive your <b>PUUID</b> (an anonymous Riot account identifier), your <b>Riot ID</b> (name and tag), and — to power the features you enable — your VALORANT <b>competitive rank and recent match data</b>.",
+    "sValp3": "This data is used only to show your rank and stats, assign rank-based roles, build server leaderboards, and send match notifications you opt into. We never sell it or use it for advertising.",
+    "sValp4": "You can unlink your Riot account at any time from the dashboard, which deletes the stored link and tokens. You may also request deletion by contacting <email>support@arkenbot.app</email>.",
+    "sValDisclaimer": "ArkenBot isn’t endorsed by Riot Games and doesn’t reflect the views or opinions of Riot Games or anyone officially involved in producing or managing Riot Games properties. Riot Games and all associated properties are trademarks or registered trademarks of Riot Games, Inc.",
+    "s9ItemVal": "<b>Riot Games</b> — when you link a Riot account (see <sec>the VALORANT section</sec>)."
   },
   "pages": {
     "overview": "Overview",

@@ -2071,7 +2071,14 @@
     "s13Title": "12. Bu Politikadaki Değişiklikler",
     "s13p1": "Bu Gizlilik Politikasını zaman zaman güncelleyebiliriz. Bu sayfanın üstündeki \"Son güncelleme\" tarihi, en son değişikliklerin ne zaman yapıldığını yansıtır. Değişiklikler yayınlandıktan sonra Arken Bot’u kullanmaya devam etmek, güncellenmiş politikanın kabulü anlamına gelir.",
     "s14Title": "13. İletişim",
-    "s14p1": "Bu Gizlilik Politikası hakkında sorun varsa veya veri silme talep etmek istiyorsan, <email>support@arkenbot.app</email> adresinden bizimle iletişime geç veya <support>destek sunucumuza</support> katıl."
+    "s14p1": "Bu Gizlilik Politikası hakkında sorun varsa veya veri silme talep etmek istiyorsan, <email>support@arkenbot.app</email> adresinden bizimle iletişime geç veya <support>destek sunucumuza</support> katıl.",
+    "sValTitle": "VALORANT / Riot Games Verileri",
+    "sValp1": "Riot hesabını bağlarsan, ArkenBot resmi <b>Riot Sign-On (RSO)</b> ile <riot>Riot Games</riot>’e bağlanır. Bağlantıyı Riot’un kendi giriş sayfasında onaylarsın — <b>Riot şifreni asla görmez veya saklamayız</b>. Riot verilerini kullanman ayrıca Riot’un <tos>Hizmet Şartları</tos> ve <privacy>Gizlilik Bildirimi</privacy>’ne tabidir.",
+    "sValp2": "RSO aracılığıyla <b>PUUID</b>’ni (anonim Riot hesap tanımlayıcısı), <b>Riot ID</b>’ni (ad ve etiket) ve — etkinleştirdiğin özellikler için — VALORANT <b>dereceli rütbeni ve son maç verilerini</b> alırız.",
+    "sValp3": "Bu veriler yalnızca rütbeni ve istatistiklerini göstermek, rütbe rolleri atamak, sunucu sıralamaları oluşturmak ve seçtiğin maç bildirimlerini göndermek için kullanılır. Asla satmayız veya reklam için kullanmayız.",
+    "sValp4": "Riot hesabını istediğin zaman panelden ayırabilirsin; bu, kayıtlı bağlantıyı ve jetonları siler. Silme talebini <email>support@arkenbot.app</email> ile de iletebilirsin.",
+    "sValDisclaimer": "ArkenBot, Riot Games tarafından onaylanmamıştır ve Riot Games’in veya Riot Games mülklerinin üretimi ya da yönetiminde resmi olarak yer alan hiç kimsenin görüşlerini yansıtmaz. Riot Games ve ilgili tüm mülkler, Riot Games, Inc.’in ticari markaları veya tescilli ticari markalarıdır.",
+    "s9ItemVal": "<b>Riot Games</b> — bir Riot hesabı bağladığında (bkz. <sec>VALORANT bölümü</sec>)."
   },
   "pages": {
     "overview": "Genel Bakış",
