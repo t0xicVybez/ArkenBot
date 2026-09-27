@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { Search, Bell, Sun, Moon, Menu } from 'lucide-react';
 
 export function Topbar({
@@ -9,7 +10,7 @@ export function Topbar({
   onOpenPalette,
   onOpenSidebar,
 }: {
-  breadcrumb: string[];
+  breadcrumb: Array<{ label: string; href?: string }>;
   theme: 'dark' | 'light';
   onToggleTheme: () => void;
   onOpenPalette: () => void;
@@ -27,14 +28,21 @@ export function Topbar({
         </button>
       )}
       <nav className="flex items-center gap-2 text-[13px] text-(--text-secondary)">
-        {breadcrumb.map((c, i) => (
-          <span key={i} className="flex items-center gap-2">
-            {i > 0 && <span className="text-(--text-muted)">›</span>}
-            <span className={i === breadcrumb.length - 1 ? 'font-semibold text-(--text-primary)' : ''}>
-              {c}
+        {breadcrumb.map((c, i) => {
+          const last = i === breadcrumb.length - 1;
+          return (
+            <span key={i} className="flex items-center gap-2">
+              {i > 0 && <span className="text-(--text-muted)">›</span>}
+              {c.href && !last ? (
+                <Link href={c.href} className="transition-colors hover:text-(--text-primary)">
+                  {c.label}
+                </Link>
+              ) : (
+                <span className={last ? 'font-semibold text-(--text-primary)' : ''}>{c.label}</span>
+              )}
             </span>
-          </span>
-        ))}
+          );
+        })}
       </nav>
 
       <div className="flex-1" />

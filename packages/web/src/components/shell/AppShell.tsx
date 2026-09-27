@@ -66,7 +66,7 @@ export function AppShell({
         <Sidebar activeKey={activeKey} onOpenPalette={() => setPaletteOpen(true)} />
         <div className="relative flex min-w-0 flex-col overflow-hidden">
           <Topbar
-            breadcrumb={breadcrumb}
+            breadcrumb={breadcrumb.map((label) => ({ label }))}
             theme={theme}
             onToggleTheme={toggleTheme}
             onOpenPalette={() => setPaletteOpen(true)}
