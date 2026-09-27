@@ -63,7 +63,8 @@
       "permissions": "Permission Health",
       "staffPortal": "Staff Portal",
       "gameservers": "Game Servers",
-      "gameadmin": "Game Admin"
+      "gameadmin": "Game Admin",
+      "valorant": "Valorant"
     },
     "palette": {
       "placeholder": "Jump to anything…",
@@ -3677,5 +3678,29 @@
     "mockAlert": "Sova#NA1 just finished a Competitive match — 24/11/7, Immortal 2 (+18 RR).",
     "privacyNote": "Opt-in and privacy-first — see our <privacy>Privacy Policy</privacy> and <terms>Terms</terms>.",
     "disclaimer": "ArkenBot isn’t endorsed by Riot Games and doesn’t reflect the views or opinions of Riot Games or anyone officially involved in producing or managing Riot Games properties. Riot Games and all associated properties are trademarks or registered trademarks of Riot Games, Inc."
+  },
+  "valorantDashPage": {
+    "title": "Valorant",
+    "subtitle": "Rank roles, stats, leaderboards and match alerts for VALORANT.",
+    "pendingNotice": "Configure it now — the VALORANT integration activates automatically once our Riot API access is approved. Members link with /valorant link.",
+    "enable": "Enable Valorant integration",
+    "enableDesc": "Turn on VALORANT features for this server.",
+    "syncRoles": "Rank roles",
+    "syncRolesDesc": "Automatically assign a Discord role based on each member’s competitive rank.",
+    "rankRoleMap": "Map each rank to a role",
+    "noRole": "No role",
+    "matchAlerts": "Match alerts",
+    "matchAlertsDesc": "Post to a channel when a linked member finishes a Competitive match.",
+    "alertChannel": "Alert channel",
+    "selectChannel": "Select a channel",
+    "leaderboard": "Server leaderboard",
+    "leaderboardDesc": "Rank linked members by competitive tier.",
+    "presence": "Playing VALORANT role",
+    "presenceDesc": "Give members a role while they’re playing VALORANT (from Discord activity).",
+    "presenceRole": "Role to assign while playing",
+    "save": "Save changes",
+    "saving": "Saving…",
+    "saved": "Valorant settings saved!",
+    "saveError": "Couldn’t save settings."
   }
 }

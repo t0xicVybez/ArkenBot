@@ -63,7 +63,8 @@
       "permissions": "Estado de permisos",
       "staffPortal": "Portal del staff",
       "gameservers": "Servidores de juego",
-      "gameadmin": "Admin de juego"
+      "gameadmin": "Admin de juego",
+      "valorant": "Valorant"
     },
     "palette": {
       "placeholder": "Salta a cualquier sitio…",
@@ -3677,5 +3678,29 @@
     "mockAlert": "Sova#NA1 acaba de terminar una partida competitiva — 24/11/7, Immortal 2 (+18 RR).",
     "privacyNote": "Opcional y con la privacidad primero: consulta nuestra <privacy>Política de Privacidad</privacy> y los <terms>Términos</terms>.",
     "disclaimer": "ArkenBot no está avalado por Riot Games y no refleja las opiniones de Riot Games ni de nadie oficialmente involucrado en la producción o gestión de las propiedades de Riot Games. Riot Games y todas las propiedades asociadas son marcas comerciales o marcas registradas de Riot Games, Inc."
+  },
+  "valorantDashPage": {
+    "title": "Valorant",
+    "subtitle": "Roles por rango, estadísticas, clasificaciones y alertas de partida para VALORANT.",
+    "pendingNotice": "Configúralo ahora: la integración de VALORANT se activa automáticamente cuando se apruebe nuestro acceso a la API de Riot. Los miembros se vinculan con /valorant link.",
+    "enable": "Activar integración de Valorant",
+    "enableDesc": "Activa las funciones de VALORANT para este servidor.",
+    "syncRoles": "Roles por rango",
+    "syncRolesDesc": "Asigna automáticamente un rol de Discord según el rango competitivo de cada miembro.",
+    "rankRoleMap": "Asigna cada rango a un rol",
+    "noRole": "Sin rol",
+    "matchAlerts": "Alertas de partida",
+    "matchAlertsDesc": "Publica en un canal cuando un miembro vinculado termina una partida competitiva.",
+    "alertChannel": "Canal de alertas",
+    "selectChannel": "Selecciona un canal",
+    "leaderboard": "Clasificación del servidor",
+    "leaderboardDesc": "Ordena a los miembros vinculados por rango competitivo.",
+    "presence": "Rol “Jugando a VALORANT”",
+    "presenceDesc": "Da a los miembros un rol mientras juegan a VALORANT (según la actividad de Discord).",
+    "presenceRole": "Rol al estar jugando",
+    "save": "Guardar cambios",
+    "saving": "Guardando…",
+    "saved": "¡Ajustes de Valorant guardados!",
+    "saveError": "No se pudieron guardar los ajustes."
   }
 }

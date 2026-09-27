@@ -875,6 +875,17 @@
       "reInvite": "Verleen ze met één klik door de bot opnieuw te autoriseren — zonder hem te verwijderen: [ArkenBot opnieuw uitnodigen]({url})",
       "channelIssuesTitle": "Kanalen die de bot niet volledig kan gebruiken",
       "footer": "Zorg er ook voor dat de rol van ArkenBot boven de rollen en leden staat die het beheert."
+    },
+    "valorant": {
+      "notConfigured": "🔧 De VALORANT-integratie is nog niet beschikbaar — kom snel terug!",
+      "linkButton": "Riot-account koppelen",
+      "linkPrompt": "Klik hieronder om je Riot-account veilig te koppelen via Riot Sign-On. De link is privé en verloopt over 10 minuten.",
+      "unlinked": "✅ Je Riot-account is ontkoppeld.",
+      "notLinkedSelf": "Je hebt geen Riot-account gekoppeld. Gebruik `/valorant link` om er een te koppelen.",
+      "notLinked": "{user} heeft geen Riot-account gekoppeld.",
+      "currentRank": "Huidige rang",
+      "peak": "Piek",
+      "syncing": "Synchroniseren…"
     }
   },
   "achievements": {

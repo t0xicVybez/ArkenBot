@@ -875,6 +875,17 @@
       "reInvite": "Berikan dengan sekali klik dengan mengotorisasi ulang bot, tanpa perlu mengeluarkannya: [Undang ulang ArkenBot]({url})",
       "channelIssuesTitle": "Kanal yang tidak dapat digunakan bot sepenuhnya",
       "footer": "Pastikan juga peran ArkenBot berada di atas peran dan anggota yang dikelolanya."
+    },
+    "valorant": {
+      "notConfigured": "🔧 Integrasi VALORANT belum tersedia — nanti kembali lagi ya!",
+      "linkButton": "Tautkan akun Riot",
+      "linkPrompt": "Klik di bawah untuk menautkan akun Riot-mu dengan aman lewat Riot Sign-On. Tautan bersifat pribadi dan kedaluwarsa dalam 10 menit.",
+      "unlinked": "✅ Akun Riot-mu telah dilepas.",
+      "notLinkedSelf": "Kamu belum menautkan akun Riot. Gunakan `/valorant link` untuk menautkan.",
+      "notLinked": "{user} belum menautkan akun Riot.",
+      "currentRank": "Peringkat saat ini",
+      "peak": "Puncak",
+      "syncing": "Menyinkronkan…"
     }
   },
   "achievements": {

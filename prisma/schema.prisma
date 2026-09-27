@@ -1718,6 +1718,7 @@ model ValorantGuildConfig {
   alertChannelId     String?
   leaderboardEnabled Boolean  @default(true)
   presenceEnabled    Boolean  @default(false) // Discord-activity "Playing VALORANT"
+  presenceRoleId     String? // role toggled while a linked member is playing VALORANT
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 

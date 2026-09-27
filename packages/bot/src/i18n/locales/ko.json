@@ -875,6 +875,17 @@
       "reInvite": "봇을 다시 인증하면 클릭 한 번으로 부여할 수 있습니다(추방할 필요 없음): [ArkenBot 다시 초대하기]({url})",
       "channelIssuesTitle": "봇이 완전히 사용할 수 없는 채널",
       "footer": "또한 ArkenBot의 역할이 관리 대상 역할과 멤버보다 위에 있는지 확인하세요."
+    },
+    "valorant": {
+      "notConfigured": "🔧 VALORANT 연동은 아직 사용할 수 없습니다 — 곧 다시 확인해 주세요!",
+      "linkButton": "Riot 계정 연결",
+      "linkPrompt": "아래를 클릭해 Riot Sign-On으로 Riot 계정을 안전하게 연결하세요. 이 링크는 본인 전용이며 10분 후 만료됩니다.",
+      "unlinked": "✅ Riot 계정 연결을 해제했습니다.",
+      "notLinkedSelf": "연결된 Riot 계정이 없습니다. `/valorant link`로 연결하세요.",
+      "notLinked": "{user} 님은 Riot 계정을 연결하지 않았습니다.",
+      "currentRank": "현재 랭크",
+      "peak": "최고",
+      "syncing": "동기화 중…"
     }
   },
   "achievements": {

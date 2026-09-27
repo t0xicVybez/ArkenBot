@@ -63,7 +63,8 @@
       "permissions": "権限の状態",
       "staffPortal": "スタッフポータル",
       "gameservers": "ゲームサーバー",
-      "gameadmin": "ゲーム管理"
+      "gameadmin": "ゲーム管理",
+      "valorant": "Valorant"
     },
     "palette": {
       "placeholder": "どこへでも移動…",
@@ -3677,5 +3678,29 @@
     "mockAlert": "Sova#NA1 がCompetitiveの試合を終えました — 24/11/7、Immortal 2（+18 RR）。",
     "privacyNote": "任意参加でプライバシー重視 — <privacy>プライバシーポリシー</privacy> と <terms>利用規約</terms> をご覧ください。",
     "disclaimer": "ArkenBotはRiot Gamesの承認を受けておらず、Riot GamesやRiot Gamesの資産の制作・管理に公式に関与する者の見解や意見を反映するものではありません。Riot Gamesおよび関連するすべての資産は、Riot Games, Inc. の商標または登録商標です。"
+  },
+  "valorantDashPage": {
+    "title": "Valorant",
+    "subtitle": "VALORANTのランクロール、統計、リーダーボード、試合通知。",
+    "pendingNotice": "今すぐ設定できます — Riot APIのアクセスが承認され次第、VALORANT連携は自動的に有効になります。メンバーは /valorant link で連携します。",
+    "enable": "Valorant連携を有効化",
+    "enableDesc": "このサーバーでVALORANT機能を有効にします。",
+    "syncRoles": "ランクロール",
+    "syncRolesDesc": "各メンバーのcompetitiveランクに応じてDiscordロールを自動付与します。",
+    "rankRoleMap": "各ランクにロールを割り当て",
+    "noRole": "ロールなし",
+    "matchAlerts": "試合通知",
+    "matchAlertsDesc": "連携メンバーがCompetitive試合を終えたらチャンネルに投稿します。",
+    "alertChannel": "通知チャンネル",
+    "selectChannel": "チャンネルを選択",
+    "leaderboard": "サーバーのリーダーボード",
+    "leaderboardDesc": "連携メンバーをcompetitiveティア順に並べます。",
+    "presence": "「VALORANTをプレイ中」ロール",
+    "presenceDesc": "メンバーがVALORANTをプレイ中の間、ロールを付与します（Discordのアクティビティから）。",
+    "presenceRole": "プレイ中に付与するロール",
+    "save": "変更を保存",
+    "saving": "保存中…",
+    "saved": "Valorantの設定を保存しました！",
+    "saveError": "設定を保存できませんでした。"
   }
 }

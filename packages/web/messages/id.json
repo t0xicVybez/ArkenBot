@@ -63,7 +63,8 @@
       "permissions": "Status Izin",
       "staffPortal": "Portal Staf",
       "gameservers": "Server Game",
-      "gameadmin": "Admin Game"
+      "gameadmin": "Admin Game",
+      "valorant": "Valorant"
     },
     "palette": {
       "placeholder": "Lompat ke mana saja…",
@@ -3677,5 +3678,29 @@
     "mockAlert": "Sova#NA1 baru menyelesaikan pertandingan Competitive — 24/11/7, Immortal 2 (+18 RR).",
     "privacyNote": "Opt-in dan mengutamakan privasi — lihat <privacy>Kebijakan Privasi</privacy> dan <terms>Ketentuan</terms> kami.",
     "disclaimer": "ArkenBot tidak didukung oleh Riot Games dan tidak mencerminkan pandangan atau pendapat Riot Games maupun siapa pun yang secara resmi terlibat dalam memproduksi atau mengelola properti Riot Games. Riot Games dan semua properti terkait adalah merek dagang atau merek dagang terdaftar dari Riot Games, Inc."
+  },
+  "valorantDashPage": {
+    "title": "Valorant",
+    "subtitle": "Peran peringkat, statistik, papan peringkat, dan notifikasi pertandingan untuk VALORANT.",
+    "pendingNotice": "Atur sekarang — integrasi VALORANT aktif otomatis begitu akses Riot API kami disetujui. Anggota menautkan dengan /valorant link.",
+    "enable": "Aktifkan integrasi Valorant",
+    "enableDesc": "Nyalakan fitur VALORANT untuk server ini.",
+    "syncRoles": "Peran peringkat",
+    "syncRolesDesc": "Otomatis memberi peran Discord berdasarkan peringkat kompetitif tiap anggota.",
+    "rankRoleMap": "Petakan tiap peringkat ke peran",
+    "noRole": "Tanpa peran",
+    "matchAlerts": "Notifikasi pertandingan",
+    "matchAlertsDesc": "Kirim ke channel saat anggota tertaut menyelesaikan pertandingan Competitive.",
+    "alertChannel": "Channel notifikasi",
+    "selectChannel": "Pilih channel",
+    "leaderboard": "Papan peringkat server",
+    "leaderboardDesc": "Urutkan anggota tertaut berdasarkan tingkat kompetitif.",
+    "presence": "Peran “Bermain VALORANT”",
+    "presenceDesc": "Beri anggota peran saat mereka bermain VALORANT (dari aktivitas Discord).",
+    "presenceRole": "Peran saat bermain",
+    "save": "Simpan perubahan",
+    "saving": "Menyimpan…",
+    "saved": "Pengaturan Valorant disimpan!",
+    "saveError": "Tidak dapat menyimpan pengaturan."
   }
 }

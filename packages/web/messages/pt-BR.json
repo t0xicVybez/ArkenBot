@@ -63,7 +63,8 @@
       "permissions": "Estado das permissões",
       "staffPortal": "Portal da equipe",
       "gameservers": "Servidores de jogo",
-      "gameadmin": "Admin de jogo"
+      "gameadmin": "Admin de jogo",
+      "valorant": "Valorant"
     },
     "palette": {
       "placeholder": "Ir para qualquer lugar…",
@@ -3677,5 +3678,29 @@
     "mockAlert": "Sova#NA1 acabou de terminar uma partida competitiva — 24/11/7, Immortal 2 (+18 RR).",
     "privacyNote": "Opcional e com privacidade em primeiro lugar — veja nossa <privacy>Política de Privacidade</privacy> e os <terms>Termos</terms>.",
     "disclaimer": "O ArkenBot não é endossado pela Riot Games e não reflete as opiniões da Riot Games nem de qualquer pessoa oficialmente envolvida na produção ou gestão das propriedades da Riot Games. Riot Games e todas as propriedades associadas são marcas comerciais ou marcas registradas da Riot Games, Inc."
+  },
+  "valorantDashPage": {
+    "title": "Valorant",
+    "subtitle": "Cargos por ranque, estatísticas, rankings e alertas de partida para VALORANT.",
+    "pendingNotice": "Configure agora — a integração do VALORANT ativa automaticamente quando nosso acesso à API da Riot for aprovado. Membros vinculam com /valorant link.",
+    "enable": "Ativar integração do Valorant",
+    "enableDesc": "Ative os recursos do VALORANT para este servidor.",
+    "syncRoles": "Cargos por ranque",
+    "syncRolesDesc": "Atribui automaticamente um cargo do Discord com base no ranque competitivo de cada membro.",
+    "rankRoleMap": "Associe cada ranque a um cargo",
+    "noRole": "Sem cargo",
+    "matchAlerts": "Alertas de partida",
+    "matchAlertsDesc": "Publica em um canal quando um membro vinculado termina uma partida competitiva.",
+    "alertChannel": "Canal de alertas",
+    "selectChannel": "Selecione um canal",
+    "leaderboard": "Ranking do servidor",
+    "leaderboardDesc": "Ordena membros vinculados por ranque competitivo.",
+    "presence": "Cargo “Jogando VALORANT”",
+    "presenceDesc": "Dê um cargo aos membros enquanto jogam VALORANT (pela atividade do Discord).",
+    "presenceRole": "Cargo enquanto joga",
+    "save": "Salvar alterações",
+    "saving": "Salvando…",
+    "saved": "Configurações do Valorant salvas!",
+    "saveError": "Não foi possível salvar as configurações."
   }
 }

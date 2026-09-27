@@ -63,7 +63,8 @@
       "permissions": "İzin Durumu",
       "staffPortal": "Yetkili Portalı",
       "gameservers": "Oyun Sunucuları",
-      "gameadmin": "Oyun Yönetimi"
+      "gameadmin": "Oyun Yönetimi",
+      "valorant": "Valorant"
     },
     "palette": {
       "placeholder": "Herhangi bir yere atla…",
@@ -3677,5 +3678,29 @@
     "mockAlert": "Sova#NA1 az önce bir Dereceli maç bitirdi — 24/11/7, Immortal 2 (+18 RR).",
     "privacyNote": "İsteğe bağlı ve gizlilik öncelikli — <privacy>Gizlilik Politikamız</privacy> ve <terms>Şartlar</terms>’a bakın.",
     "disclaimer": "ArkenBot, Riot Games tarafından onaylanmamıştır ve Riot Games’in veya Riot Games mülklerinin üretimi ya da yönetiminde resmi olarak yer alan hiç kimsenin görüşlerini yansıtmaz. Riot Games ve ilgili tüm mülkler, Riot Games, Inc.’in ticari markaları veya tescilli ticari markalarıdır."
+  },
+  "valorantDashPage": {
+    "title": "Valorant",
+    "subtitle": "VALORANT için rütbe rolleri, istatistikler, sıralamalar ve maç bildirimleri.",
+    "pendingNotice": "Şimdi yapılandır — VALORANT entegrasyonu, Riot API erişimimiz onaylanınca otomatik olarak etkinleşir. Üyeler /valorant link ile bağlanır.",
+    "enable": "Valorant entegrasyonunu etkinleştir",
+    "enableDesc": "Bu sunucu için VALORANT özelliklerini aç.",
+    "syncRoles": "Rütbe rolleri",
+    "syncRolesDesc": "Her üyenin dereceli rütbesine göre otomatik olarak bir Discord rolü atar.",
+    "rankRoleMap": "Her rütbeyi bir role eşle",
+    "noRole": "Rol yok",
+    "matchAlerts": "Maç bildirimleri",
+    "matchAlertsDesc": "Bağlı bir üye dereceli maçı bitirdiğinde bir kanala gönderir.",
+    "alertChannel": "Bildirim kanalı",
+    "selectChannel": "Bir kanal seç",
+    "leaderboard": "Sunucu sıralaması",
+    "leaderboardDesc": "Bağlı üyeleri dereceli rütbeye göre sırala.",
+    "presence": "“VALORANT oynuyor” rolü",
+    "presenceDesc": "Üyeler VALORANT oynarken onlara bir rol ver (Discord etkinliğinden).",
+    "presenceRole": "Oynarken atanacak rol",
+    "save": "Değişiklikleri kaydet",
+    "saving": "Kaydediliyor…",
+    "saved": "Valorant ayarları kaydedildi!",
+    "saveError": "Ayarlar kaydedilemedi."
   }
 }

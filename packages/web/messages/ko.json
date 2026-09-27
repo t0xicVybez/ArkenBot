@@ -63,7 +63,8 @@
       "permissions": "권한 상태",
       "staffPortal": "스태프 포털",
       "gameservers": "게임 서버",
-      "gameadmin": "게임 관리"
+      "gameadmin": "게임 관리",
+      "valorant": "Valorant"
     },
     "palette": {
       "placeholder": "어디로든 이동…",
@@ -3677,5 +3678,29 @@
     "mockAlert": "Sova#NA1 님이 방금 경쟁전 경기를 마쳤습니다 — 24/11/7, Immortal 2 (+18 RR).",
     "privacyNote": "선택형이며 개인정보 우선 — <privacy>개인정보 처리방침</privacy>과 <terms>약관</terms>을 확인하세요.",
     "disclaimer": "ArkenBot은 Riot Games의 보증을 받지 않았으며, Riot Games 또는 Riot Games 자산의 제작·관리에 공식적으로 관여한 사람의 견해나 의견을 반영하지 않습니다. Riot Games 및 모든 관련 자산은 Riot Games, Inc.의 상표 또는 등록 상표입니다."
+  },
+  "valorantDashPage": {
+    "title": "Valorant",
+    "subtitle": "VALORANT 랭크 역할, 통계, 리더보드, 경기 알림.",
+    "pendingNotice": "지금 설정하세요 — Riot API 접근이 승인되면 VALORANT 연동이 자동으로 활성화됩니다. 멤버는 /valorant link로 연결합니다.",
+    "enable": "Valorant 연동 사용",
+    "enableDesc": "이 서버에서 VALORANT 기능을 켭니다.",
+    "syncRoles": "랭크 역할",
+    "syncRolesDesc": "각 멤버의 경쟁전 랭크에 따라 Discord 역할을 자동 부여합니다.",
+    "rankRoleMap": "각 랭크를 역할에 매핑",
+    "noRole": "역할 없음",
+    "matchAlerts": "경기 알림",
+    "matchAlertsDesc": "연결된 멤버가 경쟁전 경기를 마치면 채널에 게시합니다.",
+    "alertChannel": "알림 채널",
+    "selectChannel": "채널 선택",
+    "leaderboard": "서버 리더보드",
+    "leaderboardDesc": "연결된 멤버를 경쟁전 티어로 정렬합니다.",
+    "presence": "“VALORANT 플레이 중” 역할",
+    "presenceDesc": "멤버가 VALORANT를 플레이하는 동안 역할을 부여합니다(Discord 활동 기반).",
+    "presenceRole": "플레이 중 부여할 역할",
+    "save": "변경 사항 저장",
+    "saving": "저장 중…",
+    "saved": "Valorant 설정을 저장했습니다!",
+    "saveError": "설정을 저장하지 못했습니다."
   }
 }

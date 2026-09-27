@@ -875,6 +875,17 @@
       "reInvite": "Grant these in one click by re-authorizing the bot — no need to kick it: [Re-invite ArkenBot]({url})",
       "channelIssuesTitle": "Channels the bot can’t fully use",
       "footer": "Also make sure ArkenBot’s role sits above the roles and members it manages."
+    },
+    "valorant": {
+      "notConfigured": "🔧 The VALORANT integration isn’t available yet — check back soon!",
+      "linkButton": "Link Riot account",
+      "linkPrompt": "Click below to securely link your Riot account via Riot Sign-On. The link is private to you and expires in 10 minutes.",
+      "unlinked": "✅ Your Riot account has been unlinked.",
+      "notLinkedSelf": "You haven’t linked a Riot account. Use `/valorant link` to connect one.",
+      "notLinked": "{user} hasn’t linked a Riot account.",
+      "currentRank": "Current Rank",
+      "peak": "Peak",
+      "syncing": "Syncing…"
     }
   },
   "achievements": {

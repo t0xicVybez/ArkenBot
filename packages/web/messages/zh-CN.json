@@ -63,7 +63,8 @@
       "permissions": "权限状态",
       "staffPortal": "员工门户",
       "gameservers": "游戏服务器",
-      "gameadmin": "游戏管理"
+      "gameadmin": "游戏管理",
+      "valorant": "Valorant"
     },
     "palette": {
       "placeholder": "跳转到任意位置…",
@@ -3677,5 +3678,29 @@
     "mockAlert": "Sova#NA1 刚完成了一场竞技对局 — 24/11/7，Immortal 2（+18 RR）。",
     "privacyNote": "自愿开启、隐私优先 — 参见我们的 <privacy>隐私政策</privacy> 和 <terms>条款</terms>。",
     "disclaimer": "ArkenBot 未获得 Riot Games 的认可，也不代表 Riot Games 或任何正式参与制作或管理 Riot Games 资产者的观点或意见。Riot Games 及所有相关资产均为 Riot Games, Inc. 的商标或注册商标。"
+  },
+  "valorantDashPage": {
+    "title": "Valorant",
+    "subtitle": "VALORANT 的段位身份组、数据、排行榜和对局提醒。",
+    "pendingNotice": "现在即可配置 — 一旦我们的 Riot API 访问获批，VALORANT 集成将自动启用。成员使用 /valorant link 关联。",
+    "enable": "启用 Valorant 集成",
+    "enableDesc": "为此服务器开启 VALORANT 功能。",
+    "syncRoles": "段位身份组",
+    "syncRolesDesc": "根据每位成员的竞技段位自动分配 Discord 身份组。",
+    "rankRoleMap": "将每个段位映射到身份组",
+    "noRole": "无身份组",
+    "matchAlerts": "对局提醒",
+    "matchAlertsDesc": "当已关联成员完成一场竞技对局时发送到频道。",
+    "alertChannel": "提醒频道",
+    "selectChannel": "选择频道",
+    "leaderboard": "服务器排行榜",
+    "leaderboardDesc": "按竞技段位对已关联成员排序。",
+    "presence": "“正在游玩 VALORANT”身份组",
+    "presenceDesc": "成员游玩 VALORANT 时授予身份组（基于 Discord 活动）。",
+    "presenceRole": "游玩时授予的身份组",
+    "save": "保存更改",
+    "saving": "保存中…",
+    "saved": "已保存 Valorant 设置！",
+    "saveError": "无法保存设置。"
   }
 }

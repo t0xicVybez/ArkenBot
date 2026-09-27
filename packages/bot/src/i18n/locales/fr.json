@@ -875,6 +875,17 @@
       "reInvite": "Accordez-les en un clic en ré-autorisant le bot, sans avoir à l’exclure : [Réinviter ArkenBot]({url})",
       "channelIssuesTitle": "Salons que le bot ne peut pas pleinement utiliser",
       "footer": "Vérifiez aussi que le rôle d’ArkenBot est au-dessus des rôles et membres qu’il gère."
+    },
+    "valorant": {
+      "notConfigured": "🔧 L’intégration VALORANT n’est pas encore disponible — revenez bientôt !",
+      "linkButton": "Lier le compte Riot",
+      "linkPrompt": "Cliquez ci-dessous pour lier votre compte Riot en toute sécurité via Riot Sign-On. Le lien vous est privé et expire dans 10 minutes.",
+      "unlinked": "✅ Votre compte Riot a été délié.",
+      "notLinkedSelf": "Vous n’avez pas lié de compte Riot. Utilisez `/valorant link` pour en connecter un.",
+      "notLinked": "{user} n’a pas lié de compte Riot.",
+      "currentRank": "Rang actuel",
+      "peak": "Max",
+      "syncing": "Synchronisation…"
     }
   },
   "achievements": {
