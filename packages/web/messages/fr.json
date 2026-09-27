@@ -63,7 +63,8 @@
       "permissions": "État des permissions",
       "staffPortal": "Portail du staff",
       "gameservers": "Serveurs de jeu",
-      "gameadmin": "Admin de jeu"
+      "gameadmin": "Admin de jeu",
+      "valorant": "Valorant"
     },
     "palette": {
       "placeholder": "Aller n’importe où…",
@@ -3677,5 +3678,29 @@
     "mockAlert": "Sova#NA1 vient de terminer une partie compétitive — 24/11/7, Immortal 2 (+18 RR).",
     "privacyNote": "Sur option et respectueux de la vie privée — consultez notre <privacy>Politique de confidentialité</privacy> et nos <terms>Conditions</terms>.",
     "disclaimer": "ArkenBot n’est pas approuvé par Riot Games et ne reflète pas les opinions de Riot Games ni de quiconque officiellement impliqué dans la production ou la gestion des propriétés de Riot Games. Riot Games et toutes les propriétés associées sont des marques commerciales ou déposées de Riot Games, Inc."
+  },
+  "valorantDashPage": {
+    "title": "Valorant",
+    "subtitle": "Rôles de rang, stats, classements et alertes de partie pour VALORANT.",
+    "pendingNotice": "Configurez-le maintenant — l’intégration VALORANT s’active automatiquement dès que notre accès à l’API Riot est approuvé. Les membres se lient avec /valorant link.",
+    "enable": "Activer l’intégration Valorant",
+    "enableDesc": "Activez les fonctionnalités VALORANT pour ce serveur.",
+    "syncRoles": "Rôles de rang",
+    "syncRolesDesc": "Attribue automatiquement un rôle Discord selon le rang compétitif de chaque membre.",
+    "rankRoleMap": "Associez chaque rang à un rôle",
+    "noRole": "Aucun rôle",
+    "matchAlerts": "Alertes de partie",
+    "matchAlertsDesc": "Publie dans un salon quand un membre lié termine une partie compétitive.",
+    "alertChannel": "Salon des alertes",
+    "selectChannel": "Sélectionnez un salon",
+    "leaderboard": "Classement du serveur",
+    "leaderboardDesc": "Classez les membres liés par palier compétitif.",
+    "presence": "Rôle « Joue à VALORANT »",
+    "presenceDesc": "Donnez un rôle aux membres pendant qu’ils jouent à VALORANT (via l’activité Discord).",
+    "presenceRole": "Rôle attribué pendant le jeu",
+    "save": "Enregistrer",
+    "saving": "Enregistrement…",
+    "saved": "Paramètres Valorant enregistrés !",
+    "saveError": "Impossible d’enregistrer les paramètres."
   }
 }

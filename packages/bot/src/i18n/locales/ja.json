@@ -875,6 +875,17 @@
       "reInvite": "ボットを再認証すればワンクリックで付与できます（キックする必要はありません）: [ArkenBot を再招待]({url})",
       "channelIssuesTitle": "ボットが十分に利用できないチャンネル",
       "footer": "また、ArkenBot のロールが、管理対象のロールやメンバーより上にあることを確認してください。"
+    },
+    "valorant": {
+      "notConfigured": "🔧 VALORANT連携はまだ利用できません — また後で確認してね！",
+      "linkButton": "Riotアカウントを連携",
+      "linkPrompt": "下のボタンから Riot Sign-On で安全にRiotアカウントをリンクできますこのリンクはあなただけのもので、10分で失効します。",
+      "unlinked": "✅ Riotアカウントの連携を解除しました。",
+      "notLinkedSelf": "Riotアカウントが連携されていません。`/valorant link` で連携してください。",
+      "notLinked": "{user} はRiotアカウントを連携していません。",
+      "currentRank": "現在のランク",
+      "peak": "最高",
+      "syncing": "同期中…"
     }
   },
   "achievements": {

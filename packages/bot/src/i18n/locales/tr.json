@@ -875,6 +875,17 @@
       "reInvite": "Botu yeniden yetkilendirerek bunları tek tıkla verebilirsin; atmana gerek yok: [ArkenBot’u yeniden davet et]({url})",
       "channelIssuesTitle": "Botun tam olarak kullanamadığı kanallar",
       "footer": "Ayrıca ArkenBot’un rolünün, yönettiği rollerin ve üyelerin üzerinde olduğundan emin ol."
+    },
+    "valorant": {
+      "notConfigured": "🔧 VALORANT entegrasyonu henüz kullanılamıyor — yakında tekrar bak!",
+      "linkButton": "Riot hesabı bağla",
+      "linkPrompt": "Riot hesabını Riot Sign-On ile güvenle bağlamak için aşağıya tıkla. Bağlantı sana özeldir ve 10 dakika içinde sona erer.",
+      "unlinked": "✅ Riot hesabının bağlantısı kaldırıldı.",
+      "notLinkedSelf": "Bir Riot hesabı bağlamadın. Bağlamak için `/valorant link` kullan.",
+      "notLinked": "{user} bir Riot hesabı bağlamamış.",
+      "currentRank": "Mevcut rütbe",
+      "peak": "Zirve",
+      "syncing": "Senkronize ediliyor…"
     }
   },
   "achievements": {

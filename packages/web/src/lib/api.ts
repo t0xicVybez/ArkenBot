@@ -521,4 +521,11 @@ export const adminApi = {
     api.post<{ success: boolean; data: { title: string; body: string; type: string } }>('/admin/announcements/generate', { count }),
 };
 
+// ─── VALORANT ─────────────────────────────────────────────────────
+export const valorantApi = {
+  getConfig: (guildId: string) => api.get(`/valorant/config/${guildId}`),
+  updateConfig: (guildId: string, data: object) => api.patch(`/valorant/config/${guildId}`, data),
+  leaderboard: (guildId: string) => api.get(`/valorant/leaderboard/${guildId}`),
+};
+
 export default api;

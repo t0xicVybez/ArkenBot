@@ -63,7 +63,8 @@
       "permissions": "Stan uprawnień",
       "staffPortal": "Portal personelu",
       "gameservers": "Serwery gier",
-      "gameadmin": "Admin gier"
+      "gameadmin": "Admin gier",
+      "valorant": "Valorant"
     },
     "palette": {
       "placeholder": "Przejdź do dowolnego miejsca…",
@@ -3677,5 +3678,29 @@
     "mockAlert": "Sova#NA1 właśnie zakończył mecz rankingowy — 24/11/7, Immortal 2 (+18 RR).",
     "privacyNote": "Opcjonalnie i z prywatnością na pierwszym miejscu — zobacz naszą <privacy>Politykę prywatności</privacy> i <terms>Regulamin</terms>.",
     "disclaimer": "ArkenBot nie jest wspierany przez Riot Games i nie odzwierciedla poglądów ani opinii Riot Games ani nikogo oficjalnie zaangażowanego w tworzenie lub zarządzanie własnością Riot Games. Riot Games i wszystkie powiązane własności są znakami towarowymi lub zastrzeżonymi znakami towarowymi Riot Games, Inc."
+  },
+  "valorantDashPage": {
+    "title": "Valorant",
+    "subtitle": "Role rang, statystyki, rankingi i alerty meczów dla VALORANT.",
+    "pendingNotice": "Skonfiguruj teraz — integracja VALORANT włączy się automatycznie po zatwierdzeniu naszego dostępu do API Riot. Członkowie łączą się przez /valorant link.",
+    "enable": "Włącz integrację Valorant",
+    "enableDesc": "Włącz funkcje VALORANT dla tego serwera.",
+    "syncRoles": "Role rang",
+    "syncRolesDesc": "Automatycznie przydziela rolę Discord na podstawie rangi rankingowej członka.",
+    "rankRoleMap": "Przypisz każdą rangę do roli",
+    "noRole": "Brak roli",
+    "matchAlerts": "Alerty meczów",
+    "matchAlertsDesc": "Publikuje na kanale, gdy połączony członek kończy mecz rankingowy.",
+    "alertChannel": "Kanał alertów",
+    "selectChannel": "Wybierz kanał",
+    "leaderboard": "Ranking serwera",
+    "leaderboardDesc": "Sortuje połączonych członków według rangi rankingowej.",
+    "presence": "Rola „Gra w VALORANT”",
+    "presenceDesc": "Nadaj członkom rolę, gdy grają w VALORANT (z aktywności Discord).",
+    "presenceRole": "Rola podczas gry",
+    "save": "Zapisz zmiany",
+    "saving": "Zapisywanie…",
+    "saved": "Zapisano ustawienia Valorant!",
+    "saveError": "Nie udało się zapisać ustawień."
   }
 }

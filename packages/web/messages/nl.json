@@ -63,7 +63,8 @@
       "permissions": "Rechtenstatus",
       "staffPortal": "Staffportaal",
       "gameservers": "Gameservers",
-      "gameadmin": "Gamebeheer"
+      "gameadmin": "Gamebeheer",
+      "valorant": "Valorant"
     },
     "palette": {
       "placeholder": "Spring naar alles…",
@@ -3677,5 +3678,29 @@
     "mockAlert": "Sova#NA1 heeft net een Competitive-match afgerond — 24/11/7, Immortal 2 (+18 RR).",
     "privacyNote": "Opt-in en privacy voorop — zie ons <privacy>Privacybeleid</privacy> en de <terms>Voorwaarden</terms>.",
     "disclaimer": "ArkenBot wordt niet ondersteund door Riot Games en weerspiegelt niet de standpunten of meningen van Riot Games of van iemand die officieel betrokken is bij het produceren of beheren van Riot Games-eigendommen. Riot Games en alle bijbehorende eigendommen zijn handelsmerken of geregistreerde handelsmerken van Riot Games, Inc."
+  },
+  "valorantDashPage": {
+    "title": "Valorant",
+    "subtitle": "Rang-rollen, stats, ranglijsten en matchmeldingen voor VALORANT.",
+    "pendingNotice": "Stel het nu in — de VALORANT-integratie activeert automatisch zodra onze Riot API-toegang is goedgekeurd. Leden koppelen met /valorant link.",
+    "enable": "Valorant-integratie inschakelen",
+    "enableDesc": "Zet VALORANT-functies aan voor deze server.",
+    "syncRoles": "Rang-rollen",
+    "syncRolesDesc": "Wijs automatisch een Discord-rol toe op basis van de competitieve rang van elk lid.",
+    "rankRoleMap": "Koppel elke rang aan een rol",
+    "noRole": "Geen rol",
+    "matchAlerts": "Matchmeldingen",
+    "matchAlertsDesc": "Post in een kanaal wanneer een gekoppeld lid een Competitive-match afrondt.",
+    "alertChannel": "Meldingenkanaal",
+    "selectChannel": "Selecteer een kanaal",
+    "leaderboard": "Serverranglijst",
+    "leaderboardDesc": "Rangschik gekoppelde leden op competitieve tier.",
+    "presence": "“Speelt VALORANT”-rol",
+    "presenceDesc": "Geef leden een rol terwijl ze VALORANT spelen (via Discord-activiteit).",
+    "presenceRole": "Rol tijdens het spelen",
+    "save": "Wijzigingen opslaan",
+    "saving": "Opslaan…",
+    "saved": "Valorant-instellingen opgeslagen!",
+    "saveError": "Kan instellingen niet opslaan."
   }
 }

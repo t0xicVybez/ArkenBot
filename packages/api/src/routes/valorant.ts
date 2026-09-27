@@ -60,6 +60,28 @@ export async function valorantRoutes(server: FastifyInstance): Promise<void> {
     return reply.redirect(`${RSO_AUTHORIZE}?${params.toString()}`);
   });
 
+  // 1b. Token-based start — used by the bot's /valorant link command so members
+  // can link straight from Discord (no dashboard login). The bot writes
+  // `valorant:link:<token>` → discordId to Redis; we redeem it and begin RSO.
+  server.get('/valorant/rso/start', async (request, reply) => {
+    if (!config.valorant.isConfigured) return reply.redirect(`${config.web.url}/dashboard?valorant=unavailable`);
+    const { token } = request.query as { token?: string };
+    if (!token) return reply.redirect(`${config.web.url}/dashboard?valorant=denied`);
+    const discordId = await redis.get(`valorant:link:${token}`);
+    if (!discordId) return reply.redirect(`${config.web.url}/dashboard?valorant=expired`);
+    await redis.del(`valorant:link:${token}`);
+    const state = randomBytes(24).toString('hex');
+    await redis.set(`valorant:rso:${state}`, discordId, 'EX', STATE_TTL);
+    const params = new URLSearchParams({
+      client_id: config.valorant.clientId,
+      redirect_uri: config.valorant.redirectUri,
+      response_type: 'code',
+      scope: 'openid offline_access',
+      state,
+    });
+    return reply.redirect(`${RSO_AUTHORIZE}?${params.toString()}`);
+  });
+
   // 2. RSO callback — exchange the code, resolve PUUID + Riot ID, store the link.
   server.get('/valorant/rso/callback', async (request, reply) => {
     if (!config.valorant.isConfigured) return reply.redirect(`${config.web.url}/dashboard?valorant=unavailable`);

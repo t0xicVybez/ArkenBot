@@ -29,6 +29,7 @@ import { ModmailModule } from './modmail/ModmailModule.js';
 import { AnalyticsModule } from './AnalyticsModule.js';
 import { pollUpcoming, pollFeeds } from './streamAlerts/YouTubeAlerts.js';
 import { runRedditAlerts } from './streamAlerts/RedditAlerts.js';
+import { ValorantModule } from './valorant/ValorantModule.js';
 import RSSParser from 'rss-parser';
 
 export class BackgroundJobs {
@@ -53,6 +54,10 @@ export class BackgroundJobs {
 
     void this.checkBirthdays();
     setTimeout(() => this.timers.push(setInterval(() => void this.checkBirthdays(), 60 * 60 * 1000)), jitter());
+
+    // VALORANT rank sync + rank-roles + match alerts (batched to respect Riot
+    // rate limits). No-ops entirely while the integration is unconfigured.
+    setTimeout(() => this.timers.push(setInterval(() => void this.runValorantSync(), 10 * 60 * 1000)), jitter());
 
     void this.runScheduledMessages();
     setTimeout(() => this.timers.push(setInterval(() => void this.runScheduledMessages(), 60 * 1000)), jitter());
@@ -157,6 +162,14 @@ export class BackgroundJobs {
    * they can vote again. `reminderSent` is set to avoid repeat DMs and reset on
    * the next vote.
    */
+  private async runValorantSync(): Promise<void> {
+    try {
+      await ValorantModule.syncBatch(this.client, 20);
+    } catch (err) {
+      logger.warn({ err }, 'valorant sync failed');
+    }
+  }
+
   private async runTopggReminders(): Promise<void> {
     if (!this.client.user) return;
     try {

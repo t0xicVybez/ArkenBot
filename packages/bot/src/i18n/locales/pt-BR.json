@@ -875,6 +875,17 @@
       "reInvite": "Conceda-as com um clique reautorizando o bot, sem precisar removê-lo: [Reconvidar o ArkenBot]({url})",
       "channelIssuesTitle": "Canais que o bot não consegue usar por completo",
       "footer": "Verifique também se o cargo do ArkenBot está acima dos cargos e membros que ele gerencia."
+    },
+    "valorant": {
+      "notConfigured": "🔧 A integração do VALORANT ainda não está disponível — volte em breve!",
+      "linkButton": "Vincular conta Riot",
+      "linkPrompt": "Clique abaixo para vincular sua conta Riot com segurança via Riot Sign-On. O link é privado e expira em 10 minutos.",
+      "unlinked": "✅ Sua conta Riot foi desvinculada.",
+      "notLinkedSelf": "Você não vinculou uma conta Riot. Use `/valorant link` para conectar uma.",
+      "notLinked": "{user} não vinculou uma conta Riot.",
+      "currentRank": "Ranque atual",
+      "peak": "Pico",
+      "syncing": "Sincronizando…"
     }
   },
   "achievements": {

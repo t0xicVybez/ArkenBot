@@ -54,4 +54,18 @@ export const config = {
   env: optional('NODE_ENV', 'development'),
   logLevel: optional('LOG_LEVEL', 'info'),
   addonsDir: optional('ADDONS_DIR', '../../addons'),
+
+  /**
+   * Riot / VALORANT (RSO). Dormant until a Production key lands — every Valorant
+   * command and the sync job no-op while `isConfigured` is false.
+   */
+  valorant: {
+    clientId: optional('RIOT_CLIENT_ID', ''),
+    clientSecret: optional('RIOT_CLIENT_SECRET', ''),
+    apiKey: optional('RIOT_API_KEY', ''),
+    redirectUri: optional('RIOT_RSO_REDIRECT', 'https://api.arkenbot.app/valorant/rso/callback'),
+    get isConfigured(): boolean {
+      return Boolean(process.env.RIOT_CLIENT_ID && process.env.RIOT_CLIENT_SECRET && process.env.RIOT_API_KEY);
+    },
+  },
 };

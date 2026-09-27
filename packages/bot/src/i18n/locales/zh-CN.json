@@ -875,6 +875,17 @@
       "reInvite": "重新授权机器人即可一键授予这些权限，无需将其移除：[重新邀请 ArkenBot]({url})",
       "channelIssuesTitle": "机器人无法完全使用的频道",
       "footer": "另请确保 ArkenBot 的身份组位于它所管理的身份组和成员之上。"
+    },
+    "valorant": {
+      "notConfigured": "🔧 VALORANT 集成尚未开放 — 敬请期待！",
+      "linkButton": "关联 Riot 账号",
+      "linkPrompt": "点击下方通过 Riot Sign-On 安全关联你的 Riot 账号。该链接仅对你可见，10 分钟后失效。",
+      "unlinked": "✅ 已解除你的 Riot 账号关联。",
+      "notLinkedSelf": "你尚未关联 Riot 账号。使用 `/valorant link` 关联一个。",
+      "notLinked": "{user} 尚未关联 Riot 账号。",
+      "currentRank": "当前段位",
+      "peak": "最高",
+      "syncing": "同步中…"
     }
   },
   "achievements": {

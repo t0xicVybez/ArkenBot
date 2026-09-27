@@ -875,6 +875,17 @@
       "reInvite": "Concedili con un clic riautorizzando il bot, senza doverlo espellere: [Reinvita ArkenBot]({url})",
       "channelIssuesTitle": "Canali che il bot non può usare completamente",
       "footer": "Assicurati inoltre che il ruolo di ArkenBot sia sopra i ruoli e i membri che gestisce."
+    },
+    "valorant": {
+      "notConfigured": "🔧 L’integrazione VALORANT non è ancora disponibile — torna presto!",
+      "linkButton": "Collega account Riot",
+      "linkPrompt": "Clicca qui sotto per collegare in sicurezza il tuo account Riot tramite Riot Sign-On. Il link è privato e scade tra 10 minuti.",
+      "unlinked": "✅ Il tuo account Riot è stato scollegato.",
+      "notLinkedSelf": "Non hai collegato un account Riot. Usa `/valorant link` per collegarne uno.",
+      "notLinked": "{user} non ha collegato un account Riot.",
+      "currentRank": "Rango attuale",
+      "peak": "Max",
+      "syncing": "Sincronizzazione…"
     }
   },
   "achievements": {
