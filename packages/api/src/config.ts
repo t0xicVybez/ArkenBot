@@ -72,6 +72,23 @@ export const config = {
   youtubeApiKey: optional('YOUTUBE_API_KEY', ''),
 
   /**
+   * Riot Games / VALORANT integration (RSO). Empty until we're granted a
+   * Production key + RSO client. `isConfigured` gates the whole feature: every
+   * Valorant route/command no-ops (503 "not configured") while these are blank,
+   * so the code ships dormant and activates the moment the creds land.
+   */
+  valorant: {
+    clientId: optional('RIOT_CLIENT_ID', ''),
+    clientSecret: optional('RIOT_CLIENT_SECRET', ''),
+    apiKey: optional('RIOT_API_KEY', ''),
+    // Must match the redirect URI registered with Riot for the RSO client.
+    redirectUri: optional('RIOT_RSO_REDIRECT', 'https://api.arkenbot.app/valorant/rso/callback'),
+    get isConfigured(): boolean {
+      return Boolean(process.env.RIOT_CLIENT_ID && process.env.RIOT_CLIENT_SECRET && process.env.RIOT_API_KEY);
+    },
+  },
+
+  /**
    * Opaque session cookie. `secure` is enabled in production only so the flow
    * still works over plain HTTP during local development. `sameSite: 'lax'` is
    * sufficient because the dashboard and API are same-site (shared registrable

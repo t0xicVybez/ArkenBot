@@ -53,6 +53,7 @@ model Guild {
   tempBans               TempBan[]
   tempRoles              TempRole[]
   topggConfig            TopggConfig?
+  valorantConfig         ValorantGuildConfig?
   reminders              Reminder[]
   countingState          CountingState?
   inviteCounts           InviteCount[]
@@ -1678,4 +1679,47 @@ model EventRsvp {
   @@unique([eventId, userId])
   @@index([eventId])
   @@map("event_rsvps")
+}
+
+/// A member's linked Riot account (global — one Riot account per Discord user).
+/// Populated via the official Riot Sign-On (RSO) OAuth flow. Rank fields are a
+/// cached snapshot refreshed by the sync job so roles/leaderboards don't refetch.
+model ValorantLink {
+  id             String    @id @default(cuid())
+  discordId      String    @unique
+  puuid          String    @unique
+  gameName       String
+  tagLine        String
+  region         String    @default("na") // na | eu | ap | kr | latam | br
+  accessToken    String? // RSO tokens — sensitive (DB is encrypted at rest)
+  refreshToken   String?
+  tokenExpiresAt DateTime?
+  currentTier    Int? // competitive tier 0–27 (0 = unranked); null = unknown
+  currentRr      Int? // rank rating within the tier
+  peakTier       Int?
+  lastMatchId    String? // dedup for match-finished alerts
+  lastSyncAt     DateTime?
+  linkedAt       DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([puuid])
+  @@map("valorant_links")
+}
+
+/// Per-guild Valorant integration config: rank→role map, match alerts, etc.
+model ValorantGuildConfig {
+  id                 String   @id @default(cuid())
+  guildId            String   @unique
+  guild              Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  enabled            Boolean  @default(false)
+  syncRolesEnabled   Boolean  @default(true)
+  rankRoles          Json     @default("{}") // { "<tier>": "<roleId>" }
+  matchAlertsEnabled Boolean  @default(false)
+  alertChannelId     String?
+  leaderboardEnabled Boolean  @default(true)
+  presenceEnabled    Boolean  @default(false) // Discord-activity "Playing VALORANT"
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@map("valorant_guild_configs")
 }
