@@ -2249,7 +2249,8 @@
     "serverDashboard": "Panel serwera",
     "logout": "Wyloguj",
     "openMenu": "Otwórz menu",
-    "staffPortal": "Portal personelu"
+    "staffPortal": "Portal personelu",
+    "moderation": "Moderacja"
   },
   "staffDashboard": {
     "title": "Przegląd floty",
@@ -3615,5 +3616,29 @@
       "every12h": "Co 12 godzin",
       "daily": "Codziennie"
     }
+  },
+  "staffModeration": {
+    "title": "Moderacja",
+    "total": "Rekordów: {total}",
+    "tabCases": "Sprawy",
+    "tabWarnings": "Ostrzeżenia",
+    "searchPlaceholder": "Szukaj użytkownika, moderatora, powodu lub ID…",
+    "allTypes": "Wszystkie typy",
+    "allStatus": "Wszystkie statusy",
+    "statusActive": "Aktywne",
+    "statusInactive": "Nieaktywne",
+    "colServer": "Serwer",
+    "colCase": "Sprawa",
+    "colType": "Typ",
+    "colUser": "Użytkownik",
+    "colReason": "Powód",
+    "colModerator": "Moderator",
+    "colDate": "Data",
+    "colStatus": "Status",
+    "noCases": "Nie znaleziono spraw moderacyjnych.",
+    "noWarnings": "Nie znaleziono ostrzeżeń.",
+    "pageInfo": "Strona {page} · łącznie {total}",
+    "previous": "Poprzednia",
+    "next": "Następna"
   }
 }

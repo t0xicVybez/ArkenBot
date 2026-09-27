@@ -2249,7 +2249,8 @@
     "serverDashboard": "Server-Dashboard",
     "logout": "Abmelden",
     "openMenu": "Menü öffnen",
-    "staffPortal": "Team-Portal"
+    "staffPortal": "Team-Portal",
+    "moderation": "Moderation"
   },
   "staffDashboard": {
     "title": "Flottenübersicht",
@@ -3615,5 +3616,29 @@
       "every12h": "Alle 12 Stunden",
       "daily": "Täglich"
     }
+  },
+  "staffModeration": {
+    "title": "Moderation",
+    "total": "{total} Einträge",
+    "tabCases": "Fälle",
+    "tabWarnings": "Verwarnungen",
+    "searchPlaceholder": "Nutzer, Moderator, Grund oder ID suchen…",
+    "allTypes": "Alle Typen",
+    "allStatus": "Alle Status",
+    "statusActive": "Aktiv",
+    "statusInactive": "Inaktiv",
+    "colServer": "Server",
+    "colCase": "Fall",
+    "colType": "Typ",
+    "colUser": "Nutzer",
+    "colReason": "Grund",
+    "colModerator": "Moderator",
+    "colDate": "Datum",
+    "colStatus": "Status",
+    "noCases": "Keine Moderationsfälle gefunden.",
+    "noWarnings": "Keine Verwarnungen gefunden.",
+    "pageInfo": "Seite {page} · {total} gesamt",
+    "previous": "Zurück",
+    "next": "Weiter"
   }
 }

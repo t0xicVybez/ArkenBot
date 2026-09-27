@@ -24,6 +24,7 @@ import {
   LayoutGrid,
   Megaphone,
   Terminal,
+  Gavel,
 } from 'lucide-react';
 import { Topbar } from '@/components/Topbar';
 
@@ -31,6 +32,7 @@ const staffNav = [
   { href: '/staff', key: 'dashboard', icon: LayoutDashboard },
   { href: '/staff/guilds', key: 'guilds', icon: Server },
   { href: '/staff/users', key: 'users', icon: Users },
+  { href: '/staff/moderation', key: 'moderation', icon: Gavel },
   { href: '/staff/addons', key: 'addons', icon: Puzzle },
   { href: '/staff/logs', key: 'auditLogs', icon: FileText },
   { href: '/staff/service-logs', key: 'serviceLogs', icon: Terminal },

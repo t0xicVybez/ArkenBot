@@ -2249,7 +2249,8 @@
     "serverDashboard": "Dasbor Server",
     "logout": "Keluar",
     "openMenu": "Buka menu",
-    "staffPortal": "Portal Staf"
+    "staffPortal": "Portal Staf",
+    "moderation": "Moderasi"
   },
   "staffDashboard": {
     "title": "Ikhtisar armada",
@@ -3615,5 +3616,29 @@
       "every12h": "Tiap 12 jam",
       "daily": "Harian"
     }
+  },
+  "staffModeration": {
+    "title": "Moderasi",
+    "total": "{total} catatan",
+    "tabCases": "Kasus",
+    "tabWarnings": "Peringatan",
+    "searchPlaceholder": "Cari pengguna, moderator, alasan, atau ID…",
+    "allTypes": "Semua tipe",
+    "allStatus": "Semua status",
+    "statusActive": "Aktif",
+    "statusInactive": "Nonaktif",
+    "colServer": "Server",
+    "colCase": "Kasus",
+    "colType": "Tipe",
+    "colUser": "Pengguna",
+    "colReason": "Alasan",
+    "colModerator": "Moderator",
+    "colDate": "Tanggal",
+    "colStatus": "Status",
+    "noCases": "Tidak ada kasus moderasi.",
+    "noWarnings": "Tidak ada peringatan.",
+    "pageInfo": "Halaman {page} · total {total}",
+    "previous": "Sebelumnya",
+    "next": "Berikutnya"
   }
 }

@@ -67,7 +67,9 @@ export function DashboardShell({
     { label: guildName ?? 'Server', href: `/dashboard/${guildId}` },
     ...(group && item
       ? [
-          { label: group.label, href: hrefFor(group.items[0], guildId) },
+          // The "Home" group crumb returns to the main dashboard (server list);
+          // other group crumbs jump to the first page in that group.
+          { label: group.label, href: group.key === 'home' ? '/dashboard' : hrefFor(group.items[0], guildId) },
           { label: item.label },
         ]
       : []),

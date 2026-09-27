@@ -2249,7 +2249,8 @@
     "serverDashboard": "Serverdashboard",
     "logout": "Uitloggen",
     "openMenu": "Menu openen",
-    "staffPortal": "Stafportaal"
+    "staffPortal": "Stafportaal",
+    "moderation": "Moderatie"
   },
   "staffDashboard": {
     "title": "Vlootoverzicht",
@@ -3615,5 +3616,29 @@
       "every12h": "Elke 12 uur",
       "daily": "Dagelijks"
     }
+  },
+  "staffModeration": {
+    "title": "Moderatie",
+    "total": "{total} records",
+    "tabCases": "Zaken",
+    "tabWarnings": "Waarschuwingen",
+    "searchPlaceholder": "Zoek gebruiker, moderator, reden of ID…",
+    "allTypes": "Alle typen",
+    "allStatus": "Alle statussen",
+    "statusActive": "Actief",
+    "statusInactive": "Inactief",
+    "colServer": "Server",
+    "colCase": "Zaak",
+    "colType": "Type",
+    "colUser": "Gebruiker",
+    "colReason": "Reden",
+    "colModerator": "Moderator",
+    "colDate": "Datum",
+    "colStatus": "Status",
+    "noCases": "Geen moderatiezaken gevonden.",
+    "noWarnings": "Geen waarschuwingen gevonden.",
+    "pageInfo": "Pagina {page} · {total} totaal",
+    "previous": "Vorige",
+    "next": "Volgende"
   }
 }

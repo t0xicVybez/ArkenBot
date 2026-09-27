@@ -2249,7 +2249,8 @@
     "serverDashboard": "Tableau de bord du serveur",
     "logout": "Déconnexion",
     "openMenu": "Ouvrir le menu",
-    "staffPortal": "Portail de l'équipe"
+    "staffPortal": "Portail de l'équipe",
+    "moderation": "Modération"
   },
   "staffDashboard": {
     "title": "Vue d'ensemble de la flotte",
@@ -3615,5 +3616,29 @@
       "every12h": "Toutes les 12 heures",
       "daily": "Chaque jour"
     }
+  },
+  "staffModeration": {
+    "title": "Modération",
+    "total": "{total} entrées",
+    "tabCases": "Sanctions",
+    "tabWarnings": "Avertissements",
+    "searchPlaceholder": "Rechercher utilisateur, modérateur, raison ou ID…",
+    "allTypes": "Tous les types",
+    "allStatus": "Tous les statuts",
+    "statusActive": "Actif",
+    "statusInactive": "Inactif",
+    "colServer": "Serveur",
+    "colCase": "Dossier",
+    "colType": "Type",
+    "colUser": "Utilisateur",
+    "colReason": "Raison",
+    "colModerator": "Modérateur",
+    "colDate": "Date",
+    "colStatus": "Statut",
+    "noCases": "Aucune sanction trouvée.",
+    "noWarnings": "Aucun avertissement trouvé.",
+    "pageInfo": "Page {page} · {total} au total",
+    "previous": "Précédent",
+    "next": "Suivant"
   }
 }

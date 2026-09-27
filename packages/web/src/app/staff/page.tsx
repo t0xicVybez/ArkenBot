@@ -8,15 +8,21 @@ import type { SystemStats } from '@arkenbot/shared';
 import { useTranslations } from 'next-intl';
 import { useWebSocket } from '@/lib/socket';
 
-/** Mock-pattern stat tile: uppercase label, big tabular value. */
-function StatTile({ label, value }: { label: string; value: string | number }) {
-  return (
-    <div className="bg-(--bg-card) border border-(--border-subtle) rounded-xl px-4 pt-[15px] pb-3">
+/** Mock-pattern stat tile: uppercase label, big tabular value. Optionally a link. */
+function StatTile({ label, value, href }: { label: string; value: string | number; href?: string }) {
+  const cls = 'bg-(--bg-card) border border-(--border-subtle) rounded-xl px-4 pt-[15px] pb-3';
+  const inner = (
+    <>
       <p className="text-[11px] uppercase tracking-wider text-(--text-muted) font-semibold">{label}</p>
       <p className="text-2xl font-bold text-white leading-tight tracking-tight tabular mt-[3px]">
         {typeof value === 'number' ? value.toLocaleString() : value}
       </p>
-    </div>
+    </>
+  );
+  return href ? (
+    <Link href={href} className={`${cls} block transition-colors hover:border-discord-blurple/50`}>{inner}</Link>
+  ) : (
+    <div className={cls}>{inner}</div>
   );
 }
 
@@ -64,8 +70,8 @@ export default function StaffDashboard() {
           <StatTile label={t('servers')} value={stats?.totalGuilds ?? 0} />
           <StatTile label={t('activeServers')} value={stats?.activeGuilds ?? 0} />
           <StatTile label={t('totalUsers')} value={stats?.totalUsers ?? 0} />
-          <StatTile label={t('modCases')} value={stats?.totalCases ?? 0} />
-          <StatTile label={t('activeWarnings')} value={stats?.totalWarnings ?? 0} />
+          <StatTile label={t('modCases')} value={stats?.totalCases ?? 0} href="/staff/moderation" />
+          <StatTile label={t('activeWarnings')} value={stats?.totalWarnings ?? 0} href="/staff/moderation" />
           <StatTile label={t('addons')} value={stats?.totalAddons ?? 0} />
           <StatTile label={t('uptime')} value={stats?.uptime ? formatUptime(stats.uptime) : '—'} />
           <StatTile label={t('memory')} value={stats?.memoryUsage ? `${stats.memoryUsage} MB` : '—'} />

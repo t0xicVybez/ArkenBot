@@ -2249,7 +2249,8 @@
     "serverDashboard": "Панель сервера",
     "logout": "Выйти",
     "openMenu": "Открыть меню",
-    "staffPortal": "Портал команды"
+    "staffPortal": "Портал команды",
+    "moderation": "Модерация"
   },
   "staffDashboard": {
     "title": "Обзор флота",
@@ -3615,5 +3616,29 @@
       "every12h": "Каждые 12 часов",
       "daily": "Ежедневно"
     }
+  },
+  "staffModeration": {
+    "title": "Модерация",
+    "total": "Записей: {total}",
+    "tabCases": "Наказания",
+    "tabWarnings": "Предупреждения",
+    "searchPlaceholder": "Поиск: пользователь, модератор, причина или ID…",
+    "allTypes": "Все типы",
+    "allStatus": "Все статусы",
+    "statusActive": "Активно",
+    "statusInactive": "Неактивно",
+    "colServer": "Сервер",
+    "colCase": "Дело",
+    "colType": "Тип",
+    "colUser": "Пользователь",
+    "colReason": "Причина",
+    "colModerator": "Модератор",
+    "colDate": "Дата",
+    "colStatus": "Статус",
+    "noCases": "Наказания не найдены.",
+    "noWarnings": "Предупреждения не найдены.",
+    "pageInfo": "Страница {page} · всего {total}",
+    "previous": "Назад",
+    "next": "Вперёд"
   }
 }

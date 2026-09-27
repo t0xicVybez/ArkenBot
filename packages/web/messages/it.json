@@ -2249,7 +2249,8 @@
     "serverDashboard": "Dashboard server",
     "logout": "Esci",
     "openMenu": "Apri menu",
-    "staffPortal": "Portale staff"
+    "staffPortal": "Portale staff",
+    "moderation": "Moderazione"
   },
   "staffDashboard": {
     "title": "Panoramica della flotta",
@@ -3615,5 +3616,29 @@
       "every12h": "Ogni 12 ore",
       "daily": "Ogni giorno"
     }
+  },
+  "staffModeration": {
+    "title": "Moderazione",
+    "total": "{total} record",
+    "tabCases": "Casi",
+    "tabWarnings": "Avvisi",
+    "searchPlaceholder": "Cerca utente, moderatore, motivo o ID…",
+    "allTypes": "Tutti i tipi",
+    "allStatus": "Tutti gli stati",
+    "statusActive": "Attivo",
+    "statusInactive": "Inattivo",
+    "colServer": "Server",
+    "colCase": "Caso",
+    "colType": "Tipo",
+    "colUser": "Utente",
+    "colReason": "Motivo",
+    "colModerator": "Moderatore",
+    "colDate": "Data",
+    "colStatus": "Stato",
+    "noCases": "Nessun caso di moderazione trovato.",
+    "noWarnings": "Nessun avviso trovato.",
+    "pageInfo": "Pagina {page} · {total} totali",
+    "previous": "Precedente",
+    "next": "Successivo"
   }
 }

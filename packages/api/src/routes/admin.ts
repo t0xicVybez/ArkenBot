@@ -55,6 +55,66 @@ export async function adminRoutes(server: FastifyInstance): Promise<void> {
     });
   });
 
+  // Global moderation cases across every guild (staff-only fleet view).
+  server.get('/admin/moderation/cases', { preHandler: [requireStaff] }, async (request, reply) => {
+    const query = request.query as { page?: string; search?: string; type?: string; active?: string };
+    const page = Math.max(0, parseInt(query.page ?? '1') - 1);
+    const pageSize = 25;
+    const s = query.search?.trim();
+    const where = {
+      ...(query.type ? { type: query.type } : {}),
+      ...(query.active === 'true' || query.active === 'false' ? { active: query.active === 'true' } : {}),
+      ...(s ? { OR: [
+        { userTag: { contains: s, mode: 'insensitive' as const } },
+        { moderatorTag: { contains: s, mode: 'insensitive' as const } },
+        { reason: { contains: s, mode: 'insensitive' as const } },
+        { userId: { contains: s } },
+        { guildId: { contains: s } },
+      ] } : {}),
+    };
+    const [items, total] = await Promise.all([
+      prisma.moderationCase.findMany({
+        where, orderBy: { createdAt: 'desc' }, skip: page * pageSize, take: pageSize,
+        select: {
+          id: true, caseNumber: true, guildId: true, type: true, userId: true, userTag: true,
+          moderatorTag: true, reason: true, active: true, createdAt: true,
+          guild: { select: { name: true } },
+        },
+      }),
+      prisma.moderationCase.count({ where }),
+    ]);
+    return reply.send({ success: true, data: { items, total, page: page + 1, pageSize, hasMore: (page + 1) * pageSize < total } });
+  });
+
+  // Global warnings across every guild (staff-only fleet view).
+  server.get('/admin/moderation/warnings', { preHandler: [requireStaff] }, async (request, reply) => {
+    const query = request.query as { page?: string; search?: string; active?: string };
+    const page = Math.max(0, parseInt(query.page ?? '1') - 1);
+    const pageSize = 25;
+    const s = query.search?.trim();
+    const where = {
+      ...(query.active === 'true' || query.active === 'false' ? { active: query.active === 'true' } : {}),
+      ...(s ? { OR: [
+        { userTag: { contains: s, mode: 'insensitive' as const } },
+        { moderatorTag: { contains: s, mode: 'insensitive' as const } },
+        { reason: { contains: s, mode: 'insensitive' as const } },
+        { userId: { contains: s } },
+        { guildId: { contains: s } },
+      ] } : {}),
+    };
+    const [items, total] = await Promise.all([
+      prisma.warning.findMany({
+        where, orderBy: { createdAt: 'desc' }, skip: page * pageSize, take: pageSize,
+        select: {
+          id: true, guildId: true, userId: true, userTag: true, moderatorTag: true,
+          reason: true, active: true, createdAt: true, guild: { select: { name: true } },
+        },
+      }),
+      prisma.warning.count({ where }),
+    ]);
+    return reply.send({ success: true, data: { items, total, page: page + 1, pageSize, hasMore: (page + 1) * pageSize < total } });
+  });
+
   // Permanently remove a guild and all associated data. Only permitted for
   // inactive guilds to prevent accidental deletion of live servers.
   server.delete('/admin/guilds/:guildId', { preHandler: [requireStaff] }, async (request, reply) => {
