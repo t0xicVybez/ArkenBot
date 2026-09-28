@@ -85,22 +85,31 @@ export async function streamAlertRoutes(server: FastifyInstance): Promise<void> 
       }
     }
 
-    const alert = await prisma.streamAlert.create({
-      data: {
-        guildId,
-        platform: platform as string,
-        channelUsername: normalizedUsername,
-        channelId,
-        discordChannelId: discordChannelId as string,
-        message: resolvedMessage ?? undefined,
-        ...(platform === 'youtube'
-          ? {
-              notifyLive: notifyLive === undefined ? true : Boolean(notifyLive),
-              notifyUploads: notifyUploads === undefined ? true : Boolean(notifyUploads),
-            }
-          : {}),
-      },
-    });
+    let alert;
+    try {
+      alert = await prisma.streamAlert.create({
+        data: {
+          guildId,
+          platform: platform as string,
+          channelUsername: normalizedUsername,
+          channelId,
+          discordChannelId: discordChannelId as string,
+          message: resolvedMessage ?? undefined,
+          ...(platform === 'youtube'
+            ? {
+                notifyLive: notifyLive === undefined ? true : Boolean(notifyLive),
+                notifyUploads: notifyUploads === undefined ? true : Boolean(notifyUploads),
+              }
+            : {}),
+        },
+      });
+    } catch (err) {
+      // Duplicate: this guild already tracks this channel on this platform.
+      if ((err as { code?: string }).code === 'P2002') {
+        return reply.code(409).send({ success: false, error: 'This server already has an alert for that channel.' });
+      }
+      throw err;
+    }
 
     // Subscribe to the channel's push feed (idempotent across guilds sharing it).
     if (platform === 'youtube' && channelId) {
