@@ -21,7 +21,7 @@
     "@napi-rs/canvas": "^1.0.9",
     "@prisma/adapter-pg": "^7.10.0",
     "@prisma/client": "7.10.0",
-    "@sentry/node": "^10.75.0",
+    "@sentry/node": "^11.0.0",
     "@snazzah/davey": "^0.1.12",
     "axios": "^1.20.0",
     "bullmq": "^5.81.3",
