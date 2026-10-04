@@ -2289,7 +2289,10 @@
     "healthEnvironment": "환경",
     "serversValue": "{count, number} 서버",
     "upValue": "가동 시간 {uptime}",
-    "memoryHeap": "{mb} MB 힙"
+    "memoryHeap": "{mb} MB 힙",
+    "botMemory": "봇 메모리",
+    "totalMemory": "총 기억",
+    "memoryRss": "{mb} 사이트맵 RSS"
   },
   "staffAddons": {
     "registered": "애드온이 등록되었습니다!",

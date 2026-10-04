@@ -2289,7 +2289,10 @@
     "healthEnvironment": "环境",
     "serversValue": "{count, number} 服务器",
     "upValue": "已运行 {uptime}",
-    "memoryHeap": "{mb} MB 堆内存"
+    "memoryHeap": "{mb} MB 堆内存",
+    "botMemory": "瓶内存",
+    "totalMemory": "总内存",
+    "memoryRss": "{mb} 甲基溴 RSS"
   },
   "staffAddons": {
     "registered": "插件已注册！",

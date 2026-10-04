@@ -2289,7 +2289,10 @@
     "healthEnvironment": "Omgeving",
     "serversValue": "{count, number} servers",
     "upValue": "{uptime} online",
-    "memoryHeap": "{mb} MB heap"
+    "memoryHeap": "{mb} MB heap",
+    "botMemory": "Botgeheugen",
+    "totalMemory": "Totaal geheugen",
+    "memoryRss": "{mb} MB RSS"
   },
   "staffAddons": {
     "registered": "Add-on geregistreerd!",

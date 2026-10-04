@@ -61,7 +61,7 @@ export default function StaffDashboard() {
       {/* Stat tiles */}
       {isLoading ? (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 mb-6">
-          {[...Array(8)].map((_, i) => (
+          {[...Array(9)].map((_, i) => (
             <div key={i} className="bg-(--bg-card) border border-(--border-subtle) rounded-xl h-[76px] animate-pulse" />
           ))}
         </div>
@@ -74,7 +74,8 @@ export default function StaffDashboard() {
           <StatTile label={t('activeWarnings')} value={stats?.totalWarnings ?? 0} href="/staff/moderation" />
           <StatTile label={t('addons')} value={stats?.totalAddons ?? 0} />
           <StatTile label={t('uptime')} value={stats?.uptime ? formatUptime(stats.uptime) : '—'} />
-          <StatTile label={t('memory')} value={stats?.memoryUsage ? `${stats.memoryUsage} MB` : '—'} />
+          <StatTile label={t('botMemory')} value={stats?.memoryUsage != null ? `${stats.memoryUsage} MB` : '—'} />
+          <StatTile label={t('totalMemory')} value={stats?.totalMemoryUsage != null ? `${stats.totalMemoryUsage} MB` : '—'} />
         </div>
       )}
 
@@ -123,7 +124,7 @@ export default function StaffDashboard() {
               { label: t('healthBot'), value: stats?.totalGuilds != null ? t('serversValue', { count: stats.totalGuilds }) : '—' },
               { label: t('healthApi'), value: stats?.uptime ? t('upValue', { uptime: formatUptime(stats.uptime) }) : '—' },
               { label: t('healthVersion'), value: stats?.version ?? '1.0.0', mono: true },
-              { label: t('healthMemory'), value: stats?.memoryUsage ? t('memoryHeap', { mb: stats.memoryUsage }) : '—' },
+              { label: t('healthMemory'), value: stats?.memoryUsage != null ? t('memoryRss', { mb: stats.memoryUsage }) : '—' },
               { label: t('healthEnvironment'), value: process.env.NODE_ENV ?? 'development' },
             ].map((row) => (
               <div key={row.label} className="flex items-center gap-2.5 py-3 border-b border-(--border-subtle) last:border-0">

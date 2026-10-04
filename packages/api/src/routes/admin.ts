@@ -12,6 +12,7 @@ import { pub } from '../redis.js';
 import { register } from 'prom-client';
 import { execSync } from 'child_process';
 import { readServiceLogs } from '../services/ServiceLogReader.js';
+import { getPm2Memory } from '../utils/pm2Memory.js';
 import { resolveGuildNames, resolveChannelNames } from '../services/LogContextResolver.js';
 const GITHUB_REPO = 't0xicVybez/ArkenBot';
 
@@ -156,7 +157,7 @@ export async function adminRoutes(server: FastifyInstance): Promise<void> {
       prisma.warning.count({ where: { active: true } }),
     ]);
 
-    const memUsage = process.memoryUsage();
+    const { botMb, totalMb } = await getPm2Memory();
 
     return reply.send({
       success: true,
@@ -168,7 +169,8 @@ export async function adminRoutes(server: FastifyInstance): Promise<void> {
         totalAddons,
         totalWarnings,
         uptime: Math.floor(process.uptime()),
-        memoryUsage: Math.round(memUsage.heapUsed / 1024 / 1024),
+        memoryUsage: botMb,
+        totalMemoryUsage: totalMb,
         version: '1.0.0',
       },
     });

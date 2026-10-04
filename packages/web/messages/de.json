@@ -2289,7 +2289,10 @@
     "healthEnvironment": "Umgebung",
     "serversValue": "{count, number} Server",
     "upValue": "läuft seit {uptime}",
-    "memoryHeap": "{mb} MB Heap"
+    "memoryHeap": "{mb} MB Heap",
+    "botMemory": "Bot-Speicher",
+    "totalMemory": "Gesamtspeicher",
+    "memoryRss": "{mb} MB RSS"
   },
   "staffAddons": {
     "registered": "Add-on registriert!",

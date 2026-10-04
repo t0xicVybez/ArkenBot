@@ -2289,7 +2289,10 @@
     "healthEnvironment": "Ortam",
     "serversValue": "{count, number} sunucu",
     "upValue": "{uptime} çalışıyor",
-    "memoryHeap": "{mb} MB yığın"
+    "memoryHeap": "{mb} MB yığın",
+    "botMemory": "Bot Memory",
+    "totalMemory": "Total Memory",
+    "memoryRss": "{mb} MB MB MB RSS"
   },
   "staffAddons": {
     "registered": "Eklenti kaydedildi!",

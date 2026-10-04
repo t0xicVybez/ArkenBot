@@ -2289,7 +2289,10 @@
     "healthEnvironment": "Окружение",
     "serversValue": "{count, number} серверов",
     "upValue": "работает {uptime}",
-    "memoryHeap": "{mb} МБ heap"
+    "memoryHeap": "{mb} МБ heap",
+    "botMemory": "Бот памяти",
+    "totalMemory": "Полная память",
+    "memoryRss": "{mb} МБ RSS"
   },
   "staffAddons": {
     "registered": "Дополнение зарегистрировано!",

@@ -53,8 +53,10 @@ export interface SystemStats {
   totalAddons: number;
   /** Process uptime in seconds. */
   uptime: number;
-  /** RSS memory usage in bytes. */
-  memoryUsage: number;
+  /** Bot process resident memory (RSS), in MB. Null if it can't be read. */
+  memoryUsage: number | null;
+  /** Combined resident memory (RSS) of all ArkenBot PM2 processes, in MB. Null if it can't be read. */
+  totalMemoryUsage?: number | null;
   cpuUsage: number;
   version: string;
 }

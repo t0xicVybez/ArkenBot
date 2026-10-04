@@ -2289,7 +2289,10 @@
     "healthEnvironment": "環境",
     "serversValue": "{count, number} サーバー",
     "upValue": "稼働時間 {uptime}",
-    "memoryHeap": "{mb} MB ヒープ"
+    "memoryHeap": "{mb} MB ヒープ",
+    "botMemory": "ボットメモリ",
+    "totalMemory": "総記憶",
+    "memoryRss": "{mb} メガバイト RSS"
   },
   "staffAddons": {
     "registered": "アドオンを登録しました！",

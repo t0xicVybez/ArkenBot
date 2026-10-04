@@ -36,9 +36,10 @@ export default function StaffMetricsPage() {
 
   // Build memory history
   useEffect(() => {
-    if (stats?.memoryUsage) {
+    const mem = stats?.memoryUsage;
+    if (mem != null) {
       const now = new Date().toLocaleTimeString();
-      setMemHistory((prev) => [...prev.slice(-29), { time: now, value: stats.memoryUsage }]);
+      setMemHistory((prev) => [...prev.slice(-29), { time: now, value: mem }]);
     }
   }, [stats?.memoryUsage]);
 

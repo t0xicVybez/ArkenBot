@@ -2289,7 +2289,10 @@
     "healthEnvironment": "Lingkungan",
     "serversValue": "{count, number} server",
     "upValue": "aktif {uptime}",
-    "memoryHeap": "{mb} MB heap"
+    "memoryHeap": "{mb} MB heap",
+    "botMemory": "Memori Bot",
+    "totalMemory": "Memori Total",
+    "memoryRss": "{mb} MB RSS"
   },
   "staffAddons": {
     "registered": "Add-on terdaftar!",
