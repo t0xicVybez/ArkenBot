@@ -15,6 +15,17 @@ import { DiscordAPIError, type Client, type Guild } from 'discord.js';
 import { isPermissionError, notifyActionFailure } from './permissionAlert.js';
 import { logger } from '../logger.js';
 
+/**
+ * Endpoints whose permission failures are benign passive reads the bot already
+ * degrades around — never worth an admin alert. Audit-log reads fail whenever the
+ * bot lacks View Audit Log; anti-nuke tracking just no-ops, so these 403s were the
+ * dominant source of alert-channel noise.
+ */
+function isSilencedEndpoint(url: string): boolean {
+  const path = url.replace(/^https?:\/\/[^/]+/, '').split('?')[0];
+  return /\/guilds\/\d+\/audit-logs$/.test(path);
+}
+
 /** Recover the guild and channel snowflakes from a Discord API URL. */
 function extractIds(url: string): { guildId?: string; channelId?: string } {
   const path = url.replace(/^https?:\/\/[^/]+/, '');
@@ -60,7 +71,7 @@ export function installRestErrorInterceptor(client: Client): void {
     try {
       return await original(...args);
     } catch (err) {
-      if (isPermissionError(err) && err instanceof DiscordAPIError && typeof err.url === 'string') {
+      if (isPermissionError(err) && err instanceof DiscordAPIError && typeof err.url === 'string' && !isSilencedEndpoint(err.url)) {
         const captured = err;
         // Defer to a macrotask so a call-site handler (which marks the error)
         // runs first; only alert here if nothing else did.
