@@ -36,7 +36,11 @@ export async function levelRoleRoutes(server: FastifyInstance): Promise<void> {
   // DELETE /guilds/:guildId/level-roles/:level
   server.delete('/guilds/:guildId/level-roles/:level', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, level } = request.params as { guildId: string; level: string };
-    await prisma.levelRole.deleteMany({ where: { guildId, level: Number(level) } });
+    const levelNum = Number(level);
+    if (!Number.isInteger(levelNum)) {
+      return reply.code(400).send({ success: false, error: 'level must be an integer' });
+    }
+    await prisma.levelRole.deleteMany({ where: { guildId, level: levelNum } });
     return reply.code(204).send();
   });
 
