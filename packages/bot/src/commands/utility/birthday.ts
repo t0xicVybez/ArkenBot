@@ -43,8 +43,12 @@ const command: BotCommand = {
 
   async execute(interaction: ChatInputCommandInteraction, _client: BotClient) {
     const sub = interaction.options.getSubcommand();
-    const guildId = interaction.guildId!;
     const loc = await resolveUserLocale(interaction);
+    if (!interaction.guildId) {
+      await interaction.reply({ content: t('common.notInServer', loc), flags: MessageFlags.Ephemeral });
+      return;
+    }
+    const guildId = interaction.guildId;
 
     if (sub === 'set') {
       const month = interaction.options.getInteger('month', true);

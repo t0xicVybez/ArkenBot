@@ -17,9 +17,16 @@ import { ModmailModule } from '../modules/modmail/ModmailModule.js';
 import { prisma } from '../database.js';
 import { redis } from '../redis.js';
 import { logger, swallow} from '../logger.js';
+import { ensureGuildExists } from '../utils/settings.js';
 
 // Per-user cooldown tracker for custom commands: `${commandId}:${userId}` → expiry timestamp
 const cooldownMap = new Map<string, number>();
+
+// Guilds whose DB row we've confirmed this process. The `ready` pass ensures all
+// guilds, but a message can land in the startup window (or for a guild whose ensure
+// failed) before its Guild row exists, which FK-violates the activity upserts below.
+// Ensuring once per guild per process closes that gap without a write per message.
+const ensuredGuilds = new Set<string>();
 
 // Sliding-window message rate tracker for auto-slowmode: channelId → message timestamps
 const msgRateTracker = new Map<string, number[]>();
@@ -208,6 +215,18 @@ const event: BotEvent = {
     if (ModmailModule.hasOpenThread(message.channel.id)) {
       await ModmailModule.handleStaffMessage(message).catch(swallow);
       return;
+    }
+
+    // Guarantee the Guild row exists before the activity/analytics upserts, which
+    // have FK constraints on guildId. Runs once per guild per process (see above).
+    if (!ensuredGuilds.has(message.guild.id)) {
+      ensuredGuilds.add(message.guild.id);
+      await ensureGuildExists(
+        message.guild.id,
+        message.guild.name,
+        message.guild.ownerId,
+        message.guild.iconURL() ?? undefined,
+      ).catch((err) => { ensuredGuilds.delete(message.guild!.id); logger.error({ err }, 'ensureGuildExists (messageCreate) failed'); });
     }
 
     await Promise.allSettled([

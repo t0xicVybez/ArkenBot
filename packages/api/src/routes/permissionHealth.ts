@@ -122,6 +122,16 @@ export async function permissionHealthRoutes(server: FastifyInstance): Promise<v
 
       return reply.send({ success: true, data: { botInGuild: true, administrator: isAdmin, botHighestPosition: botHighest, missing, channels: channelIssues } });
     } catch (err) {
+      // Discord rate-limited us — transient, not a bug. Surface as 429 so the
+      // dashboard can retry, and log at warn so it doesn't trip the error alerts.
+      const status = (err as { response?: { status?: number }; status?: number })?.response?.status
+        ?? (err as { status?: number })?.status;
+      if (status === 429) {
+        const retryAfter = (err as { response?: { headers?: Record<string, string> } })?.response?.headers?.['retry-after'];
+        if (retryAfter) reply.header('Retry-After', retryAfter);
+        request.log.warn({ guildId }, 'permission health deferred — Discord rate limit');
+        return reply.code(429).send({ success: false, error: 'Discord is rate-limiting requests — please retry in a moment' });
+      }
       const msg = err instanceof Error ? err.message : String(err);
       request.log.error({ err, guildId }, 'Failed to compute permission health');
       return reply.code(500).send({ success: false, error: `Failed to check permissions: ${msg}` });

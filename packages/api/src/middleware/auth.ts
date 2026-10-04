@@ -9,6 +9,7 @@
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { prisma } from '../database.js';
 import { config } from '../config.js';
+import { ensureGuildRow } from '../utils/ensureGuild.js';
 import { SessionService } from '../services/SessionService.js';
 import { setSessionCookie } from '../utils/sessionCookie.js';
 import { AuthService } from '../services/AuthService.js';
@@ -111,7 +112,10 @@ export async function requireGuildAdmin(request: FastifyRequest, reply: FastifyR
   }
 
   // Staff and bot owners have implicit access to all guilds.
-  if (request.user?.isStaff || request.user?.isBotOwner) return;
+  if (request.user?.isStaff || request.user?.isBotOwner) {
+    await ensureGuildRow(guildId);
+    return;
+  }
 
   const accessToken = await AuthService.getValidAccessToken(request.user!.id);
   if (!accessToken) {
@@ -137,7 +141,12 @@ export async function requireGuildAdmin(request: FastifyRequest, reply: FastifyR
 
     if (!canManage && guild.owner !== true) {
       reply.code(403).send({ success: false, error: 'Administrator or Manage Server permission required' });
+      return;
     }
+
+    // Authorized — make sure the guild row exists so guild-scoped writes don't
+    // FK-violate inside the brief window before the bot has persisted it.
+    await ensureGuildRow(guildId);
   } catch (err) {
     if (err instanceof GuildFetchRateLimited) {
       reply.header('Retry-After', String(err.retryAfterSeconds));
