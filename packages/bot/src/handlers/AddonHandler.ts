@@ -249,6 +249,13 @@ export class AddonHandler {
         });
         return (guildAddon?.settings as Record<string, unknown>) ?? {};
       },
+      isInstalled: async (guildId: string) => {
+        const ga = await prisma.guildAddon.findUnique({
+          where: { guildId_addonId: { guildId, addonId: dbAddonId } },
+          select: { enabled: true },
+        });
+        return Boolean(ga?.enabled);
+      },
       // Wire the addon's own localized catalogs and the shared locale resolver so
       // `ctx.t()` / `ctx.resolveLocale()` reply in the viewer's language.
       messages: definition.locales,

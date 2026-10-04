@@ -32,6 +32,7 @@ export class AddonContext {
   public readonly events: AddonEventBus;
 
   private _getSettings: (guildId: string) => Promise<Record<string, unknown>>;
+  private _isInstalled?: (guildId: string) => Promise<boolean>;
   private _messages: AddonMessages;
   private _resolveLocale?: (arg: LocaleResolvable) => Promise<string>;
 
@@ -42,6 +43,8 @@ export class AddonContext {
     logger: AddonLogger;
     events: AddonEventBus;
     getSettings: (guildId: string) => Promise<Record<string, unknown>>;
+    /** Whether this addon is installed AND enabled in the given guild. */
+    isInstalled?: (guildId: string) => Promise<boolean>;
     /** Localized catalogs declared by the addon (locale -> nested dict). */
     messages?: AddonMessages;
     /** Host-provided locale resolver (reads the user's saved preference, etc.). */
@@ -53,6 +56,7 @@ export class AddonContext {
     this.logger = options.logger;
     this.events = options.events;
     this._getSettings = options.getSettings;
+    this._isInstalled = options.isInstalled;
     this._messages = options.messages ?? {};
     this._resolveLocale = options.resolveLocale;
   }
@@ -94,6 +98,15 @@ export class AddonContext {
    */
   async getSettings(guildId: string): Promise<Record<string, unknown>> {
     return this._getSettings(guildId);
+  }
+
+  /**
+   * Whether this addon is installed and enabled in the guild. Useful inside raw
+   * event handlers (which fire globally) to skip guilds that don't have the addon.
+   * Returns `true` when the host didn't wire a resolver (dev/test fallback).
+   */
+  async isInstalled(guildId: string): Promise<boolean> {
+    return this._isInstalled ? this._isInstalled(guildId) : true;
   }
 
   /**

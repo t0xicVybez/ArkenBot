@@ -1,0 +1,172 @@
+/** Localized catalogs for the Translator addon. Falls back to en-US per key.
+ * Non-English strings generated via self-hosted LibreTranslate (scripts/i18n workflow). */
+export const locales = {
+  "en-US": {
+    "unavailable": "🌐 Translation is not available right now. An administrator needs to configure LibreTranslate.",
+    "cooldown": "⏳ Slow down — try again in {seconds}s.",
+    "fieldFrom": "From ({lang})",
+    "fieldTo": "To ({lang})",
+    "poweredBy": "Powered by LibreTranslate",
+    "failed": "⚠️ Translation failed. Please try again in a moment.",
+    "noText": "❌ That message has no text to translate.",
+    "alreadyIn": "✅ That message is already in {lang}.",
+    "translatedFrom": "Translated from {lang}",
+    "translatedFromTo": "Translated {from} → {to} · LibreTranslate"
+  },
+  "es-ES": {
+    "unavailable": "🌐 Traducción no está disponible ahora mismo. Un administrador necesita configurar LibreTranslate.",
+    "cooldown": "⏳ Aminorar — inténtalo de nuevo {seconds}s.",
+    "fieldFrom": "De ({lang})",
+    "fieldTo": "A (A){lang})",
+    "poweredBy": "Powered by LibreTranslate",
+    "failed": "La traducción de rigón falló. Por favor, intente de nuevo en un momento.",
+    "noText": "❌ Ese mensaje no tiene texto que traducir.",
+    "alreadyIn": "✅ Ese mensaje ya está en {lang}.",
+    "translatedFrom": "Traducido del {lang}",
+    "translatedFromTo": "Traducido {from} → {to} · LibreTranslate"
+  },
+  "fr": {
+    "unavailable": "La traduction n'est pas disponible en ce moment. Un administrateur doit configurer LibreTranslate.",
+    "cooldown": "— essayez de nouveau {seconds}Par.",
+    "fieldFrom": "De ({lang})",
+    "fieldTo": "Aux{lang})",
+    "poweredBy": "Propulsé par LibreTranslate",
+    "failed": "La traduction a échoué. Veuillez réessayer dans un instant.",
+    "noText": "Ce message n'a pas de texte à traduire.",
+    "alreadyIn": "Ce message est déjà dans {lang}.",
+    "translatedFrom": "Traduit de {lang}",
+    "translatedFromTo": "Traduit {from} → {to} · LibreTranslate"
+  },
+  "de": {
+    "unavailable": "Übersetzung ist derzeit nicht verfügbar. Ein Administrator muss konfigurieren LibreTranslate.",
+    "cooldown": "⏳ Verlangsamen Sie sich - versuchen Sie es erneut {seconds}s.",
+    "fieldFrom": "Vom{lang})",
+    "fieldTo": "bis{lang})",
+    "poweredBy": "Powered by LibreTranslate",
+    "failed": "Übersetzung fehlgeschlagen. Bitte versuchen Sie es gleich noch einmal.",
+    "noText": "Diese Nachricht hat keinen Text zu übersetzen.",
+    "alreadyIn": "✅ Diese Nachricht ist bereits in {lang}.",
+    "translatedFrom": "Übersetzt von {lang}",
+    "translatedFromTo": "Übersetzt {from} → {to} · LibreTranslate"
+  },
+  "it": {
+    "unavailable": "🌐 La traduzione non è disponibile in questo momento. Un amministratore deve configurare LibreTranslate.",
+    "cooldown": "⏳ Rallentare — riprovare in {seconds}S.",
+    "fieldFrom": "Da:{lang})",
+    "fieldTo": "A{lang})",
+    "poweredBy": "Alimentato da LibreTranslate",
+    "failed": "Traduzione fallita. Si prega di riprovare in un momento.",
+    "noText": "Questo messaggio non ha testo da tradurre.",
+    "alreadyIn": "✅ Quel messaggio è già in {lang}.",
+    "translatedFrom": "Tradotto da {lang}",
+    "translatedFromTo": "Traduzione {from} → {to} · LibreTranslate"
+  },
+  "nl": {
+    "unavailable": "Vertaling is nu niet beschikbaar. Een beheerder moet deze configureren LibreTranslate.",
+    "cooldown": "Probeer het nog eens. {seconds}s.",
+    "fieldFrom": "Van ({lang})",
+    "fieldTo": "Aan ({lang})",
+    "poweredBy": "Aangedreven door LibreTranslate",
+    "failed": "Vertaling mislukt. Probeer het nog eens.",
+    "noText": "Dat bericht heeft geen tekst om te vertalen.",
+    "alreadyIn": "Dat bericht is al in {lang}.",
+    "translatedFrom": "Vertaald van {lang}",
+    "translatedFromTo": "Vertaald {from} → {to} · LibreTranslate"
+  },
+  "pt-BR": {
+    "unavailable": "Tradução não está disponível agora. Um administrador precisa configurar LibreTranslate.",
+    "cooldown": "- Devagar, tente novamente. {seconds}S.",
+    "fieldFrom": "De ({lang})",
+    "fieldTo": "Para...{lang})",
+    "poweredBy": "Alimentado por LibreTranslate",
+    "failed": "A tradução falhou. Por favor, tente novamente em um momento.",
+    "noText": "Essa mensagem não tem texto para traduzir.",
+    "alreadyIn": "Essa mensagem já está em {lang}.",
+    "translatedFrom": "Traduzido de {lang}",
+    "translatedFromTo": "Traduzido {from} → {to} · LibreTranslate"
+  },
+  "ru": {
+    "unavailable": "Перевод сейчас недоступен. Администратор должен настроить LibreTranslate.",
+    "cooldown": "Slow Down — Попробуйте снова {seconds}С.",
+    "fieldFrom": "Из{lang})",
+    "fieldTo": "Чтобы{lang})",
+    "poweredBy": "питаемый LibreTranslate",
+    "failed": "Перевод провалился. Пожалуйста, попробуйте еще раз через минуту.",
+    "noText": "Это сообщение не имеет текста для перевода.",
+    "alreadyIn": "Это сообщение уже в {lang}.",
+    "translatedFrom": "Перевод с {lang}",
+    "translatedFromTo": "Перевод {from} ? {to} • LibreTranslate"
+  },
+  "pl": {
+    "unavailable": "Tłumaczenie nie jest teraz dostępne. Administrator musi skonfigurować LibreTranslate.",
+    "cooldown": "Zwolnij - spróbuj ponownie w {seconds}d.",
+    "fieldFrom": "Od ({lang})",
+    "fieldTo": "Do ({lang})",
+    "poweredBy": "Napędzane LibreTranslate",
+    "failed": "Tłumaczenie nie powiodło się. Proszę spróbować ponownie za chwilę.",
+    "noText": "Ta wiadomość nie ma tekstu do przetłumaczenia.",
+    "alreadyIn": "/ Ta wiadomość jest już w {lang}.",
+    "translatedFrom": "Tłumaczenie z {lang}",
+    "translatedFromTo": "Przetłumaczone {from} → {to} · LibreTranslate"
+  },
+  "tr": {
+    "unavailable": ". Çeviri şu anda mevcut değildir. Bir yöneticinin yapılandırması gerekiyor LibreTranslate.",
+    "cooldown": "⏳ Yavaş aşağı - tekrar deneyin {seconds}s.",
+    "fieldFrom": "From (From){lang})",
+    "fieldTo": "To (To){lang})",
+    "poweredBy": "Powered by Tarafından LibreTranslate",
+    "failed": "Tercüme başarısız oldu. Lütfen bir anda tekrar deneyin.",
+    "noText": ". Bu mesajın tercüme etmek için hiçbir metni yoktur.",
+    "alreadyIn": "Bu mesaj zaten içeride {lang}.",
+    "translatedFrom": "Translated from from {lang}",
+    "translatedFromTo": "Translated {from} → {to} · LibreTranslate"
+  },
+  "id": {
+    "unavailable": "Terjemahan tidak tersedia sekarang. Administrator perlu mengkonfigurasi LibreTranslate.",
+    "cooldown": "Pelan-pelan - coba lagi di {seconds}s.",
+    "fieldFrom": "Dari ({lang})",
+    "fieldTo": "Untuk ({lang})",
+    "poweredBy": "Didukung oleh LibreTranslate",
+    "failed": "Terjemahan Gagal. Tolong coba lagi sebentar lagi.",
+    "noText": "Pesan itu tidak memiliki teks untuk diterjemahkan.",
+    "alreadyIn": "Pesan itu sudah ada di {lang}.",
+    "translatedFrom": "Diterjemahkan dari {lang}",
+    "translatedFromTo": "Diterjemahkan {from} beriman {to} ! LibreTranslate"
+  },
+  "ja": {
+    "unavailable": "右手には、翻訳ができません。 管理者は構成する必要があります LibreTranslateお問い合わせ",
+    "cooldown": "再び試してみる {seconds}お問い合わせ",
+    "fieldFrom": "から ( ){lang})",
+    "fieldTo": "お問い合わせ{lang})",
+    "poweredBy": "スタッフ LibreTranslate",
+    "failed": "翻訳が失敗しました。 是非一度お試しください。",
+    "noText": "〇 そのメッセージは翻訳するテキストがありません。",
+    "alreadyIn": "✅ そのメッセージは既にある {lang}お問い合わせ",
+    "translatedFrom": "翻訳から {lang}",
+    "translatedFromTo": "翻訳済み {from} → {to} ・ LibreTranslate"
+  },
+  "ko": {
+    "unavailable": "번역은 지금 사용할 수 없습니다. 관리자는 구성해야 LibreTranslate·",
+    "cooldown": "슬로우 다운 - 다시 시도 {seconds}·",
+    "fieldFrom": "에서 ({lang}·",
+    "fieldTo": "으로 ({lang}·",
+    "poweredBy": "에 의해 LibreTranslate",
+    "failed": "⚠️ 번역이 실패했습니다. 잠시 다시 시도하십시오.",
+    "noText": "❌ 그 메시지는 번역 할 텍스트가 없습니다.",
+    "alreadyIn": "✅ 그 메시지는 이미 {lang}·",
+    "translatedFrom": "Original 에서 {lang}",
+    "translatedFromTo": "한국어 {from} · {to} · LibreTranslate"
+  },
+  "zh-CN": {
+    "unavailable": "翻译目前不可用。 管理员需要配置 LibreTranslate。 。 。 。",
+    "cooldown": "慢点,再试一次 {seconds}编号",
+    "fieldFrom": "从 (从){lang}(中文(简体) ).",
+    "fieldTo": "改为({lang}(中文(简体) ).",
+    "poweredBy": "电源: LibreTranslate",
+    "failed": "翻译失败 。 请稍候再试一次",
+    "noText": "QQ 该消息没有文本可翻译 。",
+    "alreadyIn": "QQ 该消息已经存在 {lang}。 。 。 。",
+    "translatedFrom": "翻译自 {lang}",
+    "translatedFromTo": "翻译 {from} → {to} • 妇女 LibreTranslate"
+  }
+} as const;
