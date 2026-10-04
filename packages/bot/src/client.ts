@@ -8,6 +8,7 @@ import {
   GatewayIntentBits,
   Partials,
   Collection,
+  Options,
 } from 'discord.js';
 import type { BotCommand } from './types.js';
 import { installRestErrorInterceptor } from './utils/restErrorInterceptor.js';
@@ -38,7 +39,9 @@ export class BotClient extends Client {
         GatewayIntentBits.GuildPresences,
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.GuildMessageReactions,
-        GatewayIntentBits.GuildMessageTyping,
+        // GuildMessageTyping intentionally omitted — no feature handles typing
+        // events, and they're extremely high-volume (every keystroke, every
+        // guild), so subscribing just burns gateway traffic and GC.
         GatewayIntentBits.DirectMessages,
         GatewayIntentBits.DirectMessageReactions,
         GatewayIntentBits.MessageContent,
@@ -51,6 +54,21 @@ export class BotClient extends Client {
         Partials.GuildMember,
         Partials.User,
       ],
+      // Bound the message cache and sweep stale entries so memory doesn't creep
+      // up over long uptimes. Only MessageManager is capped here: members,
+      // presences, and users are left at defaults because live features read
+      // them (online-count stats channels, role-gated XP/lottery, etc.), and
+      // sweeping users out from under cached members can crash member.user.
+      // Messages are safe to drop — reaction-role/starboard handlers refetch
+      // partial messages on demand.
+      makeCache: Options.cacheWithLimits({
+        ...Options.DefaultMakeCacheSettings,
+        MessageManager: 50,
+      }),
+      sweepers: {
+        ...Options.DefaultSweeperSettings,
+        messages: { interval: 1800, lifetime: 1800 },
+      },
       // Suppress @everyone pings and prevent the bot from pinging the author of
       // the message it replies to by default.
       allowedMentions: {
