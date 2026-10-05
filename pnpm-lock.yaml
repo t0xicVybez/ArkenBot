@@ -431,8 +431,8 @@ importers:
         specifier: ^0.8.4
         version: 0.8.4
       mediaplex:
-        specifier: ^0.0.8
-        version: 0.0.8
+        specifier: ^1.0.0
+        version: 1.0.0
       ms:
         specifier: ^2.1.3
         version: 2.1.3
@@ -6870,68 +6870,108 @@ packages:
     resolution: {integrity: sha512-dq+qelQ9akHpcOl/gUVRTxVIOkAJ1wR3QAvb4RsVjS8oVoFjDGTc679wJYmUmknUF5HwMLOgb5O+a3KxfWapPQ==}
     engines: {node: '>= 0.6'}
 
-  mediaplex-android-arm64@0.0.8:
-    resolution: {integrity: sha512-67azKxuexHj7dSWqqAHwzZFk1FHwPWzslLgvCfCER+0szPbZ0Nme6k3jgEC6rIjoZyhP8aNmpWBKj8M2KG0kBA==}
+  mediaplex-android-arm-eabi@1.0.0:
+    resolution: {integrity: sha512-/Ec33NNTeYxDLePRewOnjt82yVjwFy2monHk4OFk/wov7gDXvNCwSsLVRzgQgVQ2QAxmEND75Cx1nlyMWRjfFQ==}
+    engines: {node: '>= 10'}
+    cpu: [arm]
+    os: [android]
+
+  mediaplex-android-arm64@1.0.0:
+    resolution: {integrity: sha512-qisiHCK6HiRhw9qKr99yGFqtJHV9w///Vg5sc3RCA5FpEZOgK/EPkE3XEyVaBXux6XzU9lF5KeCfHuWW/rZEGQ==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [android]
 
-  mediaplex-darwin-arm64@0.0.8:
-    resolution: {integrity: sha512-FhajN2Sb93BtPzghGtrglIme7yHIif8Exen/TvpRAqc8ps770oOu0Bo7Hcm/sRgZh3HSUZg2KbPhQlrhposq2Q==}
+  mediaplex-darwin-arm64@1.0.0:
+    resolution: {integrity: sha512-uux5Lb2RfE+51Xz+wf0fwBpx14k66eexeMjw2IWpEK5LMIU8QI1AU+ag/ocIxEf6yIdu/Dj8b4zaxxfr2B7usw==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [darwin]
 
-  mediaplex-darwin-universal@0.0.8:
-    resolution: {integrity: sha512-Q3OOYXM0FrwfiRXouI+kcn+TySYayMQabGSSe5Nz4cqYTlnJ1erarPSq6P+1fKjxZLaYkacgnILcZSKzAn1kAg==}
+  mediaplex-darwin-universal@1.0.0:
+    resolution: {integrity: sha512-dwFIEZHuH7zsnAhAqP77Pc7i/YWMgXnDT2hBxF9/K5/wGxlV1HtdpJfY9Pug3A5SiCpb9YwQy5VGhW0se/aqIw==}
     engines: {node: '>= 10'}
     os: [darwin]
 
-  mediaplex-darwin-x64@0.0.8:
-    resolution: {integrity: sha512-Xj7x7z2widAchu2c1TMH/SF6PtX1zG3yKdQebZg5aOuacbIJUlRgLCBYn6tc66TyPJp88hMWbLEl5992VU1RKQ==}
+  mediaplex-darwin-x64@1.0.0:
+    resolution: {integrity: sha512-pAiCp8vPNb1b103v2xV3x6W9SQZifg6+5TGZOczlltpEbANWSy5112MqEwCM3XBohOHcal1zLC2qxdaHM8edhw==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [darwin]
 
-  mediaplex-freebsd-x64@0.0.8:
-    resolution: {integrity: sha512-HwwcA1D2GHYKpGKZdrWCH/rsTqqfwT0EmBy6qZF2EG5tY1ncxU4qFlgBgpHLPJt/XopKWa1fpGnaO2zSdN5aHQ==}
+  mediaplex-freebsd-x64@1.0.0:
+    resolution: {integrity: sha512-9lRsE3GumCRODm6OWBtfRyFCgC5mfLPVl+4miR52/+PVw2ABrdV+lnz2cKZDUfnmwxDGV1fTG6QMxs5D3xcuZQ==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [freebsd]
 
-  mediaplex-linux-arm-gnueabihf@0.0.8:
-    resolution: {integrity: sha512-HfSzKrx6ZEDnSk42+ypZ6Bp/8OYSp6av6xenh5hyBhSu/2Czy8yZQDwGe2zSxibK44QXtpJKlrZB8HszFv2OPg==}
+  mediaplex-linux-arm-gnueabihf@1.0.0:
+    resolution: {integrity: sha512-mDBD2d/87CdmR4P0IUYyznzEmBoar7p4cbQiyT44voZ8LIG9w0RWHpP1r5zprbnt73YRrZwJTYhurF7mVixgRQ==}
     engines: {node: '>= 10'}
     cpu: [arm]
     os: [linux]
 
-  mediaplex-linux-x64-gnu@0.0.8:
-    resolution: {integrity: sha512-5Myyy9zlQLPl1daWXKn7zLP2iMDqBqHPOtezhmt/4C/hKvsPkll4YxrpDE3Dn5gGBAA7WYfB03ALgdltt7JVKQ==}
+  mediaplex-linux-arm-musleabihf@1.0.0:
+    resolution: {integrity: sha512-Jzu8hRxS9vjbgRh92sfPV++wHHUHVGMRmHS0YAxzLso73IAVKMArhsVIEcTDVVN4/yF4D0HzD63AX6M3dgeoCA==}
+    engines: {node: '>= 10'}
+    cpu: [arm]
+    os: [linux]
+
+  mediaplex-linux-arm64-gnu@1.0.0:
+    resolution: {integrity: sha512-y6NXkTtjFSDqd6cXliZ8QYcQuHcVCk9MYHIHRNpPJU30M0CUvFx5Itgaemr/Si4Pl+VbU+UGHsoY7O1yoT7xEQ==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
+
+  mediaplex-linux-arm64-musl@1.0.0:
+    resolution: {integrity: sha512-7bpJG5wILQXLAEUAcFafMtlZmNZXKRFXaiMGKWSj29YZnyEwSHRiQEyemxu72SEYQibfwyq9Ah830pZAcfnIsg==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [musl]
+
+  mediaplex-linux-riscv64-gnu@1.0.0:
+    resolution: {integrity: sha512-p0m6R5O/jSg3w6u7LCw2bwCDeXKKeYEmIqy9ORvOVZT6Cin96ojhj6ELj8/spRh8Uox1DUxiPkBJrTEzeNWugA==}
+    engines: {node: '>= 10'}
+    cpu: [riscv64]
+    os: [linux]
+    libc: [glibc]
+
+  mediaplex-linux-x64-gnu@1.0.0:
+    resolution: {integrity: sha512-8piBl1DmEeRtElr+aG8OgC7cszzhQN8jGh+ClB6FKIZ2uiRf9SQ9tWH4hsE+qm17SamOekiibG5kXDLNAtPrtg==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
     libc: [glibc]
 
-  mediaplex-win32-arm64-msvc@0.0.8:
-    resolution: {integrity: sha512-eHgIdDMDX2BZMY0vfwqXf2+C5v80jKoKMthzQqQIVgob27/jJUN4K9X/kMDWJ38dUEIlLMK9k83OzKtyRyshjA==}
+  mediaplex-linux-x64-musl@1.0.0:
+    resolution: {integrity: sha512-9hZvUDxPHIuFI+Y4bT3io/TnDK1fnXbfAMWhObWd5qx7YyZJcvgS2M4p0x9a57dZnLSPc7sbNov1tQTqMm03RQ==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [linux]
+    libc: [musl]
+
+  mediaplex-win32-arm64-msvc@1.0.0:
+    resolution: {integrity: sha512-R2cQlKR+AjbafdtVnyPftkALxeam4XPEanT5SBo/IO1WmglC5MzppqHm8Gto5NleE16AqXHRPanQoi53fK49xg==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [win32]
 
-  mediaplex-win32-ia32-msvc@0.0.8:
-    resolution: {integrity: sha512-DWNWOJ1fQib5UpE6Yj2Otg9kAR0W7xLnHN/937uHQMNciu3SEQO5GD9Dknp6iH/v4EEMOlVU6JNiihby45IODg==}
+  mediaplex-win32-ia32-msvc@1.0.0:
+    resolution: {integrity: sha512-CWvcvHw4x0moo2gJeDZEbar39TbCeZ0bV3Vu0n+DWzFEDxl5p3iIeZqlDsHbSvNQeU0iKVCQOgatxvUly3E/4g==}
     engines: {node: '>= 10'}
     cpu: [ia32]
     os: [win32]
 
-  mediaplex-win32-x64-msvc@0.0.8:
-    resolution: {integrity: sha512-3Tn3fx8/rAlP8ml1VcMs7oC9chYDtnG1o8bBQD1hipirjsNcCY5qQwCs989XrNirtlgiKg82CiA3OUakrtDuMw==}
+  mediaplex-win32-x64-msvc@1.0.0:
+    resolution: {integrity: sha512-yocvA647y6kAgBLpjllVjmp6ayvaBuqwrF+KhQnUnXbGH8celV0clJw9y7Ca8e38v89Yj4C73KpHxwGBk0sGqQ==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [win32]
 
-  mediaplex@0.0.8:
-    resolution: {integrity: sha512-d/V0HdrJWdtCr2btsh+yzDn+YJ5pioyfM9UKyLLwPVCnPb7/6rrihXWB/iiM+viOuwwh9nhK3fAydRxSoYgJxw==}
+  mediaplex@1.0.0:
+    resolution: {integrity: sha512-2vj7Px34rNUmHKilpAagU7jNhKIyoG8/wZ/cvJQzUdhvul8ef03NOK3No3LWVZEF1Pi27VSFOwBvawli/B86hA==}
     engines: {node: '>= 10'}
 
   memfs@4.68.1:
@@ -17136,48 +17176,72 @@ snapshots:
 
   media-typer@0.3.0: {}
 
-  mediaplex-android-arm64@0.0.8:
+  mediaplex-android-arm-eabi@1.0.0:
     optional: true
 
-  mediaplex-darwin-arm64@0.0.8:
+  mediaplex-android-arm64@1.0.0:
     optional: true
 
-  mediaplex-darwin-universal@0.0.8:
+  mediaplex-darwin-arm64@1.0.0:
     optional: true
 
-  mediaplex-darwin-x64@0.0.8:
+  mediaplex-darwin-universal@1.0.0:
     optional: true
 
-  mediaplex-freebsd-x64@0.0.8:
+  mediaplex-darwin-x64@1.0.0:
     optional: true
 
-  mediaplex-linux-arm-gnueabihf@0.0.8:
+  mediaplex-freebsd-x64@1.0.0:
     optional: true
 
-  mediaplex-linux-x64-gnu@0.0.8:
+  mediaplex-linux-arm-gnueabihf@1.0.0:
     optional: true
 
-  mediaplex-win32-arm64-msvc@0.0.8:
+  mediaplex-linux-arm-musleabihf@1.0.0:
     optional: true
 
-  mediaplex-win32-ia32-msvc@0.0.8:
+  mediaplex-linux-arm64-gnu@1.0.0:
     optional: true
 
-  mediaplex-win32-x64-msvc@0.0.8:
+  mediaplex-linux-arm64-musl@1.0.0:
     optional: true
 
-  mediaplex@0.0.8:
+  mediaplex-linux-riscv64-gnu@1.0.0:
+    optional: true
+
+  mediaplex-linux-x64-gnu@1.0.0:
+    optional: true
+
+  mediaplex-linux-x64-musl@1.0.0:
+    optional: true
+
+  mediaplex-win32-arm64-msvc@1.0.0:
+    optional: true
+
+  mediaplex-win32-ia32-msvc@1.0.0:
+    optional: true
+
+  mediaplex-win32-x64-msvc@1.0.0:
+    optional: true
+
+  mediaplex@1.0.0:
     optionalDependencies:
-      mediaplex-android-arm64: 0.0.8
-      mediaplex-darwin-arm64: 0.0.8
-      mediaplex-darwin-universal: 0.0.8
-      mediaplex-darwin-x64: 0.0.8
-      mediaplex-freebsd-x64: 0.0.8
-      mediaplex-linux-arm-gnueabihf: 0.0.8
-      mediaplex-linux-x64-gnu: 0.0.8
-      mediaplex-win32-arm64-msvc: 0.0.8
-      mediaplex-win32-ia32-msvc: 0.0.8
-      mediaplex-win32-x64-msvc: 0.0.8
+      mediaplex-android-arm-eabi: 1.0.0
+      mediaplex-android-arm64: 1.0.0
+      mediaplex-darwin-arm64: 1.0.0
+      mediaplex-darwin-universal: 1.0.0
+      mediaplex-darwin-x64: 1.0.0
+      mediaplex-freebsd-x64: 1.0.0
+      mediaplex-linux-arm-gnueabihf: 1.0.0
+      mediaplex-linux-arm-musleabihf: 1.0.0
+      mediaplex-linux-arm64-gnu: 1.0.0
+      mediaplex-linux-arm64-musl: 1.0.0
+      mediaplex-linux-riscv64-gnu: 1.0.0
+      mediaplex-linux-x64-gnu: 1.0.0
+      mediaplex-linux-x64-musl: 1.0.0
+      mediaplex-win32-arm64-msvc: 1.0.0
+      mediaplex-win32-ia32-msvc: 1.0.0
+      mediaplex-win32-x64-msvc: 1.0.0
 
   memfs@4.68.1:
     dependencies:
