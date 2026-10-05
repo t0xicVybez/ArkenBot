@@ -32,6 +32,11 @@ export const interactionHandler = {
 
     // ─── Modal: /apply submission ─────────────────────────────────────────────
     if (interaction.isModalSubmit() && interaction.customId.startsWith('app:submit:')) {
+      // Defer first: posting the submission involves DB writes and a Discord
+      // channel.send() to the review channel, which can exceed the 3s interaction
+      // window and otherwise throws 10062 (Unknown interaction) on the final reply.
+      await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+
       const applicantLoc = await ctx.resolveLocale(interaction);
       const guildLoc = await ctx.resolveLocale({ user: { id: '' }, guildId, guildLocale: interaction.guild?.preferredLocale });
       const at = (k: string, v?: Record<string, string | number>) => ctx.t(k, applicantLoc, v);
@@ -40,7 +45,7 @@ export const interactionHandler = {
       const forms = await getForms(ctx.storage, guildId);
       const form = forms.find((f) => f.id === formId);
       if (!form) {
-        await interaction.reply({ content: at('formNotFound'), flags: MessageFlags.Ephemeral });
+        await interaction.editReply({ content: at('formNotFound') });
         return;
       }
 
@@ -75,7 +80,7 @@ export const interactionHandler = {
         }
       }
 
-      await interaction.reply({
+      await interaction.editReply({
         embeds: [
           new EmbedBuilder()
             .setColor(0x57f287)
@@ -83,7 +88,6 @@ export const interactionHandler = {
             .setDescription(at('submittedDesc', { name: form.name }))
             .setFooter({ text: at('appId', { id: submission.id }) }),
         ],
-        flags: MessageFlags.Ephemeral,
       });
       return;
     }
