@@ -5,7 +5,7 @@
  */
 import { EmbedBuilder, type Guild, type GuildMember, type TextChannel, type Presence } from 'discord.js';
 import { prisma } from '../../database.js';
-import { logger, swallow } from '../../logger.js';
+import { swallow } from '../../logger.js';
 import { notifyActionFailure } from '../../utils/permissionAlert.js';
 import { ValorantService } from './ValorantService.js';
 import { TIER_NAMES, tierBase, tierName, tierColor } from './constants.js';
