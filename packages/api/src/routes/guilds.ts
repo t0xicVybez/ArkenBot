@@ -122,7 +122,17 @@ export async function guildRoutes(server: FastifyInstance): Promise<void> {
     if (!isSnowflake(guildId)) return reply.code(400).send({ success: false, error: 'Invalid guild ID' });
     const body = (request.body ?? {}) as { name?: string };
     // Normalise to Discord's text-channel naming rules (lowercase, dashes).
-    const name = (body.name ?? '').trim().toLowerCase().replace(/[^a-z0-9_-]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 90);
+    // Bound the length up front so the regexes only ever see short input — a
+    // channel name is max 100 chars anyway, and this avoids super-linear
+    // backtracking (ReDoS) on a hostile, very long `name`.
+    const name = (body.name ?? '')
+      .slice(0, 200)
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9_-]+/g, '-')
+      .replace(/^-+/, '')
+      .replace(/-+$/, '')
+      .slice(0, 90);
     if (!name) return reply.code(400).send({ success: false, error: 'A valid channel name is required' });
     try {
       const { default: axiosInstance } = await import('axios');
