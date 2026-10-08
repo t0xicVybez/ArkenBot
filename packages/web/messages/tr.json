@@ -940,7 +940,11 @@
     "chipMaxUser": "Maks/kullanıcı",
     "hidePreview": "Önizlemeyi gizle",
     "showPreview": "Gömme önizlemesini göster",
-    "edit": "Düzenle"
+    "edit": "Düzenle",
+    "buttonCustomQuestions": "Özel sorular",
+    "buttonUsesPanelFields": "Varsayılan alanları kullanır",
+    "buttonCustomQuestionsDesc": "Bu düğmeye sadece farklı sorular sorun. Ne zaman ayarlandığında, bu panelin varsayılan alanları bu düğme ile açılan biletler için değiştirir. 5.",
+    "addButtonQuestion": "Soru ekle"
   },
   "giveawaysPage": {
     "giveawayCreated": "Çekiliş oluşturuldu!",

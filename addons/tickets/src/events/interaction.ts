@@ -16,7 +16,7 @@ import {
 import { randomUUID } from 'crypto';
 import type { AddonContext } from '@arkenbot/addon-sdk';
 import { jsonCompletion, isLLMAvailable, LLMUnavailableError } from '@arkenbot/shared';
-import type { Ticket, TicketPanel, TicketNote } from '../types.js';
+import type { Ticket, TicketPanel, TicketNote, PanelField } from '../types.js';
 import {
   getPanel,
   getConfig,
@@ -40,6 +40,17 @@ import { createTicketChannel, archiveTicketChannel, restoreTicketChannel, resolv
 import { generateTranscriptHtml } from '../utils/transcript.js';
 
 const CUSTOM_ID_PREFIX = 'ticket:';
+
+/**
+ * Returns the form questions to show for a ticket opened via `buttonId`.
+ * A button's own `fields` take precedence (letting each ticket type ask its own
+ * questions); otherwise the panel-level `fields` apply as the shared default.
+ */
+export function resolvePanelFields(panel: TicketPanel, buttonId?: string): PanelField[] {
+  const button = buttonId ? panel.buttons?.find((b) => b.id === buttonId) : undefined;
+  if (button?.fields && button.fields.length > 0) return button.fields;
+  return panel.fields ?? [];
+}
 
 /**
  * Pending close timers keyed by channelId.
@@ -142,16 +153,17 @@ async function handleOpenTicket(
     return;
   }
 
-  // Resolve category tag from the clicked button
-  const categoryTag = buttonId
-    ? panel.buttons?.find((b) => b.id === buttonId)?.categoryTag
-    : undefined;
+  // Resolve category tag + fields from the clicked button (per-button fields
+  // override the panel-level fields; see resolvePanelFields).
+  const clickedBtn = buttonId ? panel.buttons?.find((b) => b.id === buttonId) : undefined;
+  const categoryTag = clickedBtn?.categoryTag;
+  const formFields = resolvePanelFields(panel, buttonId);
 
-  if (panel.fields && panel.fields.length > 0) {
+  if (formFields.length > 0) {
     const modal = new ModalBuilder()
       .setCustomId(`ticket:reason:${panelId}${buttonId ? `:${buttonId}` : ''}`)
-      .setTitle(t('modalOpenTitle'));
-    const fieldRows = panel.fields.slice(0, 5).map((f) =>
+      .setTitle((clickedBtn?.label?.trim() || t('modalOpenTitle')).slice(0, 45));
+    const fieldRows = formFields.slice(0, 5).map((f) =>
       new ActionRowBuilder<TextInputBuilder>().addComponents(
         new TextInputBuilder()
           .setCustomId(f.id)
@@ -184,7 +196,7 @@ async function handleOpenTicket(
     await interaction.showModal(modal);
   } else {
     await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-    await createTicket(ctx, interaction.guild, interaction.user.id, interaction.user.tag, panel, undefined, interaction, categoryTag);
+    await createTicket(ctx, interaction.guild, interaction.user.id, interaction.user.tag, panel, undefined, interaction, categoryTag, undefined, buttonId);
   }
 }
 
@@ -200,6 +212,7 @@ export async function createTicket(
   interaction: ButtonInteraction | ModalSubmitInteraction,
   categoryTag?: string,
   formResponses?: Record<string, string>,
+  buttonId?: string,
 ): Promise<void> {
   const guildId = guild.id;
   const loc = await ctx.resolveLocale(interaction);
@@ -233,6 +246,7 @@ export async function createTicket(
     status: 'open',
     priority: 'medium',
     categoryTag,
+    buttonId,
     tags: categoryTag ? [categoryTag] : [],
     notes: [],
     reason,
@@ -281,8 +295,9 @@ export async function createTicket(
     if (notifyChannel?.isTextBased() && 'send' in notifyChannel) {
       const rolePing = config.staffNotifyRoleId ? `<@&${config.staffNotifyRoleId}> ` : '';
       let formSummary = '';
-      if (formResponses && panel.fields && panel.fields.length > 0) {
-        formSummary = panel.fields
+      const notifyFields = resolvePanelFields(panel, buttonId);
+      if (formResponses && notifyFields.length > 0) {
+        formSummary = notifyFields
           .filter((f) => formResponses![f.id])
           .map((f) => `> **${f.label}:** ${formResponses![f.id]}`)
           .join('\n');
@@ -963,13 +978,14 @@ async function handleReasonModal(
   }
 
   const categoryTag = buttonId ? panel.buttons?.find((b) => b.id === buttonId)?.categoryTag : undefined;
+  const submitFields = resolvePanelFields(panel, buttonId);
 
   let reason: string | undefined;
   let formResponses: Record<string, string> | undefined;
 
-  if (panel.fields && panel.fields.length > 0) {
+  if (submitFields.length > 0) {
     formResponses = {};
-    for (const field of panel.fields) {
+    for (const field of submitFields) {
       try {
         const val = interaction.fields.getTextInputValue(field.id).trim();
         if (val) formResponses[field.id] = val;
@@ -977,7 +993,7 @@ async function handleReasonModal(
         // field not present
       }
     }
-    const firstTextField = panel.fields[0];
+    const firstTextField = submitFields[0];
     if (firstTextField && formResponses[firstTextField.id]) {
       reason = formResponses[firstTextField.id];
     }
@@ -986,7 +1002,7 @@ async function handleReasonModal(
   }
 
   await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-  await createTicket(ctx, interaction.guild, interaction.user.id, interaction.user.tag, panel, reason, interaction, categoryTag, formResponses);
+  await createTicket(ctx, interaction.guild, interaction.user.id, interaction.user.tag, panel, reason, interaction, categoryTag, formResponses, buttonId);
 }
 
 // ─── Waiting Button ───────────────────────────────────────────────────────────

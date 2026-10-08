@@ -940,7 +940,11 @@
     "chipMaxUser": "Макс./польз.",
     "hidePreview": "Скрыть предпросмотр",
     "showPreview": "Показать предпросмотр эмбеда",
-    "edit": "Изменить"
+    "edit": "Изменить",
+    "buttonCustomQuestions": "Пользовательские вопросы",
+    "buttonUsesPanelFields": "Использует поля по умолчанию",
+    "buttonCustomQuestionsDesc": "Задавайте разные вопросы только для этой кнопки. При установке они заменяют поля по умолчанию для билетов, открытые этой кнопкой. До 5.",
+    "addButtonQuestion": "Добавить вопрос"
   },
   "giveawaysPage": {
     "giveawayCreated": "Розыгрыш создан!",

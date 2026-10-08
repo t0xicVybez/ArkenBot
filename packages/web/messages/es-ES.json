@@ -940,7 +940,11 @@
     "chipMaxUser": "Máx./usuario",
     "hidePreview": "Ocultar vista previa",
     "showPreview": "Ver vista previa del embed",
-    "edit": "Editar"
+    "edit": "Editar",
+    "buttonCustomQuestions": "Cuestiones de aduana",
+    "buttonUsesPanelFields": "utiliza los campos predeterminados",
+    "buttonCustomQuestionsDesc": "Haga preguntas diferentes para este botón solamente. Cuando se establece, estos reemplazan los campos predeterminados del panel para las entradas abiertas con este botón. Hasta 5.",
+    "addButtonQuestion": "Add question"
   },
   "giveawaysPage": {
     "giveawayCreated": "¡Sorteo creado!",

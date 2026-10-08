@@ -940,7 +940,11 @@
     "chipMaxUser": "Max/utente",
     "hidePreview": "Nascondi anteprima",
     "showPreview": "Mostra anteprima embed",
-    "edit": "Modifica"
+    "edit": "Modifica",
+    "buttonCustomQuestions": "Questioni generali",
+    "buttonUsesPanelFields": "utilizza i campi di default",
+    "buttonCustomQuestionsDesc": "Fai diverse domande solo per questo pulsante. Quando impostato, questi sostituire i campi predefiniti del pannello per i biglietti aperti con questo pulsante. Fino a 5.",
+    "addButtonQuestion": "Aggiungi domanda"
   },
   "giveawaysPage": {
     "giveawayCreated": "Giveaway creato!",

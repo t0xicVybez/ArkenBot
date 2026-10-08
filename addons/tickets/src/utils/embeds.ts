@@ -112,8 +112,11 @@ export function buildTicketEmbed(ticket: Ticket, panel: TicketPanel, member: Gui
 
   if (ticket.categoryTag) fields.push({ name: t('fieldCategory'), value: ticket.categoryTag, inline: true });
 
-  if (ticket.formResponses && panel.fields && panel.fields.length > 0) {
-    for (const f of panel.fields) {
+  // Use the clicked button's own fields when it defines them, else the panel's.
+  const btn = ticket.buttonId ? panel.buttons?.find((b) => b.id === ticket.buttonId) : undefined;
+  const formFields = (btn?.fields && btn.fields.length > 0) ? btn.fields : (panel.fields ?? []);
+  if (ticket.formResponses && formFields.length > 0) {
+    for (const f of formFields) {
       const answer = ticket.formResponses[f.id];
       if (answer) fields.push({ name: f.label, value: answer, inline: false });
     }

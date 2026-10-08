@@ -940,7 +940,11 @@
     "chipMaxUser": "Maks./użytk.",
     "hidePreview": "Ukryj podgląd",
     "showPreview": "Pokaż podgląd embeda",
-    "edit": "Edytuj"
+    "edit": "Edytuj",
+    "buttonCustomQuestions": "Pytania własne",
+    "buttonUsesPanelFields": "używa domyślnych pól",
+    "buttonCustomQuestionsDesc": "Zadaj różne pytania tylko dla tego przycisku. Kiedy ustawione, zastępują one domyślne pola panelu dla otwartych biletów tym przyciskiem. Do 5.",
+    "addButtonQuestion": "Dodaj pytanie"
   },
   "giveawaysPage": {
     "giveawayCreated": "Utworzono giveaway!",

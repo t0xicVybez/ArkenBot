@@ -13,7 +13,7 @@ import { pub } from '../redis.js';
 // These mirror the types in addons/tickets/src/types.ts. Keep them in sync when
 // the addon's data schema changes.
 
-interface PanelButton { id: string; label: string; emoji: string; color: string; categoryTag?: string; staffRoles?: string[]; }
+interface PanelButton { id: string; label: string; emoji: string; color: string; categoryTag?: string; staffRoles?: string[]; fields?: PanelField[]; }
 interface PanelField { id: string; label: string; placeholder?: string; required: boolean; style: 'short' | 'paragraph'; maxLength?: number; }
 interface TicketPanel { id: string; name: string; description: string; emoji: string; channelId?: string; messageId?: string; categoryId?: string; logChannelId?: string; staffRoles: string[]; maxTicketsPerUser: number; namingPattern: string; closeAction: string; autoCloseHours: number; requireReason: boolean; welcomeMessage: string; buttonLabel: string; buttonColor: string; buttons?: PanelButton[]; fields?: PanelField[]; ticketMode?: 'channel' | 'thread'; embedColor?: string; embedAuthorName?: string; embedAuthorIconUrl?: string; embedThumbnailUrl?: string; embedImageUrl?: string; embedFooterText?: string; embedFooterIconUrl?: string; enabled: boolean; createdAt: string; }
 interface TicketNote { id: string; authorId: string; authorTag: string; content: string; createdAt: string; }

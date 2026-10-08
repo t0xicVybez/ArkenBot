@@ -940,7 +940,11 @@
     "chipMaxUser": "Max/gebruiker",
     "hidePreview": "Voorbeeld verbergen",
     "showPreview": "Embed-voorbeeld tonen",
-    "edit": "Bewerken"
+    "edit": "Bewerken",
+    "buttonCustomQuestions": "Aangepaste vragen",
+    "buttonUsesPanelFields": "gebruikt de standaard velden",
+    "addButtonQuestion": "Vraag toevoegen",
+    "buttonCustomQuestionsDesc": "Stel andere vragen voor deze knop alleen. Als deze ingesteld zijn, vervangen deze de standaard Fields voor tickets geopend met deze knop. Tot 5."
   },
   "giveawaysPage": {
     "giveawayCreated": "Giveaway aangemaakt!",

@@ -940,7 +940,11 @@
     "chipMaxUser": "Max/utilisateur",
     "hidePreview": "Masquer l’aperçu",
     "showPreview": "Afficher l’aperçu de l’embed",
-    "edit": "Modifier"
+    "edit": "Modifier",
+    "buttonCustomQuestions": "Questions personnalisées",
+    "buttonUsesPanelFields": "utilise les champs par défaut",
+    "buttonCustomQuestionsDesc": "Posez différentes questions pour ce bouton seulement. Lorsque défini, ceux-ci remplacent les champs par défaut du panneau pour les tickets ouverts par ce bouton. Jusqu’à 5.",
+    "addButtonQuestion": "Ajouter une question"
   },
   "giveawaysPage": {
     "giveawayCreated": "Giveaway créé !",

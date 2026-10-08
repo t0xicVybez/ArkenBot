@@ -940,7 +940,11 @@
     "chipMaxUser": "Max/Nutzer",
     "hidePreview": "Vorschau ausblenden",
     "showPreview": "Embed-Vorschau anzeigen",
-    "edit": "Bearbeiten"
+    "edit": "Bearbeiten",
+    "buttonCustomQuestions": "Zollfragen",
+    "buttonUsesPanelFields": "verwendet die Standardfelder",
+    "buttonCustomQuestionsDesc": "Stellen Sie nur für diesen Button verschiedene Fragen. Beim Setzen ersetzen diese die Standardfelder des Panels für Tickets, die mit dieser Schaltfläche geöffnet werden. Bis zu 5.",
+    "addButtonQuestion": "Frage hinzufügen"
   },
   "giveawaysPage": {
     "giveawayCreated": "Giveaway erstellt!",

@@ -11,8 +11,6 @@ import { useTranslations } from 'next-intl';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-interface PanelButton { id: string; label: string; emoji: string; color: string; categoryTag?: string; staffRoles?: string[]; }
-
 interface PanelField {
   id: string;
   label: string;
@@ -21,6 +19,8 @@ interface PanelField {
   style: 'short' | 'paragraph';
   maxLength?: number;
 }
+
+interface PanelButton { id: string; label: string; emoji: string; color: string; categoryTag?: string; staffRoles?: string[]; fields?: PanelField[]; }
 
 interface TicketPanel {
   id: string; name: string; description: string; emoji: string;
@@ -195,6 +195,8 @@ function ButtonRow({
   btn, onChange, onDelete,
 }: { btn: PanelButton; onChange: (b: PanelButton) => void; onDelete: () => void }) {
   const t = useTranslations('ticketPanelsPage');
+  const [showFields, setShowFields] = useState(false);
+  const btnFields = btn.fields ?? [];
   return (
     <div className="bg-gray-700/30 rounded-lg p-2 space-y-2">
       <div className="flex items-center gap-2">
@@ -236,6 +238,50 @@ function ButtonRow({
           roles={btn.staffRoles ?? []}
           onChange={(r) => onChange({ ...btn, staffRoles: r.length > 0 ? r : undefined })}
         />
+      </div>
+      {/* Per-button custom questions — override the panel's Fields tab */}
+      <div className="pl-1 pt-1.5 border-t border-gray-700/40">
+        <button
+          type="button"
+          onClick={() => setShowFields((s) => !s)}
+          className="text-xs text-gray-300 hover:text-white flex items-center gap-1.5 font-medium"
+        >
+          {showFields ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+          {t('buttonCustomQuestions')}
+          <span className="text-gray-500 font-normal">
+            {btnFields.length > 0 ? `(${btnFields.length})` : `— ${t('buttonUsesPanelFields')}`}
+          </span>
+        </button>
+        {showFields && (
+          <div className="mt-2 space-y-2">
+            <p className="text-gray-500 text-[11px] leading-snug">{t('buttonCustomQuestionsDesc')}</p>
+            {btnFields.map((f) => (
+              <FieldRow
+                key={f.id}
+                field={f}
+                onChange={(updated) => onChange({ ...btn, fields: btnFields.map((x) => (x.id === f.id ? updated : x)) })}
+                onDelete={() => {
+                  const next = btnFields.filter((x) => x.id !== f.id);
+                  onChange({ ...btn, fields: next.length > 0 ? next : undefined });
+                }}
+              />
+            ))}
+            {btnFields.length < 5 && (
+              <button
+                type="button"
+                onClick={() =>
+                  onChange({
+                    ...btn,
+                    fields: [...btnFields, { id: crypto.randomUUID(), label: '', required: false, style: 'short' as const }],
+                  })
+                }
+                className="btn-secondary text-xs flex items-center gap-1.5 w-full justify-center py-1.5"
+              >
+                <Plus className="w-3 h-3" /> {t('addButtonQuestion')}
+              </button>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

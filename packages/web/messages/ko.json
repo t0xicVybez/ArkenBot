@@ -940,7 +940,11 @@
     "chipMaxUser": "최대/사용자",
     "hidePreview": "미리보기 숨기기",
     "showPreview": "임베드 미리보기 표시",
-    "edit": "편집"
+    "edit": "편집",
+    "buttonCustomQuestions": "주문 질문",
+    "buttonUsesPanelFields": "기본 필드를 사용합니다.",
+    "buttonCustomQuestionsDesc": "이 버튼을 위한 다른 질문만 물어보세요. 설정할 때, 이 버튼이 열린 티켓의 기본 필드를 대체합니다. 최대 5.",
+    "addButtonQuestion": "자주 묻는 질문"
   },
   "giveawaysPage": {
     "giveawayCreated": "이벤트를 만들었습니다!",

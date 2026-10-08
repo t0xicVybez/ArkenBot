@@ -940,7 +940,11 @@
     "chipMaxUser": "Maks/pengguna",
     "hidePreview": "Sembunyikan pratinjau",
     "showPreview": "Tampilkan pratinjau embed",
-    "edit": "Edit"
+    "edit": "Edit",
+    "buttonCustomQuestions": "Pertanyaan gubahan",
+    "buttonUsesPanelFields": "memakai ruas bawaan",
+    "buttonCustomQuestionsDesc": "Ajukan pertanyaan yang berbeda untuk tombol ini saja. Ketika diisi, ini menggantikan kolom standar panel untuk tiket yang dibuka dengan tombol ini. Sampai 5.",
+    "addButtonQuestion": "Tambah pertanyaan"
   },
   "giveawaysPage": {
     "giveawayCreated": "Giveaway dibuat!",

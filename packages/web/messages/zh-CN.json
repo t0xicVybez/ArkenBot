@@ -940,7 +940,11 @@
     "chipMaxUser": "每用户上限",
     "hidePreview": "隐藏预览",
     "showPreview": "显示嵌入预览",
-    "edit": "编辑"
+    "edit": "编辑",
+    "buttonCustomQuestions": "自定义问题",
+    "buttonUsesPanelFields": "使用默认字段",
+    "buttonCustomQuestionsDesc": "只为此按钮提出不同问题 。 设定时, 这些会取代面板打开的门票默认字段 。 至五时.",
+    "addButtonQuestion": "添加问题"
   },
   "giveawaysPage": {
     "giveawayCreated": "抽奖已创建！",

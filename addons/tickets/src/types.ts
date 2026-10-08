@@ -11,6 +11,12 @@ export interface PanelButton {
   /** Optional tag applied to tickets opened via this button */
   categoryTag?: string;
   staffRoles?: string[];
+  /**
+   * Custom form questions for THIS button. When present and non-empty they
+   * override the panel-level `fields`, so each ticket type can ask its own
+   * questions from a single panel. When absent/empty, the panel `fields` apply.
+   */
+  fields?: PanelField[];
 }
 
 export interface PanelField {
@@ -101,6 +107,8 @@ export interface Ticket {
   reason?: string;
   /** Category tag from the panel button that was clicked */
   categoryTag?: string;
+  /** ID of the panel button used to open this ticket (for per-button fields) */
+  buttonId?: string;
   tags: string[];
   rating?: number;
   ratingFeedback?: string;

@@ -885,7 +885,7 @@
     "buttonLabelLabel": "Button Label",
     "buttonColor": "Button Color",
     "addButton": "Add Button",
-    "fieldsDesc": "When a user opens a ticket via this panel, they’ll be shown a modal with these fields to fill in. Up to 5 fields. Responses are saved to the ticket and shown in the transcript.",
+    "fieldsDesc": "Default questions shown when a user opens a ticket. They apply to every button that doesn’t define its own. Up to 5 fields. Responses are saved to the ticket and shown in the transcript. To ask different questions per button, set custom questions on each button in the Buttons tab.",
     "noFields": "No fields yet — users just click the button and the ticket opens.",
     "addField": "Add Field",
     "staffRoles": "Staff Roles",
@@ -940,7 +940,11 @@
     "chipMaxUser": "Max/user",
     "hidePreview": "Hide preview",
     "showPreview": "Show embed preview",
-    "edit": "Edit"
+    "edit": "Edit",
+    "buttonCustomQuestions": "Custom questions",
+    "buttonUsesPanelFields": "uses the default Fields",
+    "buttonCustomQuestionsDesc": "Ask different questions for this button only. When set, these replace the panel’s default Fields for tickets opened with this button. Up to 5.",
+    "addButtonQuestion": "Add question"
   },
   "giveawaysPage": {
     "giveawayCreated": "Giveaway created!",

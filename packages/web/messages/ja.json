@@ -940,7 +940,11 @@
     "chipMaxUser": "最大/ユーザー",
     "hidePreview": "プレビューを隠す",
     "showPreview": "埋め込みプレビューを表示",
-    "edit": "編集"
+    "edit": "編集",
+    "buttonCustomQuestions": "カスタム質問",
+    "buttonUsesPanelFields": "デフォルトフィールドを使用する",
+    "buttonCustomQuestionsDesc": "このボタンの質問は、このボタンだけ。 設定すると、パネルのデフォルトフィールドをこのボタンで開いているチケットに置き換えます。 5. まで",
+    "addButtonQuestion": "質問を追加"
   },
   "giveawaysPage": {
     "giveawayCreated": "ギブアウェイを作成しました！",
