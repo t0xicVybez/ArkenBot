@@ -33,10 +33,10 @@
     "eslint": "^10.10.0",
     "eslint-plugin-unused-imports": "^4.4.1",
     "prisma": "7.10.0",
-    "tsx": "^4.23.13",
+    "tsx": "^4.23.15",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.70.0",
-    "vitest": "^5.0.1"
+    "typescript-eslint": "^8.71.1",
+    "vitest": "^5.0.3"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
@@ -55,7 +55,7 @@
       "brace-expansion@<1.1.21": "1.1.21",
       "brace-expansion@>=3.0.0 <5.0.12": "5.0.12",
       "http-cache-semantics": "^4.3.0",
-      "ws": "8.21.3",
+      "ws": "^8.22.0",
       "undici": "^6.28.1",
       "joi": "^17.13.7",
       "fast-uri": "^3.1.6",
@@ -67,7 +67,6 @@
       "shell-quote": "1.9.0",
       "esbuild": "0.28.1",
       "fast-jwt": ">=6.2.4",
-      "bullmq>uuid": "^11.1.1",
       "sockjs>uuid": "^11.1.1",
       "next-auth>uuid": "^11.1.1",
       "next>postcss": "^8.5.17",

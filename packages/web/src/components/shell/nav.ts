@@ -3,7 +3,7 @@ import {
   LayoutGrid, BarChart3, Wand2, Shield, Bot, ShieldAlert, ShieldCheck, Flag, Gavel, ScrollText,
   TrendingUp, Trophy, Hand, SmilePlus, Tags, Cake, Vote, Lightbulb, Gift, Coins, Star, Link2,
   ThumbsUp, Hash, Music, Activity, Code2, CalendarClock, Mic, Terminal, MessageSquare, Users,
-  Rss, Radio, Megaphone, Puzzle, Ticket, ClipboardList, SquareKanban, Trello,
+  Rss, Radio, Megaphone, Puzzle, Ticket, ClipboardList, SquareKanban,
   Timer, History, Settings, KeyRound, Gamepad2, ServerCog, Crosshair,
 } from 'lucide-react';
 
@@ -112,7 +112,7 @@ export const NAV: NavGroup[] = [
       it('tickets', 'Tickets', Ticket, 'tickets'),
       it('applications', 'Applications', ClipboardList, 'applications'),
       it('monday', 'Monday.com', SquareKanban, 'monday'),
-      it('trello', 'Trello', Trello, 'trello'),
+      it('trello', 'Trello', SquareKanban, 'trello'),
     ],
   },
   {

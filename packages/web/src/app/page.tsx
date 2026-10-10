@@ -6,7 +6,7 @@ import {
   Gift, Radio, Lightbulb, Calendar,
   BarChart2, Clock, Settings, Command, Globe, X,
   Mic, ShieldAlert, ShieldCheck, MessagesSquare, Flag, BarChart,
-  Trello, Code2, Server } from 'lucide-react';
+  SquareKanban, Code2, Server } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import { LandingNav } from '@/components/LandingNav';
 import { Footer } from '@/components/Footer';
@@ -60,7 +60,7 @@ const FEATURES = [
   { icon: Megaphone,      color: 'text-pink-400',    bg: 'bg-pink-500/10',    border: 'border-pink-500/20' },
   { icon: Gift,           color: 'text-emerald-400', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20' },
   { icon: Radio,          color: 'text-rose-400',    bg: 'bg-rose-500/10',    border: 'border-rose-500/20' },
-  { icon: Trello,         color: 'text-sky-400',     bg: 'bg-sky-500/10',     border: 'border-sky-500/20' },
+  { icon: SquareKanban,         color: 'text-sky-400',     bg: 'bg-sky-500/10',     border: 'border-sky-500/20' },
   { icon: Star,           color: 'text-amber-400',   bg: 'bg-amber-500/10',   border: 'border-amber-500/20' },
   { icon: Lightbulb,      color: 'text-violet-400',  bg: 'bg-violet-500/10',  border: 'border-violet-500/20' },
   { icon: Calendar,       color: 'text-sky-400',     bg: 'bg-sky-500/10',     border: 'border-sky-500/20' },

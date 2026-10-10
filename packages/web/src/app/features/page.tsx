@@ -4,7 +4,7 @@ import {
   Megaphone, ArrowRight, Check, ExternalLink,
   Star, Gift, Radio, Lightbulb, Calendar,
   BarChart2, Clock, Command, Zap, ChevronRight, Trophy, ThumbsUp, LineChart, Palette, Hash, UserPlus, MessageSquare, UserCheck,
-  Mic, ShieldAlert, ShieldCheck, MessagesSquare, Flag, BarChart, Trello,
+  Mic, ShieldAlert, ShieldCheck, MessagesSquare, Flag, BarChart, SquareKanban,
 } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import { LandingNav } from '@/components/LandingNav';
@@ -44,7 +44,7 @@ const FEATURE_SECTIONS = [
   { id: 'welcome', icon: Megaphone, color: 'text-pink-400', bg: 'bg-pink-500/10', border: 'border-pink-500/20', accentBorder: 'border-pink-500/40' },
   { id: 'giveaways', icon: Gift, color: 'text-emerald-400', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20', accentBorder: 'border-emerald-500/40' },
   { id: 'stream-alerts', icon: Radio, color: 'text-rose-400', bg: 'bg-rose-500/10', border: 'border-rose-500/20', accentBorder: 'border-rose-500/40' },
-  { id: 'board-alerts', icon: Trello, color: 'text-sky-400', bg: 'bg-sky-500/10', border: 'border-sky-500/20', accentBorder: 'border-sky-500/40' },
+  { id: 'board-alerts', icon: SquareKanban, color: 'text-sky-400', bg: 'bg-sky-500/10', border: 'border-sky-500/20', accentBorder: 'border-sky-500/40' },
   { id: 'starboard', icon: Star, color: 'text-amber-400', bg: 'bg-amber-500/10', border: 'border-amber-500/20', accentBorder: 'border-amber-500/40' },
   { id: 'suggestions', icon: Lightbulb, color: 'text-violet-400', bg: 'bg-violet-500/10', border: 'border-violet-500/20', accentBorder: 'border-violet-500/40' },
   { id: 'birthdays', icon: Calendar, color: 'text-sky-400', bg: 'bg-sky-500/10', border: 'border-sky-500/20', accentBorder: 'border-sky-500/40' },
