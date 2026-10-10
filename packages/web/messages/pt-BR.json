@@ -941,10 +941,11 @@
     "hidePreview": "Ocultar prévia",
     "showPreview": "Mostrar prévia do embed",
     "edit": "Editar",
-    "buttonCustomQuestions": "Perguntas personalizadas.",
-    "buttonUsesPanelFields": "usa os campos padrão",
-    "buttonCustomQuestionsDesc": "Faça perguntas diferentes só para este botão. Quando ajustados, eles substituem os campos padrão do painel para os tickets abertos com este botão. Até 5.",
-    "addButtonQuestion": "Coloque a pergunta."
+    "questionsFor": "Perguntas para",
+    "allButtonsDefault": "Todos os botões (padrão)",
+    "buttonN": "Botão {n}",
+    "thisButton": "Este botão.",
+    "fieldsButtonHint": "Mostrado apenas para o “{label}\"botão. Deixe vazio para usar as perguntas padrão."
   },
   "giveawaysPage": {
     "giveawayCreated": "Sorteio criado!",

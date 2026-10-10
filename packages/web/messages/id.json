@@ -941,10 +941,11 @@
     "hidePreview": "Sembunyikan pratinjau",
     "showPreview": "Tampilkan pratinjau embed",
     "edit": "Edit",
-    "buttonCustomQuestions": "Pertanyaan gubahan",
-    "buttonUsesPanelFields": "memakai ruas bawaan",
-    "buttonCustomQuestionsDesc": "Ajukan pertanyaan yang berbeda untuk tombol ini saja. Ketika diisi, ini menggantikan kolom standar panel untuk tiket yang dibuka dengan tombol ini. Sampai 5.",
-    "addButtonQuestion": "Tambah pertanyaan"
+    "questionsFor": "Pertanyaan untuk",
+    "allButtonsDefault": "Semua tombol (baku)",
+    "buttonN": "Tombol {n}",
+    "thisButton": "tombol ini",
+    "fieldsButtonHint": "Shown hanya untuk \"{label}\"Tombol. Tinggalkan kosong untuk menggunakan pertanyaan baku."
   },
   "giveawaysPage": {
     "giveawayCreated": "Giveaway dibuat!",

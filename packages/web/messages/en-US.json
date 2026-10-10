@@ -880,7 +880,7 @@
     "footerText": "Footer Text",
     "footerPlaceholder": "Optional footer text",
     "footerIconUrl": "Footer Icon URL",
-    "buttonsDesc": "Add multiple buttons to the panel. Each button can have a different category tag applied to tickets it opens. Leave empty to use a single default button.",
+    "buttonsDesc": "Add multiple buttons to the panel — one per ticket type. Each button can have its own category tag, staff roles, and (in the Fields tab) its own questions. Leave empty to use a single default button.",
     "defaultButton": "Default Button",
     "buttonLabelLabel": "Button Label",
     "buttonColor": "Button Color",
@@ -941,10 +941,11 @@
     "hidePreview": "Hide preview",
     "showPreview": "Show embed preview",
     "edit": "Edit",
-    "buttonCustomQuestions": "Custom questions",
-    "buttonUsesPanelFields": "uses the default Fields",
-    "buttonCustomQuestionsDesc": "Ask different questions for this button only. When set, these replace the panel’s default Fields for tickets opened with this button. Up to 5.",
-    "addButtonQuestion": "Add question"
+    "questionsFor": "Questions for",
+    "allButtonsDefault": "All buttons (default)",
+    "fieldsButtonHint": "Shown only for the “{label}” button. Leave empty to use the default questions.",
+    "buttonN": "Button {n}",
+    "thisButton": "this button"
   },
   "giveawaysPage": {
     "giveawayCreated": "Giveaway created!",

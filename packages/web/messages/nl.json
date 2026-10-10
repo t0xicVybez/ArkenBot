@@ -941,10 +941,11 @@
     "hidePreview": "Voorbeeld verbergen",
     "showPreview": "Embed-voorbeeld tonen",
     "edit": "Bewerken",
-    "buttonCustomQuestions": "Aangepaste vragen",
-    "buttonUsesPanelFields": "gebruikt de standaard velden",
-    "addButtonQuestion": "Vraag toevoegen",
-    "buttonCustomQuestionsDesc": "Stel andere vragen voor deze knop alleen. Als deze ingesteld zijn, vervangen deze de standaard Fields voor tickets geopend met deze knop. Tot 5."
+    "questionsFor": "Vragen voor",
+    "allButtonsDefault": "Alle knoppen (standaard)",
+    "buttonN": "Knop {n}",
+    "thisButton": "deze knop",
+    "fieldsButtonHint": "Alleen getoond voor de{label}Button. Laat leeg om de standaardvragen te gebruiken."
   },
   "giveawaysPage": {
     "giveawayCreated": "Giveaway aangemaakt!",

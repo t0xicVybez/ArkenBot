@@ -941,10 +941,11 @@
     "hidePreview": "プレビューを隠す",
     "showPreview": "埋め込みプレビューを表示",
     "edit": "編集",
-    "buttonCustomQuestions": "カスタム質問",
-    "buttonUsesPanelFields": "デフォルトフィールドを使用する",
-    "buttonCustomQuestionsDesc": "このボタンの質問は、このボタンだけ。 設定すると、パネルのデフォルトフィールドをこのボタンで開いているチケットに置き換えます。 5. まで",
-    "addButtonQuestion": "質問を追加"
+    "allButtonsDefault": "すべてのボタン(デフォルト)",
+    "questionsFor": "お問い合わせ",
+    "buttonN": "ボタン {n}",
+    "thisButton": "このボタン",
+    "fieldsButtonHint": "ショーは「{label}「」ボタン。 既定の質問を使用するために空にしておく。"
   },
   "giveawaysPage": {
     "giveawayCreated": "ギブアウェイを作成しました！",

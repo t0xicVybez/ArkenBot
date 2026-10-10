@@ -941,10 +941,11 @@
     "hidePreview": "隐藏预览",
     "showPreview": "显示嵌入预览",
     "edit": "编辑",
-    "buttonCustomQuestions": "自定义问题",
-    "buttonUsesPanelFields": "使用默认字段",
-    "buttonCustomQuestionsDesc": "只为此按钮提出不同问题 。 设定时, 这些会取代面板打开的门票默认字段 。 至五时.",
-    "addButtonQuestion": "添加问题"
+    "questionsFor": "问题",
+    "allButtonsDefault": "所有按钮( 默认)",
+    "buttonN": "按钮 {n}",
+    "thisButton": "此按钮",
+    "fieldsButtonHint": "仅显示“{label}“按钮。 留空以使用默认问题 。"
   },
   "giveawaysPage": {
     "giveawayCreated": "抽奖已创建！",

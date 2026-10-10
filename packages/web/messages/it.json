@@ -941,10 +941,11 @@
     "hidePreview": "Nascondi anteprima",
     "showPreview": "Mostra anteprima embed",
     "edit": "Modifica",
-    "buttonCustomQuestions": "Questioni generali",
-    "buttonUsesPanelFields": "utilizza i campi di default",
-    "buttonCustomQuestionsDesc": "Fai diverse domande solo per questo pulsante. Quando impostato, questi sostituire i campi predefiniti del pannello per i biglietti aperti con questo pulsante. Fino a 5.",
-    "addButtonQuestion": "Aggiungi domanda"
+    "questionsFor": "Domande per",
+    "allButtonsDefault": "Tutti i pulsanti (default)",
+    "buttonN": "Pulsante {n}",
+    "thisButton": "questo pulsante",
+    "fieldsButtonHint": "Mostrato solo per il “{label}” pulsante. Lasciare vuoto per usare le domande predefinite."
   },
   "giveawaysPage": {
     "giveawayCreated": "Giveaway creato!",

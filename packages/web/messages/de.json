@@ -941,10 +941,11 @@
     "hidePreview": "Vorschau ausblenden",
     "showPreview": "Embed-Vorschau anzeigen",
     "edit": "Bearbeiten",
-    "buttonCustomQuestions": "Zollfragen",
-    "buttonUsesPanelFields": "verwendet die Standardfelder",
-    "buttonCustomQuestionsDesc": "Stellen Sie nur für diesen Button verschiedene Fragen. Beim Setzen ersetzen diese die Standardfelder des Panels für Tickets, die mit dieser Schaltfläche geöffnet werden. Bis zu 5.",
-    "addButtonQuestion": "Frage hinzufügen"
+    "questionsFor": "Anfragen für",
+    "allButtonsDefault": "Alle Buttons (Standard)",
+    "buttonN": "Button {n}",
+    "thisButton": "Dieser Button",
+    "fieldsButtonHint": "Gezeigt nur für die „{label}„Button. Lassen Sie leer, um die Standardfragen zu verwenden."
   },
   "giveawaysPage": {
     "giveawayCreated": "Giveaway erstellt!",

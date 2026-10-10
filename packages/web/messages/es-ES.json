@@ -941,10 +941,11 @@
     "hidePreview": "Ocultar vista previa",
     "showPreview": "Ver vista previa del embed",
     "edit": "Editar",
-    "buttonCustomQuestions": "Cuestiones de aduana",
-    "buttonUsesPanelFields": "utiliza los campos predeterminados",
-    "buttonCustomQuestionsDesc": "Haga preguntas diferentes para este botón solamente. Cuando se establece, estos reemplazan los campos predeterminados del panel para las entradas abiertas con este botón. Hasta 5.",
-    "addButtonQuestion": "Add question"
+    "questionsFor": "Preguntas para",
+    "allButtonsDefault": "Todos los botones (por defecto)",
+    "buttonN": "Button {n}",
+    "thisButton": "este botón",
+    "fieldsButtonHint": "Mostrar sólo para el “{label}” botón. Deje vacío para usar las preguntas predeterminadas."
   },
   "giveawaysPage": {
     "giveawayCreated": "¡Sorteo creado!",

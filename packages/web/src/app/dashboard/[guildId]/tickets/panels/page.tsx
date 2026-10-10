@@ -195,8 +195,6 @@ function ButtonRow({
   btn, onChange, onDelete,
 }: { btn: PanelButton; onChange: (b: PanelButton) => void; onDelete: () => void }) {
   const t = useTranslations('ticketPanelsPage');
-  const [showFields, setShowFields] = useState(false);
-  const btnFields = btn.fields ?? [];
   return (
     <div className="bg-gray-700/30 rounded-lg p-2 space-y-2">
       <div className="flex items-center gap-2">
@@ -238,50 +236,6 @@ function ButtonRow({
           roles={btn.staffRoles ?? []}
           onChange={(r) => onChange({ ...btn, staffRoles: r.length > 0 ? r : undefined })}
         />
-      </div>
-      {/* Per-button custom questions — override the panel's Fields tab */}
-      <div className="pl-1 pt-1.5 border-t border-gray-700/40">
-        <button
-          type="button"
-          onClick={() => setShowFields((s) => !s)}
-          className="text-xs text-gray-300 hover:text-white flex items-center gap-1.5 font-medium"
-        >
-          {showFields ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-          {t('buttonCustomQuestions')}
-          <span className="text-gray-500 font-normal">
-            {btnFields.length > 0 ? `(${btnFields.length})` : `— ${t('buttonUsesPanelFields')}`}
-          </span>
-        </button>
-        {showFields && (
-          <div className="mt-2 space-y-2">
-            <p className="text-gray-500 text-[11px] leading-snug">{t('buttonCustomQuestionsDesc')}</p>
-            {btnFields.map((f) => (
-              <FieldRow
-                key={f.id}
-                field={f}
-                onChange={(updated) => onChange({ ...btn, fields: btnFields.map((x) => (x.id === f.id ? updated : x)) })}
-                onDelete={() => {
-                  const next = btnFields.filter((x) => x.id !== f.id);
-                  onChange({ ...btn, fields: next.length > 0 ? next : undefined });
-                }}
-              />
-            ))}
-            {btnFields.length < 5 && (
-              <button
-                type="button"
-                onClick={() =>
-                  onChange({
-                    ...btn,
-                    fields: [...btnFields, { id: crypto.randomUUID(), label: '', required: false, style: 'short' as const }],
-                  })
-                }
-                className="btn-secondary text-xs flex items-center gap-1.5 w-full justify-center py-1.5"
-              >
-                <Plus className="w-3 h-3" /> {t('addButtonQuestion')}
-              </button>
-            )}
-          </div>
-        )}
       </div>
     </div>
   );
@@ -387,17 +341,32 @@ function PanelForm({
   const removeButton = (id: string) =>
     set('buttons', (draft.buttons ?? []).filter((b) => b.id !== id));
 
+  // Which button's questions the Fields tab is editing: 'default' = the shared
+  // panel fields; otherwise a button id = that button's own questions.
+  const [fieldTarget, setFieldTarget] = useState<string>('default');
+  // Fall back to 'default' if the selected button was removed.
+  const effFieldTarget = () =>
+    fieldTarget !== 'default' && !(draft.buttons ?? []).some((b) => b.id === fieldTarget) ? 'default' : fieldTarget;
+  const targetFields = (): PanelField[] => {
+    const tgt = effFieldTarget();
+    return tgt === 'default'
+      ? (draft.fields ?? [])
+      : (draft.buttons ?? []).find((b) => b.id === tgt)?.fields ?? [];
+  };
+  const setTargetFields = (next: PanelField[]) => {
+    const tgt = effFieldTarget();
+    if (tgt === 'default') { set('fields', next); return; }
+    set('buttons', (draft.buttons ?? []).map((b) => (b.id === tgt ? { ...b, fields: next.length ? next : undefined } : b)));
+  };
   const addField = () => {
-    if ((draft.fields ?? []).length >= 5) { toast.error(t('max5Fields')); return; }
-    set('fields', [
-      ...(draft.fields ?? []),
-      { id: crypto.randomUUID(), label: '', placeholder: undefined, required: false, style: 'short' as const },
-    ]);
+    const cur = targetFields();
+    if (cur.length >= 5) { toast.error(t('max5Fields')); return; }
+    setTargetFields([...cur, { id: crypto.randomUUID(), label: '', placeholder: undefined, required: false, style: 'short' as const }]);
   };
   const updateField = (id: string, updated: PanelField) =>
-    set('fields', (draft.fields ?? []).map((f) => (f.id === id ? updated : f)));
+    setTargetFields(targetFields().map((f) => (f.id === id ? updated : f)));
   const removeField = (id: string) =>
-    set('fields', (draft.fields ?? []).filter((f) => f.id !== id));
+    setTargetFields(targetFields().filter((f) => f.id !== id));
 
   const tabs = ['embed', 'buttons', 'fields', 'settings'] as const;
 
@@ -523,33 +492,51 @@ function PanelForm({
         )}
 
         {/* ── Fields tab ── */}
-        {section === 'fields' && (
-          <div className="space-y-3">
-            <p className="text-gray-400 text-sm">
-              {t('fieldsDesc')}
-            </p>
-            {(draft.fields ?? []).length === 0 && (
-              <div className="text-center py-6 border border-dashed border-gray-700 rounded-lg text-gray-500 text-sm">
-                {t('noFields')}
+        {section === 'fields' && (() => {
+          const buttons = draft.buttons ?? [];
+          const tgt = effFieldTarget();
+          const fields = targetFields();
+          const selectedBtn = buttons.find((b) => b.id === tgt);
+          return (
+            <div className="space-y-3">
+              {buttons.length > 0 && (
+                <Row label={t('questionsFor')}>
+                  <select className="input" value={tgt} onChange={(e) => setFieldTarget(e.target.value)}>
+                    <option value="default">{t('allButtonsDefault')}</option>
+                    {buttons.map((b, i) => (
+                      <option key={b.id} value={b.id}>{b.label?.trim() || t('buttonN', { n: i + 1 })}</option>
+                    ))}
+                  </select>
+                </Row>
+              )}
+              <p className="text-gray-400 text-sm">
+                {tgt === 'default'
+                  ? t('fieldsDesc')
+                  : t('fieldsButtonHint', { label: selectedBtn?.label?.trim() || t('thisButton') })}
+              </p>
+              {fields.length === 0 && (
+                <div className="text-center py-6 border border-dashed border-gray-700 rounded-lg text-gray-500 text-sm">
+                  {t('noFields')}
+                </div>
+              )}
+              <div className="space-y-2">
+                {fields.map((field) => (
+                  <FieldRow
+                    key={field.id}
+                    field={field}
+                    onChange={(updated) => updateField(field.id, updated)}
+                    onDelete={() => removeField(field.id)}
+                  />
+                ))}
               </div>
-            )}
-            <div className="space-y-2">
-              {(draft.fields ?? []).map((field) => (
-                <FieldRow
-                  key={field.id}
-                  field={field}
-                  onChange={(updated) => updateField(field.id, updated)}
-                  onDelete={() => removeField(field.id)}
-                />
-              ))}
+              {fields.length < 5 && (
+                <button onClick={addField} className="btn-secondary text-sm flex items-center gap-2 w-full justify-center">
+                  <Plus className="w-3.5 h-3.5" /> {t('addField')}
+                </button>
+              )}
             </div>
-            {(draft.fields ?? []).length < 5 && (
-              <button onClick={addField} className="btn-secondary text-sm flex items-center gap-2 w-full justify-center">
-                <Plus className="w-3.5 h-3.5" /> {t('addField')}
-              </button>
-            )}
-          </div>
-        )}
+          );
+        })()}
 
         {/* ── Settings tab ── */}
         {section === 'settings' && (

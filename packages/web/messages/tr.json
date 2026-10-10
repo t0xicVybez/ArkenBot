@@ -941,10 +941,11 @@
     "hidePreview": "Önizlemeyi gizle",
     "showPreview": "Gömme önizlemesini göster",
     "edit": "Düzenle",
-    "buttonCustomQuestions": "Özel sorular",
-    "buttonUsesPanelFields": "Varsayılan alanları kullanır",
-    "buttonCustomQuestionsDesc": "Bu düğmeye sadece farklı sorular sorun. Ne zaman ayarlandığında, bu panelin varsayılan alanları bu düğme ile açılan biletler için değiştirir. 5.",
-    "addButtonQuestion": "Soru ekle"
+    "questionsFor": "Sorular için sorular",
+    "allButtonsDefault": "Tüm düğmeler (default)",
+    "buttonN": "Düğme {n}",
+    "thisButton": "Bu düğme",
+    "fieldsButtonHint": "Shown sadece \"{label}\" düğmesine. Varsayılan soruları kullanmak için boş bırakın."
   },
   "giveawaysPage": {
     "giveawayCreated": "Çekiliş oluşturuldu!",

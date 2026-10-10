@@ -941,10 +941,11 @@
     "hidePreview": "Ukryj podgląd",
     "showPreview": "Pokaż podgląd embeda",
     "edit": "Edytuj",
-    "buttonCustomQuestions": "Pytania własne",
-    "buttonUsesPanelFields": "używa domyślnych pól",
-    "buttonCustomQuestionsDesc": "Zadaj różne pytania tylko dla tego przycisku. Kiedy ustawione, zastępują one domyślne pola panelu dla otwartych biletów tym przyciskiem. Do 5.",
-    "addButtonQuestion": "Dodaj pytanie"
+    "questionsFor": "Pytania",
+    "allButtonsDefault": "Wszystkie przyciski (domyślnie)",
+    "buttonN": "Przycisk {n}",
+    "thisButton": "ten przycisk",
+    "fieldsButtonHint": "Pokazane tylko dla \"{label}\"guzik. Zostaw puste, aby użyć domyślnych pytań."
   },
   "giveawaysPage": {
     "giveawayCreated": "Utworzono giveaway!",
