@@ -886,6 +886,21 @@
       "currentRank": "Huidige rang",
       "peak": "Piek",
       "syncing": "Synchroniseren…"
+    },
+    "promotion": {
+      "notEnabled": "Server promotie tracking is niet ingeschakeld op deze server.",
+      "lbTitle": "Top Server Promoters",
+      "lbEmpty": "Niemand heeft de server gepromoveerd. Voeg de serverstatus of tag toe om op het bord te komen!",
+      "footer": "Server Promotie · ",
+      "checkTitle": "Promotietijd",
+      "checkNever": "{name} heeft de server nog niet gepromoveerd.",
+      "fieldTotal": "Totale tijd",
+      "fieldStatus": "Aangepaste status",
+      "fieldTag": "Server-tag",
+      "mOnly": "{m}m",
+      "lessMin": "minder dan een minuut",
+      "dh": "{d}d {h}h",
+      "hm": "{h}h {m}m"
     }
   },
   "achievements": {

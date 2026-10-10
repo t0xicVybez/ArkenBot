@@ -2132,7 +2132,8 @@
     "users": "Users",
     "metrics": "Metrics",
     "economy": "Economy",
-    "appeals": "Appeals"
+    "appeals": "Appeals",
+    "promotion": "Server Promotion"
   },
   "sections": {
     "general": "General",
@@ -3710,5 +3711,37 @@
     "saving": "Saving…",
     "saved": "Valorant settings saved!",
     "saveError": "Couldn’t save settings."
+  },
+  "promotionPage": {
+    "title": "Server Promotion",
+    "subtitle": "Track members who promote your server and reward your top supporters.",
+    "limitationNote": "Discord only lets the bot see a custom status while a member shows as online. If someone goes invisible, their status is hidden from everyone — including the bot — so their timer pauses until they are visible again. Server tags are not affected by this.",
+    "enableTitle": "Enable tracking",
+    "enableDesc": "Start recording who promotes your server. Off by default.",
+    "trackStatusTitle": "Track custom status",
+    "trackStatusDesc": "Detect members whose custom status contains one of your keywords.",
+    "trackTagTitle": "Track server tag",
+    "trackTagDesc": "Detect members who display your server tag on their profile.",
+    "keywordsTitle": "Status keywords",
+    "keywordsDesc": "A custom status counts as promoting if it contains any of these (your server name, invite, or a phrase). Case-insensitive.",
+    "noKeywords": "No keywords yet.",
+    "keywordsPlaceholder": "e.g. .gg/yourserver",
+    "add": "Add",
+    "maxKeywords": "You can add up to 25 keywords.",
+    "save": "Save changes",
+    "saving": "Saving…",
+    "saved": "Promotion settings saved.",
+    "saveError": "Could not save settings. Please try again.",
+    "leaderboardTitle": "Top promoters",
+    "loading": "Loading…",
+    "leaderboardEmpty": "No one has promoted the server yet. Once members add your status or tag, they will appear here.",
+    "statusActive": "Status active",
+    "tagActive": "Tag active",
+    "notPromoting": "Not currently promoting",
+    "sessionsCount": "{count} sessions",
+    "dh": "{d}d {h}h",
+    "hm": "{h}h {m}m",
+    "mOnly": "{m}m",
+    "lessMin": "under a minute"
   }
 }

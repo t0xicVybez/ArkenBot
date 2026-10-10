@@ -886,6 +886,21 @@
       "currentRank": "Current Rank",
       "peak": "Peak",
       "syncing": "Syncing…"
+    },
+    "promotion": {
+      "notEnabled": "📣 Server promotion tracking isn’t enabled on this server.",
+      "lbTitle": "🏆 Top Server Promoters",
+      "lbEmpty": "No one has promoted the server yet. Add the server status or tag to get on the board!",
+      "footer": "Server Promotion · 🟢 = promoting now",
+      "checkTitle": "📣 Promotion Time",
+      "checkNever": "{name} hasn’t promoted the server yet.",
+      "fieldTotal": "Total time",
+      "fieldStatus": "Custom status",
+      "fieldTag": "Server tag",
+      "dh": "{d}d {h}h",
+      "hm": "{h}h {m}m",
+      "mOnly": "{m}m",
+      "lessMin": "under a minute"
     }
   },
   "achievements": {

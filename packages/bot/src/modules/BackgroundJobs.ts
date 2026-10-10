@@ -30,6 +30,7 @@ import { AnalyticsModule } from './AnalyticsModule.js';
 import { pollUpcoming, pollFeeds } from './streamAlerts/YouTubeAlerts.js';
 import { runRedditAlerts } from './streamAlerts/RedditAlerts.js';
 import { ValorantModule } from './valorant/ValorantModule.js';
+import { PromotionModule } from './promotion/PromotionModule.js';
 import RSSParser from 'rss-parser';
 
 export class BackgroundJobs {
@@ -58,6 +59,11 @@ export class BackgroundJobs {
     // VALORANT rank sync + rank-roles + match alerts (batched to respect Riot
     // rate limits). No-ops entirely while the integration is unconfigured.
     setTimeout(() => this.timers.push(setInterval(() => void this.runValorantSync(), 10 * 60 * 1000)), jitter());
+
+    // Server promotion tracking: load enabled configs now (so the presence hot
+    // path works immediately), then reconcile every 5 min to catch missed events.
+    void PromotionModule.refresh();
+    setTimeout(() => this.timers.push(setInterval(() => void PromotionModule.reconcile(this.client), 5 * 60 * 1000)), jitter());
 
     void this.runScheduledMessages();
     setTimeout(() => this.timers.push(setInterval(() => void this.runScheduledMessages(), 60 * 1000)), jitter());

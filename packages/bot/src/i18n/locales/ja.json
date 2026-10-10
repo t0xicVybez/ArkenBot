@@ -886,6 +886,21 @@
       "currentRank": "現在のランク",
       "peak": "最高",
       "syncing": "同期中…"
+    },
+    "promotion": {
+      "notEnabled": "このサーバーではサーバーのプロモーショントラッキングが有効ではありません。",
+      "lbTitle": "トップサーバープロモーター",
+      "lbEmpty": "サーバをまだ推進していません。 サーバのステータスやタグを追加して、ボード上で取得!",
+      "footer": "サーバプロモーション・サーバプロモーション",
+      "checkTitle": "開催時間",
+      "checkNever": "{name} サーバをまだ推進していない。",
+      "fieldTotal": "合計時間",
+      "fieldStatus": "カスタムステータス",
+      "fieldTag": "サーバータグ",
+      "mOnly": "{m}m 点",
+      "lessMin": "1分以内",
+      "dh": "{d}ログイン {h}ログイン",
+      "hm": "{h}ログイン {m}m 点"
     }
   },
   "achievements": {

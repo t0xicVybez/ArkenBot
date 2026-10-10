@@ -886,6 +886,21 @@
       "currentRank": "현재 랭크",
       "peak": "최고",
       "syncing": "동기화 중…"
+    },
+    "promotion": {
+      "notEnabled": "☸ 서버 프로모션 추적은 이 서버에 사용할 수 없습니다.",
+      "lbTitle": "Ö 상위 서버 홍보관",
+      "lbEmpty": "아무도 아직 서버를 홍보했다. 서버 상태 또는 태그를 추가하여 보드에 얻을!",
+      "footer": "Server Promotion ·   = 지금 홍보",
+      "checkTitle": "☸ 프로모션 시간",
+      "checkNever": "{name} 아직 서버를 홍보하지 않았습니다.",
+      "fieldTotal": "총 시간",
+      "fieldStatus": "주문 상태",
+      "fieldTag": "서버 태그",
+      "mOnly": "{m}m/분",
+      "lessMin": "1분 미만",
+      "dh": "{d}₢ 킹 {h}₢ 킹",
+      "hm": "{h}₢ 킹 {m}m/분"
     }
   },
   "achievements": {

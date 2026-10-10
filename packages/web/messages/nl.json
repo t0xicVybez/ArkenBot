@@ -2132,7 +2132,8 @@
     "users": "Gebruikers",
     "metrics": "Metrieken",
     "economy": "Economie",
-    "appeals": "Beroepen"
+    "appeals": "Beroepen",
+    "promotion": "Serverpromotie"
   },
   "sections": {
     "general": "Algemeen",
@@ -3710,5 +3711,37 @@
     "saving": "Opslaan…",
     "saved": "Valorant-instellingen opgeslagen!",
     "saveError": "Kan instellingen niet opslaan."
+  },
+  "promotionPage": {
+    "title": "Serverpromotie",
+    "subtitle": "Volg leden die uw server promoten en uw top supporters belonen.",
+    "limitationNote": "Discord laat alleen de bot zien een aangepaste status, terwijl een lid toont als online. Als iemand onzichtbaar wordt, wordt hun status voor iedereen verborgen  Server-tags worden hierdoor niet beïnvloed.",
+    "enableTitle": "Tracking inschakelen",
+    "enableDesc": "Begin met opnemen wie uw server promoot. Standaard uit.",
+    "trackStatusTitle": "Aangepaste status volgen",
+    "trackStatusDesc": "Detecteer leden waarvan de aangepaste status een van uw zoekwoorden bevat.",
+    "trackTagTitle": "Track-servertag",
+    "trackTagDesc": "Detecteer leden die uw servertag op hun profiel weergeven.",
+    "keywordsTitle": "Status trefwoorden",
+    "keywordsDesc": "Een aangepaste status telt als promotie als het een van deze bevat (uw servernaam, uitnodiging, of een zin). Hoofdletterongevoelig.",
+    "noKeywords": "Nog geen sleutelwoorden.",
+    "keywordsPlaceholder": "b.v. .gg/uw server",
+    "add": "Voeg toe",
+    "maxKeywords": "U kunt tot 25 trefwoorden toevoegen.",
+    "save": "Wijzigingen opslaan",
+    "saving": "Opslaan...",
+    "saved": "Promotie instellingen opgeslagen.",
+    "saveError": "Kon instellingen niet opslaan. Probeer het nog eens.",
+    "leaderboardTitle": "Toppromotors",
+    "loading": "Laden...",
+    "leaderboardEmpty": "Niemand heeft de server gepromoveerd. Zodra leden uw status of tag toevoegen, zullen ze hier verschijnen.",
+    "statusActive": "Status actief",
+    "tagActive": "Label actief",
+    "notPromoting": "Momenteel niet bevorderen",
+    "sessionsCount": "{count} zittingen",
+    "mOnly": "{m}m",
+    "lessMin": "minder dan een minuut",
+    "dh": "{d}d {h}h",
+    "hm": "{h}h {m}m"
   }
 }

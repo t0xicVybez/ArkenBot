@@ -2132,7 +2132,8 @@
     "users": "Utenti",
     "metrics": "Metriche",
     "economy": "Economia",
-    "appeals": "Ricorsi"
+    "appeals": "Ricorsi",
+    "promotion": "Promozione server"
   },
   "sections": {
     "general": "Generale",
@@ -3710,5 +3711,37 @@
     "saving": "Salvataggio…",
     "saved": "Impostazioni Valorant salvate!",
     "saveError": "Impossibile salvare le impostazioni."
+  },
+  "promotionPage": {
+    "title": "Promozione server",
+    "subtitle": "Traccia i membri che promuovono il tuo server e premi i tuoi migliori sostenitori.",
+    "limitationNote": "Discord solo consente al bot di vedere uno stato personalizzato mentre un membro mostra come online. Se qualcuno va invisibile, il loro stato è nascosto da tutti — compreso il bot — così il loro timer si ferma fino a quando non sono ancora visibili. I tag server non sono influenzati da questo.",
+    "enableTitle": "Attivare il tracciamento",
+    "enableDesc": "Inizia a registrare chi promuove il tuo server. Per impostazione predefinita.",
+    "trackStatusTitle": "Traccia lo stato personalizzato",
+    "trackStatusDesc": "Rileva i membri il cui stato personalizzato contiene una delle tue parole chiave.",
+    "trackTagTitle": "Track server tag",
+    "trackTagDesc": "Rileva i membri che visualizzano il tag server sul loro profilo.",
+    "keywordsTitle": "Parole chiave di stato",
+    "keywordsDesc": "Uno stato personalizzato conta come promuovere se contiene uno di questi (il tuo nome del server, invitare, o una frase). Caso insensibile.",
+    "noKeywords": "Ancora nessuna parola chiave.",
+    "keywordsPlaceholder": "ad esempio .gg/il tuo server",
+    "add": "Aggiungi",
+    "maxKeywords": "Puoi aggiungere fino a 25 parole chiave.",
+    "save": "Salvare le modifiche",
+    "saving": "Salvare...",
+    "saved": "Impostazioni di promozione salvate.",
+    "saveError": "Non è possibile salvare le impostazioni. Per favore riprovate.",
+    "leaderboardTitle": "I migliori promotori",
+    "loading": "Caricamento...",
+    "leaderboardEmpty": "Nessuno ha ancora promosso il server. Una volta che i membri aggiungono il tuo stato o tag, verranno visualizzati qui.",
+    "statusActive": "Stato attivo",
+    "tagActive": "Taggato attivo",
+    "notPromoting": "Non è attualmente in corso di promozione",
+    "sessionsCount": "{count} sessioni",
+    "mOnly": "{m}m",
+    "lessMin": "sotto un minuto",
+    "dh": "{d}D {h}h",
+    "hm": "{h}h {m}m"
   }
 }

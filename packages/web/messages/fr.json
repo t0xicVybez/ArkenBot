@@ -2132,7 +2132,8 @@
     "users": "Utilisateurs",
     "metrics": "Métriques",
     "economy": "Économie",
-    "appeals": "Appels"
+    "appeals": "Appels",
+    "promotion": "Promotion du serveur"
   },
   "sections": {
     "general": "Général",
@@ -3710,5 +3711,37 @@
     "saving": "Enregistrement…",
     "saved": "Paramètres Valorant enregistrés !",
     "saveError": "Impossible d’enregistrer les paramètres."
+  },
+  "promotionPage": {
+    "title": "Promotion du serveur",
+    "subtitle": "Les membres de suivi qui font la promotion de votre serveur et récompensent vos meilleurs supporters.",
+    "limitationNote": "Discord uniquement permet au bot de voir un statut personnalisé pendant qu’un membre s’affiche en ligne. Si quelqu’un devient invisible, son statut est caché à tout le monde — y compris au robot — de sorte que son minuteur s’arrête jusqu’à ce qu’il soit visible à nouveau. Les balises du serveur ne sont pas affectées par cela.",
+    "enableTitle": "Activer le suivi",
+    "enableDesc": "Commencez à enregistrer qui fait la promotion de votre serveur. Arrêt par défaut.",
+    "trackStatusTitle": "Statut personnalisé du suivi",
+    "trackStatusDesc": "Détectez les membres dont le statut personnalisé contient un de vos mots clés.",
+    "trackTagTitle": "Étiquette du serveur de piste",
+    "trackTagDesc": "Détectez les membres qui affichent votre balise serveur sur leur profil.",
+    "keywordsTitle": "Mots clés de l’état",
+    "keywordsDesc": "Un statut personnalisé compte comme promotionnel s’il contient l’un de ceux-ci (votre nom de serveur, invite, ou une phrase). Insensible aux cas.",
+    "noKeywords": "Pas encore de mots clés.",
+    "keywordsPlaceholder": "p.ex. gg/votre serveur",
+    "add": "Ajouter",
+    "maxKeywords": "Vous pouvez ajouter jusqu’à 25 mots-clés.",
+    "save": "Enregistrer les modifications",
+    "saving": "Sauver...",
+    "saved": "Paramètres de promotion enregistrés.",
+    "saveError": "Impossible d’enregistrer les paramètres. Veuillez réessayer.",
+    "leaderboardTitle": "Meilleurs promoteurs",
+    "loading": "Chargement...",
+    "leaderboardEmpty": "Personne n’a encore promu le serveur. Une fois que les membres ajouteront votre statut ou votre étiquette, ils apparaîtront ici.",
+    "statusActive": "Statut actif",
+    "tagActive": "Étiquette active",
+    "notPromoting": "Pas de promotion",
+    "sessionsCount": "{count} Séances",
+    "mOnly": "{m}m",
+    "lessMin": "Moins d’une minute",
+    "dh": "{d}d {h}h",
+    "hm": "{h}h {m}m"
   }
 }

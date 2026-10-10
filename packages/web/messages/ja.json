@@ -2132,7 +2132,8 @@
     "users": "ユーザー",
     "metrics": "メトリクス",
     "economy": "経済",
-    "appeals": "異議申し立て"
+    "appeals": "異議申し立て",
+    "promotion": "サーバープロモーション"
   },
   "sections": {
     "general": "一般",
@@ -3710,5 +3711,37 @@
     "saving": "保存中…",
     "saved": "Valorantの設定を保存しました！",
     "saveError": "設定を保存できませんでした。"
+  },
+  "promotionPage": {
+    "title": "サーバープロモーション",
+    "limitationNote": "Discord 会員がオンラインとして表示している間、ボットはカスタムステータスを確認できます。 誰かが目に見えない場合は、ボットを含むすべての人から自分のステータスが隠されています。そのため、タイマーは再び表示されます。 サーバタグは影響を受けません。",
+    "subtitle": "サーバを促進し、トップサポーターに報酬を与えるメンバーを追跡します。",
+    "enableTitle": "追跡を有効にする",
+    "enableDesc": "サーバを促進する録音を開始します。 デフォルトでオフ。",
+    "trackStatusTitle": "カスタムステータスを追跡する",
+    "trackStatusDesc": "カスタムステータスがキーワードの1つを含むメンバーを検知します。",
+    "trackTagTitle": "サーバタグの追跡",
+    "trackTagDesc": "プロフィールにサーバータグを表示したメンバーを検知します。",
+    "keywordsTitle": "ステータスキーワード",
+    "keywordsDesc": "これら(サーバー名、招待、フレーズなど)が含まれている場合は、プロモーションとしてカスタムステータスがカウントされます。 ケースインセンティブ。",
+    "noKeywords": "キーワードはまだありません。",
+    "keywordsPlaceholder": "例:.gg/yourserver",
+    "add": "追加する",
+    "maxKeywords": "キーワードは25個まで追加できます。",
+    "save": "変更を保存",
+    "saving": "保存...",
+    "saved": "プロモーション設定を保存しました。",
+    "saveError": "設定を保存できません。 お問い合わせ",
+    "leaderboardTitle": "トッププロモーター",
+    "loading": "ローディング...",
+    "leaderboardEmpty": "サーバをまだ推進していません。 ステータスやタグを追加すると、ここに表示されます。",
+    "statusActive": "アクティブステータス",
+    "tagActive": "アクティブタグ",
+    "notPromoting": "現在進行していない",
+    "sessionsCount": "{count} セッション",
+    "mOnly": "{m}m 点",
+    "lessMin": "1分以内",
+    "dh": "{d}ログイン {h}ログイン",
+    "hm": "{h}ログイン {m}m 点"
   }
 }

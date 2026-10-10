@@ -2132,7 +2132,8 @@
     "users": "Usuários",
     "metrics": "Métricas",
     "economy": "Economia",
-    "appeals": "Recursos"
+    "appeals": "Recursos",
+    "promotion": "Promoção do Servidor"
   },
   "sections": {
     "general": "Geral",
@@ -3710,5 +3711,37 @@
     "saving": "Salvando…",
     "saved": "Configurações do Valorant salvas!",
     "saveError": "Não foi possível salvar as configurações."
+  },
+  "promotionPage": {
+    "title": "Promoção do Servidor",
+    "subtitle": "Rastreie membros que promovam seu servidor e recompense seus melhores apoiadores.",
+    "limitationNote": "Discord Só permite que o robô veja um status personalizado enquanto um membro aparece como online. Se alguém fica invisível, seu status está escondido de todos, incluindo o robô, então seu cronômetro pausa até que seja visível novamente. As etiquetas do servidor não são afetadas por isso.",
+    "enableTitle": "Activar o rastreio",
+    "enableDesc": "Comece a gravar quem promove seu servidor. Desligado por padrão.",
+    "trackStatusTitle": "Track status personalizado",
+    "trackStatusDesc": "Detecte membros cujo status personalizado contém uma de suas palavras-chave.",
+    "trackTagTitle": "Track servidor tag",
+    "trackTagDesc": "Detecte membros que mostram sua etiqueta no perfil.",
+    "keywordsTitle": "Palavras-chave de status",
+    "keywordsDesc": "Um status personalizado conta como promoção se ele contém algum destes (seu nome de servidor, convite, ou uma frase). Insensível a casos.",
+    "noKeywords": "Sem palavras-chave ainda.",
+    "keywordsPlaceholder": "Por exemplo, seu servidor.",
+    "add": "Adicionar",
+    "maxKeywords": "Você pode adicionar até 25 palavras-chave.",
+    "save": "Salvar mudanças",
+    "saving": "Salvando...",
+    "saved": "Configurações de promoção salvas.",
+    "saveError": "Não foi possível salvar as configurações. Por favor, tente novamente.",
+    "leaderboardTitle": "Top Promoters",
+    "loading": "Carregando...",
+    "leaderboardEmpty": "Ninguém promoveu o servidor ainda. Assim que os membros adicionarem seu status ou tag, eles aparecerão aqui.",
+    "statusActive": "Estado ativo",
+    "tagActive": "Marca ativa.",
+    "notPromoting": "Não está promovendo.",
+    "sessionsCount": "{count} sessões",
+    "mOnly": "{m}M",
+    "lessMin": "Menos de um minuto.",
+    "dh": "{d}D {h}H",
+    "hm": "{h}H {m}M"
   }
 }

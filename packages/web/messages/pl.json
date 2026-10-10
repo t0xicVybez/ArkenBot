@@ -2132,7 +2132,8 @@
     "users": "Użytkownicy",
     "metrics": "Metryki",
     "economy": "Ekonomia",
-    "appeals": "Odwołania"
+    "appeals": "Odwołania",
+    "promotion": "Promocja serwera"
   },
   "sections": {
     "general": "Ogólne",
@@ -3710,5 +3711,37 @@
     "saving": "Zapisywanie…",
     "saved": "Zapisano ustawienia Valorant!",
     "saveError": "Nie udało się zapisać ustawień."
+  },
+  "promotionPage": {
+    "title": "Promocja serwera",
+    "subtitle": "Członkowie tropu, którzy promują serwer i nagradzają swoich najlepszych zwolenników.",
+    "limitationNote": "Discord Tylko pozwala bot zobaczyć niestandardowy status podczas gdy członek pokazuje jako online. Jeśli ktoś stanie się niewidzialny, jego status jest ukryty przed wszystkimi - włącznie z robotem - więc jego zegar zatrzymuje się, aż znów będzie widoczny. To nie wpływa na znaczniki serwera.",
+    "enableTitle": "Włącz śledzenie",
+    "enableDesc": "Zacznij nagrywanie, kto promuje serwer. Domyślnie wyłączone.",
+    "trackStatusTitle": "Status użytkownika utworu",
+    "trackStatusDesc": "Wykrywanie członków, których status użytkownika zawiera jedno z słów kluczowych.",
+    "trackTagTitle": "Znacznik serwera utworów",
+    "trackTagDesc": "Wykryj członków, którzy wyświetlają znacznik serwera na swoim profilu.",
+    "keywordsTitle": "Stan słowa kluczowe",
+    "keywordsDesc": "Niestandardowy status liczy się jako promocja, jeśli zawiera którekolwiek z nich (nazwa serwera, zaproszenie lub wyrażenie). Case- nieczuły.",
+    "noKeywords": "Brak słów kluczowych.",
+    "keywordsPlaceholder": "np. .gg / Twój serwer",
+    "add": "Dodaj",
+    "maxKeywords": "Możesz dodać do 25 słów kluczowych.",
+    "save": "Zapisz zmiany",
+    "saving": "Zapisywanie...",
+    "saved": "Ustawienia promocyjne zapisane.",
+    "saveError": "Nie można zapisać ustawień. Proszę spróbować jeszcze raz.",
+    "leaderboardTitle": "Najlepsi promotorzy",
+    "loading": "Ładowanie...",
+    "leaderboardEmpty": "Nikt jeszcze nie awansował serwera. Kiedy członkowie dodają status lub znacznik, pojawią się tutaj.",
+    "statusActive": "Status aktywny",
+    "tagActive": "Aktywny znacznik",
+    "notPromoting": "Obecnie nie promuje",
+    "sessionsCount": "{count} sesje",
+    "mOnly": "{m}m",
+    "lessMin": "poniżej minuty",
+    "dh": "{d}d {h}h",
+    "hm": "{h}h {m}m"
   }
 }

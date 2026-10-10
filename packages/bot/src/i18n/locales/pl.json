@@ -886,6 +886,21 @@
       "currentRank": "Aktualna ranga",
       "peak": "Szczyt",
       "syncing": "Synchronizowanie…"
+    },
+    "promotion": {
+      "notEnabled": "Śledzenie promocji serwera nie jest włączone na tym serwerze.",
+      "lbTitle": "Najlepsze promotory serwerów",
+      "lbEmpty": "Nikt jeszcze nie awansował serwera. Dodaj status serwera lub tag, aby dostać się na planszę!",
+      "footer": "Promocja serwera · Promowanie = promocja teraz",
+      "checkTitle": "Czas promocji",
+      "checkNever": "{name} Jeszcze nie awansował serwera.",
+      "fieldTotal": "Całkowity czas",
+      "fieldStatus": "Status użytkownika",
+      "fieldTag": "Znacznik serwera",
+      "mOnly": "{m}m",
+      "lessMin": "poniżej minuty",
+      "dh": "{d}d {h}h",
+      "hm": "{h}h {m}m"
     }
   },
   "achievements": {

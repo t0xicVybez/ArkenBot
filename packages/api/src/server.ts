@@ -49,6 +49,7 @@ import { reportRoutes } from './routes/reports.js';
 import { mondayRoutes } from './routes/monday.js';
 import { trelloRoutes } from './routes/trello.js';
 import { valorantRoutes } from './routes/valorant.js';
+import { promotionRoutes } from './routes/promotion.js';
 import { auditLogRoutes } from './routes/auditLog.js';
 import { configTransferRoutes } from './routes/configTransfer.js';
 import { dataControlsRoutes } from './routes/dataControls.js';
@@ -204,6 +205,7 @@ export async function createServer() {
   await server.register(mondayRoutes);
   await server.register(trelloRoutes);
   await server.register(valorantRoutes);
+  await server.register(promotionRoutes);
   await server.register(auditLogRoutes);
   await server.register(configTransferRoutes);
   await server.register(dataControlsRoutes);

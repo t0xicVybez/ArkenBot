@@ -528,4 +528,11 @@ export const valorantApi = {
   leaderboard: (guildId: string) => api.get(`/valorant/leaderboard/${guildId}`),
 };
 
+export const promotionApi = {
+  getConfig: (guildId: string) => api.get(`/promotion/${guildId}/config`),
+  updateConfig: (guildId: string, data: object) => api.patch(`/promotion/${guildId}/config`, data),
+  leaderboard: (guildId: string, limit = 50) => api.get(`/promotion/${guildId}/leaderboard?limit=${limit}`),
+  getMember: (guildId: string, userId: string) => api.get(`/promotion/${guildId}/members/${userId}`),
+};
+
 export default api;

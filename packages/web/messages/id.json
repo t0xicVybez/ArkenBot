@@ -2132,7 +2132,8 @@
     "users": "Pengguna",
     "metrics": "Metrik",
     "economy": "Ekonomi",
-    "appeals": "Banding"
+    "appeals": "Banding",
+    "promotion": "Promosi Server"
   },
   "sections": {
     "general": "Umum",
@@ -3710,5 +3711,37 @@
     "saving": "Menyimpan…",
     "saved": "Pengaturan Valorant disimpan!",
     "saveError": "Tidak dapat menyimpan pengaturan."
+  },
+  "promotionPage": {
+    "title": "Promosi Server",
+    "subtitle": "Melacak anggota yang mempromosikan server Anda dan penghargaan pendukung atas Anda.",
+    "limitationNote": "Discord Hanya membiarkan bot melihat status custom sementara anggota menunjukkan sebagai online. Jika seseorang tidak terlihat, status mereka tersembunyi dari semua orang - termasuk robot - sehingga timer mereka berhenti sampai mereka terlihat lagi. Tag server tidak terpengaruh oleh ini.",
+    "enableTitle": "Aktifkan pelacakan",
+    "enableDesc": "Mulai merekam siapa yang mempromosikan server Anda. Off secara default.",
+    "trackStatusTitle": "Lacak status gubahan",
+    "trackStatusDesc": "Deteksi anggota yang status kustom berisi salah satu kata kunci Anda.",
+    "trackTagTitle": "Tag server trek",
+    "trackTagDesc": "Deteksi anggota yang menampilkan tag server Anda pada profil mereka.",
+    "keywordsTitle": "Kata kunci status",
+    "keywordsDesc": "Status suai dihitung sebagai mempromosikan jika berisi salah satu dari ini (nama server Anda, mengundang, atau frasa). Kasus - sensitif.",
+    "noKeywords": "Belum ada kata kunci.",
+    "keywordsPlaceholder": "mis. .gg / yourserver",
+    "add": "Tambah",
+    "maxKeywords": "Anda dapat menambahkan hingga 25 kata kunci.",
+    "save": "Simpan perubahan",
+    "saving": "Menyimpan...",
+    "saved": "Pengaturan promosi disimpan.",
+    "saveError": "Tak bisa menyimpan pengaturan. Tolong coba lagi.",
+    "leaderboardTitle": "Promotor teratas",
+    "loading": "Memuat...",
+    "leaderboardEmpty": "Belum ada yang mempromosikan server. Setelah anggota menambahkan status atau tag, mereka akan muncul di sini.",
+    "statusActive": "Status aktif",
+    "tagActive": "Tag aktif",
+    "notPromoting": "Tidak mempromosikan saat ini",
+    "sessionsCount": "{count} sesi",
+    "mOnly": "{m}m",
+    "lessMin": "dibawah satu menit",
+    "dh": "{d}d {h}h",
+    "hm": "{h}h {m}m"
   }
 }

@@ -2132,7 +2132,8 @@
     "users": "Benutzer",
     "metrics": "Metriken",
     "economy": "Wirtschaft",
-    "appeals": "Einsprüche"
+    "appeals": "Einsprüche",
+    "promotion": "Server Promotion"
   },
   "sections": {
     "general": "Allgemein",
@@ -3710,5 +3711,37 @@
     "saving": "Wird gespeichert…",
     "saved": "Valorant-Einstellungen gespeichert!",
     "saveError": "Einstellungen konnten nicht gespeichert werden."
+  },
+  "promotionPage": {
+    "title": "Server Promotion",
+    "subtitle": "Verfolgen Sie Mitglieder, die Ihren Server bewerben, und belohnen Sie Ihre Top-Unterstützer.",
+    "limitationNote": "Discord lässt den bot nur einen benutzerdefinierten status sehen, während ein mitglied online angezeigt wird. Wenn jemand unsichtbar wird, wird sein status vor allen - einschließlich des bots - verborgen, so dass sein timer anhält, bis er wieder sichtbar ist. Server-Tags sind davon nicht betroffen.",
+    "enableTitle": "Tracking ermöglichen",
+    "enableDesc": "Beginnen Sie mit der Aufzeichnung, wer Ihren Server fördert. Standardmäßig ausgeschaltet.",
+    "trackStatusTitle": "Custom-Status des Gleises",
+    "trackStatusDesc": "Erkennen sie mitglieder, deren benutzerdefinierter status eines ihrer keywords enthält.",
+    "trackTagTitle": "Track Server Tag",
+    "trackTagDesc": "Erkennen Sie Mitglieder, die Ihren Server-Tag in ihrem Profil anzeigen.",
+    "keywordsTitle": "Status-Keywords",
+    "keywordsDesc": "Ein benutzerdefinierter Status gilt als Promotion, wenn er eine davon enthält (Ihr Servername, Einladung oder eine Phrase). Case-unsensitive.",
+    "noKeywords": "Noch keine Keywords.",
+    "keywordsPlaceholder": "z. B. .gg/yourserver",
+    "add": "Addition",
+    "maxKeywords": "Sie können bis zu 25 Keywords hinzufügen.",
+    "save": "Änderungen speichern",
+    "saving": "Rettung...",
+    "saved": "Promotion Einstellungen gespeichert.",
+    "saveError": "Konnte die Einstellungen nicht speichern. Bitte versuchen Sie es noch einmal.",
+    "leaderboardTitle": "Top-Promotoren",
+    "loading": "Beladung...",
+    "leaderboardEmpty": "Noch hat niemand den Server beworben. Sobald Mitglieder Ihren Status oder Tag hinzufügen, werden sie hier angezeigt.",
+    "statusActive": "Status aktiv",
+    "tagActive": "Tag aktiv",
+    "notPromoting": "Derzeit keine Förderung",
+    "sessionsCount": "{count} Sitzungen",
+    "mOnly": "{m}m",
+    "lessMin": "unter einer Minute",
+    "dh": "{d}d {h}h",
+    "hm": "{h}h {m}m"
   }
 }

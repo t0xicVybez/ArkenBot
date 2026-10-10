@@ -886,6 +886,21 @@
       "currentRank": "Mevcut rütbe",
       "peak": "Zirve",
       "syncing": "Senkronize ediliyor…"
+    },
+    "promotion": {
+      "notEnabled": ". Server promosyon izleme bu sunucuda etkinleştirilmemektedir.",
+      "lbTitle": "Top Server Promosyonlar",
+      "lbEmpty": "Hiç kimse sunucuyu henüz terfi etmedi. Gemide almak için sunucu statüsü veya etiketi ekleyin!",
+      "footer": "Server Promosyonu · 🟢 = şimdi teşvik etmek",
+      "checkTitle": "Promosyon Zamanı",
+      "checkNever": "{name} Henüz sunucuyu terfi etmedi.",
+      "fieldTotal": "Toplam zaman",
+      "fieldStatus": "Özel statü",
+      "fieldTag": "Server etiketi",
+      "mOnly": "{m}m m m m",
+      "lessMin": "Bir dakikanın altında",
+      "dh": "{d}d {h}h",
+      "hm": "{h}h {m}m m m m"
     }
   },
   "achievements": {

@@ -54,6 +54,8 @@ model Guild {
   tempRoles              TempRole[]
   topggConfig            TopggConfig?
   valorantConfig         ValorantGuildConfig?
+  promotionConfig        PromotionConfig?
+  promotionSessions      PromotionSession[]
   reminders              Reminder[]
   countingState          CountingState?
   inviteCounts           InviteCount[]
@@ -1707,6 +1709,48 @@ model ValorantLink {
 }
 
 /// Per-guild Valorant integration config: rank→role map, match alerts, etc.
+// ── Server Promotion Tracking ──────────────────────────────────────────────
+// Opt-in, per-guild. Tracks members who promote the server via their custom
+// status (containing a configured keyword/invite/phrase) or by displaying the
+// server's Discord tag. Sessions are the source of truth: one open session
+// (endedAt = null) per member per kind while they're visibly promoting; it
+// closes when they remove it, go offline/invisible, or leave. Total promotion
+// time = sum of session durations, so offline gaps naturally don't count.
+model PromotionConfig {
+  id          String   @id @default(cuid())
+  guildId     String   @unique
+  guild       Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  enabled     Boolean  @default(false)
+  trackStatus Boolean  @default(true)
+  trackTag    Boolean  @default(true)
+  // Case-insensitive substrings matched against a member's custom status.
+  // Seeded with the guild name (+ vanity if any) on first enable; owner-editable.
+  keywords    String[] @default([])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("promotion_configs")
+}
+
+model PromotionSession {
+  id        String    @id @default(cuid())
+  guildId   String
+  guild     Guild     @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  userId    String
+  username  String? // denormalised for the dashboard (latest wins)
+  avatar    String? // avatar hash, for the dashboard
+  kind      String // 'status' | 'tag'
+  value     String? // the matched status text, or the server tag
+  startedAt DateTime  @default(now())
+  endedAt   DateTime? // null = currently active
+  endReason String? // 'removed' | 'offline' | 'left' | 'reconcile' | 'disabled'
+  createdAt DateTime  @default(now())
+
+  @@index([guildId, userId])
+  @@index([guildId, kind, endedAt])
+  @@map("promotion_sessions")
+}
+
 model ValorantGuildConfig {
   id                 String   @id @default(cuid())
   guildId            String   @unique

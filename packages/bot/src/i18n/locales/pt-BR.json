@@ -886,6 +886,21 @@
       "currentRank": "Ranque atual",
       "peak": "Pico",
       "syncing": "Sincronizando…"
+    },
+    "promotion": {
+      "notEnabled": "O rastreamento da promoção do servidor não está habilitado neste servidor.",
+      "lbTitle": "Top Server Promoters",
+      "lbEmpty": "Ninguém promoveu o servidor ainda. Adicione o status do servidor ou tag para entrar no quadro!",
+      "footer": "Promoção do servidor...",
+      "checkTitle": "Hora da promoção",
+      "checkNever": "{name} ainda não promoveu o servidor.",
+      "fieldTotal": "Tempo total",
+      "fieldStatus": "Status personalizado",
+      "fieldTag": "Etiqueta do servidor",
+      "mOnly": "{m}M",
+      "lessMin": "Menos de um minuto.",
+      "dh": "{d}D {h}H",
+      "hm": "{h}H {m}M"
     }
   },
   "achievements": {

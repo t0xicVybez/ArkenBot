@@ -2132,7 +2132,8 @@
     "users": "Usuarios",
     "metrics": "Métricas",
     "economy": "Economía",
-    "appeals": "Apelaciones"
+    "appeals": "Apelaciones",
+    "promotion": "Promoción de servidores"
   },
   "sections": {
     "general": "General",
@@ -3710,5 +3711,37 @@
     "saving": "Guardando…",
     "saved": "¡Ajustes de Valorant guardados!",
     "saveError": "No se pudieron guardar los ajustes."
+  },
+  "promotionPage": {
+    "title": "Promoción de servidores",
+    "subtitle": "Pista a los miembros que promueven su servidor y recompensan a sus principales partidarios.",
+    "limitationNote": "Discord sólo permite que el bot vea un estado personalizado mientras que un miembro muestra como en línea. Si alguien va invisible, su estado está oculto de todo el mundo, incluyendo el bot, por lo que su temporizador se detiene hasta que son visibles de nuevo. Las etiquetas de servidor no se ven afectadas por esto.",
+    "enableTitle": "Realizar seguimiento",
+    "enableDesc": "Empieza a grabar quién promueve tu servidor. Por defecto.",
+    "trackStatusTitle": "Seguimiento de estado personalizado",
+    "trackStatusDesc": "Detectar miembros cuyo estado personalizado contiene una de sus palabras clave.",
+    "trackTagTitle": "Track server tag",
+    "trackTagDesc": "Detectar miembros que muestren su etiqueta servidor en su perfil.",
+    "keywordsTitle": "Palabras clave del estado",
+    "keywordsDesc": "Un estado personalizado cuenta como promocionar si contiene cualquiera de estos (su nombre de servidor, invitación o una frase). Un caso insensible.",
+    "noKeywords": "Todavía no hay palabras clave.",
+    "keywordsPlaceholder": "por ejemplo .gg/yourserver",
+    "add": "Añadir",
+    "maxKeywords": "Puedes agregar hasta 25 palabras clave.",
+    "save": "Guardar cambios",
+    "saving": "Salvando...",
+    "saved": "Ajustes de promoción guardados.",
+    "saveError": "No podía guardar ajustes. Por favor, inténtalo de nuevo.",
+    "leaderboardTitle": "Principales promotores",
+    "loading": "Cargando...",
+    "leaderboardEmpty": "Nadie ha promovido el servidor todavía. Una vez que los miembros añadan su estado o etiqueta, aparecerán aquí.",
+    "statusActive": "Situación activa",
+    "tagActive": "Tag active",
+    "notPromoting": "Actualmente no se promueve",
+    "sessionsCount": "{count} períodos de sesiones",
+    "mOnly": "{m}m",
+    "lessMin": "bajo un minuto",
+    "dh": "{d}d {h}h",
+    "hm": "{h}h {m}m"
   }
 }

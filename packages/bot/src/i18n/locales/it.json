@@ -886,6 +886,21 @@
       "currentRank": "Rango attuale",
       "peak": "Max",
       "syncing": "Sincronizzazione…"
+    },
+    "promotion": {
+      "notEnabled": "📣 Il monitoraggio della promozione del server non è abilitato su questo server.",
+      "lbTitle": "🏆 I migliori promotori del server",
+      "lbEmpty": "Nessuno ha ancora promosso il server. Aggiungi lo stato del server o il tag per salire sulla scheda!",
+      "footer": "Promozione server · 🟢 = promuovere ora",
+      "checkTitle": "📣 Tempo di promozione",
+      "checkNever": "{name} non ha ancora promosso il server.",
+      "fieldTotal": "Tempo totale",
+      "fieldStatus": "Stato doganale",
+      "fieldTag": "Tag server",
+      "mOnly": "{m}m",
+      "lessMin": "sotto un minuto",
+      "dh": "{d}D {h}h",
+      "hm": "{h}h {m}m"
     }
   },
   "achievements": {

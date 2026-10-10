@@ -886,6 +886,21 @@
       "currentRank": "Peringkat saat ini",
       "peak": "Puncak",
       "syncing": "Menyinkronkan…"
+    },
+    "promotion": {
+      "notEnabled": "Pelacakan promosi server tidak diaktifkan di server ini.",
+      "lbTitle": "Promotor Server Atas",
+      "lbEmpty": "Belum ada yang mempromosikan server. Tambahkan status server atau tag untuk mendapatkan papan!",
+      "footer": "Promosi Server = mempromosikan sekarang",
+      "checkTitle": "Waktu Promosi",
+      "checkNever": "{name} belum dipromosikan server belum.",
+      "fieldTotal": "Total waktu",
+      "fieldStatus": "Status gubahan",
+      "fieldTag": "Tag server",
+      "mOnly": "{m}m",
+      "lessMin": "dibawah satu menit",
+      "dh": "{d}d {h}h",
+      "hm": "{h}h {m}m"
     }
   },
   "achievements": {

@@ -886,6 +886,21 @@
       "currentRank": "Rang actuel",
       "peak": "Max",
       "syncing": "Synchronisation…"
+    },
+    "promotion": {
+      "notEnabled": "Le suivi de la promotion du serveur n'est pas activé sur ce serveur.",
+      "lbTitle": "Meilleurs promoteurs de serveur",
+      "lbEmpty": "Personne n'a encore promu le serveur. Ajoutez l'état ou la balise du serveur pour accéder au tableau !",
+      "footer": "Promotion du serveur · ↓ = promotion maintenant",
+      "checkTitle": "Temps de promotion",
+      "checkNever": "{name} n'a pas encore promu le serveur.",
+      "fieldTotal": "Durée totale",
+      "fieldStatus": "État personnalisé",
+      "fieldTag": "Balise du serveur",
+      "mOnly": "{m}m",
+      "lessMin": "Moins d'une minute",
+      "dh": "{d}d {h}h",
+      "hm": "{h}h {m}m"
     }
   },
   "achievements": {

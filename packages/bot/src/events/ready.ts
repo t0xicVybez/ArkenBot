@@ -191,6 +191,14 @@ const event: BotEvent = {
     sub.removeAllListeners('message');
     sub.on('message', async (_channel: string, message: string) => {
       try {
+        // Promotion tracking config changed in the dashboard — reload the hot-path
+        // cache so the toggle/keywords take effect immediately.
+        if (_channel === 'promotion:config:updated') {
+          const { PromotionModule } = await import('../modules/promotion/PromotionModule.js');
+          await PromotionModule.refresh();
+          return;
+        }
+
         // A forwarded top.gg vote — reward the voter. A guildId means it was a
         // vote for that specific server; otherwise it was a vote for the bot.
         if (_channel === 'topgg:vote') {
@@ -427,6 +435,7 @@ const event: BotEvent = {
 
     await sub.subscribe('api:events');
     await sub.subscribe('cache:invalidate:settings');
+    await sub.subscribe('promotion:config:updated');
     await sub.subscribe('topgg:vote');
     await sub.subscribe('giveaway:start');
     await sub.subscribe('youtube:live');

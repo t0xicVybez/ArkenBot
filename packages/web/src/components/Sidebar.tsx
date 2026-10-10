@@ -116,6 +116,7 @@ const buildNavSections = (guildId: string, installedAddons: string[]): NavSectio
         { href: `/dashboard/${guildId}/polls`, key: 'polls', icon: BarChart },
         { href: `/dashboard/${guildId}/suggestions`, key: 'suggestions', icon: MessageSquarePlus },
         { href: `/dashboard/${guildId}/giveaways`, key: 'giveaways', icon: Gift },
+        { href: `/dashboard/${guildId}/promotion`, key: 'promotion', icon: Megaphone },
         { href: `/dashboard/${guildId}/economy`, key: 'economy', icon: Coins },
         { href: `/dashboard/${guildId}/starboard`, key: 'starboard', icon: Star },
         { href: `/dashboard/${guildId}/members`, key: 'members', icon: Users },

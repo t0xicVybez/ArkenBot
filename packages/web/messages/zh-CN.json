@@ -2132,7 +2132,8 @@
     "users": "用户",
     "metrics": "指标",
     "economy": "经济",
-    "appeals": "申诉"
+    "appeals": "申诉",
+    "promotion": "服务器促进"
   },
   "sections": {
     "general": "常规",
@@ -3710,5 +3711,37 @@
     "saving": "保存中…",
     "saved": "已保存 Valorant 设置！",
     "saveError": "无法保存设置。"
+  },
+  "promotionPage": {
+    "title": "服务器促进",
+    "subtitle": "追踪宣传您的服务器并奖励您的顶级支持者的会员.",
+    "limitationNote": "Discord 只让机器人看到一个自定义状态,而一个成员在线显示。 如果有人隐去,他们的地位就隐藏在每个人的身上——包括机器人——所以他们的计时器会暂停到再次显出. 服务器标记不受此影响 。",
+    "enableTitle": "启用跟踪",
+    "enableDesc": "开始录制推销你的服务器的人 默认关闭。",
+    "trackStatusTitle": "音轨自定义状态",
+    "trackStatusDesc": "检测自定义状态包含您关键词之一的成员。",
+    "trackTagTitle": "音轨服务器标签",
+    "trackTagDesc": "检测在配置文件上显示您的服务器标签的成员 。",
+    "keywordsTitle": "状态关键字",
+    "keywordsDesc": "自定义状态在包含其中任何内容( 您的服务器名、 邀请或短语) 时算作促进 。 无相相相.",
+    "noKeywords": "还没有关键字。",
+    "keywordsPlaceholder": "例如.gg/你的服务器",
+    "add": "添加",
+    "maxKeywords": "可加25个关键词.",
+    "save": "保存更改",
+    "saving": "正在保存...",
+    "saved": "已保存升级设置 。",
+    "saveError": "无法保存设置 。 请再试一次。",
+    "leaderboardTitle": "顶级推广者",
+    "loading": "正在装入...",
+    "leaderboardEmpty": "目前还没有人宣传过服务器. 一旦成员加入你的状态或标记,他们就会出现在这里.",
+    "statusActive": "状态",
+    "tagActive": "标记活动",
+    "notPromoting": "目前未推广",
+    "sessionsCount": "{count} 会议",
+    "mOnly": "{m}页:1",
+    "lessMin": "不到一分钟",
+    "dh": "{d}D. 国家 {h}页:1",
+    "hm": "{h}页:1 {m}页:1"
   }
 }

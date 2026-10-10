@@ -886,6 +886,21 @@
       "currentRank": "当前段位",
       "peak": "最高",
       "syncing": "同步中…"
+    },
+    "promotion": {
+      "notEnabled": "QQ 服务器推广跟踪在此服务器上没有启用 。",
+      "lbTitle": "QQ 顶端服务器促进器",
+      "lbEmpty": "目前还没有人宣传过服务器. 添加服务器状态或标签进入棋盘!",
+      "footer": "服务器促销 + = 现在促销",
+      "checkTitle": "* 晋升时间",
+      "checkNever": "{name} 尚未推广服务器。",
+      "fieldTotal": "总时间",
+      "fieldStatus": "自定义状态",
+      "fieldTag": "服务器标签",
+      "mOnly": "{m}页:1",
+      "lessMin": "不到一分钟",
+      "dh": "{d}D. 国家 {h}页:1",
+      "hm": "{h}页:1 {m}页:1"
     }
   },
   "achievements": {

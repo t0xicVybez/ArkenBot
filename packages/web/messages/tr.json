@@ -2132,7 +2132,8 @@
     "users": "Kullanıcılar",
     "metrics": "Metrikler",
     "economy": "Ekonomi",
-    "appeals": "İtirazlar"
+    "appeals": "İtirazlar",
+    "promotion": "Server Promosyon"
   },
   "sections": {
     "general": "Genel",
@@ -3710,5 +3711,37 @@
     "saving": "Kaydediliyor…",
     "saved": "Valorant ayarları kaydedildi!",
     "saveError": "Ayarlar kaydedilemedi."
+  },
+  "promotionPage": {
+    "title": "Server Promosyon",
+    "subtitle": "Sunucunuzu teşvik eden ve üst destekçilerinizi ödüllendiren üyeleri izleyin.",
+    "limitationNote": "Discord Sadece botun online olarak gösterirken özel bir statü görmesini sağlar. Birisi görünmez giderse, statüleri herkesten gizlidir - bot dahil - bu yüzden tekrar görünür olana kadar zaman duraklar. Server etiketleri bundan etkilenmez.",
+    "enableTitle": "Enable takip",
+    "enableDesc": "Sunucunuzu kimin teşvik ettiğini kayıt edin. Varsayılan olarak kapalı.",
+    "trackStatusTitle": "Track custom statüsü",
+    "trackStatusDesc": "Özel statüye sahip olan üyeler anahtar kelimelerinizden birini içerir.",
+    "trackTagTitle": "Track server etiketi",
+    "trackTagDesc": "Sunucu etiketinizi profilinizde gösteren üyeler.",
+    "keywordsTitle": "Durum anahtar kelimeler",
+    "keywordsDesc": "Özel bir durum, bunlardan herhangi birini içeriyorsa ( sunucunuz adı, davet, veya bir cümle). Vakaya duyarlı.",
+    "noKeywords": "Henüz anahtar kelimeler yok.",
+    "keywordsPlaceholder": "e.g. .gg/yourserver",
+    "add": "Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add",
+    "maxKeywords": "25 anahtar kelimeye kadar ekleyebilirsiniz.",
+    "save": "Kaydet değişiklikler",
+    "saving": "Tasarruf...",
+    "saved": "Promosyon ayarları kurtarıldı.",
+    "saveError": "ayarları kurtaramaz. Lütfen tekrar deneyin.",
+    "leaderboardTitle": "Top promosyonlar",
+    "loading": "Yükleniyor...",
+    "leaderboardEmpty": "Hiç kimse sunucuyu henüz terfi etmedi. Bir kez üyeler durumunuzu veya etiketinizi eklerken, burada görünecekler.",
+    "statusActive": "Durum aktif durumda",
+    "tagActive": "Tag aktif",
+    "notPromoting": "Şu anda teşvik etme",
+    "sessionsCount": "{count} seans seans oturumları",
+    "mOnly": "{m}m m m m",
+    "lessMin": "Bir dakikanın altında",
+    "dh": "{d}d {h}h",
+    "hm": "{h}h {m}m m m m"
   }
 }

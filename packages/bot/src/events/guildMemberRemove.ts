@@ -9,12 +9,15 @@ import { WelcomeModule } from '../modules/welcome/WelcomeModule.js';
 import { LoggingModule } from '../modules/logging/LoggingModule.js';
 import { AnalyticsModule } from '../modules/AnalyticsModule.js';
 import { InviteTrackerModule } from '../modules/inviteTracker/InviteTrackerModule.js';
+import { PromotionModule } from '../modules/promotion/PromotionModule.js';
 
 import { swallow } from '../logger.js';
 const event: BotEvent = {
   name: 'guildMemberRemove',
   async execute(_client: unknown, member: GuildMember | PartialGuildMember) {
     if (!member.guild) return;
+    // Close promotion sessions using the partial (a left member can't be fetched).
+    void PromotionModule.handleMemberRemove(member.guild.id, member.id).catch(swallow);
     // Partial members lack roles and other data needed by downstream handlers.
     const fullMember = member.partial
       ? await member.guild.members.fetch(member.id).catch(swallow)
