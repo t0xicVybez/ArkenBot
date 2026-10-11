@@ -26,6 +26,12 @@ if [ "$RUN_PRISMA" -eq 1 ]; then
   npx prisma generate
 fi
 
+# Always rebuild the workspace libraries first: bot/api/web compile against
+# their dist, so a stale lib is the classic "builds locally, breaks on deploy".
+echo "── building workspace libs (shared, addon-sdk) ──"
+(cd packages/shared && npm run build)
+(cd packages/addon-sdk && npm run build)
+
 for pkg in "${PACKAGES[@]}"; do
   echo "── building $pkg ──"
   (cd "packages/$pkg" && npm run build)
