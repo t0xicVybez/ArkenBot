@@ -747,6 +747,28 @@ async function handleClaimButton(
   await saveTicket(ctx.storage, interaction.guildId, ticket);
   await updateControlsMessage(ctx, ticket, true);
   await interaction.reply(t('claimed', { user: interaction.user.tag }));
+  await sendClaimBrief(ctx, interaction, ticket, t);
+}
+
+/**
+ * After a staff member claims a ticket, privately send them the AI triage brief
+ * (summary + suggested reply + action buttons) so they don't have to run
+ * `/ticket notes`. Ephemeral — only the claimer sees it. No-op when there's no
+ * AI triage (e.g. auto-triage disabled or no AI key).
+ */
+export async function sendClaimBrief(
+  ctx: AddonContext,
+  interaction: ButtonInteraction | import('discord.js').ChatInputCommandInteraction,
+  ticket: Ticket,
+  t: Translate,
+): Promise<void> {
+  if (!ticket.aiTriage) return;
+  await interaction.followUp({
+    content: t('claimBriefHeader', { num: ticket.number }),
+    embeds: [buildTriageEmbed(ticket, ticket.aiTriage, t)],
+    components: [buildTriageActions(ticket.channelId, t)],
+    flags: MessageFlags.Ephemeral,
+  }).catch(() => null);
 }
 
 /**

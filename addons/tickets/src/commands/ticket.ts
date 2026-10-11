@@ -35,7 +35,7 @@ import {
   removeUserFromTicket,
   restoreTicketChannel,
 } from '../utils/channel.js';
-import { updateControlsMessage } from '../events/interaction.js';
+import { updateControlsMessage, sendClaimBrief } from '../events/interaction.js';
 
 const PRIORITY_CHOICES = [
   { name: '🟢 Low', value: 'low' },
@@ -250,6 +250,7 @@ const command: AddonCommandDefinition = {
         await saveTicket(ctx.storage, interaction.guildId, ticket);
         await updateControlsMessage(ctx, ticket, true);
         await interaction.reply(t('claimed', { user: interaction.user.tag }));
+        await sendClaimBrief(ctx, interaction, ticket, t);
         break;
       }
       case 'unclaim': {
