@@ -921,6 +921,9 @@ export async function generateTriage(
 
 type MsgFetchable = { messages: { fetch: (o: { limit: number }) => Promise<Map<string, Message>> } };
 
+/** Model used for ticket triage — bigger/smarter, on its own Groq token budget. */
+const TRIAGE_MODEL = 'openai/gpt-oss-120b';
+
 /** Call the LLM to summarize a ticket. Returns null when there's nothing to triage. */
 export async function runTriageModel(
   ctx: AddonContext,
@@ -939,7 +942,10 @@ export async function runTriageModel(
   let transcript: string[] = [];
   if (channel) {
     try {
-      const fetched = await channel.messages.fetch({ limit: 40 });
+      // Keep the context tight: the most recent ~15 messages carry the current
+      // state of the conversation, and fewer tokens per call means more daily
+      // headroom on the model's token budget.
+      const fetched = await channel.messages.fetch({ limit: 15 });
       transcript = [...fetched.values()]
         .reverse()
         .filter((m: Message) => m.content.trim().length > 0)
@@ -967,7 +973,10 @@ export async function runTriageModel(
       },
       { role: 'user', content: context },
     ],
-    { temperature: 0.3, maxTokens: 600 },
+    // Use the larger gpt-oss-120b for triage quality. Groq rate-limits per
+    // model, so this runs on its own token budget, separate from other AI
+    // features (which stay on the default model).
+    { model: TRIAGE_MODEL, temperature: 0.3, maxTokens: 600 },
   );
 
   const urgency = (result.urgency ?? 'medium').toLowerCase();
