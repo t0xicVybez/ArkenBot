@@ -31,6 +31,7 @@ import { pollUpcoming, pollFeeds } from './streamAlerts/YouTubeAlerts.js';
 import { runRedditAlerts } from './streamAlerts/RedditAlerts.js';
 import { ValorantModule } from './valorant/ValorantModule.js';
 import { PromotionModule } from './promotion/PromotionModule.js';
+import { runGiveaways } from './jobs/giveaways.js';
 import RSSParser from 'rss-parser';
 
 export class BackgroundJobs {
@@ -82,8 +83,8 @@ export class BackgroundJobs {
     void this.runReminders();
     setTimeout(() => this.timers.push(setInterval(() => void this.runReminders(), 60 * 1000)), jitter());
 
-    void this.runGiveaways();
-    setTimeout(() => this.timers.push(setInterval(() => void this.runGiveaways(), 60 * 1000)), jitter());
+    void runGiveaways(this.client);
+    setTimeout(() => this.timers.push(setInterval(() => void runGiveaways(this.client), 60 * 1000)), jitter());
 
     void this.closePolls();
     setTimeout(() => this.timers.push(setInterval(() => void this.closePolls(), 60 * 1000)), jitter());
@@ -631,90 +632,6 @@ export class BackgroundJobs {
 
   // ── Giveaway Endings ────────────────────────────────────────────────────────
 
-  private async runGiveaways(): Promise<void> {
-    const now = new Date();
-    try {
-      const ended = await prisma.giveaway.findMany({
-        where: { ended: false, endsAt: { lte: now } },
-      });
-      for (const giveaway of ended) {
-        await this.endGiveaway(giveaway);
-      }
-    } catch (err) {
-      logger.error({ err }, 'Giveaway check failed');
-    }
-  }
-
-  private async endGiveaway(giveaway: Awaited<ReturnType<typeof prisma.giveaway.findFirst>> & object): Promise<void> {
-    if (!giveaway) return;
-    try {
-      const guild = this.client.guilds.cache.get(giveaway.guildId);
-      if (!guild) return;
-
-      const channel = guild.channels.cache.get(giveaway.channelId);
-      if (!channel?.isTextBased() || !giveaway.messageId) {
-        await prisma.giveaway.update({ where: { id: giveaway.id }, data: { ended: true } });
-        return;
-      }
-
-      const msg = await channel.messages.fetch(giveaway.messageId).catch(swallow);
-      const reaction = msg?.reactions.cache.get('🎉');
-      const users = reaction ? await reaction.users.fetch().catch(swallow) : null;
-      const eligibleBase = users?.filter(u => !u.bot && u.id !== giveaway.hostId);
-
-      // Filter by required role if set
-      const requiredRoleId = (giveaway as Record<string, unknown>).requiredRoleId as string | null | undefined;
-      const eligible = requiredRoleId && eligibleBase
-        ? eligibleBase.filter((_u: import('discord.js').User, id: string) => guild.members.cache.get(id)?.roles.cache.has(requiredRoleId) ?? false)
-        : eligibleBase;
-
-      // Build entries with bonus role duplicates
-      let entries = eligible ? [...eligible.values()] : [];
-      const bonusRoleEntries = (giveaway as Record<string, unknown>).bonusRoleEntries as Array<{ roleId: string; bonusEntries: number }> | null;
-      if (bonusRoleEntries && bonusRoleEntries.length > 0 && eligible) {
-        for (const bonus of bonusRoleEntries) {
-          for (const user of eligible.values()) {
-            if (guild.members.cache.get(user.id)?.roles.cache.has(bonus.roleId)) {
-              for (let i = 0; i < bonus.bonusEntries; i++) entries.push(user);
-            }
-          }
-        }
-      }
-
-      const loc = await resolveUserLocale({ user: { id: '' }, guildId: giveaway.guildId, guildLocale: guild.preferredLocale });
-
-      let winnerIds: string[] = [];
-      let winnerMentions = t('giveaway.noEntrants', loc);
-
-      if (entries.length > 0) {
-        const winners = entries.sort(() => Math.random() - 0.5).slice(0, giveaway.winnersCount);
-        winnerIds = [...new Set(winners.map(w => w.id))];
-        winnerMentions = winnerIds.map(id => `<@${id}>`).join(', ');
-      }
-
-      const winnerLabel = winnerIds.length > 1 ? t('giveaway.winnersLabel', loc) : t('giveaway.winnerLabel', loc);
-
-      await prisma.giveaway.update({ where: { id: giveaway.id }, data: { ended: true, winnerIds } });
-
-      await channel.send({
-        content: t('giveaway.ended', loc, { winnerLabel, winners: winnerMentions, prize: giveaway.prize }),
-      });
-
-      if (msg) {
-        const { EmbedBuilder } = await import('discord.js');
-        const endedEmbed = new EmbedBuilder()
-          .setTitle(t('giveaway.endedTitle', loc))
-          .setDescription(t('giveaway.endedEmbed', loc, { prize: giveaway.prize, winnerLabel, winners: winnerMentions }))
-          .setColor(0x95a5a6)
-          .setTimestamp();
-        await msg.edit({ embeds: [endedEmbed] }).catch(swallow);
-      }
-
-      logger.info({ id: giveaway.id, guildId: giveaway.guildId }, 'Giveaway ended');
-    } catch (err) {
-      logger.error({ err, id: giveaway?.id }, 'Failed to end giveaway');
-    }
-  }
 
   // ── Stream Alerts ────────────────────────────────────────────────────────────
 
