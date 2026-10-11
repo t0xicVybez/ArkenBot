@@ -762,13 +762,81 @@ export async function sendClaimBrief(
   ticket: Ticket,
   t: Translate,
 ): Promise<void> {
-  if (!ticket.aiTriage) return;
+  // Smart-refresh: reuse the cached brief unless the conversation has advanced
+  // since it was made (then regenerate so the claimer sees current context).
+  const triage = await freshTriage(ctx, ticket, false);
+  if (!triage) return;
   await interaction.followUp({
     content: t('claimBriefHeader', { num: ticket.number }),
-    embeds: [buildTriageEmbed(ticket, ticket.aiTriage, t)],
+    embeds: [buildTriageEmbed(ticket, triage, t)],
     components: [buildTriageActions(ticket.channelId, t)],
     flags: MessageFlags.Ephemeral,
   }).catch(() => null);
+}
+
+/** Resolve the ticket's channel as something with a `messages.fetch`. */
+function ticketMsgChannel(ctx: AddonContext, ticket: Ticket): MsgFetchable | null {
+  const ch = ctx.client.channels.cache.get(ticket.channelId);
+  return ch && 'messages' in ch ? (ch as unknown as MsgFetchable) : null;
+}
+
+/**
+ * Return an up-to-date triage for a ticket: regenerate from the live
+ * conversation when `force` is set, when there's no cached brief, or when a
+ * message has arrived since the cached brief was made; otherwise reuse the
+ * cache. Persists a regenerated brief onto the ticket. Falls back to the stale
+ * cache if the AI is unavailable or regeneration fails.
+ */
+export async function freshTriage(
+  ctx: AddonContext,
+  ticket: Ticket,
+  force: boolean,
+): Promise<AiTriage | null> {
+  const cached = ticket.aiTriage ?? null;
+  let needRegen = force || !cached;
+  if (!needRegen && cached) {
+    const msgs = await getMessages(ctx.storage, ticket.channelId);
+    const lastMsgAt = msgs.reduce((max, m) => Math.max(max, new Date(m.timestamp).getTime()), 0);
+    if (lastMsgAt > new Date(cached.at).getTime()) needRegen = true;
+  }
+  if (!needRegen) return cached;
+  if (!isLLMAvailable()) return cached; // can't regenerate — use stale if any
+  try {
+    const fresh = await runTriageModel(ctx, ticket, ticketMsgChannel(ctx, ticket), true);
+    if (fresh) {
+      ticket.aiTriage = fresh;
+      await saveTicket(ctx.storage, ticket.guildId, ticket);
+      return fresh;
+    }
+  } catch (err) {
+    ctx.logger.warn(`Triage regenerate failed for #${ticket.number}: ${err instanceof Error ? err.message : String(err)}`);
+  }
+  return cached;
+}
+
+/**
+ * On transfer, DM the new owner a freshly-regenerated brief (covering the whole
+ * conversation so far). If the DM can't be delivered, drop a quiet in-channel
+ * ping pointing them at `/triage` — never the private AI content.
+ */
+export async function sendTransferBrief(
+  ctx: AddonContext,
+  ticket: Ticket,
+  targetMember: import('discord.js').GuildMember,
+  t: Translate,
+): Promise<void> {
+  const triage = await freshTriage(ctx, ticket, true); // always regenerate at handoff
+  if (!triage) return;
+  const guildName = ctx.getGuild(ticket.guildId)?.name ?? '';
+  const dmOk = await targetMember.send({
+    content: t('transferBriefHeader', { num: ticket.number, guild: guildName, channel: `<#${ticket.channelId}>` }),
+    embeds: [buildTriageEmbed(ticket, triage, t)],
+    components: [buildTriageActions(ticket.channelId, t)],
+  }).then(() => true).catch(() => false);
+  if (!dmOk) {
+    const ch = ctx.client.channels.cache.get(ticket.channelId) as TextChannel | undefined;
+    if (ch && 'send' in ch) await ch.send(t('transferBriefFallback', { user: `<@${targetMember.id}>`, num: ticket.number })).catch(() => null);
+  }
 }
 
 /**
