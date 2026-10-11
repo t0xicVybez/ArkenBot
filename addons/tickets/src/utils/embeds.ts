@@ -10,6 +10,7 @@ import {
   type MessageActionRowComponentBuilder,
 } from 'discord.js';
 import type { Ticket, TicketPanel } from '../types.js';
+import { pickEmoji } from './format.js';
 
 /** Translator bound to the viewer's locale, passed in from the addon context. */
 export type Translate = (key: string, vars?: Record<string, string | number>) => string;
@@ -72,25 +73,6 @@ export function buildPanelEmbed(panel: TicketPanel, guild: Guild): EmbedBuilder 
   });
 
   return embed;
-}
-
-/**
- * Extract a Discord-valid emoji from a free-text field. Users sometimes type an
- * emoji plus extra words (e.g. "🎫 feedback") into the emoji box, which Discord
- * rejects with COMPONENT_INVALID_EMOJI and fails the *entire* panel send. This
- * returns a usable emoji — a custom token `<:name:id>`, a country flag, or the
- * leading unicode emoji — or undefined so we simply omit it rather than crash.
- */
-function pickEmoji(raw?: string): string | undefined {
-  if (!raw) return undefined;
-  const s = raw.trim();
-  if (!s) return undefined;
-  if (/^<a?:[a-zA-Z0-9_]+:\d+>$/.test(s)) return s; // custom emoji token
-  const flag = s.match(/\p{Regional_Indicator}\p{Regional_Indicator}/u);
-  if (flag) return flag[0]; // country flag (pair of regional indicators)
-  const emoji = s.match(/\p{Extended_Pictographic}(️|‍\p{Extended_Pictographic}|\p{Emoji_Modifier})*/u);
-  if (emoji) return emoji[0]; // first unicode emoji sequence, trailing text dropped
-  return undefined;
 }
 
 /** Set a button's emoji only when the raw value yields a valid one. */

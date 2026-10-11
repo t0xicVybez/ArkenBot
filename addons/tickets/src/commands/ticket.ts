@@ -30,6 +30,7 @@ import {
   buildTicketControls,
 } from '../utils/embeds.js';
 import { generateTranscriptHtml } from '../utils/transcript.js';
+import { applyCannedVars } from '../utils/format.js';
 import {
   addUserToTicket,
   removeUserFromTicket,
@@ -492,14 +493,13 @@ const command: AddonCommandDefinition = {
         }
         // Substitute {user} {username} {staff} {staffname} {ticket} placeholders.
         const opener = await interaction.guild!.members.fetch(ticket.userId).catch(() => null);
-        const vars: Record<string, string> = {
+        const content = applyCannedVars(canned.content, {
           user: `<@${ticket.userId}>`,
           username: opener?.user.username ?? ticket.username,
           staff: `<@${interaction.user.id}>`,
           staffname: interaction.user.username,
           ticket: `#${ticket.number}`,
-        };
-        const content = canned.content.replace(/\{(\w+)\}/g, (m, k) => vars[String(k).toLowerCase()] ?? m);
+        });
         await interaction.reply(content);
         break;
       }
