@@ -9,7 +9,7 @@ import triageCommand from './commands/triage.js';
 import { isTicketInteraction, handleTicketInteraction, closeTicket, postNoteToThread, updateControlsMessage } from './events/interaction.js';
 import { handleTicketMessage } from './events/message.js';
 import { getTickets, getPanels, getConfig, getPanel, getTicketByChannel, appendMessage, saveTicket } from './utils/storage.js';
-import { buildPanelEmbed, buildPanelButtons } from './utils/embeds.js';
+import { buildPanelEmbed, buildPanelComponents } from './utils/embeds.js';
 import type { TicketNote } from './types.js';
 import { locales } from './locales.js';
 
@@ -186,8 +186,10 @@ async function syncPanelMessage(ctx: AddonContext, guildId: string, panelId: str
   if (!channel?.isTextBased()) return;
 
   try {
+    const loc = await ctx.resolveLocale({ user: { id: '' }, guildId: guild.id, guildLocale: guild.preferredLocale });
+    const selectPlaceholder = ctx.t('selectPlaceholder', loc);
     const msg = await channel.messages.fetch(panel.messageId);
-    await msg.edit({ embeds: [buildPanelEmbed(panel, guild)], components: buildPanelButtons(panel) });
+    await msg.edit({ embeds: [buildPanelEmbed(panel, guild)], components: buildPanelComponents(panel, selectPlaceholder) });
     ctx.logger.info(`Auto-updated panel "${panel.name}" in guild ${guildId}`);
   } catch (err) {
     ctx.logger.warn(`Failed to auto-update panel message: ${String(err)}`);

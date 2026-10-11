@@ -29,6 +29,7 @@ interface TicketPanel {
   closeAction: string; autoCloseHours: number; requireReason: boolean;
   welcomeMessage: string; buttonLabel: string; buttonColor: string;
   buttons?: PanelButton[];
+  panelStyle?: 'buttons' | 'dropdown';
   ticketMode: 'channel' | 'thread';
   fields?: PanelField[];
   embedColor?: string; embedAuthorName?: string; embedAuthorIconUrl?: string;
@@ -49,6 +50,7 @@ const DEFAULT_DRAFT: PanelDraft = {
   name: '', description: '', emoji: '🎫',
   buttonLabel: 'Open a Ticket', buttonColor: 'primary',
   buttons: [],
+  panelStyle: 'buttons',
   ticketMode: 'channel',
   fields: [],
   staffRoles: [], maxTicketsPerUser: 1,
@@ -203,13 +205,14 @@ function ButtonRow({
           placeholder={t('emoji')}
           value={btn.emoji}
           onChange={(e) => onChange({ ...btn, emoji: e.target.value })}
-          style={{ width: 60, flex: 'none' }}
+          style={{ width: 88, flex: 'none' }}
         />
         <input
           className="input flex-1 text-sm py-1.5"
           placeholder={t('buttonLabelPlaceholder')}
           value={btn.label}
           onChange={(e) => onChange({ ...btn, label: e.target.value })}
+          style={{ maxWidth: 340 }}
         />
         <select
           className="input text-sm py-1.5"
@@ -455,6 +458,22 @@ function PanelForm({
             <p className="text-gray-400 text-sm">
               {t('buttonsDesc')}
             </p>
+
+            {(draft.buttons ?? []).length >= 2 && (
+              <div className="border border-(--border-subtle) rounded-lg p-3 space-y-2">
+                <Row label={t('panelStyleLabel')}>
+                  <select
+                    className="input text-sm"
+                    value={draft.panelStyle ?? 'buttons'}
+                    onChange={(e) => set('panelStyle', e.target.value as 'buttons' | 'dropdown')}
+                  >
+                    <option value="buttons">{t('panelStyleButtons')}</option>
+                    <option value="dropdown">{t('panelStyleDropdown')}</option>
+                  </select>
+                </Row>
+                <p className="text-gray-500 text-xs">{t('panelStyleHint')}</p>
+              </div>
+            )}
 
             {(draft.buttons ?? []).length === 0 && (
               <div className="space-y-3 border border-(--border-subtle) rounded-lg p-3">

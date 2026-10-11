@@ -646,7 +646,8 @@
     "noStaffResponse": "Brak odpowiedzi zespołu w 24 h",
     "showing": "Wyświetlanie {from}–{to} z {total}",
     "previous": "Poprzednia",
-    "next": "Następna"
+    "next": "Następna",
+    "status_waiting": "Czekam."
   },
   "ticketSettingsPage": {
     "loading": "Ładowanie...",
@@ -946,7 +947,11 @@
     "allButtonsDefault": "Wszystkie przyciski (domyślnie)",
     "buttonN": "Przycisk {n}",
     "thisButton": "ten przycisk",
-    "fieldsButtonHint": "Pokazane tylko dla \"{label}\"guzik. Zostaw puste, aby użyć domyślnych pytań."
+    "fieldsButtonHint": "Pokazane tylko dla \"{label}\"guzik. Zostaw puste, aby użyć domyślnych pytań.",
+    "panelStyleLabel": "Wyświetla opcje jako",
+    "panelStyleButtons": "Przyciski",
+    "panelStyleDropdown": "Menu rozwijane",
+    "panelStyleHint": "Upadek utrzymuje zajęte panele czyste, wymieniając każdy typ biletu w jednym menu. Stosuje się, gdy masz 2 lub więcej przycisków."
   },
   "giveawaysPage": {
     "giveawayCreated": "Utworzono giveaway!",

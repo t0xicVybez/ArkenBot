@@ -646,7 +646,8 @@
     "noStaffResponse": "No staff response in 24h",
     "showing": "Showing {from}–{to} of {total}",
     "previous": "Previous",
-    "next": "Next"
+    "next": "Next",
+    "status_waiting": "Waiting"
   },
   "ticketSettingsPage": {
     "loading": "Loading...",
@@ -946,7 +947,11 @@
     "allButtonsDefault": "All buttons (default)",
     "fieldsButtonHint": "Shown only for the “{label}” button. Leave empty to use the default questions.",
     "buttonN": "Button {n}",
-    "thisButton": "this button"
+    "thisButton": "this button",
+    "panelStyleLabel": "Display options as",
+    "panelStyleButtons": "Buttons",
+    "panelStyleDropdown": "Dropdown menu",
+    "panelStyleHint": "A dropdown keeps busy panels tidy by listing every ticket type in one menu. Applies when you have 2 or more buttons."
   },
   "giveawaysPage": {
     "giveawayCreated": "Giveaway created!",

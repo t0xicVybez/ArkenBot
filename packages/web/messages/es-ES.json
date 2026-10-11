@@ -646,7 +646,8 @@
     "noStaffResponse": "Sin respuesta del staff en 24 h",
     "showing": "Mostrando {from}–{to} de {total}",
     "previous": "Anterior",
-    "next": "Siguiente"
+    "next": "Siguiente",
+    "status_waiting": "Esperando"
   },
   "ticketSettingsPage": {
     "loading": "Cargando...",
@@ -946,7 +947,11 @@
     "allButtonsDefault": "Todos los botones (por defecto)",
     "buttonN": "Button {n}",
     "thisButton": "este botón",
-    "fieldsButtonHint": "Mostrar sólo para el “{label}” botón. Deje vacío para usar las preguntas predeterminadas."
+    "fieldsButtonHint": "Mostrar sólo para el “{label}” botón. Deje vacío para usar las preguntas predeterminadas.",
+    "panelStyleButtons": "Botones",
+    "panelStyleHint": "Un desplegable mantiene los paneles ocupados ordenando cada tipo de ticket en un menú. Se aplica cuando tiene 2 o más botones.",
+    "panelStyleLabel": "Opciones de visualización como",
+    "panelStyleDropdown": "Menú desplegable"
   },
   "giveawaysPage": {
     "giveawayCreated": "¡Sorteo creado!",

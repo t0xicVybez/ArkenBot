@@ -646,7 +646,8 @@
     "noStaffResponse": "24시간 내 스태프 응답 없음",
     "showing": "{total}개 중 {from}–{to} 표시",
     "previous": "이전",
-    "next": "다음"
+    "next": "다음",
+    "status_waiting": "뚱 베어"
   },
   "ticketSettingsPage": {
     "loading": "불러오는 중...",
@@ -946,7 +947,11 @@
     "allButtonsDefault": "모든 단추 (과태)",
     "buttonN": "기타 제품 {n}",
     "thisButton": "이 버튼",
-    "fieldsButtonHint": "\"만보기{label}” 단추. 자주 묻는 질문"
+    "fieldsButtonHint": "\"만보기{label}” 단추. 자주 묻는 질문",
+    "panelStyleButtons": "버튼",
+    "panelStyleLabel": "옵션 표시",
+    "panelStyleDropdown": "드롭다운 메뉴",
+    "panelStyleHint": "드롭다운은 1개의 메뉴에서 각 표 유형을 나열하여 바쁜 패널 tidy를 유지합니다. 2개 이상의 버튼이 있을 때 적용됩니다."
   },
   "giveawaysPage": {
     "giveawayCreated": "이벤트를 만들었습니다!",

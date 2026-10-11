@@ -646,7 +646,8 @@
     "noStaffResponse": "Sem resposta da equipe em 24 h",
     "showing": "Mostrando {from}–{to} de {total}",
     "previous": "Anterior",
-    "next": "Próximo"
+    "next": "Próximo",
+    "status_waiting": "Esperando."
   },
   "ticketSettingsPage": {
     "loading": "Carregando...",
@@ -946,7 +947,11 @@
     "allButtonsDefault": "Todos os botões (padrão)",
     "buttonN": "Botão {n}",
     "thisButton": "Este botão.",
-    "fieldsButtonHint": "Mostrado apenas para o “{label}\"botão. Deixe vazio para usar as perguntas padrão."
+    "fieldsButtonHint": "Mostrado apenas para o “{label}\"botão. Deixe vazio para usar as perguntas padrão.",
+    "panelStyleLabel": "Mostrar opções como",
+    "panelStyleButtons": "Botões",
+    "panelStyleDropdown": "Menu suspenso",
+    "panelStyleHint": "Um dropdown mantém os painéis ocupados arrumados listando cada tipo de ingresso em um menu. Aplica-se quando você tem 2 ou mais botões."
   },
   "giveawaysPage": {
     "giveawayCreated": "Sorteio criado!",

@@ -646,7 +646,8 @@
     "noStaffResponse": "24 小时内无客服回复",
     "showing": "显示 {from}–{to}，共 {total}",
     "previous": "上一页",
-    "next": "下一页"
+    "next": "下一页",
+    "status_waiting": "等待时"
   },
   "ticketSettingsPage": {
     "loading": "加载中...",
@@ -946,7 +947,11 @@
     "allButtonsDefault": "所有按钮( 默认)",
     "buttonN": "按钮 {n}",
     "thisButton": "此按钮",
-    "fieldsButtonHint": "仅显示“{label}“按钮。 留空以使用默认问题 。"
+    "fieldsButtonHint": "仅显示“{label}“按钮。 留空以使用默认问题 。",
+    "panelStyleLabel": "显示选项为",
+    "panelStyleButtons": "按钮",
+    "panelStyleDropdown": "下拉菜单",
+    "panelStyleHint": "下拉会把每个票型都列在一个菜单中 来清理板子 当您有两个或两个以上按钮时适用。"
   },
   "giveawaysPage": {
     "giveawayCreated": "抽奖已创建！",

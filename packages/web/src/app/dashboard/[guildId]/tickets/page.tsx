@@ -230,6 +230,7 @@ export default function TicketsPage() {
             <option value="">{t('allStatuses')}</option>
             <option value="open">{t('status_open')}</option>
             <option value="claimed">{t('status_claimed')}</option>
+            <option value="waiting">{t('status_waiting')}</option>
             <option value="closed">{t('status_closed')}</option>
           </select>
           <select className="input" value={priorityFilter} onChange={(e) => { setPriorityFilter(e.target.value); setPage(1); }}>

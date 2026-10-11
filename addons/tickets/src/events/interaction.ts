@@ -7,6 +7,7 @@ import {
   EmbedBuilder,
   type Interaction,
   type ButtonInteraction,
+  type StringSelectMenuInteraction,
   type ChatInputCommandInteraction,
   type ModalSubmitInteraction,
   type TextChannel,
@@ -60,6 +61,7 @@ const pendingClose = new Map<string, ReturnType<typeof setTimeout>>();
 
 export function isTicketInteraction(interaction: Interaction): boolean {
   if (interaction.isButton()) return interaction.customId.startsWith(CUSTOM_ID_PREFIX);
+  if (interaction.isStringSelectMenu()) return interaction.customId.startsWith(CUSTOM_ID_PREFIX);
   if (interaction.isModalSubmit()) return interaction.customId.startsWith(CUSTOM_ID_PREFIX);
   return false;
 }
@@ -70,8 +72,22 @@ export async function handleTicketInteraction(
 ): Promise<void> {
   if (interaction.isButton()) {
     await handleButton(ctx, interaction);
+  } else if (interaction.isStringSelectMenu()) {
+    await handleSelect(ctx, interaction);
   } else if (interaction.isModalSubmit()) {
     await handleModal(ctx, interaction);
+  }
+}
+
+// ─── Select-Menu Handler (dropdown-style panels) ───────────────────────────────
+
+async function handleSelect(ctx: AddonContext, interaction: StringSelectMenuInteraction): Promise<void> {
+  const id = interaction.customId;
+  if (id.startsWith('ticket:select:')) {
+    // Format: ticket:select:{panelId}, selected value = the button id
+    const panelId = id.slice('ticket:select:'.length);
+    const buttonId = interaction.values[0];
+    await handleOpenTicket(ctx, interaction, panelId, buttonId);
   }
 }
 
@@ -117,7 +133,7 @@ async function handleButton(ctx: AddonContext, interaction: ButtonInteraction): 
 
 async function handleOpenTicket(
   ctx: AddonContext,
-  interaction: ButtonInteraction,
+  interaction: ButtonInteraction | StringSelectMenuInteraction,
   panelId: string,
   buttonId?: string,
 ): Promise<void> {
@@ -209,7 +225,7 @@ export async function createTicket(
   userTag: string,
   panel: TicketPanel,
   reason: string | undefined,
-  interaction: ButtonInteraction | ModalSubmitInteraction,
+  interaction: ButtonInteraction | StringSelectMenuInteraction | ModalSubmitInteraction,
   categoryTag?: string,
   formResponses?: Record<string, string>,
   buttonId?: string,

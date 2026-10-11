@@ -3,8 +3,11 @@ import {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
+  StringSelectMenuBuilder,
+  StringSelectMenuOptionBuilder,
   type Guild,
   type GuildMember,
+  type MessageActionRowComponentBuilder,
 } from 'discord.js';
 import type { Ticket, TicketPanel } from '../types.js';
 
@@ -96,22 +99,56 @@ function applyEmoji(btn: ButtonBuilder, raw?: string): void {
   if (e) { try { btn.setEmoji(e); } catch { /* malformed — leave emoji off */ } }
 }
 
-export function buildPanelButtons(panel: TicketPanel): ActionRowBuilder<ButtonBuilder>[] {
+/**
+ * Build the interactive components for a ticket panel message. Depending on
+ * `panel.panelStyle` this is either a grid of buttons (default) or a single
+ * string-select dropdown. `selectPlaceholder` is the guild-localized prompt
+ * shown on the dropdown; it falls back to the panel's button label.
+ *
+ * Dropdown only applies with 2+ ticket options — a single-option panel always
+ * renders as one button regardless of style.
+ */
+export function buildPanelComponents(
+  panel: TicketPanel,
+  selectPlaceholder?: string,
+): ActionRowBuilder<MessageActionRowComponentBuilder>[] {
   const buttons = panel.buttons && panel.buttons.length > 0 ? panel.buttons : null;
 
+  // ── Dropdown style ──────────────────────────────────────────────────────
+  if (panel.panelStyle === 'dropdown' && buttons && buttons.length > 1) {
+    const menu = new StringSelectMenuBuilder()
+      .setCustomId(`ticket:select:${panel.id}`)
+      .setPlaceholder((selectPlaceholder || panel.buttonLabel || 'Open a ticket').slice(0, 150))
+      .setMinValues(1)
+      .setMaxValues(1)
+      .addOptions(
+        buttons.slice(0, 25).map((b) => {
+          const opt = new StringSelectMenuOptionBuilder()
+            .setLabel((b.label?.trim() || 'Ticket').slice(0, 100))
+            .setValue(b.id);
+          if (b.categoryTag?.trim()) opt.setDescription(b.categoryTag.trim().slice(0, 100));
+          const e = pickEmoji(b.emoji);
+          if (e) { try { opt.setEmoji(e); } catch { /* malformed — leave emoji off */ } }
+          return opt;
+        }),
+      );
+    return [new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(menu)];
+  }
+
+  // ── Button style (default) ──────────────────────────────────────────────
   if (!buttons) {
     const btn = new ButtonBuilder()
       .setCustomId(`ticket:open:${panel.id}`)
       .setLabel(panel.buttonLabel)
       .setStyle(toButtonStyle(panel.buttonColor));
     applyEmoji(btn, panel.emoji);
-    return [new ActionRowBuilder<ButtonBuilder>().addComponents(btn)];
+    return [new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(btn)];
   }
 
-  const rows: ActionRowBuilder<ButtonBuilder>[] = [];
+  const rows: ActionRowBuilder<MessageActionRowComponentBuilder>[] = [];
   for (let i = 0; i < Math.min(buttons.length, 25); i += 5) {
     const chunk = buttons.slice(i, i + 5);
-    const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+    const row = new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(
       chunk.map((b) => {
         const btn = new ButtonBuilder()
           .setCustomId(`ticket:open:${panel.id}:${b.id}`)
@@ -125,6 +162,9 @@ export function buildPanelButtons(panel: TicketPanel): ActionRowBuilder<ButtonBu
   }
   return rows;
 }
+
+/** @deprecated use {@link buildPanelComponents}. Kept for any external callers. */
+export const buildPanelButtons = buildPanelComponents;
 
 // ─── Ticket Open Embed ────────────────────────────────────────────────────────
 

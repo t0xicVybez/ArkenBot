@@ -646,7 +646,8 @@
     "noStaffResponse": "Keine Team-Antwort in 24 h",
     "showing": "Zeige {from}–{to} von {total}",
     "previous": "Zurück",
-    "next": "Weiter"
+    "next": "Weiter",
+    "status_waiting": "Warten"
   },
   "ticketSettingsPage": {
     "loading": "Wird geladen...",
@@ -946,7 +947,11 @@
     "allButtonsDefault": "Alle Buttons (Standard)",
     "buttonN": "Button {n}",
     "thisButton": "Dieser Button",
-    "fieldsButtonHint": "Gezeigt nur für die „{label}„Button. Lassen Sie leer, um die Standardfragen zu verwenden."
+    "fieldsButtonHint": "Gezeigt nur für die „{label}„Button. Lassen Sie leer, um die Standardfragen zu verwenden.",
+    "panelStyleLabel": "Anzeigeoptionen als",
+    "panelStyleButtons": "Knöpfe",
+    "panelStyleDropdown": "Dropdown-Menü",
+    "panelStyleHint": "Ein Dropdown hält beschäftigte Panels ordentlich, indem er jeden Tickettyp in einem Menü auflistet. Gilt, wenn Sie 2 oder mehr Buttons haben."
   },
   "giveawaysPage": {
     "giveawayCreated": "Giveaway erstellt!",

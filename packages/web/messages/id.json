@@ -646,7 +646,8 @@
     "noStaffResponse": "Tidak ada respons staf dalam 24j",
     "showing": "Menampilkan {from}–{to} dari {total}",
     "previous": "Sebelumnya",
-    "next": "Berikutnya"
+    "next": "Berikutnya",
+    "status_waiting": "Menunggu"
   },
   "ticketSettingsPage": {
     "loading": "Memuat...",
@@ -946,7 +947,11 @@
     "allButtonsDefault": "Semua tombol (baku)",
     "buttonN": "Tombol {n}",
     "thisButton": "tombol ini",
-    "fieldsButtonHint": "Shown hanya untuk \"{label}\"Tombol. Tinggalkan kosong untuk menggunakan pertanyaan baku."
+    "fieldsButtonHint": "Shown hanya untuk \"{label}\"Tombol. Tinggalkan kosong untuk menggunakan pertanyaan baku.",
+    "panelStyleLabel": "Tampilkan opsi sebagai",
+    "panelStyleButtons": "Tombol",
+    "panelStyleDropdown": "Menu penurunan",
+    "panelStyleHint": "Sebuah drop down membuat panel sibuk rapi dengan daftar setiap jenis tiket dalam satu menu. Aplikasi ketika Anda memiliki 2 atau lebih tombol."
   },
   "giveawaysPage": {
     "giveawayCreated": "Giveaway dibuat!",

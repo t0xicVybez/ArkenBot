@@ -646,7 +646,8 @@
     "noStaffResponse": "24 saatte yetkili yanıtı yok",
     "showing": "{total} içinden {from}–{to} gösteriliyor",
     "previous": "Önceki",
-    "next": "Sonraki"
+    "next": "Sonraki",
+    "status_waiting": "Bekle"
   },
   "ticketSettingsPage": {
     "loading": "Yükleniyor...",
@@ -946,7 +947,11 @@
     "allButtonsDefault": "Tüm düğmeler (default)",
     "buttonN": "Düğme {n}",
     "thisButton": "Bu düğme",
-    "fieldsButtonHint": "Shown sadece \"{label}\" düğmesine. Varsayılan soruları kullanmak için boş bırakın."
+    "fieldsButtonHint": "Shown sadece \"{label}\" düğmesine. Varsayılan soruları kullanmak için boş bırakın.",
+    "panelStyleLabel": "Ekran seçenekleri gibi",
+    "panelStyleButtons": "Düğmeler",
+    "panelStyleDropdown": "Dropdown menu",
+    "panelStyleHint": "Bir damladown, her bilet tipini bir menüde listelemek için yoğun panellere devam eder. 2 veya daha fazla düğmeye sahip olduğunuzda."
   },
   "giveawaysPage": {
     "giveawayCreated": "Çekiliş oluşturuldu!",

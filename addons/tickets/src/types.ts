@@ -56,6 +56,14 @@ export interface TicketPanel {
   /** Legacy single-button — used if buttons array is absent or empty */
   buttonLabel: string;
   buttonColor: ButtonColor;
+  /**
+   * How the panel's ticket options are presented to users:
+   *  - 'buttons'  (default) → one clickable button per option
+   *  - 'dropdown' → a single string-select menu listing every option
+   * Dropdown only applies when there are 2+ buttons; a single-option panel
+   * always renders as a button.
+   */
+  panelStyle?: 'buttons' | 'dropdown';
   // ─── Embed customisation ─────────────────────────────────────────
   embedColor?: string;           // hex e.g. "#5865F2"
   embedAuthorName?: string;

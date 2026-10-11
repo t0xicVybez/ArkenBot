@@ -646,7 +646,8 @@
     "noStaffResponse": "Nessuna risposta dello staff in 24 h",
     "showing": "Visualizzati {from}–{to} di {total}",
     "previous": "Precedente",
-    "next": "Successivo"
+    "next": "Successivo",
+    "status_waiting": "Aspettare"
   },
   "ticketSettingsPage": {
     "loading": "Caricamento...",
@@ -946,7 +947,11 @@
     "allButtonsDefault": "Tutti i pulsanti (default)",
     "buttonN": "Pulsante {n}",
     "thisButton": "questo pulsante",
-    "fieldsButtonHint": "Mostrato solo per il “{label}” pulsante. Lasciare vuoto per usare le domande predefinite."
+    "fieldsButtonHint": "Mostrato solo per il “{label}” pulsante. Lasciare vuoto per usare le domande predefinite.",
+    "panelStyleLabel": "Opzioni di visualizzazione",
+    "panelStyleButtons": "Pulsanti",
+    "panelStyleDropdown": "menu a tendina",
+    "panelStyleHint": "Un menu a tendina mantiene occupato i pannelli in ordine elencando ogni tipo di biglietto in un menu. Si applica quando si dispone di 2 o più pulsanti."
   },
   "giveawaysPage": {
     "giveawayCreated": "Giveaway creato!",

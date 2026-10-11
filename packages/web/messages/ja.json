@@ -646,7 +646,8 @@
     "noStaffResponse": "24時間スタッフの応答なし",
     "showing": "{total} 件中 {from}–{to} 件を表示",
     "previous": "前へ",
-    "next": "次へ"
+    "next": "次へ",
+    "status_waiting": "待ち合わせ"
   },
   "ticketSettingsPage": {
     "loading": "読み込み中...",
@@ -946,7 +947,11 @@
     "questionsFor": "お問い合わせ",
     "buttonN": "ボタン {n}",
     "thisButton": "このボタン",
-    "fieldsButtonHint": "ショーは「{label}「」ボタン。 既定の質問を使用するために空にしておく。"
+    "fieldsButtonHint": "ショーは「{label}「」ボタン。 既定の質問を使用するために空にしておく。",
+    "panelStyleLabel": "オプションを表示",
+    "panelStyleButtons": "ボタン",
+    "panelStyleDropdown": "ドロップダウンメニュー",
+    "panelStyleHint": "1つのメニューにすべてのチケットタイプをリストすることで、ドロップダウンが忙しいパネルを整頓します。 2つ以上のボタンがある場合に適用されます。"
   },
   "giveawaysPage": {
     "giveawayCreated": "ギブアウェイを作成しました！",

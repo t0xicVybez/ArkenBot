@@ -646,7 +646,8 @@
     "noStaffResponse": "Geen stafreactie in 24u",
     "showing": "{from}–{to} van {total} getoond",
     "previous": "Vorige",
-    "next": "Volgende"
+    "next": "Volgende",
+    "status_waiting": "Wachten"
   },
   "ticketSettingsPage": {
     "loading": "Laden...",
@@ -946,7 +947,11 @@
     "allButtonsDefault": "Alle knoppen (standaard)",
     "buttonN": "Knop {n}",
     "thisButton": "deze knop",
-    "fieldsButtonHint": "Alleen getoond voor de{label}Button. Laat leeg om de standaardvragen te gebruiken."
+    "fieldsButtonHint": "Alleen getoond voor de{label}Button. Laat leeg om de standaardvragen te gebruiken.",
+    "panelStyleLabel": "Opties tonen als",
+    "panelStyleButtons": "Knoppen",
+    "panelStyleDropdown": "Dropdown-menu",
+    "panelStyleHint": "Een dropdown houdt drukke panelen netjes door elk tickettype in één menu op te nemen. Geldt voor 2 of meer knoppen."
   },
   "giveawaysPage": {
     "giveawayCreated": "Giveaway aangemaakt!",

@@ -646,7 +646,8 @@
     "noStaffResponse": "Aucune réponse du staff en 24 h",
     "showing": "Affichage de {from}–{to} sur {total}",
     "previous": "Précédent",
-    "next": "Suivant"
+    "next": "Suivant",
+    "status_waiting": "Attendre"
   },
   "ticketSettingsPage": {
     "loading": "Chargement...",
@@ -946,7 +947,11 @@
     "allButtonsDefault": "Tous les boutons (par défaut)",
     "buttonN": "Bouton {n}",
     "thisButton": "ce bouton",
-    "fieldsButtonHint": "Montré seulement pour le{label}Bouton. Laissez vide pour utiliser les questions par défaut."
+    "fieldsButtonHint": "Montré seulement pour le{label}Bouton. Laissez vide pour utiliser les questions par défaut.",
+    "panelStyleLabel": "Afficher les options comme",
+    "panelStyleButtons": "Boutons",
+    "panelStyleDropdown": "Menu déroulant",
+    "panelStyleHint": "Un menu déroulant permet de ranger les panneaux occupés en énumérant chaque type de billet dans un menu. S’applique lorsque vous avez 2 boutons ou plus."
   },
   "giveawaysPage": {
     "giveawayCreated": "Giveaway créé !",

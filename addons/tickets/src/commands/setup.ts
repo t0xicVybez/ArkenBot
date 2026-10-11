@@ -18,7 +18,7 @@ import {
   getConfig,
   saveConfig,
 } from '../utils/storage.js';
-import { buildPanelEmbed, buildPanelButtons } from '../utils/embeds.js';
+import { buildPanelEmbed, buildPanelComponents } from '../utils/embeds.js';
 
 const CLOSE_ACTION_CHOICES = [
   { name: 'Delete channel', value: 'delete' },
@@ -374,7 +374,7 @@ async function handlePanelSend(
   }
 
   const embed = buildPanelEmbed(panel, interaction.guild!);
-  const rows = buildPanelButtons(panel);
+  const rows = buildPanelComponents(panel, t('selectPlaceholder'));
 
   const msg = await channel.send({ embeds: [embed], components: rows });
 
