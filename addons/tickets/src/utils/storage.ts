@@ -34,14 +34,13 @@ export async function savePanel(
   guildId: string,
   panel: TicketPanel,
 ): Promise<void> {
-  const panels = await getPanels(storage, guildId);
-  const idx = panels.findIndex((p) => p.id === panel.id);
-  if (idx >= 0) {
-    panels[idx] = panel;
-  } else {
-    panels.push(panel);
-  }
-  await storage.set(KEY_PANELS, panels, guildId);
+  await storage.mutate<TicketPanel[]>(KEY_PANELS, (cur) => {
+    const panels = cur ?? [];
+    const idx = panels.findIndex((p) => p.id === panel.id);
+    if (idx >= 0) panels[idx] = panel;
+    else panels.push(panel);
+    return panels;
+  }, guildId);
 }
 
 export async function deletePanel(
@@ -49,12 +48,7 @@ export async function deletePanel(
   guildId: string,
   panelId: string,
 ): Promise<void> {
-  const panels = await getPanels(storage, guildId);
-  await storage.set(
-    KEY_PANELS,
-    panels.filter((p) => p.id !== panelId),
-    guildId,
-  );
+  await storage.mutate<TicketPanel[]>(KEY_PANELS, (cur) => (cur ?? []).filter((p) => p.id !== panelId), guildId);
 }
 
 // ─── Tickets ──────────────────────────────────────────────────────────────────
@@ -86,14 +80,13 @@ export async function saveTicket(
   guildId: string,
   ticket: Ticket,
 ): Promise<void> {
-  const tickets = await getTickets(storage, guildId);
-  const idx = tickets.findIndex((t) => t.id === ticket.id);
-  if (idx >= 0) {
-    tickets[idx] = ticket;
-  } else {
-    tickets.push(ticket);
-  }
-  await storage.set(KEY_TICKETS, tickets, guildId);
+  await storage.mutate<Ticket[]>(KEY_TICKETS, (cur) => {
+    const tickets = cur ?? [];
+    const idx = tickets.findIndex((t) => t.id === ticket.id);
+    if (idx >= 0) tickets[idx] = ticket;
+    else tickets.push(ticket);
+    return tickets;
+  }, guildId);
 }
 
 /** Returns the open tickets belonging to a specific user in this guild. */
@@ -112,10 +105,8 @@ export async function nextTicketNumber(
   storage: AddonStorage,
   guildId: string,
 ): Promise<number> {
-  const counter = (await storage.get<number>(KEY_COUNTER, guildId)) ?? 0;
-  const next = counter + 1;
-  await storage.set(KEY_COUNTER, next, guildId);
-  return next;
+  // Atomic increment so concurrent opens never collide on a ticket number.
+  return storage.mutate<number>(KEY_COUNTER, (cur) => (cur ?? 0) + 1, guildId);
 }
 
 // ─── Config ───────────────────────────────────────────────────────────────────
@@ -163,9 +154,11 @@ export async function appendMessage(
   channelId: string,
   msg: TicketMessage,
 ): Promise<void> {
-  const msgs = await getMessages(storage, channelId);
-  msgs.push(msg);
-  await storage.set(msgKey(channelId), msgs);
+  await storage.mutate<TicketMessage[]>(msgKey(channelId), (cur) => {
+    const msgs = cur ?? [];
+    msgs.push(msg);
+    return msgs;
+  });
 }
 
 export async function deleteMessages(storage: AddonStorage, channelId: string): Promise<void> {

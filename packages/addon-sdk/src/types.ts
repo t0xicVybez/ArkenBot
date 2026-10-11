@@ -93,6 +93,14 @@ export interface AddonStorage {
   get<T = unknown>(key: string, guildId?: string): Promise<T | null>;
   /** Persists a value. Scoped to `guildId` when provided. */
   set<T = unknown>(key: string, value: T, guildId?: string): Promise<void>;
+  /**
+   * Atomically read-modify-write a value under a distributed lock, so
+   * concurrent mutations of the same key can't clobber each other. The mutator
+   * receives the current value (or null) and returns the next value, which is
+   * persisted. Prefer this over get()+set() for any collection you append to or
+   * update in place. Returns the written value.
+   */
+  mutate<T = unknown>(key: string, mutator: (current: T | null) => T | Promise<T>, guildId?: string): Promise<T>;
   /** Deletes a value. Scoped to `guildId` when provided. */
   delete(key: string, guildId?: string): Promise<void>;
   /** Lists all keys in the given scope. */

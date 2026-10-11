@@ -12,8 +12,13 @@ import type { BotCommand } from '../types.js';
 import type { AddonDefinition } from '@arkenbot/addon-sdk';
 import { AddonContext } from '@arkenbot/addon-sdk';
 import { AddonEventBus } from '@arkenbot/addon-sdk';
+import { randomUUID } from 'crypto';
 import { prisma } from '../database.js';
+import { redis } from '../redis.js';
 import { logger } from '../logger.js';
+
+/** Release a Redis lock only if we still own it (compare-and-delete). */
+const RELEASE_LOCK = 'if redis.call("get", KEYS[1]) == ARGV[1] then return redis.call("del", KEYS[1]) else return 0 end';
 import { resolveUserLocale } from '../i18n/index.js';
 import { ADDON_CATEGORY_PREFIX } from '@arkenbot/shared';
 
@@ -69,6 +74,45 @@ class AddonStorage {
       } else {
         await prisma.addonData.create({ data: { guildId: null, addonId: this.addonDbId, key, value: value as object } });
       }
+    }
+  }
+
+  /**
+   * Atomically read-modify-write a value under a per-(addon,guild,key) Redis
+   * lock, so concurrent mutations of the same JSON blob can't clobber each
+   * other (e.g. two tickets opening at once). Best-effort: if the lock can't be
+   * acquired within the window the mutation still proceeds (logged), so a stuck
+   * lock never deadlocks an addon.
+   */
+  async mutate<T>(key: string, mutator: (current: T | null) => T | Promise<T>, guildId?: string): Promise<T> {
+    const lockKey = `addonlock:${this.addonDbId}:${guildId ?? 'global'}:${key}`;
+    const token = randomUUID();
+    const acquired = await this.acquireLock(lockKey, token);
+    try {
+      const current = await this.get<T>(key, guildId);
+      const next = await mutator(current);
+      await this.set(key, next, guildId);
+      return next;
+    } finally {
+      if (acquired) {
+        await redis.eval(RELEASE_LOCK, 1, lockKey, token).catch(() => undefined);
+      }
+    }
+  }
+
+  /** Acquire a Redis lock (SET NX PX) with bounded retry. Returns false on give-up. */
+  private async acquireLock(lockKey: string, token: string): Promise<boolean> {
+    const LOCK_TTL_MS = 5000;
+    const MAX_WAIT_MS = 3000;
+    const deadline = Date.now() + MAX_WAIT_MS;
+    for (;;) {
+      const ok = await redis.set(lockKey, token, 'PX', LOCK_TTL_MS, 'NX').catch(() => null);
+      if (ok === 'OK') return true;
+      if (Date.now() >= deadline) {
+        logger.warn(`AddonStorage: lock contention on ${lockKey}; proceeding without lock`);
+        return false;
+      }
+      await new Promise((r) => setTimeout(r, 40 + Math.floor(Math.random() * 40)));
     }
   }
 

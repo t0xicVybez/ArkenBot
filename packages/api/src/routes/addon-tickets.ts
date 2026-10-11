@@ -7,7 +7,34 @@ import type { FastifyInstance } from 'fastify';
 import { randomUUID } from 'crypto';
 import { requireGuildAdmin } from '../middleware/auth.js';
 import { prisma } from '../database.js';
-import { pub } from '../redis.js';
+import { pub, redis } from '../redis.js';
+
+/** Compare-and-delete so we only release a lock we still own. */
+const RELEASE_LOCK = 'if redis.call("get", KEYS[1]) == ARGV[1] then return redis.call("del", KEYS[1]) else return 0 end';
+
+/**
+ * Run a read-modify-write under the SAME per-(addon,guild,key) Redis lock the
+ * bot's AddonStorage uses, so dashboard writes can't clobber bot writes (or
+ * each other). Best-effort: proceeds after a short wait if the lock is stuck.
+ */
+async function withAddonLock<T>(guildId: string, key: string, fn: () => Promise<T>): Promise<T> {
+  const addonId = await getAddonDbId();
+  const lockKey = `addonlock:${addonId}:${guildId}:${key}`;
+  const token = randomUUID();
+  const deadline = Date.now() + 3000;
+  let acquired = false;
+  for (;;) {
+    const ok = await redis.set(lockKey, token, 'PX', 5000, 'NX').catch(() => null);
+    if (ok === 'OK') { acquired = true; break; }
+    if (Date.now() >= deadline) break;
+    await new Promise((r) => setTimeout(r, 40 + Math.floor(Math.random() * 40)));
+  }
+  try {
+    return await fn();
+  } finally {
+    if (acquired) await redis.eval(RELEASE_LOCK, 1, lockKey, token).catch(() => undefined);
+  }
+}
 
 // ─── Local type definitions ────────────────────────────────────────────────────
 // These mirror the types in addons/tickets/src/types.ts. Keep them in sync when
@@ -101,6 +128,7 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     if (!body.name?.trim()) return reply.code(400).send({ success: false, error: 'Panel name is required' });
     if (!body.description?.trim()) return reply.code(400).send({ success: false, error: 'Panel description is required' });
 
+    return withAddonLock(guildId, 'panels', async () => {
     const panels = (await readData<TicketPanel[]>(guildId, 'panels')) ?? [];
     if (panels.some((p) => p.name.toLowerCase() === body.name!.toLowerCase())) {
       return reply.code(409).send({ success: false, error: 'A panel with that name already exists' });
@@ -108,8 +136,8 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
 
     const panel: TicketPanel = {
       id: randomUUID(),
-      name: body.name.trim(),
-      description: body.description.trim(),
+      name: body.name!.trim(),
+      description: body.description!.trim(),
       emoji: body.emoji ?? '🎫',
       buttonLabel: body.buttonLabel ?? 'Open a Ticket',
       buttonColor: body.buttonColor ?? 'primary',
@@ -138,6 +166,7 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     panels.push(panel);
     await writeData(guildId, 'panels', panels);
     return reply.code(201).send({ success: true, data: panel });
+    });
   });
 
   // ── Panels (update) ───────────────────────────────────────────────────────
@@ -146,6 +175,7 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     const { guildId, panelId } = request.params as { guildId: string; panelId: string };
     const body = request.body as Partial<TicketPanel>;
 
+    return withAddonLock(guildId, 'panels', async () => {
     const panels = (await readData<TicketPanel[]>(guildId, 'panels')) ?? [];
     const idx = panels.findIndex((p) => p.id === panelId);
     if (idx < 0) return reply.code(404).send({ success: false, error: 'Panel not found' });
@@ -168,6 +198,7 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     pub.publish('ticket:panel:updated', JSON.stringify({ guildId, panelId })).catch(() => null);
 
     return reply.send({ success: true, data: updated });
+    });
   });
 
   // ── Panels (delete) ───────────────────────────────────────────────────────
@@ -175,12 +206,14 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
   server.delete('/addons/tickets/:guildId/panels/:panelId', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, panelId } = request.params as { guildId: string; panelId: string };
 
+    return withAddonLock(guildId, 'panels', async () => {
     const panels = (await readData<TicketPanel[]>(guildId, 'panels')) ?? [];
     const filtered = panels.filter((p) => p.id !== panelId);
     if (filtered.length === panels.length) return reply.code(404).send({ success: false, error: 'Panel not found' });
 
     await writeData(guildId, 'panels', filtered);
     return reply.send({ success: true });
+    });
   });
 
   // ── Tickets (list) ────────────────────────────────────────────────────────
