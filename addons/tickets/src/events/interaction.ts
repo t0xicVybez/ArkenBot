@@ -435,6 +435,7 @@ export async function createTicket(
           ticket.claimedByTag = assignee.user.tag;
           await saveTicket(ctx.storage, guildId, ticket);
           await channel.send(t('autoAssigned', { mention: `<@${assignee.id}>` })).catch(() => null);
+          await sendAssignmentBrief(ctx, ticket, assignee, t, false);
         }
       }
     } catch (err) {
@@ -815,17 +816,21 @@ export async function freshTriage(
 }
 
 /**
- * On transfer, DM the new owner a freshly-regenerated brief (covering the whole
- * conversation so far). If the DM can't be delivered, drop a quiet in-channel
- * ping pointing them at `/triage` — never the private AI content.
+ * DM a staff member the ticket's AI brief when they're assigned it without
+ * clicking anything — i.e. via `/ticket transfer` (force a regenerate so the
+ * brief covers the whole conversation) or round-robin auto-assign on open
+ * (the brief is already fresh, so `force` stays false). If the DM can't be
+ * delivered, drop a quiet in-channel ping to `/triage` — never the private AI
+ * content.
  */
-export async function sendTransferBrief(
+export async function sendAssignmentBrief(
   ctx: AddonContext,
   ticket: Ticket,
   targetMember: import('discord.js').GuildMember,
   t: Translate,
+  force = false,
 ): Promise<void> {
-  const triage = await freshTriage(ctx, ticket, true); // always regenerate at handoff
+  const triage = await freshTriage(ctx, ticket, force);
   if (!triage) return;
   const guildName = ctx.getGuild(ticket.guildId)?.name ?? '';
   const dmOk = await targetMember.send({

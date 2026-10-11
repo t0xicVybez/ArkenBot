@@ -35,7 +35,7 @@ import {
   removeUserFromTicket,
   restoreTicketChannel,
 } from '../utils/channel.js';
-import { updateControlsMessage, sendClaimBrief, sendTransferBrief } from '../events/interaction.js';
+import { updateControlsMessage, sendClaimBrief, sendAssignmentBrief } from '../events/interaction.js';
 
 const PRIORITY_CHOICES = [
   { name: '🟢 Low', value: 'low' },
@@ -339,7 +339,7 @@ const command: AddonCommandDefinition = {
         await addUserToTicket(channel, target.id).catch(() => null);
         await updateControlsMessage(ctx, ticket, true);
         await interaction.reply(t('transferred', { mention: `<@${target.id}>` }));
-        await sendTransferBrief(ctx, ticket, targetMember, t);
+        await sendAssignmentBrief(ctx, ticket, targetMember, t, true);
         break;
       }
       case 'add': {
