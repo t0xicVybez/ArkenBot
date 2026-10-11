@@ -79,6 +79,7 @@ export const NAV: NavGroup[] = [
       it('polls', 'Polls', Vote, 'polls'),
       it('suggestions', 'Suggestions', Lightbulb, 'suggestions'),
       it('giveaways', 'Giveaways', Gift, 'giveaways'),
+      it('promotion', 'Server Promotion', Megaphone, 'promotion'),
       it('economy', 'Economy', Coins, 'economy'),
       it('valorant', 'Valorant', Crosshair, 'valorant'),
       it('starboard', 'Starboard', Star, 'starboard'),

@@ -64,7 +64,8 @@
       "staffPortal": "员工门户",
       "gameservers": "游戏服务器",
       "gameadmin": "游戏管理",
-      "valorant": "Valorant"
+      "valorant": "Valorant",
+      "promotion": "服务器促进"
     },
     "palette": {
       "placeholder": "跳转到任意位置…",

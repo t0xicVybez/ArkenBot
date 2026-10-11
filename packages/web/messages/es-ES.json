@@ -64,7 +64,8 @@
       "staffPortal": "Portal del staff",
       "gameservers": "Servidores de juego",
       "gameadmin": "Admin de juego",
-      "valorant": "Valorant"
+      "valorant": "Valorant",
+      "promotion": "Promoción de servidores"
     },
     "palette": {
       "placeholder": "Salta a cualquier sitio…",

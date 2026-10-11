@@ -64,7 +64,8 @@
       "staffPortal": "스태프 포털",
       "gameservers": "게임 서버",
       "gameadmin": "게임 관리",
-      "valorant": "Valorant"
+      "valorant": "Valorant",
+      "promotion": "서버 프로모션"
     },
     "palette": {
       "placeholder": "어디로든 이동…",

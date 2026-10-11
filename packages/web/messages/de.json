@@ -64,7 +64,8 @@
       "staffPortal": "Staff-Portal",
       "gameservers": "Spielserver",
       "gameadmin": "Spieladmin",
-      "valorant": "Valorant"
+      "valorant": "Valorant",
+      "promotion": "Server Promotion"
     },
     "palette": {
       "placeholder": "Zu allem springen…",

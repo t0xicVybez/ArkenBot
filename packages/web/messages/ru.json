@@ -64,7 +64,8 @@
       "staffPortal": "Портал персонала",
       "gameservers": "Игровые серверы",
       "gameadmin": "Админ игры",
-      "valorant": "Valorant"
+      "valorant": "Valorant",
+      "promotion": "Продвижение сервера"
     },
     "palette": {
       "placeholder": "Перейти куда угодно…",

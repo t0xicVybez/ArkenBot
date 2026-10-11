@@ -64,7 +64,8 @@
       "staffPortal": "Yetkili Portalı",
       "gameservers": "Oyun Sunucuları",
       "gameadmin": "Oyun Yönetimi",
-      "valorant": "Valorant"
+      "valorant": "Valorant",
+      "promotion": "Server Promosyon"
     },
     "palette": {
       "placeholder": "Herhangi bir yere atla…",

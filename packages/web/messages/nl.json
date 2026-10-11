@@ -64,7 +64,8 @@
       "staffPortal": "Staffportaal",
       "gameservers": "Gameservers",
       "gameadmin": "Gamebeheer",
-      "valorant": "Valorant"
+      "valorant": "Valorant",
+      "promotion": "Serverpromotie"
     },
     "palette": {
       "placeholder": "Spring naar alles…",

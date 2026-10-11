@@ -64,7 +64,8 @@
       "staffPortal": "スタッフポータル",
       "gameservers": "ゲームサーバー",
       "gameadmin": "ゲーム管理",
-      "valorant": "Valorant"
+      "valorant": "Valorant",
+      "promotion": "サーバープロモーション"
     },
     "palette": {
       "placeholder": "どこへでも移動…",
