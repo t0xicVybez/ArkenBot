@@ -1,7 +1,9 @@
 import { defineAddon } from '@arkenbot/addon-sdk';
 import type { AddonContext } from '@arkenbot/addon-sdk';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import type { AutocompleteInteraction, Interaction, Message, TextChannel } from 'discord.js';
 import { Redis } from 'ioredis';
+import { isWithinBusinessHours } from './utils/time.js';
 
 import setupCommand from './commands/setup.js';
 import ticketCommand from './commands/ticket.js';
@@ -218,12 +220,67 @@ async function runAutoCloseAndSLA(ctx: AddonContext): Promise<void> {
     const tickets = await getTickets(ctx.storage, guild.id);
     const config = await getConfig(ctx.storage, guild.id);
 
+    // ── Weekly stats digest ──
+    if (config.weeklyDigestChannelId) {
+      const WEEK = 7 * 24 * 60 * 60 * 1000;
+      const last = await ctx.storage.get<string>('digest:last', guild.id);
+      if (!last) {
+        // Seed the marker on first sight so the first digest arrives a week out.
+        await ctx.storage.set('digest:last', new Date(now).toISOString(), guild.id);
+      } else if (now - new Date(last).getTime() >= WEEK) {
+        await ctx.storage.set('digest:last', new Date(now).toISOString(), guild.id);
+        const channel = ctx.client.channels.cache.get(config.weeklyDigestChannelId) as TextChannel | undefined;
+        if (channel?.isTextBased()) {
+          const weekAgo = now - WEEK;
+          const opened = tickets.filter((x) => new Date(x.createdAt).getTime() >= weekAgo).length;
+          const closed = tickets.filter((x) => x.closedAt && new Date(x.closedAt).getTime() >= weekAgo).length;
+          const rated = tickets.filter((x) => typeof x.rating === 'number' && x.closedAt && new Date(x.closedAt).getTime() >= weekAgo);
+          const rating = rated.length ? (rated.reduce((s, x) => s + (x.rating ?? 0), 0) / rated.length).toFixed(1) : '—';
+          const openNow = tickets.filter((x) => x.status !== 'closed').length;
+          await channel.send(t('digestMsg', { opened, closed, rating, open: openNow })).catch(() => null);
+        }
+      }
+    }
+
     for (const ticket of tickets) {
-      if (ticket.status === 'closed' || ticket.status === 'waiting') continue;
+      if (ticket.status === 'closed') continue;
+
+      // ── Snooze reminder (fires for any open status) ──
+      if (ticket.reminderAt && new Date(ticket.reminderAt).getTime() <= now) {
+        const by = ticket.reminderBy;
+        const note = ticket.reminderNote;
+        ticket.reminderAt = undefined;
+        ticket.reminderBy = undefined;
+        ticket.reminderNote = undefined;
+        await saveTicket(ctx.storage, guild.id, ticket);
+        const channel = ctx.client.channels.cache.get(ticket.channelId) as import('discord.js').TextChannel | undefined;
+        if (channel?.isTextBased()) {
+          await channel.send(`${by ? `<@${by}> ` : ''}${t('reminderPing', { num: ticket.number })}${note ? `\n> ${note}` : ''}`).catch(() => null);
+        }
+      }
+
+      if (ticket.status === 'waiting') continue; // waiting tickets don't auto-close or accrue SLA
 
       const panel = panels.find((p) => p.id === ticket.panelId);
       const lastActivity = new Date(ticket.lastActivity).getTime();
       const idleMs = now - lastActivity;
+
+      // ── Pre-close inactivity nudge ────────────────────────────────
+      if (panel && panel.autoCloseHours > 0 && config.nudgeBeforeCloseHours && config.nudgeBeforeCloseHours > 0 && !ticket.nudgedAt) {
+        const closeMs = panel.autoCloseHours * 60 * 60 * 1000;
+        const nudgeAtMs = (panel.autoCloseHours - config.nudgeBeforeCloseHours) * 60 * 60 * 1000;
+        if (nudgeAtMs > 0 && idleMs >= nudgeAtMs && idleMs < closeMs) {
+          ticket.nudgedAt = new Date().toISOString();
+          await saveTicket(ctx.storage, guild.id, ticket);
+          const channel = ctx.client.channels.cache.get(ticket.channelId) as import('discord.js').TextChannel | undefined;
+          if (channel?.isTextBased()) {
+            const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+              new ButtonBuilder().setCustomId(`ticket:keepopen:${ticket.channelId}`).setLabel(t('btnKeepOpen')).setEmoji('🔓').setStyle(ButtonStyle.Success),
+            );
+            await channel.send({ content: t('nudgeMsg', { user: `<@${ticket.userId}>`, hours: config.nudgeBeforeCloseHours }), components: [row] }).catch(() => null);
+          }
+        }
+      }
 
       // ── Auto-close ────────────────────────────────────────────────
       if (panel && panel.autoCloseHours > 0) {
@@ -253,7 +310,12 @@ async function runAutoCloseAndSLA(ctx: AddonContext): Promise<void> {
         }
       }
 
-      // ── SLA Warning ───────────────────────────────────────────────
+      // ── Business hours: pause SLA outside support hours ───────────
+      if (config.businessHours?.enabled && config.businessHours.pauseSla && !isWithinBusinessHours(config.businessHours, now)) {
+        continue; // SLA timers don't advance outside business hours
+      }
+
+      // ── SLA Warning (with optional auto-escalation) ───────────────
       if (config.slaLevels && config.slaLevels.length > 0 && !ticket.firstResponseAt) {
         const openMs = now - new Date(ticket.createdAt).getTime();
         for (const level of config.slaLevels.sort((a, b) => a.hours - b.hours)) {
@@ -261,10 +323,13 @@ async function runAutoCloseAndSLA(ctx: AddonContext): Promise<void> {
           const warnTag = `sla-level-${level.hours}h`;
           if (openMs >= slaMs && !ticket.tags.includes(warnTag)) {
             ticket.tags.push(warnTag);
-            await (await import('./utils/storage.js')).saveTicket(ctx.storage, guild.id, ticket);
+            // Auto-escalation: bump priority on breach.
+            if (level.escalatePriority) ticket.priority = level.escalatePriority;
+            await saveTicket(ctx.storage, guild.id, ticket);
             const channel = ctx.client.channels.cache.get(ticket.channelId) as import('discord.js').TextChannel | undefined;
             if (channel?.isTextBased()) {
-              const rolePing = level.pingRoleId ? `<@&${level.pingRoleId}> ` : '';
+              const pings = [level.pingRoleId, level.escalateRoleId].filter(Boolean).map((r) => `<@&${r}>`).join(' ');
+              const rolePing = pings ? `${pings} ` : '';
               const msg = level.message ?? t('slaDefaultMsg', { num: ticket.number, hours: level.hours });
               await channel.send(`${rolePing}${msg}`).catch(() => null);
             }

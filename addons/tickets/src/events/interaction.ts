@@ -4,6 +4,8 @@ import {
   TextInputBuilder,
   TextInputStyle,
   ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
   EmbedBuilder,
   type Interaction,
   type ButtonInteraction,
@@ -17,12 +19,13 @@ import {
 import { randomUUID } from 'crypto';
 import type { AddonContext } from '@arkenbot/addon-sdk';
 import { jsonCompletion, isLLMAvailable, LLMUnavailableError } from '@arkenbot/shared';
-import type { Ticket, TicketPanel, TicketNote, PanelField } from '../types.js';
+import type { Ticket, TicketPanel, TicketNote, PanelField, TicketPriority, AiTriage } from '../types.js';
 import {
   getPanel,
   getConfig,
   saveConfig,
   getUserOpenTickets,
+  getTickets,
   nextTicketNumber,
   saveTicket,
   getTicketByChannel,
@@ -36,9 +39,11 @@ import {
   buildRatingEmbed,
   buildRatingButtons,
   buildTranscriptEmbed,
+  type Translate,
 } from '../utils/embeds.js';
 import { createTicketChannel, archiveTicketChannel, restoreTicketChannel, resolveChannelName } from '../utils/channel.js';
 import { generateTranscriptHtml } from '../utils/transcript.js';
+import { isWithinBusinessHours } from '../utils/time.js';
 
 const CUSTOM_ID_PREFIX = 'ticket:';
 
@@ -126,6 +131,14 @@ async function handleButton(ctx: AddonContext, interaction: ButtonInteraction): 
   } else if (id.startsWith('ticket:waiting:')) {
     const channelId = id.slice('ticket:waiting:'.length);
     await handleWaitingButton(ctx, interaction, channelId);
+  } else if (id.startsWith('ticket:ai:')) {
+    await handleAiAction(ctx, interaction, id);
+  } else if (id.startsWith('ticket:keepopen:')) {
+    const channelId = id.slice('ticket:keepopen:'.length);
+    await handleKeepOpenButton(ctx, interaction, channelId);
+  } else if (id.startsWith('ticket:confirmclose:')) {
+    const channelId = id.slice('ticket:confirmclose:'.length);
+    await handleConfirmCloseButton(ctx, interaction, channelId);
   }
 }
 
@@ -156,6 +169,42 @@ async function handleOpenTicket(
       flags: MessageFlags.Ephemeral,
     });
     return;
+  }
+
+  // Account-age gate
+  if (config.minAccountAgeDays && config.minAccountAgeDays > 0) {
+    const ageMs = Date.now() - interaction.user.createdTimestamp;
+    if (ageMs < config.minAccountAgeDays * 86400000) {
+      await interaction.reply({ content: t('accountTooNew', { days: config.minAccountAgeDays }), flags: MessageFlags.Ephemeral });
+      return;
+    }
+  }
+
+  // Required-role gate
+  if (config.requiredOpenRoleId) {
+    const m = interaction.guild.members.cache.get(interaction.user.id)
+      ?? (await interaction.guild.members.fetch(interaction.user.id).catch(() => null));
+    if (!m?.roles.cache.has(config.requiredOpenRoleId)) {
+      await interaction.reply({ content: t('needRoleToOpen', { role: `<@&${config.requiredOpenRoleId}>` }), flags: MessageFlags.Ephemeral });
+      return;
+    }
+  }
+
+  // Open cooldown (based on the user's most recent ticket in this guild)
+  if (config.openCooldownMinutes && config.openCooldownMinutes > 0) {
+    const mine = (await getTickets(ctx.storage, guildId))
+      .filter((x) => x.userId === interaction.user.id)
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    const last = mine[0];
+    if (last) {
+      const cdMs = config.openCooldownMinutes * 60000;
+      const sinceMs = Date.now() - new Date(last.createdAt).getTime();
+      if (sinceMs < cdMs) {
+        const readyAt = Math.floor((new Date(last.createdAt).getTime() + cdMs) / 1000);
+        await interaction.reply({ content: t('openCooldown', { when: `<t:${readyAt}:R>` }), flags: MessageFlags.Ephemeral });
+        return;
+      }
+    }
   }
 
   // Max tickets check
@@ -289,8 +338,49 @@ export async function createTicket(
 
   ctx.logger.info(`Ticket #${number} created in guild ${guildId} by ${userTag}`);
 
-  // Fire webhook
   const config = await getConfig(ctx.storage, guildId);
+
+  // ── User history (staff context) ──
+  let historyLine = '';
+  if (config.showUserHistory) {
+    const hist = await getUserTicketHistory(ctx, guildId, userId, ticket.id);
+    if (hist.count > 0) {
+      historyLine = t('historyLine', { count: hist.count, rating: hist.avgRating != null ? `${hist.avgRating.toFixed(1)}★` : '—' });
+    }
+  }
+
+  // ── AI auto-triage on open ──
+  if (config.autoTriage && isLLMAvailable()) {
+    try {
+      const triage = await runTriageModel(ctx, ticket, channel, !!config.autoTriageTag);
+      if (triage) {
+        ticket.aiTriage = triage;
+        if (config.autoTriageSetPriority && ['low', 'medium', 'high'].includes(triage.urgency)) {
+          ticket.priority = triage.urgency as TicketPriority;
+        }
+        if (config.autoTriageTag && triage.tag && !ticket.tags.includes(triage.tag)) {
+          ticket.tags.push(triage.tag);
+        }
+        ticket.notes.push({
+          id: randomUUID(),
+          authorId: ctx.client.user!.id,
+          authorTag: 'AI Triage',
+          content: `🧠 ${triage.summary}${triage.reply ? `\n\n💬 ${triage.reply}` : ''}`,
+          createdAt: new Date().toISOString(),
+        });
+        await saveTicket(ctx.storage, guildId, ticket);
+      }
+    } catch (err) {
+      ctx.logger.warn(`Auto-triage failed for #${ticket.number}: ${err instanceof Error ? err.message : String(err)}`);
+    }
+  }
+
+  // Business-hours away notice
+  if (config.businessHours?.enabled && config.businessHours.awayMessage && !isWithinBusinessHours(config.businessHours, Date.now())) {
+    await channel.send(config.businessHours.awayMessage).catch(() => null);
+  }
+
+  // Fire webhook
   if (config.webhookUrl) {
     fireWebhook(config.webhookUrl, {
       event: 'ticket.opened',
@@ -320,8 +410,10 @@ export async function createTicket(
       } else if (reason) {
         formSummary = `> ${reason}`;
       }
+      const aiLine = ticket.aiTriage ? `\n🧠 ${ticket.aiTriage.summary}` : '';
+      const histLine = historyLine ? `\n${historyLine}` : '';
       await notifyChannel.send(
-        `${rolePing}📬 New ticket **#${ticket.number}** opened by <@${userId}>${ticket.categoryTag ? ` — \`${ticket.categoryTag}\`` : ''}${formSummary ? `\n${formSummary}` : ''}\n→ <#${channel.id}>`,
+        `${rolePing}📬 New ticket **#${ticket.number}** opened by <@${userId}>${ticket.categoryTag ? ` — \`${ticket.categoryTag}\`` : ''}${formSummary ? `\n${formSummary}` : ''}${aiLine}${histLine}\n→ <#${channel.id}>`,
       ).catch(() => null);
     }
   }
@@ -701,13 +793,52 @@ export async function generateTriage(
 
   await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
+  const channel = interaction.channel;
+  let triage: AiTriage | null;
+  try {
+    triage = await runTriageModel(ctx, ticket, channel && 'messages' in channel ? channel : null, true);
+  } catch (err) {
+    if (err instanceof LLMUnavailableError) {
+      await interaction.editReply(t('aiUnavailable'));
+      return;
+    }
+    ctx.logger.warn(`Ticket AI triage failed: ${err instanceof Error ? err.message : String(err)}`);
+    await interaction.editReply(t('aiError'));
+    return;
+  }
+
+  if (!triage) {
+    await interaction.editReply(t('aiNothing'));
+    return;
+  }
+
+  // Cache on the ticket so the action buttons can act without re-calling the model.
+  ticket.aiTriage = triage;
+  await saveTicket(ctx.storage, interaction.guildId, ticket);
+
+  await interaction.editReply({
+    embeds: [buildTriageEmbed(ticket, triage, t)],
+    components: [buildTriageActions(ticket.channelId, t)],
+  });
+}
+
+// ─── AI triage helpers (shared by /triage and auto-triage-on-open) ─────────────
+
+type MsgFetchable = { messages: { fetch: (o: { limit: number }) => Promise<Map<string, Message>> } };
+
+/** Call the LLM to summarize a ticket. Returns null when there's nothing to triage. */
+export async function runTriageModel(
+  ctx: AddonContext,
+  ticket: Ticket,
+  channel: MsgFetchable | null,
+  wantTag: boolean,
+): Promise<AiTriage | null> {
   const details: string[] = [];
   if (ticket.reason) details.push(`Reason given: ${ticket.reason}`);
   for (const [k, v] of Object.entries(ticket.formResponses ?? {})) details.push(`${k}: ${v}`);
 
   let transcript: string[] = [];
-  const channel = interaction.channel;
-  if (channel && 'messages' in channel) {
+  if (channel) {
     try {
       const fetched = await channel.messages.fetch({ limit: 40 });
       transcript = [...fetched.values()]
@@ -721,57 +852,176 @@ export async function generateTriage(
     details.length ? `Ticket details:\n${details.join('\n')}` : '',
     transcript.length ? `Conversation so far:\n${transcript.join('\n')}` : '',
   ].filter(Boolean).join('\n\n');
+  if (!context) return null;
 
-  if (!context) {
-    await interaction.editReply(t('aiNothing'));
+  const result = await jsonCompletion<{ summary?: string; urgency?: string; reply?: string; tag?: string }>(
+    [
+      {
+        role: 'system',
+        content:
+          'You triage support tickets for staff. Given the ticket details and conversation, respond with a JSON object ' +
+          `{"summary": string, "urgency": "low"|"medium"|"high", "reply": string${wantTag ? ', "tag": string' : ''}}. ` +
+          '"summary" is 1-2 sentences describing the user\'s issue. "urgency" reflects how time-sensitive it is. ' +
+          '"reply" is a friendly, helpful first response a staff member could send, ready to adapt. ' +
+          (wantTag ? '"tag" is a single short lowercase category label (1-2 words). ' : '') +
+          'Base everything only on the provided content; do not invent facts.',
+      },
+      { role: 'user', content: context },
+    ],
+    { temperature: 0.3, maxTokens: 600 },
+  );
+
+  const urgency = (result.urgency ?? 'medium').toLowerCase();
+  return {
+    summary: (result.summary ?? '').slice(0, 1000),
+    urgency: ['low', 'medium', 'high'].includes(urgency) ? urgency : 'medium',
+    reply: result.reply ? result.reply.slice(0, 1500) : undefined,
+    tag: wantTag && result.tag ? result.tag.toLowerCase().trim().slice(0, 30) : undefined,
+    at: new Date().toISOString(),
+  };
+}
+
+const URGENCY_META: Record<string, { emoji: string; color: number }> = {
+  low: { emoji: '🟢', color: 0x57f287 },
+  medium: { emoji: '🟡', color: 0xfee75c },
+  high: { emoji: '🔴', color: 0xed4245 },
+};
+
+export function buildTriageEmbed(ticket: Ticket, triage: AiTriage, t: Translate): EmbedBuilder {
+  const meta = URGENCY_META[triage.urgency] ?? URGENCY_META.medium;
+  const embed = new EmbedBuilder()
+    .setColor(meta.color)
+    .setTitle(t('aiTriageTitle', { num: ticket.number }))
+    .addFields(
+      { name: t('aiFieldSummary'), value: (triage.summary || '—').slice(0, 1024) },
+      { name: t('aiFieldUrgency'), value: `${meta.emoji} ${t('priority' + triage.urgency.charAt(0).toUpperCase() + triage.urgency.slice(1))}`, inline: true },
+    );
+  if (triage.tag) embed.addFields({ name: t('aiFieldTag'), value: `\`${triage.tag}\``, inline: true });
+  embed.addFields({ name: t('aiFieldReply'), value: (triage.reply || '—').slice(0, 1024) });
+  return embed.setFooter({ text: t('aiFooter') }).setTimestamp();
+}
+
+export function buildTriageActions(channelId: string, t: Translate): ActionRowBuilder<ButtonBuilder> {
+  return new ActionRowBuilder<ButtonBuilder>().addComponents(
+    new ButtonBuilder().setCustomId(`ticket:ai:priority:${channelId}`).setLabel(t('aiBtnSetPriority')).setEmoji('⚡').setStyle(ButtonStyle.Secondary),
+    new ButtonBuilder().setCustomId(`ticket:ai:reply:${channelId}`).setLabel(t('aiBtnPostReply')).setEmoji('✉️').setStyle(ButtonStyle.Primary),
+    new ButtonBuilder().setCustomId(`ticket:ai:note:${channelId}`).setLabel(t('aiBtnSaveNote')).setEmoji('📝').setStyle(ButtonStyle.Secondary),
+  );
+}
+
+/** Count a user's prior tickets in this guild and their average rating. */
+export async function getUserTicketHistory(
+  ctx: AddonContext,
+  guildId: string,
+  userId: string,
+  excludeId: string,
+): Promise<{ count: number; avgRating: number | null }> {
+  const all = await getTickets(ctx.storage, guildId);
+  const prior = all.filter((x) => x.userId === userId && x.id !== excludeId);
+  const rated = prior.filter((x) => typeof x.rating === 'number');
+  const avgRating = rated.length ? rated.reduce((s, x) => s + (x.rating ?? 0), 0) / rated.length : null;
+  return { count: prior.length, avgRating };
+}
+
+/** Handle the AI action buttons (Set priority / Post reply / Save as note). */
+async function handleAiAction(ctx: AddonContext, interaction: ButtonInteraction, id: string): Promise<void> {
+  const guildId = interaction.guildId;
+  if (!guildId) return;
+  const loc = await ctx.resolveLocale(interaction);
+  const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
+
+  const parts = id.split(':'); // ticket:ai:{action}:{channelId}
+  const action = parts[2];
+  const channelId = parts.slice(3).join(':');
+
+  const ticket = await getTicketByChannel(ctx.storage, guildId, channelId);
+  if (!ticket || ticket.status === 'closed') {
+    await interaction.reply({ content: t('ticketNotFoundOrClosed'), flags: MessageFlags.Ephemeral });
+    return;
+  }
+  const panel = await getPanel(ctx.storage, guildId, ticket.panelId);
+  const member = interaction.guild?.members.cache.get(interaction.user.id);
+  const isStaff = !panel || panel.staffRoles.length === 0 || panel.staffRoles.some((r) => member?.roles.cache.has(r));
+  if (!isStaff) {
+    await interaction.reply({ content: t('aiOnlyStaff'), flags: MessageFlags.Ephemeral });
+    return;
+  }
+  const triage = ticket.aiTriage;
+  if (!triage) {
+    await interaction.reply({ content: t('aiNothing'), flags: MessageFlags.Ephemeral });
     return;
   }
 
-  try {
-    const result = await jsonCompletion<{ summary?: string; urgency?: string; reply?: string }>(
-      [
-        {
-          role: 'system',
-          content:
-            'You triage support tickets for staff. Given the ticket details and conversation, respond with a JSON object ' +
-            '{"summary": string, "urgency": "low"|"medium"|"high", "reply": string}. ' +
-            '"summary" is 1-2 sentences describing the user\'s issue. "urgency" reflects how time-sensitive it is. ' +
-            '"reply" is a friendly, helpful first response a staff member could send, ready to adapt. ' +
-            'Base everything only on the provided content; do not invent facts.',
-        },
-        { role: 'user', content: context },
-      ],
-      { temperature: 0.3, maxTokens: 600 },
-    );
-
-    const urgency = (result.urgency ?? 'medium').toLowerCase();
-    const urgencyMeta: Record<string, { emoji: string; color: number }> = {
-      low: { emoji: '🟢', color: 0x57f287 },
-      medium: { emoji: '🟡', color: 0xfee75c },
-      high: { emoji: '🔴', color: 0xed4245 },
-    };
-    const meta = urgencyMeta[urgency] ?? urgencyMeta.medium;
-
-    const embed = new EmbedBuilder()
-      .setColor(meta.color)
-      .setTitle(t('aiTriageTitle', { num: ticket.number }))
-      .addFields(
-        { name: t('aiFieldSummary'), value: (result.summary ?? 'No summary produced.').slice(0, 1024) },
-        { name: t('aiFieldUrgency'), value: `${meta.emoji} ${t('priority' + urgency.charAt(0).toUpperCase() + urgency.slice(1))}`, inline: true },
-        { name: t('aiFieldReply'), value: (result.reply ?? '—').slice(0, 1024) },
-      )
-      .setFooter({ text: 'AI-generated · only you can see this · review before sending' })
-      .setTimestamp();
-
-    await interaction.editReply({ embeds: [embed] });
-  } catch (err) {
-    if (err instanceof LLMUnavailableError) {
-      await interaction.editReply(t('aiUnavailable'));
+  if (action === 'priority') {
+    const level = (['low', 'medium', 'high'].includes(triage.urgency) ? triage.urgency : 'medium') as TicketPriority;
+    ticket.priority = level;
+    await saveTicket(ctx.storage, guildId, ticket);
+    await interaction.reply({ content: t('aiPrioritySet', { level: t('priority' + level.charAt(0).toUpperCase() + level.slice(1)) }), flags: MessageFlags.Ephemeral });
+  } else if (action === 'reply') {
+    if (!triage.reply) {
+      await interaction.reply({ content: t('aiNothing'), flags: MessageFlags.Ephemeral });
       return;
     }
-    ctx.logger.warn(`Ticket AI triage failed: ${err instanceof Error ? err.message : String(err)}`);
-    await interaction.editReply(t('aiError'));
+    const channel = ctx.client.channels.cache.get(channelId) as TextChannel | undefined;
+    if (channel && 'send' in channel) await channel.send(triage.reply).catch(() => null);
+    if (!ticket.firstResponseAt) {
+      ticket.firstResponseAt = new Date().toISOString();
+      await saveTicket(ctx.storage, guildId, ticket);
+    }
+    await interaction.reply({ content: t('aiReplyPosted'), flags: MessageFlags.Ephemeral });
+  } else if (action === 'note') {
+    ticket.notes.push({
+      id: randomUUID(),
+      authorId: interaction.user.id,
+      authorTag: interaction.user.tag,
+      content: `🧠 ${triage.summary}${triage.reply ? `\n\n💬 ${triage.reply}` : ''}`,
+      createdAt: new Date().toISOString(),
+    });
+    await saveTicket(ctx.storage, guildId, ticket);
+    await interaction.reply({ content: t('aiNoteSaved'), flags: MessageFlags.Ephemeral });
   }
+}
+
+// ─── Keep-open (pre-close nudge + close request) ───────────────────────────────
+
+async function handleKeepOpenButton(ctx: AddonContext, interaction: ButtonInteraction, channelId: string): Promise<void> {
+  if (!interaction.guildId) return;
+  const loc = await ctx.resolveLocale(interaction);
+  const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
+  const ticket = await getTicketByChannel(ctx.storage, interaction.guildId, channelId);
+  if (!ticket || ticket.status === 'closed') {
+    await interaction.reply({ content: t('ticketNotFoundOrClosed'), flags: MessageFlags.Ephemeral });
+    return;
+  }
+  // Reset the inactivity timer and clear any pending nudge / close request.
+  ticket.lastActivity = new Date().toISOString();
+  ticket.nudgedAt = undefined;
+  ticket.closeRequestedBy = undefined;
+  ticket.closeRequestedByTag = undefined;
+  ticket.closeRequestedAt = undefined;
+  await saveTicket(ctx.storage, interaction.guildId, ticket);
+  await interaction.reply({ content: t('keptOpen', { user: `<@${interaction.user.id}>` }) });
+}
+
+async function handleConfirmCloseButton(ctx: AddonContext, interaction: ButtonInteraction, channelId: string): Promise<void> {
+  if (!interaction.guildId) return;
+  const loc = await ctx.resolveLocale(interaction);
+  const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
+  const ticket = await getTicketByChannel(ctx.storage, interaction.guildId, channelId);
+  if (!ticket || ticket.status === 'closed') {
+    await interaction.reply({ content: t('ticketNotFoundOrClosed'), flags: MessageFlags.Ephemeral });
+    return;
+  }
+  const panel = await getPanel(ctx.storage, interaction.guildId, ticket.panelId);
+  const member = interaction.guild?.members.cache.get(interaction.user.id);
+  const isStaff = !panel || panel.staffRoles.length === 0 || panel.staffRoles.some((r) => member?.roles.cache.has(r));
+  const isOpener = interaction.user.id === ticket.userId;
+  if (!isOpener && !isStaff) {
+    await interaction.reply({ content: t('onlyOpenerOrStaffClose'), flags: MessageFlags.Ephemeral });
+    return;
+  }
+  await interaction.deferReply();
+  await closeTicket(ctx, interaction, ticket, t('closedViaRequest'));
 }
 
 async function handleUnclaimButton(
@@ -969,6 +1219,22 @@ async function handleRateModal(
   // Trigger finalization now that rating is complete (cancels the fallback timer)
   const panel = await getPanel(ctx.storage, guildId, ticket.panelId);
   const config = await getConfig(ctx.storage, guildId);
+
+  // Low-rating alert — ping staff when CSAT is at or below the threshold.
+  if (config.lowRatingThreshold && config.lowRatingThreshold > 0 && rating <= config.lowRatingThreshold) {
+    const alertChannelId = config.lowRatingAlertChannelId || config.staffNotifyChannelId;
+    const guild = ctx.getGuild(guildId);
+    const alertChannel = alertChannelId ? (guild?.channels.cache.get(alertChannelId) as TextChannel | undefined) : undefined;
+    if (alertChannel && 'send' in alertChannel) {
+      const staffLoc = await ctx.resolveLocale({ user: { id: '' }, guildId, guildLocale: guild?.preferredLocale });
+      const st = (k: string, v?: Record<string, string | number>) => ctx.t(k, staffLoc, v);
+      const rolePing = config.lowRatingAlertRoleId ? `<@&${config.lowRatingAlertRoleId}> ` : '';
+      await alertChannel.send(
+        `${rolePing}${st('lowRatingAlert', { num: ticket.number, stars: '⭐'.repeat(rating), user: `<@${ticket.userId}>`, handler: ticket.claimedByTag || ticket.closedByTag || '—' })}${feedback ? `\n> ${feedback}` : ''}`,
+      ).catch(() => null);
+    }
+  }
+
   const closeAction = panel?.closeAction ?? 'delete';
   const logChannelId = (panel?.logChannelId ?? config.transcriptChannelId) as string | undefined;
   await finalizeTicketClose(ctx, guildId, channelId, closeAction, logChannelId, panel ?? null, config.webhookUrl).catch((err) =>

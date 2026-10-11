@@ -8,10 +8,11 @@ import {
   PieChart, Pie, Cell, ResponsiveContainer,
 } from 'recharts';
 import { ticketsApi } from '@/lib/api';
-import { TrendingUp, Ticket, Star, Users, Clock, AlertTriangle, CheckCircle, Hourglass } from 'lucide-react';
+import { TrendingUp, Ticket, Star, Users, Clock, AlertTriangle, CheckCircle, Hourglass, Download, Trophy } from 'lucide-react';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import toast from 'react-hot-toast';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -22,6 +23,10 @@ interface StatsData {
   ratingDistribution: Record<number, number>;
   byPanel: {
     panelId: string; panelName: string; emoji: string; total: number; open: number;
+    avgRating: number | null; avgCloseMinutes: number | null;
+  }[];
+  byStaff?: {
+    staffId: string; tag: string; handled: number; closed: number;
     avgRating: number | null; avgCloseMinutes: number | null;
   }[];
 }
@@ -63,6 +68,24 @@ export default function TicketStatsPage() {
   const { guildId } = useParams() as { guildId: string };
   const t = useTranslations('ticketStatsPage');
   const [days, setDays] = useState(30);
+  const [exporting, setExporting] = useState(false);
+
+  const exportCsv = async () => {
+    setExporting(true);
+    try {
+      const res = await ticketsApi.exportCsv(guildId);
+      const url = window.URL.createObjectURL(new Blob([res.data as BlobPart], { type: 'text/csv' }));
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `tickets-${guildId}.csv`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    } catch {
+      toast.error(t('exportError'));
+    } finally {
+      setExporting(false);
+    }
+  };
 
   const { data: statsRes } = useQuery({
     queryKey: ['tickets-stats', guildId],
@@ -109,13 +132,16 @@ export default function TicketStatsPage() {
         <Link href={`/dashboard/${guildId}/tickets`} className="text-gray-400 hover:text-white transition-colors">
           <ArrowLeft className="w-5 h-5" />
         </Link>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 flex-1 min-w-0">
           <TrendingUp className="w-6 h-6 text-discord-blurple" />
-          <div>
+          <div className="min-w-0">
             <h1 className="text-xl sm:text-2xl font-bold text-white">{t('title')}</h1>
             <p className="text-gray-400 text-sm">{t('subtitle')}</p>
           </div>
         </div>
+        <button onClick={exportCsv} disabled={exporting} className="btn-secondary text-sm flex items-center gap-2 disabled:opacity-50 shrink-0">
+          <Download className="w-4 h-4" /> {exporting ? t('exporting') : t('exportCsv')}
+        </button>
       </div>
 
       {/* Summary cards — row 1 */}
@@ -312,6 +338,47 @@ export default function TicketStatsPage() {
                     </tr>
                   );
                 })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* Per-agent leaderboard */}
+      {stats && (stats.byStaff?.length ?? 0) > 0 && (
+        <div className="card overflow-hidden p-0">
+          <div className="px-4 py-3 border-b border-(--border-subtle) flex items-center gap-2">
+            <Trophy className="w-4 h-4 text-yellow-400" />
+            <h2 className="text-white font-semibold">{t('staffLeaderboard')}</h2>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[560px]">
+              <thead className="text-left text-xs text-gray-500 uppercase tracking-wider border-b border-(--border-subtle)">
+                <tr>
+                  <th className="px-4 py-3">{t('colStaff')}</th>
+                  <th className="px-4 py-3">{t('colHandled')}</th>
+                  <th className="px-4 py-3">{t('statusClosed')}</th>
+                  <th className="px-4 py-3">{t('colAvgRating')}</th>
+                  <th className="px-4 py-3">{t('colAvgClose')}</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-700/30">
+                {stats.byStaff!.map((s, i) => (
+                  <tr key={s.staffId} className="hover:bg-gray-700/20 transition-colors">
+                    <td className="px-4 py-3 text-white text-sm whitespace-nowrap">
+                      <span className="text-gray-500 mr-2">{i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i + 1}`}</span>
+                      {s.tag}
+                    </td>
+                    <td className="px-4 py-3 text-gray-300 text-sm">{s.handled}</td>
+                    <td className="px-4 py-3 text-gray-300 text-sm">{s.closed}</td>
+                    <td className="px-4 py-3 text-sm">
+                      {s.avgRating != null
+                        ? <span className="text-yellow-400">{'⭐'.repeat(Math.round(s.avgRating))} <span className="text-gray-400">({s.avgRating.toFixed(1)})</span></span>
+                        : <span className="text-gray-500">—</span>}
+                    </td>
+                    <td className="px-4 py-3 text-gray-300 text-sm">{fmtMinutes(s.avgCloseMinutes)}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>

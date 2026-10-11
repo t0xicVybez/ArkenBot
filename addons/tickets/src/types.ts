@@ -32,6 +32,35 @@ export interface SlaLevel {
   hours: number;
   pingRoleId?: string;
   message?: string;
+  /** On breach, raise the ticket to this priority (auto-escalation). */
+  escalatePriority?: TicketPriority;
+  /** On breach, ping (and, with auto-assign, prefer) this senior role. */
+  escalateRoleId?: string;
+}
+
+/** Support/business hours — pauses SLA and sends an away reply outside hours. */
+export interface BusinessHours {
+  enabled: boolean;
+  /** IANA timezone, e.g. "America/New_York". */
+  timezone: string;
+  /** Local open/close times, "HH:MM" 24h. */
+  openTime: string;
+  closeTime: string;
+  /** Active weekdays, 0=Sunday … 6=Saturday. */
+  days: number[];
+  /** Posted (once) when a ticket opens outside hours. */
+  awayMessage?: string;
+  /** When true, SLA timers don't advance outside business hours. */
+  pauseSla?: boolean;
+}
+
+/** Cached AI triage output stored on the ticket. */
+export interface AiTriage {
+  summary: string;
+  urgency: string;
+  reply?: string;
+  tag?: string;
+  at: string;
 }
 
 export interface TicketPanel {
@@ -133,6 +162,20 @@ export interface Ticket {
   createdAt: string;
   lastActivity: string;
   formResponses?: Record<string, string>;
+
+  // ─── Enhancements ──────────────────────────────────────────────────────
+  /** Pre-close inactivity nudge sent at (ISO) — nudge the opener only once. */
+  nudgedAt?: string;
+  /** Snooze: fire a staff reminder ping at this time (ISO). */
+  reminderAt?: string;
+  reminderBy?: string;
+  reminderNote?: string;
+  /** Close request awaiting the opener's confirmation. */
+  closeRequestedBy?: string;
+  closeRequestedByTag?: string;
+  closeRequestedAt?: string;
+  /** Cached AI triage result. */
+  aiTriage?: AiTriage;
 }
 
 export interface TicketMessage {
@@ -156,4 +199,33 @@ export interface GuildTicketConfig {
   slaLevels?: SlaLevel[];
   autoAssign?: boolean;
   roundRobinIndex?: number;
+
+  // ─── Enhancements ──────────────────────────────────────────────────────
+  // Tier 2 — AI
+  /** Run AI triage automatically when a ticket opens (staff-only summary). */
+  autoTriage?: boolean;
+  /** Let auto-triage set the ticket's initial priority from AI urgency. */
+  autoTriageSetPriority?: boolean;
+  /** Let auto-triage apply a suggested tag. */
+  autoTriageTag?: boolean;
+  // Tier 1 — pre-close nudge + business hours
+  /** Warn the opener this many hours before auto-close (0 = off). */
+  nudgeBeforeCloseHours?: number;
+  businessHours?: BusinessHours;
+  // Tier 3 — show the opener's prior tickets to staff on open
+  showUserHistory?: boolean;
+  // Tier 4 — quality loop + collaborative close
+  /** Alert when a rating is at or below this (1–5; 0 = off). */
+  lowRatingThreshold?: number;
+  lowRatingAlertRoleId?: string;
+  lowRatingAlertChannelId?: string;
+  // Tier 5 — abuse controls + digest
+  /** Minimum minutes between a user's ticket opens (0 = off). */
+  openCooldownMinutes?: number;
+  /** Minimum Discord account age in days to open a ticket (0 = off). */
+  minAccountAgeDays?: number;
+  /** Members must have this role to open a ticket (blank = anyone). */
+  requiredOpenRoleId?: string;
+  /** Post a weekly stats digest to this channel (blank = off). */
+  weeklyDigestChannelId?: string;
 }

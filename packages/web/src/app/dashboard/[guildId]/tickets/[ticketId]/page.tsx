@@ -40,6 +40,7 @@ interface TicketRecord {
   rating?: number;
   ratingFeedback?: string;
   notes: TicketNote[];
+  aiTriage?: { summary: string; urgency: string; reply?: string; tag?: string; at: string };
 
   createdAt: string;
   lastActivity: string;
@@ -445,6 +446,29 @@ export default function TicketDetailPage() {
               <button onClick={() => addNoteMut.mutate()} disabled={!noteInput.trim() || addNoteMut.isPending} className="btn-secondary text-xs px-3 disabled:opacity-40">{t('addNote')}</button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* AI Triage */}
+      {ticket.aiTriage && (
+        <div className="card space-y-3">
+          <h2 className="text-white font-semibold flex items-center gap-2">🧠 {t('aiTriage')}</h2>
+          <div>
+            <p className="text-gray-500 text-xs mb-1">{t('aiSummary')}</p>
+            <p className="text-gray-200 text-sm">{ticket.aiTriage.summary}</p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <span className={`badge-secondary text-xs ${ticket.aiTriage.urgency === 'high' ? 'text-red-400' : ticket.aiTriage.urgency === 'low' ? 'text-green-400' : 'text-yellow-400'}`}>
+              {t('aiUrgency')}: {ticket.aiTriage.urgency}
+            </span>
+            {ticket.aiTriage.tag && <span className="badge-secondary text-xs">#{ticket.aiTriage.tag}</span>}
+          </div>
+          {ticket.aiTriage.reply && (
+            <div>
+              <p className="text-gray-500 text-xs mb-1">{t('aiSuggestedReply')}</p>
+              <p className="text-gray-300 text-sm whitespace-pre-wrap bg-gray-700/30 rounded-lg p-3">{ticket.aiTriage.reply}</p>
+            </div>
+          )}
         </div>
       )}
 

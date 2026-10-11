@@ -178,6 +178,7 @@ export const ticketsApi = {
     api.get(`/addons/tickets/${guildId}/tickets/${ticketId}/transcript`, { responseType: 'blob' }),
   getStats:      (guildId: string) => api.get(`/addons/tickets/${guildId}/stats`),
   getTimeseries: (guildId: string, days?: number) => api.get(`/addons/tickets/${guildId}/stats/timeseries`, { params: { days } }),
+  exportCsv:     (guildId: string) => api.get(`/addons/tickets/${guildId}/tickets/export`, { responseType: 'blob' }),
   getConfig:    (guildId: string) => api.get(`/addons/tickets/${guildId}/config`),
   updateConfig: (guildId: string, data: object) => api.patch(`/addons/tickets/${guildId}/config`, data),
   getCannedResponses:   (guildId: string) => api.get(`/addons/tickets/${guildId}/canned-responses`),

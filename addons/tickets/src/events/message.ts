@@ -53,8 +53,10 @@ export async function handleTicketMessage(ctx: AddonContext, message: Message): 
     statusChanged = true;
   }
 
-  // Update last activity for auto-close tracking
+  // Update last activity for auto-close tracking; clear any pending pre-close
+  // nudge so a re-activated ticket can be nudged again later.
   ticket.lastActivity = now;
+  if (ticket.nudgedAt) ticket.nudgedAt = undefined;
   await saveTicket(ctx.storage, message.guildId, ticket);
 
   // Reflect the new waiting state in the controls message buttons

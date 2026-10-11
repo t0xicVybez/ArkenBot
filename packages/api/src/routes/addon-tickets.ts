@@ -17,9 +17,10 @@ interface PanelButton { id: string; label: string; emoji: string; color: string;
 interface PanelField { id: string; label: string; placeholder?: string; required: boolean; style: 'short' | 'paragraph'; maxLength?: number; }
 interface TicketPanel { id: string; name: string; description: string; emoji: string; channelId?: string; messageId?: string; categoryId?: string; logChannelId?: string; staffRoles: string[]; maxTicketsPerUser: number; namingPattern: string; closeAction: string; autoCloseHours: number; requireReason: boolean; welcomeMessage: string; buttonLabel: string; buttonColor: string; buttons?: PanelButton[]; panelStyle?: 'buttons' | 'dropdown'; fields?: PanelField[]; ticketMode?: 'channel' | 'thread'; embedColor?: string; embedAuthorName?: string; embedAuthorIconUrl?: string; embedThumbnailUrl?: string; embedImageUrl?: string; embedFooterText?: string; embedFooterIconUrl?: string; enabled: boolean; createdAt: string; }
 interface TicketNote { id: string; authorId: string; authorTag: string; content: string; createdAt: string; }
-interface Ticket { id: string; number: number; panelId: string; guildId: string; channelId: string; userId: string; username: string; status: string; priority: string; categoryTag?: string; claimedBy?: string; claimedByTag?: string; transferredTo?: string; transferredToTag?: string; reason?: string; tags: string[]; rating?: number; ratingFeedback?: string; closedBy?: string; closedByTag?: string; closedAt?: string; firstResponseAt?: string; notes: TicketNote[]; formResponses?: Record<string, string>; createdAt: string; lastActivity: string; }
-interface SlaLevel { hours: number; pingRoleId?: string; message?: string; }
-interface GuildTicketConfig { blacklistedUsers: string[]; transcriptChannelId?: string; slaHours?: number; webhookUrl?: string; staffNotifyChannelId?: string; staffNotifyRoleId?: string; ratingWindowMinutes?: number; autoAssign?: boolean; roundRobinIndex?: number; slaLevels?: SlaLevel[]; }
+interface Ticket { id: string; number: number; panelId: string; guildId: string; channelId: string; userId: string; username: string; status: string; priority: string; categoryTag?: string; claimedBy?: string; claimedByTag?: string; transferredTo?: string; transferredToTag?: string; reason?: string; tags: string[]; rating?: number; ratingFeedback?: string; closedBy?: string; closedByTag?: string; closedAt?: string; firstResponseAt?: string; notes: TicketNote[]; formResponses?: Record<string, string>; createdAt: string; lastActivity: string; nudgedAt?: string; reminderAt?: string; reminderBy?: string; reminderNote?: string; closeRequestedBy?: string; closeRequestedByTag?: string; closeRequestedAt?: string; aiTriage?: { summary: string; urgency: string; reply?: string; tag?: string; at: string }; }
+interface SlaLevel { hours: number; pingRoleId?: string; message?: string; escalatePriority?: string; escalateRoleId?: string; }
+interface BusinessHours { enabled: boolean; timezone: string; openTime: string; closeTime: string; days: number[]; awayMessage?: string; pauseSla?: boolean; }
+interface GuildTicketConfig { blacklistedUsers: string[]; transcriptChannelId?: string; slaHours?: number; webhookUrl?: string; staffNotifyChannelId?: string; staffNotifyRoleId?: string; ratingWindowMinutes?: number; autoAssign?: boolean; roundRobinIndex?: number; slaLevels?: SlaLevel[]; autoTriage?: boolean; autoTriageSetPriority?: boolean; autoTriageTag?: boolean; nudgeBeforeCloseHours?: number; businessHours?: BusinessHours; showUserHistory?: boolean; lowRatingThreshold?: number; lowRatingAlertRoleId?: string; lowRatingAlertChannelId?: string; openCooldownMinutes?: number; minAccountAgeDays?: number; requiredOpenRoleId?: string; weeklyDigestChannelId?: string; }
 interface CannedResponse { id: string; name: string; content: string; createdBy: string; createdByTag: string; createdAt: string; }
 
 // ─── AddonData helpers ────────────────────────────────────────────────────────
@@ -612,6 +613,31 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
       };
     });
 
+    // Per-agent breakdown: a ticket's handler is whoever claimed it, else who closed it.
+    const staffAgg = new Map<string, { id: string; tag: string; handled: number; closed: number; ratingSum: number; ratingCount: number; closeSum: number; closeCount: number }>();
+    for (const tk of tickets) {
+      const id = tk.claimedBy ?? tk.closedBy;
+      if (!id) continue;
+      const tag = tk.claimedByTag ?? tk.closedByTag ?? id;
+      const a = staffAgg.get(id) ?? { id, tag, handled: 0, closed: 0, ratingSum: 0, ratingCount: 0, closeSum: 0, closeCount: 0 };
+      a.tag = tag;
+      a.handled++;
+      if (tk.closedAt) { a.closed++; a.closeSum += (new Date(tk.closedAt).getTime() - new Date(tk.createdAt).getTime()) / 60000; a.closeCount++; }
+      if (typeof tk.rating === 'number') { a.ratingSum += tk.rating; a.ratingCount++; }
+      staffAgg.set(id, a);
+    }
+    const byStaff = [...staffAgg.values()]
+      .map((a) => ({
+        staffId: a.id,
+        tag: a.tag,
+        handled: a.handled,
+        closed: a.closed,
+        avgRating: a.ratingCount ? a.ratingSum / a.ratingCount : null,
+        avgCloseMinutes: a.closeCount ? a.closeSum / a.closeCount : null,
+      }))
+      .sort((x, y) => y.handled - x.handled)
+      .slice(0, 25);
+
     return reply.send({
       success: true,
       data: {
@@ -629,6 +655,7 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
         panels: panels.length,
         blacklistedUsers: config.blacklistedUsers.length,
         byPanel,
+        byStaff,
       },
     });
   });
@@ -674,6 +701,28 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     const { guildId } = request.params as { guildId: string };
     const config = (await readData<GuildTicketConfig>(guildId, 'config')) ?? { blacklistedUsers: [] };
     return reply.send({ success: true, data: config });
+  });
+
+  // ── Tickets CSV export ──────────────────────────────────────────────────────
+  server.get('/addons/tickets/:guildId/tickets/export', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
+    const { guildId } = request.params as { guildId: string };
+    const [tickets, panels] = await Promise.all([
+      readData<Ticket[]>(guildId, 'tickets').then((r) => r ?? []),
+      readData<TicketPanel[]>(guildId, 'panels').then((r) => r ?? []),
+    ]);
+    const panelName = (id: string) => panels.find((p) => p.id === id)?.name ?? '';
+    const esc = (v: unknown) => {
+      const s = String(v ?? '');
+      return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const header = ['number', 'status', 'priority', 'panel', 'category', 'opener', 'opener_id', 'claimed_by', 'closed_by', 'rating', 'feedback', 'created_at', 'closed_at'];
+    const rows = [...tickets]
+      .sort((a, b) => a.number - b.number)
+      .map((t) => [t.number, t.status, t.priority, panelName(t.panelId), t.categoryTag ?? '', t.username, t.userId, t.claimedByTag ?? '', t.closedByTag ?? '', t.rating ?? '', t.ratingFeedback ?? '', t.createdAt, t.closedAt ?? ''].map(esc).join(','));
+    const csv = [header.join(','), ...rows].join('\n');
+    reply.header('Content-Type', 'text/csv; charset=utf-8');
+    reply.header('Content-Disposition', `attachment; filename="tickets-${guildId}.csv"`);
+    return reply.send(csv);
   });
 
   server.patch('/addons/tickets/:guildId/config', { preHandler: [requireGuildAdmin] }, async (request, reply) => {

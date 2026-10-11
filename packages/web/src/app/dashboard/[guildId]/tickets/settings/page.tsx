@@ -10,7 +10,17 @@ import { Settings, ArrowLeft, Plus, Trash2 } from 'lucide-react';
 import { Toggle } from '@/components/Toggle';
 import { useTranslations } from 'next-intl';
 
-interface SlaLevel { hours: number; pingRoleId?: string; message?: string; }
+interface SlaLevel { hours: number; pingRoleId?: string; message?: string; escalatePriority?: string; escalateRoleId?: string; }
+
+interface BusinessHours {
+  enabled: boolean;
+  timezone: string;
+  openTime: string;
+  closeTime: string;
+  days: number[];
+  awayMessage?: string;
+  pauseSla?: boolean;
+}
 
 interface GuildTicketConfig {
   blacklistedUsers: string[];
@@ -22,7 +32,22 @@ interface GuildTicketConfig {
   ratingWindowMinutes?: number;
   autoAssign?: boolean;
   slaLevels?: SlaLevel[];
+  autoTriage?: boolean;
+  autoTriageSetPriority?: boolean;
+  autoTriageTag?: boolean;
+  showUserHistory?: boolean;
+  nudgeBeforeCloseHours?: number;
+  businessHours?: BusinessHours;
+  lowRatingThreshold?: number;
+  lowRatingAlertRoleId?: string;
+  lowRatingAlertChannelId?: string;
+  openCooldownMinutes?: number;
+  minAccountAgeDays?: number;
+  requiredOpenRoleId?: string;
+  weeklyDigestChannelId?: string;
 }
+
+const DEFAULT_BH: BusinessHours = { enabled: false, timezone: 'UTC', openTime: '09:00', closeTime: '17:00', days: [1, 2, 3, 4, 5], pauseSla: true, awayMessage: '' };
 
 function Row({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
   return (
@@ -69,13 +94,14 @@ function SlaLevelsEditor({ levels, roles, onChange }: { levels: SlaLevel[]; role
   const [newHours, setNewHours] = useState('');
   const [newRole, setNewRole] = useState('');
   const [newMsg, setNewMsg] = useState('');
+  const [newEscalate, setNewEscalate] = useState('');
 
   const add = () => {
     const h = parseInt(newHours);
     if (!h || h <= 0) { toast.error(t('enterValidHours')); return; }
     if (levels.some((l) => l.hours === h)) { toast.error(t('levelExists')); return; }
-    onChange([...levels, { hours: h, pingRoleId: newRole || undefined, message: newMsg.trim() || undefined }].sort((a, b) => a.hours - b.hours));
-    setNewHours(''); setNewRole(''); setNewMsg('');
+    onChange([...levels, { hours: h, pingRoleId: newRole || undefined, message: newMsg.trim() || undefined, escalatePriority: newEscalate || undefined }].sort((a, b) => a.hours - b.hours));
+    setNewHours(''); setNewRole(''); setNewMsg(''); setNewEscalate('');
   };
 
   return (
@@ -88,6 +114,7 @@ function SlaLevelsEditor({ levels, roles, onChange }: { levels: SlaLevel[]; role
               <tr>
                 <th className="text-left px-3 py-2 text-xs text-gray-400 uppercase">{t('colHours')}</th>
                 <th className="text-left px-3 py-2 text-xs text-gray-400 uppercase">{t('colPingRole')}</th>
+                <th className="text-left px-3 py-2 text-xs text-gray-400 uppercase">{t('colEscalate')}</th>
                 <th className="text-left px-3 py-2 text-xs text-gray-400 uppercase">{t('colCustomMessage')}</th>
                 <th className="px-3 py-2" />
               </tr>
@@ -97,6 +124,7 @@ function SlaLevelsEditor({ levels, roles, onChange }: { levels: SlaLevel[]; role
                 <tr key={lvl.hours} className="hover:bg-white/2">
                   <td className="px-3 py-2 font-mono text-yellow-400">{lvl.hours}h</td>
                   <td className="px-3 py-2 text-gray-300">{roles.find((r) => r.id === lvl.pingRoleId)?.name ?? lvl.pingRoleId ?? '—'}</td>
+                  <td className="px-3 py-2 text-gray-300 capitalize">{lvl.escalatePriority ? t(`priority_${lvl.escalatePriority}`) : '—'}</td>
                   <td className="px-3 py-2 text-gray-400 max-w-[200px] truncate">{lvl.message ?? '—'}</td>
                   <td className="px-3 py-2 text-right">
                     <button onClick={() => onChange(levels.filter((l) => l.hours !== lvl.hours))} className="text-gray-500 hover:text-red-400">
@@ -110,7 +138,7 @@ function SlaLevelsEditor({ levels, roles, onChange }: { levels: SlaLevel[]; role
           </div>
         </div>
       )}
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
         <div>
           <label className="label text-xs">{t('colHours')}</label>
           <input type="number" min={1} className="input text-sm" placeholder={t('eg6')} value={newHours} onChange={(e) => setNewHours(e.target.value)} />
@@ -120,6 +148,15 @@ function SlaLevelsEditor({ levels, roles, onChange }: { levels: SlaLevel[]; role
           <select className="input text-sm" value={newRole} onChange={(e) => setNewRole(e.target.value)}>
             <option value="">{t('none')}</option>
             {roles.map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
+          </select>
+        </div>
+        <div>
+          <label className="label text-xs">{t('escalateToOptional')}</label>
+          <select className="input text-sm" value={newEscalate} onChange={(e) => setNewEscalate(e.target.value)}>
+            <option value="">{t('none')}</option>
+            <option value="medium">{t('priority_medium')}</option>
+            <option value="high">{t('priority_high')}</option>
+            <option value="urgent">{t('priority_urgent')}</option>
           </select>
         </div>
         <div>
@@ -157,6 +194,19 @@ export default function TicketSettingsPage() {
     ratingWindowMinutes: 5,
     autoAssign: false,
     slaLevels: [],
+    autoTriage: false,
+    autoTriageSetPriority: false,
+    autoTriageTag: false,
+    showUserHistory: true,
+    nudgeBeforeCloseHours: 0,
+    businessHours: DEFAULT_BH,
+    lowRatingThreshold: 0,
+    lowRatingAlertRoleId: '',
+    lowRatingAlertChannelId: '',
+    openCooldownMinutes: 0,
+    minAccountAgeDays: 0,
+    requiredOpenRoleId: '',
+    weeklyDigestChannelId: '',
   });
 
   useEffect(() => {
@@ -171,8 +221,24 @@ export default function TicketSettingsPage() {
       ratingWindowMinutes: cfg.ratingWindowMinutes ?? 5,
       autoAssign: cfg.autoAssign ?? false,
       slaLevels: cfg.slaLevels ?? [],
+      autoTriage: cfg.autoTriage ?? false,
+      autoTriageSetPriority: cfg.autoTriageSetPriority ?? false,
+      autoTriageTag: cfg.autoTriageTag ?? false,
+      showUserHistory: cfg.showUserHistory ?? true,
+      nudgeBeforeCloseHours: cfg.nudgeBeforeCloseHours ?? 0,
+      businessHours: { ...DEFAULT_BH, ...(cfg.businessHours ?? {}) },
+      lowRatingThreshold: cfg.lowRatingThreshold ?? 0,
+      lowRatingAlertRoleId: cfg.lowRatingAlertRoleId ?? '',
+      lowRatingAlertChannelId: cfg.lowRatingAlertChannelId ?? '',
+      openCooldownMinutes: cfg.openCooldownMinutes ?? 0,
+      minAccountAgeDays: cfg.minAccountAgeDays ?? 0,
+      requiredOpenRoleId: cfg.requiredOpenRoleId ?? '',
+      weeklyDigestChannelId: cfg.weeklyDigestChannelId ?? '',
     });
   }, [configRes]);
+
+  const setBH = <K extends keyof BusinessHours>(key: K, value: BusinessHours[K]) =>
+    setDraft((d) => ({ ...d, businessHours: { ...DEFAULT_BH, ...(d.businessHours ?? {}), [key]: value } }));
 
   const set = <K extends keyof GuildTicketConfig>(key: K, value: GuildTicketConfig[K]) => setDraft((d) => ({ ...d, [key]: value }));
 
@@ -256,6 +322,141 @@ export default function TicketSettingsPage() {
           <label className="label">{t('slaLevels')}</label>
           <SlaLevelsEditor levels={draft.slaLevels ?? []} roles={roles.filter((r) => r.name !== '@everyone')} onChange={(l) => set('slaLevels', l)} />
         </div>
+      </div>
+
+      {/* AI Assist */}
+      <div className="card space-y-5">
+        <h2 className="text-white font-semibold border-b border-(--border-subtle) pb-2">{t('aiAssist')}</h2>
+        <p className="text-gray-400 text-sm">{t('aiAssistDesc')}</p>
+        <Row label={t('autoTriage')} hint={t('autoTriageHint')}>
+          <div className="mt-1"><Toggle enabled={draft.autoTriage ?? false} onChange={(v) => set('autoTriage', v)} /></div>
+        </Row>
+        {draft.autoTriage && (
+          <>
+            <Row label={t('autoTriageSetPriority')} hint={t('autoTriageSetPriorityHint')}>
+              <div className="mt-1"><Toggle enabled={draft.autoTriageSetPriority ?? false} onChange={(v) => set('autoTriageSetPriority', v)} /></div>
+            </Row>
+            <Row label={t('autoTriageTag')} hint={t('autoTriageTagHint')}>
+              <div className="mt-1"><Toggle enabled={draft.autoTriageTag ?? false} onChange={(v) => set('autoTriageTag', v)} /></div>
+            </Row>
+          </>
+        )}
+        <Row label={t('showUserHistory')} hint={t('showUserHistoryHint')}>
+          <div className="mt-1"><Toggle enabled={draft.showUserHistory ?? true} onChange={(v) => set('showUserHistory', v)} /></div>
+        </Row>
+      </div>
+
+      {/* Lifecycle */}
+      <div className="card space-y-5">
+        <h2 className="text-white font-semibold border-b border-(--border-subtle) pb-2">{t('lifecycle')}</h2>
+        <Row label={t('nudgeBeforeClose')} hint={t('nudgeBeforeCloseHint')}>
+          <input type="number" min={0} max={168} className="input w-28" value={draft.nudgeBeforeCloseHours ?? 0} onChange={(e) => set('nudgeBeforeCloseHours', Math.max(0, parseInt(e.target.value) || 0))} />
+        </Row>
+      </div>
+
+      {/* Business Hours */}
+      <div className="card space-y-5">
+        <h2 className="text-white font-semibold border-b border-(--border-subtle) pb-2">{t('businessHours')}</h2>
+        <p className="text-gray-400 text-sm">{t('businessHoursDesc')}</p>
+        <Row label={t('enableBusinessHours')}>
+          <div className="mt-1"><Toggle enabled={draft.businessHours?.enabled ?? false} onChange={(v) => setBH('enabled', v)} /></div>
+        </Row>
+        {draft.businessHours?.enabled && (
+          <>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <Row label={t('timezone')}>
+                <input className="input text-sm" placeholder="America/New_York" value={draft.businessHours?.timezone ?? 'UTC'} onChange={(e) => setBH('timezone', e.target.value)} />
+              </Row>
+              <Row label={t('openTime')}>
+                <input type="time" className="input text-sm" value={draft.businessHours?.openTime ?? '09:00'} onChange={(e) => setBH('openTime', e.target.value)} />
+              </Row>
+              <Row label={t('closeTime')}>
+                <input type="time" className="input text-sm" value={draft.businessHours?.closeTime ?? '17:00'} onChange={(e) => setBH('closeTime', e.target.value)} />
+              </Row>
+            </div>
+            <Row label={t('activeDays')}>
+              <div className="flex flex-wrap gap-1.5 mt-1">
+                {[t('sun'), t('mon'), t('tue'), t('wed'), t('thu'), t('fri'), t('sat')].map((d, i) => {
+                  const on = (draft.businessHours?.days ?? []).includes(i);
+                  return (
+                    <button key={i} type="button"
+                      onClick={() => { const cur = draft.businessHours?.days ?? []; setBH('days', on ? cur.filter((x) => x !== i) : [...cur, i].sort()); }}
+                      className={`px-2.5 py-1 rounded-md text-xs font-medium border transition-colors ${on ? 'bg-discord-blurple/20 border-discord-blurple text-white' : 'border-(--border-subtle) text-gray-400 hover:text-white'}`}>
+                      {d}
+                    </button>
+                  );
+                })}
+              </div>
+            </Row>
+            <Row label={t('pauseSlaOffHours')} hint={t('pauseSlaOffHoursHint')}>
+              <div className="mt-1"><Toggle enabled={draft.businessHours?.pauseSla ?? false} onChange={(v) => setBH('pauseSla', v)} /></div>
+            </Row>
+            <Row label={t('awayMessage')} hint={t('awayMessageHint')}>
+              <textarea className="input text-sm" rows={2} value={draft.businessHours?.awayMessage ?? ''} onChange={(e) => setBH('awayMessage', e.target.value)} maxLength={500} />
+            </Row>
+          </>
+        )}
+      </div>
+
+      {/* Quality & Feedback */}
+      <div className="card space-y-5">
+        <h2 className="text-white font-semibold border-b border-(--border-subtle) pb-2">{t('qualityFeedback')}</h2>
+        <p className="text-gray-400 text-sm">{t('qualityFeedbackDesc')}</p>
+        <Row label={t('lowRatingThreshold')} hint={t('lowRatingThresholdHint')}>
+          <select className="input w-40" value={draft.lowRatingThreshold ?? 0} onChange={(e) => set('lowRatingThreshold', parseInt(e.target.value))}>
+            <option value={0}>{t('disabled')}</option>
+            <option value={1}>{t('ratingAtOrBelow', { n: 1 })}</option>
+            <option value={2}>{t('ratingAtOrBelow', { n: 2 })}</option>
+            <option value={3}>{t('ratingAtOrBelow', { n: 3 })}</option>
+          </select>
+        </Row>
+        {(draft.lowRatingThreshold ?? 0) > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <Row label={t('alertChannel')} hint={t('alertChannelHint')}>
+              <select className="input" value={draft.lowRatingAlertChannelId ?? ''} onChange={(e) => set('lowRatingAlertChannelId', e.target.value)}>
+                <option value="">{t('useStaffChannel')}</option>
+                {textChannels.map((c) => <option key={c.id} value={c.id}>#{c.name}</option>)}
+              </select>
+            </Row>
+            <Row label={t('alertRole')}>
+              <select className="input" value={draft.lowRatingAlertRoleId ?? ''} onChange={(e) => set('lowRatingAlertRoleId', e.target.value)}>
+                <option value="">{t('noPing')}</option>
+                {roles.filter((r) => r.name !== '@everyone').map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
+              </select>
+            </Row>
+          </div>
+        )}
+      </div>
+
+      {/* Access & Abuse */}
+      <div className="card space-y-5">
+        <h2 className="text-white font-semibold border-b border-(--border-subtle) pb-2">{t('accessControls')}</h2>
+        <p className="text-gray-400 text-sm">{t('accessControlsDesc')}</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <Row label={t('openCooldown')} hint={t('openCooldownHint')}>
+            <input type="number" min={0} max={10080} className="input w-32" value={draft.openCooldownMinutes ?? 0} onChange={(e) => set('openCooldownMinutes', Math.max(0, parseInt(e.target.value) || 0))} />
+          </Row>
+          <Row label={t('minAccountAge')} hint={t('minAccountAgeHint')}>
+            <input type="number" min={0} max={365} className="input w-32" value={draft.minAccountAgeDays ?? 0} onChange={(e) => set('minAccountAgeDays', Math.max(0, parseInt(e.target.value) || 0))} />
+          </Row>
+        </div>
+        <Row label={t('requiredRole')} hint={t('requiredRoleHint')}>
+          <select className="input" value={draft.requiredOpenRoleId ?? ''} onChange={(e) => set('requiredOpenRoleId', e.target.value)}>
+            <option value="">{t('anyone')}</option>
+            {roles.filter((r) => r.name !== '@everyone').map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
+          </select>
+        </Row>
+      </div>
+
+      {/* Weekly Digest */}
+      <div className="card space-y-5">
+        <h2 className="text-white font-semibold border-b border-(--border-subtle) pb-2">{t('weeklyDigest')}</h2>
+        <Row label={t('digestChannel')} hint={t('digestChannelHint')}>
+          <select className="input" value={draft.weeklyDigestChannelId ?? ''} onChange={(e) => set('weeklyDigestChannelId', e.target.value)}>
+            <option value="">{t('disabled')}</option>
+            {textChannels.map((c) => <option key={c.id} value={c.id}>#{c.name}</option>)}
+          </select>
+        </Row>
       </div>
 
       {/* Blacklist */}

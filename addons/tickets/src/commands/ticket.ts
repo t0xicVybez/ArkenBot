@@ -1,12 +1,17 @@
 import {
   MessageFlags,
   SlashCommandBuilder,
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  PermissionFlagsBits,
   type ChatInputCommandInteraction,
   type ContextMenuCommandInteraction,
   type AutocompleteInteraction,
   type TextChannel,
 } from 'discord.js';
 import { randomUUID } from 'crypto';
+import { parseDuration } from '@arkenbot/shared';
 import type { AddonContext, AddonCommandDefinition } from '@arkenbot/addon-sdk';
 import type { TicketNote } from '../types.js';
 import {
@@ -16,6 +21,8 @@ import {
   getPanel,
   getCannedResponses,
   getTickets,
+  getUserOpenTickets,
+  getPanels,
 } from '../utils/storage.js';
 import {
   buildInfoEmbed,
@@ -125,6 +132,26 @@ const command: AddonCommandDefinition = {
     )
     .addSubcommand((s) =>
       s.setName('waiting').setDescription('Toggle waiting status on this ticket (staff only)'),
+    )
+    .addSubcommand((s) =>
+      s.setName('requestclose').setDescription('Ask the ticket opener to confirm closing (staff only)'),
+    )
+    .addSubcommand((s) =>
+      s.setName('snooze')
+        .setDescription('Remind yourself about this ticket later (staff only)')
+        .addStringOption((o) =>
+          o.setName('in').setDescription('When to be reminded, e.g. 2h, 30m, 1d').setRequired(true).setMaxLength(20),
+        ),
+    )
+    .addSubcommand((s) =>
+      s.setName('find')
+        .setDescription('Search tickets by number, user, or tag (staff only)')
+        .addStringOption((o) =>
+          o.setName('query').setDescription('Ticket number, username/ID, or tag').setRequired(true).setMaxLength(100),
+        ),
+    )
+    .addSubcommand((s) =>
+      s.setName('mine').setDescription('List your open tickets in this server'),
     ) as unknown as SlashCommandBuilder,
 
   async autocomplete(interaction: AutocompleteInteraction, ctx: AddonContext): Promise<void> {
@@ -173,13 +200,19 @@ const command: AddonCommandDefinition = {
 
     const sub = interaction.options.getSubcommand();
 
+    // These run anywhere (not inside a specific ticket channel).
+    if (sub === 'find' || sub === 'mine') {
+      await handleSearchSub(ctx, interaction, sub, t);
+      return;
+    }
+
     const ticket = await getTicketByChannel(ctx.storage, interaction.guildId, interaction.channelId);
     if (!ticket) {
       await interaction.reply({ content: t('notTicketChannel'), flags: MessageFlags.Ephemeral });
       return;
     }
 
-    const OPEN_ONLY_SUBS = ['close', 'claim', 'unclaim', 'transfer', 'add', 'remove', 'rename', 'priority', 'tag', 'note', 'respond', 'waiting'];
+    const OPEN_ONLY_SUBS = ['close', 'claim', 'unclaim', 'transfer', 'add', 'remove', 'rename', 'priority', 'tag', 'note', 'respond', 'waiting', 'requestclose', 'snooze'];
     if (ticket.status === 'closed' && OPEN_ONLY_SUBS.includes(sub)) {
       if (sub === 'reopen') {
         // handled below
@@ -455,7 +488,51 @@ const command: AddonCommandDefinition = {
           await interaction.reply({ content: t('cannedNotFound', { name }), flags: MessageFlags.Ephemeral });
           return;
         }
-        await interaction.reply(canned.content);
+        // Substitute {user} {username} {staff} {staffname} {ticket} placeholders.
+        const opener = await interaction.guild!.members.fetch(ticket.userId).catch(() => null);
+        const vars: Record<string, string> = {
+          user: `<@${ticket.userId}>`,
+          username: opener?.user.username ?? ticket.username,
+          staff: `<@${interaction.user.id}>`,
+          staffname: interaction.user.username,
+          ticket: `#${ticket.number}`,
+        };
+        const content = canned.content.replace(/\{(\w+)\}/g, (m, k) => vars[String(k).toLowerCase()] ?? m);
+        await interaction.reply(content);
+        break;
+      }
+      case 'requestclose': {
+        if (!isStaff) {
+          await interaction.reply({ content: t('onlyStaffRequestClose'), flags: MessageFlags.Ephemeral });
+          return;
+        }
+        ticket.closeRequestedBy = interaction.user.id;
+        ticket.closeRequestedByTag = interaction.user.tag;
+        ticket.closeRequestedAt = new Date().toISOString();
+        await saveTicket(ctx.storage, interaction.guildId, ticket);
+        const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+          new ButtonBuilder().setCustomId(`ticket:confirmclose:${ticket.channelId}`).setLabel(t('btnConfirmClose')).setEmoji('✅').setStyle(ButtonStyle.Success),
+          new ButtonBuilder().setCustomId(`ticket:keepopen:${ticket.channelId}`).setLabel(t('btnKeepOpen')).setEmoji('🔓').setStyle(ButtonStyle.Secondary),
+        );
+        await interaction.reply({ content: t('closeRequestPrompt', { user: `<@${ticket.userId}>` }), components: [row] });
+        break;
+      }
+      case 'snooze': {
+        if (!isStaff) {
+          await interaction.reply({ content: t('onlyStaffSnooze'), flags: MessageFlags.Ephemeral });
+          return;
+        }
+        const raw = interaction.options.getString('in', true);
+        const ms = parseDuration(raw);
+        if (!ms || ms < 60_000 || ms > 30 * 24 * 60 * 60 * 1000) {
+          await interaction.reply({ content: t('snoozeBadDuration'), flags: MessageFlags.Ephemeral });
+          return;
+        }
+        ticket.reminderAt = new Date(Date.now() + ms).toISOString();
+        ticket.reminderBy = interaction.user.id;
+        await saveTicket(ctx.storage, interaction.guildId, ticket);
+        const when = Math.floor((Date.now() + ms) / 1000);
+        await interaction.reply({ content: t('snoozeSet', { when: `<t:${when}:R>` }), flags: MessageFlags.Ephemeral });
         break;
       }
       case 'waiting': {
@@ -481,6 +558,67 @@ const command: AddonCommandDefinition = {
     }
   },
 };
+
+/** `/ticket find` (staff) and `/ticket mine` (anyone) — run outside a ticket channel. */
+async function handleSearchSub(
+  ctx: AddonContext,
+  interaction: ChatInputCommandInteraction,
+  sub: string,
+  t: (k: string, v?: Record<string, string | number>) => string,
+): Promise<void> {
+  const guildId = interaction.guildId!;
+
+  if (sub === 'mine') {
+    const open = await getUserOpenTickets(ctx.storage, guildId, interaction.user.id);
+    if (open.length === 0) {
+      await interaction.reply({ content: t('mineNone'), flags: MessageFlags.Ephemeral });
+      return;
+    }
+    const lines = open
+      .sort((a, b) => b.number - a.number)
+      .map((x) => `• **#${x.number}** → <#${x.channelId}>`);
+    await interaction.reply({ content: `${t('mineHeader', { count: open.length })}\n${lines.join('\n')}`, flags: MessageFlags.Ephemeral });
+    return;
+  }
+
+  // find — staff only
+  const member = interaction.guild!.members.cache.get(interaction.user.id)
+    ?? (await interaction.guild!.members.fetch(interaction.user.id).catch(() => null));
+  const panels = await getPanels(ctx.storage, guildId);
+  const staffRoleIds = new Set(panels.flatMap((p) => p.staffRoles));
+  const isStaff =
+    !!member?.permissions.has(PermissionFlagsBits.ManageGuild) ||
+    [...staffRoleIds].some((r) => member?.roles.cache.has(r));
+  if (!isStaff) {
+    await interaction.reply({ content: t('onlyStaffFind'), flags: MessageFlags.Ephemeral });
+    return;
+  }
+
+  const query = interaction.options.getString('query', true).trim().toLowerCase();
+  const numStr = query.replace(/^#/, '');
+  const idStr = query.replace(/[<@!>]/g, '');
+  const all = await getTickets(ctx.storage, guildId);
+  const matches = all
+    .filter((x) =>
+      String(x.number) === numStr ||
+      x.username.toLowerCase().includes(query) ||
+      x.userId === idStr ||
+      x.tags.some((tag) => tag.toLowerCase().includes(query)) ||
+      (x.categoryTag?.toLowerCase().includes(query) ?? false),
+    )
+    .sort((a, b) => b.number - a.number)
+    .slice(0, 15);
+
+  if (matches.length === 0) {
+    await interaction.reply({ content: t('findNone', { query }), flags: MessageFlags.Ephemeral });
+    return;
+  }
+  const emoji: Record<string, string> = { open: '🟢', claimed: '🔵', waiting: '🟡', closed: '⬛' };
+  const lines = matches.map((x) =>
+    `${emoji[x.status] ?? '•'} **#${x.number}** — ${x.username}${x.categoryTag ? ` \`${x.categoryTag}\`` : ''}${x.status === 'closed' ? ` (${t('statusClosedShort')})` : ` → <#${x.channelId}>`}`,
+  );
+  await interaction.reply({ content: `${t('findHeader', { count: matches.length })}\n${lines.join('\n')}`, flags: MessageFlags.Ephemeral });
+}
 
 export default command;
 
