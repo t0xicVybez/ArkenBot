@@ -210,6 +210,18 @@ export class PromotionModule {
     }
   }
 
+  /** messageCreate — opportunistic tag detection. A message author carries a
+   * fresh `primaryGuild` (unlike the member cache), so this reliably catches a
+   * member's server tag the moment they send a message. Only opens (closing is
+   * handled by the sweep/userUpdate) and only touches the DB for tagged members,
+   * so it's cheap on the message hot path. */
+  static async handleMessage(guildId: string, author: User): Promise<void> {
+    if (author.bot || !this.enabledGuilds.has(guildId)) return;
+    if (!this.configs.get(guildId)?.trackTag) return;
+    const tag = this.matchTag(author, guildId);
+    if (tag) await this.openSession(guildId, author.id, 'tag', tag, { username: author.username, avatar: author.avatar });
+  }
+
   /** guildMemberRemove — close any open sessions when a member leaves. */
   static async handleMemberRemove(guildId: string, userId: string): Promise<void> {
     if (!this.enabledGuilds.has(guildId)) return;
@@ -242,19 +254,15 @@ export class PromotionModule {
 
   private static async reconcileGuild(guild: Guild, cfg: CachedConfig): Promise<void> {
     const guildId = guild.id;
-    // Current visible truth, keyed by `${userId}:${kind}` → matched value + identity.
     type Truth = { value: string; username: string; avatar: string | null };
     const activeTruth = new Map<string, Truth>();
-    for (const member of guild.members.cache.values()) {
-      if (member.user.bot) continue;
-      const id = { username: member.user.username, avatar: member.user.avatar };
-      if (cfg.trackStatus) {
+
+    // Status: read from the member/presence cache (presence is cached reliably).
+    if (cfg.trackStatus) {
+      for (const member of guild.members.cache.values()) {
+        if (member.user.bot) continue;
         const m = this.matchStatus(this.customStatusText(member.presence), cfg.keywords);
-        if (m) activeTruth.set(`${member.id}:status`, { value: m, ...id });
-      }
-      if (cfg.trackTag) {
-        const m = this.matchTag(member.user, guildId);
-        if (m) activeTruth.set(`${member.id}:tag`, { value: m, ...id });
+        if (m) activeTruth.set(`${member.id}:status`, { value: m, username: member.user.username, avatar: member.user.avatar });
       }
     }
 
@@ -263,6 +271,26 @@ export class PromotionModule {
       where: { guildId, endedAt: null },
       select: { id: true, userId: true, kind: true },
     });
+
+    // Tag: `user.primaryGuild` is NOT reliably in the member cache, so force-fetch
+    // fresh user objects for a bounded candidate set — everyone who currently has
+    // an open tag session (to detect removals) plus online members (to detect new
+    // tags), capped so big guilds don't hammer the REST API each sweep.
+    if (cfg.trackTag) {
+      const TAG_FETCH_CAP = 60;
+      const candidates = new Set<string>(open.filter((s) => s.kind === 'tag').map((s) => s.userId));
+      for (const member of guild.members.cache.values()) {
+        if (candidates.size >= TAG_FETCH_CAP) break;
+        if (member.user.bot || candidates.has(member.id)) continue;
+        if (member.presence && member.presence.status !== 'offline') candidates.add(member.id);
+      }
+      for (const userId of candidates) {
+        const user = await guild.client.users.fetch(userId, { force: true }).catch(() => null);
+        if (!user) continue;
+        const m = this.matchTag(user, guildId);
+        if (m) activeTruth.set(`${userId}:tag`, { value: m, username: user.username, avatar: user.avatar });
+      }
+    }
     const openKeys = new Set<string>();
     const toClose: string[] = [];
     for (const s of open) {

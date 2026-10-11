@@ -18,6 +18,7 @@ import { prisma } from '../database.js';
 import { redis } from '../redis.js';
 import { logger, swallow} from '../logger.js';
 import { ensureGuildExists } from '../utils/settings.js';
+import { PromotionModule } from '../modules/promotion/PromotionModule.js';
 
 // Per-user cooldown tracker for custom commands: `${commandId}:${userId}` → expiry timestamp
 const cooldownMap = new Map<string, number>();
@@ -238,6 +239,7 @@ const event: BotEvent = {
       checkSlowmode(message),
       CountingModule.check(message),
       checkAutoResponses(message),
+      PromotionModule.handleMessage(message.guild.id, message.author),
     ]);
 
     if (message.content.startsWith('!')) {
