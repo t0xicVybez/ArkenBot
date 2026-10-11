@@ -1019,7 +1019,8 @@
     "panelStyleButtons": "버튼",
     "panelStyleLabel": "옵션 표시",
     "panelStyleDropdown": "드롭다운 메뉴",
-    "panelStyleHint": "드롭다운은 1개의 메뉴에서 각 표 유형을 나열하여 바쁜 패널 tidy를 유지합니다. 2개 이상의 버튼이 있을 때 적용됩니다."
+    "panelStyleHint": "드롭다운은 1개의 메뉴에서 각 표 유형을 나열하여 바쁜 패널 tidy를 유지합니다. 2개 이상의 버튼이 있을 때 적용됩니다.",
+    "namingPatternHint": "주주 : {category} (버튼 태그에서), {number}· {username}. 예. {category}- - -{number} → 콘-0009"
   },
   "giveawaysPage": {
     "giveawayCreated": "이벤트를 만들었습니다!",

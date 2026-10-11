@@ -1019,7 +1019,8 @@
     "panelStyleLabel": "Opzioni di visualizzazione",
     "panelStyleButtons": "Pulsanti",
     "panelStyleDropdown": "menu a tendina",
-    "panelStyleHint": "Un menu a tendina mantiene occupato i pannelli in ordine elencando ogni tipo di biglietto in un menu. Si applica quando si dispone di 2 o più pulsanti."
+    "panelStyleHint": "Un menu a tendina mantiene occupato i pannelli in ordine elencando ogni tipo di biglietto in un menu. Si applica quando si dispone di 2 o più pulsanti.",
+    "namingPatternHint": "Portaposto: {category} (dal tasto tag), {number}♪ {username}. ad esempio. {category}- No.{number} → con-0009"
   },
   "giveawaysPage": {
     "giveawayCreated": "Giveaway creato!",

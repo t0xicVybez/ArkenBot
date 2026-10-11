@@ -1019,7 +1019,8 @@
     "panelStyleLabel": "Opties tonen als",
     "panelStyleButtons": "Knoppen",
     "panelStyleDropdown": "Dropdown-menu",
-    "panelStyleHint": "Een dropdown houdt drukke panelen netjes door elk tickettype in één menu op te nemen. Geldt voor 2 of meer knoppen."
+    "panelStyleHint": "Een dropdown houdt drukke panelen netjes door elk tickettype in één menu op te nemen. Geldt voor 2 of meer knoppen.",
+    "namingPatternHint": "Plaatshouders: {category} (van de knoopstag), {number}, {username}. bv. {category}-{number} → con-0009"
   },
   "giveawaysPage": {
     "giveawayCreated": "Giveaway aangemaakt!",

@@ -1019,7 +1019,8 @@
     "panelStyleLabel": "Anzeigeoptionen als",
     "panelStyleButtons": "Knöpfe",
     "panelStyleDropdown": "Dropdown-Menü",
-    "panelStyleHint": "Ein Dropdown hält beschäftigte Panels ordentlich, indem er jeden Tickettyp in einem Menü auflistet. Gilt, wenn Sie 2 oder mehr Buttons haben."
+    "panelStyleHint": "Ein Dropdown hält beschäftigte Panels ordentlich, indem er jeden Tickettyp in einem Menü auflistet. Gilt, wenn Sie 2 oder mehr Buttons haben.",
+    "namingPatternHint": "Platzhalter: {category} (vom Button-Tag), {number}, {username}B. {category}-{number} Con-0009"
   },
   "giveawaysPage": {
     "giveawayCreated": "Giveaway erstellt!",

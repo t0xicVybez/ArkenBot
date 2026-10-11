@@ -99,7 +99,7 @@ const command: AddonCommandDefinition = {
             .addStringOption((o) =>
               o
                 .setName('naming_pattern')
-                .setDescription('Channel naming pattern ({number}, {username}) — default: ticket-{number}')
+                .setDescription('Channel naming ({category}, {number}, {username}) — default: ticket-{number}')
                 .setRequired(false),
             )
             .addStringOption((o) =>

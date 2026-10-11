@@ -289,7 +289,7 @@ export async function createTicket(
   }
 
   const number = await nextTicketNumber(ctx.storage, guildId);
-  const channelName = resolveChannelName(panel, number, member.displayName);
+  const channelName = resolveChannelName(panel, number, member.displayName, categoryTag);
 
   let channel: TextChannel;
   try {
@@ -835,7 +835,11 @@ export async function runTriageModel(
 ): Promise<AiTriage | null> {
   const details: string[] = [];
   if (ticket.reason) details.push(`Reason given: ${ticket.reason}`);
-  for (const [k, v] of Object.entries(ticket.formResponses ?? {})) details.push(`${k}: ${v}`);
+  // Map form-field IDs → their human question labels so the model sees the
+  // actual questions, not internal UUIDs.
+  const triagePanel = await getPanel(ctx.storage, ticket.guildId, ticket.panelId);
+  const labelById = new Map((triagePanel ? resolvePanelFields(triagePanel, ticket.buttonId) : []).map((f) => [f.id, f.label]));
+  for (const [k, v] of Object.entries(ticket.formResponses ?? {})) details.push(`${labelById.get(k) ?? k}: ${v}`);
 
   let transcript: string[] = [];
   if (channel) {

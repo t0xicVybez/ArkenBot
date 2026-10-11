@@ -14,10 +14,12 @@ import type { Ticket, TicketPanel } from '../types.js';
  * Resolve the ticket channel name from the panel naming pattern.
  * Supports {number}, {username}.
  */
-export function resolveChannelName(panel: TicketPanel, number: number, username: string): string {
+export function resolveChannelName(panel: TicketPanel, number: number, username: string, categoryTag?: string): string {
+  const category = (categoryTag ?? '').toLowerCase().replace(/[^a-z0-9-]/g, '') || 'ticket';
   return panel.namingPattern
-    .replace('{number}', String(number).padStart(4, '0'))
-    .replace('{username}', username.toLowerCase().replace(/[^a-z0-9-]/g, ''))
+    .replace(/\{category\}/g, category)
+    .replace(/\{number\}/g, String(number).padStart(4, '0'))
+    .replace(/\{username\}/g, username.toLowerCase().replace(/[^a-z0-9-]/g, ''))
     .slice(0, 100);
 }
 

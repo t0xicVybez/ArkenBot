@@ -590,6 +590,7 @@ function PanelForm({
               </Row>
               <Row label={t('namingPattern')}>
                 <input className="input text-sm" placeholder="ticket-{number}" value={draft.namingPattern} onChange={(e) => set('namingPattern', e.target.value)} />
+                <p className="text-gray-500 text-xs mt-1">{t('namingPatternHint')}</p>
               </Row>
               <Row label={t('closeAction')}>
                 <select className="input" value={draft.closeAction} onChange={(e) => set('closeAction', e.target.value)}>

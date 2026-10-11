@@ -1019,7 +1019,8 @@
     "panelStyleButtons": "Botones",
     "panelStyleHint": "Un desplegable mantiene los paneles ocupados ordenando cada tipo de ticket en un menú. Se aplica cuando tiene 2 o más botones.",
     "panelStyleLabel": "Opciones de visualización como",
-    "panelStyleDropdown": "Menú desplegable"
+    "panelStyleDropdown": "Menú desplegable",
+    "namingPatternHint": "Titulares: {category} (desde la etiqueta de botón), {number}, {username}Por ejemplo. {category}-{number} → con-0009"
   },
   "giveawaysPage": {
     "giveawayCreated": "¡Sorteo creado!",

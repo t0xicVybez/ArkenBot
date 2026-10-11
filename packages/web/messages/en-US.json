@@ -1019,7 +1019,8 @@
     "panelStyleLabel": "Display options as",
     "panelStyleButtons": "Buttons",
     "panelStyleDropdown": "Dropdown menu",
-    "panelStyleHint": "A dropdown keeps busy panels tidy by listing every ticket type in one menu. Applies when you have 2 or more buttons."
+    "panelStyleHint": "A dropdown keeps busy panels tidy by listing every ticket type in one menu. Applies when you have 2 or more buttons.",
+    "namingPatternHint": "Placeholders: {category} (from the button tag), {number}, {username}. e.g. {category}-{number} → con-0009"
   },
   "giveawaysPage": {
     "giveawayCreated": "Giveaway created!",

@@ -1019,7 +1019,8 @@
     "panelStyleLabel": "Ekran seçenekleri gibi",
     "panelStyleButtons": "Düğmeler",
     "panelStyleDropdown": "Dropdown menu",
-    "panelStyleHint": "Bir damladown, her bilet tipini bir menüde listelemek için yoğun panellere devam eder. 2 veya daha fazla düğmeye sahip olduğunuzda."
+    "panelStyleHint": "Bir damladown, her bilet tipini bir menüde listelemek için yoğun panellere devam eder. 2 veya daha fazla düğmeye sahip olduğunuzda.",
+    "namingPatternHint": "Placeholders: {category} ( düğme etiketinden) {number}, {username}. e.g. {category}-{number} → con-0009"
   },
   "giveawaysPage": {
     "giveawayCreated": "Çekiliş oluşturuldu!",

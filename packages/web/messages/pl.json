@@ -1019,7 +1019,8 @@
     "panelStyleLabel": "Wyświetla opcje jako",
     "panelStyleButtons": "Przyciski",
     "panelStyleDropdown": "Menu rozwijane",
-    "panelStyleHint": "Upadek utrzymuje zajęte panele czyste, wymieniając każdy typ biletu w jednym menu. Stosuje się, gdy masz 2 lub więcej przycisków."
+    "panelStyleHint": "Upadek utrzymuje zajęte panele czyste, wymieniając każdy typ biletu w jednym menu. Stosuje się, gdy masz 2 lub więcej przycisków.",
+    "namingPatternHint": "Uchwyty do powierzchni: {category} (z znacznika przycisku), {number}, {username}. np. {category}-{number} → con- 0009"
   },
   "giveawaysPage": {
     "giveawayCreated": "Utworzono giveaway!",

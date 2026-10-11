@@ -1019,7 +1019,8 @@
     "panelStyleLabel": "Afficher les options comme",
     "panelStyleButtons": "Boutons",
     "panelStyleDropdown": "Menu déroulant",
-    "panelStyleHint": "Un menu déroulant permet de ranger les panneaux occupés en énumérant chaque type de billet dans un menu. S’applique lorsque vous avez 2 boutons ou plus."
+    "panelStyleHint": "Un menu déroulant permet de ranger les panneaux occupés en énumérant chaque type de billet dans un menu. S’applique lorsque vous avez 2 boutons ou plus.",
+    "namingPatternHint": "Titulaires: {category} (à partir de l’étiquette du bouton), {number}, {username}. par exemple {category}- Oui.{number} → con-0009"
   },
   "giveawaysPage": {
     "giveawayCreated": "Giveaway créé !",
