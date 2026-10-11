@@ -1,38 +1,34 @@
 /**
- * Manages all recurring background tasks: birthday notifications, scheduled
- * messages, stats channel updates, temporary ban expiry, reminders, giveaways,
- * stream/social alerts, XP decay, and analytics flushing.
+ * Registrar for all recurring background jobs: sets up the intervals and runs
+ * the time-sensitive ones once immediately. Each job's implementation lives in
+ * its own module under ./jobs/ (P3 god-file split); this file only schedules.
  *
  * Call `start()` once the client is ready and `stop()` during graceful shutdown.
  */
 
-import { EmbedBuilder, type TextChannel, type VoiceChannel } from 'discord.js';
-import { computeNextOccurrence } from '@arkenbot/shared';
-import { postAnalytics } from '../commands/utility/analytics.js';
-import { buildPollEmbed, buildPollComponents } from '../commands/utility/poll.js';
-import { generatePollChart } from '../utils/pollChart.js';
-import { prisma } from '../database.js';
-import { redis } from '../redis.js';
-import { notifyActionFailure } from '../utils/permissionAlert.js';
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const db = prisma as any;
-import { logger, swallow} from '../logger.js';
+import { logger } from '../logger.js';
 import type { BotClient } from '../client.js';
-import { getGuildSettings } from '../utils/settings.js';
-import { t, resolveUserLocale } from '../i18n/index.js';
+
+// Jobs still owned by their own feature modules, invoked directly.
 import { XPDecayModule } from './leveling/XPDecayModule.js';
-import { LevelingModule } from './leveling/LevelingModule.js';
-import { HighlightsModule } from './HighlightsModule.js';
-import { EconomyModule } from './economy/EconomyModule.js';
 import { EventsModule } from './events/EventsModule.js';
 import { ModmailModule } from './modmail/ModmailModule.js';
 import { AnalyticsModule } from './AnalyticsModule.js';
-import { pollUpcoming, pollFeeds } from './streamAlerts/YouTubeAlerts.js';
-import { runRedditAlerts } from './streamAlerts/RedditAlerts.js';
-import { ValorantModule } from './valorant/ValorantModule.js';
 import { PromotionModule } from './promotion/PromotionModule.js';
+import { pollUpcoming, pollFeeds } from './streamAlerts/YouTubeAlerts.js';
+
+// Extracted scheduler jobs (./jobs/*).
 import { runGiveaways } from './jobs/giveaways.js';
-import RSSParser from 'rss-parser';
+import { checkBirthdays } from './jobs/birthdays.js';
+import { runScheduledMessages } from './jobs/scheduledMessages.js';
+import { updateStatsChannels } from './jobs/statsChannels.js';
+import { runTempBanExpiry, runTempRoleExpiry } from './jobs/tempExpiry.js';
+import { runReminders } from './jobs/reminders.js';
+import { closePolls } from './jobs/polls.js';
+import { runStreamAlerts } from './jobs/streamAlerts.js';
+import { runLotteryDraw, runWeeklyHighlights, runWeeklyAnalytics } from './jobs/weekly.js';
+import { postTopggStats, runTopggReminders } from './jobs/topgg.js';
+import { runValorantSync, runVoiceXp, beatHeartbeat, runGuildPurgeSweep } from './jobs/system.js';
 
 export class BackgroundJobs {
   private client: BotClient;
@@ -53,44 +49,45 @@ export class BackgroundJobs {
    */
   start(): void {
     const jitter = () => Math.floor(Math.random() * 5_000);
+    const c = this.client;
 
-    void this.checkBirthdays();
-    setTimeout(() => this.timers.push(setInterval(() => void this.checkBirthdays(), 60 * 60 * 1000)), jitter());
+    void checkBirthdays(c);
+    setTimeout(() => this.timers.push(setInterval(() => void checkBirthdays(c), 60 * 60 * 1000)), jitter());
 
     // VALORANT rank sync + rank-roles + match alerts (batched to respect Riot
     // rate limits). No-ops entirely while the integration is unconfigured.
-    setTimeout(() => this.timers.push(setInterval(() => void this.runValorantSync(), 10 * 60 * 1000)), jitter());
+    setTimeout(() => this.timers.push(setInterval(() => void runValorantSync(c), 10 * 60 * 1000)), jitter());
 
     // Server promotion tracking: load enabled configs now (so the presence hot
     // path works immediately), then reconcile every 5 min to catch missed events.
     void PromotionModule.refresh();
-    setTimeout(() => this.timers.push(setInterval(() => void PromotionModule.reconcile(this.client), 5 * 60 * 1000)), jitter());
+    setTimeout(() => this.timers.push(setInterval(() => void PromotionModule.reconcile(c), 5 * 60 * 1000)), jitter());
 
-    void this.runScheduledMessages();
-    setTimeout(() => this.timers.push(setInterval(() => void this.runScheduledMessages(), 60 * 1000)), jitter());
+    void runScheduledMessages(c);
+    setTimeout(() => this.timers.push(setInterval(() => void runScheduledMessages(c), 60 * 1000)), jitter());
 
     // Stats channels are voice-channel renames — updates are rate-limited by Discord,
     // so 5-minute polling is a safe floor.
-    void this.updateStatsChannels();
-    setTimeout(() => this.timers.push(setInterval(() => void this.updateStatsChannels(), 5 * 60 * 1000)), jitter());
+    void updateStatsChannels(c);
+    setTimeout(() => this.timers.push(setInterval(() => void updateStatsChannels(c), 5 * 60 * 1000)), jitter());
 
-    void this.runTempBanExpiry();
-    setTimeout(() => this.timers.push(setInterval(() => void this.runTempBanExpiry(), 60 * 1000)), jitter());
+    void runTempBanExpiry(c);
+    setTimeout(() => this.timers.push(setInterval(() => void runTempBanExpiry(c), 60 * 1000)), jitter());
 
-    void this.runTempRoleExpiry();
-    setTimeout(() => this.timers.push(setInterval(() => void this.runTempRoleExpiry(), 60 * 1000)), jitter());
+    void runTempRoleExpiry(c);
+    setTimeout(() => this.timers.push(setInterval(() => void runTempRoleExpiry(c), 60 * 1000)), jitter());
 
-    void this.runReminders();
-    setTimeout(() => this.timers.push(setInterval(() => void this.runReminders(), 60 * 1000)), jitter());
+    void runReminders(c);
+    setTimeout(() => this.timers.push(setInterval(() => void runReminders(c), 60 * 1000)), jitter());
 
-    void runGiveaways(this.client);
-    setTimeout(() => this.timers.push(setInterval(() => void runGiveaways(this.client), 60 * 1000)), jitter());
+    void runGiveaways(c);
+    setTimeout(() => this.timers.push(setInterval(() => void runGiveaways(c), 60 * 1000)), jitter());
 
-    void this.closePolls();
-    setTimeout(() => this.timers.push(setInterval(() => void this.closePolls(), 60 * 1000)), jitter());
+    void closePolls(c);
+    setTimeout(() => this.timers.push(setInterval(() => void closePolls(c), 60 * 1000)), jitter());
 
-    void this.runStreamAlerts();
-    setTimeout(() => this.timers.push(setInterval(() => void this.runStreamAlerts(), 5 * 60 * 1000)), jitter());
+    void runStreamAlerts(c);
+    setTimeout(() => this.timers.push(setInterval(() => void runStreamAlerts(c), 5 * 60 * 1000)), jitter());
 
     // YouTube alerts: the primary detector is a quota-free poll of each channel's
     // public Atom feed (~2min) — reliable and independent of Google's WebSub hub;
@@ -103,145 +100,47 @@ export class BackgroundJobs {
 
     setTimeout(() => this.timers.push(setInterval(() => void XPDecayModule.runDecay(), 24 * 60 * 60 * 1000)), jitter());
 
-    setTimeout(() => this.timers.push(setInterval(() => void AnalyticsModule.flushDailyStats(this.client), 24 * 60 * 60 * 1000)), jitter());
+    setTimeout(() => this.timers.push(setInterval(() => void AnalyticsModule.flushDailyStats(c), 24 * 60 * 60 * 1000)), jitter());
 
     // Weekly analytics reports — fire every 7 days, but only actually post on
     // Mondays (UTC) so restarts mid-week don't double-post.
-    setTimeout(() => this.timers.push(setInterval(() => void this.runWeeklyAnalytics(), 7 * 24 * 60 * 60 * 1000)), jitter());
+    setTimeout(() => this.timers.push(setInterval(() => void runWeeklyAnalytics(c), 7 * 24 * 60 * 60 * 1000)), jitter());
 
     // Weekly community highlights digest (Monday-gated).
-    setTimeout(() => this.timers.push(setInterval(() => void this.runWeeklyHighlights(), 6 * 60 * 60 * 1000)), jitter());
+    setTimeout(() => this.timers.push(setInterval(() => void runWeeklyHighlights(c), 6 * 60 * 60 * 1000)), jitter());
 
     // Event RSVP reminders (every minute).
-    setTimeout(() => this.timers.push(setInterval(() => void EventsModule.runReminders(this.client).catch(() => {}), 60 * 1000)), jitter());
+    setTimeout(() => this.timers.push(setInterval(() => void EventsModule.runReminders(c).catch(() => {}), 60 * 1000)), jitter());
 
     // Weekly economy lottery draw (Sunday-gated).
-    setTimeout(() => this.timers.push(setInterval(() => void this.runLotteryDraw(), 6 * 60 * 60 * 1000)), jitter());
+    setTimeout(() => this.timers.push(setInterval(() => void runLotteryDraw(c), 6 * 60 * 60 * 1000)), jitter());
 
     // Purge data for guilds that left longer than the grace period ago.
-    void this.runGuildPurgeSweep();
-    setTimeout(() => this.timers.push(setInterval(() => void this.runGuildPurgeSweep(), 60 * 60 * 1000)), jitter());
+    void runGuildPurgeSweep(c);
+    setTimeout(() => this.timers.push(setInterval(() => void runGuildPurgeSweep(c), 60 * 60 * 1000)), jitter());
 
     // Voice XP: award to eligible members in voice once a minute.
-    setTimeout(() => this.timers.push(setInterval(() => void this.runVoiceXp(), 60 * 1000)), jitter());
+    setTimeout(() => this.timers.push(setInterval(() => void runVoiceXp(c), 60 * 1000)), jitter());
 
     // Auto-close idle modmail threads every 15 minutes.
-    setTimeout(() => this.timers.push(setInterval(() => void ModmailModule.closeIdleThreads(this.client), 15 * 60 * 1000)), jitter());
+    setTimeout(() => this.timers.push(setInterval(() => void ModmailModule.closeIdleThreads(c), 15 * 60 * 1000)), jitter());
 
     // Heartbeat for the public status page — the API reads this key.
-    void this.beatHeartbeat();
-    this.timers.push(setInterval(() => void this.beatHeartbeat(), 30 * 1000));
+    void beatHeartbeat(c);
+    this.timers.push(setInterval(() => void beatHeartbeat(c), 30 * 1000));
 
     // Server count on the top.gg listing — only when a token is configured.
     if (process.env.TOPGG_TOKEN) {
-      void this.postTopggStats();
-      setTimeout(() => this.timers.push(setInterval(() => void this.postTopggStats(), 30 * 60 * 1000)), jitter());
+      void postTopggStats(c);
+      setTimeout(() => this.timers.push(setInterval(() => void postTopggStats(c), 30 * 60 * 1000)), jitter());
     } else {
       logger.info('TOPGG_TOKEN not set — skipping top.gg stats posting');
     }
 
     // "You can vote again" DM reminders for opted-in voters.
-    setTimeout(() => this.timers.push(setInterval(() => void this.runTopggReminders(), 5 * 60 * 1000)), jitter());
+    setTimeout(() => this.timers.push(setInterval(() => void runTopggReminders(c), 5 * 60 * 1000)), jitter());
 
     logger.info('Background jobs started (birthdays, scheduled messages, stats channels, temp bans, temp roles, reminders, giveaways, stream alerts, xp decay, analytics, weekly analytics, guild purge sweep, heartbeat, top.gg stats)');
-  }
-
-  /** Posts the current guild count to top.gg so the listing shows real numbers. */
-  private async postTopggStats(): Promise<void> {
-    const token = process.env.TOPGG_TOKEN;
-    if (!token || !this.client.user) return;
-    try {
-      const res = await fetch(`https://top.gg/api/bots/${this.client.user.id}/stats`, {
-        method: 'POST',
-        headers: { 'Authorization': token, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ server_count: this.client.guilds.cache.size }),
-      });
-      if (!res.ok) {
-        logger.warn(`top.gg stats post failed: HTTP ${res.status} ${await res.text().catch(() => '')}`);
-      }
-    } catch (err) {
-      logger.warn(`top.gg stats post failed: ${err instanceof Error ? err.message : String(err)}`);
-    }
-  }
-
-  /**
-   * DMs opted-in voters once their 12-hour cooldown has elapsed, so they know
-   * they can vote again. `reminderSent` is set to avoid repeat DMs and reset on
-   * the next vote.
-   */
-  private async runValorantSync(): Promise<void> {
-    try {
-      await ValorantModule.syncBatch(this.client, 20);
-    } catch (err) {
-      logger.warn({ err }, 'valorant sync failed');
-    }
-  }
-
-  private async runTopggReminders(): Promise<void> {
-    if (!this.client.user) return;
-    try {
-      const due = await prisma.topggVoter.findMany({
-        where: { remindersOptIn: true, reminderSent: false, eligibleAt: { lte: new Date() } },
-        take: 50,
-      });
-      if (due.length === 0) return;
-
-      const voteUrl = `https://top.gg/bot/${this.client.user.id}/vote`;
-      for (const voter of due) {
-        try {
-          const user = await this.client.users.fetch(voter.userId);
-          const loc = await resolveUserLocale({ user: { id: voter.userId } });
-          await user.send(
-            t('topgg.voteReminder', loc, { bot: this.client.user.username, url: voteUrl }),
-          );
-        } catch {
-          // DMs closed or user gone — mark as sent anyway so we don't retry every cycle.
-        }
-        await prisma.topggVoter.update({ where: { userId: voter.userId }, data: { reminderSent: true } }).catch(swallow);
-      }
-    } catch (err) {
-      logger.warn({ err }, 'top.gg reminder sweep failed');
-    }
-  }
-
-  /** Writes a short-lived Redis key so the API can report bot liveness. */
-  private async runVoiceXp(): Promise<void> {
-    for (const guild of this.client.guilds.cache.values()) {
-      await LevelingModule.sweepVoiceXp(guild).catch((err) => logger.error({ err, guildId: guild.id }, 'voice XP sweep failed'));
-    }
-  }
-
-  private async beatHeartbeat(): Promise<void> {
-    try {
-      const { pub } = await import('../redis.js');
-      await pub.set('bot:heartbeat', JSON.stringify({
-        at: Date.now(),
-        guilds: this.client.guilds.cache.size,
-        ws: this.client.ws.ping,
-      }), 'EX', 120);
-    } catch { /* redis hiccup — next beat will recover */ }
-  }
-
-  /**
-   * Permanently deletes all data for guilds whose grace period has elapsed.
-   * Guilds that re-added the bot in the meantime have isActive=true again
-   * (ensureGuildExists resets it) and are never selected here.
-   */
-  private async runGuildPurgeSweep(): Promise<void> {
-    try {
-      const { purgeGuildData, PURGE_GRACE_HOURS } = await import('../utils/guildPurge.js');
-      const cutoff = new Date(Date.now() - PURGE_GRACE_HOURS * 60 * 60 * 1000);
-      const expired = await prisma.guild.findMany({
-        where: { isActive: false, leftAt: { not: null, lt: cutoff } },
-        select: { id: true, name: true },
-      });
-      for (const guild of expired) {
-        logger.info({ guildId: guild.id, name: guild.name }, 'Grace period elapsed — purging guild data');
-        await purgeGuildData(guild.id);
-      }
-    } catch (err) {
-      logger.error({ err }, 'Guild purge sweep failed');
-    }
   }
 
   /** Clears all active intervals. Call during graceful shutdown. */
@@ -249,677 +148,4 @@ export class BackgroundJobs {
     for (const t of this.timers) clearInterval(t);
     this.timers = [];
   }
-
-  // ── Birthday Notifications ──────────────────────────────────────────────────
-
-  private async checkBirthdays(): Promise<void> {
-    const now = new Date();
-    const month = now.getUTCMonth() + 1;
-    const day = now.getUTCDate();
-    const year = now.getUTCFullYear();
-
-    try {
-      const birthdays = await prisma.birthday.findMany({
-        where: {
-          month,
-          day,
-          OR: [{ lastNotifiedYear: null }, { lastNotifiedYear: { not: year } }],
-        },
-      });
-
-      for (const bday of birthdays) {
-        await this.sendBirthdayNotification(bday.guildId, bday.userId, year);
-      }
-    } catch (err) {
-      logger.error({ err }, 'Birthday check failed');
-    }
-  }
-
-  private async sendBirthdayNotification(
-    guildId: string,
-    userId: string,
-    year: number,
-  ): Promise<void> {
-    try {
-      const config = await prisma.birthdayConfig.findUnique({ where: { guildId } });
-      if (!config?.enabled || !config.channelId) {
-        logger.warn({ guildId, userId }, 'Birthday skipped: config not set or disabled');
-        return;
-      }
-
-      const guild = this.client.guilds.cache.get(guildId);
-      if (!guild) {
-        logger.warn({ guildId, userId }, 'Birthday skipped: guild not in cache');
-        return;
-      }
-
-      const member = await guild.members.fetch(userId).catch(swallow);
-      if (!member) {
-        logger.warn({ guildId, userId }, 'Birthday skipped: member not found');
-        return;
-      }
-
-      const channel = guild.channels.cache.get(config.channelId) as TextChannel | undefined;
-      if (!channel?.isTextBased()) {
-        logger.warn({ guildId, userId, channelId: config.channelId }, 'Birthday skipped: channel not found or not text-based');
-        return;
-      }
-
-      const message = config.message.replace(/\{user\}/g, `<@${userId}>`);
-
-      const settings = await getGuildSettings(guildId);
-      const loc = await resolveUserLocale({ user: { id: '' }, guildId, guildLocale: guild.preferredLocale });
-      const birthdayColor = settings?.birthdayColor
-        ? (parseInt(settings.birthdayColor.replace('#', ''), 16) as number)
-        : 0xffc0cb;
-
-      const notifMsg = await channel.send({
-        embeds: [
-          new EmbedBuilder()
-            .setColor(birthdayColor)
-            .setTitle(t('birthday.title', loc))
-            .setDescription(message)
-            .setThumbnail(member.user.displayAvatarURL())
-            .setTimestamp(),
-        ],
-      });
-
-      if (config.birthdayRoleId) {
-        const role = guild.roles.cache.get(config.birthdayRoleId);
-        if (role && member.roles.cache.has(role.id) === false) {
-          await member.roles.add(role, 'Birthday role').catch(swallow);
-
-          // Schedule role removal at midnight UTC so the birthday role lasts
-          // exactly one calendar day without needing a separate polling job.
-          const msUntilTomorrow =
-            new Date(Date.UTC(year, new Date().getUTCMonth(), new Date().getUTCDate() + 1)).getTime() -
-            Date.now();
-          setTimeout(
-            () => member.roles.remove(role, 'Birthday role expired').catch(swallow),
-            msUntilTomorrow,
-          );
-        }
-      }
-
-      await prisma.birthday.update({
-        where: { guildId_userId: { guildId, userId } },
-        data: { lastNotifiedYear: year, notificationMessageId: notifMsg.id, notificationChannelId: notifMsg.channelId },
-      });
-
-      logger.info({ guildId, userId }, 'Birthday notification sent');
-    } catch (err) {
-      logger.error({ err, guildId, userId }, 'Failed to send birthday notification');
-    }
-  }
-
-  // ── Scheduled Messages ──────────────────────────────────────────────────────
-
-  private async runScheduledMessages(): Promise<void> {
-    const now = new Date();
-
-    try {
-      const due = await prisma.scheduledMessage.findMany({
-        where: {
-          enabled: true,
-          scheduledAt: { lte: now },
-        },
-      });
-
-      for (const msg of due) {
-        await this.sendScheduledMessage(msg);
-      }
-    } catch (err) {
-      logger.error({ err }, 'Scheduled messages check failed');
-    }
-  }
-
-  private async sendScheduledMessage(
-    msg: Awaited<ReturnType<typeof prisma.scheduledMessage.findFirst>> & object,
-  ): Promise<void> {
-    if (!msg) return;
-    try {
-      // Claim the message atomically by matching the expected lastSentAt value.
-      // If a concurrent worker already sent it, `count` will be 0 and we abort
-      // to prevent duplicate delivery.
-      const claimed = await prisma.scheduledMessage.updateMany({
-        where: {
-          id: msg.id,
-          lastSentAt: msg.lastSentAt ?? null,
-        },
-        data: { lastSentAt: new Date() },
-      });
-      if (claimed.count === 0) return;
-
-      const guild = this.client.guilds.cache.get(msg.guildId);
-      const channel = guild?.channels.cache.get(msg.channelId) as TextChannel | undefined;
-
-      if (!channel?.isTextBased()) {
-        await this.recordScheduledFailure(msg.id, 'Channel not found — deleted or the bot lost access');
-        return;
-      }
-
-      const roleMention = (msg as unknown as { roleMentionId?: string | null }).roleMentionId
-        ? `<@&${(msg as unknown as { roleMentionId: string }).roleMentionId}> `
-        : '';
-      if (msg.embed) {
-        const schedSettings = await getGuildSettings(msg.guildId);
-        const schedColor = schedSettings?.scheduledMessageColor
-          ? parseInt(schedSettings.scheduledMessageColor.replace('#', ''), 16)
-          : 0x5865f2;
-        await channel.send({
-          content: roleMention || undefined,
-          embeds: [
-            new EmbedBuilder()
-              .setDescription(msg.content)
-              .setColor(schedColor)
-              .setTimestamp(),
-          ],
-        });
-      } else {
-        await channel.send({ content: `${roleMention}${msg.content}` });
-      }
-
-      // Advance to the next occurrence; disable the record if it has no repeat
-      // interval. A successful send also resets the consecutive-failure counter.
-      const nextAt = computeNextOccurrence(msg.scheduledAt, msg.repeat ?? null, msg.timezone ?? null, msg.daysOfWeek ?? []);
-      await prisma.scheduledMessage.update({
-        where: { id: msg.id },
-        data: nextAt
-          ? { scheduledAt: nextAt, failureCount: 0, lastError: null }
-          : { enabled: false, failureCount: 0, lastError: null },
-      });
-
-      logger.info({ id: msg.id, guildId: msg.guildId }, 'Scheduled message sent');
-    } catch (err) {
-      logger.error({ err, id: msg.id }, 'Failed to send scheduled message');
-      // Permission-type failures repeat forever until someone fixes the
-      // channel — count them and auto-disable instead of retrying every minute.
-      const code = (err as { code?: number }).code;
-      if (code === 50001 || code === 50013 || code === 10003) {
-        const reason = `Discord error ${code}: ${(err as Error).message ?? 'permission denied'}`;
-        await this.recordScheduledFailure(msg.id, reason);
-      }
-    }
-  }
-
-  /**
-   * Increments a scheduled message's consecutive-failure counter and disables
-   * it once the threshold is reached, so broken configurations stop retrying
-   * every minute. The counter resets on any successful delivery.
-   */
-  private async recordScheduledFailure(id: string, reason: string): Promise<void> {
-    const MAX_FAILURES = 5;
-    try {
-      const updated = await prisma.scheduledMessage.update({
-        where: { id },
-        data: { failureCount: { increment: 1 }, lastError: reason.slice(0, 300) },
-        select: { failureCount: true, guildId: true },
-      });
-      if (updated.failureCount >= MAX_FAILURES) {
-        await prisma.scheduledMessage.update({ where: { id }, data: { enabled: false } });
-        logger.warn(
-          { id, guildId: updated.guildId, failures: updated.failureCount, reason },
-          `Scheduled message auto-disabled after ${MAX_FAILURES} consecutive failures`,
-        );
-      }
-    } catch { /* row deleted mid-flight — nothing to record */ }
-  }
-
-  // ── Stats Channels ──────────────────────────────────────────────────────────
-
-  private async updateStatsChannels(): Promise<void> {
-    try {
-      const configs = await prisma.statsChannel.findMany();
-
-      for (const cfg of configs) {
-        await this.updateStatsChannel(cfg);
-      }
-    } catch (err) {
-      logger.error({ err }, 'Stats channel update failed');
-    }
-  }
-
-  private async updateStatsChannel(
-    cfg: Awaited<ReturnType<typeof prisma.statsChannel.findFirst>> & object,
-  ): Promise<void> {
-    if (!cfg) return;
-    try {
-      const guild = this.client.guilds.cache.get(cfg.guildId);
-      if (!guild) return;
-
-      const channel = guild.channels.cache.get(cfg.channelId) as VoiceChannel | undefined;
-      if (!channel) return;
-
-      let value: string;
-      switch (cfg.type) {
-        case 'members':
-          value = guild.memberCount.toLocaleString();
-          break;
-        case 'online': {
-          // Read from the presence cache rather than bulk-fetching members.
-          // Bulk member fetches are rate-limited to one request per guild per 30 s,
-          // making them unsuitable for a 5-minute polling interval.
-          const online = guild.presences.cache.filter(
-            (p) => p.status !== 'offline' && !p.user?.bot,
-          ).size;
-          value = online.toLocaleString();
-          break;
-        }
-        case 'boosts':
-          value = (guild.premiumSubscriptionCount ?? 0).toLocaleString();
-          break;
-        case 'bots':
-          value = guild.members.cache.filter((m) => m.user.bot).size.toLocaleString();
-          break;
-        default:
-          return;
-      }
-
-      const newName = cfg.format.replace('{value}', value);
-      if (channel.name !== newName) {
-        await channel.setName(newName, 'Stats channel update').catch(swallow);
-      }
-    } catch (err) {
-      logger.error({ err, channelId: cfg?.channelId }, 'Failed to update stats channel');
-    }
-  }
-
-  // ── Temp Ban Expiry ─────────────────────────────────────────────────────────
-
-  private async runTempBanExpiry(): Promise<void> {
-    const now = new Date();
-    try {
-      const expired = await prisma.tempBan.findMany({
-        where: { unbanned: false, expiresAt: { lte: now } },
-      });
-      for (const ban of expired) {
-        const guild = this.client.guilds.cache.get(ban.guildId);
-        if (!guild) continue;
-        await guild.bans.remove(ban.userId, 'Temporary ban expired').catch(swallow);
-        await prisma.tempBan.update({ where: { id: ban.id }, data: { unbanned: true } });
-        logger.info({ guildId: ban.guildId, userId: ban.userId }, 'Temp ban expired and removed');
-      }
-    } catch (err) {
-      logger.error({ err }, 'Temp ban expiry check failed');
-    }
-  }
-
-  // ── Temp Role Expiry ─────────────────────────────────────────────────────────
-
-  private async runTempRoleExpiry(): Promise<void> {
-    const now = new Date();
-    try {
-      const expired = await db.tempRole.findMany({
-        where: { removed: false, expiresAt: { lte: now } },
-      });
-      for (const tempRole of expired) {
-        const guild = this.client.guilds.cache.get(tempRole.guildId);
-        if (guild) {
-          const member = await guild.members.fetch(tempRole.userId).catch(swallow);
-          if (member) {
-            await member.roles.remove(tempRole.roleId, 'Temporary role expired').catch(swallow);
-          }
-        }
-        await db.tempRole.update({ where: { id: tempRole.id }, data: { removed: true } });
-        logger.info({ guildId: tempRole.guildId, userId: tempRole.userId, roleId: tempRole.roleId }, 'Temp role expired and removed');
-      }
-    } catch (err) {
-      logger.error({ err }, 'Temp role expiry check failed');
-    }
-  }
-
-  // ── Reminder Delivery ───────────────────────────────────────────────────────
-
-  private async runReminders(): Promise<void> {
-    const now = new Date();
-    try {
-      const due = await prisma.reminder.findMany({
-        where: { sent: false, remindAt: { lte: now } },
-      });
-      for (const reminder of due) {
-        const channel = this.client.channels.cache.get(reminder.channelId);
-        if (channel?.isTextBased() && 'send' in channel) {
-          const loc = await resolveUserLocale({ user: { id: reminder.userId } });
-          await (channel as import('discord.js').TextChannel).send({ content: t('reminders.deliver', loc, { user: `<@${reminder.userId}>`, message: reminder.message }) }).catch(swallow);
-        }
-        await prisma.reminder.update({ where: { id: reminder.id }, data: { sent: true } });
-      }
-    } catch (err) {
-      logger.error({ err }, 'Reminder delivery failed');
-    }
-  }
-
-  // ── Poll Auto-Close ─────────────────────────────────────────────────────────
-
-  /**
-   * Closes polls whose `endsAt` has passed and updates the poll message with the
-   * final results. Durable (reads `endsAt` from the DB) so it survives restarts
-   * and handles long durations that an in-process timer could not.
-   */
-  private async closePolls(): Promise<void> {
-    const now = new Date();
-    try {
-      const expired = await prisma.poll.findMany({
-        where: { closed: false, endsAt: { not: null, lte: now } },
-        include: { votes: true },
-      });
-      for (const poll of expired) {
-        await prisma.poll.update({ where: { id: poll.id }, data: { closed: true } });
-
-        const guild = this.client.guilds.cache.get(poll.guildId);
-        const channel = guild?.channels.cache.get(poll.channelId) as TextChannel | undefined;
-        if (!guild || !channel?.isTextBased() || !poll.messageId) continue;
-
-        const options = poll.options as string[];
-        const loc = await resolveUserLocale({ user: { id: '' }, guildId: poll.guildId, guildLocale: guild.preferredLocale });
-        try {
-          const embed = buildPollEmbed(poll.question, options, poll.votes, poll.endsAt, loc)
-            .setTitle(`📊 ${t('cmd.poll.ended', loc, { question: poll.question })}`)
-            .setColor(0x57f287);
-          const chart = await generatePollChart(poll.question, options, poll.votes).catch(swallow);
-          const msg = await channel.messages.fetch(poll.messageId);
-          await msg.edit({
-            embeds: [embed],
-            components: buildPollComponents(poll.id, options, true, loc),
-            files: chart ? [{ attachment: chart, name: 'poll-results.png' }] : [],
-          });
-        } catch { /* poll message may have been deleted */ }
-      }
-    } catch (err) {
-      logger.error({ err }, 'Poll auto-close failed');
-    }
-  }
-
-  // ── Giveaway Endings ────────────────────────────────────────────────────────
-
-
-  // ── Stream Alerts ────────────────────────────────────────────────────────────
-
-  private async runStreamAlerts(): Promise<void> {
-    const twitchClientId = process.env.TWITCH_CLIENT_ID;
-    const twitchClientSecret = process.env.TWITCH_CLIENT_SECRET;
-
-    try {
-      // YouTube (WebSub + feed poll) and Reddit (grouped RSS poll) are handled
-      // separately; this timer covers Twitch, Kick, and RSS per-alert.
-      void runRedditAlerts(this.client).catch((err) => logger.error({ err }, 'Reddit alerts check failed'));
-      const otherAlerts = await prisma.streamAlert.findMany({
-        where: { enabled: true, platform: { notIn: ['youtube', 'reddit'] } },
-      });
-      if (!otherAlerts.length) return;
-
-      // Obtain a Twitch app token once up-front so every Twitch alert in this
-      // cycle can reuse it rather than each alert hitting the token endpoint.
-      let twitchToken: string | null = null;
-      if (twitchClientId && twitchClientSecret && otherAlerts.some((a) => a.platform === 'twitch')) {
-        const tokenRes = await fetch(
-          `https://id.twitch.tv/oauth2/token?client_id=${twitchClientId}&client_secret=${twitchClientSecret}&grant_type=client_credentials`,
-          { method: 'POST' },
-        ).catch(swallow);
-        if (tokenRes?.ok) {
-          const tokenData = await tokenRes.json() as { access_token: string };
-          twitchToken = tokenData.access_token;
-        }
-      }
-
-      const rssParser = new RSSParser();
-
-      // Process alerts in parallel batches of 5 so we don't hammer external APIs
-      // with all requests at once while still being much faster than sequential.
-      const BATCH = 5;
-      for (let i = 0; i < otherAlerts.length; i += BATCH) {
-        await Promise.allSettled(
-          otherAlerts.slice(i, i + BATCH).map((alert) =>
-            this.processStreamAlert(alert, twitchClientId ?? null, twitchClientSecret ?? null, twitchToken, rssParser),
-          ),
-        );
-      }
-    } catch (err) {
-      logger.error({ err }, 'Stream alerts check failed');
-    }
-  }
-
-  private async processStreamAlert(
-    alert: Awaited<ReturnType<typeof prisma.streamAlert.findFirst>> & object,
-    twitchClientId: string | null,
-    twitchClientSecret: string | null,
-    twitchToken: string | null,
-    rssParser: RSSParser,
-  ): Promise<void> {
-    if (!alert) return;
-    try {
-      const guild = this.client.guilds.cache.get(alert.guildId);
-      if (!guild) return;
-
-      const channel = guild.channels.cache.get(alert.discordChannelId) as TextChannel | undefined;
-      if (!channel?.isTextBased()) {
-        await this.recordAlertFailure(alert.id, 'Channel not found — deleted or the bot lost access');
-        return;
-      }
-
-      const alertSettings = await getGuildSettings(alert.guildId);
-      const loc = await resolveUserLocale({ user: { id: '' }, guildId: alert.guildId });
-      const alertColor = alertSettings?.streamAlertColor
-        ? parseInt(alertSettings.streamAlertColor.replace('#', ''), 16)
-        : null;
-
-      if (alert.platform === 'twitch' && twitchClientId && twitchToken) {
-        const res = await fetch(
-          `https://api.twitch.tv/helix/streams?user_login=${encodeURIComponent(alert.channelUsername)}`,
-          { headers: { 'Client-ID': twitchClientId, 'Authorization': `Bearer ${twitchToken}` } },
-        );
-        const data = await res.json() as { data: Array<{ id: string; title: string; game_name: string; thumbnail_url: string }> };
-        const stream = data.data?.[0];
-
-        if (!stream) {
-          if (alert.lastStreamId) {
-            await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastStreamId: null } });
-          }
-          return;
-        }
-
-        if (stream.id === alert.lastStreamId) return;
-        await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastStreamId: stream.id } });
-
-        const message = alert.message
-          .replace(/\{streamer\}/g, alert.channelUsername)
-          .replace(/\{url\}/g, `https://twitch.tv/${alert.channelUsername}`)
-          .replace(/\{title\}/g, stream.title)
-          .replace(/\{game\}/g, stream.game_name);
-
-        const previewUrl = stream.thumbnail_url.replace('{width}', '640').replace('{height}', '360');
-
-        const embed = new EmbedBuilder()
-          .setTitle(t('streamAlert.twitchLive', loc, { streamer: alert.channelUsername }))
-          .setDescription(stream.title)
-          .addFields({ name: t('streamAlert.playing', loc), value: stream.game_name || t('streamAlert.unknownGame', loc) })
-          .setURL(`https://twitch.tv/${alert.channelUsername}`)
-          .setColor(alertColor ?? 0x9146ff)
-          .setImage(previewUrl)
-          .setTimestamp();
-
-        const alertMsg = await channel.send({ content: message, embeds: [embed] });
-        await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastMessageId: alertMsg.id, lastMessageChannelId: alertMsg.channelId, failureCount: 0, lastError: null } }).catch(swallow);
-        logger.info({ guildId: alert.guildId, streamer: alert.channelUsername }, 'Twitch stream alert sent');
-
-      } else if (alert.platform === 'kick') {
-        const res = await fetch(
-          `https://kick.com/api/v2/channels/${encodeURIComponent(alert.channelUsername)}`,
-          { headers: { 'Accept': 'application/json', 'User-Agent': 'ArkenBot/1.0' } },
-        );
-        if (!res.ok) return;
-        const data = await res.json() as { livestream?: { id: number; session_title: string } | null };
-
-        if (!data.livestream) {
-          if (alert.lastStreamId) {
-            await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastStreamId: null } });
-          }
-          return;
-        }
-
-        const streamId = String(data.livestream.id);
-        if (streamId === alert.lastStreamId) return;
-        await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastStreamId: streamId } });
-
-        const kickUrl = `https://kick.com/${alert.channelUsername}`;
-        const message = alert.message
-          .replace(/\{streamer\}/g, alert.channelUsername)
-          .replace(/\{url\}/g, kickUrl)
-          .replace(/\{title\}/g, data.livestream.session_title);
-
-        const embed = new EmbedBuilder()
-          .setTitle(t('streamAlert.kickLive', loc, { streamer: alert.channelUsername }))
-          .setDescription(data.livestream.session_title)
-          .setURL(kickUrl)
-          .setColor(alertColor ?? 0x53fc18)
-          .setTimestamp();
-
-        const alertMsg = await channel.send({ content: message, embeds: [embed] });
-        await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastMessageId: alertMsg.id, lastMessageChannelId: alertMsg.channelId, failureCount: 0, lastError: null } }).catch(swallow);
-        logger.info({ guildId: alert.guildId, streamer: alert.channelUsername }, 'Kick stream alert sent');
-
-      } else if (alert.platform === 'rss') {
-        // For RSS/Podcast alerts, `channelUsername` stores the feed URL rather
-        // than a platform username, as there is no separate channel concept.
-        const feed = await rssParser.parseURL(alert.channelUsername).catch(swallow);
-        if (!feed) return;
-
-        const latestItem = feed.items?.[0];
-        if (!latestItem) return;
-
-        const itemId = latestItem.guid ?? latestItem.link ?? latestItem.title ?? '';
-        if (!itemId || itemId === alert.lastStreamId) return;
-
-        await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastStreamId: itemId } });
-
-        const itemUrl = latestItem.link ?? alert.channelUsername;
-        const feedTitle = feed.title ?? t('streamAlert.rssFeedFallback', loc);
-        const postFallback = t('streamAlert.rssPostFallback', loc);
-        const message = alert.message
-          // {feed} is the RSS-appropriate name; {streamer} kept as an alias so
-          // messages saved before the rename keep working.
-          .replace(/\{feed\}/g, feedTitle)
-          .replace(/\{streamer\}/g, feedTitle)
-          .replace(/\{url\}/g, itemUrl)
-          .replace(/\{title\}/g, latestItem.title ?? postFallback);
-
-        const embed = new EmbedBuilder()
-          .setTitle(latestItem.title ?? postFallback)
-          .setURL(itemUrl)
-          .setDescription(t('streamAlert.rssNewPost', loc, { feed: feedTitle }))
-          .setColor(alertColor ?? 0xf26522)
-          .setTimestamp();
-
-        const alertMsg = await channel.send({ content: message, embeds: [embed] });
-        await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastMessageId: alertMsg.id, lastMessageChannelId: alertMsg.channelId, failureCount: 0, lastError: null } }).catch(swallow);
-        logger.info({ guildId: alert.guildId, feed: alert.channelUsername }, 'RSS/Podcast alert sent');
-      }
-    } catch (err) {
-      logger.error({ err, alertId: alert.id }, 'Failed to process stream alert');
-      await this.recordAlertPermissionFailure(alert.id, err);
-    }
-  }
-
-  /**
-   * Counts a failure only when Discord says the bot cannot post to the channel.
-   * Feed and upstream-API errors are transient and must not disable an alert.
-   */
-  private async recordAlertPermissionFailure(id: string, err: unknown): Promise<void> {
-    const code = (err as { code?: number }).code;
-    if (code !== 50001 && code !== 50013 && code !== 10003) return;
-    await this.recordAlertFailure(id, `Discord error ${code}: ${(err as Error).message ?? 'permission denied'}`);
-    // On a genuine missing-permission error, also ping the guild's alert role.
-    if (code === 50013 || code === 50001) {
-      const alert = await prisma.streamAlert
-        .findUnique({ where: { id }, select: { guildId: true, discordChannelId: true } })
-        .catch(() => null);
-      const guild = alert ? this.client.guilds.cache.get(alert.guildId) : null;
-      if (guild && alert) {
-        await notifyActionFailure(guild, {
-          action: 'feedPost',
-          error: err,
-          requiredPermission: 'Send Messages / Embed Links',
-          channelId: alert.discordChannelId,
-        });
-      }
-    }
-  }
-
-  /**
-   * Increments a stream alert's consecutive-failure counter and disables it once
-   * the threshold is reached. Without this, an alert pointed at a channel the bot
-   * can no longer see retries every 5 minutes forever. Reset on any successful send.
-   */
-  private async recordAlertFailure(id: string, reason: string): Promise<void> {
-    const MAX_FAILURES = 5;
-    try {
-      const updated = await prisma.streamAlert.update({
-        where: { id },
-        data: { failureCount: { increment: 1 }, lastError: reason.slice(0, 300) },
-        select: { failureCount: true, guildId: true, platform: true, channelUsername: true },
-      });
-      if (updated.failureCount >= MAX_FAILURES) {
-        await prisma.streamAlert.update({ where: { id }, data: { enabled: false } });
-        logger.warn(
-          { id, guildId: updated.guildId, platform: updated.platform, feed: updated.channelUsername, failures: updated.failureCount, reason },
-          `Stream alert auto-disabled after ${MAX_FAILURES} consecutive failures`,
-        );
-      }
-    } catch { /* row deleted mid-flight — nothing to record */ }
-  }
-
-  // ── Weekly Analytics Reports ─────────────────────────────────────────────
-
-  private async runLotteryDraw(): Promise<void> {
-    // Draw on Sundays (UTC day 0); a Redis guard makes it exactly-once per week.
-    if (new Date().getUTCDay() !== 0) return;
-    const week = (() => { const d = new Date(); return `${d.getUTCFullYear()}-${Math.floor(d.getTime() / 6048e5)}`; })();
-    const configs = await prisma.economyConfig.findMany({ where: { enabled: true, lotteryEnabled: true }, select: { guildId: true } }).catch(() => []);
-    for (const cfg of configs) {
-      const guild = this.client.guilds.cache.get(cfg.guildId);
-      if (!guild) continue;
-      const guard = await redis.set(`lottery:${cfg.guildId}:${week}`, '1', 'EX', 8 * 86400, 'NX').catch(() => 'OK');
-      if (guard !== 'OK') continue;
-      await EconomyModule.drawLottery(guild).catch((err) => logger.error({ err, guildId: cfg.guildId }, 'lottery draw failed'));
-    }
-  }
-
-  private async runWeeklyHighlights(): Promise<void> {
-    // Only post on Mondays (UTC) so a restart during the week doesn't repeat it.
-    if (new Date().getUTCDay() !== 1) return;
-    const configs = await prisma.guildSettings.findMany({ where: { highlightsEnabled: true, highlightsChannelId: { not: null } }, select: { guildId: true } }).catch(() => []);
-    for (const cfg of configs) {
-      const guild = this.client.guilds.cache.get(cfg.guildId);
-      if (!guild) continue;
-      await HighlightsModule.postDigest(guild).catch((err) => logger.error({ err, guildId: cfg.guildId }, 'highlights digest failed'));
-    }
-  }
-
-  private async runWeeklyAnalytics(): Promise<void> {
-    // Only post on Mondays (UTC day 1) so mid-week restarts don't double-post.
-    if (new Date().getUTCDay() !== 1) return;
-
-    const configs = await prisma.guildSettings.findMany({
-      where: { analyticsChannelId: { not: null } },
-      select: { guildId: true, analyticsChannelId: true },
-    });
-
-    for (const cfg of configs) {
-      try {
-        const channel = await this.client.channels.fetch(cfg.analyticsChannelId!);
-        if (!channel?.isTextBased()) continue;
-        await postAnalytics(cfg.guildId, channel as TextChannel);
-      } catch (err) {
-        logger.error({ err, guildId: cfg.guildId }, 'Failed to send weekly analytics report');
-      }
-    }
-  }
 }
-
-// ── Helpers ─────────────────────────────────────────────────────────────────
-
-/**
- * Computes the next fire time for a repeating scheduled message relative to its
- * previous `base` timestamp. Returns `null` for one-shot messages or unrecognised
- * repeat values, which causes the caller to disable the record.
- */
