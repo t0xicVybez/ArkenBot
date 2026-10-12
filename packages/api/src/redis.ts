@@ -1,4 +1,6 @@
-
+/**
+ * Redis connections for the API: a general client plus publish/subscribe clients. Publishing here is how the API asks the bot to act (the bot listens in its ready.ts bridge).
+ */
 import { Redis } from 'ioredis';
 import { config } from './config.js';
 

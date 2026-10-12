@@ -1,4 +1,6 @@
-
+/**
+ * AES-256-GCM helpers for encrypting secrets at rest (integration tokens and similar). Derives a key from the configured secret and authenticates every ciphertext, so tampering is detected on decrypt.
+ */
 import { createCipheriv, createDecipheriv, createHash, randomBytes, scryptSync } from 'crypto';
 
 const ALGORITHM = 'aes-256-gcm';

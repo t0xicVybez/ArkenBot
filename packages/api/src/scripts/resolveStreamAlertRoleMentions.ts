@@ -1,3 +1,6 @@
+/**
+ * One-off CLI: backfill existing stream-alert messages, resolving @role names into mention IDs.
+ */
 import 'dotenv/config';
 import { prisma } from '../database.js';
 import { resolveRoleMentions } from '../utils/roleMentions.js';

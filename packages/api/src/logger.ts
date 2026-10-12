@@ -1,4 +1,6 @@
-
+/**
+ * The API logger (pino) plus an error serializer that flattens thrown errors into structured, searchable log fields.
+ */
 import pino from 'pino';
 import { config } from './config.js';
 

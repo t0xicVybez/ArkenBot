@@ -1,4 +1,6 @@
-
+/**
+ * API entry point. Loads config, connects to Postgres and Redis, builds the Fastify server, and starts listening.
+ */
 import 'dotenv/config';
 import { config } from './config.js';
 import { logger } from './logger.js';

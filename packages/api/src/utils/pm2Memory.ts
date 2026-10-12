@@ -1,4 +1,6 @@
-
+/**
+ * Reads each PM2 process's memory usage via the pm2 CLI, for the staff metrics view.
+ */
 import { execFile } from 'node:child_process';
 
 export interface Pm2Memory {

@@ -1,4 +1,6 @@
-
+/**
+ * Sets and clears the session auth cookie with the correct security flags (HttpOnly, SameSite, Secure).
+ */
 import type { FastifyReply } from 'fastify';
 import { config } from '../config.js';
 

@@ -1,4 +1,6 @@
-
+/**
+ * Fastify auth guards used as route preHandlers: requireAuth (a valid session), requireGuildAdmin (Manage Server on the target guild, with a staff/owner bypass), and requireStaff/requireBotOwner for the staff portal. Also augments FastifyRequest with the resolved `user`.
+ */
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { prisma } from '../database.js';
 import { config } from '../config.js';

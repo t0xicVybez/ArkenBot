@@ -1,4 +1,6 @@
-
+/**
+ * The single gateway for reading and writing guild settings (fronted by the Redis cache), so every path stays consistent and the cache is invalidated correctly.
+ */
 import { prisma } from '../database.js';
 import { redis, pub } from '../redis.js';
 import { REDIS_KEYS } from '@arkenbot/shared';

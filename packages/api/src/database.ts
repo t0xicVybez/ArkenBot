@@ -1,4 +1,6 @@
-
+/**
+ * The shared Prisma client for the API (Postgres via the pg driver adapter), with connect/disconnect helpers. Import `prisma` anywhere the API needs the database.
+ */
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 

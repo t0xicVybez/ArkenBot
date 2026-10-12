@@ -1,4 +1,6 @@
-
+/**
+ * Central API configuration, read from environment variables. `required` throws at startup if a critical variable is missing; `optional` falls back to a default.
+ */
 import 'dotenv/config';
 
 function required(name: string): string {

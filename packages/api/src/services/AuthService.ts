@@ -1,4 +1,6 @@
-
+/**
+ * Discord OAuth helper: builds the PKCE login URL, exchanges the returned code for tokens, and refreshes/validates a user's access token.
+ */
 import axios from 'axios';
 import { createHash, randomBytes } from 'crypto';
 import { prisma } from '../database.js';

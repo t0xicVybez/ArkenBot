@@ -1,4 +1,6 @@
-
+/**
+ * Builds and configures the Fastify server: core plugins (cookies, CORS, rate limiting), the WebSocket gateway, every route group, and shared error handling. `createServer()` returns the ready-to-listen app.
+ */
 import Fastify, { type FastifyError } from 'fastify';
 import fastifyCors from '@fastify/cors';
 import fastifyHelmet from '@fastify/helmet';

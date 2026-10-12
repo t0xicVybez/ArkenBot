@@ -1,4 +1,6 @@
-
+/**
+ * The database-backed session store that authenticates dashboard requests — create, look up, refresh and revoke sessions tied to the auth cookie.
+ */
 import { randomBytes } from 'crypto';
 import { prisma } from '../database.js';
 import { config } from '../config.js';

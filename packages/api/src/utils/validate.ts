@@ -1,4 +1,6 @@
-
+/**
+ * Validates a request body against a Zod schema: on failure it replies 400 with the issues and returns undefined; on success it returns the typed, parsed data.
+ */
 import type { FastifyReply } from 'fastify';
 import type { ZodSchema } from 'zod';
 

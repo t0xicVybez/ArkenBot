@@ -1,4 +1,6 @@
-
+/**
+ * Reads and parses the PM2 log files behind the staff dashboard's service-log view, classifying lines by level and category. LOG_SERVICES lists which processes it reads.
+ */
 import { open, stat } from 'fs/promises';
 import { homedir } from 'os';
 import { join } from 'path';

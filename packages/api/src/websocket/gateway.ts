@@ -1,4 +1,6 @@
-
+/**
+ * The dashboard's live WebSocket gateway: pushes real-time updates (stats, log tails, etc.) to connected dashboard clients.
+ */
 import type { FastifyInstance } from 'fastify';
 import { sub, pub } from '../redis.js';
 import { config } from '../config.js';

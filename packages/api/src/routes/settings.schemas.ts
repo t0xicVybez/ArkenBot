@@ -1,4 +1,6 @@
-
+/**
+ * Zod schemas that validate guild-settings PATCH payloads (automod, welcome, and the rest). Shared by the settings routes so every update is strictly checked.
+ */
 import { z } from 'zod';
 
 export const autoModAction = z.enum(['delete', 'warn', 'mute', 'kick', 'ban']);

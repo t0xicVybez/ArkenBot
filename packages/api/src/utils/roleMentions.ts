@@ -1,4 +1,6 @@
-
+/**
+ * Turns @role-name text in a message into real Discord role mentions by matching against the guild's roles.
+ */
 import axios from 'axios';
 
 const DISCORD_API = 'https://discord.com/api/v10';

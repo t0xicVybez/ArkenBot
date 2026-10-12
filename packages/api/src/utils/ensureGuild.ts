@@ -1,4 +1,6 @@
-
+/**
+ * Makes sure a guild row exists before the API acts on it, fetching the guild's details from Discord when it's new.
+ */
 import axios from 'axios';
 import { prisma } from '../database.js';
 

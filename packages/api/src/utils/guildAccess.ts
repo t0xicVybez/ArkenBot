@@ -1,4 +1,6 @@
-
+/**
+ * Decodes Discord permission bitfields to decide whether a user may manage a guild (Administrator or Manage Server, or being the owner).
+ */
 const ADMINISTRATOR = 0x8n;
 const MANAGE_GUILD = 0x20n;
 

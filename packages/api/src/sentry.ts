@@ -1,4 +1,6 @@
-
+/**
+ * Optional Sentry error reporting for the API. Stays a no-op unless SENTRY_DSN is set, so callers can report errors unconditionally.
+ */
 import * as Sentry from '@sentry/node';
 
 let enabled = false;

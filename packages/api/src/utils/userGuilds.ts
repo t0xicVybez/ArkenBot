@@ -1,4 +1,6 @@
-
+/**
+ * Fetches (and briefly caches) the guilds a user belongs to from Discord, coalescing concurrent requests so a dashboard load makes at most one upstream call per user.
+ */
 import { redis } from '../redis.js';
 
 export type UserGuild = { id: string; permissions: string; owner?: boolean };

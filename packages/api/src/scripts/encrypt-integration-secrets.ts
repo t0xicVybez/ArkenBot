@@ -1,4 +1,6 @@
-
+/**
+ * One-off CLI: encrypt any plaintext integration secrets already stored in the database, migrating them to encryption-at-rest.
+ */
 import { prisma } from '../database.js';
 import { encryptSecret, decryptSecret } from '../utils/crypto.js';
 

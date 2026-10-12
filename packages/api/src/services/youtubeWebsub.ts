@@ -1,4 +1,6 @@
-
+/**
+ * Manages YouTube WebSub (PubSubHubbub) subscriptions — subscribing to and renewing channel feeds, and metering the YouTube API quota. This is the push side of YouTube alerts.
+ */
 import crypto from 'crypto';
 import { prisma } from '../database.js';
 import { redis } from '../redis.js';
