@@ -1,7 +1,17 @@
 
 
+/**
+ * Pure math for the economy gambling games (coinflip, dice, high-low, …).
+ *
+ * These functions contain no Discord or database code so they can be unit
+ * tested directly, including the long-run house edge. The random source is
+ * injected as `rng` (defaults to Math.random) so tests can feed deterministic
+ * values.
+ */
 export type Rng = () => number;
 
+// Winning an even-money bet pays 95% of the stake, not 100% — that 5% is the
+// built-in house edge that keeps the economy from inflating.
 export const EVEN_MONEY_PAYOUT = 0.95;
 
 const evenWin = (bet: number): number => Math.max(0, Math.floor(bet * EVEN_MONEY_PAYOUT));

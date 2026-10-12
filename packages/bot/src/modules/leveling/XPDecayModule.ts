@@ -1,5 +1,10 @@
 
 
+/**
+ * Optional XP decay. For servers that enable it, this slowly reduces inactive
+ * members' XP over time so the leaderboard rewards ongoing activity rather than
+ * past grinding. Runs once a day from the background scheduler.
+ */
 import { prisma } from '../../database.js';
 import { levelFromXp } from '@arkenbot/shared';
 import { logger } from '../../logger.js';

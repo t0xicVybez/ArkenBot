@@ -1,4 +1,9 @@
 
+/**
+ * Scheduled community events with RSVPs. Builds the event embed and its
+ * Going/Maybe/Can't-go buttons, records members' responses, and sends reminders
+ * as the event approaches (driven by a background job).
+ */
 import {
   EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, PermissionFlagsBits,
   type ButtonInteraction, type Guild, type TextChannel,

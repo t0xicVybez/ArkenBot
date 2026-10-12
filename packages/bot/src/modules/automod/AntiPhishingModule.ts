@@ -1,5 +1,11 @@
 
 
+/**
+ * Anti-phishing. Scans message links against a blocklist of known scam/phishing
+ * domains and acts (delete/warn/ban per config) on a match. The blocklist is
+ * fetched from a public feed and cached in Redis, refreshed hourly, so every
+ * message check is a fast in-memory/Redis lookup.
+ */
 import { type Message, PermissionFlagsBits } from 'discord.js';
 import { prisma } from '../../database.js';
 import { redis } from '../../redis.js';

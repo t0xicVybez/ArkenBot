@@ -1,5 +1,14 @@
 
 
+/**
+ * Anti-nuke protection. Watches for a single person performing destructive
+ * actions (deleting channels/roles, mass bans/kicks) in quick succession —
+ * the signature of a compromised admin account or a rogue mod — and, past a
+ * configured threshold, steps in to stop and punish them.
+ *
+ * Action counts are tracked per actor in Redis with a short window, so the
+ * threshold means "N of these within the window", not "N ever".
+ */
 import { type Guild, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 import { redis } from '../../redis.js';
 import { getGuildSettings } from '../../utils/settings.js';

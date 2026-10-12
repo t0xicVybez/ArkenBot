@@ -1,4 +1,11 @@
 
+/**
+ * Low-level client for Riot's Valorant API.
+ *
+ * Wraps the raw HTTP calls (match list, match details, rank) behind typed
+ * methods and returns tidy snapshots. The higher-level ValorantModule decides
+ * when to call this and how to present the results; this file just talks to Riot.
+ */
 import axios from 'axios';
 import { config } from '../../config.js';
 import { logger } from '../../logger.js';

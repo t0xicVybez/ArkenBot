@@ -1,5 +1,10 @@
 
 
+/**
+ * The starboard: when a message collects enough ⭐ reactions, it's reposted to
+ * a dedicated "starboard" channel as a hall-of-fame highlight. This reacts to
+ * star reactions being added or removed and keeps the starboard entry in sync.
+ */
 import { EmbedBuilder } from 'discord.js';
 import type { MessageReaction, User } from 'discord.js';
 import { prisma } from '../../database.js';

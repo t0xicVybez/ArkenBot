@@ -1,4 +1,9 @@
 
+/**
+ * Member verification gate. New members get a "pending" role and must click a
+ * verify button before they receive the full member role and gain access —
+ * a simple barrier against drive-by raids and bots.
+ */
 import { type GuildMember, type ButtonInteraction, type TextChannel, type Guild, type Message, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, MessageFlags } from 'discord.js';
 import { getGuildSettings } from '../../utils/settings.js';
 import { logger, swallow} from '../../logger.js';

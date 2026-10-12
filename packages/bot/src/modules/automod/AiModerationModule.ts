@@ -1,4 +1,9 @@
 
+/**
+ * AI-assisted moderation. Sends qualifying messages to a language model to
+ * judge whether they break the server's rules (toxicity, hate, etc.) and acts
+ * on the verdict. Only runs when an LLM is configured.
+ */
 import { type Message, type TextChannel, EmbedBuilder } from 'discord.js';
 import { prisma } from '../../database.js';
 import { redis } from '../../redis.js';
@@ -8,6 +13,8 @@ import { logger, swallow} from '../../logger.js';
 import { notifyActionFailure } from '../../utils/permissionAlert.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 
+// Skip very short messages (not enough signal) and truncate very long ones to
+// keep token usage and latency sane.
 const MIN_LENGTH = 24;
 const MAX_LENGTH = 800;
 

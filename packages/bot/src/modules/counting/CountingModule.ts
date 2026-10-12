@@ -1,13 +1,22 @@
 
 
+/**
+ * The counting game: members take turns posting the next number in a dedicated
+ * channel. This validates each message (right number, not the same person
+ * twice in a row), tracks the streak/high score, and reacts or resets on
+ * mistakes.
+ */
 import type { Message } from 'discord.js';
 import { prisma } from '../../database.js';
 import { logger, swallow} from '../../logger.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 
+// `db` is the same client typed loosely, for a model not yet in the generated types.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = prisma as any;
 
+// Allow simple arithmetic (e.g. "5+2") as a count, but ONLY digits and math
+// symbols — the strict regex makes eval'ing the string safe from code injection.
 function safeEval(expr: string): number {
   if (!/^[\d\s+\-*/.()]+$/.test(expr)) return NaN;
   try {

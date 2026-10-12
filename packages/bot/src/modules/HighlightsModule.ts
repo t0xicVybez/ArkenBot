@@ -1,4 +1,9 @@
 
+/**
+ * Builds the weekly "server highlights" recap — the most active members, top
+ * channels and other standout stats for the week — and posts it to the
+ * configured channel. Triggered by the weekly background job.
+ */
 import { EmbedBuilder, type TextChannel, type Guild } from 'discord.js';
 import { prisma } from '../database.js';
 import { redis } from '../redis.js';
@@ -6,6 +11,8 @@ import { COLORS } from '@arkenbot/shared';
 import { swallow } from '../logger.js';
 import { t, resolveUserLocale } from '../i18n/index.js';
 
+// A stable "year-week" string (ISO week number) used to key one week's data and
+// to guard against posting the same week's recap twice.
 function isoWeek(d = new Date()): string {
   const date = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
   const day = date.getUTCDay() || 7;

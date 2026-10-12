@@ -1,11 +1,18 @@
 
+/**
+ * Handles top.gg votes. When a user votes for the bot, top.gg calls our webhook
+ * and the API forwards it here, where we grant rewards, track voting streaks,
+ * and thank the voter. Voting is allowed every 12 hours.
+ */
 import type { Client, GuildMember, TextChannel } from 'discord.js';
 import { prisma } from '../../database.js';
 import { logger, swallow} from '../../logger.js';
 import { classifyError } from '@arkenbot/shared';
 
+// top.gg lets each user vote once per 12 hours.
 const VOTE_COOLDOWN_MS = 12 * 60 * 60 * 1000;
 
+// A streak survives if the next vote comes within 36 hours of the last.
 const STREAK_WINDOW_MS = 36 * 60 * 60 * 1000;
 
 export class TopggModule {

@@ -1,5 +1,10 @@
 
 
+/**
+ * Leveling achievements/badges. `ACHIEVEMENTS` is the catalogue — each has a
+ * `check` predicate against a user's stats — and the module awards any newly
+ * earned ones (and announces them) as a member's stats grow.
+ */
 import { prisma } from '../../database.js';
 import { logger } from '../../logger.js';
 

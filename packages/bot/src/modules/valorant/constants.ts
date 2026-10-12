@@ -1,4 +1,8 @@
 
+// Valorant rank reference data and helpers. TIER_NAMES is indexed by Riot's
+// numeric competitive tier (0 = Unranked … 27 = Radiant); the tier* helpers
+// turn a tier number into a display name/base/colour, and the *Host helpers map
+// a region to the correct regional Riot API hostname.
 export const TIER_NAMES: string[] = [
   'Unranked', 'Unranked', 'Unranked',
   'Iron 1', 'Iron 2', 'Iron 3',

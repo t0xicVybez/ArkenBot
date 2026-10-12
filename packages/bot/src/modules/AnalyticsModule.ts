@@ -1,5 +1,12 @@
 
 
+/**
+ * Collects per-guild activity metrics (messages, commands, joins, leaves).
+ *
+ * Counts are tallied in fast Redis counters keyed by day, then flushed to the
+ * database once a day. Keeping the hot counting in Redis avoids a database
+ * write on every single message. Powers the `/analytics` dashboard and charts.
+ */
 import { prisma } from '../database.js';
 import { redis } from '../redis.js';
 import { logger } from '../logger.js';
@@ -7,6 +14,7 @@ import type { BotClient } from '../client.js';
 
 const REDIS_PREFIX = 'analytics';
 
+// Build today's Redis counter key for one guild + metric (e.g. messages).
 function dayKey(guildId: string, metric: string): string {
   const today = new Date().toISOString().slice(0, 10);
   return `${REDIS_PREFIX}:${guildId}:${today}:${metric}`;

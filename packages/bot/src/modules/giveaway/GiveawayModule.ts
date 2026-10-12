@@ -1,4 +1,9 @@
 
+/**
+ * Posts and manages a giveaway's message (the embed with the "Enter" button and
+ * live entry count). The actual winner draw when a giveaway ends lives in the
+ * background job `jobs/giveaways.ts`; this module handles the message side.
+ */
 import { EmbedBuilder, type TextChannel } from 'discord.js';
 import type { BotClient } from '../../client.js';
 import { prisma } from '../../database.js';
