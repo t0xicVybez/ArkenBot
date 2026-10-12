@@ -1,5 +1,15 @@
-
-
+/**
+ * Discovers, loads, and manages first-party addons.
+ *
+ * Addons live in the top-level `addons/` folder and each ship a compiled
+ * `dist/index.js` that default-exports an `AddonDefinition` (a manifest plus
+ * optional commands, event listeners and lifecycle hooks). On startup we find
+ * every addon, register it in the database, and wire up whatever it provides.
+ *
+ * Each addon runs with an `AddonContext` — a small, sandboxed toolkit giving it
+ * scoped storage, a logger, an event bus and its per-guild settings — so addon
+ * code never touches the database or client directly.
+ */
 import { readdirSync, statSync, existsSync } from 'fs';
 import { join, resolve, dirname } from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
@@ -13,17 +23,25 @@ import { prisma } from '../database.js';
 import { redis } from '../redis.js';
 import { logger } from '../logger.js';
 
+// Lua run atomically on Redis to release a lock only if we still own it: compare
+// the stored token to ours and delete only on a match. This prevents releasing
+// a lock that already expired and was re-acquired by someone else.
 const RELEASE_LOCK = 'if redis.call("get", KEYS[1]) == ARGV[1] then return redis.call("del", KEYS[1]) else return 0 end';
 import { resolveUserLocale } from '../i18n/index.js';
 import { ADDON_CATEGORY_PREFIX } from '@arkenbot/shared';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+/**
+ * Key-value storage handed to a single addon. Values are JSON stored in the
+ * `AddonData` table, scoped either to one guild or globally (no guild).
+ */
 class AddonStorage {
   constructor(private addonDbId: string) {}
 
   async get<T>(key: string, guildId?: string): Promise<T | null> {
-
+    // A composite unique index can't match a NULL column, so global records
+    // (guildId = null) are fetched with findFirst rather than findUnique.
     const record = guildId
       ? await prisma.addonData.findUnique({
           where: { guildId_addonId_key: { guildId, addonId: this.addonDbId, key } },
@@ -42,7 +60,8 @@ class AddonStorage {
         create: { guildId, addonId: this.addonDbId, key, value: value as object },
       });
     } else {
-
+      // Same NULL-guild limitation as above: upsert can't key on a null column,
+      // so do the find-then-update-or-create by hand.
       const existing = await prisma.addonData.findFirst({
         where: { guildId: null, addonId: this.addonDbId, key },
         select: { id: true },
@@ -55,6 +74,11 @@ class AddonStorage {
     }
   }
 
+  /**
+   * Read a value, transform it, and write it back — all under a short Redis lock
+   * so two concurrent mutations of the same key can't overwrite each other (for
+   * example, two tickets opening at the same instant both bumping a counter).
+   */
   async mutate<T>(key: string, mutator: (current: T | null) => T | Promise<T>, guildId?: string): Promise<T> {
     const lockKey = `addonlock:${this.addonDbId}:${guildId ?? 'global'}:${key}`;
     const token = randomUUID();
@@ -65,15 +89,23 @@ class AddonStorage {
       await this.set(key, next, guildId);
       return next;
     } finally {
+      // Only release the lock if we actually took it, and only if it's still
+      // ours (the Lua check above).
       if (acquired) {
         await redis.eval(RELEASE_LOCK, 1, lockKey, token).catch(() => undefined);
       }
     }
   }
 
+  /**
+   * Try to take the lock, retrying briefly if it's held. Best-effort: if we
+   * can't get it within the wait window we proceed anyway (logged) so a stuck
+   * lock never deadlocks an addon — the small risk of a lost update is better
+   * than hanging forever.
+   */
   private async acquireLock(lockKey: string, token: string): Promise<boolean> {
-    const LOCK_TTL_MS = 5000;
-    const MAX_WAIT_MS = 3000;
+    const LOCK_TTL_MS = 5000; // the lock auto-expires so a crash can't hold it
+    const MAX_WAIT_MS = 3000; // how long we'll wait for a busy lock
     const deadline = Date.now() + MAX_WAIT_MS;
     for (;;) {
       const ok = await redis.set(lockKey, token, 'PX', LOCK_TTL_MS, 'NX').catch(() => null);
@@ -82,6 +114,8 @@ class AddonStorage {
         logger.warn(`AddonStorage: lock contention on ${lockKey}; proceeding without lock`);
         return false;
       }
+      // Wait a short, slightly randomised moment before retrying so competing
+      // waiters don't all wake at once.
       await new Promise((r) => setTimeout(r, 40 + Math.floor(Math.random() * 40)));
     }
   }
@@ -101,6 +135,7 @@ class AddonStorage {
   }
 }
 
+/** A thin logger wrapper that stamps every line with the addon's name. */
 class AddonLogger {
   constructor(private addonName: string) {}
 
@@ -118,14 +153,16 @@ class AddonLogger {
   }
 }
 
+/** Everything we keep in memory about one running addon. */
 interface LoadedAddon {
   definition: AddonDefinition;
   context: AddonContext;
   eventBus: AddonEventBus;
-
+  // Called on unload to detach each gateway listener we registered.
   unsubscribers: Array<() => void>;
 }
 
+// Reference/example addons shipped for documentation only — never loaded.
 const RETIRED_ADDONS = new Set(['example-economy']);
 
 export class AddonHandler {
@@ -137,6 +174,7 @@ export class AddonHandler {
     this.client = client;
   }
 
+  /** Walk the addons directory and load each one. */
   async loadAddons(): Promise<void> {
     const addonsDir = resolve(__dirname, '..', '..', '..', '..', 'addons');
 
@@ -150,7 +188,6 @@ export class AddonHandler {
     );
 
     for (const folder of addonFolders) {
-
       if (RETIRED_ADDONS.has(folder)) {
         logger.info(`Skipping retired reference addon: ${folder}`);
         continue;
@@ -161,10 +198,12 @@ export class AddonHandler {
     logger.info(`Loaded ${this.loadedAddons.size} addons`);
   }
 
+  /** Load a single addon from its folder, registering/refreshing it in the DB. */
   async loadAddon(addonPath: string): Promise<void> {
     try {
       const indexPath = join(addonPath, 'dist', 'index.js');
 
+      // Addons run from their compiled output; skip any that haven't been built.
       if (!existsSync(indexPath)) {
         logger.warn(`Skipping addon at ${addonPath} — no dist/index.js found (run pnpm build inside the addon)`);
         return;
@@ -181,6 +220,8 @@ export class AddonHandler {
 
       const { name } = definition.manifest;
 
+      // Keep the database's record of this addon in sync with its manifest,
+      // creating the row the first time we ever see it.
       const dbAddon = await prisma.addon.upsert({
         where: { name },
         update: {
@@ -204,6 +245,7 @@ export class AddonHandler {
         },
       });
 
+      // An operator can disable an addon globally by flipping this flag.
       if (!dbAddon.enabled) {
         logger.info(`Addon ${name} is disabled in the database, skipping`);
         return;
@@ -211,14 +253,18 @@ export class AddonHandler {
 
       await this.activateAddon(definition, dbAddon.id);
     } catch (err) {
+      // A single broken addon must never take down the whole bot.
       logger.error({ err, addonPath }, 'Failed to load addon');
     }
   }
 
+  /** Wire an addon's commands, events and hooks into the running client. */
   async activateAddon(definition: AddonDefinition, dbAddonId: string): Promise<void> {
     const { name } = definition.manifest;
     const eventBus = new AddonEventBus();
 
+    // The sandboxed toolkit the addon sees. Everything it needs to touch the
+    // outside world goes through here.
     const context = new AddonContext({
       addonName: name,
       client: this.client,
@@ -248,6 +294,8 @@ export class AddonHandler {
 
     if (definition.commands) {
       for (const cmd of definition.commands) {
+        // Adapt the addon's command shape to the bot's, injecting the addon
+        // context so its execute/autocomplete receive their toolkit.
         const botCommand: BotCommand = {
           data: cmd.data as BotCommand['data'],
           category: `${ADDON_CATEGORY_PREFIX}${name}`,
@@ -257,6 +305,7 @@ export class AddonHandler {
             : undefined,
         };
 
+        // Core commands win: an addon may not shadow a built-in command name.
         const existing = this.client.commands.get(cmd.data.name);
         if (existing && !existing.category?.startsWith(ADDON_CATEGORY_PREFIX)) {
           logger.warn(`Addon ${name} command "${cmd.data.name}" ignored — a core command already owns that name`);
@@ -269,11 +318,15 @@ export class AddonHandler {
 
     if (definition.events) {
       for (const eventDef of definition.events) {
+        // Discord.js event signatures vary per event, so the wrapper takes any
+        // args and forwards them to the addon's handler.
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const handler = (...args: any[]) => {
           const result = (eventDef.handler as (...a: unknown[]) => Promise<void>)(context, ...args);
           result.catch((err) => {
-
+            // An autocomplete interaction expires the moment the user types
+            // another character, so a 10062 "Unknown interaction" when replying
+            // to one is harmless noise, not a real error.
             const isAutocomplete = args.some((a) => typeof a?.isAutocomplete === 'function' && a.isAutocomplete());
             if (isAutocomplete && (err as { code?: number })?.code === 10062) {
               logger.debug({ addon: name, event: eventDef.event }, 'autocomplete interaction expired (10062) — ignored');
@@ -283,6 +336,7 @@ export class AddonHandler {
           });
         };
 
+        // Register the listener and remember how to remove it again on unload.
         if (eventDef.once) {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           this.client.once(eventDef.event, handler as any);
@@ -297,6 +351,7 @@ export class AddonHandler {
       }
     }
 
+    // Let the addon run any one-time setup.
     if (definition.hooks?.onLoad) {
       await definition.hooks.onLoad(context);
     }
@@ -305,6 +360,7 @@ export class AddonHandler {
     logger.info(`Activated addon: ${name} v${definition.manifest.version}`);
   }
 
+  /** Tear an addon back down: run its onUnload hook, detach listeners, drop commands. */
   async deactivateAddon(name: string): Promise<void> {
     const loaded = this.loadedAddons.get(name);
     if (!loaded) return;
@@ -331,6 +387,7 @@ export class AddonHandler {
     return Array.from(this.loadedAddons.keys());
   }
 
+  /** Called when a guild changes an addon's settings in the dashboard. */
   async notifySettingsUpdate(addonName: string, guildId: string, settings: Record<string, unknown>): Promise<void> {
     const loaded = this.loadedAddons.get(addonName);
     if (loaded?.definition.hooks?.onSettingsUpdate) {

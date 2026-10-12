@@ -1,5 +1,17 @@
-
-
+/**
+ * The central router for every Discord interaction.
+ *
+ * Whenever a user runs a slash command, types in an autocomplete field, clicks
+ * a button, picks from a select menu, or submits a modal, that interaction
+ * lands here first. We figure out what kind it is and send it to the right
+ * place.
+ *
+ * Buttons, selects and modals are routed by the first `:`-separated segment of
+ * their `customId`, which is the owning command's name (e.g. `giveaway:enter`
+ * → the `giveaway` command's `handleButton`). A few cross-cutting flows that
+ * aren't owned by a single command (verification, appeals, RSVPs, the ban
+ * network) are matched by a `prefix:` instead.
+ */
 import {
   MessageFlags,
   type Interaction,
@@ -28,6 +40,7 @@ export class InteractionHandler {
     this.client = client;
   }
 
+  /** Entry point: send each interaction to the handler for its type. */
   async handle(interaction: Interaction): Promise<void> {
     if (interaction.isChatInputCommand()) {
       await this.handleChatCommand(interaction);
@@ -40,6 +53,7 @@ export class InteractionHandler {
     } else if (interaction.isModalSubmit()) {
       await this.handleModal(interaction);
     } else if (interaction.isContextMenuCommand()) {
+      // Right-click (context-menu) commands share the slash-command handler.
       await this.handleChatCommand(interaction as unknown as ChatInputCommandInteraction);
     }
   }
@@ -55,6 +69,8 @@ export class InteractionHandler {
       return;
     }
 
+    // If this command comes from an addon, make sure that addon is actually
+    // installed for the server before running it.
     if (command.category?.startsWith(ADDON_CATEGORY_PREFIX) && interaction.guildId) {
       const addonName = command.category.slice(ADDON_CATEGORY_PREFIX.length);
       const enabled = await isAddonEnabledForGuild(addonName, interaction.guildId);
@@ -67,6 +83,7 @@ export class InteractionHandler {
       }
     }
 
+    // Server admins can switch individual commands off; respect that.
     if (interaction.guildId) {
       const disabled = await prisma.disabledCommand.findFirst({
         where: { guildId: interaction.guildId, commandName: command.data.name },
@@ -81,6 +98,9 @@ export class InteractionHandler {
       }
     }
 
+    // Per-role command permissions. Administrators always bypass these. The
+    // rule is: a matching deny always blocks; and if any allow-rules exist for
+    // the command, the member must hold at least one allowed role.
     if (interaction.guildId) {
       const rolePerms = await prisma.commandRolePermission.findMany({
         where: { guildId: interaction.guildId, commandName: command.data.name },
@@ -108,6 +128,7 @@ export class InteractionHandler {
       }
     }
 
+    // Rate-limit repeated use (default 3s) so commands can't be spammed.
     const inCooldown = await this.checkCooldown(interaction, command.data.name, command.cooldown ?? 3);
     if (inCooldown > 0) {
       await interaction.reply({
@@ -122,6 +143,7 @@ export class InteractionHandler {
       return;
     }
 
+    // Enforce any Discord permissions the command requires of the caller.
     if (command.userPermissions && interaction.guild) {
       const member = await interaction.guild.members.fetch(interaction.user.id).catch(swallow);
       if (member) {
@@ -143,9 +165,14 @@ export class InteractionHandler {
       }
     }
 
+    // All checks passed — run the command, and turn any failure into a friendly
+    // message rather than a silent crash.
     try {
       await command.execute(interaction, this.client);
     } catch (err) {
+      // classifyError sorts the failure into a category so we react sensibly:
+      // expired-interaction errors are ignored, truly unknown ones are reported
+      // to Sentry, and the rest show a helpful summary/hint to the user.
       const classified = classifyError(err);
       logger.error(
         { err, command: command.data.name, category: classified.category, code: classified.code },
@@ -164,6 +191,7 @@ export class InteractionHandler {
           : `${classified.summary}${classified.hint ? `\n\n*${classified.hint}*` : ''}`;
       const embed = errorEmbed('Error', description);
 
+      // Reply or edit depending on whether we've already responded.
       if (interaction.replied || interaction.deferred) {
         await interaction.editReply({ embeds: [embed] }).catch(swallow);
       } else {
@@ -184,7 +212,7 @@ export class InteractionHandler {
   }
 
   private async handleButton(interaction: ButtonInteraction): Promise<void> {
-
+    // Cross-cutting flows not owned by a single command, matched by prefix.
     if (interaction.customId.startsWith('verify:')) {
       try {
         await VerificationModule.handleVerifyButton(interaction);
@@ -224,6 +252,7 @@ export class InteractionHandler {
       return;
     }
 
+    // Default: route to the command named by the customId's first segment.
     const [commandName] = interaction.customId.split(':');
     const command = this.client.commands.get(commandName);
 
@@ -237,6 +266,7 @@ export class InteractionHandler {
   }
 
   private async handleSelectMenu(interaction: StringSelectMenuInteraction): Promise<void> {
+    // Select menus route to their owning command by customId prefix.
     const [commandName] = interaction.customId.split(':');
     const command = this.client.commands.get(commandName);
 
@@ -250,7 +280,7 @@ export class InteractionHandler {
   }
 
   private async handleModal(interaction: ModalSubmitInteraction): Promise<void> {
-
+    // Appeal modals are a cross-cutting flow; everything else routes by prefix.
     if (interaction.customId.startsWith('appeal:modal:')) {
       try {
         await AppealsModule.handleModal(this.client, interaction);
@@ -272,6 +302,11 @@ export class InteractionHandler {
     }
   }
 
+  /**
+   * Returns the seconds left on a user's cooldown for a command, or 0 if they're
+   * clear. Backed by a Redis key that expires on its own, so the cooldown is
+   * shared across every bot process and needs no cleanup.
+   */
   private async checkCooldown(
     interaction: ChatInputCommandInteraction,
     commandName: string,
