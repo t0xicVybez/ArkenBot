@@ -24,6 +24,16 @@ type EmbedBody = {
   embedFields?: EmbedField[];
 };
 
+/**
+ * Saved embeds, and sending an embed to a channel from the dashboard.
+ *
+ * Routes:
+ *   GET    /guilds/:guildId/embeds
+ *   POST   /guilds/:guildId/embeds
+ *   PATCH  /guilds/:guildId/embeds/:id
+ *   DELETE /guilds/:guildId/embeds/:id
+ *   POST   /guilds/:guildId/embeds/:id/send
+ */
 export async function embedRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/guilds/:guildId/embeds', { preHandler: [requireGuildAdmin] }, async (request, reply) => {

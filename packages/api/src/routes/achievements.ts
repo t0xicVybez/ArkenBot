@@ -16,6 +16,13 @@ const ACHIEVEMENT_DEFS: Record<string, { name: string; description: string; emoj
   msg_10000: { name: 'Transcendent',  description: 'Send 10,000 messages', emoji: '🏆' },
 };
 
+/**
+ * Dashboard API for the leveling achievements catalogue and a guild's earned badges.
+ *
+ * Routes:
+ *   GET    /guilds/:guildId/achievements/:userId
+ *   GET    /guilds/:guildId/achievements
+ */
 export async function achievementRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/guilds/:guildId/achievements/:userId', { preHandler: [requireGuildAdmin] }, async (request, reply) => {

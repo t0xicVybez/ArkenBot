@@ -199,6 +199,17 @@ function parseBoardId(input: string): string | null {
   return null;
 }
 
+/**
+ * Trello integration setup and webhooks.
+ *
+ * Routes:
+ *   GET    /guilds/:guildId/trello-alerts
+ *   POST   /guilds/:guildId/trello-alerts
+ *   PATCH  /guilds/:guildId/trello-alerts/:id
+ *   DELETE /guilds/:guildId/trello-alerts/:id
+ *   GET    /trello/webhook/:token
+ *   POST   /trello/webhook/:token
+ */
 export async function trelloRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/guilds/:guildId/trello-alerts', { preHandler: [requireGuildAdmin] }, async (request, reply) => {

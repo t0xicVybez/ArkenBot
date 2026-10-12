@@ -239,6 +239,16 @@ async function sendDiscordEmbed(channelId: string, embed: object): Promise<void>
   });
 }
 
+/**
+ * Monday.com integration setup and webhooks.
+ *
+ * Routes:
+ *   GET    /guilds/:guildId/monday-alerts
+ *   POST   /guilds/:guildId/monday-alerts
+ *   PATCH  /guilds/:guildId/monday-alerts/:id
+ *   DELETE /guilds/:guildId/monday-alerts/:id
+ *   POST   /monday/webhook/:token
+ */
 export async function mondayRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/guilds/:guildId/monday-alerts', { preHandler: [requireGuildAdmin] }, async (request, reply) => {

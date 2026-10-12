@@ -38,6 +38,15 @@ function shapeRow(r: LeaderRow) {
   };
 }
 
+/**
+ * Server-promotion tracking: config plus the promotion-time leaderboard and per-member view.
+ *
+ * Routes:
+ *   GET    /promotion/:guildId/config
+ *   PATCH  /promotion/:guildId/config
+ *   GET    /promotion/:guildId/leaderboard
+ *   GET    /promotion/:guildId/members/:userId
+ */
 export async function promotionRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/promotion/:guildId/config', { preHandler: [requireGuildAdmin] }, async (request, reply) => {

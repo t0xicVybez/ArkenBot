@@ -6,6 +6,13 @@ import { parse } from '../utils/validate.js';
 import { prisma } from '../database.js';
 import { isSupportedLocale } from '@arkenbot/shared';
 
+/**
+ * Per-user preferences such as reply language.
+ *
+ * Routes:
+ *   GET    /me/language
+ *   PATCH  /me/language
+ */
 export async function userPreferencesRoutes(server: FastifyInstance): Promise<void> {
   server.get('/me/language', { preHandler: [requireAuth] }, async (request, reply) => {
     const userId = (request as { user?: { id: string } }).user!.id;

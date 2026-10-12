@@ -54,6 +54,13 @@ async function fetchVideos(ids: string[]): Promise<Map<string, VideoInfo>> {
   return out;
 }
 
+/**
+ * YouTube WebSub (PubSubHubbub) callback endpoints — the push side of YouTube alerts.
+ *
+ * Routes:
+ *   GET    /youtube/websub
+ *   POST   /youtube/websub
+ */
 export async function youtubeWebsubRoutes(server: FastifyInstance): Promise<void> {
 
   server.addContentTypeParser(

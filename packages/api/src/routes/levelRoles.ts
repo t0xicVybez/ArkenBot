@@ -4,6 +4,21 @@ import { requireGuildAdmin } from '../middleware/auth.js';
 import { parse } from '../utils/validate.js';
 import { prisma } from '../database.js';
 
+/**
+ * Configure the roles granted at each level.
+ *
+ * Routes:
+ *   GET    /guilds/:guildId/level-roles
+ *   POST   /guilds/:guildId/level-roles
+ *   DELETE /guilds/:guildId/level-roles/:level
+ *   GET    /guilds/:guildId/xp-multipliers
+ *   POST   /guilds/:guildId/xp-multipliers
+ *   DELETE /guilds/:guildId/xp-multipliers/:roleId
+ *   GET    /guilds/:guildId/xp-channel-multipliers
+ *   POST   /guilds/:guildId/xp-channel-multipliers
+ *   DELETE /guilds/:guildId/xp-channel-multipliers/:channelId
+ *   POST   /guilds/:guildId/leaderboard/reset-inactive
+ */
 export async function levelRoleRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/guilds/:guildId/level-roles', { preHandler: [requireGuildAdmin] }, async (request, reply) => {

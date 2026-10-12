@@ -4,6 +4,16 @@ import { requireGuildAdmin } from '../middleware/auth.js';
 import { prisma } from '../database.js';
 import { pub } from '../redis.js';
 
+/**
+ * Member reports submitted to the moderation team.
+ *
+ * Routes:
+ *   GET    /guilds/:guildId/reports
+ *   GET    /guilds/:guildId/reports/:reportId
+ *   PATCH  /guilds/:guildId/reports/:reportId
+ *   GET    /guilds/:guildId/report-config
+ *   PATCH  /guilds/:guildId/report-config
+ */
 export async function reportRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/guilds/:guildId/reports', { preHandler: [requireGuildAdmin] }, async (request, reply) => {

@@ -4,6 +4,18 @@ import { requireGuildAdmin } from '../middleware/auth.js';
 import { parse } from '../utils/validate.js';
 import { prisma } from '../database.js';
 
+/**
+ * Manage moderation cases and warnings from the dashboard.
+ *
+ * Routes:
+ *   GET    /guilds/:guildId/cases
+ *   GET    /guilds/:guildId/cases/:caseNumber
+ *   PATCH  /guilds/:guildId/cases/:caseNumber
+ *   GET    /guilds/:guildId/warnings
+ *   DELETE /guilds/:guildId/warnings/:id
+ *   DELETE /guilds/:guildId/warnings
+ *   GET    /guilds/:guildId/logs
+ */
 export async function moderationRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/guilds/:guildId/cases', { preHandler: [requireGuildAdmin] }, async (request, reply) => {

@@ -18,6 +18,13 @@ async function readKey<T>(guildId: string, name: string, key: string): Promise<T
   return (row?.value as T) ?? null;
 }
 
+/**
+ * Configuration for the game-server (RCON) addons.
+ *
+ * Routes:
+ *   GET    /guilds/:guildId/addons/gameservers
+ *   GET    /guilds/:guildId/addons/gameadmin
+ */
 export async function gameAddonRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/guilds/:guildId/addons/gameservers', { preHandler: [requireGuildAdmin] }, async (request, reply) => {

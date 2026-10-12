@@ -16,6 +16,15 @@ const cmdFields = {
   cooldown: z.number().int().min(0).max(86400).optional(),
 };
 
+/**
+ * User-defined custom commands for a guild.
+ *
+ * Routes:
+ *   GET    /guilds/:guildId/custom-commands
+ *   POST   /guilds/:guildId/custom-commands
+ *   PATCH  /guilds/:guildId/custom-commands/:id
+ *   DELETE /guilds/:guildId/custom-commands/:id
+ */
 export async function customCommandRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/guilds/:guildId/custom-commands', { preHandler: [requireGuildAdmin] }, async (request, reply) => {

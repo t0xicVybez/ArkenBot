@@ -3,6 +3,14 @@ import type { FastifyInstance } from 'fastify';
 import { requireGuildAdmin } from '../middleware/auth.js';
 import { prisma } from '../database.js';
 
+/**
+ * Staff notes attached to users.
+ *
+ * Routes:
+ *   GET    /guilds/:guildId/user-notes/:userId
+ *   POST   /guilds/:guildId/user-notes/:userId
+ *   DELETE /guilds/:guildId/user-notes/:noteId
+ */
 export async function userNoteRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/guilds/:guildId/user-notes/:userId', { preHandler: [requireGuildAdmin] }, async (request, reply) => {

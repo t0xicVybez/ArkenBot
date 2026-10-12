@@ -30,6 +30,15 @@ async function resolveUsernames(userIds: string[]): Promise<Record<string, strin
   return results;
 }
 
+/**
+ * Create, list and manage giveaways.
+ *
+ * Routes:
+ *   GET    /guilds/:guildId/giveaways
+ *   GET    /guilds/:guildId/giveaways/:id
+ *   POST   /guilds/:guildId/giveaways
+ *   DELETE /guilds/:guildId/giveaways/:id
+ */
 export async function giveawayRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/guilds/:guildId/giveaways', { preHandler: [requireGuildAdmin] }, async (request, reply) => {

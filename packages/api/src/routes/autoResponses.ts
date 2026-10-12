@@ -34,6 +34,15 @@ function validatePattern(pattern: unknown, flags: unknown): string | null {
   }
 }
 
+/**
+ * CRUD for keyword/regex auto-responses.
+ *
+ * Routes:
+ *   GET    /guilds/:guildId/auto-responses
+ *   POST   /guilds/:guildId/auto-responses
+ *   PATCH  /guilds/:guildId/auto-responses/:id
+ *   DELETE /guilds/:guildId/auto-responses/:id
+ */
 export async function autoResponseRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/guilds/:guildId/auto-responses', { preHandler: [requireGuildAdmin] }, async (request, reply) => {

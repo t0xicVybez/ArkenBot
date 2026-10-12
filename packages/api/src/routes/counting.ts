@@ -3,6 +3,13 @@ import type { FastifyInstance } from 'fastify';
 import { requireGuildAdmin } from '../middleware/auth.js';
 import { prisma } from '../database.js';
 
+/**
+ * Configuration and stats for the counting game.
+ *
+ * Routes:
+ *   GET    /guilds/:guildId/counting
+ *   POST   /guilds/:guildId/counting/reset
+ */
 export async function countingRoutes(server: FastifyInstance): Promise<void> {
   server.get('/guilds/:guildId/counting', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };

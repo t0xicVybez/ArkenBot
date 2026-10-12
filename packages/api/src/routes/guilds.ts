@@ -6,6 +6,21 @@ import { prisma } from '../database.js';
 import { AuthService } from '../services/AuthService.js';
 import { canManageGuild } from '../utils/guildAccess.js';
 
+/**
+ * The signed-in user's manageable guilds and each guild's dashboard overview.
+ *
+ * Routes:
+ *   GET    /guilds
+ *   GET    /guilds/:guildId
+ *   GET    /guilds/:guildId/channels
+ *   GET    https://discord.com/api/v10/guilds/${guildId}/channels
+ *   POST   /guilds/:guildId/channels
+ *   POST   https://discord.com/api/v10/guilds/${guildId}/channels
+ *   GET    /guilds/:guildId/roles
+ *   GET    https://discord.com/api/v10/guilds/${guildId}/roles
+ *   GET    /guilds/:guildId/analytics/automod
+ *   GET    /guilds/:guildId/analytics
+ */
 export async function guildRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/guilds', { preHandler: [requireAuth] }, async (request, reply) => {

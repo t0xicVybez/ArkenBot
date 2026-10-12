@@ -5,6 +5,15 @@ import { parse } from '../utils/validate.js';
 import { prisma } from '../database.js';
 import { pub } from '../redis.js';
 
+/**
+ * Submit and review ban/mute appeals.
+ *
+ * Routes:
+ *   GET    /me/appealable
+ *   POST   /me/appeals
+ *   GET    /guilds/:guildId/appeals
+ *   POST   /guilds/:guildId/appeals/:id/decision
+ */
 export async function appealsRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/me/appealable', { preHandler: [requireAuth] }, async (request, reply) => {

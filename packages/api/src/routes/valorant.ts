@@ -18,6 +18,22 @@ function accountHost(region: string): string {
   return 'americas';
 }
 
+/**
+ * Valorant RSO account linking and rank data.
+ *
+ * Routes:
+ *   GET    /valorant/rso/login
+ *   GET    /valorant/rso/start
+ *   GET    valorant:link:${token}
+ *   GET    /valorant/rso/callback
+ *   GET    valorant:rso:${state}
+ *   GET    https://${accountHost(
+ *   GET    /valorant/link
+ *   DELETE /valorant/link
+ *   GET    /valorant/config/:guildId
+ *   PATCH  /valorant/config/:guildId
+ *   GET    /valorant/leaderboard/:guildId
+ */
 export async function valorantRoutes(server: FastifyInstance): Promise<void> {
   const guard = (reply: import('fastify').FastifyReply): boolean => {
     if (!config.valorant.isConfigured) {

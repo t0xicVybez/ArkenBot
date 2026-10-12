@@ -24,6 +24,14 @@ const PatchSchema = z.object({
   enabled: z.boolean(),
 }).strict();
 
+/**
+ * Invite-tracking data and the inviter leaderboard.
+ *
+ * Routes:
+ *   GET    /guilds/:guildId/invite-tracker
+ *   PATCH  /guilds/:guildId/invite-tracker
+ *   PATCH  /guilds/:guildId/invite-tracker/bonus
+ */
 export async function inviteTrackerRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/guilds/:guildId/invite-tracker', { preHandler: [requireGuildAdmin] }, async (request, reply) => {

@@ -3,6 +3,16 @@ import { prisma } from '../database.js';
 import { redis } from '../redis.js';
 import { xpForLevel } from '@arkenbot/shared';
 
+/**
+ * Public, unauthenticated endpoints (status, public stats, health).
+ *
+ * Routes:
+ *   GET    /public/status
+ *   GET    bot:heartbeat
+ *   GET    /public/stats
+ *   GET    /public/changelog
+ *   GET    /public/leaderboard/:guildId
+ */
 export async function publicRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/public/status', async (_request, reply) => {

@@ -12,6 +12,26 @@ import { getPm2Memory } from '../utils/pm2Memory.js';
 import { resolveGuildNames, resolveChannelNames } from '../services/LogContextResolver.js';
 const GITHUB_REPO = 't0xicVybez/ArkenBot';
 
+/**
+ * Staff portal API — fleet-wide guild and user management, system metrics, service logs, and broadcast announcements. Staff/owner only.
+ *
+ * Routes:
+ *   GET    /admin/guilds
+ *   GET    /admin/moderation/cases
+ *   GET    /admin/moderation/warnings
+ *   DELETE /admin/guilds/:guildId
+ *   GET    /admin/stats
+ *   GET    /admin/users
+ *   PATCH  /admin/users/:id
+ *   GET    /admin/metrics
+ *   GET    /admin/logs
+ *   GET    /admin/service-logs
+ *   POST   /admin/announcements/generate
+ *   GET    /admin/announcements
+ *   POST   /admin/announcements
+ *   GET    /admin/bot-config
+ *   PATCH  /admin/bot-config
+ */
 export async function adminRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/admin/guilds', { preHandler: [requireStaff] }, async (request, reply) => {

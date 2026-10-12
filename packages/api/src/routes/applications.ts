@@ -66,6 +66,19 @@ async function writeData<T>(guildId: string, key: string, value: T): Promise<voi
   });
 }
 
+/**
+ * The staff-applications addon: application forms, submissions and review.
+ *
+ * Routes:
+ *   GET    /guilds/:guildId/applications/forms
+ *   POST   /guilds/:guildId/applications/forms
+ *   PATCH  /guilds/:guildId/applications/forms/:formId
+ *   DELETE /guilds/:guildId/applications/forms/:formId
+ *   POST   /guilds/:guildId/applications/forms/:formId/fields
+ *   DELETE /guilds/:guildId/applications/forms/:formId/fields/:fieldId
+ *   GET    /guilds/:guildId/applications/submissions
+ *   POST   /guilds/:guildId/applications/submissions/:submissionId/review
+ */
 export async function applicationRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/guilds/:guildId/applications/forms', { preHandler: [requireGuildAdmin] }, async (request, reply) => {

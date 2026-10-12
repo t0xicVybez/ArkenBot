@@ -18,6 +18,18 @@ function safeRedirect(target: unknown): string {
   return target;
 }
 
+/**
+ * Discord OAuth login, logout and session management.
+ *
+ * Routes:
+ *   GET    /auth/login
+ *   GET    /auth/callback
+ *   GET    /auth/me
+ *   POST   /auth/logout
+ *   POST   /auth/logout-all
+ *   GET    /auth/sessions
+ *   DELETE /auth/sessions/:id
+ */
 export async function authRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/auth/login', async (request, reply) => {

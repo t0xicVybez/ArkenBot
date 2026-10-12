@@ -39,6 +39,20 @@ const DEFAULTS = {
   lotteryEnabled: false, lotteryTicketPrice: 100, lotteryChannelId: null,
 };
 
+/**
+ * Economy configuration and balance administration.
+ *
+ * Routes:
+ *   GET    /guilds/:guildId/economy/config
+ *   PATCH  /guilds/:guildId/economy/config
+ *   GET    /guilds/:guildId/economy/shop
+ *   POST   /guilds/:guildId/economy/shop
+ *   PATCH  /guilds/:guildId/economy/shop/:itemId
+ *   DELETE /guilds/:guildId/economy/shop/:itemId
+ *   GET    /guilds/:guildId/economy/income-roles
+ *   PUT    /guilds/:guildId/economy/income-roles
+ *   DELETE /guilds/:guildId/economy/income-roles/:roleId
+ */
 export async function economyRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/guilds/:guildId/economy/config', { preHandler: [requireGuildAdmin] }, async (request, reply) => {

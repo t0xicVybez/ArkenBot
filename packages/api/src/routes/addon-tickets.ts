@@ -119,6 +119,38 @@ async function writeData<T>(guildId: string, key: string, value: T): Promise<voi
   });
 }
 
+/**
+ * Data API for the tickets addon — the dashboard reads/writes tickets, messages, panels, config and canned responses here (tickets/messages live in their own relational tables).
+ *
+ * Routes:
+ *   GET    /addons/tickets/:guildId/panels
+ *   POST   /addons/tickets/:guildId/panels
+ *   PATCH  /addons/tickets/:guildId/panels/:panelId
+ *   DELETE /addons/tickets/:guildId/panels/:panelId
+ *   GET    /addons/tickets/:guildId/tickets
+ *   GET    /addons/tickets/:guildId/tickets/:ticketId
+ *   GET    /addons/tickets/:guildId/tickets/:ticketId/transcript
+ *   DELETE /addons/tickets/:guildId/tickets/:ticketId
+ *   POST   /addons/tickets/:guildId/tickets/:ticketId/reopen
+ *   POST   /addons/tickets/:guildId/tickets/bulk-close
+ *   POST   /addons/tickets/:guildId/tickets/:ticketId/claim
+ *   POST   /addons/tickets/:guildId/tickets/:ticketId/unclaim
+ *   POST   /addons/tickets/:guildId/tickets/:ticketId/transfer
+ *   PATCH  /addons/tickets/:guildId/tickets/:ticketId/priority
+ *   POST   /addons/tickets/:guildId/tickets/:ticketId/tags
+ *   DELETE /addons/tickets/:guildId/tickets/:ticketId/tags/:tag
+ *   POST   /addons/tickets/:guildId/tickets/:ticketId/reply
+ *   POST   /addons/tickets/:guildId/tickets/:ticketId/notes
+ *   GET    /addons/tickets/:guildId/stats
+ *   GET    /addons/tickets/:guildId/stats/timeseries
+ *   GET    /addons/tickets/:guildId/config
+ *   GET    /addons/tickets/:guildId/tickets/export
+ *   PATCH  /addons/tickets/:guildId/config
+ *   GET    /addons/tickets/:guildId/canned-responses
+ *   POST   /addons/tickets/:guildId/canned-responses
+ *   PATCH  /addons/tickets/:guildId/canned-responses/:responseId
+ *   DELETE /addons/tickets/:guildId/canned-responses/:responseId
+ */
 export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/addons/tickets/:guildId/panels', { preHandler: [requireGuildAdmin] }, async (request, reply) => {

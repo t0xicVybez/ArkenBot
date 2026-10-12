@@ -70,6 +70,15 @@ const ConfigSchema = z.object({
   announceMessage: z.string().max(1000).optional(),
 }).strict();
 
+/**
+ * Webhook that receives top.gg vote notifications.
+ *
+ * Routes:
+ *   POST   /topgg/webhook
+ *   GET    /guilds/:guildId/topgg
+ *   PATCH  /guilds/:guildId/topgg
+ *   GET    /guilds/:guildId/topgg/leaderboard
+ */
 export async function topggRoutes(server: FastifyInstance): Promise<void> {
 
   server.addContentTypeParser('application/json', { parseAs: 'string' }, (req, body, done) => {

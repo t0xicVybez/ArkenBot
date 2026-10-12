@@ -54,6 +54,12 @@ function channelPerms(base: bigint, isAdmin: boolean, ch: Channel, guildId: stri
   return perms;
 }
 
+/**
+ * Report which permissions the bot is missing in a guild, so admins can fix them.
+ *
+ * Routes:
+ *   GET    /guilds/:guildId/permission-health
+ */
 export async function permissionHealthRoutes(server: FastifyInstance): Promise<void> {
   server.get('/guilds/:guildId/permission-health', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };

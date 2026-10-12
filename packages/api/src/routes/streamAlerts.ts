@@ -7,6 +7,15 @@ import { resolveChannelId, ensureSubscription, removeSubscriptionIfUnused } from
 
 const YOUTUBE_ALERTS_PER_GUILD = parseInt(process.env.YOUTUBE_ALERTS_PER_GUILD ?? '25', 10);
 
+/**
+ * Configure stream/feed alerts (Twitch, YouTube, Kick, Reddit, RSS).
+ *
+ * Routes:
+ *   GET    /guilds/:guildId/stream-alerts
+ *   POST   /guilds/:guildId/stream-alerts
+ *   PATCH  /guilds/:guildId/stream-alerts/:id
+ *   DELETE /guilds/:guildId/stream-alerts/:id
+ */
 export async function streamAlertRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/guilds/:guildId/stream-alerts', { preHandler: [requireGuildAdmin] }, async (request, reply) => {

@@ -10,6 +10,40 @@ import {
   normalizeEmoji,
 } from './settings.schemas.js';
 
+/**
+ * The main guild-settings read/update API — the heart of the dashboard. New fields must be added here, in the Prisma schema, and in the shared type (see CLAUDE.md).
+ *
+ * Routes:
+ *   GET    /guilds/:guildId/settings
+ *   PATCH  /guilds/:guildId/settings
+ *   GET    /guilds/:guildId/settings/automod
+ *   PATCH  /guilds/:guildId/settings/automod
+ *   GET    /guilds/:guildId/settings/welcome
+ *   PATCH  /guilds/:guildId/settings/welcome
+ *   POST   /guilds/:guildId/settings/welcome/test
+ *   GET    /guilds/:guildId/settings/announcements
+ *   PATCH  /guilds/:guildId/settings/announcements
+ *   GET    /guilds/:guildId/reaction-roles
+ *   POST   /guilds/:guildId/reaction-roles
+ *   DELETE /guilds/:guildId/reaction-roles/:id
+ *   GET    /guilds/:guildId/reaction-roles/panels
+ *   POST   /guilds/:guildId/reaction-roles/panels
+ *   PATCH  /guilds/:guildId/reaction-roles/panels/:panelId
+ *   DELETE /guilds/:guildId/reaction-roles/panels/:panelId
+ *   POST   /guilds/:guildId/reaction-roles/panels/:panelId/roles
+ *   DELETE /guilds/:guildId/reaction-roles/panels/:panelId/roles/:roleId
+ *   GET    /guilds/:guildId/warning-escalation
+ *   PUT    /guilds/:guildId/warning-escalation
+ *   GET    /guilds/:guildId/temp-voice/triggers
+ *   POST   /guilds/:guildId/temp-voice/triggers
+ *   DELETE /guilds/:guildId/temp-voice/triggers/:channelId
+ *   GET    /guilds/:guildId/anti-nuke/config
+ *   PATCH  /guilds/:guildId/anti-nuke/config
+ *   GET    /guilds/:guildId/verification/config
+ *   PATCH  /guilds/:guildId/verification/config
+ *   GET    /guilds/:guildId/forum-management/config
+ *   PATCH  /guilds/:guildId/forum-management/config
+ */
 export async function settingsRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/guilds/:guildId/settings', { preHandler: [requireGuildAdmin] }, async (request, reply) => {

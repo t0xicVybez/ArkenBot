@@ -17,6 +17,13 @@ function clean<T extends Record<string, any>>(row: T, extraStrip: string[] = [])
   return out;
 }
 
+/**
+ * Export a guild's configuration and import it into another.
+ *
+ * Routes:
+ *   GET    /guilds/:guildId/config-export
+ *   POST   /guilds/:guildId/config-import
+ */
 export async function configTransferRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/guilds/:guildId/config-export', { preHandler: [requireGuildAdmin] }, async (request, reply) => {

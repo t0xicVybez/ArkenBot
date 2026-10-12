@@ -22,6 +22,39 @@ function cleanDays(days: unknown): number[] {
   return [...new Set(days.map(Number).filter((n) => Number.isInteger(n) && n >= 0 && n <= 6))].sort();
 }
 
+/**
+ * Feature overview/flags shown on the dashboard.
+ *
+ * Routes:
+ *   GET    /guilds/:guildId/commands/available
+ *   GET    /guilds/:guildId/commands/disabled
+ *   POST   /guilds/:guildId/commands/disabled
+ *   DELETE /guilds/:guildId/commands/disabled/:commandName
+ *   GET    /guilds/:guildId/stats-channels
+ *   POST   /guilds/:guildId/stats-channels
+ *   DELETE /guilds/:guildId/stats-channels/:id
+ *   GET    /guilds/:guildId/birthdays/config
+ *   PATCH  /guilds/:guildId/birthdays/config
+ *   GET    /guilds/:guildId/birthdays
+ *   POST   /guilds/:guildId/birthdays
+ *   DELETE /guilds/:guildId/birthdays/:userId
+ *   GET    /guilds/:guildId/polls
+ *   POST   /guilds/:guildId/polls
+ *   PATCH  /guilds/:guildId/polls/:pollId
+ *   POST   /guilds/:guildId/polls/:pollId/vote
+ *   DELETE /guilds/:guildId/polls/:pollId
+ *   GET    /guilds/:guildId/scheduled-messages
+ *   POST   /guilds/:guildId/scheduled-messages
+ *   PATCH  /guilds/:guildId/scheduled-messages/:id
+ *   DELETE /guilds/:guildId/scheduled-messages/:id
+ *   GET    /guilds/:guildId/slowmode
+ *   POST   /guilds/:guildId/slowmode
+ *   PATCH  /guilds/:guildId/slowmode/:id
+ *   DELETE /guilds/:guildId/slowmode/:id
+ *   GET    /guilds/:guildId/activity
+ *   DELETE /guilds/:guildId/leaderboard
+ *   GET    /guilds/:guildId/members
+ */
 export async function featureRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/guilds/:guildId/commands/available', { preHandler: [requireGuildAdmin] }, async (request, reply) => {

@@ -2,6 +2,13 @@ import type { FastifyInstance } from 'fastify';
 import { requireGuildAdmin } from '../middleware/auth.js';
 import { prisma } from '../database.js';
 
+/**
+ * Reputation-system data and leaderboards.
+ *
+ * Routes:
+ *   GET    /guilds/:guildId/reputation/top
+ *   GET    /guilds/:guildId/reputation/:userId
+ */
 export async function reputationRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/guilds/:guildId/reputation/top', { preHandler: [requireGuildAdmin] }, async (request, reply) => {

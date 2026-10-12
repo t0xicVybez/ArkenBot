@@ -10,6 +10,14 @@ async function bustCache(guildId: string) {
   await redis.del(CACHE_KEY(guildId));
 }
 
+/**
+ * Configure which roles members may self-assign.
+ *
+ * Routes:
+ *   GET    /guilds/:guildId/self-roles
+ *   POST   /guilds/:guildId/self-roles
+ *   DELETE /guilds/:guildId/self-roles/:id
+ */
 export async function selfRoleRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/guilds/:guildId/self-roles', { preHandler: [requireGuildAdmin] }, async (request, reply) => {

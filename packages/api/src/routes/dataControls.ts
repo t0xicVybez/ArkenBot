@@ -3,6 +3,14 @@ import { requireAuth, requireGuildAdmin } from '../middleware/auth.js';
 import { prisma } from '../database.js';
 import { pub } from '../redis.js';
 
+/**
+ * Privacy controls — export or delete a user's/guild's stored data.
+ *
+ * Routes:
+ *   DELETE /guilds/:guildId/data
+ *   GET    /me/data-export
+ *   DELETE /me/data
+ */
 export async function dataControlsRoutes(server: FastifyInstance): Promise<void> {
 
   server.delete('/guilds/:guildId/data', { preHandler: [requireGuildAdmin] }, async (request, reply) => {

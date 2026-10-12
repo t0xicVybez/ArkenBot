@@ -4,6 +4,14 @@ import { requireGuildAdmin } from '../middleware/auth.js';
 import { parse } from '../utils/validate.js';
 import { prisma } from '../database.js';
 
+/**
+ * Starboard configuration.
+ *
+ * Routes:
+ *   GET    /guilds/:guildId/starboard/config
+ *   PATCH  /guilds/:guildId/starboard/config
+ *   GET    /guilds/:guildId/starboard/entries
+ */
 export async function starboardRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/guilds/:guildId/starboard/config', { preHandler: [requireGuildAdmin] }, async (request, reply) => {

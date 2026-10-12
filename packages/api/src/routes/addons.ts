@@ -6,6 +6,19 @@ import { parse } from '../utils/validate.js';
 import { prisma } from '../database.js';
 import { pub } from '../redis.js';
 
+/**
+ * Install, enable/disable and configure addons for a guild.
+ *
+ * Routes:
+ *   GET    /addons
+ *   GET    /guilds/:guildId/addons
+ *   POST   /guilds/:guildId/addons/:addonId
+ *   DELETE /guilds/:guildId/addons/:addonId
+ *   GET    /guilds/:guildId/addons/:addonId/settings
+ *   PATCH  /guilds/:guildId/addons/:addonId/settings
+ *   POST   /admin/addons
+ *   PATCH  /admin/addons/:id
+ */
 export async function addonRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/addons', async (request, reply) => {

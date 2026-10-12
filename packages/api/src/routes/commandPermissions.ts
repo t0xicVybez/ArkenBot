@@ -4,6 +4,14 @@ import { z } from 'zod';
 import { requireGuildAdmin } from '../middleware/auth.js';
 import { prisma } from '../database.js';
 
+/**
+ * Per-role command allow/deny rules and disabled-command toggles.
+ *
+ * Routes:
+ *   GET    /guilds/:guildId/command-permissions
+ *   POST   /guilds/:guildId/command-permissions
+ *   DELETE /guilds/:guildId/command-permissions/:id
+ */
 export async function commandPermissionRoutes(server: FastifyInstance): Promise<void> {
   server.get('/guilds/:guildId/command-permissions', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };

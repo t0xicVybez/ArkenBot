@@ -9,6 +9,13 @@ const PatchSchema = z.object({
   botAvatarUrl: z.string().nullable().optional(),
 }).strict();
 
+/**
+ * Per-guild dashboard personalization (branding/theme).
+ *
+ * Routes:
+ *   GET    /guilds/:guildId/personalization
+ *   PATCH  /guilds/:guildId/personalization
+ */
 export async function personalizationRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/guilds/:guildId/personalization', { preHandler: [requireGuildAdmin] }, async (request, reply) => {

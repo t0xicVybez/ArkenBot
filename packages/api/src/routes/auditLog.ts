@@ -2,6 +2,12 @@ import type { FastifyInstance } from 'fastify';
 import { requireGuildAdmin } from '../middleware/auth.js';
 import { prisma } from '../database.js';
 
+/**
+ * Read a guild's moderation/audit history for the dashboard.
+ *
+ * Routes:
+ *   GET    /guilds/:guildId/audit-log
+ */
 export async function auditLogRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/guilds/:guildId/audit-log', { preHandler: [requireGuildAdmin] }, async (request, reply) => {

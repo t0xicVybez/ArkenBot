@@ -4,6 +4,15 @@ import { requireGuildAdmin } from '../middleware/auth.js';
 import { parse } from '../utils/validate.js';
 import { prisma } from '../database.js';
 
+/**
+ * Suggestion-box configuration and staff management of submissions.
+ *
+ * Routes:
+ *   GET    /guilds/:guildId/suggestions/config
+ *   PATCH  /guilds/:guildId/suggestions/config
+ *   GET    /guilds/:guildId/suggestions
+ *   PATCH  /guilds/:guildId/suggestions/:id
+ */
 export async function suggestionRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/guilds/:guildId/suggestions/config', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
