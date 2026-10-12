@@ -37,7 +37,7 @@ const command: BotCommand = {
   userPermissions: [PermissionFlagsBits.ModerateMembers],
   botPermissions: [PermissionFlagsBits.ModerateMembers],
 
-  async execute(interaction: ChatInputCommandInteraction, client: BotClient) {
+  async execute(interaction: ChatInputCommandInteraction, _client: BotClient) {
     await interaction.deferReply();
     const loc = await resolveUserLocale(interaction);
 

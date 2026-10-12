@@ -26,7 +26,7 @@ const command: BotCommand = {
   category: 'music',
   botPermissions: [PermissionFlagsBits.Connect, PermissionFlagsBits.Speak],
 
-  async execute(interaction: ChatInputCommandInteraction, client: BotClient) {
+  async execute(interaction: ChatInputCommandInteraction, _client: BotClient) {
     await interaction.deferReply();
     const loc = await resolveUserLocale(interaction);
 

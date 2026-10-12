@@ -174,7 +174,7 @@ export class BanNetworkModule {
     if (action === 'ban') {
       try {
         await interaction.guild.members.ban(userId, { reason: t('banNetwork.banByStaff', loc, { mod: interaction.user.tag }) });
-      } catch (e) {
+      } catch {
         await interaction.reply({ content: t('banNetwork.banFailed', loc), flags: MessageFlags.Ephemeral });
         return;
       }

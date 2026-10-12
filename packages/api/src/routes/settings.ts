@@ -10,22 +10,6 @@ import {
   normalizeEmoji,
 } from './settings.schemas.js';
 
-/** Helper: read guild extended JSON, merge a key, and upsert. Invalidates Redis cache. */
-async function patchExtended(guildId: string, key: string, value: unknown): Promise<Record<string, unknown>> {
-  const settings = await prisma.guildSettings.findUnique({ where: { guildId }, select: { extended: true } });
-  const extended = { ...((settings?.extended ?? {}) as Record<string, unknown>), [key]: value };
-
-  await prisma.guildSettings.upsert({
-    where: { guildId },
-    update: { extended: extended as import('@prisma/client').Prisma.InputJsonValue },
-    create: { guildId, extended: extended as import('@prisma/client').Prisma.InputJsonValue },
-  });
-
-  await pub.publish('cache:invalidate:settings', guildId);
-
-  return extended;
-}
-
 export async function settingsRoutes(server: FastifyInstance): Promise<void> {
   // GET /guilds/:guildId/settings
   server.get('/guilds/:guildId/settings', { preHandler: [requireGuildAdmin] }, async (request, reply) => {

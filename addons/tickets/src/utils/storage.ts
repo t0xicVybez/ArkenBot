@@ -14,15 +14,9 @@ import {
 // ─── Storage Keys ─────────────────────────────────────────────────────────────
 // All keys are per-guild unless noted.
 const KEY_PANELS = 'panels';
-const KEY_TICKETS = 'tickets';
 const KEY_COUNTER = 'counter';
 const KEY_CONFIG = 'config';
 const KEY_CANNED = 'canned-responses';
-
-/** Messages stored globally (channelId is globally unique in Discord) */
-function msgKey(channelId: string): string {
-  return `msgs:${channelId}`;
-}
 
 // ─── Panels ───────────────────────────────────────────────────────────────────
 

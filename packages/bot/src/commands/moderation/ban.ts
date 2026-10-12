@@ -200,7 +200,7 @@ const command: BotCommand = {
         duration: durationSeconds,
         guildId: interaction.guild.id,
       });
-    } catch (err) {
+    } catch {
       await interaction.editReply({
         embeds: [errorEmbed('Failed', 'I could not ban that user. Check my permissions and role hierarchy.')],
       });

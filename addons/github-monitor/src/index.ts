@@ -435,7 +435,7 @@ export default defineAddon({
       ctx.logger.info('GitHub Monitor: unloaded, poll loop stopped');
     },
 
-    async onSettingsUpdate(ctx, guildId, settings) {
+    async onSettingsUpdate(ctx, guildId, _settings) {
       ctx.logger.info(`GitHub Monitor: settings updated for guild ${guildId} — next poll will apply new config`);
     },
   },

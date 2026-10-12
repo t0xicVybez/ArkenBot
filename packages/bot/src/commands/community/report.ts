@@ -29,7 +29,7 @@ function buildReportEmbed(report: {
   reason: string; status: string;
   reviewerTag?: string | null; staffNote?: string | null;
   createdAt: Date;
-}, loc: string, disabled = false): EmbedBuilder {
+}, loc: string, _disabled = false): EmbedBuilder {
   const statusColors: Record<string, number> = {
     pending: 0xf1c40f,
     dismissed: 0x95a5a6,

@@ -30,7 +30,7 @@ export async function beatHeartbeat(client: BotClient): Promise<void> {
   } catch { /* redis hiccup — next beat will recover */ }
 }
 
-export async function runGuildPurgeSweep(client: BotClient): Promise<void> {
+export async function runGuildPurgeSweep(_client: BotClient): Promise<void> {
   try {
     const { purgeGuildData, PURGE_GRACE_HOURS } = await import('../../utils/guildPurge.js');
     const cutoff = new Date(Date.now() - PURGE_GRACE_HOURS * 60 * 60 * 1000);
