@@ -1,4 +1,6 @@
-
+/**
+ * The locales module of the translate addon.
+ */
 export const locales = {
   "en-US": {
     "unavailable": "🌐 Translation is not available right now. An administrator needs to configure LibreTranslate.",

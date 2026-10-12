@@ -1,4 +1,6 @@
-
+/**
+ * ticketsRepo helpers for the tickets addon.
+ */
 import type { Ticket, TicketMessage } from '../types.js';
 import { getTicketDb } from './db.js';
 

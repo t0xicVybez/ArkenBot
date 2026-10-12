@@ -1,4 +1,6 @@
-
+/**
+ * telnet — part of the gameadmin addon's rcon layer.
+ */
 import { Socket } from 'net';
 import { RconError } from './source.js';
 

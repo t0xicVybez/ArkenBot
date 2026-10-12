@@ -1,4 +1,6 @@
-
+/**
+ * Analyzer barrel for the code-review addon.
+ */
 import prettier from 'prettier';
 import { analyzeJavaScript } from './rules/javascript.js';
 import { analyzePython } from './rules/python.js';

@@ -1,3 +1,6 @@
+/**
+ * The /apply command for the applications addon.
+ */
 import {
   SlashCommandBuilder,
   ModalBuilder,

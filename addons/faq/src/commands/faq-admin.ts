@@ -1,3 +1,6 @@
+/**
+ * The /faq-admin command for the faq addon.
+ */
 import {
   SlashCommandBuilder,
   PermissionFlagsBits,

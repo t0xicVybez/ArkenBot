@@ -1,4 +1,6 @@
-
+/**
+ * The games module of the gameadmin addon.
+ */
 import { sourceRconCommand } from './rcon/source.js';
 import { webRconCommand } from './rcon/webrcon.js';
 import { telnetCommand } from './rcon/telnet.js';

@@ -1,4 +1,6 @@
-
+/**
+ * The locales module of the faq addon.
+ */
 export const locales = {
   "en-US": {
     "guildOnly": "This command can only be used in a server.",

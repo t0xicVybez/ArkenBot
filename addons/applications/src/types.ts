@@ -1,3 +1,6 @@
+/**
+ * Type definitions for the applications addon.
+ */
 export interface ApplicationForm {
   id: string;
   guildId: string;

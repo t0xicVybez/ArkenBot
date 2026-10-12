@@ -1,3 +1,6 @@
+/**
+ * The support-tickets addon — panels, per-ticket channels, claiming, AI triage, canned responses, transcripts and ratings. Tickets and their messages live in their own relational tables.
+ */
 import { defineAddon } from '@arkenbot/addon-sdk';
 import { setTicketDb, type TicketDb } from './utils/db.js';
 import type { AddonContext } from '@arkenbot/addon-sdk';

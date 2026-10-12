@@ -1,3 +1,6 @@
+/**
+ * embeds helpers for the tickets addon.
+ */
 import {
   EmbedBuilder,
   ActionRowBuilder,

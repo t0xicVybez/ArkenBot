@@ -1,4 +1,6 @@
-
+/**
+ * embed helpers for the code-review addon.
+ */
 import { EmbedBuilder } from 'discord.js';
 import type { AnalysisResult } from '../analyzer/types.js';
 

@@ -1,3 +1,6 @@
+/**
+ * The /confess command for the confessions addon.
+ */
 import {
   SlashCommandBuilder,
   ModalBuilder,

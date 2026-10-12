@@ -1,5 +1,6 @@
-
-
+/**
+ * Type definitions for the gameservers addon.
+ */
 export interface SavedServer {
   id: string;
   name: string;

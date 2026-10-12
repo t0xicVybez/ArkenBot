@@ -1,3 +1,6 @@
+/**
+ * FlagReact event handling for the translate addon.
+ */
 import { EmbedBuilder, type MessageReaction, type PartialMessageReaction, type User, type PartialUser, type TextBasedChannel } from 'discord.js';
 import type { AddonContext } from '@arkenbot/addon-sdk';
 import { translate, isTranslateAvailable, langName, FLAG_TO_LANG } from '../service.js';

@@ -1,4 +1,6 @@
-
+/**
+ * python — part of the code-review addon's analyzer/rules layer.
+ */
 import { parser as pythonParser } from '@lezer/python';
 import type { Issue } from '../types.js';
 

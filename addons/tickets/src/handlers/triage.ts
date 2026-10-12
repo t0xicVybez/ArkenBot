@@ -1,4 +1,6 @@
-
+/**
+ * Triage handling for the tickets addon.
+ */
 import {
   MessageFlags,
   EmbedBuilder,

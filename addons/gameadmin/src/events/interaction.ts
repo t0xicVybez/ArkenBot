@@ -1,4 +1,6 @@
-
+/**
+ * Interaction event handling for the gameadmin addon.
+ */
 import {
   MessageFlags, PermissionFlagsBits,
   type Interaction, type ButtonInteraction, type ModalSubmitInteraction,

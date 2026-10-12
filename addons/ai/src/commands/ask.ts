@@ -1,3 +1,6 @@
+/**
+ * The /ask command for the ai addon.
+ */
 import {
   SlashCommandBuilder,
   EmbedBuilder,

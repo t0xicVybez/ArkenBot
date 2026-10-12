@@ -1,4 +1,6 @@
-
+/**
+ * The locales module of the gameadmin addon.
+ */
 export const locales = {
   "en-US": {
     "gameadmin": {

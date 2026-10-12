@@ -1,4 +1,6 @@
-
+/**
+ * The locales module of the gameservers addon.
+ */
 export const locales = {
   "en-US": {
     "graphTitle": "📈 Player History — {name}",

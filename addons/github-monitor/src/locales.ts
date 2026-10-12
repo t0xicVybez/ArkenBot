@@ -1,4 +1,6 @@
-
+/**
+ * The locales module of the github-monitor addon.
+ */
 export const locales = {
   "en-US": {
     "commitTitle": "New commit: {title}",

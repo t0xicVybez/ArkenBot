@@ -1,3 +1,6 @@
+/**
+ * storage helpers for the tickets addon.
+ */
 import type { AddonStorage } from '@arkenbot/addon-sdk';
 import type { Ticket, TicketPanel, TicketMessage, GuildTicketConfig, CannedResponse } from '../types.js';
 import {

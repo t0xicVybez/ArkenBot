@@ -1,3 +1,6 @@
+/**
+ * time helpers for the tickets addon.
+ */
 import type { BusinessHours } from '../types.js';
 
 export function isWithinBusinessHours(bh: BusinessHours, nowMs: number): boolean {

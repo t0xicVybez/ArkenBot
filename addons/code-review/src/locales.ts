@@ -1,4 +1,6 @@
-
+/**
+ * The locales module of the code-review addon.
+ */
 export const locales = {
   "en-US": {
     "modalTitle": "Code Review",

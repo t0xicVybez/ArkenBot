@@ -1,4 +1,6 @@
-
+/**
+ * Open handling for the tickets addon.
+ */
 import {
   MessageFlags,
   ModalBuilder,

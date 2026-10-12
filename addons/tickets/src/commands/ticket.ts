@@ -1,3 +1,6 @@
+/**
+ * The /ticket command for the tickets addon.
+ */
 import {
   MessageFlags,
   SlashCommandBuilder,

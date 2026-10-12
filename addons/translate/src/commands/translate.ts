@@ -1,3 +1,6 @@
+/**
+ * The /translate command for the translate addon.
+ */
 import {
   SlashCommandBuilder, EmbedBuilder, MessageFlags,
   type ChatInputCommandInteraction, type ContextMenuCommandInteraction,

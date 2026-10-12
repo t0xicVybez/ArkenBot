@@ -1,4 +1,6 @@
-
+/**
+ * The game-servers addon — connects game servers over RCON and surfaces their status and player counts in Discord.
+ */
 import { defineAddon } from '@arkenbot/addon-sdk';
 import type { AddonContext } from '@arkenbot/addon-sdk';
 import { MessageFlags, type AutocompleteInteraction, type Interaction, type ModalSubmitInteraction } from 'discord.js';

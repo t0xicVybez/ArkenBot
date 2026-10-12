@@ -1,3 +1,6 @@
+/**
+ * embeds helpers for the applications addon.
+ */
 import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import type { ApplicationForm, ApplicationSubmission } from '../types.js';
 

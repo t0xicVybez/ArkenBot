@@ -1,4 +1,6 @@
-
+/**
+ * The code-review addon — automated, language-aware review of code (rule analysis) for linked repositories and pull requests.
+ */
 import { defineAddon } from '@arkenbot/addon-sdk';
 import type { AddonContext } from '@arkenbot/addon-sdk';
 import {

@@ -1,4 +1,6 @@
-
+/**
+ * The query module of the gameservers addon.
+ */
 import { GameQuery, type Result } from '@t0xicvybez/gamequery';
 import { status as mcJavaStatus } from 'minecraft-server-util';
 import type { QueryAuth, QueryResult, ServerStatus } from './types.js';

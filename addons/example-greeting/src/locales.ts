@@ -1,4 +1,6 @@
-
+/**
+ * The locales module of the example-greeting addon.
+ */
 export const locales = {
   "en-US": {
     "footerGreetedBy": "Greeted by {tag}",

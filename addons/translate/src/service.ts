@@ -1,5 +1,6 @@
-
-
+/**
+ * The service module of the translate addon.
+ */
 const LT_URL = (process.env.LIBRETRANSLATE_URL || 'http://localhost:5000').replace(/\/$/, '');
 const LT_KEY = process.env.LIBRETRANSLATE_API_KEY || '';
 const TIMEOUT_MS = parseInt(process.env.LIBRETRANSLATE_TIMEOUT_MS || '20000', 10);

@@ -1,3 +1,6 @@
+/**
+ * storage helpers for the gameservers addon.
+ */
 import { randomUUID } from 'crypto';
 import type { AddonStorage } from '@arkenbot/addon-sdk';
 import type { SavedServer } from '../types.js';

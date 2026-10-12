@@ -1,3 +1,6 @@
+/**
+ * storage helpers for the faq addon.
+ */
 import type { AddonStorage } from '@arkenbot/addon-sdk';
 import type { FaqEntry } from '../types.js';
 

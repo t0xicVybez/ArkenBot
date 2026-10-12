@@ -1,3 +1,6 @@
+/**
+ * Interaction event handling for the tickets addon.
+ */
 import {
   MessageFlags,
   type Interaction,

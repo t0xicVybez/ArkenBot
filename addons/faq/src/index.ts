@@ -1,3 +1,6 @@
+/**
+ * The FAQ addon — a searchable knowledge base. Admins store Q&A entries; members find answers instantly with /faq and autocomplete. No AI or external API required.
+ */
 import { defineAddon } from '@arkenbot/addon-sdk';
 import type { AddonContext } from '@arkenbot/addon-sdk';
 import type { AutocompleteInteraction, Interaction } from 'discord.js';

@@ -1,3 +1,6 @@
+/**
+ * The /translateCtx command for the translate addon.
+ */
 import {
   ContextMenuCommandBuilder, ApplicationCommandType, EmbedBuilder, MessageFlags,
   type ChatInputCommandInteraction, type ContextMenuCommandInteraction,

@@ -1,5 +1,6 @@
-
-
+/**
+ * Type definitions for the code-review addon.
+ */
 export interface Issue {
   severity: 'error' | 'warning' | 'info';
   message: string;

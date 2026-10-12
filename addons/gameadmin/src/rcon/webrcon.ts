@@ -1,4 +1,6 @@
-
+/**
+ * webrcon — part of the gameadmin addon's rcon layer.
+ */
 import WebSocket from 'ws';
 import { RconError } from './source.js';
 

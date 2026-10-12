@@ -1,4 +1,6 @@
-
+/**
+ * The locales module of the example-economy addon.
+ */
 export const locales = {
   'en-US': {
     balanceTitle: '{emoji} {name} Balance', balanceDesc: '**{tag}** has **{balance} {name}** {emoji}',

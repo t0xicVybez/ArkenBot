@@ -1,3 +1,6 @@
+/**
+ * The translation addon — /translate plus right-click and flag-reaction translation, via a self-hosted LibreTranslate instance.
+ */
 import { defineAddon, type AddonContext } from '@arkenbot/addon-sdk';
 import type { MessageReaction, PartialMessageReaction, User, PartialUser } from 'discord.js';
 import translateCommand from './commands/translate.js';

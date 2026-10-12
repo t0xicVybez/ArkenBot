@@ -1,3 +1,6 @@
+/**
+ * The confessions addon — an anonymous confessions board: members submit privately via /confess, with optional staff approval, reply threads, per-user cooldowns, a blocklist, and staff-only author lookup for abuse handling.
+ */
 import { defineAddon } from '@arkenbot/addon-sdk';
 import type { AddonContext } from '@arkenbot/addon-sdk';
 import type { Interaction } from 'discord.js';

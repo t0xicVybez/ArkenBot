@@ -1,4 +1,6 @@
-
+/**
+ * Interaction event handling for the confessions addon.
+ */
 import {
   PermissionFlagsBits,
   MessageFlags,

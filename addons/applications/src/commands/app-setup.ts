@@ -1,3 +1,6 @@
+/**
+ * The /app-setup command for the applications addon.
+ */
 import {
   SlashCommandBuilder,
   PermissionFlagsBits,

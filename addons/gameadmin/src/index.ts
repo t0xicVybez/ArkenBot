@@ -1,4 +1,6 @@
-
+/**
+ * The game-server admin addon — RCON-based administration of connected game servers (Minecraft, Palworld, …) from Discord.
+ */
 import { defineAddon } from '@arkenbot/addon-sdk';
 import type { AddonContext } from '@arkenbot/addon-sdk';
 import type { Interaction } from 'discord.js';

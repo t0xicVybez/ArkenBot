@@ -1,3 +1,6 @@
+/**
+ * embeds helpers for the confessions addon.
+ */
 import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import type { ConfessionRecord } from '../types.js';
 

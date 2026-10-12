@@ -1,4 +1,6 @@
-
+/**
+ * The panel module of the gameadmin addon.
+ */
 import {
   EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle,
   ModalBuilder, TextInputBuilder, TextInputStyle,

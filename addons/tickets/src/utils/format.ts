@@ -1,5 +1,6 @@
-
-
+/**
+ * format helpers for the tickets addon.
+ */
 export function applyCannedVars(content: string, vars: Record<string, string>): string {
   return content.replace(/\{(\w+)\}/g, (m, k) => vars[String(k).toLowerCase()] ?? m);
 }

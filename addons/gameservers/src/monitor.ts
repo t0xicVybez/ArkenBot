@@ -1,4 +1,6 @@
-
+/**
+ * The monitor module of the gameservers addon.
+ */
 import { EmbedBuilder, type Guild, type TextChannel, type VoiceChannel } from 'discord.js';
 import type { AddonContext, AddonStorage } from '@arkenbot/addon-sdk';
 import { getServers } from './utils/storage.js';

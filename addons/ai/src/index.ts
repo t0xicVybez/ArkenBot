@@ -1,4 +1,6 @@
-
+/**
+ * The AI Assistant addon — adds /ask and /summarize, backed by a language model.
+ */
 import { defineAddon } from '@arkenbot/addon-sdk';
 import type { AddonContext } from '@arkenbot/addon-sdk';
 import { isLLMAvailable } from '@arkenbot/shared';

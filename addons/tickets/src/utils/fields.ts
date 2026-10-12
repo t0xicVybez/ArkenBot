@@ -1,3 +1,6 @@
+/**
+ * fields helpers for the tickets addon.
+ */
 import type { TicketPanel, PanelField } from '../types.js';
 
 export function resolvePanelFields(panel: TicketPanel, buttonId?: string): PanelField[] {

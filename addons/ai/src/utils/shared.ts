@@ -1,5 +1,6 @@
-
-
+/**
+ * shared helpers for the ai addon.
+ */
 export const AI_UNAVAILABLE_MESSAGE =
   '🤖 AI features are not configured on this bot. An administrator needs to set `GROQ_API_KEY`.';
 

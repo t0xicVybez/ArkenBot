@@ -1,5 +1,6 @@
-
-
+/**
+ * db helpers for the tickets addon.
+ */
 export interface TicketDb {
   addonTicket: {
     upsert(args: unknown): Promise<unknown>;

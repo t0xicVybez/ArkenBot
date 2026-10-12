@@ -1,3 +1,6 @@
+/**
+ * The /faq command for the faq addon.
+ */
 import {
   SlashCommandBuilder,
   EmbedBuilder,

@@ -1,4 +1,6 @@
-
+/**
+ * The locales module of the ai addon.
+ */
 export const locales = {
   "en-US": {
     "cooldown": "⏳ Slow down — try again in {seconds}s.",

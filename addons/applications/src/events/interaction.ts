@@ -1,4 +1,6 @@
-
+/**
+ * Interaction event handling for the applications addon.
+ */
 import {
   Events,
   ModalBuilder,

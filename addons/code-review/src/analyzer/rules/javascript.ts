@@ -1,4 +1,6 @@
-
+/**
+ * javascript — part of the code-review addon's analyzer/rules layer.
+ */
 import * as acorn from 'acorn';
 import type { Issue } from '../types.js';
 

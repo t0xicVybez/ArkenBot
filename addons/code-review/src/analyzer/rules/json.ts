@@ -1,4 +1,6 @@
-
+/**
+ * json — part of the code-review addon's analyzer/rules layer.
+ */
 import type { Issue } from '../types.js';
 
 export function analyzeJSON(code: string): Issue[] {

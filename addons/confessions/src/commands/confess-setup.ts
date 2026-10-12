@@ -1,3 +1,6 @@
+/**
+ * The /confess-setup command for the confessions addon.
+ */
 import {
   SlashCommandBuilder,
   PermissionFlagsBits,

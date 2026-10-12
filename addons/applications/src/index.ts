@@ -1,3 +1,6 @@
+/**
+ * The applications addon — configurable application forms with modal collection, a staff review channel, and an accept/deny workflow.
+ */
 import { defineAddon } from '@arkenbot/addon-sdk';
 import type { AddonContext } from '@arkenbot/addon-sdk';
 import { EmbedBuilder, type AutocompleteInteraction, type Interaction, type TextChannel } from 'discord.js';

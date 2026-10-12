@@ -1,4 +1,6 @@
-
+/**
+ * Interaction event handling for the faq addon.
+ */
 import { MessageFlags, type Interaction } from 'discord.js';
 import type { AddonContext } from '@arkenbot/addon-sdk';
 import { findEntry, findByTitle, saveEntry, getEntries, atCapacity, generateId } from '../utils/storage.js';

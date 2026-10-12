@@ -1,3 +1,6 @@
+/**
+ * The storage module of the gameadmin addon.
+ */
 import { randomUUID } from 'crypto';
 import type { AddonStorage } from '@arkenbot/addon-sdk';
 import type { SavedGameServer } from './types.js';

@@ -1,3 +1,6 @@
+/**
+ * Message event handling for the tickets addon.
+ */
 import type { Message } from 'discord.js';
 import type { AddonContext } from '@arkenbot/addon-sdk';
 import type { TicketMessage } from '../types.js';

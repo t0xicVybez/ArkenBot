@@ -1,3 +1,6 @@
+/**
+ * The /triage command for the tickets addon.
+ */
 import {
   SlashCommandBuilder,
   type ChatInputCommandInteraction,

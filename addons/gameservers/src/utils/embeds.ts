@@ -1,3 +1,6 @@
+/**
+ * embeds helpers for the gameservers addon.
+ */
 import { EmbedBuilder } from 'discord.js';
 import type { ServerStatus, SavedServer } from '../types.js';
 import { SUPPORTED_GAMES } from '../query.js';

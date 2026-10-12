@@ -1,4 +1,6 @@
-
+/**
+ * cooldown helpers for the confessions addon.
+ */
 const last = new Map<string, number>();
 const key = (g: string, u: string) => `${g}:${u}`;
 

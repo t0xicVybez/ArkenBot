@@ -1,4 +1,6 @@
-
+/**
+ * Lifecycle handling for the tickets addon.
+ */
 import {
   MessageFlags,
   type ButtonInteraction,

@@ -1,4 +1,6 @@
-
+/**
+ * The locales module of the tickets addon.
+ */
 export const locales = {
   "en-US": {
     "fieldOpenedBy": "Opened by",

@@ -1,4 +1,6 @@
-
+/**
+ * crypto helpers for the gameservers addon.
+ */
 import { createCipheriv, createDecipheriv, randomBytes, scryptSync } from 'crypto';
 
 const ALGORITHM = 'aes-256-gcm';

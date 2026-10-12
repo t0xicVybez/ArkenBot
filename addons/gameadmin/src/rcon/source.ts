@@ -1,4 +1,6 @@
-
+/**
+ * source — part of the gameadmin addon's rcon layer.
+ */
 import { Socket } from 'net';
 
 const SERVERDATA_AUTH = 3;

@@ -1,3 +1,6 @@
+/**
+ * The /gameadmin command for the gameadmin addon.
+ */
 import {
   SlashCommandBuilder,
   PermissionFlagsBits,

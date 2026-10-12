@@ -1,5 +1,6 @@
-
-
+/**
+ * groq — part of the code-review addon's ai layer.
+ */
 const GROQ_ENDPOINT = 'https://api.groq.com/openai/v1/chat/completions';
 const GROQ_MODEL = 'openai/gpt-oss-20b';
 

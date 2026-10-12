@@ -1,3 +1,6 @@
+/**
+ * Type definitions for the tickets addon.
+ */
 export type ButtonColor = 'primary' | 'secondary' | 'success' | 'danger';
 export type TicketStatus = 'open' | 'claimed' | 'closed' | 'waiting';
 export type TicketPriority = 'low' | 'medium' | 'high' | 'urgent';

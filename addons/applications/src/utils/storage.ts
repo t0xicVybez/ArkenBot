@@ -1,3 +1,6 @@
+/**
+ * storage helpers for the applications addon.
+ */
 import type { AddonStorage } from '@arkenbot/addon-sdk';
 import type { ApplicationForm, ApplicationSubmission } from '../types.js';
 

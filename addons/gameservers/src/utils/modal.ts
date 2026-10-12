@@ -1,4 +1,6 @@
-
+/**
+ * modal helpers for the gameservers addon.
+ */
 import { ModalBuilder, TextInputBuilder, TextInputStyle, ActionRowBuilder } from 'discord.js';
 import { PALWORLD_REST_PORT } from '../query.js';
 

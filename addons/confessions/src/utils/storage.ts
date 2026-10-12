@@ -1,3 +1,6 @@
+/**
+ * storage helpers for the confessions addon.
+ */
 import type { AddonStorage } from '@arkenbot/addon-sdk';
 import type { ConfessionConfig, ConfessionRecord } from '../types.js';
 import { DEFAULT_CONFIG } from '../types.js';

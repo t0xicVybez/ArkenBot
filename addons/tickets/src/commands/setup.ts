@@ -1,3 +1,6 @@
+/**
+ * The /setup command for the tickets addon.
+ */
 import {
   MessageFlags,
   SlashCommandBuilder,

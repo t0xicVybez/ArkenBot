@@ -1,3 +1,6 @@
+/**
+ * transcript helpers for the tickets addon.
+ */
 import type { Ticket, TicketPanel, TicketMessage } from '../types.js';
 import type { Translate } from './embeds.js';
 

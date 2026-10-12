@@ -1,4 +1,6 @@
-
+/**
+ * Type definitions for the confessions addon.
+ */
 export interface ConfessionConfig {
 
   channelId?: string;

@@ -1,5 +1,6 @@
-
-
+/**
+ * detect — part of the code-review addon's analyzer layer.
+ */
 interface LangPattern {
   lang: string;
   patterns: RegExp[];

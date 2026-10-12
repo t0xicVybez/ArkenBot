@@ -1,3 +1,6 @@
+/**
+ * embeds helpers for the gameadmin addon.
+ */
 import { EmbedBuilder } from 'discord.js';
 import { GAMES } from '../games.js';
 import type { SavedGameServer } from '../types.js';

@@ -1,4 +1,6 @@
-
+/**
+ * chunks helpers for the code-review addon.
+ */
 import type { ModalSubmitInteraction } from 'discord.js';
 
 const MAX_MSG = 1980;

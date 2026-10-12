@@ -1,4 +1,6 @@
-
+/**
+ * Type definitions for the gameadmin addon.
+ */
 export interface SavedGameServer {
   id: string;
   name: string;

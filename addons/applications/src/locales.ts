@@ -1,4 +1,6 @@
-
+/**
+ * The locales module of the applications addon.
+ */
 export const locales = {
   "en-US": {
     "reviewTitle": "📋 New Application: {name}",

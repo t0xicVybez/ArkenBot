@@ -1,3 +1,6 @@
+/**
+ * The /summarize command for the ai addon.
+ */
 import {
   SlashCommandBuilder,
   EmbedBuilder,

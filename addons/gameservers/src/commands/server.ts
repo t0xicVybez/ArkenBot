@@ -1,3 +1,6 @@
+/**
+ * The /server command for the gameservers addon.
+ */
 import {
   SlashCommandBuilder,
   PermissionFlagsBits,

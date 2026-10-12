@@ -1,3 +1,6 @@
+/**
+ * channel helpers for the tickets addon.
+ */
 import {
   ChannelType,
   PermissionFlagsBits,

@@ -1,4 +1,6 @@
-
+/**
+ * The admin module of the gameadmin addon.
+ */
 import { EmbedBuilder, type Guild, type TextChannel } from 'discord.js';
 import type { AddonContext, AddonStorage } from '@arkenbot/addon-sdk';
 import { GAMES, runGameCommand } from './games.js';
