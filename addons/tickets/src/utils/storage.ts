@@ -1,13 +1,15 @@
 import type { AddonStorage } from '@arkenbot/addon-sdk';
 import type { Ticket, TicketPanel, TicketMessage, GuildTicketConfig, CannedResponse } from '../types.js';
-import { hasTicketDb } from './db.js';
-import { repoSaveTicket, repoAppendMessage, repoDeleteMessages } from './ticketsRepo.js';
+import {
+  repoSaveTicket, repoAppendMessage, repoDeleteMessages,
+  repoGetTickets, repoGetByChannel, repoGetById, repoGetUserOpen, repoGetMessages,
+} from './ticketsRepo.js';
 
-// ── P1.2 migration (dual-write phase) ──────────────────────────────────────────
-// The JSON blob remains the source of truth and is what reads use; ticket and
-// message writes are *also* mirrored to the relational tables (best-effort —
-// a mirror error never fails the authoritative blob write). Reads flip to the
-// tables only after backfill + verification.
+// ── P1.2 (DB-only) ─────────────────────────────────────────────────────────────
+// Tickets and ticket messages live in the relational AddonTicket /
+// AddonTicketMessage tables — the single source of truth. Panels, config,
+// canned responses, and the ticket-number counter remain small KV values in
+// AddonData. The old JSON ticket/message blobs have been migrated out and removed.
 
 // ─── Storage Keys ─────────────────────────────────────────────────────────────
 // All keys are per-guild unless noted.
@@ -61,52 +63,46 @@ export async function deletePanel(
 
 // ─── Tickets ──────────────────────────────────────────────────────────────────
 
-export async function getTickets(storage: AddonStorage, guildId: string): Promise<Ticket[]> {
-  return (await storage.get<Ticket[]>(KEY_TICKETS, guildId)) ?? [];
+/* eslint-disable @typescript-eslint/no-unused-vars */
+// `storage`/`guildId`(where derivable from the ticket) are kept in these
+// signatures so the many call sites don't change; tickets now read/write the DB.
+export async function getTickets(_storage: AddonStorage, guildId: string): Promise<Ticket[]> {
+  return repoGetTickets(guildId);
 }
 
 export async function getTicketByChannel(
-  storage: AddonStorage,
-  guildId: string,
+  _storage: AddonStorage,
+  _guildId: string,
   channelId: string,
 ): Promise<Ticket | undefined> {
-  const tickets = await getTickets(storage, guildId);
-  return tickets.find((t) => t.channelId === channelId);
+  return repoGetByChannel(channelId);
 }
 
 export async function getTicketById(
-  storage: AddonStorage,
-  guildId: string,
+  _storage: AddonStorage,
+  _guildId: string,
   ticketId: string,
 ): Promise<Ticket | undefined> {
-  const tickets = await getTickets(storage, guildId);
-  return tickets.find((t) => t.id === ticketId);
+  return repoGetById(ticketId);
 }
 
 export async function saveTicket(
-  storage: AddonStorage,
-  guildId: string,
+  _storage: AddonStorage,
+  _guildId: string,
   ticket: Ticket,
 ): Promise<void> {
-  await storage.mutate<Ticket[]>(KEY_TICKETS, (cur) => {
-    const tickets = cur ?? [];
-    const idx = tickets.findIndex((t) => t.id === ticket.id);
-    if (idx >= 0) tickets[idx] = ticket;
-    else tickets.push(ticket);
-    return tickets;
-  }, guildId);
-  if (hasTicketDb()) { try { await repoSaveTicket(ticket); } catch { /* dual-write mirror; blob is source of truth */ } }
+  await repoSaveTicket(ticket);
 }
 
 /** Returns the open tickets belonging to a specific user in this guild. */
 export async function getUserOpenTickets(
-  storage: AddonStorage,
+  _storage: AddonStorage,
   guildId: string,
   userId: string,
 ): Promise<Ticket[]> {
-  const tickets = await getTickets(storage, guildId);
-  return tickets.filter((t) => t.userId === userId && t.status !== 'closed');
+  return repoGetUserOpen(guildId, userId);
 }
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 // ─── Counter ──────────────────────────────────────────────────────────────────
 
@@ -152,26 +148,20 @@ export async function saveCannedResponses(storage: AddonStorage, guildId: string
 // ─── Messages (Transcript) ────────────────────────────────────────────────────
 
 export async function getMessages(
-  storage: AddonStorage,
+  _storage: AddonStorage,
   channelId: string,
 ): Promise<TicketMessage[]> {
-  return (await storage.get<TicketMessage[]>(msgKey(channelId))) ?? [];
+  return repoGetMessages(channelId);
 }
 
 export async function appendMessage(
-  storage: AddonStorage,
+  _storage: AddonStorage,
   channelId: string,
   msg: TicketMessage,
 ): Promise<void> {
-  await storage.mutate<TicketMessage[]>(msgKey(channelId), (cur) => {
-    const msgs = cur ?? [];
-    msgs.push(msg);
-    return msgs;
-  });
-  if (hasTicketDb()) { try { await repoAppendMessage(channelId, msg); } catch { /* dual-write mirror */ } }
+  await repoAppendMessage(channelId, msg);
 }
 
-export async function deleteMessages(storage: AddonStorage, channelId: string): Promise<void> {
-  await storage.delete(msgKey(channelId));
-  if (hasTicketDb()) { try { await repoDeleteMessages(channelId); } catch { /* dual-write mirror */ } }
+export async function deleteMessages(_storage: AddonStorage, channelId: string): Promise<void> {
+  await repoDeleteMessages(channelId);
 }

@@ -41,20 +41,46 @@ function ticketToRow(t: Ticket): Record<string, unknown> {
  * longer present for that guild. Mirror is best-effort; a failure never breaks
  * the authoritative blob write.
  */
+/** AddonTicket row → Ticket (inverse of ticketToRow). */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function rowToTicket(r: any): Ticket {
+  const d = (r.data ?? {}) as Record<string, unknown>;
+  return {
+    ...d,
+    id: r.id, number: r.number, panelId: r.panelId, guildId: r.guildId, channelId: r.channelId,
+    userId: r.userId, username: r.username, status: r.status, priority: r.priority,
+    categoryTag: r.categoryTag ?? undefined, buttonId: r.buttonId ?? undefined,
+    claimedBy: r.claimedBy ?? undefined, claimedByTag: r.claimedByTag ?? undefined,
+    closedBy: r.closedBy ?? undefined, closedByTag: r.closedByTag ?? undefined,
+    closedAt: r.closedAt ? r.closedAt.toISOString() : undefined,
+    rating: r.rating ?? undefined, ratingFeedback: r.ratingFeedback ?? undefined,
+    firstResponseAt: r.firstResponseAt ? r.firstResponseAt.toISOString() : undefined,
+    lastActivity: r.lastActivity.toISOString(), createdAt: r.createdAt.toISOString(),
+    tags: (d.tags as string[]) ?? [], notes: (d.notes as Ticket['notes']) ?? [],
+  } as Ticket;
+}
+
+/** Read all tickets for a guild from the relational table (DB-only). */
+async function readTickets(guildId: string): Promise<Ticket[]> {
+  const rows = await prisma.addonTicket.findMany({ where: { guildId } });
+  return rows.map(rowToTicket);
+}
+
+/**
+ * Persist the full ticket set for a guild to the relational table: upsert each
+ * and remove rows no longer present. DB is the single source of truth.
+ */
 async function writeTickets(guildId: string, tickets: Ticket[]): Promise<void> {
-  await writeData(guildId, 'tickets', tickets);
-  try {
-    const ids = tickets.map((t) => t.id);
-    if (ids.length) await prisma.addonTicket.deleteMany({ where: { guildId, id: { notIn: ids } } });
-    else await prisma.addonTicket.deleteMany({ where: { guildId } });
-    for (const t of tickets) {
-      const row = ticketToRow(t);
-      const { id, createdAt, guildId: _g, number, ...mutable } = row;
-      void createdAt; void _g; void number;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await prisma.addonTicket.upsert({ where: { id: id as string }, create: row as any, update: mutable as any });
-    }
-  } catch { /* mirror best-effort; blob is authoritative during migration */ }
+  const ids = tickets.map((t) => t.id);
+  if (ids.length) await prisma.addonTicket.deleteMany({ where: { guildId, id: { notIn: ids } } });
+  else await prisma.addonTicket.deleteMany({ where: { guildId } });
+  for (const t of tickets) {
+    const row = ticketToRow(t);
+    const { id, createdAt, guildId: _g, number, ...mutable } = row;
+    void createdAt; void _g; void number;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await prisma.addonTicket.upsert({ where: { id: id as string }, create: row as any, update: mutable as any });
+  }
 }
 
 /**
@@ -267,7 +293,7 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     const { guildId } = request.params as { guildId: string };
     const { status, priority, panel: panelId, search, page = '1', limit = '25' } = request.query as Record<string, string>;
 
-    let tickets = (await readData<Ticket[]>(guildId, 'tickets')) ?? [];
+    let tickets = await readTickets(guildId);
 
     if (status)  tickets = tickets.filter((t) => t.status === status);
     if (priority) tickets = tickets.filter((t) => t.priority === priority);
@@ -298,7 +324,7 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
   server.get('/addons/tickets/:guildId/tickets/:ticketId', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, ticketId } = request.params as { guildId: string; ticketId: string };
 
-    const tickets = (await readData<Ticket[]>(guildId, 'tickets')) ?? [];
+    const tickets = await readTickets(guildId);
     const ticket  = tickets.find((t) => t.id === ticketId);
     if (!ticket) return reply.code(404).send({ success: false, error: 'Ticket not found' });
 
@@ -321,7 +347,7 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
   server.get('/addons/tickets/:guildId/tickets/:ticketId/transcript', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, ticketId } = request.params as { guildId: string; ticketId: string };
 
-    const tickets = (await readData<Ticket[]>(guildId, 'tickets')) ?? [];
+    const tickets = await readTickets(guildId);
     const ticket  = tickets.find((t) => t.id === ticketId);
     if (!ticket) return reply.code(404).send({ success: false, error: 'Ticket not found' });
 
@@ -447,7 +473,7 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
   server.delete('/addons/tickets/:guildId/tickets/:ticketId', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, ticketId } = request.params as { guildId: string; ticketId: string };
 
-    const tickets = (await readData<Ticket[]>(guildId, 'tickets')) ?? [];
+    const tickets = await readTickets(guildId);
     const filtered = tickets.filter((t) => t.id !== ticketId);
     if (filtered.length === tickets.length) return reply.code(404).send({ success: false, error: 'Ticket not found' });
 
@@ -460,7 +486,7 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
   server.post('/addons/tickets/:guildId/tickets/:ticketId/reopen', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, ticketId } = request.params as { guildId: string; ticketId: string };
 
-    const tickets = (await readData<Ticket[]>(guildId, 'tickets')) ?? [];
+    const tickets = await readTickets(guildId);
     const idx = tickets.findIndex((t) => t.id === ticketId);
     if (idx < 0) return reply.code(404).send({ success: false, error: 'Ticket not found' });
 
@@ -485,7 +511,7 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     const { guildId } = request.params as { guildId: string };
     const { idleHours = 72 } = (request.body as { idleHours?: number }) ?? {};
 
-    const tickets = (await readData<Ticket[]>(guildId, 'tickets')) ?? [];
+    const tickets = await readTickets(guildId);
     const thresholdMs = idleHours * 60 * 60 * 1000;
     const now = Date.now();
     let closedCount = 0;
@@ -515,7 +541,7 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
 
   /** Loads the ticket array and locates a specific ticket by ID. */
   async function findTicket(guildId: string, ticketId: string) {
-    const tickets = (await readData<Ticket[]>(guildId, 'tickets')) ?? [];
+    const tickets = await readTickets(guildId);
     const idx = tickets.findIndex((t) => t.id === ticketId);
     return { tickets, idx, ticket: tickets[idx] as Ticket | undefined };
   }
@@ -624,7 +650,7 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     const { guildId } = request.params as { guildId: string };
 
     const [tickets, panels, config] = await Promise.all([
-      readData<Ticket[]>(guildId, 'tickets').then((r) => r ?? []),
+      readTickets(guildId),
       readData<TicketPanel[]>(guildId, 'panels').then((r) => r ?? []),
       readData<GuildTicketConfig>(guildId, 'config').then((r) => r ?? { blacklistedUsers: [] }),
     ]);
@@ -745,7 +771,7 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     const { days = '30' } = request.query as Record<string, string>;
     const daysNum = Math.min(365, Math.max(7, parseInt(days, 10)));
 
-    const tickets = (await readData<Ticket[]>(guildId, 'tickets')) ?? [];
+    const tickets = await readTickets(guildId);
 
     const now    = new Date();
     const result: { date: string; opened: number; closed: number }[] = [];
@@ -785,7 +811,7 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
   server.get('/addons/tickets/:guildId/tickets/export', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const [tickets, panels] = await Promise.all([
-      readData<Ticket[]>(guildId, 'tickets').then((r) => r ?? []),
+      readTickets(guildId),
       readData<TicketPanel[]>(guildId, 'panels').then((r) => r ?? []),
     ]);
     const panelName = (id: string) => panels.find((p) => p.id === id)?.name ?? '';

@@ -2,6 +2,7 @@ import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 import {
   TEST_DB_URL, testPrisma, seedAddon, seedGuild, clearAddonData, makeStorage, closeTestDb,
 } from '../helpers/testDb.js';
+import { setTicketDb, type TicketDb } from '../../addons/tickets/src/utils/db.js';
 import {
   getTickets, saveTicket, getTicketByChannel, getTicketById, getUserOpenTickets,
   nextTicketNumber, savePanel, getPanel, deletePanel, getConfig, saveConfig,
@@ -40,9 +41,15 @@ describe.skipIf(!TEST_DB_URL)('tickets storage (integration, arkenbot_test)', ()
     const addonId = await seedAddon('tickets');
     await seedGuild(GUILD);
     storage = makeStorage(addonId);
+    // tickets/messages are DB-only now; panels/config/canned/counter stay in the blob.
+    setTicketDb(testPrisma() as unknown as TicketDb);
   });
   afterAll(async () => { await closeTestDb(); });
-  beforeEach(async () => { await clearAddonData(); });
+  beforeEach(async () => {
+    await clearAddonData();
+    await testPrisma().addonTicketMessage.deleteMany({});
+    await testPrisma().addonTicket.deleteMany({});
+  });
 
   it('round-trips a ticket through save → getTickets', async () => {
     const tk = mkTicket({ number: 1 });

@@ -107,16 +107,17 @@ describe.skipIf(!TEST_DB_URL)('ticketsRepo (integration, arkenbot_test)', () => 
     expect(await repoGetMessages('chan-m')).toEqual([]);
   });
 
-  it('storage.saveTicket dual-writes to BOTH the blob and the table', async () => {
+  it('storage.saveTicket writes to the table only (DB-only), not the blob', async () => {
     const addonId = await seedAddon('tickets');
     await testPrisma().addonData.deleteMany({});
     const storage = makeStorage(addonId);
     const t = richTicket({ number: 42, channelId: 'dw-chan' });
     await saveTicket(storage, GUILD, t);
-    // blob (authoritative) has it...
-    expect((await getTickets(storage, GUILD)).map((x) => x.id)).toContain(t.id);
-    // ...and the relational mirror has it too, full-fidelity.
+    // reads (via storage facade) come from the table, full-fidelity
+    expect((await getTickets(storage, GUILD)).find((x) => x.id === t.id)).toEqual(t);
     expect(await repoGetById(t.id)).toEqual(t);
+    // the old JSON ticket blob is NOT written
+    expect(await storage.get('tickets', GUILD)).toBeNull();
   });
 
   it('backfills a blob array into the table', async () => {
