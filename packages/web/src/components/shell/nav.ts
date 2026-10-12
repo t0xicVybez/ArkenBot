@@ -48,8 +48,8 @@ export const NAV: NavGroup[] = [
   {
     key: 'home', label: 'Home',
     items: [
-      it('overview', 'Overview', LayoutGrid, '', '/v2-app'),
-      it('analytics', 'Analytics', BarChart3, 'analytics', '/v2-app/analytics'),
+      it('overview', 'Overview', LayoutGrid, ''),
+      it('analytics', 'Analytics', BarChart3, 'analytics'),
       it('setup', 'Setup Wizard', Wand2, 'setup'),
     ],
   },
@@ -57,7 +57,7 @@ export const NAV: NavGroup[] = [
     key: 'safety', label: 'Safety',
     items: [
       it('moderation', 'Moderation', Shield, 'moderation'),
-      it('automod', 'Auto-Mod', Bot, 'automod', '/v2-app/automod'),
+      it('automod', 'Auto-Mod', Bot, 'automod'),
       it('antinuke', 'Anti-Nuke', ShieldAlert, 'anti-nuke'),
       it('verification', 'Verification', ShieldCheck, 'verification'),
       it('slowmode', 'Auto-Slowmode', Timer, 'slowmode'),
