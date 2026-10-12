@@ -1,3 +1,11 @@
+/**
+ * CLI script: register all slash commands with Discord (globally).
+ *
+ * Run with `npm run deploy:commands` whenever a command's name, options,
+ * description or choices change, or a command is added/removed. It loads every
+ * command from disk, localizes the picker metadata, and sends the set to
+ * Discord. Global command changes can take up to ~1h to show up for users.
+ */
 import "dotenv/config";
 import {
   REST,

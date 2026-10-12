@@ -1,5 +1,13 @@
 
 
+/**
+ * CLI script: find and remove stale slash commands from Discord.
+ *
+ * Compares what's registered with Discord against the commands that actually
+ * exist on disk, and deletes the leftovers (e.g. a command that was renamed or
+ * removed). Runs as a DRY RUN by default — pass `--confirm` to actually delete,
+ * and `--guild <id>` to also clean a specific guild's commands.
+ */
 import 'dotenv/config';
 import { REST, Routes } from 'discord.js';
 import { readdirSync, statSync, existsSync } from 'fs';
@@ -11,6 +19,7 @@ import type { BotCommand } from '../types.js';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const argv    = process.argv.slice(2);
+// Safety first: only delete when explicitly confirmed.
 const DRY_RUN = !argv.includes('--confirm');
 
 const extraGuildIds: string[] = [];
