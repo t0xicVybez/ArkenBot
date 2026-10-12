@@ -8,6 +8,9 @@ import { invalidateSettingsCache } from '../utils/settings.js';
 import { PURGE_GRACE_HOURS } from '../utils/guildPurge.js';
 import { InviteTrackerModule } from '../modules/inviteTracker/InviteTrackerModule.js';
 
+// The bot was removed from a server. Clear its caches, mark the guild inactive,
+// and tell the rest of the system — a scheduled job purges the data later if the
+// bot isn't re-added within the grace period.
 const event: BotEvent = {
   name: 'guildDelete',
   async execute(_client: unknown, guild: Guild) {

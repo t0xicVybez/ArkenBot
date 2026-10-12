@@ -6,12 +6,20 @@ import type { BotClient } from '../client.js';
 import { prisma } from '../database.js';
 import { logger, swallow} from '../logger.js';
 
+/**
+ * Powers "temp voice channels". Two things happen here:
+ *  1. Joining a designated trigger channel creates a fresh personal voice
+ *     channel owned by that member and moves them into it.
+ *  2. Leaving a temp channel that's now empty deletes it, so they clean
+ *     themselves up.
+ */
 const event: BotEvent = {
   name: 'voiceStateUpdate',
   async execute(_client: BotClient, oldState: VoiceState, newState: VoiceState) {
     const guild = newState.guild ?? oldState.guild;
     if (!guild) return;
 
+    // (1) Joined a trigger channel → spin up a personal temp VC.
     if (newState.channelId && newState.channelId !== oldState.channelId && newState.member) {
       const trigger = await prisma.tempVoiceTrigger.findUnique({
         where: { guildId_channelId: { guildId: guild.id, channelId: newState.channelId } },
@@ -59,6 +67,7 @@ const event: BotEvent = {
       }
     }
 
+    // (2) Left a channel → if it was an (now-empty) temp VC, delete it.
     const leftChannelId = oldState.channelId;
     if (leftChannelId && leftChannelId !== newState.channelId) {
       const record = await prisma.tempVoiceChannel.findUnique({

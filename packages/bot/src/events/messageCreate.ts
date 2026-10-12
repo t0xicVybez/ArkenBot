@@ -1,4 +1,12 @@
 
+/**
+ * Fires on every message. This is one of the busiest paths in the bot, so it
+ * fans a message out to the many features that care about chat: automod and
+ * anti-phishing, XP/leveling, analytics, the counting game, modmail relaying,
+ * auto-responses, custom slowmode and promotion tracking. The helpers above the
+ * event do the heavier lifting (auto-responses and slowmode are cached in Redis
+ * to keep this hot path cheap).
+ */
 import type { Message, TextChannel } from 'discord.js';
 import { EmbedBuilder } from 'discord.js';
 import type { BotEvent } from '../types.js';
@@ -42,6 +50,8 @@ setInterval(() => {
   }
 }, 5 * 60 * 1000).unref();
 
+// Record one message toward the guild's daily activity stats (powers the
+// analytics charts). Debounced per guild so we're not writing on every message.
 async function trackActivity(guildId: string): Promise<void> {
   try {
     const today = new Date();
@@ -66,6 +76,9 @@ type AutoResponseRow = {
   ignoredRoles: string[];
 };
 
+// Match a message against the guild's configured auto-responses (keyword/regex
+// triggers → canned replies). Rules are cached in Redis for 2 minutes, with the
+// string 'null' caching the "this guild has none" case to skip the DB entirely.
 async function checkAutoResponses(message: Message): Promise<void> {
   if (!message.guild || !message.channel.isTextBased() || !('send' in message.channel)) return;
 
@@ -132,6 +145,8 @@ async function checkAutoResponses(message: Message): Promise<void> {
 
 type SlowmodeCfg = { enabled: boolean; windowSeconds: number; threshold: number; slowmodeSeconds: number; resetAfter: number };
 
+// Custom slowmode: if a channel exceeds a configured message rate, flip on
+// Discord's native slowmode for a bit, then lift it when the pace settles.
 async function checkSlowmode(message: Message): Promise<void> {
   if (!message.guild || !message.channel.isTextBased()) return;
   const channelId = message.channel.id;

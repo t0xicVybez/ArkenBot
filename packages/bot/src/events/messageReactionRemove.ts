@@ -5,6 +5,7 @@ import { ReactionRolesModule } from '../modules/reactionRoles/ReactionRolesModul
 import { StarboardModule } from '../modules/starboard/StarboardModule.js';
 import { prisma } from '../database.js';
 
+// Removing a 👍/👎 from a suggestion retracts that vote — decrement the tally.
 async function handleSuggestionVoteRemove(reaction: MessageReaction, user: User): Promise<void> {
   if (user.bot) return;
   const emoji = reaction.emoji.name;
@@ -15,6 +16,8 @@ async function handleSuggestionVoteRemove(reaction: MessageReaction, user: User)
   await prisma.suggestion.update({ where: { id: suggestion.id }, data: { [field]: { decrement: 1 } } });
 }
 
+// The mirror of messageReactionAdd: undo the reaction-role, starboard and
+// suggestion-vote effects when a reaction is taken away.
 const event: BotEvent = {
   name: 'messageReactionRemove',
   async execute(_client: unknown, reaction: MessageReaction | PartialMessageReaction, user: User | PartialUser) {

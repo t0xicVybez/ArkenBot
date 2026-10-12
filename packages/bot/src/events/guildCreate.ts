@@ -27,6 +27,8 @@ const DASHBOARD_URL = 'https://arkenbot.app/dashboard';
 const DOCS_URL = 'https://docs.arkenbot.app/';
 const SUPPORT_URL = 'https://discord.gg/fXJnYPdHRX';
 
+// Greet a new server when the bot is added: try to DM whoever invited us (from
+// the audit log), fall back to the owner, then to a channel we can post in.
 async function sendWelcomeMessage(guild: Guild): Promise<void> {
   const loc = await resolveUserLocale({ user: { id: '' }, guildId: guild.id, guildLocale: guild.preferredLocale });
   const embed = new EmbedBuilder()
@@ -109,6 +111,12 @@ async function sendWelcomeMessage(guild: Guild): Promise<void> {
   logger.warn({ guildId: guild.id }, 'Could not deliver welcome message (DMs closed, no writable channel)');
 }
 
+/**
+ * The bot was added to a new server. Create its database records, send a
+ * welcome message, and let the rest of the system know (so the dashboard sees
+ * the new guild). If the bot was previously here and left, this also revives
+ * the existing row rather than starting fresh.
+ */
 const event: BotEvent = {
   name: 'guildCreate',
   async execute(_client: unknown, guild: Guild) {

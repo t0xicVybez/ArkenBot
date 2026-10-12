@@ -5,6 +5,8 @@ import { AntiNukeModule } from '../modules/antiNuke/AntiNukeModule.js';
 import { logger } from '../logger.js';
 import { isPermissionError } from '../utils/permissionAlert.js';
 
+// Anti-nuke: attribute role deletions to their executor via the audit log and
+// track the rate. Missing audit-log access is expected (logged at debug).
 const event: BotEvent = {
   name: Events.GuildRoleDelete,
   async execute(_client: unknown, role: Role) {

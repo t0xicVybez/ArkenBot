@@ -5,6 +5,8 @@ import { AntiNukeModule } from '../modules/antiNuke/AntiNukeModule.js';
 import { logger } from '../logger.js';
 import { isPermissionError } from '../utils/permissionAlert.js';
 
+// Anti-nuke: attribute channel deletions to their executor via the audit log
+// and track the rate. Missing audit-log access is expected (logged at debug).
 const event: BotEvent = {
   name: Events.ChannelDelete,
   async execute(_client: unknown, channel: GuildChannel) {

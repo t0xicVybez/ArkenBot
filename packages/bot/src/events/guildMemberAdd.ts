@@ -10,6 +10,9 @@ import { InviteTrackerModule } from '../modules/inviteTracker/InviteTrackerModul
 import { VerificationModule } from '../modules/verification/VerificationModule.js';
 import { BanNetworkModule } from '../modules/moderation/BanNetworkModule.js';
 
+// A new member joined. Make sure the guild row exists, then fan out to every
+// feature that reacts to joins: welcome, logging, join-gate automod, analytics,
+// invite attribution, verification, and the shared ban-network check.
 const event: BotEvent = {
   name: 'guildMemberAdd',
   async execute(_client: unknown, member: GuildMember) {

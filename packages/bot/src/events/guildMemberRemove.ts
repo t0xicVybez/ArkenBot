@@ -8,6 +8,10 @@ import { InviteTrackerModule } from '../modules/inviteTracker/InviteTrackerModul
 import { PromotionModule } from '../modules/promotion/PromotionModule.js';
 
 import { swallow } from '../logger.js';
+
+// A member left (or was removed). Fan out to everything that cares: goodbye
+// message, leave logging, analytics, invite-tracker bookkeeping, and promotion
+// cleanup. allSettled so one failure doesn't block the others.
 const event: BotEvent = {
   name: 'guildMemberRemove',
   async execute(_client: unknown, member: GuildMember | PartialGuildMember) {

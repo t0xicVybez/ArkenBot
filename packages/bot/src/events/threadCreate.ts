@@ -15,6 +15,11 @@ interface ForumManagementConfig {
   channels: Record<string, ForumChannelConfig>;
 }
 
+/**
+ * Forum management: when a new post (thread) is created in a configured forum
+ * channel, optionally auto-apply a tag and post a template/welcome message.
+ * Only acts on brand-new threads in forum channels that have config.
+ */
 const event: BotEvent = {
   name: 'threadCreate',
   async execute(_client: BotClient, thread: AnyThreadChannel, newlyCreated: boolean) {

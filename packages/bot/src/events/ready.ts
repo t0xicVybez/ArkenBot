@@ -1,4 +1,15 @@
 
+/**
+ * Runs once the bot has connected and is ready.
+ *
+ * Two jobs live here:
+ *  1. Startup — apply the configured presence/status, announce coming online,
+ *     and load any open modmail threads.
+ *  2. The API bridge — subscribe to Redis channels the API/dashboard publish
+ *     on (`api:events`, cache invalidations, giveaways, stream alerts, …) and
+ *     carry out the requested action in Discord. This is how a click in the
+ *     web dashboard turns into a real change in the server.
+ */
 import { ActivityType, ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, ChannelType, EmbedBuilder, PermissionFlagsBits, type PresenceStatusData, type TextChannel } from 'discord.js';
 import type { BotEvent } from '../types.js';
 import { logger, swallow} from '../logger.js';
@@ -24,6 +35,8 @@ const TYPE_LABEL: Record<string, { emoji: string; label: string }> = {
   hotfix:      { emoji: '🚑', label: 'Hotfix' },
 };
 
+// Pick where to post a staff announcement in a guild: the channel the server
+// configured, or null if none is set and we can't fall back to one we may post in.
 async function resolveAnnouncementChannel(
   client: import('../client.js').BotClient,
   guildId: string,
@@ -66,6 +79,8 @@ async function resolveAnnouncementChannel(
   return channel;
 }
 
+// Broadcast a staff announcement (update/feature/maintenance/hotfix) to every
+// targeted guild, styled by type, counting how many actually received it.
 async function sendAnnouncement(
   client: import('../client.js').BotClient,
   data: { id: string; title: string; body: string; type: string; targets: Array<{ guildId: string; announcementChannelId: string | null }> },
@@ -108,6 +123,8 @@ async function sendAnnouncement(
   logger.info({ id: data.id, sent, total: data.targets.length }, 'Announcement delivered');
 }
 
+// Set the bot's "Playing/Watching/…" presence from the stored config,
+// substituting live {servers}/{users} counts into the activity text.
 function applyPresence(client: import('../client.js').BotClient, cfg: BotConfigRow): void {
   const typeMap: Record<string, ActivityType> = {
     Playing: ActivityType.Playing,
@@ -162,6 +179,10 @@ const event: BotEvent = {
 
     const { sub } = await import('../redis.js');
 
+    // The API bridge. The API/dashboard publish JSON messages on Redis channels;
+    // here we receive each one and carry out the matching action in Discord
+    // (send an embed, refresh a cache, start a giveaway, post a stream alert…).
+    // removeAllListeners first so a reconnect doesn't stack duplicate handlers.
     sub.removeAllListeners('message');
     sub.on('message', async (_channel: string, message: string) => {
       try {
@@ -392,6 +413,7 @@ const event: BotEvent = {
       }
     });
 
+    // Channels the bridge listens on.
     await sub.subscribe('api:events');
     await sub.subscribe('cache:invalidate:settings');
     await sub.subscribe('promotion:config:updated');
