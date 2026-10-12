@@ -63,7 +63,7 @@ export async function deletePanel(
 
 // ─── Tickets ──────────────────────────────────────────────────────────────────
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
+ 
 // `storage`/`guildId`(where derivable from the ticket) are kept in these
 // signatures so the many call sites don't change; tickets now read/write the DB.
 export async function getTickets(_storage: AddonStorage, guildId: string): Promise<Ticket[]> {
@@ -102,7 +102,7 @@ export async function getUserOpenTickets(
 ): Promise<Ticket[]> {
   return repoGetUserOpen(guildId, userId);
 }
-/* eslint-enable @typescript-eslint/no-unused-vars */
+ 
 
 // ─── Counter ──────────────────────────────────────────────────────────────────
 

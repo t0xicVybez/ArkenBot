@@ -6,12 +6,8 @@
  */
 import {
   MessageFlags,
-  ActionRowBuilder,
-  ButtonBuilder,
-  EmbedBuilder,
   type ButtonInteraction,
   type TextChannel,
-  type ChatInputCommandInteraction,
 } from 'discord.js';
 import type { AddonContext } from '@arkenbot/addon-sdk';
 import type { Ticket, TicketPanel } from '../types.js';
@@ -27,7 +23,6 @@ import {
   buildClosedEmbed,
   buildRatingEmbed,
   buildRatingButtons,
-  buildReopenButton,
   buildTicketControls,
   buildClaimedControls,
   buildTranscriptEmbed,

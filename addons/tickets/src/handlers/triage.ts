@@ -15,7 +15,6 @@ import {
   type ButtonInteraction,
   type ChatInputCommandInteraction,
   type TextChannel,
-  type GuildMember,
 } from 'discord.js';
 import { randomUUID } from 'crypto';
 import { jsonCompletion, isLLMAvailable, LLMUnavailableError } from '@arkenbot/shared';

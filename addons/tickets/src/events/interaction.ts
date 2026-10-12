@@ -1,51 +1,19 @@
 import {
   MessageFlags,
-  ModalBuilder,
-  TextInputBuilder,
-  TextInputStyle,
-  ActionRowBuilder,
-  ButtonBuilder,
-  ButtonStyle,
-  EmbedBuilder,
   type Interaction,
   type ButtonInteraction,
   type StringSelectMenuInteraction,
-  type ChatInputCommandInteraction,
   type ModalSubmitInteraction,
-  type TextChannel,
-  type Guild,
-  type Message,
 } from 'discord.js';
-import { randomUUID } from 'crypto';
 import type { AddonContext } from '@arkenbot/addon-sdk';
-import { jsonCompletion, isLLMAvailable, LLMUnavailableError } from '@arkenbot/shared';
-import type { Ticket, TicketPanel, TicketNote, PanelField, TicketPriority, AiTriage } from '../types.js';
+import type { Ticket, TicketNote } from '../types.js';
 import {
   getPanel,
-  getConfig,
-  saveConfig,
-  getUserOpenTickets,
-  getTickets,
-  nextTicketNumber,
   saveTicket,
   getTicketByChannel,
-  getMessages,
 } from '../utils/storage.js';
-import {
-  buildTicketEmbed,
-  buildTicketControls,
-  buildClaimedControls,
-  buildClosedEmbed,
-  buildRatingEmbed,
-  buildRatingButtons,
-  buildTranscriptEmbed,
-  type Translate,
-} from '../utils/embeds.js';
-import { createTicketChannel, archiveTicketChannel, restoreTicketChannel, resolveChannelName } from '../utils/channel.js';
-import { generateTranscriptHtml } from '../utils/transcript.js';
-import { isWithinBusinessHours } from '../utils/time.js';
-import { resolvePanelFields } from '../utils/fields.js';
-import { fireWebhook } from '../utils/webhook.js';
+
+
 // Lifecycle handlers live in ./handlers/lifecycle.js (P3 split).
 import {
   handleCloseButton,
@@ -56,7 +24,6 @@ import {
   handleConfirmCloseButton,
   handleTranscriptButton,
   updateControlsMessage,
-  finalizeTicketClose,
 } from '../handlers/lifecycle.js';
 export { closeTicket, updateControlsMessage } from '../handlers/lifecycle.js';
 import { handleRateButton, handleRateModal } from '../handlers/rating.js';
@@ -67,11 +34,7 @@ export { resolvePanelFields } from '../utils/fields.js';
 // router/createTicket use internally; re-export the full public surface so
 // existing importers of this module are unaffected.
 import {
-  runTriageModel,
-  getUserTicketHistory,
   handleAiAction,
-  sendClaimBrief,
-  sendAssignmentBrief,
 } from '../handlers/triage.js';
 export {
   generateTriage,
