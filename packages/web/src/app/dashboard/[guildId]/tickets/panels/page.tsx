@@ -6,7 +6,6 @@ import { useState } from 'react';
 import { ticketsApi } from '@/lib/api';
 import toast from 'react-hot-toast';
 import { Plus, Trash2, Edit, X, ChevronDown, ChevronUp, LayoutTemplate } from 'lucide-react';
-import { randomUUID } from 'crypto'; // available client-side via Next.js/webpack polyfill
 import { useTranslations } from 'next-intl';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
