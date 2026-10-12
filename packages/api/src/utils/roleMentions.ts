@@ -26,12 +26,12 @@ export async function resolveRoleMentions(guildId: string, message?: string): Pr
       headers: { Authorization: `Bot ${process.env.DISCORD_TOKEN}` },
     });
 
-    const roles = Array.isArray(res.data) ? res.data : [];
+    const roles: Array<{ id: string; name: string }> = Array.isArray(res.data) ? res.data : [];
     // Sort longest-name-first so that a role named "Admin Team" is matched
     // before a role named "Admin" when both appear in the message.
     const roleCandidates = roles
-      .filter((role: any) => typeof role.name === 'string' && role.name.trim().length > 0)
-      .sort((a: any, b: any) => b.name.length - a.name.length);
+      .filter((role) => typeof role.name === 'string' && role.name.trim().length > 0)
+      .sort((a, b) => b.name.length - a.name.length);
 
     let updatedMessage = message;
     for (const role of roleCandidates) {

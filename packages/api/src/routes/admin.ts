@@ -439,7 +439,7 @@ export async function adminRoutes(server: FastifyInstance): Promise<void> {
   // The bot subscribes to the `api:events` channel and sends the message
   // to each guild's configured announcement channel.
   server.post('/admin/announcements', { preHandler: [requireStaff] }, async (request, reply) => {
-    const user = (request as any).user as { id: string };
+    const user = request.user!;
     const input = parse(z.object({
       title: z.string().trim().min(1).max(256),
       body: z.string().trim().min(1).max(4000),

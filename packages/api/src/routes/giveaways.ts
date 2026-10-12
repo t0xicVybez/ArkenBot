@@ -44,8 +44,8 @@ export async function giveawayRoutes(server: FastifyInstance): Promise<void> {
   // GET /guilds/:guildId/giveaways?ended=true/false
   server.get('/guilds/:guildId/giveaways', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
-    const ended = (request.query as any).ended;
-    const where: any = { guildId };
+    const ended = (request.query as { ended?: string }).ended;
+    const where: { guildId: string; ended?: boolean } = { guildId };
     if (ended === 'true') where.ended = true;
     if (ended === 'false') where.ended = false;
     const giveaways = await prisma.giveaway.findMany({ where, orderBy: { createdAt: 'desc' } });

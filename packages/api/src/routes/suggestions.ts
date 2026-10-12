@@ -38,8 +38,8 @@ export async function suggestionRoutes(server: FastifyInstance): Promise<void> {
   // GET /guilds/:guildId/suggestions?status=pending
   server.get('/guilds/:guildId/suggestions', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
-    const { status } = request.query as any;
-    const where: any = { guildId };
+    const { status } = request.query as { status?: string };
+    const where: { guildId: string; status?: string } = { guildId };
     if (status) where.status = status;
     const suggestions = await prisma.suggestion.findMany({ where, orderBy: { createdAt: 'desc' } });
     return reply.send({ success: true, data: suggestions });

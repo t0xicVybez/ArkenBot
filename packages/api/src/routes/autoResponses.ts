@@ -33,8 +33,8 @@ function validatePattern(pattern: unknown, flags: unknown): string | null {
   try {
     VALIDATE_SCRIPT.runInContext(ctx, { timeout: 100 });
     return null;
-  } catch (e: any) {
-    if (e.code === 'ERR_SCRIPT_EXECUTION_TIMEOUT')
+  } catch (e) {
+    if ((e as { code?: string }).code === 'ERR_SCRIPT_EXECUTION_TIMEOUT')
       return 'Pattern causes excessive backtracking (ReDoS risk)';
     return 'Invalid regex pattern or flags';
   }
@@ -77,7 +77,7 @@ export async function autoResponseRoutes(server: FastifyInstance): Promise<void>
         deleteMessage: input.deleteMessage ?? false,
         requiredRoles: input.requiredRoles ?? [],
         ignoredRoles:  input.ignoredRoles ?? [],
-        createdById:   (request as any).user?.id ?? 'dashboard',
+        createdById:   request.user?.id ?? 'dashboard',
       },
     });
 

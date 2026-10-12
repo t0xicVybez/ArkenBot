@@ -133,8 +133,8 @@ async function fetchRegistered(
         Routes.applicationGuildCommands(clientId, guildId),
       )) as Array<{ id: string; name: string }>;
       for (const cmd of guildCmds) result.push({ id: cmd.id, name: cmd.name, scope: guildId });
-    } catch (err: any) {
-      console.log(`  ${ylw('⚠')}  Could not fetch guild ${guildId}: ${err.message}`);
+    } catch (err) {
+      console.log(`  ${ylw('⚠')}  Could not fetch guild ${guildId}: ${(err as Error).message}`);
     }
   }
 
@@ -241,8 +241,8 @@ async function main() {
       }
       console.log(`  ${grn('✓')}  /${bold(cmd.name)}  ${dim(`(${location})`)}`);
       deleted++;
-    } catch (err: any) {
-      console.log(`  ${red('✗')}  /${bold(cmd.name)}  ${dim(`(${location})`)}  — ${red(err.message)}`);
+    } catch (err) {
+      console.log(`  ${red('✗')}  /${bold(cmd.name)}  ${dim(`(${location})`)}  — ${red((err as Error).message)}`);
       failed++;
     }
   }

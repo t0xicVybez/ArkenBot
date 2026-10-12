@@ -41,7 +41,7 @@ export async function inviteTrackerRoutes(server: FastifyInstance): Promise<void
     // Fetch all InviteJoin records for these inviters in one query.
     const inviterIds = rows.map((r) => r.userId);
     const joinRecords = inviterIds.length > 0
-      ? await (prisma as any).inviteJoin.findMany({
+      ? await prisma.inviteJoin.findMany({
           where:   { guildId, inviterId: { in: inviterIds } },
           orderBy: { joinedAt: 'desc' },
         })
@@ -59,7 +59,7 @@ export async function inviteTrackerRoutes(server: FastifyInstance): Promise<void
     const leaderboard = rows.map((r) => ({
       ...r,
       username: usernameMap[r.userId] ?? r.userId,
-      invitees: (joinsByInviter.get(r.userId) ?? []).map((j: any) => ({
+      invitees: (joinsByInviter.get(r.userId) ?? []).map((j) => ({
         userId:   j.joinedUserId,
         username: j.joinedUsername ?? j.joinedUserId,
         joinedAt: j.joinedAt,

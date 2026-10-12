@@ -336,7 +336,7 @@ export class AddonHandler {
       for (const eventDef of definition.events) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const handler = (...args: any[]) => {
-          const result = (eventDef.handler as (...a: any[]) => Promise<void>)(context, ...args);
+          const result = (eventDef.handler as (...a: unknown[]) => Promise<void>)(context, ...args);
           result.catch((err) => {
             // An autocomplete interaction expires the instant the user types
             // another character, so a 10062 "Unknown interaction" when responding
