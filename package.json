@@ -63,14 +63,19 @@
       "mysql2": "^3.22.0",
       "find-my-way": "^9.7.0",
       "socket.io-parser": "^4.2.7",
-      "sharp": "^0.35.0",
-      "shell-quote": "1.9.0",
+      "sharp": "^0.35.5",
+      "shell-quote": "^1.12.0",
       "esbuild": "0.28.1",
-      "fast-jwt": ">=6.2.4",
+      "fast-jwt": ">=6.3.4",
       "sockjs>uuid": "^11.1.1",
       "next-auth>uuid": "^11.1.1",
       "next>postcss": "^8.5.17",
-      "serialize-javascript": "^7.0.7"
+      "serialize-javascript": "^7.0.7",
+      "proxy-addr": "^2.0.8",
+      "compression": "^1.8.2",
+      "source-map-js": "^1.2.2",
+      "fast-copy": "^4.1.0",
+      "postcss-selector-parser@>=7.0.0 <7.1.6": "7.1.6"
     }
   }
 }
