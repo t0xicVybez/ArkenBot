@@ -11,6 +11,7 @@
  */
 import type { FastifyInstance } from 'fastify';
 import axios from 'axios';
+import { isSnowflake } from '@arkenbot/shared';
 import { requireGuildAdmin } from '../middleware/auth.js';
 import { prisma } from '../database.js';
 import { pub } from '../redis.js';
@@ -60,6 +61,11 @@ export async function promotionRoutes(server: FastifyInstance): Promise<void> {
 
   server.patch('/promotion/:guildId/config', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
+    // Validate the snowflake before it's ever interpolated into the Discord API
+    // URL below — blocks request-forgery via a crafted guildId (e.g. one that
+    // appends path segments to reach other bot-token endpoints). The staff/owner
+    // path skips requireGuildAdmin's guild check, so this guard is load-bearing.
+    if (!isSnowflake(guildId)) return reply.code(400).send({ success: false, error: 'Invalid guild ID' });
     const b = (request.body ?? {}) as {
       enabled?: boolean; trackStatus?: boolean; trackTag?: boolean; keywords?: string[];
     };
