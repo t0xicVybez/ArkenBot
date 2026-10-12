@@ -1,3 +1,10 @@
+/**
+ * Renders a user's leveling "rank card" as a PNG image.
+ *
+ * Discord can't show rich HTML, so the profile card (avatar, level, XP bar,
+ * stats) is drawn onto a canvas and sent as an image attachment. `@napi-rs/canvas`
+ * is a fast, native 2D canvas with the same API as the browser's.
+ */
 import { createCanvas, loadImage } from '@napi-rs/canvas';
 
 export interface RankCardOptions {
@@ -14,6 +21,8 @@ export interface RankCardOptions {
   backgroundUrl?: string;
 }
 
+// Trace a rectangle with rounded corners onto the current path (canvas has no
+// built-in rounded-rect), ready to fill or stroke. Used for the card panels.
 function drawRoundRect(
   ctx: ReturnType<ReturnType<typeof createCanvas>['getContext']>,
   x: number, y: number, w: number, h: number, r: number,
@@ -31,6 +40,7 @@ function drawRoundRect(
   ctx.closePath();
 }
 
+/** Draw the full rank card and return it as PNG bytes ready to attach. */
 export async function generateRankCard(options: RankCardOptions): Promise<Buffer> {
   const W = 900;
   const H = 280;

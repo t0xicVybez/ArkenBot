@@ -1,3 +1,10 @@
+/**
+ * Renders the server analytics dashboard as a PNG.
+ *
+ * Draws a multi-series chart of daily activity (messages, commands, joins,
+ * leaves) over the last ~30 days for the `/analytics` command. The colour
+ * constants below are the shared palette used throughout the image.
+ */
 import { createCanvas } from '@napi-rs/canvas';
 
 export interface DayStats {
@@ -21,6 +28,8 @@ const BASELINE = 'rgba(255,255,255,0.12)';
 
 type Ctx = ReturnType<ReturnType<typeof createCanvas>['getContext']>;
 
+// Fill in any missing days with zero-value entries so the x-axis is always a
+// continuous run of `days` dates, even for quiet servers.
 function padDays(stats: DayStats[], days = 30): DayStats[] {
   const map = new Map<string, DayStats>();
   for (const s of stats) map.set(s.date.toISOString().slice(0, 10), s);
@@ -37,6 +46,8 @@ function shortDate(d: Date): string {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
 }
 
+// Round a raw maximum up to a "nice" round number (10, 25, 50, 100, …) so the
+// y-axis gridlines land on tidy values instead of arbitrary ones.
 function niceMax(raw: number): number {
   if (raw <= 0) return 5;
   const mag  = Math.pow(10, Math.floor(Math.log10(raw)));
@@ -210,6 +221,7 @@ function drawChart(
   }
 }
 
+/** Draw the full analytics chart from raw daily stats and return PNG bytes. */
 export async function generateAnalyticsImage(rawStats: DayStats[]): Promise<Buffer> {
   const stats      = padDays(rawStats, 30);
   const labels     = stats.map(s => shortDate(s.date));

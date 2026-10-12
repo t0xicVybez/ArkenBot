@@ -1,3 +1,9 @@
+/**
+ * Embed factories for a consistent look across the bot.
+ *
+ * Instead of building an EmbedBuilder by hand each time, commands use these so
+ * every success/error/warning/info message shares the same colour and icon.
+ */
 import { EmbedBuilder, type ColorResolvable } from 'discord.js';
 import { COLORS } from '@arkenbot/shared';
 
@@ -33,6 +39,11 @@ export function infoEmbed(title: string, description?: string): EmbedBuilder {
   return embed;
 }
 
+/**
+ * A structured embed for moderation actions (ban, kick, mute, …) with the
+ * standard User / Moderator / Reason fields, plus optional duration and case
+ * number. Pass `colorHex` to override the default moderation colour.
+ */
 export function moderationEmbed(
   options: {
     action: string;

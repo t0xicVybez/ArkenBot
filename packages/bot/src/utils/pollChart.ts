@@ -1,3 +1,10 @@
+/**
+ * Renders poll results as a horizontal bar-chart PNG.
+ *
+ * Takes the question, the answer options, and the raw votes, tallies them, and
+ * draws one bar per option (longest = most votes) to attach to the poll
+ * results message.
+ */
 import { createCanvas } from '@napi-rs/canvas';
 
 export async function generatePollChart(
@@ -27,6 +34,7 @@ export async function generatePollChart(
   ctx.fillStyle = '#ffffff';
   ctx.font = 'bold 18px sans-serif';
   ctx.textAlign = 'center';
+  // Truncate the title with an ellipsis if it's wider than the canvas.
   const maxTitleWidth = canvasWidth - 40;
   let title = question;
   if (ctx.measureText(title).width > maxTitleWidth) {

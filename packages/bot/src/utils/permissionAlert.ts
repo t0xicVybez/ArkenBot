@@ -1,10 +1,22 @@
-
+/**
+ * Sends "the bot couldn't do that" alerts to a server's mod-log.
+ *
+ * When a bot action fails because of a missing Discord permission, this posts a
+ * localized embed to the guild's configured log channel (optionally pinging an
+ * alert role) so admins can fix the permission. Alerts are opt-out per guild and
+ * de-duplicated so one misconfiguration doesn't spam the channel.
+ *
+ * Features can call `notifyActionFailure` directly, but most permission errors
+ * are caught automatically by the REST interceptor (see restErrorInterceptor.ts).
+ */
 import { EmbedBuilder, DiscordAPIError, type Guild } from 'discord.js';
 import { getGuildSettings } from './settings.js';
 import { resolveUserLocale, t } from '../i18n/index.js';
 import { logger, swallow } from '../logger.js';
 
+// 50013 = Missing Permissions, 50001 = Missing Access.
 const PERMISSION_ERROR_CODES = new Set([50013, 50001]);
+// Only alert once per guild/action/channel every 10 minutes.
 const DEDUPE_TTL_MS = 10 * 60 * 1000;
 const lastAlertAt = new Map<string, number>();
 
@@ -15,15 +27,15 @@ export function isPermissionError(err: unknown): boolean {
 }
 
 export interface ActionFailureOptions {
-
+  // Friendly action id, mapped to a localized label (e.g. 'ban', 'sendMessage').
   action: string;
-
+  // The original error that was thrown.
   error: unknown;
-
+  // Human-readable permission the action needs, shown in the alert.
   requiredPermission?: string;
-
+  // Channel the action targeted, if any (linked in the alert).
   channelId?: string | null;
-
+  // The user/role/thing acted upon, if any.
   target?: string | null;
 }
 
@@ -33,8 +45,10 @@ export async function notifyActionFailure(guild: Guild, opts: ActionFailureOptio
   logger.debug({ err: error, action, guildId: guild.id }, 'bot action failed');
 
   try {
+    // Only permission errors are worth alerting about.
     if (!isPermissionError(error)) return null;
 
+    // Mark the error so the REST interceptor won't also alert on it.
     if (error && typeof error === 'object') {
       (error as { __arkenHandled?: boolean }).__arkenHandled = true;
     }
@@ -42,9 +56,11 @@ export async function notifyActionFailure(guild: Guild, opts: ActionFailureOptio
     const settings = await getGuildSettings(guild.id);
     if (!settings || settings.permissionAlertsEnabled === false) return null;
 
+    // Prefer the dedicated mod-log channel, falling back to the general log.
     const channelId = settings.modLogChannelId ?? settings.logChannelId;
     if (!channelId) return null;
 
+    // Skip if we alerted about this same thing recently.
     const key = `${guild.id}:${action}:${opts.channelId ?? ''}`;
     const now = Date.now();
     const last = lastAlertAt.get(key);
@@ -54,6 +70,7 @@ export async function notifyActionFailure(guild: Guild, opts: ActionFailureOptio
       guild.channels.cache.get(channelId) ?? (await guild.channels.fetch(channelId).catch(() => null));
     if (!channel || !channel.isTextBased()) return null;
 
+    // Alerts are server-facing, so localize to the guild's language.
     const loc = await resolveUserLocale({
       user: { id: '' },
       guildId: guild.id,
@@ -78,12 +95,14 @@ export async function notifyActionFailure(guild: Guild, opts: ActionFailureOptio
       .send({
         content: roleId ? `<@&${roleId}>` : undefined,
         embeds: [embed],
+        // Only ping the alert role, never @everyone/@here from an error.
         allowedMentions: roleId ? { roles: [roleId] } : { parse: [] },
       })
       .catch(swallow);
 
     lastAlertAt.set(key, now);
   } catch (e) {
+    // This is itself an error handler; never let it throw.
     logger.debug({ err: e }, 'notifyActionFailure internal error');
   }
   return null;

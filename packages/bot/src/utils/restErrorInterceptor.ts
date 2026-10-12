@@ -1,13 +1,26 @@
-
+/**
+ * Turns Discord permission errors into admin alerts, bot-wide.
+ *
+ * Rather than making every feature remember to catch "Missing Permissions", we
+ * wrap the client's REST layer once. When any Discord API call fails with a
+ * permission error, we work out which guild/channel and what kind of action it
+ * was, and hand that to `notifyActionFailure` so the server's admins get told
+ * what the bot couldn't do and why. The original error is always re-thrown, so
+ * callers still behave exactly as before.
+ */
 import { DiscordAPIError, type Client, type Guild } from 'discord.js';
 import { isPermissionError, notifyActionFailure } from './permissionAlert.js';
 import { logger } from '../logger.js';
 
+// Audit-log reads fail for benign reasons (no View Audit Log) all the time and
+// would be noisy, so we never alert on them.
 function isSilencedEndpoint(url: string): boolean {
   const path = url.replace(/^https?:\/\/[^/]+/, '').split('?')[0];
   return /\/guilds\/\d+\/audit-logs$/.test(path);
 }
 
+// Pull the guild/channel IDs out of the failed request's URL so we know where
+// to send the alert.
 function extractIds(url: string): { guildId?: string; channelId?: string } {
   const path = url.replace(/^https?:\/\/[^/]+/, '');
   return {
@@ -16,6 +29,8 @@ function extractIds(url: string): { guildId?: string; channelId?: string } {
   };
 }
 
+// Map an HTTP method + API path to a friendly action id and the permission it
+// most likely needs, so the alert can say "couldn't ban — needs Ban Members".
 function classify(method: string, url: string): { action: string; requiredPermission?: string } {
   const path = url.replace(/^https?:\/\/[^/]+/, '').split('?')[0];
   const m = method.toUpperCase();
@@ -53,6 +68,9 @@ export function installRestErrorInterceptor(client: Client): void {
       if (isPermissionError(err) && err instanceof DiscordAPIError && typeof err.url === 'string' && !isSilencedEndpoint(err.url)) {
         const captured = err;
 
+        // Fire the alert on the next tick so we don't delay re-throwing the
+        // error to the caller. `__arkenHandled` lets a feature that already
+        // handled this specific error suppress the duplicate alert.
         setTimeout(() => {
           try {
             if ((captured as { __arkenHandled?: boolean }).__arkenHandled) return;
@@ -70,6 +88,7 @@ export function installRestErrorInterceptor(client: Client): void {
           }
         }, 0);
       }
+      // Always propagate the original error — the interceptor only observes.
       throw err;
     }
   };
