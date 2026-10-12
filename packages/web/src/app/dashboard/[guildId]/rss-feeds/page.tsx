@@ -1,11 +1,10 @@
-'use client';
-
-import { Rss } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
 import { FeedAlertsPage } from '@/components/FeedAlertsPage';
-import { useTranslations } from 'next-intl';
 
-export default function RssFeedsPage() {
-  const t = useTranslations('rssFeeds');
+// Server component: resolves translations + builds the (static) platform config
+// on the server; only the interactive FeedAlertsPage ships to the client.
+export default async function RssFeedsPage() {
+  const t = await getTranslations('rssFeeds');
   const PLATFORMS = [
     {
       value: 'rss',
@@ -21,7 +20,7 @@ export default function RssFeedsPage() {
     <FeedAlertsPage
       title={t('title')}
       description={t('description')}
-      icon={Rss}
+      icon="rss"
       iconColor="text-yellow-400"
       platforms={PLATFORMS}
     />

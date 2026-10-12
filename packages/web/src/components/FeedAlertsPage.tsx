@@ -7,9 +7,14 @@ import { streamAlertsApi } from '@/lib/api';
 import { Toggle } from '@/components/Toggle';
 import { SettingsSection } from '@/components/SettingsSection';
 import toast from 'react-hot-toast';
-import { useState, type ComponentType } from 'react';
-import { Plus, Trash2, Pencil, X } from 'lucide-react';
+import { useState } from 'react';
+import { Plus, Trash2, Pencil, X, Rss, Radio } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+
+// Head-icon lookup: callers pass a string key (not a component) so the page
+// wrappers can be server components — functions can't cross the RSC boundary.
+const HEAD_ICONS = { rss: Rss, radio: Radio } as const;
+export type FeedAlertsIcon = keyof typeof HEAD_ICONS;
 
 export interface PlatformConfig {
   value: string;
@@ -24,7 +29,7 @@ export interface PlatformConfig {
 interface FeedAlertsPageProps {
   title: string;
   description: string;
-  icon: ComponentType<{ className?: string }>;
+  icon: FeedAlertsIcon;
   iconColor: string;
   platforms: PlatformConfig[];
   notice?: string;
@@ -53,7 +58,8 @@ const PLATFORM_VISUALS: Record<string, { glyph: string; bg: string; fg: string }
 /** Platforms where a stored stream ID means "currently live". */
 const LIVE_PLATFORMS = new Set(['twitch', 'kick', 'youtube']);
 
-export function FeedAlertsPage({ title, description, icon: Icon, platforms, notice }: FeedAlertsPageProps) {
+export function FeedAlertsPage({ title, description, icon, platforms, notice }: FeedAlertsPageProps) {
+  const Icon = HEAD_ICONS[icon];
   const { guildId } = useParams() as { guildId: string };
   const queryClient = useQueryClient();
   const t = useTranslations('feedAlerts');

@@ -1,11 +1,10 @@
-'use client';
-
-import { Radio } from 'lucide-react';
+import { getTranslations } from 'next-intl/server';
 import { FeedAlertsPage } from '@/components/FeedAlertsPage';
-import { useTranslations } from 'next-intl';
 
-export default function StreamAlertsPage() {
-  const t = useTranslations('streamAlerts');
+// Server component: resolves translations + builds the (static) platform config
+// on the server; only the interactive FeedAlertsPage ships to the client.
+export default async function StreamAlertsPage() {
+  const t = await getTranslations('streamAlerts');
   const PLATFORMS = [
     {
       value: 'twitch',
@@ -48,7 +47,7 @@ export default function StreamAlertsPage() {
     <FeedAlertsPage
       title={t('title')}
       description={t('description')}
-      icon={Radio}
+      icon="radio"
       iconColor="text-purple-400"
       platforms={PLATFORMS}
     />
