@@ -32,6 +32,19 @@ echo "── building workspace libs (shared, addon-sdk) ──"
 (cd packages/shared && npm run build)
 (cd packages/addon-sdk && npm run build)
 
+# Web is served by `next start`, which reads `.next` (client reference manifests)
+# per request. Rebuilding it in place under the live process throws "Could not
+# find the module … in the React Client Manifest" errors until the restart lands.
+# So when web is deploying, stop it first and clear its stale build; it comes
+# back fresh below. bot/api don't have this issue (they load dist once at boot).
+WEB_SELECTED=0
+for pkg in "${PACKAGES[@]}"; do [ "$pkg" = web ] && WEB_SELECTED=1; done
+if [ "$WEB_SELECTED" -eq 1 ]; then
+  echo "── stopping web for a clean .next rebuild (brief downtime) ──"
+  pm2 stop web 2>/dev/null || true
+  rm -rf packages/web/.next
+fi
+
 for pkg in "${PACKAGES[@]}"; do
   echo "── building $pkg ──"
   (cd "packages/$pkg" && npm run build)
@@ -39,6 +52,8 @@ done
 
 echo "── reloading PM2 ──"
 pm2 startOrReload ecosystem.config.cjs --update-env
+# startOrReload may not revive a stopped app; hard-start web on the fresh build.
+[ "$WEB_SELECTED" -eq 1 ] && pm2 restart web --update-env
 
 sleep 4
 echo "── status ──"
