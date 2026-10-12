@@ -3,11 +3,14 @@
 import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
-  PieChart, Pie, Cell, ResponsiveContainer,
-} from 'recharts';
+import dynamic from 'next/dynamic';
+import { ChartSkeleton } from '@/components/charts/ChartSkeleton';
 import { ticketsApi } from '@/lib/api';
+
+// recharts is heavy; load each chart in its own chunk on demand.
+const DailyBarChart = dynamic(() => import('./_charts').then((m) => m.DailyBarChart), { ssr: false, loading: () => <ChartSkeleton height={280} /> });
+const BreakdownPie = dynamic(() => import('./_charts').then((m) => m.BreakdownPie), { ssr: false, loading: () => <ChartSkeleton height={160} /> });
+const RatingBarChart = dynamic(() => import('./_charts').then((m) => m.RatingBarChart), { ssr: false, loading: () => <ChartSkeleton height={200} /> });
 import { TrendingUp, Ticket, Star, Users, Clock, AlertTriangle, CheckCircle, Hourglass, Download, Trophy } from 'lucide-react';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
@@ -47,20 +50,6 @@ function fmtMinutes(mins: number | null): string {
 }
 
 // ─── Custom tooltip ───────────────────────────────────────────────────────────
-
-function CustomTooltip({ active, payload, label }: { active?: boolean; payload?: { name: string; value: number; color: string }[]; label?: string }) {
-  if (!active || !payload?.length) return null;
-  return (
-    <div className="bg-gray-800 border border-gray-600 rounded-lg p-3 text-sm shadow-xl">
-      <p className="text-gray-300 mb-1 font-medium">{label}</p>
-      {payload.map((entry) => (
-        <p key={entry.name} style={{ color: entry.color }}>
-          {entry.name}: <span className="font-bold">{entry.value}</span>
-        </p>
-      ))}
-    </div>
-  );
-}
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
@@ -194,24 +183,7 @@ export default function TicketStatsPage() {
         ) : chartData.length === 0 ? (
           <div className="h-64 flex items-center justify-center text-gray-500">{t('noDataYet')}</div>
         ) : (
-          <ResponsiveContainer width="100%" height={280}>
-            <BarChart data={chartData} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-              <XAxis
-                dataKey="date"
-                tick={{ fill: '#9ca3af', fontSize: 11 }}
-                tickFormatter={(v) => {
-                  const d = new Date(v);
-                  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-                }}
-              />
-              <YAxis tick={{ fill: '#9ca3af', fontSize: 11 }} allowDecimals={false} />
-              <Tooltip content={<CustomTooltip />} />
-              <Legend wrapperStyle={{ color: '#9ca3af', fontSize: 12 }} />
-              <Bar dataKey="opened" name={t('opened')} fill="#5865f2" radius={[3, 3, 0, 0]} />
-              <Bar dataKey="closed" name={t('statusClosed')}  fill="#57f287" radius={[3, 3, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
+          <DailyBarChart data={chartData} t={t} />
         )}
       </div>
 
@@ -224,13 +196,7 @@ export default function TicketStatsPage() {
             <div className="h-48 flex items-center justify-center text-gray-500">{t('noTicketData')}</div>
           ) : (
             <div className="flex items-center gap-6">
-              <ResponsiveContainer width={160} height={160}>
-                <PieChart>
-                  <Pie data={pieStatus} cx="50%" cy="50%" innerRadius={45} outerRadius={70} dataKey="value" strokeWidth={0}>
-                    {pieStatus.map((entry, i) => <Cell key={i} fill={entry.color} />)}
-                  </Pie>
-                </PieChart>
-              </ResponsiveContainer>
+              <BreakdownPie data={pieStatus} />
               <div className="space-y-2 flex-1">
                 {pieStatus.map((item) => (
                   <div key={item.name} className="flex items-center justify-between">
@@ -253,13 +219,7 @@ export default function TicketStatsPage() {
             <div className="h-48 flex items-center justify-center text-gray-500">{t('noPanelData')}</div>
           ) : (
             <div className="flex items-center gap-6">
-              <ResponsiveContainer width={160} height={160}>
-                <PieChart>
-                  <Pie data={piePanel} cx="50%" cy="50%" innerRadius={45} outerRadius={70} dataKey="value" strokeWidth={0}>
-                    {piePanel.map((entry, i) => <Cell key={i} fill={entry.color} />)}
-                  </Pie>
-                </PieChart>
-              </ResponsiveContainer>
+              <BreakdownPie data={piePanel} />
               <div className="space-y-2 flex-1 min-w-0">
                 {piePanel.map((item) => (
                   <div key={item.name} className="flex items-center justify-between gap-2">
@@ -280,15 +240,7 @@ export default function TicketStatsPage() {
       {stats && Object.values(stats.ratingDistribution).some((v) => v > 0) && (
         <div className="card space-y-4">
           <h2 className="text-white font-semibold">{t('ratingDistribution')}</h2>
-          <ResponsiveContainer width="100%" height={200}>
-            <BarChart data={ratingData} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-              <XAxis dataKey="star" tick={{ fill: '#9ca3af', fontSize: 13 }} />
-              <YAxis tick={{ fill: '#9ca3af', fontSize: 11 }} allowDecimals={false} />
-              <Tooltip content={<CustomTooltip />} />
-              <Bar dataKey="count" name={t('ratings')} fill="#fee75c" radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
+          <RatingBarChart data={ratingData} t={t} />
         </div>
       )}
 

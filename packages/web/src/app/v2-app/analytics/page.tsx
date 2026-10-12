@@ -1,11 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import {
-  ResponsiveContainer, AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
-  XAxis, YAxis, CartesianGrid, Tooltip,
-} from 'recharts';
+import dynamic from 'next/dynamic';
+import { ChartSkeleton } from '@/components/charts/ChartSkeleton';
 import { AppShell } from '../../../components/shell/AppShell';
+
+// recharts is heavy; load each chart in its own chunk on demand.
+const GrowthChart = dynamic(() => import('./_charts').then((m) => m.GrowthChart), { ssr: false, loading: () => <ChartSkeleton height={260} /> });
+const ActivityChart = dynamic(() => import('./_charts').then((m) => m.ActivityChart), { ssr: false, loading: () => <ChartSkeleton height={190} /> });
+const FeaturePie = dynamic(() => import('./_charts').then((m) => m.FeaturePie), { ssr: false, loading: () => <ChartSkeleton height={130} /> });
 import { StatTile, ChartCard, Tabs } from '../../../components/ui';
 
 const growth = [
@@ -28,15 +31,6 @@ const mostActive = [
   ['ragingtrucker', 6, 326, '#c94b6b'], ['phonicspider', 5, 250, '#3ba55d'],
   ['eisenherz4247', 5, 222, '#8a5cf6'], ['na_kor', 5, 206, '#e0a53b'], ['zarlus', 3, 97, '#4aa8d8'],
 ] as const;
-
-const tipStyle = {
-  background: 'var(--bg-elevated)',
-  border: '1px solid var(--border)',
-  borderRadius: 10,
-  color: 'var(--text-primary)',
-  fontSize: 12,
-} as const;
-const axisTick = { fill: 'var(--text-muted)', fontSize: 11 } as const;
 
 function Dot({ c }: { c: string }) {
   return <span className="inline-block h-2 w-2 rounded-[3px]" style={{ background: c }} />;
@@ -80,21 +74,7 @@ export default function AnalyticsPage() {
           title="Member growth"
           right={<span className="flex items-center gap-1.5 text-[11.5px] text-(--text-secondary)"><Dot c="#34d399" /> Total members</span>}
         >
-          <ResponsiveContainer width="100%" height={260}>
-            <AreaChart data={growth} margin={{ top: 8, right: 8, left: -12, bottom: 0 }}>
-              <defs>
-                <linearGradient id="mg" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#34d399" stopOpacity={0.28} />
-                  <stop offset="100%" stopColor="#34d399" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid stroke="var(--border)" vertical={false} />
-              <XAxis dataKey="d" tick={axisTick} axisLine={{ stroke: 'var(--border)' }} tickLine={false} />
-              <YAxis tick={axisTick} axisLine={false} tickLine={false} width={44} domain={['dataMin-8', 'dataMax+4']} />
-              <Tooltip contentStyle={tipStyle} cursor={{ stroke: 'var(--border-strong)' }} />
-              <Area type="monotone" dataKey="m" name="Members" stroke="#34d399" strokeWidth={2.5} fill="url(#mg)" />
-            </AreaChart>
-          </ResponsiveContainer>
+          <GrowthChart data={growth} />
         </ChartCard>
 
         <div className="grid grid-cols-[1fr_1fr_1.2fr] gap-5">
@@ -107,28 +87,12 @@ export default function AnalyticsPage() {
               </span>
             }
           >
-            <ResponsiveContainer width="100%" height={190}>
-              <BarChart data={activity} margin={{ top: 4, right: 4, left: -20, bottom: 0 }} barGap={2}>
-                <CartesianGrid stroke="var(--border)" vertical={false} />
-                <XAxis dataKey="d" tick={axisTick} axisLine={{ stroke: 'var(--border)' }} tickLine={false} />
-                <YAxis tick={axisTick} axisLine={false} tickLine={false} width={34} />
-                <Tooltip contentStyle={tipStyle} cursor={{ fill: 'var(--bg-hover)' }} />
-                <Bar dataKey="msgs" name="Messages" fill="#34d399" radius={[3, 3, 0, 0]} />
-                <Bar dataKey="cmds" name="Commands" fill="#818cf8" radius={[3, 3, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+            <ActivityChart data={activity} />
           </ChartCard>
 
           <ChartCard title="By feature">
             <div className="flex items-center gap-4">
-              <ResponsiveContainer width={130} height={130}>
-                <PieChart>
-                  <Pie data={byFeature} dataKey="value" nameKey="name" innerRadius={42} outerRadius={62} paddingAngle={2} stroke="none">
-                    {byFeature.map((e) => <Cell key={e.name} fill={e.color} />)}
-                  </Pie>
-                  <Tooltip contentStyle={tipStyle} />
-                </PieChart>
-              </ResponsiveContainer>
+              <FeaturePie data={byFeature} />
               <div className="flex flex-1 flex-col gap-2 text-[12.5px] text-(--text-secondary)">
                 {byFeature.map((e) => (
                   <div key={e.name} className="flex items-center gap-2">

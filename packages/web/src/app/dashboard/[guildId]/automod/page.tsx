@@ -9,8 +9,15 @@ import toast from 'react-hot-toast';
 import { useState, useEffect } from 'react';
 import type { AutoModConfig } from '@arkenbot/shared';
 import { Bot, X, BarChart2 } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
+import dynamic from 'next/dynamic';
+import { ChartSkeleton } from '@/components/charts/ChartSkeleton';
 import { useTranslations } from 'next-intl';
+
+// recharts is heavy; load the actions-per-day chart in its own chunk on demand.
+const AutomodChart = dynamic(() => import('./_charts'), {
+  ssr: false,
+  loading: () => <ChartSkeleton height={120} />,
+});
 
 // ─── Filter-type label map (backend reason → i18n key) ────────────────────────
 const FILTER_LABELS: Record<string, string> = {
@@ -80,18 +87,7 @@ function AutoModStats({ guildId }: { guildId: string }) {
           {/* Time-series chart */}
           <div>
             <p className="text-xs text-gray-500 mb-2">{t('actionsPerDay')}</p>
-            <ResponsiveContainer width="100%" height={120}>
-              <BarChart data={chartData} margin={{ top: 0, right: 0, left: -28, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#ffffff08" vertical={false} />
-                <XAxis dataKey="date" tick={{ fill: '#6B7280', fontSize: 10 }} axisLine={false} tickLine={false} interval="preserveStartEnd" />
-                <YAxis tick={{ fill: '#6B7280', fontSize: 10 }} axisLine={false} tickLine={false} allowDecimals={false} />
-                <Tooltip
-                  contentStyle={{ background: '#1e1f22', border: '1px solid #ffffff10', borderRadius: 8, color: '#fff', fontSize: 12 }}
-                  cursor={{ fill: '#5865F220' }}
-                />
-                <Bar dataKey="Hits" fill="#5865F2" radius={[3, 3, 0, 0]} maxBarSize={24} />
-              </BarChart>
-            </ResponsiveContainer>
+            <AutomodChart data={chartData} />
           </div>
 
           {/* Filter breakdown */}

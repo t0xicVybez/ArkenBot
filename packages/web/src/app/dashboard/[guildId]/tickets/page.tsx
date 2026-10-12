@@ -6,7 +6,11 @@ import Link from 'next/link';
 import { ticketsApi } from '@/lib/api';
 import toast from 'react-hot-toast';
 import { Ticket, LayoutTemplate, ChevronRight, BarChart2, Trash2, MessageSquare, AlertTriangle, Clock, Settings } from 'lucide-react';
-import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
+import dynamic from 'next/dynamic';
+import { ChartSkeleton } from '@/components/charts/ChartSkeleton';
+
+// recharts is heavy; load the status donut in its own chunk on demand.
+const StatusPie = dynamic(() => import('./_charts'), { ssr: false, loading: () => <ChartSkeleton height={100} /> });
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 
@@ -157,13 +161,7 @@ export default function TicketsPage() {
           <h2 className="text-gray-400 text-xs uppercase tracking-wider font-medium">{t('serverTickets')}</h2>
           {stats && stats.total > 0 ? (
             <div className="flex items-center gap-4">
-              <ResponsiveContainer width={100} height={100}>
-                <PieChart>
-                  <Pie data={pieData} cx="50%" cy="50%" innerRadius={28} outerRadius={46} dataKey="value" strokeWidth={0}>
-                    {pieData.map((e, i) => <Cell key={i} fill={e.color} />)}
-                  </Pie>
-                </PieChart>
-              </ResponsiveContainer>
+              <StatusPie data={pieData} />
               <div className="space-y-1.5">
                 {pieData.map((d) => (
                   <div key={d.name} className="flex items-center gap-2">

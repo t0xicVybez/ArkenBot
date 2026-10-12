@@ -4,8 +4,15 @@ import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import api from '@/lib/api';
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from 'recharts';
+import dynamic from 'next/dynamic';
+import { ChartSkeleton } from '@/components/charts/ChartSkeleton';
 import { LineChart as LineChartIcon, TrendingUp, TrendingDown, Users, MessageSquare } from 'lucide-react';
+
+// recharts is heavy; load the trend charts in their own chunk on demand.
+const AnalyticsCharts = dynamic(() => import('./_charts'), {
+  ssr: false,
+  loading: () => <div className="space-y-6">{[...Array(3)].map((_, i) => <div key={i} className="card"><ChartSkeleton height={220} /></div>)}</div>,
+});
 import { useTranslations } from 'next-intl';
 
 type DailyStats = { date: string; memberCount: number; messagesCount: number; commandsCount: number; newMembers: number; leftMembers: number };
@@ -45,9 +52,6 @@ export default function AnalyticsPage() {
   if (isLoading) {
     return <div className="p-3 sm:p-6 space-y-4">{[...Array(4)].map((_, i) => <div key={i} className="card h-32 animate-pulse bg-gray-700" />)}</div>;
   }
-
-  const tooltip = { contentStyle: { background: '#1e2124', border: '1px solid #374151', borderRadius: 6 } };
-  const axis = { tick: { fill: '#9ca3af', fontSize: 11 } };
 
   return (
     <div className="p-3 sm:p-6 max-w-4xl space-y-6">
@@ -91,50 +95,7 @@ export default function AnalyticsPage() {
       {history.length === 0 ? (
         <div className="card text-center py-12 text-gray-500 text-sm">{t('empty')}</div>
       ) : (
-        <>
-          <ChartCard title={t('memberGrowth')}>
-            <LineChart data={history}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-              <XAxis dataKey="date" {...axis} /><YAxis {...axis} /><Tooltip {...tooltip} />
-              <Line type="monotone" dataKey="memberCount" stroke="#5865f2" strokeWidth={2} dot={false} name={t('seriesMembers')} />
-            </LineChart>
-          </ChartCard>
-
-          <ChartCard title={t('activity')}>
-            <BarChart data={history}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-              <XAxis dataKey="date" {...axis} /><YAxis {...axis} /><Tooltip {...tooltip} />
-              <Legend wrapperStyle={{ color: '#9ca3af', fontSize: 12 }} />
-              <Bar dataKey="messagesCount" fill="#5865f2" name={t('seriesMessages')} radius={[2, 2, 0, 0]} />
-              <Bar dataKey="commandsCount" fill="#57f287" name={t('seriesCommands')} radius={[2, 2, 0, 0]} />
-            </BarChart>
-          </ChartCard>
-
-          <ChartCard title={t('memberFlow')}>
-            <BarChart data={history}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-              <XAxis dataKey="date" {...axis} /><YAxis {...axis} /><Tooltip {...tooltip} />
-              <Legend wrapperStyle={{ color: '#9ca3af', fontSize: 12 }} />
-              <Bar dataKey="newMembers" fill="#57f287" name={t('seriesJoins')} radius={[2, 2, 0, 0]} />
-              <Bar dataKey="leftMembers" fill="#ed4245" name={t('seriesLeaves')} radius={[2, 2, 0, 0]} />
-            </BarChart>
-          </ChartCard>
-
-          {/* Moderation trends */}
-          {modTrend.length > 0 && (
-            <ChartCard title={t('moderationTrends')}>
-              <BarChart data={modTrend}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                <XAxis dataKey="date" {...axis} /><YAxis {...axis} allowDecimals={false} /><Tooltip {...tooltip} />
-                <Legend wrapperStyle={{ color: '#9ca3af', fontSize: 12 }} />
-                <Bar dataKey="ban" stackId="m" fill="#ed4245" name={t('seriesBans')} />
-                <Bar dataKey="kick" stackId="m" fill="#faa61a" name={t('seriesKicks')} />
-                <Bar dataKey="mute" stackId="m" fill="#f1c40f" name={t('seriesMutes')} />
-                <Bar dataKey="warn" stackId="m" fill="#5865f2" name={t('seriesWarns')} radius={[2, 2, 0, 0]} />
-              </BarChart>
-            </ChartCard>
-          )}
-        </>
+        <AnalyticsCharts history={history} modTrend={modTrend} t={t} />
       )}
 
       {/* Top active members */}
@@ -169,14 +130,6 @@ function SummaryCard({ icon, label, value, valueClass }: { icon?: React.ReactNod
     <div className="card py-3">
       <div className="flex items-center gap-1.5 text-xs text-gray-400">{icon}{label}</div>
       <p className={`text-xl font-bold mt-1 ${valueClass ?? 'text-white'}`}>{value}</p>
-    </div>
-  );
-}
-function ChartCard({ title, children }: { title: string; children: React.ReactElement }) {
-  return (
-    <div className="card">
-      <h3 className="text-base font-semibold text-white mb-4">{title}</h3>
-      <ResponsiveContainer width="100%" height={220}>{children}</ResponsiveContainer>
     </div>
   );
 }
