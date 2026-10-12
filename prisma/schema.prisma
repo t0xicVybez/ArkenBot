@@ -26,6 +26,7 @@ model Guild {
   reactionRolePanels     ReactionRolePanel[]
   customCommands         CustomCommand[]
   addonData              AddonData[]
+  addonTickets           AddonTicket[]
   guildAddons            GuildAddon[]
   logEntries             LogEntry[]
   automodConfig          AutoModConfig?
@@ -591,6 +592,56 @@ model AddonData {
   @@unique([guildId, addonId, key])
   @@index([addonId, key])
   @@map("addon_data")
+}
+
+// Relational home for the Tickets addon (P1.2 migration out of the AddonData
+// JSON blob). Hot/queried fields are columns; the long tail stays in `data`.
+model AddonTicket {
+  id              String    @id
+  guildId         String
+  guild           Guild     @relation(fields: [guildId], references: [id], onDelete: Cascade)
+  number          Int
+  panelId         String
+  channelId       String    @unique
+  userId          String
+  username        String
+  status          String
+  priority        String
+  categoryTag     String?
+  buttonId        String?
+  claimedBy       String?
+  claimedByTag    String?
+  closedBy        String?
+  closedByTag     String?
+  closedAt        DateTime?
+  rating          Int?
+  ratingFeedback  String?
+  firstResponseAt DateTime?
+  lastActivity    DateTime
+  /// The rest of the Ticket object (tags, notes, transfer*, reminder*,
+  /// closeRequest*, aiTriage, formResponses, nudgedAt, controlsMessageId,
+  /// notesThreadId, reason, …) — fields not queried relationally.
+  data            Json
+  createdAt       DateTime
+  updatedAt       DateTime  @updatedAt
+
+  @@unique([guildId, number])
+  @@index([guildId, status])
+  @@index([guildId, userId])
+  @@map("addon_tickets")
+}
+
+model AddonTicketMessage {
+  id          String   @id @default(cuid())
+  channelId   String
+  authorId    String
+  authorTag   String
+  content     String
+  attachments Json
+  timestamp   DateTime
+
+  @@index([channelId])
+  @@map("addon_ticket_messages")
 }
 
 // ─────────────────────────────────────────────
