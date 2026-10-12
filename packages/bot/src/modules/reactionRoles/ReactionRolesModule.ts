@@ -1,3 +1,8 @@
+/**
+ * Reaction roles. Members self-assign roles by reacting to a configured
+ * message: adding a mapped emoji grants the role, removing it takes the role
+ * away. Supports verify-style and unique (pick-one) modes depending on config.
+ */
 import {
   type MessageReaction,
   type User,

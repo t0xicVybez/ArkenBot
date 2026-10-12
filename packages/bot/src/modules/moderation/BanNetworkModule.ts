@@ -1,4 +1,12 @@
 
+/**
+ * The cross-server ban network — an opt-in shared blocklist.
+ *
+ * Servers that join the network contribute manual bans to a shared list. When a
+ * flagged user joins a participating server, staff get an alert (once the user
+ * has been banned by enough separate servers to pass the threshold) with the
+ * option to ban them too. It only ever alerts/suggests — it never auto-bans.
+ */
 import {
   EmbedBuilder,
   ActionRowBuilder,

@@ -1,13 +1,23 @@
 
 
+/**
+ * Invite tracking — works out which invite link each new member used.
+ *
+ * Discord doesn't tell us directly, so we keep a cached snapshot of every
+ * invite's use-count per guild. When someone joins, whichever invite's count
+ * went up is the one they used. The cache is seeded on startup and kept current
+ * by the inviteCreate/inviteDelete events.
+ */
 import type { Guild, GuildMember, PartialGuildMember } from 'discord.js';
 import { prisma } from '../../database.js';
 import { logger } from '../../logger.js';
 import { getGuildSettings } from '../../utils/settings.js';
 
+// `db` is the same client typed loosely, for a model not yet in the generated types.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = prisma as any;
 
+// guildId -> (invite code -> last-seen use count).
 const inviteCache = new Map<string, Map<string, number>>();
 
 export class InviteTrackerModule {

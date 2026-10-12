@@ -1,4 +1,14 @@
 
+/**
+ * Server promotion tracking. Rewards members who "promote" the server by
+ * putting its invite/vanity in their custom status or display name. It watches
+ * presence/profile changes, opens a timed "session" while someone is promoting,
+ * and closes it when they stop — so leaderboards can total real promotion time
+ * (open sessions count live elapsed time; offline/invisible gaps don't).
+ *
+ * The per-guild config is cached in memory (CachedConfig) and refreshed on
+ * change, since this runs on the hot presence path.
+ */
 import { ActivityType, type Presence, type User, type Client, type Guild } from 'discord.js';
 import { prisma } from '../../database.js';
 import { logger } from '../../logger.js';

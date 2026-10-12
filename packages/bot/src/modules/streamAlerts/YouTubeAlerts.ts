@@ -1,4 +1,13 @@
 
+/**
+ * YouTube live/upload alerts.
+ *
+ * Primary path is push: we subscribe to channels via WebSub (PubSubHubbub) and
+ * react to the hub's pings in `handleYouTubeEvent`. Google's hub is flaky, so
+ * `pollUpcoming`/`pollFeeds` are an adaptive polling fallback that catches
+ * anything the push missed. The YouTube Data API has a strict daily quota, so
+ * every call is metered against `QUOTA_BUDGET` via `spendQuota`.
+ */
 import { EmbedBuilder, type TextChannel } from 'discord.js';
 import { prisma } from '../../database.js';
 import { redis, pub } from '../../redis.js';
@@ -7,6 +16,8 @@ import { getGuildSettings } from '../../utils/settings.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 import type { BotClient } from '../../client.js';
 
+// Daily YouTube API quota we allow ourselves to spend (default well under the
+// 10k/unit free ceiling across our key's budget).
 const QUOTA_BUDGET = parseInt(process.env.YOUTUBE_QUOTA_BUDGET ?? '45000', 10);
 const YT = 'https://www.googleapis.com/youtube/v3';
 

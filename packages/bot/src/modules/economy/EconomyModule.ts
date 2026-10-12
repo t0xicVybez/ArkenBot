@@ -1,4 +1,10 @@
 
+/**
+ * The server economy: per-guild virtual currency. Handles balances (wallet and
+ * bank), daily rewards, transfers, the shop and inventory, and the weekly
+ * lottery draw. The gambling games' math lives separately in `games.ts` so it
+ * can be tested on its own.
+ */
 import { prisma } from '../../database.js';
 import { EmbedBuilder, type Guild, type TextChannel } from 'discord.js';
 import { COLORS } from '@arkenbot/shared';

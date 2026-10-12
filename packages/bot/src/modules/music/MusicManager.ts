@@ -1,3 +1,10 @@
+/**
+ * Music playback. `MusicQueue` is one guild's player — its track queue, voice
+ * connection and audio player, with controls for play/skip/pause/loop/volume —
+ * and `MusicManager` owns the queues across all guilds, creating one on demand
+ * and tearing it down when playback ends or the channel empties. A `Track` is a
+ * single resolved song (title, URL, requester, duration).
+ */
 import {
   type Guild,
   type VoiceBasedChannel,
@@ -115,6 +122,7 @@ function createAudioStream(videoUrl: string): AudioStream {
   return { stream: ffmpeg.stdout!, kill };
 }
 
+/** One guild's player: its queue, voice connection, and playback controls. */
 export class MusicQueue {
   public tracks: Track[] = [];
   public currentTrack: Track | null = null;
@@ -298,6 +306,7 @@ export class MusicQueue {
   }
 }
 
+/** Owns the per-guild MusicQueue instances, creating/removing them on demand. */
 export class MusicManager {
   private static queues = new Map<string, MusicQueue>();
 

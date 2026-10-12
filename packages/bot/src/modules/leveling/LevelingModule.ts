@@ -1,5 +1,11 @@
 
 
+/**
+ * The leveling system. Awards XP for chatting (with an anti-spam cooldown) and
+ * for time in voice, announces level-ups, grants level-reward roles, checks
+ * achievements, and can pay an economy bonus. XP cooldowns live in Redis; the
+ * level ⇄ XP math comes from the shared `levelFromXp` helper.
+ */
 import { type Guild, type User, type GuildMember, type TextChannel, type Message, EmbedBuilder, Colors } from 'discord.js';
 import { prisma } from '../../database.js';
 import type { LevelRole } from '@prisma/client';

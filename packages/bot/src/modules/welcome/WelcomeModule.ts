@@ -1,3 +1,8 @@
+/**
+ * Welcome and goodbye messages, plus auto-roles. On join, posts the configured
+ * welcome message (templates like {user}/{server} filled by formatTemplate) and
+ * assigns any join roles; on leave, posts the goodbye message.
+ */
 import { type Guild, type GuildMember, EmbedBuilder, type TextChannel } from 'discord.js';
 import { notifyActionFailure } from '../../utils/permissionAlert.js';
 import { prisma } from '../../database.js';

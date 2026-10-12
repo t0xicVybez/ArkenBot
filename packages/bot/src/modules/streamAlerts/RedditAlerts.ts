@@ -1,4 +1,9 @@
 
+/**
+ * New-post alerts for subreddits, using Reddit's public RSS feeds (no Reddit
+ * API key needed). We fetch directly first; if Reddit rate-limits us (429), we
+ * retry through a SOCKS proxy (YTDLP_PROXY) since datacenter IPs get throttled.
+ */
 import Parser from 'rss-parser';
 import { SocksProxyAgent } from 'socks-proxy-agent';
 import { EmbedBuilder, type TextChannel } from 'discord.js';
@@ -8,6 +13,7 @@ import { getGuildSettings } from '../../utils/settings.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 import type { BotClient } from '../../client.js';
 
+// A descriptive User-Agent — Reddit blocks generic/empty ones.
 const UA = 'ArkenBot/1.0 (+https://arkenbot.app; Discord new-post alerts)';
 const directParser = new Parser({ headers: { 'User-Agent': UA }, timeout: 15000 });
 

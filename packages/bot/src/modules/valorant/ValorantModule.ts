@@ -1,4 +1,10 @@
 
+/**
+ * The Valorant feature. Links members' Riot accounts, periodically syncs their
+ * competitive rank, assigns matching rank roles, and posts match summaries.
+ * Talks to Riot through ValorantService and uses the tier helpers in
+ * constants.ts. Dormant until Riot API credentials are configured.
+ */
 import { EmbedBuilder, type Guild, type GuildMember, type TextChannel, type Presence } from 'discord.js';
 import { prisma } from '../../database.js';
 import { swallow } from '../../logger.js';

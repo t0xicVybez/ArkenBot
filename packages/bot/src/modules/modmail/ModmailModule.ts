@@ -1,4 +1,10 @@
 
+/**
+ * Modmail — a private relay between members and staff. A member DMs the bot and
+ * a dedicated channel/thread opens in the server; messages are relayed both
+ * ways so staff can reply as the bot. Idle threads auto-close (driven by a
+ * background job) and reopen if the member writes again.
+ */
 import {
   ChannelType,
   PermissionFlagsBits,

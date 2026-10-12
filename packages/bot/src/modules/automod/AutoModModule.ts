@@ -1,5 +1,14 @@
 
 
+/**
+ * Automatic moderation — the rules engine run against messages and new joins.
+ *
+ * Covers spam, excessive caps/mentions/emoji, banned words, invite and link
+ * filtering, and a join gate; it escalates through warn → delete → timeout →
+ * ban per the guild's config. The heavier specialised checks live in sibling
+ * modules (AiModerationModule for LLM judgement, AntiPhishingModule for scam
+ * links) and are called from here.
+ */
 import { type Message, type GuildMember, type TextChannel, EmbedBuilder, PermissionFlagsBits, GuildVerificationLevel } from 'discord.js';
 import { prisma } from '../../database.js';
 import { redis } from '../../redis.js';

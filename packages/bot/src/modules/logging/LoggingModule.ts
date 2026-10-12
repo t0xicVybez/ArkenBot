@@ -1,5 +1,11 @@
 
 
+/**
+ * Server audit logging. Posts a formatted embed to the guild's log channel for
+ * notable events — message edits and deletes, members joining and leaving,
+ * moderation actions, and so on. Each event type can be toggled per guild
+ * (LOG_TYPES), so this checks the config before posting.
+ */
 import {
   type Guild,
   type TextChannel,

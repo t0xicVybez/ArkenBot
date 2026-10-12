@@ -1,4 +1,9 @@
 
+/**
+ * Ban/mute appeals. A punished user clicks "Appeal" (from their DM or the
+ * appeal page), fills in a modal explaining their case, and the appeal is
+ * posted to a staff channel with approve/deny buttons for review.
+ */
 import {
   EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle,
   ModalBuilder, TextInputBuilder, TextInputStyle,
