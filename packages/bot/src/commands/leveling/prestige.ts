@@ -8,6 +8,7 @@ import { errorEmbed } from '../../utils/embed.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 import { getGuildSettings } from '../../utils/settings.js';
 
+/** Reset your level in exchange for a permanent prestige rank. */
 const command: BotCommand = {
   data: new SlashCommandBuilder().setName('prestige').setDescription('Reset your level for a permanent prestige rank'),
   category: 'leveling',

@@ -8,6 +8,7 @@ import { errorEmbed } from '../../utils/embed.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 import { EconomyModule } from '../../modules/economy/EconomyModule.js';
 
+/** Leaderboard of the server's wealthiest members. */
 const command: BotCommand = {
   data: new SlashCommandBuilder().setName('richest').setDescription('View the server\'s wealth leaderboard'),
   category: 'Economy',

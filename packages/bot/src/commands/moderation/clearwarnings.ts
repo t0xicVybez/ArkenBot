@@ -16,6 +16,7 @@ import { LoggingModule } from '../../modules/logging/LoggingModule.js';
 import { COLORS } from '@arkenbot/shared';
 
 import { swallow } from '../../logger.js';
+/** Remove all warnings from a member. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('clearwarnings')

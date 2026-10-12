@@ -13,6 +13,7 @@ import { errorEmbed } from '../../utils/embed.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 import { getGuildSettings } from '../../utils/settings.js';
 
+/** Admin command to grant XP to a member. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('givexp')

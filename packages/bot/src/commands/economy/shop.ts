@@ -9,6 +9,7 @@ import { t, resolveUserLocale } from '../../i18n/index.js';
 import { EconomyModule } from '../../modules/economy/EconomyModule.js';
 import { notifyActionFailure } from '../../utils/permissionAlert.js';
 
+/** Browse and buy items from the server shop. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('shop')

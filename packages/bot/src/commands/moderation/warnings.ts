@@ -13,6 +13,7 @@ import { prisma } from '../../database.js';
 import { getGuildSettings } from '../../utils/settings.js';
 import { COLORS } from '@arkenbot/shared';
 
+/** List a member's warnings. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('warnings')

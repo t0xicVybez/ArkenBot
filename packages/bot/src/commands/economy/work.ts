@@ -10,6 +10,7 @@ import { EconomyModule } from '../../modules/economy/EconomyModule.js';
 
 const JOB_COUNT = 8;
 
+/** Work a shift to earn currency (on a cooldown). */
 const command: BotCommand = {
   data: new SlashCommandBuilder().setName('work').setDescription('Work a shift to earn some currency'),
   category: 'Economy',

@@ -13,6 +13,7 @@ import { t, resolveUserLocale } from '../../i18n/index.js';
 import { MusicManager } from '../../modules/music/MusicManager.js';
 import { getGuildSettings } from '../../utils/settings.js';
 
+/** Play a track or add it to the queue, joining your voice channel. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('play')

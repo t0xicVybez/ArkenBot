@@ -5,6 +5,7 @@ import type { BotClient } from '../../client.js';
 import { infoEmbed } from '../../utils/embed.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 
+/** Show the bot's latency. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('ping')

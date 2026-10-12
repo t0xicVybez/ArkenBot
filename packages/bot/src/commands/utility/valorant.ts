@@ -14,6 +14,7 @@ import { tierName, tierColor } from '../../modules/valorant/constants.js';
 
 const API_BASE = process.env.PUBLIC_API_URL || 'https://api.arkenbot.app';
 
+/** Link your Riot account and view your VALORANT rank. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('valorant')

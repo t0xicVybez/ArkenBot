@@ -15,6 +15,7 @@ import { getGuildSettings } from '../../utils/settings.js';
 import { generateRankCard } from '../../utils/rankCard.js';
 import { logger } from '../../logger.js';
 
+/** Show a member's current level and XP as a rank-card image. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('rank')

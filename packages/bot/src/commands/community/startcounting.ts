@@ -12,6 +12,7 @@ import { swallow } from '../../logger.js';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = prisma as any;
 
+/** Post the counting-game announcement in the configured counting channel. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('startcounting')

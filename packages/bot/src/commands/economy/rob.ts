@@ -8,6 +8,7 @@ import { errorEmbed } from '../../utils/embed.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 import { EconomyModule } from '../../modules/economy/EconomyModule.js';
 
+/** Risk some currency trying to rob another member — it can backfire and cost you. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('rob')

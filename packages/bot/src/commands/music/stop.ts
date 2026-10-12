@@ -11,6 +11,7 @@ import { t, resolveUserLocale } from '../../i18n/index.js';
 import { MusicManager } from '../../modules/music/MusicManager.js';
 import { getGuildSettings } from '../../utils/settings.js';
 
+/** Stop playback and clear the queue. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('stop')

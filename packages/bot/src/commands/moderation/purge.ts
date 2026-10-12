@@ -4,6 +4,7 @@ import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 
+/** Bulk-delete recent messages in a channel. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('purge')

@@ -13,6 +13,7 @@ import { t, resolveUserLocale } from '../../i18n/index.js';
 const monthName = (month: number, loc: string): string =>
   new Intl.DateTimeFormat(loc, { month: 'long', timeZone: 'UTC' }).format(new Date(Date.UTC(2000, month - 1, 1)));
 
+/** Set, clear, or view birthdays. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('birthday')

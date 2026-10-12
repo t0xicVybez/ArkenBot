@@ -18,6 +18,7 @@ async function bustCache(guildId: string): Promise<void> {
   await redis.del(`ar:list:${guildId}`).catch(swallow);
 }
 
+/** Manage keyword/regex auto-responses for the server. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('autoresponse')

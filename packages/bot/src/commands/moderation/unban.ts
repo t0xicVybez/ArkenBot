@@ -13,6 +13,7 @@ import { getNextCaseNumber, getGuildSettings } from '../../utils/settings.js';
 import { BanNetworkModule } from '../../modules/moderation/BanNetworkModule.js';
 
 import { swallow } from '../../logger.js';
+/** Lift a ban on a user. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('unban')

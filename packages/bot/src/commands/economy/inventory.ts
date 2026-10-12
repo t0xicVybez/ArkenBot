@@ -8,6 +8,7 @@ import { errorEmbed } from '../../utils/embed.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 import { EconomyModule } from '../../modules/economy/EconomyModule.js';
 
+/** View the items you own. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('inventory')

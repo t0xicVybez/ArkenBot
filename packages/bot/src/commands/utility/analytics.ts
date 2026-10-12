@@ -13,6 +13,7 @@ import { generateAnalyticsImage } from '../../utils/analyticsChart.js';
 import { errorEmbed, successEmbed } from '../../utils/embed.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 
+/** View the server analytics report, or (for admins) configure it. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('analytics')

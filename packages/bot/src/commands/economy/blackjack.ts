@@ -55,6 +55,7 @@ async function settle(interaction: ButtonInteraction, g: Game, loc: string): Pro
   await interaction.update({ embeds: [tableEmbed(g, loc, { color, title, footer })], components: controls(g.userId, true) }).catch(() => {});
 }
 
+/** Play a hand of blackjack against the house. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('blackjack')

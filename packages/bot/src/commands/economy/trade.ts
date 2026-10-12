@@ -15,6 +15,7 @@ import { EconomyModule } from '../../modules/economy/EconomyModule.js';
 interface Offer { guildId: string; senderId: string; recipientId: string; coins: number; itemId: string | null; itemName: string | null; }
 const offers = new Map<string, Offer>();
 
+/** Offer coins and/or an item to another member and complete a trade. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('trade')

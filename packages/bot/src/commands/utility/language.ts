@@ -11,6 +11,7 @@ import { LOCALES, isSupportedLocale } from '@arkenbot/shared';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 import { infoEmbed } from '../../utils/embed.js';
 
+/** Set or view the language the bot replies to you in. */
 const command: BotCommand = {
   category: 'Utility',
   data: new SlashCommandBuilder()

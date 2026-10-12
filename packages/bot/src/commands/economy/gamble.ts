@@ -9,6 +9,7 @@ import { t, resolveUserLocale } from '../../i18n/index.js';
 import { EconomyModule } from '../../modules/economy/EconomyModule.js';
 import * as games from '../../modules/economy/games.js';
 
+/** Wager currency on a quick game of chance. The odds/house edge live in modules/economy/games.ts. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('gamble')

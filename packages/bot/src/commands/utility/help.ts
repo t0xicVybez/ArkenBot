@@ -186,6 +186,7 @@ function makeRow(page: number, total: number, loc: string) {
   );
 }
 
+/** Browse the commands available to you. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('help')

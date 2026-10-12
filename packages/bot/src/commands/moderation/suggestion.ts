@@ -13,6 +13,7 @@ const STATUS_COLORS: Record<string, number> = {
   pending: 0x5865f2,
 };
 
+/** Staff management of submitted suggestions (approve, deny, etc.). */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('suggestion')

@@ -13,6 +13,7 @@ import { prisma } from '../../database.js';
 import { getGuildSettings } from '../../utils/settings.js';
 import { COLORS, formatDuration } from '@arkenbot/shared';
 
+/** View and manage moderation cases. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('case')

@@ -12,6 +12,7 @@ import type { BotClient } from '../../client.js';
 import { COLORS } from '@arkenbot/shared';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 
+/** Show a user's avatar. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('avatar')

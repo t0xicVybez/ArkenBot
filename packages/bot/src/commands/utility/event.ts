@@ -19,6 +19,7 @@ function resolveWhen(raw: string): Date | null {
   return null;
 }
 
+/** Schedule a community event with RSVP buttons. */
 const command: BotCommand = {
   category: 'Utility',
   data: new SlashCommandBuilder()

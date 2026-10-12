@@ -28,6 +28,7 @@ const NEEDED: { flag: bigint; label: string }[] = [
   { flag: PermissionFlagsBits.ManageNicknames, label: 'Manage Nicknames' },
 ];
 
+/** Check which permissions the bot has (useful for diagnosing why something failed). */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('permcheck')

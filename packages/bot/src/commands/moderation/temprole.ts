@@ -24,6 +24,7 @@ function parseDuration(input: string): number | null {
   return value * (multipliers[match[2].toLowerCase()] ?? 0);
 }
 
+/** Grant a role that is automatically removed after a set time. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('temprole')

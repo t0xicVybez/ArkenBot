@@ -16,6 +16,7 @@ import { getNextCaseNumber, getGuildSettings } from '../../utils/settings.js';
 import { LoggingModule } from '../../modules/logging/LoggingModule.js';
 
 import { swallow } from '../../logger.js';
+/** Time a member out (mute) for a duration. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('mute')

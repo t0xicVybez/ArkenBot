@@ -5,6 +5,7 @@ import type { BotClient } from '../../client.js';
 import { prisma } from '../../database.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 
+/** Submit a suggestion for this server. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('suggest')

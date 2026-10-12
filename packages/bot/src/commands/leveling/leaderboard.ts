@@ -16,6 +16,7 @@ import { t, resolveUserLocale } from '../../i18n/index.js';
 import { getGuildSettings } from '../../utils/settings.js';
 import { config } from '../../config.js';
 
+/** The server's XP/level leaderboard. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('leaderboard')

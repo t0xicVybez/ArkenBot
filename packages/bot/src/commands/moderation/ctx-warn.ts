@@ -22,6 +22,7 @@ import { getNextCaseNumber, getGuildSettings } from '../../utils/settings.js';
 import { LoggingModule } from '../../modules/logging/LoggingModule.js';
 
 import { swallow } from '../../logger.js';
+/** Right-click → Apps → Warn: the context-menu version of /warn. */
 const command: BotCommand = {
   data: new ContextMenuCommandBuilder()
     .setName('⚠️ Warn Member')

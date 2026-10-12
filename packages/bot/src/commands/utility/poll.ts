@@ -60,6 +60,7 @@ export function buildPollComponents(pollId: string, options: string[], closed: b
   return rows;
 }
 
+/** Create a poll with voting buttons. Also exports the embed/component builders reused by the poll-closing job. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('poll')

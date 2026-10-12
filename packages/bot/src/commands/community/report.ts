@@ -76,6 +76,7 @@ function buildReportButtons(reportId: string, loc: string, disabled = false): Ac
   );
 }
 
+/** Let a member report another member to the moderation team. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('report')

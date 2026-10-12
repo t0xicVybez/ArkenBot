@@ -23,6 +23,7 @@ interface ForumManagementConfig {
   channels: Record<string, ForumChannelConfig>;
 }
 
+/** Configure automatic forum-post management (auto-tagging, template messages). */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('forum-setup')

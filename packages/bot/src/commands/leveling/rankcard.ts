@@ -15,6 +15,7 @@ import { xpForLevel } from '@arkenbot/shared';
 const HEX_RE = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
 const URL_RE = /^https?:\/\/.+\.(png|jpg|jpeg|webp|gif)(\?.*)?$/i;
 
+/** Customise the appearance of your rank card. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('rankcard')

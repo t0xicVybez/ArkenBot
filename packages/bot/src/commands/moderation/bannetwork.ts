@@ -15,6 +15,7 @@ import { BanNetworkModule } from '../../modules/moderation/BanNetworkModule.js';
 import { getGuildSettings } from '../../utils/settings.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 
+/** Manage this server's participation in the cross-server ban network. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('bannetwork')

@@ -9,6 +9,7 @@ import type { BotClient } from '../../client.js';
 import { getSelfRoles } from './selfrole.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 
+/** Give yourself one of the server's self-assignable roles. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('selfassignrole')

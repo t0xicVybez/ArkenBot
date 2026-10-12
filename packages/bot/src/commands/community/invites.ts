@@ -8,6 +8,7 @@ import { errorEmbed } from '../../utils/embed.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 import { getGuildSettings } from '../../utils/settings.js';
 
+/** Show how many members you (or another member) have invited to the server. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('invites')

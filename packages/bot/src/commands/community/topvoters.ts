@@ -9,6 +9,7 @@ import { t, resolveUserLocale } from '../../i18n/index.js';
 import { swallow } from '../../logger.js';
 const MEDALS = ['🥇', '🥈', '🥉'];
 
+/** Leaderboard of the people who vote for the bot on top.gg the most. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('topvoters')

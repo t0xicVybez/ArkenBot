@@ -16,6 +16,7 @@ function parseDuration(str: string): number | null {
   return n * (unit[match[2].toLowerCase()] ?? 0);
 }
 
+/** Create and manage giveaways. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('giveaway')

@@ -11,6 +11,7 @@ import { t, resolveUserLocale } from '../../i18n/index.js';
 import { MusicManager } from '../../modules/music/MusicManager.js';
 import { getGuildSettings } from '../../utils/settings.js';
 
+/** Skip to the next track in the queue. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('skip')

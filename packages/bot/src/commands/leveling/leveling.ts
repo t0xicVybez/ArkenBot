@@ -12,6 +12,7 @@ import { LevelingModule } from '../../modules/leveling/LevelingModule.js';
 import { getGuildSettings } from '../../utils/settings.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 
+/** Admin settings for the leveling system (XP rates, level-reward roles, announcements). */
 const command: BotCommand = {
   data: (new SlashCommandBuilder()
     .setName('leveling')

@@ -14,6 +14,7 @@ import type { Prisma } from '@prisma/client';
 import { invalidateSettingsCache } from '../../utils/settings.js';
 import { VerificationModule } from '../../modules/verification/VerificationModule.js';
 
+/** Configure the new-member verification gate. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('verification')

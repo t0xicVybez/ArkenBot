@@ -34,6 +34,7 @@ export async function bustSelfRoleCache(guildId: string) {
   await redis.del(CACHE_KEY(guildId));
 }
 
+/** Admin command to manage which roles members may self-assign. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('selfrole')

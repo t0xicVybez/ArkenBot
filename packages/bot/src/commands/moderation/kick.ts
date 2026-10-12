@@ -14,6 +14,7 @@ import { getNextCaseNumber, getGuildSettings } from '../../utils/settings.js';
 import { LoggingModule } from '../../modules/logging/LoggingModule.js';
 
 import { swallow } from '../../logger.js';
+/** Remove a member from the server (they can rejoin with a new invite). */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('kick')

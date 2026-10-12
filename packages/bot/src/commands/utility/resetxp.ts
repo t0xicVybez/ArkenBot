@@ -5,6 +5,7 @@ import type { BotClient } from '../../client.js';
 import { prisma } from '../../database.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 
+/** Admin command to wipe all XP and levels in the server. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('resetxp')

@@ -18,6 +18,7 @@ function fmt(totalSeconds: number, loc: string): string {
   return t('cmd.promotion.lessMin', loc);
 }
 
+/** See who is promoting the server and for how long. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('promotion')

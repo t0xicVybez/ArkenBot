@@ -15,6 +15,7 @@ function parseAmount(raw: string, max: number): number | null {
   return Math.floor(n);
 }
 
+/** Deposit currency into, or withdraw it from, your bank. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('bank')

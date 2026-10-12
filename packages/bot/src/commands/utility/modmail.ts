@@ -15,6 +15,7 @@ import { prisma } from '../../database.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 import { ModmailModule } from '../../modules/modmail/ModmailModule.js';
 
+/** Set up and manage DM-based modmail support. */
 const command: BotCommand = {
   category: 'Utility',
   data: new SlashCommandBuilder()

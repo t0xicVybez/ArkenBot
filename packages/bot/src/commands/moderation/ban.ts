@@ -17,6 +17,7 @@ import { LoggingModule } from '../../modules/logging/LoggingModule.js';
 import { BanNetworkModule } from '../../modules/moderation/BanNetworkModule.js';
 
 import { swallow } from '../../logger.js';
+/** Ban a member, optionally for a set duration, recording a moderation case. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('ban')

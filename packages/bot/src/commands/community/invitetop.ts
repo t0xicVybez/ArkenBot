@@ -8,6 +8,7 @@ import { errorEmbed } from '../../utils/embed.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 import { getGuildSettings } from '../../utils/settings.js';
 
+/** The server's top-inviters leaderboard. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('invitetop')

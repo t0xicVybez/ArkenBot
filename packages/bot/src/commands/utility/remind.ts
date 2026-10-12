@@ -13,6 +13,7 @@ function parseDuration(str: string): number | null {
   return n * (unit[match[2].toLowerCase()] ?? 0);
 }
 
+/** Set a reminder to be pinged about later. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('remind')

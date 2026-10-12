@@ -24,6 +24,7 @@ import { LoggingModule } from '../../modules/logging/LoggingModule.js';
 import { BanNetworkModule } from '../../modules/moderation/BanNetworkModule.js';
 
 import { swallow } from '../../logger.js';
+/** Right-click → Apps → Ban: the context-menu version of /ban. */
 const command: BotCommand = {
   data: new ContextMenuCommandBuilder()
     .setName('🔨 Ban Member')

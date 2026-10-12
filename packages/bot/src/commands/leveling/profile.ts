@@ -13,6 +13,7 @@ import { t, resolveUserLocale } from '../../i18n/index.js';
 import { getGuildSettings } from '../../utils/settings.js';
 import { AchievementsModule } from '../../modules/leveling/AchievementsModule.js';
 
+/** Show a member's full leveling profile. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('profile')

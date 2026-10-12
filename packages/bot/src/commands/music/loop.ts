@@ -11,6 +11,7 @@ import { t, resolveUserLocale } from '../../i18n/index.js';
 import { MusicManager } from '../../modules/music/MusicManager.js';
 import { getGuildSettings } from '../../utils/settings.js';
 
+/** Set the queue's loop mode (off / track / queue). */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('loop')

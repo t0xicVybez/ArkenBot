@@ -11,6 +11,7 @@ import { COLORS } from '@arkenbot/shared';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 
 import { swallow } from '../../logger.js';
+/** Show information about a user. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('userinfo')

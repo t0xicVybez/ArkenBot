@@ -31,6 +31,7 @@ function parseDuration(str: string): number | null {
   return n * (unit[match[2].toLowerCase()] ?? 0);
 }
 
+/** Right-click → Apps → Timeout: the context-menu version of /mute. */
 const command: BotCommand = {
   data: new ContextMenuCommandBuilder()
     .setName('⏱ Timeout Member')

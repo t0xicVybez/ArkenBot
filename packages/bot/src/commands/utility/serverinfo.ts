@@ -11,6 +11,7 @@ import { COLORS } from '@arkenbot/shared';
 import { prisma } from '../../database.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 
+/** Show information about this server. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('serverinfo')

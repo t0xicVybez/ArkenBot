@@ -15,6 +15,7 @@ import { t, resolveUserLocale } from '../../i18n/index.js';
 import { swallow } from '../../logger.js';
 const REP_COOLDOWN_SECONDS = 24 * 60 * 60;
 
+/** Give reputation points to a member, or view someone's reputation. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('rep')

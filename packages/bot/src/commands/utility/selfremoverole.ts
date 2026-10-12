@@ -9,6 +9,7 @@ import type { BotClient } from '../../client.js';
 import { getSelfRoles } from './selfrole.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 
+/** Remove a self-assignable role from yourself. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('selfremoverole')

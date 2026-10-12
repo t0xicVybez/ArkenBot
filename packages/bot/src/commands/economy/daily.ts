@@ -10,6 +10,7 @@ import { EconomyModule } from '../../modules/economy/EconomyModule.js';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
+/** Claim the once-a-day currency reward. */
 const command: BotCommand = {
   data: new SlashCommandBuilder().setName('daily').setDescription('Claim your daily reward'),
   category: 'Economy',

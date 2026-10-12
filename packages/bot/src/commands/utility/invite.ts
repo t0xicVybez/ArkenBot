@@ -4,6 +4,7 @@ import type { BotClient } from '../../client.js';
 import { infoEmbed } from '../../utils/embed.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 
+/** Get the link to add the bot to another server. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('invite')

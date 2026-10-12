@@ -15,6 +15,7 @@ import { LoggingModule } from '../../modules/logging/LoggingModule.js';
 
 import { swallow } from '../../logger.js';
 import { notifyActionFailure } from '../../utils/permissionAlert.js';
+/** Issue a warning to a member. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('warn')

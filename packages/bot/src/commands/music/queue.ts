@@ -13,6 +13,7 @@ import { MusicManager } from '../../modules/music/MusicManager.js';
 import { getGuildSettings } from '../../utils/settings.js';
 import { COLORS } from '@arkenbot/shared';
 
+/** Show the current music queue. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('queue')

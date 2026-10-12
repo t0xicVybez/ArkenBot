@@ -11,6 +11,7 @@ import { successEmbed, errorEmbed } from '../../utils/embed.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 import { prisma } from '../../database.js';
 
+/** Add or view private staff notes on a member. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('note')

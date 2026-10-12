@@ -12,6 +12,7 @@ import { prisma } from '../../database.js';
 import type { Prisma } from '@prisma/client';
 import { invalidateSettingsCache } from '../../utils/settings.js';
 
+/** Staff command to configure the member reporting system (where reports are sent, etc.). */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('report-setup')

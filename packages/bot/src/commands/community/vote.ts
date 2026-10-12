@@ -6,6 +6,7 @@ import { COLORS } from '@arkenbot/shared';
 import { prisma } from '../../database.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 
+/** Get the top.gg vote link and show the caller's voting rewards and streak. */
 const command: BotCommand = {
   data: new SlashCommandBuilder()
     .setName('vote')
