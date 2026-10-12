@@ -1,5 +1,11 @@
-
-
+/**
+ * The shared Prisma database client.
+ *
+ * Prisma 7 talks to Postgres through a pg driver adapter (configured here with
+ * DATABASE_URL). Warnings and errors are piped into our logger. Import the
+ * exported `prisma` anywhere you need the database — there's only ever one
+ * client per process.
+ */
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { logger } from './logger.js';

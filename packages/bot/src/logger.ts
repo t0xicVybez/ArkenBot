@@ -1,5 +1,11 @@
-
-
+/**
+ * The application logger (pino).
+ *
+ * In development it pretty-prints colourised lines; in production it emits plain
+ * JSON that PM2 captures for log aggregation. Also exports `swallow`, a tidy way
+ * to discard an expected, non-fatal error (e.g. a `.catch(swallow)` on a Discord
+ * call that may harmlessly fail) while still leaving a debug trace.
+ */
 import pino from 'pino';
 import { config } from './config.js';
 

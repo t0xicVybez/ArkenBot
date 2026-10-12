@@ -1,5 +1,10 @@
-
-
+/**
+ * Central configuration, read once from environment variables.
+ *
+ * `required` throws at startup if a critical variable is missing (so we fail
+ * loudly instead of misbehaving later); `optional` falls back to a default.
+ * Import `config` anywhere you need a token, URL or tuning value.
+ */
 import 'dotenv/config';
 
 function required(name: string): string {
@@ -37,6 +42,7 @@ export const config = {
     password: optional('LAVALINK_PASSWORD', 'youshallnotpass'),
     secure: optional('LAVALINK_SECURE', 'false') === 'true',
   },
+  // Comma-separated Discord user IDs that get bot-owner privileges.
   owners: optional('BOT_OWNER_IDS', '').split(',').filter(Boolean),
   env: optional('NODE_ENV', 'development'),
   logLevel: optional('LOG_LEVEL', 'info'),
@@ -47,6 +53,8 @@ export const config = {
     clientSecret: optional('RIOT_CLIENT_SECRET', ''),
     apiKey: optional('RIOT_API_KEY', ''),
     redirectUri: optional('RIOT_RSO_REDIRECT', 'https://api.arkenbot.app/valorant/rso/callback'),
+    // The Valorant integration stays dormant until all three Riot credentials
+    // are present, so features can check this before doing anything.
     get isConfigured(): boolean {
       return Boolean(process.env.RIOT_CLIENT_ID && process.env.RIOT_CLIENT_SECRET && process.env.RIOT_API_KEY);
     },

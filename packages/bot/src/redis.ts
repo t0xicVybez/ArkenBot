@@ -1,5 +1,16 @@
-
-
+/**
+ * Redis connections.
+ *
+ * We keep three separate clients because Redis pub/sub is modal — a connection
+ * in "subscriber" mode can't run normal commands:
+ *   - `redis` — general use (caching, cooldowns, locks, counters)
+ *   - `pub`   — publishing messages on channels (e.g. telling the bot to act on
+ *               a dashboard change)
+ *   - `sub`   — subscribing to those channels
+ *
+ * All three connect lazily, so importing this file doesn't open a socket until
+ * `connectRedis()` runs at startup.
+ */
 import { Redis } from 'ioredis';
 import { config } from './config.js';
 import { logger } from './logger.js';
@@ -8,6 +19,7 @@ export const redis = new Redis(config.redis.url, {
   password: config.redis.password || undefined,
   lazyConnect: true,
   maxRetriesPerRequest: 3,
+  // Back off a little more on each retry, capped at 5s, instead of hammering.
   retryStrategy: (times) => Math.min(times * 1000, 5000),
 });
 
