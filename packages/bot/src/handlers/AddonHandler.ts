@@ -336,9 +336,18 @@ export class AddonHandler {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const handler = (...args: any[]) => {
           const result = (eventDef.handler as (...a: any[]) => Promise<void>)(context, ...args);
-          result.catch((err) =>
-            logger.error({ err, addon: name, event: eventDef.event }, 'Addon event handler error'),
-          );
+          result.catch((err) => {
+            // An autocomplete interaction expires the instant the user types
+            // another character, so a 10062 "Unknown interaction" when responding
+            // to one is benign noise (the user moved on), not a bug. Log it at
+            // debug and keep error-level for everything else.
+            const isAutocomplete = args.some((a) => typeof a?.isAutocomplete === 'function' && a.isAutocomplete());
+            if (isAutocomplete && (err as { code?: number })?.code === 10062) {
+              logger.debug({ addon: name, event: eventDef.event }, 'autocomplete interaction expired (10062) — ignored');
+              return;
+            }
+            logger.error({ err, addon: name, event: eventDef.event }, 'Addon event handler error');
+          });
         };
 
         if (eventDef.once) {
