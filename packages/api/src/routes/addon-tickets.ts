@@ -12,6 +12,51 @@ import { pub, redis } from '../redis.js';
 /** Compare-and-delete so we only release a lock we still own. */
 const RELEASE_LOCK = 'if redis.call("get", KEYS[1]) == ARGV[1] then return redis.call("del", KEYS[1]) else return 0 end';
 
+// ── P1.2 relational mirror ──────────────────────────────────────────────────
+// Columns of AddonTicket; everything else on a ticket goes into `data` (so
+// fields the API doesn't type — buttonId/controlsMessageId/notesThreadId — are
+// still preserved). Must match addons/tickets/src/utils/ticketsRepo.ts toRow.
+const TICKET_COLUMN_KEYS = new Set(['id', 'guildId', 'number', 'panelId', 'channelId', 'userId', 'username', 'status', 'priority', 'categoryTag', 'buttonId', 'claimedBy', 'claimedByTag', 'closedBy', 'closedByTag', 'closedAt', 'rating', 'ratingFeedback', 'firstResponseAt', 'lastActivity', 'createdAt']);
+
+function ticketToRow(t: Ticket): Record<string, unknown> {
+  const raw = t as unknown as Record<string, unknown>;
+  const data: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(raw)) if (!TICKET_COLUMN_KEYS.has(k)) data[k] = v;
+  return {
+    id: t.id, guildId: t.guildId, number: t.number, panelId: t.panelId, channelId: t.channelId,
+    userId: t.userId, username: t.username, status: t.status, priority: t.priority,
+    categoryTag: t.categoryTag ?? null, buttonId: (raw.buttonId as string | undefined) ?? null,
+    claimedBy: t.claimedBy ?? null, claimedByTag: t.claimedByTag ?? null,
+    closedBy: t.closedBy ?? null, closedByTag: t.closedByTag ?? null,
+    closedAt: t.closedAt ? new Date(t.closedAt) : null,
+    rating: t.rating ?? null, ratingFeedback: t.ratingFeedback ?? null,
+    firstResponseAt: t.firstResponseAt ? new Date(t.firstResponseAt) : null,
+    lastActivity: new Date(t.lastActivity), createdAt: new Date(t.createdAt), data,
+  };
+}
+
+/**
+ * Write the tickets blob (source of truth during the P1.2 migration) and mirror
+ * the full set into the relational table — upserting each and removing rows no
+ * longer present for that guild. Mirror is best-effort; a failure never breaks
+ * the authoritative blob write.
+ */
+async function writeTickets(guildId: string, tickets: Ticket[]): Promise<void> {
+  await writeData(guildId, 'tickets', tickets);
+  try {
+    const ids = tickets.map((t) => t.id);
+    if (ids.length) await prisma.addonTicket.deleteMany({ where: { guildId, id: { notIn: ids } } });
+    else await prisma.addonTicket.deleteMany({ where: { guildId } });
+    for (const t of tickets) {
+      const row = ticketToRow(t);
+      const { id, createdAt, guildId: _g, number, ...mutable } = row;
+      void createdAt; void _g; void number;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await prisma.addonTicket.upsert({ where: { id: id as string }, create: row as any, update: mutable as any });
+    }
+  } catch { /* mirror best-effort; blob is authoritative during migration */ }
+}
+
 /**
  * Run a read-modify-write under the SAME per-(addon,guild,key) Redis lock the
  * bot's AddonStorage uses, so dashboard writes can't clobber bot writes (or
@@ -406,7 +451,7 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     const filtered = tickets.filter((t) => t.id !== ticketId);
     if (filtered.length === tickets.length) return reply.code(404).send({ success: false, error: 'Ticket not found' });
 
-    await writeData(guildId, 'tickets', filtered);
+    await writeTickets(guildId, filtered);
     return reply.send({ success: true });
   });
 
@@ -430,7 +475,7 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
       closedByTag: undefined,
       lastActivity: new Date().toISOString(),
     };
-    await writeData(guildId, 'tickets', tickets);
+    await writeTickets(guildId, tickets);
     return reply.send({ success: true, data: tickets[idx] });
   });
 
@@ -462,7 +507,7 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
       return t;
     });
 
-    await writeData(guildId, 'tickets', updated);
+    await writeTickets(guildId, updated);
     return reply.send({ success: true, data: { closedCount } });
   });
 
@@ -482,7 +527,7 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     if (!ticket) return reply.code(404).send({ success: false, error: 'Ticket not found' });
     if (ticket.status === 'closed') return reply.code(400).send({ success: false, error: 'Ticket is closed' });
     tickets[idx] = { ...ticket, claimedBy: userId, claimedByTag: userTag, status: 'claimed', lastActivity: new Date().toISOString() };
-    await writeData(guildId, 'tickets', tickets);
+    await writeTickets(guildId, tickets);
     return reply.send({ success: true, data: tickets[idx] });
   });
 
@@ -492,7 +537,7 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     if (!ticket) return reply.code(404).send({ success: false, error: 'Ticket not found' });
     if (ticket.status === 'closed') return reply.code(400).send({ success: false, error: 'Ticket is closed' });
     tickets[idx] = { ...ticket, claimedBy: undefined, claimedByTag: undefined, status: 'open', lastActivity: new Date().toISOString() };
-    await writeData(guildId, 'tickets', tickets);
+    await writeTickets(guildId, tickets);
     return reply.send({ success: true, data: tickets[idx] });
   });
 
@@ -504,7 +549,7 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     if (!ticket) return reply.code(404).send({ success: false, error: 'Ticket not found' });
     if (ticket.status === 'closed') return reply.code(400).send({ success: false, error: 'Ticket is closed' });
     tickets[idx] = { ...ticket, transferredTo: userId, transferredToTag: userTag, claimedBy: userId, claimedByTag: userTag, status: 'claimed', lastActivity: new Date().toISOString() };
-    await writeData(guildId, 'tickets', tickets);
+    await writeTickets(guildId, tickets);
     return reply.send({ success: true, data: tickets[idx] });
   });
 
@@ -516,7 +561,7 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     const { tickets, idx, ticket } = await findTicket(guildId, ticketId);
     if (!ticket) return reply.code(404).send({ success: false, error: 'Ticket not found' });
     tickets[idx] = { ...ticket, priority, lastActivity: new Date().toISOString() };
-    await writeData(guildId, 'tickets', tickets);
+    await writeTickets(guildId, tickets);
     pub.publish('ticket:priority:updated', JSON.stringify({ guildId, channelId: ticket.channelId, ticketId, priority })).catch(() => null);
     return reply.send({ success: true, data: tickets[idx] });
   });
@@ -530,7 +575,7 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     const trimmed = tag.trim().toLowerCase();
     if (!ticket.tags.includes(trimmed)) {
       tickets[idx] = { ...ticket, tags: [...ticket.tags, trimmed], lastActivity: new Date().toISOString() };
-      await writeData(guildId, 'tickets', tickets);
+      await writeTickets(guildId, tickets);
     }
     return reply.send({ success: true, data: tickets[idx] });
   });
@@ -540,7 +585,7 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     const { tickets, idx, ticket } = await findTicket(guildId, ticketId);
     if (!ticket) return reply.code(404).send({ success: false, error: 'Ticket not found' });
     tickets[idx] = { ...ticket, tags: ticket.tags.filter((t) => t !== tag), lastActivity: new Date().toISOString() };
-    await writeData(guildId, 'tickets', tickets);
+    await writeTickets(guildId, tickets);
     return reply.send({ success: true, data: tickets[idx] });
   });
 
@@ -567,7 +612,7 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     if (!ticket) return reply.code(404).send({ success: false, error: 'Ticket not found' });
     const note: TicketNote = { id: randomUUID(), authorId: 'portal', authorTag, content: content.trim(), createdAt: new Date().toISOString() };
     tickets[idx] = { ...ticket, notes: [...ticket.notes, note], lastActivity: new Date().toISOString() };
-    await writeData(guildId, 'tickets', tickets);
+    await writeTickets(guildId, tickets);
     // Notify the bot to post the note to the private staff thread in the ticket channel.
     pub.publish('ticket:note:added', JSON.stringify({ guildId, channelId: ticket.channelId, note })).catch(() => null);
     return reply.send({ success: true, data: tickets[idx] });
