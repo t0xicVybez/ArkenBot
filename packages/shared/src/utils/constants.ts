@@ -1,5 +1,6 @@
-
-
+/**
+ * Shared constants: the XP curve, default configs and limits, permission and log-type lists, the brand colour palette, Redis key builders, and addon/locale constants.
+ */
 export const XP_PER_LEVEL_BASE = 100;
 
 export const XP_MULTIPLIER = 1.5;

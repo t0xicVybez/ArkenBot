@@ -1,5 +1,6 @@
-
-
+/**
+ * A thin, provider-agnostic language-model client (chat completions) plus `isLLMAvailable`, so AI features can stay dormant and callers can degrade gracefully when no model is configured.
+ */
 const GROQ_ENDPOINT = 'https://api.groq.com/openai/v1/chat/completions';
 
 export const DEFAULT_LLM_MODEL = 'openai/gpt-oss-20b';

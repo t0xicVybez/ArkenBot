@@ -1,5 +1,6 @@
-
-
+/**
+ * Shared event types: the dashboard WebSocket messages and the internal Redis pub/sub events that bridge the API and bot.
+ */
 export type WebSocketEventType =
   | 'settings:updated'
   | 'moderation:action'

@@ -1,5 +1,6 @@
-
-
+/**
+ * Small, pure utility functions shared by the bot, API and web — XP/level math, duration formatting and parsing, template filling, text truncation, snowflake validation and pagination. No side effects, so they're trivial to unit test.
+ */
 import { XP_PER_LEVEL_BASE, XP_MULTIPLIER } from './constants.js';
 
 export function xpForLevel(level: number): number {

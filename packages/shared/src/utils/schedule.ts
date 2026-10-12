@@ -1,5 +1,6 @@
-
-
+/**
+ * Scheduling math. `computeNextOccurrence` advances a recurring schedule to its next run with timezone-aware wall-clock handling. Pure, so it's covered by unit tests.
+ */
 export type RepeatInterval = 'hourly' | 'daily' | 'weekly';
 
 export interface ZonedParts {

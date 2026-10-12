@@ -1,5 +1,6 @@
-
-
+/**
+ * Shared guild and configuration types (settings, automod, welcome, reaction roles, custom commands). New settings fields must be mirrored here, in the Prisma schema, and in the API's patch schema.
+ */
 export interface GuildData {
   id: string;
   name: string;

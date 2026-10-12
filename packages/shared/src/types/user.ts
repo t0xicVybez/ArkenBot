@@ -1,5 +1,6 @@
-
-
+/**
+ * Shared user and session types (portal user, user level, session).
+ */
 export interface PortalUser {
   id: string;
   username: string;

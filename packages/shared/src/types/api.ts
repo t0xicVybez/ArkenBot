@@ -1,5 +1,6 @@
-
-
+/**
+ * Shared request/response types for the REST API — the response envelope, auth payloads, guild overviews, system stats and analytics.
+ */
 export interface ApiResponse<T = unknown> {
   success: boolean;
   data?: T;

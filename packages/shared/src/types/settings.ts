@@ -1,5 +1,6 @@
-
-
+/**
+ * Shared types for settings-update payloads and the dashboard's settings sections.
+ */
 export interface SettingsUpdatePayload {
   guildId: string;
   section: SettingsSection;

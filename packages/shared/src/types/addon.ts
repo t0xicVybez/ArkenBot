@@ -1,5 +1,6 @@
-
-
+/**
+ * Shared types describing addons: their manifest, setting schemas, portal pages, and per-guild install state.
+ */
 export interface AddonManifest {
   name: string;
   displayName: string;

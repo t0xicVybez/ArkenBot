@@ -1,4 +1,6 @@
-
+/**
+ * The supported-locales list and locale resolution — the canonical LOCALES, plus helpers to check a locale is supported and resolve an arbitrary string to the closest supported one (falling back to the default).
+ */
 export interface LocaleInfo {
   code: string;
   name: string;

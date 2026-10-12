@@ -1,5 +1,6 @@
-
-
+/**
+ * Shared moderation types — cases, warnings and the set of moderation action kinds.
+ */
 export type ModerationActionType =
   | 'ban'
   | 'unban'

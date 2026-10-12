@@ -1,5 +1,6 @@
-
-
+/**
+ * Error classification. `classifyError` sorts a thrown error into a category (expired interaction, permission, rate limit, unknown, …) with a friendly summary and hint, so every caller can react to failures consistently.
+ */
 export type ErrorCategory =
   | 'permissions'
   | 'access'
