@@ -25,7 +25,6 @@ import {
   type AudioPlayer,
 } from '@discordjs/voice';
 import { spawn } from 'child_process';
-import { YouTube } from 'youtube-sr';
 import { prisma } from '../../database.js';
 import { logger, swallow} from '../../logger.js';
 import { getGuildSettings } from '../../utils/settings.js';
@@ -49,6 +48,60 @@ export interface Track {
 }
 
 const YT_URL_RE = /^https?:\/\/(www\.)?(youtube\.com|youtu\.be)/;
+
+/** Format a duration in seconds as m:ss (or h:mm:ss). */
+function fmtSecs(s: number): string {
+  const sec = Math.floor(s % 60), min = Math.floor((s / 60) % 60), hr = Math.floor(s / 3600);
+  const mm = hr ? String(min).padStart(2, '0') : String(min);
+  return (hr ? `${hr}:` : '') + `${mm}:${String(sec).padStart(2, '0')}`;
+}
+
+/**
+ * Resolve a track from a URL or a search query using yt-dlp.
+ *
+ * yt-dlp (the same tool that streams the audio) tracks YouTube's frequent
+ * markup changes, so it's far more reliable than scraping the HTML ourselves.
+ * A plain query becomes a `ytsearch1:` lookup; a URL is resolved directly. We
+ * reuse the same proxy/cookies the streaming path uses, and cap the call with a
+ * timeout so a hung process can't wedge the command.
+ */
+function resolveTrackInfo(query: string): Promise<{ title: string; url: string; duration?: string; thumbnail?: string }> {
+  const isUrl = YT_URL_RE.test(query);
+  const target = isUrl ? query : `ytsearch1:${query}`;
+  const args = ['--dump-json', '--no-warnings', '--skip-download'];
+  if (isUrl) args.push('--no-playlist');
+  if (process.env.YOUTUBE_COOKIES_FILE) args.push('--cookies', process.env.YOUTUBE_COOKIES_FILE);
+  if (process.env.YTDLP_PROXY) args.push('--proxy', process.env.YTDLP_PROXY);
+  args.push(target);
+
+  return new Promise((resolve, reject) => {
+    const proc = spawn('yt-dlp', args, { stdio: ['ignore', 'pipe', 'pipe'] });
+    let out = '', errText = '';
+    const timer = setTimeout(() => { proc.kill('SIGKILL'); reject(new Error('yt-dlp search timed out')); }, 20_000);
+    proc.stdout.on('data', (d: Buffer) => { out += d.toString(); });
+    proc.stderr.on('data', (d: Buffer) => { errText += d.toString(); });
+    proc.on('error', (e) => { clearTimeout(timer); reject(e); });
+    proc.on('close', (code) => {
+      clearTimeout(timer);
+      if (code !== 0) return reject(new Error(errText.slice(-300) || `yt-dlp exited ${code}`));
+      // A single video (or ytsearch1) prints one JSON object; take the first.
+      const line = out.split('\n').find((l) => l.trim().startsWith('{'));
+      if (!line) return reject(new Error('No results found'));
+      let info: Record<string, unknown>;
+      try { info = JSON.parse(line); } catch (e) { return reject(e as Error); }
+      const url = (info.webpage_url as string) || (isUrl ? query : (info.url as string));
+      if (!url) return reject(new Error('No results found'));
+      const durSecs = typeof info.duration === 'number' ? (info.duration as number) : undefined;
+      const thumbs = info.thumbnails as Array<{ url?: string }> | undefined;
+      resolve({
+        title: (info.title as string) ?? 'Unknown',
+        url,
+        duration: (info.duration_string as string) || (durSecs != null ? fmtSecs(durSecs) : undefined),
+        thumbnail: (info.thumbnail as string) || thumbs?.[thumbs.length - 1]?.url,
+      });
+    });
+  });
+}
 
 interface AudioStream {
   stream: import('stream').Readable;
@@ -328,27 +381,7 @@ export class MusicManager {
     let trackInfo: { title: string; url: string; duration?: string; thumbnail?: string };
 
     try {
-      if (YT_URL_RE.test(query)) {
-
-        const video = await YouTube.getVideo(query);
-        trackInfo = {
-          title: video?.title ?? 'Unknown',
-          url: query,
-          duration: video?.durationFormatted,
-          thumbnail: video?.thumbnail?.url,
-        };
-      } else {
-
-        const results = await YouTube.search(query, { limit: 1, type: 'video' });
-        const video = results[0];
-        if (!video?.url) throw new Error('No results found');
-        trackInfo = {
-          title: video.title ?? 'Unknown',
-          url: video.url,
-          duration: video.durationFormatted,
-          thumbnail: video.thumbnail?.url,
-        };
-      }
+      trackInfo = await resolveTrackInfo(query);
     } catch (err) {
       logger.error({ err }, 'Music search/info failed');
       throw new Error('Could not find that track.');
