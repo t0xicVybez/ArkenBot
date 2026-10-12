@@ -1,4 +1,7 @@
 'use client';
+/**
+ * Client auth store/hook — holds the signed-in user and the Discord OAuth login/logout helpers.
+ */
 
 import { create } from 'zustand';
 import type { PortalUser } from '@arkenbot/shared';

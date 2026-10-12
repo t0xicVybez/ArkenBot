@@ -1,4 +1,7 @@
 'use client';
+/**
+ * Lazily-loaded automod activity chart (recharts, code-split).
+ */
 
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 

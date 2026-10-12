@@ -1,4 +1,7 @@
 'use client';
+/**
+ * Dropdown menu for choosing the interface language.
+ */
 
 import { useEffect, useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';

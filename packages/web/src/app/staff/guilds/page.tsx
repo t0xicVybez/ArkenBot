@@ -1,4 +1,7 @@
 'use client';
+/**
+ * Staff portal: the guilds page.
+ */
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { adminApi } from '@/lib/api';

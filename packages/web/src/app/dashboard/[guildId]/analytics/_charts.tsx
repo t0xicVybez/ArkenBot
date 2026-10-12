@@ -1,4 +1,7 @@
 'use client';
+/**
+ * Lazily-loaded analytics charts (recharts, code-split so recharts loads on demand).
+ */
 
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from 'recharts';
 

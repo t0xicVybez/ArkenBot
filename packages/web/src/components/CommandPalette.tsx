@@ -1,4 +1,7 @@
 'use client';
+/**
+ * Quick-navigation command palette (⌘K) for jumping around the app.
+ */
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';

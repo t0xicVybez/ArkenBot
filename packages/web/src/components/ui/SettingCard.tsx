@@ -1,3 +1,6 @@
+/**
+ * Card wrapping a single setting with its label and description.
+ */
 import type { ReactNode } from 'react';
 import { cn } from './cn';
 

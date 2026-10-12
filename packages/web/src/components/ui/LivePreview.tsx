@@ -1,3 +1,6 @@
+/**
+ * Live-preview panel UI primitive.
+ */
 import type { ReactNode } from 'react';
 import { Eye } from 'lucide-react';
 

@@ -1,4 +1,7 @@
 'use client';
+/**
+ * The signed-in user's account settings page.
+ */
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';

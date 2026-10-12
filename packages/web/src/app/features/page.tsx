@@ -1,3 +1,6 @@
+/**
+ * Public features overview page.
+ */
 import Link from 'next/link';
 import {
   Shield, Bot, TrendingUp, Music, Smile,

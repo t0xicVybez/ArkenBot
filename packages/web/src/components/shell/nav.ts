@@ -1,3 +1,6 @@
+/**
+ * The dashboard navigation model — the grouped list of pages plus helpers to build each item's href and find the active one. Live pages resolve hrefs from the slug, so a nav item's raw href is only used outside a guild context.
+ */
 import type { LucideIcon } from 'lucide-react';
 import {
   LayoutGrid, BarChart3, Wand2, Shield, Bot, ShieldAlert, ShieldCheck, Flag, Gavel, ScrollText,

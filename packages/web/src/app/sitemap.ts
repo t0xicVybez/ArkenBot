@@ -1,3 +1,6 @@
+/**
+ * Generates sitemap.xml for search engines.
+ */
 import type { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {

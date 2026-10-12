@@ -1,4 +1,7 @@
 'use client';
+/**
+ * Staff portal layout (gates access to staff/owner and renders the portal shell).
+ */
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';

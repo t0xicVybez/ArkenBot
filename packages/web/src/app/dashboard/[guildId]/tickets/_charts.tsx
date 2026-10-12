@@ -1,4 +1,7 @@
 'use client';
+/**
+ * Lazily-loaded tickets status donut (recharts, code-split).
+ */
 
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 

@@ -1,3 +1,6 @@
+/**
+ * Privacy policy page.
+ */
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { getTranslations } from 'next-intl/server';

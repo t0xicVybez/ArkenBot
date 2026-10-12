@@ -1,4 +1,7 @@
 'use client';
+/**
+ * WebSocket client hook for live dashboard updates pushed by the API gateway.
+ */
 
 import { useEffect, useRef } from 'react';
 import type { WebSocketEvent, WebSocketEventType } from '@arkenbot/shared';

@@ -1,4 +1,7 @@
 'use client';
+/**
+ * React context provider that loads the signed-in user once and exposes it to the app.
+ */
 
 import { useEffect } from 'react';
 import { authApi } from '@/lib/api';

@@ -1,4 +1,7 @@
 'use client';
+/**
+ * Layout for a guild's dashboard — loads the guild context and renders the shell around each page.
+ */
 
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';

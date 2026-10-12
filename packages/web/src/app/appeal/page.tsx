@@ -1,4 +1,7 @@
 'use client';
+/**
+ * Ban/mute appeal submission page (reachable without logging in).
+ */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';

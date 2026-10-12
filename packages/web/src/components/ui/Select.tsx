@@ -1,3 +1,6 @@
+/**
+ * Select / dropdown UI primitive.
+ */
 import { forwardRef, type SelectHTMLAttributes } from 'react';
 import { cn } from './cn';
 

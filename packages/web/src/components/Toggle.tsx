@@ -1,4 +1,7 @@
 'use client';
+/**
+ * On/off toggle switch used throughout the settings pages.
+ */
 
 import { clsx } from 'clsx';
 

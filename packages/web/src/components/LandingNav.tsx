@@ -1,4 +1,7 @@
 'use client';
+/**
+ * Top navigation bar for the public marketing pages.
+ */
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';

@@ -1,4 +1,7 @@
 'use client';
+/**
+ * Staff portal: the announcements page.
+ */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { adminApi } from '@/lib/api';

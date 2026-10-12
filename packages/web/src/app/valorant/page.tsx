@@ -1,3 +1,6 @@
+/**
+ * Public Valorant feature page.
+ */
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';

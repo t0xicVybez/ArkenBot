@@ -1,4 +1,7 @@
 'use client';
+/**
+ * Lazily-loaded tickets-stats charts (recharts, code-split).
+ */
 
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,

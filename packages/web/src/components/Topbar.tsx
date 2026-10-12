@@ -1,4 +1,7 @@
 'use client';
+/**
+ * Dashboard top bar (guild switcher, user menu).
+ */
 
 import { usePathname, useRouter } from 'next/navigation';
 import { Search, Bell } from 'lucide-react';

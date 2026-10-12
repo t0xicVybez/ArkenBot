@@ -1,3 +1,6 @@
+/**
+ * next-intl request config — picks the active locale from the arken_locale cookie and loads its message catalogue for server rendering.
+ */
 import { getRequestConfig } from 'next-intl/server';
 import { cookies } from 'next/headers';
 import { resolveLocale, DEFAULT_LOCALE } from '@arkenbot/shared';

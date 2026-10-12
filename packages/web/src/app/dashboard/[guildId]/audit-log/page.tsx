@@ -1,4 +1,7 @@
 'use client';
+/**
+ * The audit log page of the guild dashboard.
+ */
 
 import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';

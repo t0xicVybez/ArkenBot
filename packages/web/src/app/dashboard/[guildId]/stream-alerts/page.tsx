@@ -1,3 +1,6 @@
+/**
+ * The stream alerts page of the guild dashboard.
+ */
 import { getTranslations } from 'next-intl/server';
 import { FeedAlertsPage } from '@/components/FeedAlertsPage';
 

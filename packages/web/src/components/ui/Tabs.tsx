@@ -1,4 +1,7 @@
 'use client';
+/**
+ * Tabs UI primitive.
+ */
 import { cn } from './cn';
 
 export function Tabs<T extends string>({

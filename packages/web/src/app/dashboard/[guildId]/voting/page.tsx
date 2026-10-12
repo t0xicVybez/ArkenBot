@@ -1,4 +1,7 @@
 'use client';
+/**
+ * The voting page of the guild dashboard.
+ */
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';

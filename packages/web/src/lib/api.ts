@@ -1,3 +1,6 @@
+/**
+ * The dashboard's API client: a configured axios instance plus per-feature request helpers that the pages call through React Query.
+ */
 
 import axios from 'axios';
 import type {

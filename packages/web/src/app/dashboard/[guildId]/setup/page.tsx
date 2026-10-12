@@ -1,4 +1,7 @@
 'use client';
+/**
+ * The setup page of the guild dashboard.
+ */
 
 import { useParams, useRouter } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';

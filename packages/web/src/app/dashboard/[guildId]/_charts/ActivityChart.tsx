@@ -1,4 +1,7 @@
 'use client';
+/**
+ * Lazily-loaded message-activity chart for the dashboard overview (recharts, code-split).
+ */
 
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 

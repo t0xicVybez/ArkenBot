@@ -1,4 +1,7 @@
 'use client';
+/**
+ * Lazily-loaded staff memory-usage chart (recharts, code-split).
+ */
 
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 

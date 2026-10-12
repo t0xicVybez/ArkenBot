@@ -1,4 +1,7 @@
 'use client';
+/**
+ * The dashboard shell's sidebar navigation (built from the nav model).
+ */
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';

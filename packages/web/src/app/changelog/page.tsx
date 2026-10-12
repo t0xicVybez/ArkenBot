@@ -1,3 +1,6 @@
+/**
+ * Public changelog page.
+ */
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { LandingNav } from '@/components/LandingNav';

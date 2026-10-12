@@ -1,4 +1,7 @@
 'use client';
+/**
+ * The guild dashboard's shell — sidebar, top bar and command palette wrapped around each page, with the active-guild context.
+ */
 
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { usePathname } from 'next/navigation';

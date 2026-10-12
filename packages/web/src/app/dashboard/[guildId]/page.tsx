@@ -1,4 +1,7 @@
 'use client';
+/**
+ * The guild dashboard overview (a server's home page).
+ */
 
 import { useParams } from 'next/navigation';
 import { useAuth } from '@/lib/auth';

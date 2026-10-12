@@ -1,3 +1,6 @@
+/**
+ * Text input UI primitive.
+ */
 import { forwardRef, type InputHTMLAttributes } from 'react';
 import { cn } from './cn';
 

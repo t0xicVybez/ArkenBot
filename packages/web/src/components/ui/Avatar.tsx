@@ -1,3 +1,6 @@
+/**
+ * Avatar UI primitive.
+ */
 import { cn } from './cn';
 
 export function Avatar({

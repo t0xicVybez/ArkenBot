@@ -1,4 +1,7 @@
 'use client';
+/**
+ * The valorant page of the guild dashboard.
+ */
 
 import { useParams } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';

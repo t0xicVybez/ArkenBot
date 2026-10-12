@@ -1,4 +1,7 @@
 'use client';
+/**
+ * Dashboard sidebar navigation.
+ */
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';

@@ -1,3 +1,6 @@
+/**
+ * Renders a keyboard key cap (e.g. for ⌘K hints).
+ */
 import type { HTMLAttributes } from 'react';
 import { cn } from './cn';
 

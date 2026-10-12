@@ -1,3 +1,6 @@
+/**
+ * Root layout — wraps every page with the global providers, fonts and base metadata.
+ */
 import type { Metadata } from 'next';
 import { Inter, Space_Grotesk, Manrope, JetBrains_Mono } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';

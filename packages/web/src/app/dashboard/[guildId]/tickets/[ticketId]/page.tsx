@@ -1,4 +1,7 @@
 'use client';
+/**
+ * The tickets · a single ticket page of the guild dashboard.
+ */
 
 import { useState } from 'react';
 import { useParams } from 'next/navigation';

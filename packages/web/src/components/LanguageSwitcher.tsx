@@ -1,4 +1,7 @@
 'use client';
+/**
+ * Compact control for switching the interface language.
+ */
 
 import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';

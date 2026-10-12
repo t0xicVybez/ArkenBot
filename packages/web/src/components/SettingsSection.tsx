@@ -1,3 +1,6 @@
+/**
+ * A titled section that groups related settings on a dashboard page.
+ */
 
 interface SettingsSectionProps {
   title: string;

@@ -1,4 +1,7 @@
 'use client';
+/**
+ * The game-server admin page of the guild dashboard.
+ */
 
 import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';

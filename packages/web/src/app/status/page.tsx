@@ -1,4 +1,7 @@
 'use client';
+/**
+ * Service status page.
+ */
 
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';

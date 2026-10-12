@@ -1,4 +1,7 @@
 'use client';
+/**
+ * The dashboard shell's ⌘K command palette for quick navigation.
+ */
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';

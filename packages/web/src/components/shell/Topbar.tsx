@@ -1,4 +1,7 @@
 'use client';
+/**
+ * The dashboard shell's top bar.
+ */
 
 import Link from 'next/link';
 import { Search, Bell, Sun, Moon, Menu } from 'lucide-react';

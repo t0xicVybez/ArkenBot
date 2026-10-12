@@ -1,3 +1,6 @@
+/**
+ * Standard dashboard page header (icon, title, description).
+ */
 import type { LucideIcon } from 'lucide-react';
 
 export function PageHeader({

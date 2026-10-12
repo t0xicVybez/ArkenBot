@@ -1,3 +1,6 @@
+/**
+ * Card container UI primitive.
+ */
 import type { HTMLAttributes } from 'react';
 import { cn } from './cn';
 

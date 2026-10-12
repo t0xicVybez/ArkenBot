@@ -1,4 +1,7 @@
 'use client';
+/**
+ * OAuth login / callback page.
+ */
 
 import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';

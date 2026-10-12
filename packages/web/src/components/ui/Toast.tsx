@@ -1,4 +1,7 @@
 'use client';
+/**
+ * Toast-notification UI primitive / provider.
+ */
 import { CheckCircle2 } from 'lucide-react';
 
 export function Toast({ show, message }: { show: boolean; message: string }) {

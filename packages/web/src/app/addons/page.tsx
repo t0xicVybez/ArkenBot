@@ -1,3 +1,6 @@
+/**
+ * Public addons catalogue page.
+ */
 import Link from 'next/link';
 import {
   Puzzle, ArrowRight, ChevronRight, ExternalLink,

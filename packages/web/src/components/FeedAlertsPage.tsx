@@ -1,4 +1,7 @@
 'use client';
+/**
+ * Shared UI for the stream/feed alert pages (Twitch, YouTube, Kick, Reddit, RSS): the interactive alert list and add/edit form. The page that renders it supplies the per-platform config, so this one component powers several pages.
+ */
 
 import { useParams } from 'next/navigation';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';

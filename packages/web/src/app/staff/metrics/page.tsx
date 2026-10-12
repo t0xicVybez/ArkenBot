@@ -1,4 +1,7 @@
 'use client';
+/**
+ * Staff portal: the metrics page.
+ */
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { adminApi } from '@/lib/api';

@@ -1,3 +1,6 @@
+/**
+ * Stat tile UI primitive (a labelled value).
+ */
 import type { ReactNode } from 'react';
 import { cn } from './cn';
 

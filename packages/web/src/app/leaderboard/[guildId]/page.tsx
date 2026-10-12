@@ -1,4 +1,7 @@
 'use client';
+/**
+ * Public per-guild XP leaderboard page.
+ */
 
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';

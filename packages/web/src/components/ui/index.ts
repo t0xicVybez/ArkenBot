@@ -1,3 +1,6 @@
+/**
+ * Barrel re-export of the ui component library.
+ */
 export { cn } from './cn';
 export { Button, type ButtonProps } from './Button';
 export { Badge } from './Badge';

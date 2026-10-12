@@ -1,3 +1,6 @@
+/**
+ * A dashboard stat card showing a labelled number.
+ */
 
 import { clsx } from 'clsx';
 import type { LucideIcon } from 'lucide-react';

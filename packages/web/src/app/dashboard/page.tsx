@@ -1,4 +1,7 @@
 'use client';
+/**
+ * Dashboard landing — the server picker.
+ */
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';

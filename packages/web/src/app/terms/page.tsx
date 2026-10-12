@@ -1,3 +1,6 @@
+/**
+ * Terms of service page.
+ */
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';

@@ -1,3 +1,6 @@
+/**
+ * Card that frames a chart with a title.
+ */
 import type { ReactNode } from 'react';
 import { cn } from './cn';
 

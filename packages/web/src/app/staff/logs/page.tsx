@@ -1,4 +1,7 @@
 'use client';
+/**
+ * Staff portal: the logs page.
+ */
 
 import { useQuery } from '@tanstack/react-query';
 import { adminApi } from '@/lib/api';

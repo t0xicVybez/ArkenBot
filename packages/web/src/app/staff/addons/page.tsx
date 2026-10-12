@@ -1,4 +1,7 @@
 'use client';
+/**
+ * Staff portal: the addons page.
+ */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { addonsApi } from '@/lib/api';

@@ -1,3 +1,6 @@
+/**
+ * The public landing (home) page.
+ */
 import Link from 'next/link';
 import {
   Shield, Bot, TrendingUp, Music, Smile, Puzzle,

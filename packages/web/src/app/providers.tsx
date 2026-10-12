@@ -1,4 +1,7 @@
 'use client';
+/**
+ * Client providers mounted once at the app root (React Query, auth, toasts, i18n).
+ */
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
