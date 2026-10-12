@@ -30,6 +30,12 @@ export class AddonContext {
   public readonly storage: AddonStorage;
   public readonly logger: AddonLogger;
   public readonly events: AddonEventBus;
+  /**
+   * Host database handle (the bot's Prisma client), for first-party addons that
+   * need relational storage beyond the KV `storage`. Typed `unknown` so the SDK
+   * doesn't depend on the generated client; consumers cast to the shape they use.
+   */
+  public readonly db?: unknown;
 
   private _getSettings: (guildId: string) => Promise<Record<string, unknown>>;
   private _isInstalled?: (guildId: string) => Promise<boolean>;
@@ -42,6 +48,8 @@ export class AddonContext {
     storage: AddonStorage;
     logger: AddonLogger;
     events: AddonEventBus;
+    /** Host database handle (the bot's Prisma client) for first-party addons. */
+    db?: unknown;
     getSettings: (guildId: string) => Promise<Record<string, unknown>>;
     /** Whether this addon is installed AND enabled in the given guild. */
     isInstalled?: (guildId: string) => Promise<boolean>;
@@ -55,6 +63,7 @@ export class AddonContext {
     this.storage = options.storage;
     this.logger = options.logger;
     this.events = options.events;
+    this.db = options.db;
     this._getSettings = options.getSettings;
     this._isInstalled = options.isInstalled;
     this._messages = options.messages ?? {};

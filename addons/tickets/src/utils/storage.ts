@@ -1,5 +1,13 @@
 import type { AddonStorage } from '@arkenbot/addon-sdk';
 import type { Ticket, TicketPanel, TicketMessage, GuildTicketConfig, CannedResponse } from '../types.js';
+import { hasTicketDb } from './db.js';
+import { repoSaveTicket, repoAppendMessage, repoDeleteMessages } from './ticketsRepo.js';
+
+// ── P1.2 migration (dual-write phase) ──────────────────────────────────────────
+// The JSON blob remains the source of truth and is what reads use; ticket and
+// message writes are *also* mirrored to the relational tables (best-effort —
+// a mirror error never fails the authoritative blob write). Reads flip to the
+// tables only after backfill + verification.
 
 // ─── Storage Keys ─────────────────────────────────────────────────────────────
 // All keys are per-guild unless noted.
@@ -87,6 +95,7 @@ export async function saveTicket(
     else tickets.push(ticket);
     return tickets;
   }, guildId);
+  if (hasTicketDb()) { try { await repoSaveTicket(ticket); } catch { /* dual-write mirror; blob is source of truth */ } }
 }
 
 /** Returns the open tickets belonging to a specific user in this guild. */
@@ -159,8 +168,10 @@ export async function appendMessage(
     msgs.push(msg);
     return msgs;
   });
+  if (hasTicketDb()) { try { await repoAppendMessage(channelId, msg); } catch { /* dual-write mirror */ } }
 }
 
 export async function deleteMessages(storage: AddonStorage, channelId: string): Promise<void> {
   await storage.delete(msgKey(channelId));
+  if (hasTicketDb()) { try { await repoDeleteMessages(channelId); } catch { /* dual-write mirror */ } }
 }

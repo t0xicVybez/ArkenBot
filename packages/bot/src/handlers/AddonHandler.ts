@@ -287,6 +287,7 @@ export class AddonHandler {
       storage: new AddonStorage(dbAddonId),
       logger: new AddonLogger(name),
       events: eventBus,
+      db: prisma,
       getSettings: async (guildId: string) => {
         const guildAddon = await prisma.guildAddon.findUnique({
           where: { guildId_addonId: { guildId, addonId: dbAddonId } },

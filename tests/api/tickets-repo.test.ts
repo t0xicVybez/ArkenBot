@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
-import { TEST_DB_URL, testPrisma, seedGuild, closeTestDb } from '../helpers/testDb.js';
+import { TEST_DB_URL, testPrisma, seedGuild, seedAddon, makeStorage, closeTestDb } from '../helpers/testDb.js';
+import { saveTicket, getTickets } from '../../addons/tickets/src/utils/storage.js';
 import { setTicketDb, type TicketDb } from '../../addons/tickets/src/utils/db.js';
 import {
   toRow, fromRow, repoSaveTicket, repoGetTickets, repoGetByChannel, repoGetById,
@@ -104,6 +105,18 @@ describe.skipIf(!TEST_DB_URL)('ticketsRepo (integration, arkenbot_test)', () => 
     expect(msgs[0].attachments).toEqual(['http://x/1']);
     await repoDeleteMessages('chan-m');
     expect(await repoGetMessages('chan-m')).toEqual([]);
+  });
+
+  it('storage.saveTicket dual-writes to BOTH the blob and the table', async () => {
+    const addonId = await seedAddon('tickets');
+    await testPrisma().addonData.deleteMany({});
+    const storage = makeStorage(addonId);
+    const t = richTicket({ number: 42, channelId: 'dw-chan' });
+    await saveTicket(storage, GUILD, t);
+    // blob (authoritative) has it...
+    expect((await getTickets(storage, GUILD)).map((x) => x.id)).toContain(t.id);
+    // ...and the relational mirror has it too, full-fidelity.
+    expect(await repoGetById(t.id)).toEqual(t);
   });
 
   it('backfills a blob array into the table', async () => {

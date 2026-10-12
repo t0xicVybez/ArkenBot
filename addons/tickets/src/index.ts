@@ -1,4 +1,5 @@
 import { defineAddon } from '@arkenbot/addon-sdk';
+import { setTicketDb, type TicketDb } from './utils/db.js';
 import type { AddonContext } from '@arkenbot/addon-sdk';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import type { AutocompleteInteraction, Interaction, Message, TextChannel } from 'discord.js';
@@ -64,6 +65,7 @@ export default defineAddon({
 
   hooks: {
     async onLoad(ctx: AddonContext): Promise<void> {
+      if (ctx.db) setTicketDb(ctx.db as TicketDb);
       ctx.logger.info('Ticket System v1.1 loaded.');
       startAutoCloseLoop(ctx);
       await startPanelSyncListener(ctx);
