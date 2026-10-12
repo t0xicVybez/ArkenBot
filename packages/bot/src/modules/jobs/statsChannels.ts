@@ -1,4 +1,9 @@
 
+/**
+ * Keeps "server stats" channels up to date — the voice channels named things
+ * like "Members: 1,234" that servers use as a live counter. Runs every few
+ * minutes and renames each configured channel to its current value.
+ */
 import { type VoiceChannel } from 'discord.js';
 import { prisma } from '../../database.js';
 import { logger, swallow } from '../../logger.js';

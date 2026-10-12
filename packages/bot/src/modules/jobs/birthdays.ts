@@ -1,4 +1,9 @@
 
+/**
+ * Announces birthdays. Runs hourly: find everyone whose birthday is today (and
+ * who hasn't already been congratulated this year), post the celebration, and
+ * record the year so we don't repeat it.
+ */
 import { EmbedBuilder, type TextChannel } from 'discord.js';
 import { prisma } from '../../database.js';
 import { logger, swallow } from '../../logger.js';

@@ -1,4 +1,9 @@
 
+/**
+ * Periodic "weekly" jobs: the economy lottery draw, the weekly highlights recap,
+ * and the weekly analytics report. Each uses a day-of-week check and/or a Redis
+ * once-per-week guard so it fires only once per period.
+ */
 import { type TextChannel } from 'discord.js';
 import { prisma } from '../../database.js';
 import { redis } from '../../redis.js';
@@ -8,6 +13,9 @@ import { HighlightsModule } from '../HighlightsModule.js';
 import { postAnalytics } from '../../commands/utility/analytics.js';
 import type { BotClient } from '../../client.js';
 
+// Draw each server's weekly economy lottery. Only runs on Sundays (UTC), and a
+// per-guild/week Redis guard (SET NX) ensures the draw happens exactly once even
+// if the job ticks multiple times or across restarts.
 export async function runLotteryDraw(client: BotClient): Promise<void> {
 
   if (new Date().getUTCDay() !== 0) return;

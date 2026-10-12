@@ -1,5 +1,11 @@
 
 
+/**
+ * The scheduler. Registers every recurring background task on an interval and
+ * keeps handles so they can all be stopped on shutdown. The actual work lives
+ * in the small modules under `jobs/` (and a few feature modules) — this file is
+ * just the timetable of "run X every Y".
+ */
 import { logger } from '../logger.js';
 import type { BotClient } from '../client.js';
 
@@ -31,6 +37,8 @@ export class BackgroundJobs {
   }
 
   start(): void {
+    // A small random delay before each interval starts, so all the timers don't
+    // fire in lockstep on the same tick (which would spike CPU and DB load).
     const jitter = () => Math.floor(Math.random() * 5_000);
     const c = this.client;
 

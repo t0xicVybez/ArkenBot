@@ -1,7 +1,13 @@
 
+/**
+ * Lifts temporary punishments once they expire. Runs every minute:
+ * `runTempBanExpiry` unbans users whose temp ban is up, and `runTempRoleExpiry`
+ * strips roles whose temp assignment has ended.
+ */
 import { prisma } from '../../database.js';
 import { logger, swallow } from '../../logger.js';
 import type { BotClient } from '../../client.js';
+// `db` is the same client typed loosely, for a model not yet in the generated types.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = prisma as any;
 

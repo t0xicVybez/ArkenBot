@@ -1,4 +1,10 @@
 
+/**
+ * Ends giveaways and picks winners. Runs every minute. The two pure helpers
+ * (`buildGiveawayEntries`, `pickGiveawayWinners`) hold the raffle logic —
+ * expanding bonus-role entries and drawing unique winners — so they can be unit
+ * tested without Discord; `runGiveaways` wires them to real, due giveaways.
+ */
 import { EmbedBuilder } from 'discord.js';
 import { prisma } from '../../database.js';
 import { logger, swallow } from '../../logger.js';

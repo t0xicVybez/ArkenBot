@@ -1,4 +1,10 @@
 
+/**
+ * Polls the services we watch for new content and posts alerts. Runs every few
+ * minutes: Twitch/Kick go-lives, plus Reddit (delegated to RedditAlerts) and
+ * other RSS-based feeds. YouTube has its own push-based path (YouTubeAlerts),
+ * so it's excluded here.
+ */
 import { EmbedBuilder, type TextChannel } from 'discord.js';
 import { prisma } from '../../database.js';
 import { logger, swallow } from '../../logger.js';

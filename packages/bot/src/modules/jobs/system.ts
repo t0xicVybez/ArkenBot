@@ -1,4 +1,9 @@
 
+/**
+ * Assorted system-level background jobs: syncing Valorant ranks, awarding XP to
+ * people sitting in voice, writing a heartbeat so health checks know the bot is
+ * alive, and purging data for guilds that left past their grace period.
+ */
 import { prisma } from '../../database.js';
 import { logger } from '../../logger.js';
 import { ValorantModule } from '../valorant/ValorantModule.js';

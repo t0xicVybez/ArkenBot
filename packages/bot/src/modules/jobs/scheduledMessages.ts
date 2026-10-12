@@ -1,4 +1,9 @@
 
+/**
+ * Sends scheduled messages when they come due. Runs every minute. For recurring
+ * schedules it uses `computeNextOccurrence` to roll the next send time forward
+ * rather than firing once.
+ */
 import { EmbedBuilder, type TextChannel } from 'discord.js';
 import { computeNextOccurrence } from '@arkenbot/shared';
 import { prisma } from '../../database.js';

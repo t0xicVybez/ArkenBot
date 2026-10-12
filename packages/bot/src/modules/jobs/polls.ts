@@ -1,4 +1,9 @@
 
+/**
+ * Closes expired polls (from `/poll`). Runs every minute: find polls past their
+ * end time, mark them closed, and edit the original message to show the final
+ * results (with the results chart and disabled voting buttons).
+ */
 import { type TextChannel } from 'discord.js';
 import { prisma } from '../../database.js';
 import { logger, swallow } from '../../logger.js';

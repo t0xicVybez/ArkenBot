@@ -1,4 +1,9 @@
 
+/**
+ * Delivers due reminders (from `/remind`). Runs every minute: find reminders
+ * whose time has passed and haven't been sent, post each in its channel, and
+ * mark it sent.
+ */
 import { prisma } from '../../database.js';
 import { logger, swallow } from '../../logger.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';

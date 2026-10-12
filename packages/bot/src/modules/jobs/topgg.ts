@@ -1,4 +1,9 @@
 
+/**
+ * top.gg integration jobs: `postTopggStats` reports our server count to the
+ * bot list (only when a TOPGG_TOKEN is set), and `runTopggReminders` nudges
+ * users who asked to be reminded when they can vote again.
+ */
 import { prisma } from '../../database.js';
 import { logger, swallow } from '../../logger.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
