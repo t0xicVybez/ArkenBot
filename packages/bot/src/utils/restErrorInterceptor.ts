@@ -1,32 +1,13 @@
-/**
- * Global REST permission-error interceptor.
- *
- * Every Discord API call the bot makes flows through `client.rest.request`.
- * This wraps it so that ANY request rejected with a missing-permission error
- * (50013 / 50001), anywhere in the bot, produces an admin alert — recovering the
- * guild/channel and the attempted operation from the request URL. This is the
- * catch-all so no action needs to be wired individually.
- *
- * It fires as a *fallback*: call sites that already alert (see
- * `notifyActionFailure`) mark the error as handled, and this interceptor skips
- * those so their more specific labels win and no alert is duplicated.
- */
+
 import { DiscordAPIError, type Client, type Guild } from 'discord.js';
 import { isPermissionError, notifyActionFailure } from './permissionAlert.js';
 import { logger } from '../logger.js';
 
-/**
- * Endpoints whose permission failures are benign passive reads the bot already
- * degrades around — never worth an admin alert. Audit-log reads fail whenever the
- * bot lacks View Audit Log; anti-nuke tracking just no-ops, so these 403s were the
- * dominant source of alert-channel noise.
- */
 function isSilencedEndpoint(url: string): boolean {
   const path = url.replace(/^https?:\/\/[^/]+/, '').split('?')[0];
   return /\/guilds\/\d+\/audit-logs$/.test(path);
 }
 
-/** Recover the guild and channel snowflakes from a Discord API URL. */
 function extractIds(url: string): { guildId?: string; channelId?: string } {
   const path = url.replace(/^https?:\/\/[^/]+/, '');
   return {
@@ -35,7 +16,6 @@ function extractIds(url: string): { guildId?: string; channelId?: string } {
   };
 }
 
-/** Map an API method + path to a friendly action id (i18n key) and the likely permission. */
 function classify(method: string, url: string): { action: string; requiredPermission?: string } {
   const path = url.replace(/^https?:\/\/[^/]+/, '').split('?')[0];
   const m = method.toUpperCase();
@@ -62,7 +42,6 @@ function classify(method: string, url: string): { action: string; requiredPermis
   return { action: 'generic' };
 }
 
-/** Wrap `client.rest.request` so every permission failure surfaces an alert. */
 export function installRestErrorInterceptor(client: Client): void {
   const rest = client.rest as unknown as { request: (...args: unknown[]) => Promise<unknown> };
   const original = rest.request.bind(rest);
@@ -73,8 +52,7 @@ export function installRestErrorInterceptor(client: Client): void {
     } catch (err) {
       if (isPermissionError(err) && err instanceof DiscordAPIError && typeof err.url === 'string' && !isSilencedEndpoint(err.url)) {
         const captured = err;
-        // Defer to a macrotask so a call-site handler (which marks the error)
-        // runs first; only alert here if nothing else did.
+
         setTimeout(() => {
           try {
             if ((captured as { __arkenHandled?: boolean }).__arkenHandled) return;
@@ -84,7 +62,7 @@ export function installRestErrorInterceptor(client: Client): void {
               const ch = client.channels.cache.get(channelId) as { guild?: Guild } | undefined;
               guild = ch?.guild;
             }
-            if (!guild) return; // DM or uncached guild — nothing to alert
+            if (!guild) return;
             const { action, requiredPermission } = classify(captured.method ?? 'GET', captured.url);
             void notifyActionFailure(guild, { action, error: captured, requiredPermission, channelId: channelId ?? null });
           } catch (e) {

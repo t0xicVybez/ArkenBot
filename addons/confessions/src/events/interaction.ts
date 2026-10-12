@@ -1,12 +1,4 @@
-/**
- * Confessions interaction routing:
- *  - Modal submit `confess:submit`         — a member's anonymous submission
- *  - Button `confess:approve:<recordId>`   — staff approves a pending confession
- *  - Button `confess:deny:<recordId>`      — staff rejects a pending confession
- *
- * The submitter's identity is stored on the record for staff accountability
- * (`/confess-setup whois`) but never appears in any posted message.
- */
+
 import {
   PermissionFlagsBits,
   MessageFlags,
@@ -38,7 +30,6 @@ export const interactionHandler = {
     if (!interaction.guildId || !interaction.guild) return;
     const guildId = interaction.guildId;
 
-    // ─── Member submits a confession ──────────────────────────────────────────
     if (interaction.isModalSubmit() && interaction.customId === 'confess:submit') {
       const loc = await ctx.resolveLocale(interaction);
       const guildLoc = await ctx.resolveLocale({ user: { id: '' }, guildId, guildLocale: interaction.guild.preferredLocale });
@@ -85,7 +76,6 @@ export const interactionHandler = {
       return;
     }
 
-    // ─── Staff approve / deny ─────────────────────────────────────────────────
     if (interaction.isButton() && (interaction.customId.startsWith('confess:approve:') || interaction.customId.startsWith('confess:deny:'))) {
       const loc = await ctx.resolveLocale(interaction);
       const guildLoc = await ctx.resolveLocale({ user: { id: '' }, guildId, guildLocale: interaction.guild.preferredLocale });

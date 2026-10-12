@@ -1,7 +1,4 @@
-/**
- * /serverinfo command — displays an overview of the current guild: member counts,
- * channel breakdown, roles, boosts, verification level, and banner.
- */
+
 import {
   MessageFlags,
   SlashCommandBuilder,
@@ -37,7 +34,7 @@ const command: BotCommand = {
     const voiceChannels = channels.filter((c) => c.isVoiceBased()).size;
     const categories = channels.filter((c) => c.type === 4).size;
 
-    const roles = guild.roles.cache.size - 1; // The @everyone role is excluded from the displayed count.
+    const roles = guild.roles.cache.size - 1;
     const emojis = guild.emojis.cache.size;
 
     const verificationLevels: Record<number, string> = {

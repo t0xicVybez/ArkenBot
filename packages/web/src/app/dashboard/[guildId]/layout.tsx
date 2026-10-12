@@ -1,9 +1,5 @@
 'use client';
 
-/**
- * Per-guild dashboard layout. Authenticates the session, opens a guild-scoped
- * WebSocket connection, and renders the sidebar alongside the page content.
- */
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
@@ -25,8 +21,6 @@ export default function GuildLayout({ children }: { children: React.ReactNode })
   const guildId = params.guildId as string;
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // v2 is now the PRIMARY theme (default on). `?v2=0` opts out to legacy v1
-  // (persisted, transitional escape hatch); `?v2=1` clears the opt-out.
   const [v2On, setV2On] = useState(true);
   useEffect(() => {
     try {
@@ -43,19 +37,16 @@ export default function GuildLayout({ children }: { children: React.ReactNode })
       }
       setV2On(!document.cookie.split('; ').includes('arken_v2=0'));
     } catch {
-      /* ignore */
+
     }
   }, []);
 
-  // The session cookie authenticates the WebSocket upgrade — no token needed.
   useEffect(() => {
     if (!isAuthenticated || !guildId) return;
     wsClient.connect([guildId]);
     return () => wsClient.disconnect();
   }, [isAuthenticated, guildId]);
 
-  // Wait for `/auth/me` to resolve (status !== 'loading') before redirecting, so
-  // a returning user isn't bounced to /auth during the initial check.
   useEffect(() => {
     if (status === 'unauthenticated') router.push('/auth');
   }, [status, router]);
@@ -70,7 +61,6 @@ export default function GuildLayout({ children }: { children: React.ReactNode })
 
   if (status !== 'authenticated') return null;
 
-  // Beta: render the v2 shell (v1 pages still render inside it until migrated).
   if (v2On) {
     return (
       <DashboardShell guildId={guildId} guildName={guild?.name} guildIcon={guild?.iconUrl}>

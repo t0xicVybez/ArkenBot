@@ -1,8 +1,4 @@
-/**
- * Discord OAuth2: authorisation-URL construction (with PKCE), code exchange,
- * profile fetch, and portal-user persistence. Session issuance lives in
- * `SessionService`; this module deals only with the Discord side of the flow.
- */
+
 import axios from 'axios';
 import { createHash, randomBytes } from 'crypto';
 import { prisma } from '../database.js';
@@ -27,30 +23,19 @@ interface DiscordUser {
   email?: string;
 }
 
-/** A PKCE verifier and its S256 challenge, generated per authorisation attempt. */
 export interface PkcePair {
   verifier: string;
   challenge: string;
 }
 
 export class AuthService {
-  /**
-   * Generates a PKCE verifier/challenge pair. The verifier is held server-side
-   * (Redis, keyed by state) and replayed at code exchange; only the S256
-   * challenge travels to Discord, so an intercepted authorisation code cannot be
-   * redeemed without the verifier.
-   */
+
   static generatePkce(): PkcePair {
     const verifier = randomBytes(32).toString('base64url');
     const challenge = createHash('sha256').update(verifier).digest('base64url');
     return { verifier, challenge };
   }
 
-  /**
-   * Builds the Discord OAuth2 authorisation URL for the given CSRF state token
-   * and PKCE challenge. The state value must be stored server-side and validated
-   * in the callback.
-   */
   static getOAuthUrl(state: string, codeChallenge: string): string {
     const params = new URLSearchParams({
       client_id: config.discord.clientId,
@@ -64,11 +49,6 @@ export class AuthService {
     return `https://discord.com/api/oauth2/authorize?${params}`;
   }
 
-  /**
-   * Exchanges a Discord OAuth2 authorisation code (plus its PKCE verifier) for
-   * access and refresh tokens.
-   * @throws If the Discord token endpoint returns an error.
-   */
   static async exchangeCode(code: string, codeVerifier: string): Promise<DiscordTokenResponse> {
     const params = new URLSearchParams({
       client_id: config.discord.clientId,
@@ -88,9 +68,6 @@ export class AuthService {
     return response.data;
   }
 
-  /**
-   * Fetches the authenticated Discord user's profile using their access token.
-   */
   static async getDiscordUser(accessToken: string): Promise<DiscordUser> {
     const response = await axios.get<DiscordUser>(`${DISCORD_API}/users/@me`, {
       headers: { Authorization: `Bearer ${accessToken}` },
@@ -98,11 +75,6 @@ export class AuthService {
     return response.data;
   }
 
-  /**
-   * Creates or updates the portal user record for the given Discord user,
-   * sealing the OAuth tokens at rest and refreshing the bot-owner flag from
-   * config.
-   */
   static async upsertUser(discordUser: DiscordUser, tokens: DiscordTokenResponse): Promise<PortalUser> {
     const tokenExpires = new Date(Date.now() + tokens.expires_in * 1000);
     const isBotOwner = config.owners.includes(discordUser.id);
@@ -137,11 +109,6 @@ export class AuthService {
     };
   }
 
-  /**
-   * Exchanges a stored refresh token for a fresh access/refresh token pair.
-   * @throws If Discord rejects the refresh (e.g. the grant was revoked); the
-   *         caller should treat this as "re-authentication required".
-   */
   static async refreshAccessToken(refreshToken: string): Promise<DiscordTokenResponse> {
     const params = new URLSearchParams({
       client_id: config.discord.clientId,
@@ -157,13 +124,6 @@ export class AuthService {
     return response.data;
   }
 
-  /**
-   * Returns a currently-valid Discord access token for the user, transparently
-   * refreshing (and re-sealing) it when the stored one is within 60s of expiry.
-   * Discord rotates the refresh token on each use, so the new pair is persisted.
-   * Returns null when there is no token or the refresh grant is no longer valid
-   * (the user must log in again).
-   */
   static async getValidAccessToken(userId: string): Promise<string | null> {
     const user = await prisma.portalUser.findUnique({
       where: { id: userId },
@@ -174,7 +134,6 @@ export class AuthService {
     const stillValid = user.tokenExpires && user.tokenExpires.getTime() - Date.now() > 60_000;
     if (stillValid) return decryptSecretLenient(user.accessToken);
 
-    // Expired (or about to): refresh using the stored refresh token.
     if (!user.refreshToken) return null;
     try {
       const tokens = await this.refreshAccessToken(decryptSecretLenient(user.refreshToken));

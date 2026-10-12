@@ -1,21 +1,12 @@
-/**
- * REST routes for the Ticket System addon. All ticket and panel data is stored
- * in the generic `AddonData` table keyed by the addon's database CUID, which is
- * resolved by name at runtime and cached in-process.
- */
+
 import type { FastifyInstance } from 'fastify';
 import { randomUUID } from 'crypto';
 import { requireGuildAdmin } from '../middleware/auth.js';
 import { prisma } from '../database.js';
 import { pub, redis } from '../redis.js';
 
-/** Compare-and-delete so we only release a lock we still own. */
 const RELEASE_LOCK = 'if redis.call("get", KEYS[1]) == ARGV[1] then return redis.call("del", KEYS[1]) else return 0 end';
 
-// ── P1.2 relational mirror ──────────────────────────────────────────────────
-// Columns of AddonTicket; everything else on a ticket goes into `data` (so
-// fields the API doesn't type — buttonId/controlsMessageId/notesThreadId — are
-// still preserved). Must match addons/tickets/src/utils/ticketsRepo.ts toRow.
 const TICKET_COLUMN_KEYS = new Set(['id', 'guildId', 'number', 'panelId', 'channelId', 'userId', 'username', 'status', 'priority', 'categoryTag', 'buttonId', 'claimedBy', 'claimedByTag', 'closedBy', 'closedByTag', 'closedAt', 'rating', 'ratingFeedback', 'firstResponseAt', 'lastActivity', 'createdAt']);
 
 function ticketToRow(t: Ticket): Record<string, unknown> {
@@ -35,13 +26,6 @@ function ticketToRow(t: Ticket): Record<string, unknown> {
   };
 }
 
-/**
- * Write the tickets blob (source of truth during the P1.2 migration) and mirror
- * the full set into the relational table — upserting each and removing rows no
- * longer present for that guild. Mirror is best-effort; a failure never breaks
- * the authoritative blob write.
- */
-/** AddonTicket row → Ticket (inverse of ticketToRow). */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function rowToTicket(r: any): Ticket {
   const d = (r.data ?? {}) as Record<string, unknown>;
@@ -60,16 +44,11 @@ function rowToTicket(r: any): Ticket {
   } as Ticket;
 }
 
-/** Read all tickets for a guild from the relational table (DB-only). */
 async function readTickets(guildId: string): Promise<Ticket[]> {
   const rows = await prisma.addonTicket.findMany({ where: { guildId } });
   return rows.map(rowToTicket);
 }
 
-/**
- * Persist the full ticket set for a guild to the relational table: upsert each
- * and remove rows no longer present. DB is the single source of truth.
- */
 async function writeTickets(guildId: string, tickets: Ticket[]): Promise<void> {
   const ids = tickets.map((t) => t.id);
   if (ids.length) await prisma.addonTicket.deleteMany({ where: { guildId, id: { notIn: ids } } });
@@ -83,11 +62,6 @@ async function writeTickets(guildId: string, tickets: Ticket[]): Promise<void> {
   }
 }
 
-/**
- * Run a read-modify-write under the SAME per-(addon,guild,key) Redis lock the
- * bot's AddonStorage uses, so dashboard writes can't clobber bot writes (or
- * each other). Best-effort: proceeds after a short wait if the lock is stuck.
- */
 async function withAddonLock<T>(guildId: string, key: string, fn: () => Promise<T>): Promise<T> {
   const addonId = await getAddonDbId();
   const lockKey = `addonlock:${addonId}:${guildId}:${key}`;
@@ -107,10 +81,6 @@ async function withAddonLock<T>(guildId: string, key: string, fn: () => Promise<
   }
 }
 
-// ─── Local type definitions ────────────────────────────────────────────────────
-// These mirror the types in addons/tickets/src/types.ts. Keep them in sync when
-// the addon's data schema changes.
-
 interface PanelButton { id: string; label: string; emoji: string; color: string; categoryTag?: string; staffRoles?: string[]; fields?: PanelField[]; }
 interface PanelField { id: string; label: string; placeholder?: string; required: boolean; style: 'short' | 'paragraph'; maxLength?: number; }
 interface TicketPanel { id: string; name: string; description: string; emoji: string; channelId?: string; messageId?: string; categoryId?: string; logChannelId?: string; staffRoles: string[]; maxTicketsPerUser: number; namingPattern: string; closeAction: string; autoCloseHours: number; requireReason: boolean; welcomeMessage: string; buttonLabel: string; buttonColor: string; buttons?: PanelButton[]; panelStyle?: 'buttons' | 'dropdown'; fields?: PanelField[]; ticketMode?: 'channel' | 'thread'; embedColor?: string; embedAuthorName?: string; embedAuthorIconUrl?: string; embedThumbnailUrl?: string; embedImageUrl?: string; embedFooterText?: string; embedFooterIconUrl?: string; enabled: boolean; createdAt: string; }
@@ -121,19 +91,9 @@ interface BusinessHours { enabled: boolean; timezone: string; openTime: string; 
 interface GuildTicketConfig { blacklistedUsers: string[]; transcriptChannelId?: string; slaHours?: number; webhookUrl?: string; staffNotifyChannelId?: string; staffNotifyRoleId?: string; ratingWindowMinutes?: number; autoAssign?: boolean; roundRobinIndex?: number; slaLevels?: SlaLevel[]; autoTriage?: boolean; autoTriageSetPriority?: boolean; autoTriageTag?: boolean; nudgeBeforeCloseHours?: number; businessHours?: BusinessHours; showUserHistory?: boolean; lowRatingThreshold?: number; lowRatingAlertRoleId?: string; lowRatingAlertChannelId?: string; openCooldownMinutes?: number; minAccountAgeDays?: number; requiredOpenRoleId?: string; weeklyDigestChannelId?: string; }
 interface CannedResponse { id: string; name: string; content: string; createdBy: string; createdByTag: string; createdAt: string; }
 
-// ─── AddonData helpers ────────────────────────────────────────────────────────
-// AddonData rows are keyed by the Addon.id CUID (not the addon name). We resolve
-// the CUID once and cache it for the lifetime of the process to avoid per-request
-// database lookups.
-
 const ADDON_NAME = 'tickets';
 let _addonDbId: string | null = null;
 
-/**
- * Returns the database CUID for the tickets addon, resolving it from the
- * database on first call and caching it thereafter.
- * @throws If the addon has not been registered by the bot.
- */
 async function getAddonDbId(): Promise<string> {
   if (_addonDbId) return _addonDbId;
   const addon = await prisma.addon.findUnique({ where: { name: ADDON_NAME }, select: { id: true } });
@@ -142,10 +102,6 @@ async function getAddonDbId(): Promise<string> {
   return addon.id;
 }
 
-/**
- * Reads a typed value from `AddonData` for the given guild and key.
- * Returns `null` if no row exists.
- */
 async function readData<T>(guildId: string, key: string): Promise<T | null> {
   const addonId = await getAddonDbId();
   const row = await prisma.addonData.findUnique({
@@ -154,9 +110,6 @@ async function readData<T>(guildId: string, key: string): Promise<T | null> {
   return row ? (row.value as unknown as T) : null;
 }
 
-/**
- * Upserts a typed value into `AddonData` for the given guild and key.
- */
 async function writeData<T>(guildId: string, key: string, value: T): Promise<void> {
   const addonId = await getAddonDbId();
   await prisma.addonData.upsert({
@@ -166,31 +119,13 @@ async function writeData<T>(guildId: string, key: string, value: T): Promise<voi
   });
 }
 
-// ─── Routes ───────────────────────────────────────────────────────────────────
-
-/**
- * Registers all ticket addon routes.
- *
- * Panel management:  GET/POST/PATCH/DELETE /addons/tickets/:guildId/panels
- * Ticket listing:    GET /addons/tickets/:guildId/tickets (with filtering/pagination)
- * Ticket detail:     GET /addons/tickets/:guildId/tickets/:ticketId
- * Ticket actions:    POST/DELETE claim, unclaim, transfer, reopen, bulk-close, reply, notes, tags
- * Statistics:        GET /addons/tickets/:guildId/stats
- * Time-series:       GET /addons/tickets/:guildId/stats/timeseries
- * Config:            GET/PATCH /addons/tickets/:guildId/config
- * Canned responses:  GET/POST/PATCH/DELETE /addons/tickets/:guildId/canned-responses
- */
 export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> {
-
-  // ── Panels (read) ─────────────────────────────────────────────────────────
 
   server.get('/addons/tickets/:guildId/panels', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const panels = (await readData<TicketPanel[]>(guildId, 'panels')) ?? [];
     return reply.send({ success: true, data: panels });
   });
-
-  // ── Panels (create) ───────────────────────────────────────────────────────
 
   server.post('/addons/tickets/:guildId/panels', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
@@ -240,8 +175,6 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     });
   });
 
-  // ── Panels (update) ───────────────────────────────────────────────────────
-
   server.patch('/addons/tickets/:guildId/panels/:panelId', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, panelId } = request.params as { guildId: string; panelId: string };
     const body = request.body as Partial<TicketPanel>;
@@ -255,7 +188,6 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
       return reply.code(409).send({ success: false, error: 'A panel with that name already exists' });
     }
 
-    // Preserve immutable fields — never allow the client to overwrite id or createdAt.
     const updated: TicketPanel = {
       ...panels[idx],
       ...body,
@@ -265,14 +197,11 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     panels[idx] = updated;
     await writeData(guildId, 'panels', panels);
 
-    // Notify the bot to re-render the Discord panel message with the new configuration.
     pub.publish('ticket:panel:updated', JSON.stringify({ guildId, panelId })).catch(() => null);
 
     return reply.send({ success: true, data: updated });
     });
   });
-
-  // ── Panels (delete) ───────────────────────────────────────────────────────
 
   server.delete('/addons/tickets/:guildId/panels/:panelId', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, panelId } = request.params as { guildId: string; panelId: string };
@@ -286,8 +215,6 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     return reply.send({ success: true });
     });
   });
-
-  // ── Tickets (list) ────────────────────────────────────────────────────────
 
   server.get('/addons/tickets/:guildId/tickets', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
@@ -319,8 +246,6 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     return reply.send({ success: true, data, meta: { total, page: pageNum, limit: limitNum } });
   });
 
-  // ── Tickets (single) ──────────────────────────────────────────────────────
-
   server.get('/addons/tickets/:guildId/tickets/:ticketId', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, ticketId } = request.params as { guildId: string; ticketId: string };
 
@@ -328,8 +253,6 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     const ticket  = tickets.find((t) => t.id === ticketId);
     if (!ticket) return reply.code(404).send({ success: false, error: 'Ticket not found' });
 
-    // Transcript messages are stored globally (guildId = null) keyed by channel ID
-    // because they belong to the channel rather than to the guild.
     const addonId = await getAddonDbId();
     const msgsRow = await prisma.addonData.findFirst({
       where: { guildId: null, addonId, key: `msgs:${ticket.channelId}` },
@@ -341,8 +264,6 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
 
     return reply.send({ success: true, data: { ticket, messages, panel } });
   });
-
-  // ── Tickets (transcript export) ───────────────────────────────────────────
 
   server.get('/addons/tickets/:guildId/tickets/:ticketId/transcript', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, ticketId } = request.params as { guildId: string; ticketId: string };
@@ -468,8 +389,6 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     return reply.send(html);
   });
 
-  // ── Tickets (delete) ──────────────────────────────────────────────────────
-
   server.delete('/addons/tickets/:guildId/tickets/:ticketId', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, ticketId } = request.params as { guildId: string; ticketId: string };
 
@@ -480,8 +399,6 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     await writeTickets(guildId, filtered);
     return reply.send({ success: true });
   });
-
-  // ── Tickets (reopen) ──────────────────────────────────────────────────────
 
   server.post('/addons/tickets/:guildId/tickets/:ticketId/reopen', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, ticketId } = request.params as { guildId: string; ticketId: string };
@@ -504,8 +421,6 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     await writeTickets(guildId, tickets);
     return reply.send({ success: true, data: tickets[idx] });
   });
-
-  // ── Tickets (bulk-close idle) ─────────────────────────────────────────────
 
   server.post('/addons/tickets/:guildId/tickets/bulk-close', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
@@ -537,9 +452,6 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     return reply.send({ success: true, data: { closedCount } });
   });
 
-  // ── Ticket actions ────────────────────────────────────────────────────────
-
-  /** Loads the ticket array and locates a specific ticket by ID. */
   async function findTicket(guildId: string, ticketId: string) {
     const tickets = await readTickets(guildId);
     const idx = tickets.findIndex((t) => t.id === ticketId);
@@ -615,8 +527,6 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     return reply.send({ success: true, data: tickets[idx] });
   });
 
-  // ── Portal reply to Discord channel ───────────────────────────────────────
-
   server.post('/addons/tickets/:guildId/tickets/:ticketId/reply', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, ticketId } = request.params as { guildId: string; ticketId: string };
     const { content, authorTag = 'Staff Portal' } = (request.body as { content: string; authorTag?: string });
@@ -624,8 +534,7 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     const { ticket } = await findTicket(guildId, ticketId);
     if (!ticket) return reply.code(404).send({ success: false, error: 'Ticket not found' });
     if (ticket.status === 'closed') return reply.code(400).send({ success: false, error: 'Ticket is closed' });
-    // Publish to Redis so the bot sends the message in the Discord channel and
-    // updates the transcript and waiting-on status accordingly.
+
     pub.publish('ticket:reply', JSON.stringify({ guildId, channelId: ticket.channelId, content: content.trim(), authorTag })).catch(() => null);
     return reply.send({ success: true });
   });
@@ -639,12 +548,10 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     const note: TicketNote = { id: randomUUID(), authorId: 'portal', authorTag, content: content.trim(), createdAt: new Date().toISOString() };
     tickets[idx] = { ...ticket, notes: [...ticket.notes, note], lastActivity: new Date().toISOString() };
     await writeTickets(guildId, tickets);
-    // Notify the bot to post the note to the private staff thread in the ticket channel.
+
     pub.publish('ticket:note:added', JSON.stringify({ guildId, channelId: ticket.channelId, note })).catch(() => null);
     return reply.send({ success: true, data: tickets[idx] });
   });
-
-  // ── Stats (summary) ───────────────────────────────────────────────────────
 
   server.get('/addons/tickets/:guildId/stats', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
@@ -665,14 +572,12 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
       ? rated.reduce((s, t) => s + (t.rating ?? 0), 0) / rated.length
       : null;
 
-    // Rating distribution bucketed by star value (1–5).
     const ratingDistribution: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
     for (const t of rated) { ratingDistribution[t.rating!] = (ratingDistribution[t.rating!] ?? 0) + 1; }
 
     const since7d        = Date.now() - 7 * 24 * 3600 * 1000;
     const recentlyClosed = tickets.filter((t) => t.closedAt && new Date(t.closedAt).getTime() > since7d).length;
 
-    // Average time from ticket creation to first staff response, in minutes.
     const responded = tickets.filter((t) => t.firstResponseAt);
     const avgResponseMinutes = responded.length > 0
       ? responded.reduce((s, t) => {
@@ -681,7 +586,6 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
         }, 0) / responded.length
       : null;
 
-    // Average time from ticket creation to closure, in minutes.
     const closedWithTime = tickets.filter((t) => t.closedAt);
     const avgCloseMinutes = closedWithTime.length > 0
       ? closedWithTime.reduce((s, t) => {
@@ -690,7 +594,6 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
         }, 0) / closedWithTime.length
       : null;
 
-    // SLA breaches: open tickets with no staff response that have exceeded the configured SLA window.
     const slaBreaches = config.slaHours && config.slaHours > 0
       ? tickets.filter((t) => {
           if (t.status === 'closed' || t.firstResponseAt) return false;
@@ -699,7 +602,6 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
         }).length
       : 0;
 
-    // Per-panel breakdown with average rating and average close time.
     const byPanel = panels.map((p) => {
       const pTickets = tickets.filter((t) => t.panelId === p.id);
       const pRated = pTickets.filter((t) => t.rating !== undefined);
@@ -717,7 +619,6 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
       };
     });
 
-    // Per-agent breakdown: a ticket's handler is whoever claimed it, else who closed it.
     const staffAgg = new Map<string, { id: string; tag: string; handled: number; closed: number; ratingSum: number; ratingCount: number; closeSum: number; closeCount: number }>();
     for (const tk of tickets) {
       const id = tk.claimedBy ?? tk.closedBy;
@@ -764,8 +665,6 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     });
   });
 
-  // ── Stats (time-series) ───────────────────────────────────────────────────
-
   server.get('/addons/tickets/:guildId/stats/timeseries', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const { days = '30' } = request.query as Record<string, string>;
@@ -799,15 +698,12 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     return reply.send({ success: true, data: result });
   });
 
-  // ── Config ────────────────────────────────────────────────────────────────
-
   server.get('/addons/tickets/:guildId/config', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const config = (await readData<GuildTicketConfig>(guildId, 'config')) ?? { blacklistedUsers: [] };
     return reply.send({ success: true, data: config });
   });
 
-  // ── Tickets CSV export ──────────────────────────────────────────────────────
   server.get('/addons/tickets/:guildId/tickets/export', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const [tickets, panels] = await Promise.all([
@@ -838,15 +734,11 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     return reply.send({ success: true, data: updated });
   });
 
-  // ── Canned Responses (list) ───────────────────────────────────────────────
-
   server.get('/addons/tickets/:guildId/canned-responses', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const responses = (await readData<CannedResponse[]>(guildId, 'canned-responses')) ?? [];
     return reply.send({ success: true, data: responses });
   });
-
-  // ── Canned Responses (create) ─────────────────────────────────────────────
 
   server.post('/addons/tickets/:guildId/canned-responses', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
@@ -874,8 +766,6 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     return reply.code(201).send({ success: true, data: response });
   });
 
-  // ── Canned Responses (update) ─────────────────────────────────────────────
-
   server.patch('/addons/tickets/:guildId/canned-responses/:responseId', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, responseId } = request.params as { guildId: string; responseId: string };
     const body = request.body as Partial<CannedResponse>;
@@ -888,8 +778,6 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     await writeData(guildId, 'canned-responses', responses);
     return reply.send({ success: true, data: responses[idx] });
   });
-
-  // ── Canned Responses (delete) ─────────────────────────────────────────────
 
   server.delete('/addons/tickets/:guildId/canned-responses/:responseId', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, responseId } = request.params as { guildId: string; responseId: string };

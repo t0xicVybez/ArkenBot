@@ -1,18 +1,10 @@
-/**
- * Reads per-process memory from PM2 for the dashboard overview.
- *
- * The API process can only see its own `process.memoryUsage()`, which is why the
- * old "Memory" stat showed the API's heap. To report the bot's real memory — and
- * the whole fleet's — we ask the PM2 daemon (same user) for every process's RSS
- * via `pm2 jlist`. Spawning the CLI is cheap but not free, so results are cached
- * briefly; the overview is polled, not hammered.
- */
+
 import { execFile } from 'node:child_process';
 
 export interface Pm2Memory {
-  /** RSS of the `bot` process, in MB (null if PM2 is unreadable or the process is absent). */
+
   botMb: number | null;
-  /** Summed RSS of every PM2 process, in MB (null if PM2 is unreadable). */
+
   totalMb: number | null;
 }
 

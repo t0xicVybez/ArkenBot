@@ -1,11 +1,4 @@
-/**
- * Fastify preHandler hooks for cookie-session authentication and role-based
- * authorization. Import and pass these directly in route `preHandler` arrays.
- *
- * Authentication is by opaque server-side session (see `SessionService`): the
- * httpOnly cookie carries an id, `requireAuth` resolves it to a user, and — when
- * the session rotates its id — transparently re-sets the cookie on the response.
- */
+
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import { prisma } from '../database.js';
 import { config } from '../config.js';
@@ -23,16 +16,11 @@ declare module 'fastify' {
       isStaff: boolean;
       isBotOwner: boolean;
     };
-    /** Database id of the session that authenticated this request. */
+
     sessionId?: string;
   }
 }
 
-/**
- * Resolves the session cookie, attaches the authenticated user to `request.user`,
- * and re-sets the cookie if the session rotated its id. Responds with 401 if the
- * cookie is missing, invalid, expired, revoked, or the user no longer exists.
- */
 export async function requireAuth(request: FastifyRequest, reply: FastifyReply): Promise<void> {
   const sid = request.cookies[config.cookie.name];
   if (!sid) {
@@ -49,7 +37,6 @@ export async function requireAuth(request: FastifyRequest, reply: FastifyReply):
     return;
   }
 
-  // Transparent rotation: hand the browser the freshly-minted id.
   if (resolved.newSid) setSessionCookie(reply, resolved.newSid);
 
   const user = await prisma.portalUser.findUnique({ where: { id: resolved.userId } });
@@ -67,10 +54,6 @@ export async function requireAuth(request: FastifyRequest, reply: FastifyReply):
   };
 }
 
-/**
- * Extends `requireAuth` to additionally require the staff or bot-owner flag.
- * Responds with 403 for authenticated users who lack the required role.
- */
 export async function requireStaff(request: FastifyRequest, reply: FastifyReply): Promise<void> {
   await requireAuth(request, reply);
   if (reply.sent) return;
@@ -80,10 +63,6 @@ export async function requireStaff(request: FastifyRequest, reply: FastifyReply)
   }
 }
 
-/**
- * Extends `requireAuth` to additionally require the bot-owner flag.
- * Responds with 403 for authenticated users who are not the bot owner.
- */
 export async function requireBotOwner(request: FastifyRequest, reply: FastifyReply): Promise<void> {
   await requireAuth(request, reply);
   if (reply.sent) return;
@@ -93,14 +72,6 @@ export async function requireBotOwner(request: FastifyRequest, reply: FastifyRep
   }
 }
 
-/**
- * Extends `requireAuth` to additionally verify that the user has the Discord
- * Administrator permission (or is the owner) in the guild identified by the
- * `:guildId` route parameter. Staff and bot owners bypass the Discord API check.
- *
- * Permission bits are compared as BigInt because Discord permissions exceed
- * the safe integer range for JavaScript numbers.
- */
 export async function requireGuildAdmin(request: FastifyRequest, reply: FastifyReply): Promise<void> {
   await requireAuth(request, reply);
   if (reply.sent) return;
@@ -111,7 +82,6 @@ export async function requireGuildAdmin(request: FastifyRequest, reply: FastifyR
     return;
   }
 
-  // Staff and bot owners have implicit access to all guilds.
   if (request.user?.isStaff || request.user?.isBotOwner) {
     await ensureGuildRow(guildId);
     return;
@@ -124,8 +94,7 @@ export async function requireGuildAdmin(request: FastifyRequest, reply: FastifyR
   }
 
   try {
-    // Cached + coalesced so a dashboard's parallel endpoint calls make at most
-    // one Discord `/users/@me/guilds` request per user, avoiding 429 → 500.
+
     const guilds = await getUserGuilds(request.user!.id, accessToken);
     const guild = guilds.find((g) => g.id === guildId);
     if (!guild) {
@@ -144,8 +113,6 @@ export async function requireGuildAdmin(request: FastifyRequest, reply: FastifyR
       return;
     }
 
-    // Authorized — make sure the guild row exists so guild-scoped writes don't
-    // FK-violate inside the brief window before the bot has persisted it.
     await ensureGuildRow(guildId);
   } catch (err) {
     if (err instanceof GuildFetchRateLimited) {

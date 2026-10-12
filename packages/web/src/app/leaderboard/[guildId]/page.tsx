@@ -91,7 +91,7 @@ export default function LeaderboardPage() {
 
   return (
     <div className="min-h-screen bg-discord-darkest-bg text-white">
-      {/* Header */}
+      {}
       <div className="bg-discord-darker-bg border-b border-gray-700/50">
         <div className="max-w-3xl mx-auto px-4 py-8">
           <div className="flex items-center gap-4">
@@ -113,7 +113,7 @@ export default function LeaderboardPage() {
         </div>
       </div>
 
-      {/* Leaderboard */}
+      {}
       <div className="max-w-3xl mx-auto px-4 py-6">
         {entries.length === 0 ? (
           <div className="text-center py-16 text-gray-500">
@@ -130,12 +130,12 @@ export default function LeaderboardPage() {
                     : 'bg-discord-dark-bg/50 border-gray-700/30 hover:border-gray-600/50'
                 }`}
               >
-                {/* Rank */}
+                {}
                 <div className="w-10 flex-shrink-0 flex items-center justify-center">
                   <RankBadge rank={entry.rank} />
                 </div>
 
-                {/* User info */}
+                {}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-1.5">
                     <span className="font-medium truncate text-sm">{entry.userTag}</span>
@@ -161,7 +161,7 @@ export default function LeaderboardPage() {
           </div>
         )}
 
-        {/* Pagination */}
+        {}
         {total > 25 && (
           <div className="flex items-center justify-between mt-6 text-sm">
             <p className="text-gray-500">{t('pageInfo', { page, total })}</p>

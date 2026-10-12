@@ -1,9 +1,4 @@
-/**
- * Per-user preferences shared with the bot. Currently the language the user
- * wants the dashboard and bot to use. Writing here keeps the dashboard's
- * language switcher and the bot's /language command in sync (both read/write
- * the same UserPreferences row keyed by Discord user ID).
- */
+
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { requireAuth } from '../middleware/auth.js';
@@ -22,7 +17,7 @@ export async function userPreferencesRoutes(server: FastifyInstance): Promise<vo
     const userId = (request as { user?: { id: string } }).user!.id;
     const body = parse(z.object({ language: z.string().nullable() }), request.body, reply);
     if (!body) return;
-    // Only persist a recognised locale; anything else clears the preference.
+
     const language = body.language && isSupportedLocale(body.language) ? body.language : null;
     await prisma.userPreferences.upsert({
       where: { userId },

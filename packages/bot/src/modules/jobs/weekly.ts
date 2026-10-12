@@ -1,4 +1,4 @@
-/** weekly scheduler job(s) — extracted from BackgroundJobs (P3 god-file split). */
+
 import { type TextChannel } from 'discord.js';
 import { prisma } from '../../database.js';
 import { redis } from '../../redis.js';
@@ -9,7 +9,7 @@ import { postAnalytics } from '../../commands/utility/analytics.js';
 import type { BotClient } from '../../client.js';
 
 export async function runLotteryDraw(client: BotClient): Promise<void> {
-  // Draw on Sundays (UTC day 0); a Redis guard makes it exactly-once per week.
+
   if (new Date().getUTCDay() !== 0) return;
   const week = (() => { const d = new Date(); return `${d.getUTCFullYear()}-${Math.floor(d.getTime() / 6048e5)}`; })();
   const configs = await prisma.economyConfig.findMany({ where: { enabled: true, lotteryEnabled: true }, select: { guildId: true } }).catch(() => []);
@@ -23,7 +23,7 @@ export async function runLotteryDraw(client: BotClient): Promise<void> {
 }
 
 export async function runWeeklyHighlights(client: BotClient): Promise<void> {
-  // Only post on Mondays (UTC) so a restart during the week doesn't repeat it.
+
   if (new Date().getUTCDay() !== 1) return;
   const configs = await prisma.guildSettings.findMany({ where: { highlightsEnabled: true, highlightsChannelId: { not: null } }, select: { guildId: true } }).catch(() => []);
   for (const cfg of configs) {
@@ -34,7 +34,7 @@ export async function runWeeklyHighlights(client: BotClient): Promise<void> {
 }
 
 export async function runWeeklyAnalytics(client: BotClient): Promise<void> {
-  // Only post on Mondays (UTC day 1) so mid-week restarts don't double-post.
+
   if (new Date().getUTCDay() !== 1) return;
 
   const configs = await prisma.guildSettings.findMany({

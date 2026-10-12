@@ -1,15 +1,7 @@
-/**
- * Thin client for the Groq chat-completions API (OpenAI-compatible).
- *
- * Centralises the endpoint, default model, timeout, and error handling so every
- * AI feature — the assistant commands, ticket triage, and smart automod — calls
- * the model the same way. Reads `GROQ_API_KEY` from the environment; when it is
- * unset the feature should degrade gracefully rather than error.
- */
+
 
 const GROQ_ENDPOINT = 'https://api.groq.com/openai/v1/chat/completions';
 
-/** Default model — fast, capable, and already used for changelog rewriting. */
 export const DEFAULT_LLM_MODEL = 'openai/gpt-oss-20b';
 
 export type LLMRole = 'system' | 'user' | 'assistant';
@@ -21,19 +13,18 @@ export interface LLMMessage {
 export interface LLMOptions {
   model?: string;
   temperature?: number;
-  /** Upper bound on generated tokens. */
+
   maxTokens?: number;
-  /** Ask the model to return a JSON object (`response_format: json_object`). */
+
   json?: boolean;
-  /** Abort the request after this many milliseconds (default 15000). */
+
   timeoutMs?: number;
-  /** Caller-provided abort signal, combined with the timeout. */
+
   signal?: AbortSignal;
-  /** Explicit API key, overriding `GROQ_API_KEY` (used to rotate across keys). */
+
   apiKey?: string;
 }
 
-/** Raised when no `GROQ_API_KEY` is configured — callers should treat AI as disabled. */
 export class LLMUnavailableError extends Error {
   constructor() {
     super('AI features are unavailable: GROQ_API_KEY is not configured.');
@@ -41,16 +32,10 @@ export class LLMUnavailableError extends Error {
   }
 }
 
-/** True when the deployment has an API key — check before offering an AI action. */
 export function isLLMAvailable(): boolean {
   return Boolean(process.env.GROQ_API_KEY);
 }
 
-/**
- * Sends a chat completion and returns the assistant's text.
- * Throws {@link LLMUnavailableError} when no key is set, or a plain Error on a
- * network/HTTP/timeout failure.
- */
 export async function chatCompletion(messages: LLMMessage[], opts: LLMOptions = {}): Promise<string> {
   const key = opts.apiKey ?? process.env.GROQ_API_KEY;
   if (!key) throw new LLMUnavailableError();
@@ -78,8 +63,7 @@ export async function chatCompletion(messages: LLMMessage[], opts: LLMOptions = 
         messages,
         temperature,
         max_tokens: maxTokens,
-        // gpt-oss models reason before answering; keep it minimal so tight
-        // token budgets (e.g. automod's 150) still leave room for the answer.
+
         reasoning_effort: 'low',
         ...(json ? { response_format: { type: 'json_object' } } : {}),
       }),
@@ -99,10 +83,6 @@ export async function chatCompletion(messages: LLMMessage[], opts: LLMOptions = 
   }
 }
 
-/**
- * Convenience wrapper for prompts that must return JSON. Enables JSON mode and
- * parses the reply; throws if the model returns malformed JSON.
- */
 export async function jsonCompletion<T>(
   messages: LLMMessage[],
   opts: Omit<LLMOptions, 'json'> = {},

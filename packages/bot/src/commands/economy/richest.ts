@@ -1,4 +1,4 @@
-/** /richest — the guild's wealth leaderboard by net worth (wallet + bank). */
+
 import { SlashCommandBuilder, EmbedBuilder, type ChatInputCommandInteraction } from 'discord.js';
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';

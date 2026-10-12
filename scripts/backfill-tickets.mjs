@@ -1,11 +1,4 @@
-/**
- * P1.2 backfill — copy existing ticket + message JSON blobs from AddonData into
- * the relational AddonTicket / AddonTicketMessage tables. Idempotent (ticket
- * upserts; message channels are delete-then-reinsert). Reads DATABASE_URL.
- *
- *   node scripts/backfill-tickets.mjs --dry    # report only, no writes
- *   node scripts/backfill-tickets.mjs          # perform the backfill
- */
+
 import { readFileSync } from 'fs';
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';

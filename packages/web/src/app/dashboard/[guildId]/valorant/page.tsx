@@ -83,7 +83,7 @@ export default function ValorantDashPage() {
         </div>
       </div>
 
-      {/* Dormant-until-approved notice */}
+      {}
       <div className="mb-6 rounded-xl border border-amber-500/25 bg-amber-500/5 p-4 flex items-start gap-3">
         <Info className="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" />
         <p className="text-sm text-gray-300">{t('pendingNotice')}</p>
@@ -96,7 +96,7 @@ export default function ValorantDashPage() {
 
         {enabled && (
           <>
-            {/* Rank roles */}
+            {}
             <div className="card space-y-4">
               <Toggle label={t('syncRoles')} description={t('syncRolesDesc')} enabled={syncRoles} onChange={setSyncRoles} />
               {syncRoles && (
@@ -112,7 +112,7 @@ export default function ValorantDashPage() {
               )}
             </div>
 
-            {/* Match alerts */}
+            {}
             <div className="card space-y-4">
               <Toggle label={t('matchAlerts')} description={t('matchAlertsDesc')} enabled={matchAlerts} onChange={setMatchAlerts} />
               {matchAlerts && (
@@ -126,12 +126,12 @@ export default function ValorantDashPage() {
               )}
             </div>
 
-            {/* Leaderboard */}
+            {}
             <div className="card">
               <Toggle label={t('leaderboard')} description={t('leaderboardDesc')} enabled={leaderboard} onChange={setLeaderboard} />
             </div>
 
-            {/* Presence */}
+            {}
             <div className="card space-y-4">
               <Toggle label={t('presence')} description={t('presenceDesc')} enabled={presence} onChange={setPresence} />
               {presence && (

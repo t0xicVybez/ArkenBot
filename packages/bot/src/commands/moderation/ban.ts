@@ -1,7 +1,4 @@
-/**
- * /ban command — bans a member permanently or for a specified duration, with
- * optional message deletion. Creates a moderation case and logs the action.
- */
+
 import {
   SlashCommandBuilder,
   PermissionFlagsBits,
@@ -114,11 +111,9 @@ const command: BotCommand = {
     }
 
     try {
-      // Attempt DM notification before the ban so the message can actually be delivered.
-      // Sent even for ban-by-ID (non-members): the DM still reaches the user when
-      // they share another server with the bot, so an appeal button isn't lost.
+
       {
-        // Offer an appeal button (in the target's language) when appeals are enabled.
+
         const appealsOn = await AppealsModule.enabled(interaction.guild.id);
         const targetLoc = await resolveUserLocale({ user: { id: targetUser.id }, guildId: interaction.guild.id, guildLocale: interaction.guild.preferredLocale });
         await targetUser
@@ -142,7 +137,6 @@ const command: BotCommand = {
         deleteMessageSeconds: deleteMessages * 86400,
       });
 
-      // Contribute to the cross-server ban network (no-op unless opted in).
       void BanNetworkModule.recordBan(interaction.guild.id, targetUser.id, reason);
 
       const caseNumber = await getNextCaseNumber(interaction.guild.id);
@@ -162,7 +156,6 @@ const command: BotCommand = {
         },
       });
 
-      // The TempBan row is polled by the background job scheduler to lift bans on expiry.
       if (durationStr && expiresAt) {
         await prisma.tempBan.create({
           data: {

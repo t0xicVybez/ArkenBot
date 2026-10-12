@@ -1,9 +1,4 @@
-/**
- * Minimal Telnet client for 7 Days to Die, whose admin console is a Telnet
- * endpoint rather than Source RCON. On connect the server prompts for a
- * password; after logging in we send the command and collect output until the
- * stream goes quiet.
- */
+
 import { Socket } from 'net';
 import { RconError } from './source.js';
 
@@ -26,10 +21,10 @@ export function telnetCommand(
       settled = true;
       clearTimeout(hardTimer);
       if (quietTimer) clearTimeout(quietTimer);
-      try { socket.write('exit\n'); } catch { /* ignore */ }
+      try { socket.write('exit\n'); } catch {  }
       socket.destroy();
       if (err) return reject(err);
-      // Strip the login banner and command echo; keep only meaningful lines.
+
       const lines = output
         .split(/\r?\n/)
         .map((l) => l.trim())
@@ -42,13 +37,13 @@ export function telnetCommand(
     socket.on('error', (err) => done(new RconError(`Connection failed: ${err.message}`)));
     socket.connect(port, host, () => {
       socket.write(`${password}\n`);
-      // Give the login a moment, then issue the command.
+
       setTimeout(() => { socket.write(`${command}\n`); sentCommand = true; }, 500);
     });
     socket.on('data', (chunk) => {
       output += chunk.toString('utf8');
       if (!sentCommand) return;
-      // Resolve once the server stops sending for a short window.
+
       if (quietTimer) clearTimeout(quietTimer);
       quietTimer = setTimeout(() => done(null), 800);
     });

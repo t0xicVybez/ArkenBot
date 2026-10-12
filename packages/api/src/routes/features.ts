@@ -1,15 +1,10 @@
-/**
- * Routes for miscellaneous guild features: per-command toggles, stats channels,
- * birthday tracker, polls, scheduled messages, auto-slowmode, activity graphs,
- * leaderboard management, and member search.
- */
+
 import type { FastifyInstance } from 'fastify';
 import { requireAuth, requireGuildAdmin } from '../middleware/auth.js';
 import { prisma } from '../database.js';
 import { pub } from '../redis.js';
 import { wallClockToUtc } from '@arkenbot/shared';
 
-/** Interpret a scheduled-message time: absolute if it carries Z/offset, else wall-clock in tz. */
 function resolveScheduledAt(value: string, timezone?: string | null): Date {
   if (/[zZ]$|[+-]\d{2}:?\d{2}$/.test(value)) return new Date(value);
   const m = value.match(/^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2})/);
@@ -17,38 +12,18 @@ function resolveScheduledAt(value: string, timezone?: string | null): Date {
   return wallClockToUtc(Number(m[1]), Number(m[2]), Number(m[3]), Number(m[4]), Number(m[5]), timezone && timezone.length ? timezone : 'UTC');
 }
 
-/** Keep only valid IANA timezones (or null). */
 function cleanTimezone(tz: unknown): string | null {
   if (typeof tz !== 'string' || !tz.length) return null;
   try { new Intl.DateTimeFormat('en-US', { timeZone: tz }); return tz; } catch { return null; }
 }
 
-/** Normalize a weekday list to unique ints 0-6. */
 function cleanDays(days: unknown): number[] {
   if (!Array.isArray(days)) return [];
   return [...new Set(days.map(Number).filter((n) => Number.isInteger(n) && n >= 0 && n <= 6))].sort();
 }
 
-/**
- * Registers feature routes.
- *
- * Command toggles:     GET/POST/DELETE /guilds/:guildId/commands/available|disabled
- * Stats channels:      GET/POST/DELETE /guilds/:guildId/stats-channels
- * Birthday tracker:    GET/PATCH /guilds/:guildId/birthdays/config, GET/POST/DELETE /guilds/:guildId/birthdays
- * Polls:               GET/POST /guilds/:guildId/polls, PATCH/DELETE /guilds/:guildId/polls/:pollId, POST …/vote
- * Scheduled messages:  GET/POST/PATCH/DELETE /guilds/:guildId/scheduled-messages
- * Auto-slowmode:       GET/POST/PATCH/DELETE /guilds/:guildId/slowmode
- * Activity graphs:     GET /guilds/:guildId/activity
- * Leaderboard reset:   DELETE /guilds/:guildId/leaderboard
- * Member search:       GET /guilds/:guildId/members
- */
 export async function featureRoutes(server: FastifyInstance): Promise<void> {
 
-  // ── Per-command toggles ───────────────────────────────────────────────────
-
-  // Returns built-in commands and commands exposed by installed addons.
-  // Addon commands are sourced from each addon's manifest to stay in sync
-  // with what the bot actually registers.
   server.get('/guilds/:guildId/commands/available', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
 
@@ -137,8 +112,6 @@ export async function featureRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true });
   });
 
-  // ── Stats channels ────────────────────────────────────────────────────────
-
   server.get('/guilds/:guildId/stats-channels', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const rows = await prisma.statsChannel.findMany({ where: { guildId } });
@@ -175,8 +148,6 @@ export async function featureRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true });
   });
 
-  // ── Birthday tracker ──────────────────────────────────────────────────────
-
   server.get('/guilds/:guildId/birthdays/config', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const cfg = await prisma.birthdayConfig.findUnique({ where: { guildId } });
@@ -186,8 +157,7 @@ export async function featureRoutes(server: FastifyInstance): Promise<void> {
   server.patch('/guilds/:guildId/birthdays/config', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const body = request.body as { enabled?: boolean; channelId?: string | null; birthdayRoleId?: string | null; message?: string };
-    // Whitelist known columns — never spread the raw body into Prisma (a stray
-    // field, e.g. an older client sending `roleId`, would otherwise throw).
+
     const data = {
       ...(body.enabled !== undefined ? { enabled: body.enabled } : {}),
       ...(body.channelId !== undefined ? { channelId: body.channelId } : {}),
@@ -202,8 +172,6 @@ export async function featureRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: cfg });
   });
 
-  // Usernames are resolved via the Discord API on the fly and are not persisted,
-  // so the response may fall back to the raw user ID if the bot token is absent.
   server.get('/guilds/:guildId/birthdays', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const rows = await prisma.birthday.findMany({ where: { guildId }, orderBy: [{ month: 'asc' }, { day: 'asc' }] });
@@ -226,8 +194,6 @@ export async function featureRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data });
   });
 
-  // This endpoint uses requireAuth (not requireGuildAdmin) because it is called
-  // by the bot on behalf of a member using the /birthday slash command.
   server.post('/guilds/:guildId/birthdays', { preHandler: [requireAuth] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const { userId, month, day } = request.body as { userId: string; month: number; day: number };
@@ -246,8 +212,6 @@ export async function featureRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true });
   });
 
-  // ── Polls ─────────────────────────────────────────────────────────────────
-
   server.get('/guilds/:guildId/polls', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const polls = await prisma.poll.findMany({
@@ -259,7 +223,6 @@ export async function featureRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: polls });
   });
 
-  // Called by the bot when a member uses the /poll command to persist the poll data.
   server.post('/guilds/:guildId/polls', { preHandler: [requireAuth] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const { channelId, question, options, endsAt, multiVote, createdById } = request.body as {
@@ -281,7 +244,6 @@ export async function featureRoutes(server: FastifyInstance): Promise<void> {
     return reply.code(201).send({ success: true, data: poll });
   });
 
-  // Called by the bot to store the Discord message ID after posting the poll embed.
   server.patch('/guilds/:guildId/polls/:pollId', { preHandler: [requireAuth] }, async (request, reply) => {
     const { guildId, pollId } = request.params as { guildId: string; pollId: string };
     const { messageId, closed } = request.body as { messageId?: string; closed?: boolean };
@@ -302,7 +264,7 @@ export async function featureRoutes(server: FastifyInstance): Promise<void> {
     if (!poll) return reply.code(404).send({ success: false, error: 'Poll not found or closed' });
 
     if (!poll.multiVote) {
-      // Single-vote polls: replace the user's existing vote.
+
       await prisma.pollVote.deleteMany({ where: { pollId, userId } });
     }
 
@@ -323,8 +285,6 @@ export async function featureRoutes(server: FastifyInstance): Promise<void> {
     await prisma.poll.delete({ where: { id: pollId } });
     return reply.send({ success: true });
   });
-
-  // ── Scheduled messages ────────────────────────────────────────────────────
 
   server.get('/guilds/:guildId/scheduled-messages', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
@@ -380,8 +340,6 @@ export async function featureRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true });
   });
 
-  // ── Auto-slowmode ─────────────────────────────────────────────────────────
-
   server.get('/guilds/:guildId/slowmode', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const rows = await prisma.slowmodeConfig.findMany({ where: { guildId } });
@@ -419,8 +377,6 @@ export async function featureRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true });
   });
 
-  // ── Activity graphs ───────────────────────────────────────────────────────
-
   server.get('/guilds/:guildId/activity', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const query = request.query as { days?: string };
@@ -436,8 +392,6 @@ export async function featureRoutes(server: FastifyInstance): Promise<void> {
 
     return reply.send({ success: true, data: rows });
   });
-
-  // ── Leaderboard and member search ─────────────────────────────────────────
 
   server.delete('/guilds/:guildId/leaderboard', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };

@@ -1,6 +1,5 @@
-// Validate a translated catalog against the en-US base: identical key set and
-// identical placeholder ({...}) multiset in every string. Usage:
-//   node scripts/i18n-check.mjs <base.json> <translated.json>
+
+
 import { readFileSync } from 'fs';
 
 const [, , basePath, transPath] = process.argv;
@@ -16,10 +15,7 @@ function flat(o, p = '', out = {}) {
   return out;
 }
 const fb = flat(base), ft = flat(trans);
-// Extract the set of ICU/placeholder argument names ({name}, {count, plural, …},
-// {count, number}). An argument name is an identifier immediately followed by ','
-// or '}', which distinguishes real placeholders from ICU sub-message branch text
-// like {Announcement sent to # server!} (identifier followed by a space).
+
 const ph = (s) => [...s.matchAll(/\{\s*([a-zA-Z0-9_]+)\s*[,}]/g)].map((m) => m[1]).sort().join(',');
 
 let problems = 0;

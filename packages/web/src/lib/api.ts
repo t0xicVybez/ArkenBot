@@ -1,12 +1,4 @@
-/**
- * Centralised Axios instance for the Arken Bot API.
- *
- * Authentication is by httpOnly session cookie — the browser holds no token, so
- * there is no Authorization header or refresh logic here. `withCredentials`
- * sends the cookie cross-subdomain (dashboard ↔ API are same-site in
- * production). On a 401 the auth store is flipped to unauthenticated and each
- * page's guard handles the redirect to `/auth`.
- */
+
 import axios from 'axios';
 import type {
   ApiResponse,
@@ -26,10 +18,6 @@ const api = axios.create({
   withCredentials: true,
 });
 
-// A 401 means the session cookie is missing/expired/revoked. Reflect that in the
-// store; page-level guards (watching `status`) route the user to `/auth`. The
-// `/auth/me` bootstrap probe handles its own 401 in AuthProvider, so it is
-// exempt from the store mutation here to avoid a redundant state flip.
 api.interceptors.response.use(
   (res) => res,
   (error) => {
@@ -41,12 +29,10 @@ api.interceptors.response.use(
   }
 );
 
-/** Full URL that begins the server-mediated Discord login, returning to `redirect`. */
 export function getLoginUrl(redirect = '/dashboard'): string {
   return `${API_URL}/auth/login?redirect=${encodeURIComponent(redirect)}`;
 }
 
-/** One active session as returned by `GET /auth/sessions`. */
 export interface ActiveSession {
   id: string;
   userAgent: string | null;
@@ -56,7 +42,6 @@ export interface ActiveSession {
   current: boolean;
 }
 
-// ─── Auth ─────────────────────────────────────────────────────────
 export const authApi = {
   me: () => api.get<ApiResponse<PortalUser>>('/auth/me'),
   logout: () => api.post('/auth/logout'),
@@ -65,7 +50,6 @@ export const authApi = {
   revokeSession: (id: string) => api.delete(`/auth/sessions/${id}`),
 };
 
-// ─── Guilds ───────────────────────────────────────────────────────
 export const guildsApi = {
   list: () => api.get<ApiResponse<GuildOverview[]>>('/guilds'),
   get: (guildId: string) => api.get<ApiResponse<GuildOverview>>(`/guilds/${guildId}`),
@@ -77,7 +61,6 @@ export const guildsApi = {
   automodAnalytics: (guildId: string, days = 14) => api.get(`/guilds/${guildId}/analytics/automod`, { params: { days } }),
 };
 
-// ─── Settings ─────────────────────────────────────────────────────
 export const settingsApi = {
   get: (guildId: string) => api.get<ApiResponse<GuildSettings>>(`/guilds/${guildId}/settings`),
   update: (guildId: string, data: Partial<GuildSettings>) =>
@@ -108,7 +91,6 @@ export const settingsApi = {
     api.delete(`/guilds/${guildId}/reaction-roles/panels/${panelId}/roles/${roleId}`),
 };
 
-// ─── Moderation ───────────────────────────────────────────────────
 export const moderationApi = {
   getCases: (guildId: string, params?: object) =>
     api.get(`/guilds/${guildId}/cases`, { params }),
@@ -126,7 +108,6 @@ export const moderationApi = {
     api.get(`/guilds/${guildId}/logs`, { params }),
 };
 
-// ─── Addons ───────────────────────────────────────────────────────
 export const addonsApi = {
   listAll: (includeDisabled = false) => api.get('/addons', { params: includeDisabled ? { all: 'true' } : {} }),
   listGuild: (guildId: string) => api.get(`/guilds/${guildId}/addons`),
@@ -142,7 +123,6 @@ export const addonsApi = {
   update: (id: string, data: object) => api.patch(`/admin/addons/${id}`, data),
 };
 
-// ─── Tickets Addon ────────────────────────────────────────────────
 export const ticketsApi = {
   getPanels:   (guildId: string) => api.get(`/addons/tickets/${guildId}/panels`),
   createPanel: (guildId: string, data: object) => api.post(`/addons/tickets/${guildId}/panels`, data),
@@ -187,14 +167,12 @@ export const ticketsApi = {
   deleteCannedResponse: (guildId: string, responseId: string) => api.delete(`/addons/tickets/${guildId}/canned-responses/${responseId}`),
 };
 
-// ─── Announcements (guild opt-in settings) ────────────────────────
 export const announcementsApi = {
   getSettings: (guildId: string) => api.get(`/guilds/${guildId}/settings/announcements`),
   updateSettings: (guildId: string, data: { announcementsEnabled?: boolean; announcementChannelId?: string | null }) =>
     api.patch(`/guilds/${guildId}/settings/announcements`, data),
 };
 
-// ─── Commands (per-guild toggle) ──────────────────────────────────
 export const commandsApi = {
   getAvailable: (guildId: string) => api.get<ApiResponse<Array<{ name: string; category: string }>>>(`/guilds/${guildId}/commands/available`),
   getDisabled: (guildId: string) => api.get<ApiResponse<string[]>>(`/guilds/${guildId}/commands/disabled`),
@@ -202,7 +180,6 @@ export const commandsApi = {
   enable: (guildId: string, commandName: string) => api.delete(`/guilds/${guildId}/commands/disabled/${commandName}`),
 };
 
-// ─── Stats Channels ────────────────────────────────────────────────
 export const statsChannelsApi = {
   list: (guildId: string) => api.get(`/guilds/${guildId}/stats-channels`),
   create: (guildId: string, data: { channelId: string; type: string; format?: string }) =>
@@ -210,7 +187,6 @@ export const statsChannelsApi = {
   delete: (guildId: string, id: string) => api.delete(`/guilds/${guildId}/stats-channels/${id}`),
 };
 
-// ─── Birthday ─────────────────────────────────────────────────────
 export const birthdayApi = {
   getConfig: (guildId: string) => api.get(`/guilds/${guildId}/birthdays/config`),
   updateConfig: (guildId: string, data: object) => api.patch(`/guilds/${guildId}/birthdays/config`, data),
@@ -218,14 +194,12 @@ export const birthdayApi = {
   delete: (guildId: string, userId: string) => api.delete(`/guilds/${guildId}/birthdays/${userId}`),
 };
 
-// ─── Polls ────────────────────────────────────────────────────────
 export const pollsApi = {
   list: (guildId: string) => api.get(`/guilds/${guildId}/polls`),
   close: (guildId: string, pollId: string) => api.patch(`/guilds/${guildId}/polls/${pollId}`, { closed: true }),
   delete: (guildId: string, pollId: string) => api.delete(`/guilds/${guildId}/polls/${pollId}`),
 };
 
-// ─── Scheduled Messages ───────────────────────────────────────────
 export const scheduledMessagesApi = {
   list: (guildId: string) => api.get(`/guilds/${guildId}/scheduled-messages`),
   create: (guildId: string, data: object) => api.post(`/guilds/${guildId}/scheduled-messages`, data),
@@ -233,7 +207,6 @@ export const scheduledMessagesApi = {
   delete: (guildId: string, id: string) => api.delete(`/guilds/${guildId}/scheduled-messages/${id}`),
 };
 
-// ─── Slowmode ─────────────────────────────────────────────────────
 export const slowmodeApi = {
   list: (guildId: string) => api.get(`/guilds/${guildId}/slowmode`),
   create: (guildId: string, data: object) => api.post(`/guilds/${guildId}/slowmode`, data),
@@ -241,23 +214,19 @@ export const slowmodeApi = {
   delete: (guildId: string, id: string) => api.delete(`/guilds/${guildId}/slowmode/${id}`),
 };
 
-// ─── Activity ─────────────────────────────────────────────────────
 export const activityApi = {
   get: (guildId: string, days?: number) => api.get(`/guilds/${guildId}/activity`, { params: days ? { days } : {} }),
 };
 
-// ─── Members ──────────────────────────────────────────────────────
 export const membersApi = {
   search: (guildId: string, search?: string) => api.get(`/guilds/${guildId}/members`, { params: search ? { search } : {} }),
 };
 
-// ─── Giveaways ────────────────────────────────────────────────────
 export const giveawaysApi = {
   list: (guildId: string, ended?: boolean) =>
     api.get(`/guilds/${guildId}/giveaways`, { params: ended !== undefined ? { ended } : {} }),
 };
 
-// ─── Stream / Feed Alerts ─────────────────────────────────────────
 export const streamAlertsApi = {
   list: (guildId: string, platforms?: string[]) =>
     api.get(`/guilds/${guildId}/stream-alerts`, { params: platforms?.length ? { platform: platforms.join(',') } : {} }),
@@ -266,14 +235,12 @@ export const streamAlertsApi = {
   delete: (guildId: string, id: string) => api.delete(`/guilds/${guildId}/stream-alerts/${id}`),
 };
 
-// ─── Top.gg Voting ────────────────────────────────────────────────
 export const topggApi = {
   getConfig: (guildId: string) => api.get(`/guilds/${guildId}/topgg`),
   updateConfig: (guildId: string, data: object) => api.patch(`/guilds/${guildId}/topgg`, data),
   getLeaderboard: (guildId: string) => api.get(`/guilds/${guildId}/topgg/leaderboard`),
 };
 
-// ─── Suggestions ──────────────────────────────────────────────────
 export const suggestionsApi = {
   getConfig: (guildId: string) => api.get(`/guilds/${guildId}/suggestions/config`),
   updateConfig: (guildId: string, data: object) => api.patch(`/guilds/${guildId}/suggestions/config`, data),
@@ -281,14 +248,12 @@ export const suggestionsApi = {
     api.get(`/guilds/${guildId}/suggestions`, { params: status && status !== 'all' ? { status } : {} }),
 };
 
-// ─── Starboard ────────────────────────────────────────────────────
 export const starboardApi = {
   getConfig: (guildId: string) => api.get(`/guilds/${guildId}/starboard/config`),
   updateConfig: (guildId: string, data: object) => api.patch(`/guilds/${guildId}/starboard/config`, data),
   listEntries: (guildId: string) => api.get(`/guilds/${guildId}/starboard/entries`),
 };
 
-// ─── Custom Commands ──────────────────────────────────────────────
 export const customCommandsApi = {
   list: (guildId: string) => api.get(`/guilds/${guildId}/custom-commands`),
   create: (guildId: string, data: object) => api.post(`/guilds/${guildId}/custom-commands`, data),
@@ -297,7 +262,6 @@ export const customCommandsApi = {
   delete: (guildId: string, id: string) => api.delete(`/guilds/${guildId}/custom-commands/${id}`),
 };
 
-// ─── Auto-Responses ───────────────────────────────────────────────
 export const autoResponsesApi = {
   list:   (guildId: string) => api.get(`/guilds/${guildId}/auto-responses`),
   create: (guildId: string, data: object) => api.post(`/guilds/${guildId}/auto-responses`, data),
@@ -306,27 +270,23 @@ export const autoResponsesApi = {
   delete: (guildId: string, id: string) => api.delete(`/guilds/${guildId}/auto-responses/${id}`),
 };
 
-// ─── Self-Assignable Roles ────────────────────────────────────────
 export const selfRolesApi = {
   list:   (guildId: string) => api.get(`/guilds/${guildId}/self-roles`),
   create: (guildId: string, data: { roleId: string; name: string }) => api.post(`/guilds/${guildId}/self-roles`, data),
   delete: (guildId: string, id: string) => api.delete(`/guilds/${guildId}/self-roles/${id}`),
 };
 
-// ─── Bot Personalization ──────────────────────────────────────────
 export const personalizationApi = {
   get: (guildId: string) => api.get(`/guilds/${guildId}/personalization`),
   update: (guildId: string, data: { nickname?: string | null; botAvatarUrl?: string | null }) =>
     api.patch(`/guilds/${guildId}/personalization`, data),
 };
 
-// ─── Counting ─────────────────────────────────────────────────────
 export const countingApi = {
   get:   (guildId: string) => api.get(`/guilds/${guildId}/counting`),
   reset: (guildId: string) => api.post(`/guilds/${guildId}/counting/reset`, {}),
 };
 
-// ─── Invite Tracker ───────────────────────────────────────────────
 export const inviteTrackerApi = {
   get:        (guildId: string) => api.get(`/guilds/${guildId}/invite-tracker`),
   setEnabled: (guildId: string, enabled: boolean) =>
@@ -335,7 +295,6 @@ export const inviteTrackerApi = {
     api.patch(`/guilds/${guildId}/invite-tracker/bonus`, { userId, bonus }),
 };
 
-// ─── Level Roles ──────────────────────────────────────────────────
 export const levelRolesApi = {
   list: (guildId: string) => api.get(`/guilds/${guildId}/level-roles`),
   create: (guildId: string, data: { level: number; roleId: string }) =>
@@ -343,7 +302,6 @@ export const levelRolesApi = {
   delete: (guildId: string, id: string) => api.delete(`/guilds/${guildId}/level-roles/${id}`),
 };
 
-// ─── Embeds ───────────────────────────────────────────────────────────────────
 export const embedsApi = {
   list: (guildId: string) => api.get(`/guilds/${guildId}/embeds`),
   create: (guildId: string, data: object) => api.post(`/guilds/${guildId}/embeds`, data),
@@ -353,7 +311,6 @@ export const embedsApi = {
     api.post(`/guilds/${guildId}/embeds/${id}/send`, { channelId }),
 };
 
-// ─── Command Role Permissions ─────────────────────────────────────
 export const commandPermissionsApi = {
   list: (guildId: string) => api.get(`/guilds/${guildId}/command-permissions`),
   set: (guildId: string, data: { commandName: string; roleId: string; allow: boolean }) =>
@@ -361,12 +318,10 @@ export const commandPermissionsApi = {
   delete: (guildId: string, id: string) => api.delete(`/guilds/${guildId}/command-permissions/${id}`),
 };
 
-// ─── Leaderboard Management ───────────────────────────────────────
 export const leaderboardApi = {
   resetInactive: (guildId: string) => api.post(`/guilds/${guildId}/leaderboard/reset-inactive`),
 };
 
-// ─── XP Role Multipliers ──────────────────────────────────────────
 export const xpMultipliersApi = {
   list: (guildId: string) => api.get(`/guilds/${guildId}/xp-multipliers`),
   create: (guildId: string, data: { roleId: string; multiplier: number }) =>
@@ -374,7 +329,6 @@ export const xpMultipliersApi = {
   delete: (guildId: string, roleId: string) => api.delete(`/guilds/${guildId}/xp-multipliers/${roleId}`),
 };
 
-// ─── XP Channel Multipliers ───────────────────────────────────────
 export const xpChannelMultipliersApi = {
   list: (guildId: string) => api.get(`/guilds/${guildId}/xp-channel-multipliers`),
   create: (guildId: string, data: { channelId: string; multiplier: number }) =>
@@ -383,7 +337,6 @@ export const xpChannelMultipliersApi = {
     api.delete(`/guilds/${guildId}/xp-channel-multipliers/${channelId}`),
 };
 
-// ─── Applications ─────────────────────────────────────────────────
 export const applicationsApi = {
   listForms: (guildId: string) => api.get(`/guilds/${guildId}/applications/forms`),
   createForm: (guildId: string, data: object) => api.post(`/guilds/${guildId}/applications/forms`, data),
@@ -404,25 +357,21 @@ export const applicationsApi = {
   ) => api.post(`/guilds/${guildId}/applications/submissions/${submissionId}/review`, data),
 };
 
-// ─── Anti-Nuke ────────────────────────────────────────────────────
 export const antiNukeApi = {
   get: (guildId: string) => api.get(`/guilds/${guildId}/anti-nuke/config`),
   update: (guildId: string, data: object) => api.patch(`/guilds/${guildId}/anti-nuke/config`, data),
 };
 
-// ─── Verification ─────────────────────────────────────────────────
 export const verificationApi = {
   get: (guildId: string) => api.get(`/guilds/${guildId}/verification/config`),
   update: (guildId: string, data: object) => api.patch(`/guilds/${guildId}/verification/config`, data),
 };
 
-// ─── Forum Management ─────────────────────────────────────────────
 export const forumManagementApi = {
   get: (guildId: string) => api.get(`/guilds/${guildId}/forum-management/config`),
   update: (guildId: string, data: object) => api.patch(`/guilds/${guildId}/forum-management/config`, data),
 };
 
-// ─── Reports ──────────────────────────────────────────────────────
 export const reportsApi = {
   list: (guildId: string, status?: string) =>
     api.get(`/guilds/${guildId}/reports`, { params: status ? { status } : {} }),
@@ -432,14 +381,12 @@ export const reportsApi = {
   updateConfig: (guildId: string, data: object) => api.patch(`/guilds/${guildId}/report-config`, data),
 };
 
-// ─── Warning Escalation (stored in GuildSettings.extended) ────────
 export const warningEscalationApi = {
   get: (guildId: string) => api.get(`/guilds/${guildId}/warning-escalation`),
   update: (guildId: string, escalations: Array<{ count: number; action: string; duration?: number }>) =>
     api.put(`/guilds/${guildId}/warning-escalation`, { escalations }),
 };
 
-// ─── Temp Voice Channels ──────────────────────────────────────────
 export const tempVoiceApi = {
   getTriggers: (guildId: string) => api.get(`/guilds/${guildId}/temp-voice/triggers`),
   addTrigger: (guildId: string, channelId: string, categoryId?: string | null) =>
@@ -448,7 +395,6 @@ export const tempVoiceApi = {
     api.delete(`/guilds/${guildId}/temp-voice/triggers/${channelId}`),
 };
 
-// ─── Monday.com Alerts ────────────────────────────────────────────
 export const mondayApi = {
   list: (guildId: string) => api.get(`/guilds/${guildId}/monday-alerts`),
   create: (guildId: string, data: object) => api.post(`/guilds/${guildId}/monday-alerts`, data),
@@ -456,7 +402,6 @@ export const mondayApi = {
   delete: (guildId: string, id: string) => api.delete(`/guilds/${guildId}/monday-alerts/${id}`),
 };
 
-// ─── Trello ───────────────────────────────────────────────────────
 export const trelloApi = {
   list: (guildId: string) => api.get(`/guilds/${guildId}/trello-alerts`),
   create: (guildId: string, data: object) => api.post(`/guilds/${guildId}/trello-alerts`, data),
@@ -464,20 +409,17 @@ export const trelloApi = {
   delete: (guildId: string, id: string) => api.delete(`/guilds/${guildId}/trello-alerts/${id}`),
 };
 
-// ─── Config Export / Import ───────────────────────────────────────
 export const configTransferApi = {
   export: (guildId: string) => api.get(`/guilds/${guildId}/config-export`),
   import: (guildId: string, data: object) => api.post(`/guilds/${guildId}/config-import`, data),
 };
 
-// ─── Self-service data controls (privacy / GDPR) ──────────────────
 export const dataApi = {
   deleteServerData: (guildId: string) => api.delete(`/guilds/${guildId}/data`),
   exportMine: () => api.get('/me/data-export'),
   deleteMine: () => api.delete('/me/data'),
 };
 
-// ─── Dashboard Audit Log ──────────────────────────────────────────
 export const auditLogApi = {
   list: (guildId: string, page = 1) => api.get(`/guilds/${guildId}/audit-log`, { params: { page } }),
 };
@@ -494,7 +436,6 @@ export const gameAdminApi = {
   get: (guildId: string) => api.get(`/guilds/${guildId}/addons/gameadmin`),
 };
 
-// ─── Admin ────────────────────────────────────────────────────────
 export const appealsApi = {
   appealable: () => api.get('/me/appealable'),
   submit: (guildId: string, reason: string) => api.post('/me/appeals', { guildId, reason }),
@@ -522,7 +463,6 @@ export const adminApi = {
     api.post<{ success: boolean; data: { title: string; body: string; type: string } }>('/admin/announcements/generate', { count }),
 };
 
-// ─── VALORANT ─────────────────────────────────────────────────────
 export const valorantApi = {
   getConfig: (guildId: string) => api.get(`/valorant/config/${guildId}`),
   updateConfig: (guildId: string, data: object) => api.patch(`/valorant/config/${guildId}`, data),

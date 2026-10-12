@@ -1,20 +1,9 @@
-/**
- * Routes for managing per-role command permission overrides within a guild.
- * Permissions are stored as allow/deny records and evaluated by the bot at
- * command invocation time.
- */
+
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { requireGuildAdmin } from '../middleware/auth.js';
 import { prisma } from '../database.js';
 
-/**
- * Registers command permission routes.
- *
- * GET    /guilds/:guildId/command-permissions      — list all permission overrides
- * POST   /guilds/:guildId/command-permissions      — create or update an override
- * DELETE /guilds/:guildId/command-permissions/:id  — remove an override
- */
 export async function commandPermissionRoutes(server: FastifyInstance): Promise<void> {
   server.get('/guilds/:guildId/command-permissions', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };

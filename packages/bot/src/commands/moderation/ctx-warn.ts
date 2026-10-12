@@ -1,7 +1,4 @@
-/**
- * "⚠️ Warn Member" user context-menu command.
- * Shows a modal asking for a warn reason; on submit creates Warning + ModerationCase.
- */
+
 import {
   ContextMenuCommandBuilder,
   ApplicationCommandType,

@@ -142,7 +142,7 @@ export default function LogsPage() {
         </div>
       </SettingsSection>
 
-      {/* User ID + Date range filters */}
+      {}
       <div className="flex flex-wrap gap-3 mb-4 items-end">
         <div className="flex flex-col gap-1">
           <label className="text-xs text-gray-400 font-medium">{t('userId')}</label>
@@ -182,7 +182,7 @@ export default function LogsPage() {
         )}
       </div>
 
-      {/* Filter chips */}
+      {}
       <div className="flex flex-wrap gap-2 mb-4">
         <button
           onClick={() => setTypeFilter('')}

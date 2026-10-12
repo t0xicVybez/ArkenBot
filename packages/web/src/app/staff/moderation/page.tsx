@@ -56,7 +56,7 @@ export default function StaffModerationPage() {
         </div>
       </div>
 
-      {/* Tabs */}
+      {}
       <div className="flex gap-2 mb-4">
         <button onClick={() => switchTab('cases')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${isCases ? 'bg-discord-blurple text-white' : 'bg-(--bg-card) text-gray-400 hover:text-white'}`}>
           <Gavel className="w-4 h-4" /> {t('tabCases')}
@@ -66,7 +66,7 @@ export default function StaffModerationPage() {
         </button>
       </div>
 
-      {/* Filters */}
+      {}
       <div className="card mb-6 flex flex-col sm:flex-row gap-3">
         <div className="flex-1 relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -85,7 +85,7 @@ export default function StaffModerationPage() {
         </select>
       </div>
 
-      {/* Table */}
+      {}
       <div className="card overflow-hidden p-0">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[760px]">

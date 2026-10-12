@@ -1,9 +1,4 @@
-/**
- * Shared RCON action layer for gameadmin: builds and runs console commands,
- * writes an audit-log entry per action, and drives scheduled tasks. The slash
- * command, the control-panel buttons, and the scheduler all go through here so
- * behaviour (and audit logging) stays identical across entry points.
- */
+
 import { EmbedBuilder, type Guild, type TextChannel } from 'discord.js';
 import type { AddonContext, AddonStorage } from '@arkenbot/addon-sdk';
 import { GAMES, runGameCommand } from './games.js';
@@ -14,7 +9,6 @@ import type { SavedGameServer } from './types.js';
 export type RconAction = 'players' | 'say' | 'kick' | 'ban' | 'unban' | 'save' | 'stop';
 type Translate = (key: string, vars?: Record<string, string | number>) => string;
 
-// ─── Config (audit log channel) ───────────────────────────────────────────────
 export interface GaConfig { logChannelId?: string }
 const CFG_KEY = 'gaConfig';
 export async function getConfig(storage: AddonStorage, guildId: string): Promise<GaConfig> {
@@ -24,7 +18,6 @@ export async function setConfig(storage: AddonStorage, guildId: string, cfg: GaC
   await storage.set(CFG_KEY, cfg, guildId);
 }
 
-// ─── Schedules ────────────────────────────────────────────────────────────────
 export type ScheduleAction = 'save' | 'restart' | 'broadcast';
 export interface Schedule {
   id: string;
@@ -45,7 +38,6 @@ export const SCHEDULE_INTERVALS: Record<string, number> = {
   hourly: 3_600_000, every6h: 6 * 3_600_000, every12h: 12 * 3_600_000, daily: 24 * 3_600_000,
 };
 
-// ─── Command building + running ───────────────────────────────────────────────
 export function buildActionCommand(
   server: SavedGameServer,
   action: RconAction,
@@ -64,34 +56,25 @@ export async function runServerCommand(server: SavedGameServer, rawCommand: stri
   return runGameCommand(server.game, server.host, server.port, password, rawCommand);
 }
 
-/** Games whose kick/ban RCON commands take a SteamID rather than a player name. */
 const STEAMID_GAMES = new Set(['palworld']);
 
-/**
- * For SteamID-based games (Palworld), turns a player name or SteamID into the
- * `steam_<steamid>` identifier Palworld's RCON kick/ban commands require. Accepts
- * a name (resolved to its SteamID via ShowPlayers), a bare 17-digit SteamID, or
- * an already-prefixed `steam_…`. Passes the input through unchanged when the game
- * uses names, or when a name can't be matched online (so it fails visibly).
- */
 export async function resolvePlayerTarget(server: SavedGameServer, player: string): Promise<string> {
   if (!STEAMID_GAMES.has(server.game)) return player;
   const p = player.trim();
-  if (/^steam_\d{17}$/i.test(p)) return p;      // already the Palworld form
-  if (/^\d{17}$/.test(p)) return `steam_${p}`;  // bare SteamID → prefix it
+  if (/^steam_\d{17}$/i.test(p)) return p;
+  if (/^\d{17}$/.test(p)) return `steam_${p}`;
   try {
-    const out = await runServerCommand(server, 'ShowPlayers'); // CSV: name,playeruid,steamid
+    const out = await runServerCommand(server, 'ShowPlayers');
     for (const line of out.split('\n').slice(1)) {
       const cols = line.split(',');
       if (cols.length >= 3 && cols[0].trim().toLowerCase() === p.toLowerCase()) {
         return `steam_${cols[cols.length - 1].trim()}`;
       }
     }
-  } catch { /* fall through — let the command fail with a clear server error */ }
+  } catch {  }
   return player;
 }
 
-// ─── Audit log ────────────────────────────────────────────────────────────────
 export async function postAudit(
   ctx: AddonContext,
   guild: Guild,
@@ -116,7 +99,6 @@ export async function postAudit(
   await channel.send({ embeds: [embed] }).catch(() => {});
 }
 
-// ─── Scheduler ────────────────────────────────────────────────────────────────
 export async function runDueSchedules(ctx: AddonContext): Promise<void> {
   const now = Date.now();
   for (const guild of ctx.client.guilds.cache.values()) {
@@ -154,7 +136,7 @@ async function runSchedule(ctx: AddonContext, guild: Guild, server: SavedGameSer
     } else if (sch.action === 'restart') {
       const warn = buildActionCommand(server, 'say', { message: t('gameadmin.restartWarn') });
       if (warn) await runServerCommand(server, warn).catch(() => {});
-      await new Promise((r) => setTimeout(r, 60_000)); // 1-minute warning window
+      await new Promise((r) => setTimeout(r, 60_000));
       const save = buildActionCommand(server, 'save');
       if (save) await runServerCommand(server, save).catch(() => {});
       const stop = buildActionCommand(server, 'stop');

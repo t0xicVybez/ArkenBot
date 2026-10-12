@@ -93,7 +93,7 @@ export default function CannedResponsesPage() {
 
   return (
     <div className="p-3 sm:p-6 space-y-6 max-w-3xl">
-      {/* Header */}
+      {}
       <div className="flex items-center gap-4">
         <Link href={`/dashboard/${guildId}/tickets`} className="text-gray-400 hover:text-white transition-colors">
           <ArrowLeft className="w-5 h-5" />
@@ -114,7 +114,7 @@ export default function CannedResponsesPage() {
         )}
       </div>
 
-      {/* Form */}
+      {}
       {showForm && (
         <div className="card space-y-4">
           <div className="flex items-center justify-between">
@@ -158,7 +158,7 @@ export default function CannedResponsesPage() {
         </div>
       )}
 
-      {/* Response List */}
+      {}
       {isLoading ? (
         <div className="text-center text-gray-400 py-8">{t('loading')}</div>
       ) : responses.length === 0 ? (
@@ -205,7 +205,7 @@ export default function CannedResponsesPage() {
         </div>
       )}
 
-      {/* Usage hint */}
+      {}
       {responses.length > 0 && (
         <div className="card border border-discord-blurple/20 bg-discord-blurple/5">
           <p className="text-gray-400 text-sm">

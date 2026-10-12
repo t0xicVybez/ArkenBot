@@ -4,11 +4,6 @@ import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianG
 
 export type ActivityPoint = { date: string; Messages: number };
 
-/**
- * The dashboard overview's message-activity area chart. Isolated into its own
- * module so recharts is pulled into a lazily-loaded chunk (via next/dynamic in
- * the page) instead of the route's initial bundle.
- */
 export default function ActivityChart({ data }: { data: ActivityPoint[] }) {
   return (
     <ResponsiveContainer width="100%" height={160}>

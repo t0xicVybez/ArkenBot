@@ -5,11 +5,6 @@ import type { SavedServer } from '../types.js';
 const KEY = 'servers';
 const PENDING_KEY = 'pending';
 
-/**
- * An `/server add` or `/server status` parked while we collect the admin password
- * from a modal — the modal submit is a separate interaction, so the original
- * command's arguments have to survive the round trip.
- */
 export interface PendingQuery {
   action: 'add' | 'status';
   name?: string;
@@ -18,7 +13,6 @@ export interface PendingQuery {
   port?: number;
 }
 
-/** Parks a command's arguments against the user who invoked it. */
 export async function setPending(
   storage: AddonStorage,
   guildId: string,
@@ -30,7 +24,6 @@ export async function setPending(
   await storage.set(PENDING_KEY, all, guildId);
 }
 
-/** Retrieves and clears a parked command — a pending entry is good for one submit. */
 export async function takePending(
   storage: AddonStorage,
   guildId: string,

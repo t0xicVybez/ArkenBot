@@ -1,8 +1,7 @@
-/** Builds the Discord embed summarising a code review result. */
+
 import { EmbedBuilder } from 'discord.js';
 import type { AnalysisResult } from '../analyzer/types.js';
 
-/** Translator bound to the viewer's locale, passed in from the addon context. */
 type Translate = (key: string, vars?: Record<string, string | number>) => string;
 
 const LANG_LABELS: Record<string, string> = {
@@ -24,14 +23,6 @@ const SEVERITY_ICONS = {
   info: '🔵',
 } as const;
 
-/**
- * Constructs a Discord embed summarising the issues found in an analysis result.
- * The embed color reflects the worst severity (red → yellow → green).
- * A maximum of 20 issues are shown inline; overflow is noted as a count.
- *
- * @param result - The analysis result returned by `analyze()`.
- * @returns A configured `EmbedBuilder` ready to be sent.
- */
 export function buildResultEmbed(result: AnalysisResult, t: Translate): EmbedBuilder {
   const isClean = result.errorCount === 0 && result.warningCount === 0 && result.infoCount === 0;
   const color =

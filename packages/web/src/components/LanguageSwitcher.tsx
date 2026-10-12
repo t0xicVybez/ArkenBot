@@ -6,12 +6,6 @@ import { useLocale, useTranslations } from 'next-intl';
 import { LOCALES } from '@arkenbot/shared';
 import api from '@/lib/api';
 
-/**
- * Language picker. Sets the `arken_locale` cookie (so SSR renders the chosen
- * locale), persists the choice to the user's UserPreferences via the API (so the
- * bot replies in the same language), then refreshes to apply. Falls through
- * silently if the persist call fails — the cookie still switches the UI.
- */
 export function LanguageSwitcher() {
   const locale = useLocale();
   const t = useTranslations('language');

@@ -1,18 +1,11 @@
 'use client';
 
-/**
- * Discord login page. Login is fully server-mediated: the button sends the
- * browser to the API's `/auth/login`, which handles state, PKCE, the Discord
- * round-trip, and the session cookie, then redirects back to the dashboard. No
- * OAuth state or code is ever handled here.
- */
 import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { getLoginUrl } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 
-/** Maps `?error=` codes from a failed callback to a message key. */
 const ERROR_KEYS: Record<string, string> = {
   invalid_request: 'errInvalidRequest',
   invalid_state: 'errInvalidState',
@@ -85,8 +78,7 @@ function AuthInner() {
 }
 
 export default function AuthPage() {
-  // `useSearchParams` (for the ?error= code) requires a Suspense boundary in the
-  // App Router.
+
   return (
     <Suspense fallback={null}>
       <AuthInner />

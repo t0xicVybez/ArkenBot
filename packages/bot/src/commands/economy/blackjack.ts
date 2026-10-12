@@ -1,4 +1,4 @@
-/** /blackjack — play a hand of blackjack against the dealer for currency. */
+
 import {
   SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle,
   type ChatInputCommandInteraction, type ButtonInteraction,
@@ -13,7 +13,6 @@ import { freshDeck, handValue, dealerPlay, blackjackPayout, type Card } from '..
 
 interface Game { guildId: string; userId: string; bet: number; deck: Card[]; player: Card[]; dealer: Card[]; }
 
-// One active game per user; short-lived, cleared on resolution. Keyed by guildId:userId.
 const games = new Map<string, Game>();
 
 const show = (hand: Card[]) => hand.map((c) => `${c.rank}${c.suit}`).join(' ');
@@ -39,10 +38,9 @@ function tableEmbed(g: Game, loc: string, opts: { hideDealer?: boolean; color?: 
 }
 
 async function settle(interaction: ButtonInteraction, g: Game, loc: string): Promise<void> {
-  dealerPlay(g.dealer, g.deck); // dealer draws to 17+ (stands on soft 17)
+  dealerPlay(g.dealer, g.deck);
   const cfg = await EconomyModule.getConfigOrDefault(g.guildId);
 
-  // Net wallet change (bet was debited up front). Credit = net + the original bet.
   const net = blackjackPayout(g.player, g.dealer, g.bet);
   const title = net > 0 ? t('bj.winTitle', loc) : net < 0 ? t('bj.loseTitle', loc) : t('bj.pushTitle', loc);
   const color = net > 0 ? COLORS.SUCCESS : net < 0 ? COLORS.ERROR : COLORS.WARNING;
@@ -81,13 +79,11 @@ const command: BotCommand = {
     const bal = await EconomyModule.getBalance(interaction.guild.id, interaction.user.id, cfg.startingBalance);
     if (bal.wallet < bet) { await interaction.reply({ embeds: [errorEmbed(t('economy.errorTitle', loc), t('economy.insufficientWallet', loc))], ephemeral: true }); return; }
 
-    // Take the bet up front; payouts credit back on win/push.
     await EconomyModule.addWallet(interaction.guild.id, interaction.user.id, -bet, cfg.startingBalance);
 
     const deck = freshDeck();
     const g: Game = { guildId: interaction.guild.id, userId: interaction.user.id, bet, deck, player: [deck.pop()!, deck.pop()!], dealer: [deck.pop()!, deck.pop()!] };
 
-    // Natural blackjack resolves immediately.
     if (handValue(g.player) === 21) {
       games.set(key(g.guildId, g.userId), g);
       await interaction.reply({ embeds: [tableEmbed(g, loc)], components: controls(g.userId, true) });

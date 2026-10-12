@@ -1,7 +1,4 @@
-/**
- * "⏱ Timeout Member" user context-menu command.
- * Shows a modal for duration + reason, then applies a Discord timeout.
- */
+
 import {
   ContextMenuCommandBuilder,
   ApplicationCommandType,

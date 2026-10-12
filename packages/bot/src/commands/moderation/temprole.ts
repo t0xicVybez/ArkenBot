@@ -1,7 +1,4 @@
-/**
- * /temprole command — assigns or removes a role from a member for a fixed
- * duration. Expiry is enforced by the BackgroundJobs temp-role checker.
- */
+
 import {
   SlashCommandBuilder,
   EmbedBuilder,
@@ -19,7 +16,6 @@ import { swallow } from '../../logger.js';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = prisma as any;
 
-/** Parses a duration string like "30m", "2h", "7d" into seconds. Returns null if invalid. */
 function parseDuration(input: string): number | null {
   const match = input.match(/^(\d+)(s|m|h|d)$/i);
   if (!match) return null;

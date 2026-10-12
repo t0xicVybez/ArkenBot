@@ -1,22 +1,17 @@
-/**
- * Defines the built-in achievement catalogue and provides helpers for awarding
- * and querying achievements earned by guild members.
- */
+
 
 import { prisma } from '../../database.js';
 import { logger } from '../../logger.js';
 
-/** A single achievement definition. */
 export interface Achievement {
   id: string;
   name: string;
   description: string;
   emoji: string;
-  /** Returns true when the given user stats satisfy the earn condition. */
+
   check: (stats: UserStats) => boolean;
 }
 
-/** A snapshot of a user's leveling stats used for achievement evaluation. */
 export interface UserStats {
   level: number;
   totalMessages: number;
@@ -24,23 +19,18 @@ export interface UserStats {
   streakDays?: number;
 }
 
-/**
- * The full set of built-in achievements. These are code-defined and apply across
- * all guilds. To add a new achievement, append an entry here — it will be awarded
- * retroactively the next time a user sends a message.
- */
 export const ACHIEVEMENTS: Achievement[] = [
-  // Leveling milestones
+
   { id: 'level_5',   name: 'Rising Star',   description: 'Reach level 5',   emoji: '🥉', check: (s) => s.level >= 5 },
   { id: 'level_10',  name: 'Active Member', description: 'Reach level 10',  emoji: '🥈', check: (s) => s.level >= 10 },
   { id: 'level_25',  name: 'Veteran',       description: 'Reach level 25',  emoji: '🥇', check: (s) => s.level >= 25 },
   { id: 'level_50',  name: 'Elite',         description: 'Reach level 50',  emoji: '🔥', check: (s) => s.level >= 50 },
   { id: 'level_100', name: 'Legend',        description: 'Reach level 100', emoji: '🌟', check: (s) => s.level >= 100 },
-  // Daily message streak milestones
+
   { id: 'streak_7',  name: 'Week Warrior',    description: 'Maintain a 7-day message streak',  emoji: '🔥', check: (s) => (s.streakDays ?? 0) >= 7 },
   { id: 'streak_30', name: 'Month Legend',    description: 'Maintain a 30-day message streak', emoji: '🌟', check: (s) => (s.streakDays ?? 0) >= 30 },
   { id: 'streak_100',name: 'Century Streak',  description: 'Maintain a 100-day message streak', emoji: '💯', check: (s) => (s.streakDays ?? 0) >= 100 },
-  // Lifetime message count milestones
+
   { id: 'msg_100',   name: 'Chatty',       description: 'Send 100 messages',   emoji: '💬', check: (s) => s.totalMessages >= 100 },
   { id: 'msg_500',   name: 'Talkative',    description: 'Send 500 messages',   emoji: '🗣️', check: (s) => s.totalMessages >= 500 },
   { id: 'msg_1000',  name: 'Dedicated',    description: 'Send 1,000 messages', emoji: '📢', check: (s) => s.totalMessages >= 1000 },
@@ -49,13 +39,7 @@ export const ACHIEVEMENTS: Achievement[] = [
 ];
 
 export class AchievementsModule {
-  /**
-   * Evaluates all achievements against the provided stats and persists any that
-   * have been newly earned. Already-earned achievements are skipped via a Set
-   * lookup to avoid redundant database writes.
-   *
-   * @returns The list of achievements earned for the first time during this call.
-   */
+
   static async checkAndAward(
     guildId: string,
     userId: string,
@@ -87,7 +71,6 @@ export class AchievementsModule {
     }
   }
 
-  /** Get all achievements earned by a user in a guild */
   static async getUserAchievements(
     guildId: string,
     userId: string,

@@ -1,7 +1,4 @@
-/**
- * Routes for managing guild self-assignable roles.
- * Mutations bust the bot's Redis cache (key: sr:list:{guildId}).
- */
+
 import type { FastifyInstance } from 'fastify';
 import { requireGuildAdmin } from '../middleware/auth.js';
 import { prisma } from '../database.js';
@@ -13,11 +10,6 @@ async function bustCache(guildId: string) {
   await redis.del(CACHE_KEY(guildId));
 }
 
-/**
- * GET    /guilds/:guildId/self-roles      — list all self-assignable roles
- * POST   /guilds/:guildId/self-roles      — add a role to the list
- * DELETE /guilds/:guildId/self-roles/:id  — remove a role from the list
- */
 export async function selfRoleRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/guilds/:guildId/self-roles', { preHandler: [requireGuildAdmin] }, async (request, reply) => {

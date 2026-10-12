@@ -1,9 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
 
-/**
- * The one page-header pattern used across the dashboard:
- * icon tile · title · one-line purpose · actions on the right.
- */
 export function PageHeader({
   icon: Icon,
   title,

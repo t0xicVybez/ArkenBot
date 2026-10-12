@@ -1,7 +1,4 @@
-/**
- * /giveaway command — manages server giveaways: start with a prize and duration,
- * end early, or reroll winners for an already-ended giveaway.
- */
+
 import { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, type ChatInputCommandInteraction } from 'discord.js';
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
@@ -10,10 +7,7 @@ import { getGuildSettings } from '../../utils/settings.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 
 import { swallow } from '../../logger.js';
-/**
- * Parses a short duration string (e.g. `1h`, `7d`) into milliseconds.
- * Returns null if the format is unrecognised.
- */
+
 function parseDuration(str: string): number | null {
   const match = str.match(/^(\d+)(s|m|h|d|w)$/i);
   if (!match) return null;
@@ -115,7 +109,7 @@ const command: BotCommand = {
         await interaction.reply({ content: t('cmd.giveaway.alreadyEnded', loc), flags: 64 });
         return;
       }
-      // Setting endsAt to now triggers the next background-job cycle to process the end.
+
       await prisma.giveaway.update({ where: { id }, data: { endsAt: new Date() } });
       await interaction.reply({ content: t('cmd.giveaway.willEnd', loc), flags: 64 });
     }
@@ -149,7 +143,6 @@ const command: BotCommand = {
       const users = await reaction.users.fetch();
       let eligible = users.filter(u => !u.bot && u.id !== giveaway.hostId);
 
-      // Filter by required role if set
       if (giveaway.requiredRoleId) {
         eligible = eligible.filter(u => interaction.guild!.members.cache.get(u.id)?.roles.cache.has(giveaway.requiredRoleId!) ?? false);
       }
@@ -159,7 +152,6 @@ const command: BotCommand = {
         return;
       }
 
-      // Build entries array with bonus role duplicates
       let entries = [...eligible.values()];
       const bonusRoleEntries = giveaway.bonusRoleEntries as Array<{ roleId: string; bonusEntries: number }> | null;
       if (bonusRoleEntries && bonusRoleEntries.length > 0) {

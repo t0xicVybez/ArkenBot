@@ -1,7 +1,4 @@
-/**
- * /promotion — view who promotes the server (leaderboard) or check a member's
- * total promotion time. No-ops with a friendly message unless tracking is on.
- */
+
 import {
   SlashCommandBuilder, EmbedBuilder, MessageFlags, type ChatInputCommandInteraction,
 } from 'discord.js';
@@ -65,7 +62,6 @@ const command: BotCommand = {
       return;
     }
 
-    // check
     const target = interaction.options.getUser('user') ?? interaction.user;
     const sum = await PromotionModule.getSummary(interaction.guildId, target.id);
     if (!sum) {

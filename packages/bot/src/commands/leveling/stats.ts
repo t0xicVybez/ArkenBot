@@ -1,7 +1,4 @@
-/**
- * /stats command — shows a member's engagement statistics: rank, level, XP,
- * message count, activity streak, reputation, and achievement count.
- */
+
 import {
   SlashCommandBuilder,
   EmbedBuilder,
@@ -65,7 +62,7 @@ const command: BotCommand = {
     });
 
     const streak = userLevel.streakDays ?? 0;
-    // Emoji escalates at 7-, 30-, and 100-day milestones to reward consistent activity.
+
     const streakEmoji = streak >= 100 ? '💯' : streak >= 30 ? '🌟' : streak >= 7 ? '🔥' : '❄️';
 
     const lastActive = userLevel.updatedAt

@@ -159,7 +159,7 @@ export default function EconomyPage() {
     setConfig((c) => ({ ...c, ...partial }));
     configMutation.mutate(partial);
   };
-  // Commit a numeric field on blur, clamped to a sane minimum.
+
   const num = (key: keyof EconomyConfig, min = 0) => ({
     value: (config[key] as number | undefined) ?? 0,
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => setConfig((c) => ({ ...c, [key]: parseInt(e.target.value || '0', 10) })),

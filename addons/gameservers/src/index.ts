@@ -1,8 +1,4 @@
-/**
- * Game Server Status addon entry point.
- * Registers the `/server` command and handles autocomplete for the `game`
- * and `name` fields using guild-saved server data.
- */
+
 import { defineAddon } from '@arkenbot/addon-sdk';
 import type { AddonContext } from '@arkenbot/addon-sdk';
 import { MessageFlags, type AutocompleteInteraction, type Interaction, type ModalSubmitInteraction } from 'discord.js';
@@ -54,8 +50,8 @@ export default defineAddon({
   hooks: {
     onLoad(ctx: AddonContext): void {
       ctx.logger.info(`Game Server Status addon loaded — ${Object.keys(SUPPORTED_GAMES).length} game types supported.`);
-      // Live monitoring: status board, up/down alerts, player-count stat channel.
-      setTimeout(() => void pollAllGuilds(ctx), 15_000); // first pass after startup settles
+
+      setTimeout(() => void pollAllGuilds(ctx), 15_000);
       pollTimer = setInterval(() => void pollAllGuilds(ctx), POLL_INTERVAL_MS);
     },
     onUnload(): void {
@@ -64,14 +60,6 @@ export default defineAddon({
   },
 });
 
-// ─── Credential modal ─────────────────────────────────────────────────────────
-
-/**
- * Completes an `/server add` or `/server status` that was parked waiting for an
- * admin password — the games that need one (Palworld) have no anonymous status
- * protocol, and a password can't be a slash option because Discord shows those
- * to the whole channel.
- */
 async function handleCredentialModal(
   ctx: AddonContext,
   interaction: ModalSubmitInteraction,
@@ -105,7 +93,6 @@ async function handleCredentialModal(
   const { game, host, port } = pending;
   const status = await queryServer(game, host, port, { password, queryPort });
 
-  // Only persist a credential that we know actually works.
   if (pending.action === 'add') {
     if (!status.online) {
       await interaction.editReply({
@@ -135,13 +122,6 @@ async function handleCredentialModal(
   await interaction.editReply({ embeds: [buildStatusEmbed(status, game, host, port, undefined, t)] });
 }
 
-// ─── Autocomplete ─────────────────────────────────────────────────────────────
-
-/**
- * Handles autocomplete for the `game` and `name` option fields.
- * - `game`: searches the full `SUPPORTED_GAMES` registry by key or label.
- * - `name`: searches saved servers for this guild by name.
- */
 async function handleAutocomplete(
   ctx: AddonContext,
   interaction: AutocompleteInteraction,

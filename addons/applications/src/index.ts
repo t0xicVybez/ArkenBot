@@ -11,13 +11,6 @@ import { locales } from './locales.js';
 
 let redisSub: Redis | null = null;
 
-/**
- * Applies the side-effects of an accept/deny performed from the web dashboard.
- * The dashboard API only updates the stored submission status and publishes an
- * `applications:review` event; without this handler the accept role is never
- * granted and the applicant is never notified (unlike the in-Discord button
- * flow, which does this inline).
- */
 async function handleDashboardReview(ctx: AddonContext, raw: string): Promise<void> {
   const { guildId, submissionId, action, note, reviewerTag } = JSON.parse(raw) as {
     guildId: string; submissionId: string; action: 'accept' | 'deny'; note?: string; reviewerTag?: string;
@@ -31,13 +24,11 @@ async function handleDashboardReview(ctx: AddonContext, raw: string): Promise<vo
   if (!guild) return;
   const accepted = action === 'accept';
 
-  // Assign the accept role.
   if (accepted && form.acceptRoleId) {
     const member = await guild.members.fetch(submission.userId).catch(() => null);
     if (member) await member.roles.add(form.acceptRoleId).catch(() => null);
   }
 
-  // Update the staff review embed, if one was posted.
   if (submission.reviewChannelId && submission.reviewMessageId) {
     const guildLoc = await ctx.resolveLocale({ user: { id: '' }, guildId, guildLocale: guild.preferredLocale });
     const gt = (k: string, v?: Record<string, string | number>) => ctx.t(k, guildLoc, v);
@@ -53,7 +44,6 @@ async function handleDashboardReview(ctx: AddonContext, raw: string): Promise<vo
     }
   }
 
-  // DM the applicant in their own language.
   const applicantLoc = await ctx.resolveLocale({ user: { id: submission.userId }, guildId, guildLocale: guild.preferredLocale });
   const dmt = (k: string, v?: Record<string, string | number>) => ctx.t(k, applicantLoc, v);
   const noteSuffix = note ? `\n\n> ${note}` : '';
@@ -95,7 +85,6 @@ export default defineAddon({
       handler: async (ctx: AddonContext, ...args: unknown[]): Promise<void> => {
         const interaction = args[0] as Interaction;
 
-        // Route autocomplete to the correct command handler
         if (interaction.isAutocomplete()) {
           if (interaction.commandName === 'apply' && applyCommand.autocomplete) {
             await applyCommand.autocomplete(interaction as AutocompleteInteraction, ctx);
@@ -112,8 +101,7 @@ export default defineAddon({
 
   hooks: {
     onLoad(ctx: AddonContext): void {
-      // Handle accept/deny performed from the web dashboard (the in-Discord
-      // button flow is handled inline by interactionHandler).
+
       void (async () => {
         try {
           redisSub = new Redis(process.env.REDIS_URL ?? 'redis://localhost:6379', {

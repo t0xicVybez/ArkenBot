@@ -1,7 +1,4 @@
-/**
- * Handles XP gain on message, level-up notifications, level role assignment,
- * and daily message streak tracking for the guild leveling system.
- */
+
 
 import { type Guild, type User, type GuildMember, type TextChannel, type Message, EmbedBuilder, Colors } from 'discord.js';
 import { prisma } from '../../database.js';
@@ -15,12 +12,7 @@ import { t, resolveUserLocale } from '../../i18n/index.js';
 import { EconomyModule } from '../economy/EconomyModule.js';
 
 export class LevelingModule {
-  /**
-   * Processes a message for XP gain. Skips bots, users on cooldown, and guilds
-   * with leveling disabled. Awards a randomised XP amount (base ±25% scaled by
-   * the guild multiplier), updates the streak, triggers level-up handling, and
-   * checks for newly earned achievements.
-   */
+
   static async processMessage(guild: Guild, user: User, message?: Message): Promise<void> {
     if (user.bot) return;
 
@@ -33,7 +25,6 @@ export class LevelingModule {
 
     await redis.setex(cooldownKey, settings.xpCooldown, '1');
 
-    // Resolve the effective XP multiplier: guild-wide base × highest matching role multiplier
     const base = Math.floor(settings.xpPerMessage * (0.75 + Math.random() * 0.5));
     let effectiveMultiplier = settings.xpMultiplier ?? 1.0;
     try {
@@ -49,7 +40,7 @@ export class LevelingModule {
           }
         }
       }
-      // Also apply per-channel multiplier
+
       if (message?.channelId) {
         const channelMultiplierRecord = await prisma.xpChannelMultiplier.findUnique({
           where: { guildId_channelId: { guildId: guild.id, channelId: message.channelId } },
@@ -57,7 +48,7 @@ export class LevelingModule {
         const channelMultiplier = channelMultiplierRecord?.multiplier ?? 1.0;
         effectiveMultiplier = effectiveMultiplier * channelMultiplier;
       }
-    } catch { /* non-critical; fall back to guild multiplier */ }
+    } catch {  }
     const xpGain = Math.max(1, Math.round(base * effectiveMultiplier));
 
     const existing = await prisma.userLevel.findUnique({
@@ -68,8 +59,6 @@ export class LevelingModule {
     const currentLevel = existing?.level ?? 0;
     const newLevel = levelFromXp(currentXp);
 
-    // Determine the updated streak using UTC date strings so timezone differences
-    // between the host and the guild do not affect streak continuity.
     const todayUTC = new Date().toISOString().slice(0, 10);
     const lastDate = existing?.lastStreakDate?.toISOString().slice(0, 10);
     const yesterdayUTC = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
@@ -122,7 +111,6 @@ export class LevelingModule {
 
       await this.applyLevelRoles(guild, user.id, newLevel, settings.keepPreviousRoles ?? false);
 
-      // Economy tie-in: pay a currency reward for the new level when configured.
       await EconomyModule.awardLevelUp(guild.id, user.id, newLevel).catch(swallow);
     }
 
@@ -135,18 +123,11 @@ export class LevelingModule {
     });
   }
 
-  /**
-   * Award voice XP to a member currently in a voice channel. Unlike message XP
-   * this has no per-user cooldown (the caller controls cadence) and does not
-   * touch the message count or daily streak. Handles level-up notifications,
-   * role assignment and the economy level-up tie-in.
-   */
   static async awardVoiceXp(guild: Guild, member: GuildMember, amount: number): Promise<void> {
     if (member.user.bot || amount <= 0) return;
     const settings = await getGuildSettings(guild.id);
     if (!settings?.levelingEnabled || !settings.voiceXpEnabled) return;
 
-    // Apply the same role multipliers used for message XP.
     let mult = settings.xpMultiplier ?? 1.0;
     const roleMultipliers = await prisma.xpRoleMultiplier.findMany({ where: { guildId: guild.id } }).catch(() => []);
     if (roleMultipliers.length) {
@@ -174,11 +155,6 @@ export class LevelingModule {
     }
   }
 
-  /**
-   * Grant one minute of voice XP to every eligible member in voice across all
-   * guilds. Skips bots, self-muted/deafened members, AFK-channel occupants, and
-   * members alone in a channel. Invoked once a minute by BackgroundJobs.
-   */
   static async sweepVoiceXp(guild: Guild): Promise<void> {
     const settings = await getGuildSettings(guild.id);
     if (!settings?.levelingEnabled || !settings.voiceXpEnabled) return;
@@ -187,7 +163,7 @@ export class LevelingModule {
     for (const channel of guild.channels.cache.values()) {
       if (!channel.isVoiceBased() || channel.id === afkId) continue;
       const humans = channel.members.filter((m) => !m.user.bot);
-      if (humans.size < 2) continue; // need at least two people talking
+      if (humans.size < 2) continue;
       for (const member of humans.values()) {
         const vs = member.voice;
         if (vs.selfMute || vs.selfDeaf || vs.mute || vs.deaf) continue;
@@ -196,7 +172,6 @@ export class LevelingModule {
     }
   }
 
-  /** Levels that receive a special embed colour and milestone badge in level-up notifications. */
   private static readonly MILESTONES = new Set([5, 10, 25, 50, 75, 100, 150, 200]);
 
   private static getMilestoneLabel(level: number, loc: string): string | null {
@@ -215,11 +190,6 @@ export class LevelingModule {
     return LevelingModule.MILESTONES.has(level) || level % 50 === 0;
   }
 
-  /**
-   * Sends a level-up notification to the configured channel (or the source
-   * channel as a fallback) when a user reaches a new level. Milestone levels
-   * receive a richer embed with a badge field and a special colour.
-   */
   private static async handleLevelUp(
     guild: Guild,
     user: User,
@@ -231,8 +201,7 @@ export class LevelingModule {
     colorHex?: string,
   ): Promise<void> {
     try {
-      // Prefer the configured level-up channel; fall back to the channel the
-      // triggering message was sent in so the notification is never silently lost.
+
       let channel: TextChannel | null = null;
 
       if (channelId) {
@@ -298,10 +267,6 @@ export class LevelingModule {
     }
   }
 
-  /**
-   * Assign the correct level role(s) to a member.
-   * If keepPreviousRoles is false, removes any level roles for lower levels.
-   */
   static async applyLevelRoles(
     guild: Guild,
     userId: string,
@@ -326,7 +291,7 @@ export class LevelingModule {
           }
         }
       } else {
-        // Single-role mode: keep only the highest earned role and remove any lower ones.
+
         const sorted = [...earned].sort((a, b) => b.level - a.level);
         const highest = sorted[0];
         const lowerEarned = sorted.slice(1);
@@ -357,10 +322,6 @@ export class LevelingModule {
     }
   }
 
-  /**
-   * Bulk-sync level roles for all members with XP data.
-   * Returns counts of members processed and updated.
-   */
   static async syncAllRoles(
     guild: Guild,
     keepPreviousRoles: boolean,
@@ -377,7 +338,7 @@ export class LevelingModule {
         await this.applyLevelRoles(guild, ul.userId, ul.level, keepPreviousRoles);
         const after = guild.members.cache.get(ul.userId)?.roles.cache.size ?? 0;
         if (before !== after) updated++;
-      } catch { /* member may have left the guild since the XP record was written */ }
+      } catch {  }
     }
 
     return { processed: userLevels.length, updated };

@@ -1,4 +1,4 @@
-/** Localized catalogs for the greeting addon. Falls back to en-US per key. */
+
 export const locales = {
   "en-US": {
     "footerGreetedBy": "Greeted by {tag}",

@@ -1,4 +1,4 @@
-/** VALORANT competitive tiers 0–27 → display names (0/1/2 are unranked slots). */
+
 export const TIER_NAMES: string[] = [
   'Unranked', 'Unranked', 'Unranked',
   'Iron 1', 'Iron 2', 'Iron 3',
@@ -12,7 +12,6 @@ export const TIER_NAMES: string[] = [
   'Radiant',
 ];
 
-/** Base tier name (no division number) — used for rank→role mapping keys. */
 export function tierBase(tier: number): string {
   return (TIER_NAMES[tier] ?? 'Unranked').replace(/\s*\d+$/, '');
 }
@@ -21,7 +20,6 @@ export function tierName(tier: number | null | undefined): string {
   return typeof tier === 'number' ? (TIER_NAMES[tier] ?? 'Unranked') : 'Unranked';
 }
 
-/** Tier accent color for embeds. */
 export function tierColor(tier: number | null | undefined): number {
   const b = tierBase(tier ?? 0);
   const map: Record<string, number> = {
@@ -31,7 +29,6 @@ export function tierColor(tier: number | null | undefined): number {
   return map[b] ?? 0xff4655;
 }
 
-/** VAL platform routing value for the match API host, from a stored region. */
 export function valHost(region: string): string {
   const r = (region || 'na').toLowerCase();
   if (['eu', 'europe', 'euw', 'eune'].includes(r)) return 'eu';
@@ -42,7 +39,6 @@ export function valHost(region: string): string {
   return 'na';
 }
 
-/** Regional routing host for account-v1 (Riot ID lookups). */
 export function accountHost(region: string): string {
   const r = (region || 'na').toLowerCase();
   if (['eu', 'europe', 'euw', 'eune'].includes(r)) return 'europe';

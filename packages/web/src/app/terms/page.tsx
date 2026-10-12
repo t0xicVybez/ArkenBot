@@ -32,7 +32,6 @@ function Section({ id, title, children }: { id: string; title: string; children:
   );
 }
 
-/** Renderer helpers for next-intl rich text. */
 const extLink = (href: string) => (chunks: ReactNode) => (
   <a href={href} target="_blank" rel="noopener noreferrer" className="text-discord-blurple hover:underline">{chunks}</a>
 );

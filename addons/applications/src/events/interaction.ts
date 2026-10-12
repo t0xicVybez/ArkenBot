@@ -1,9 +1,4 @@
-/**
- * Handles all application-related interactions:
- *  - Modal submit: app:submit:<formId>       — collects answers, posts to review channel
- *  - Button:       app:accept/deny:<formId>:<submissionId> — shows review-note modal
- *  - Modal submit: app:note:accept/deny:<formId>:<submissionId> — finalises decision
- */
+
 import {
   Events,
   ModalBuilder,
@@ -27,14 +22,10 @@ export const interactionHandler = {
     if (!interaction.guildId) return;
     const guildId = interaction.guildId;
 
-    // ─── Autocomplete for /apply and /app-setup ───────────────────────────────
-    if (interaction.isAutocomplete()) return; // handled per-command in index.ts
+    if (interaction.isAutocomplete()) return;
 
-    // ─── Modal: /apply submission ─────────────────────────────────────────────
     if (interaction.isModalSubmit() && interaction.customId.startsWith('app:submit:')) {
-      // Defer first: posting the submission involves DB writes and a Discord
-      // channel.send() to the review channel, which can exceed the 3s interaction
-      // window and otherwise throws 10062 (Unknown interaction) on the final reply.
+
       await interaction.deferReply({ flags: MessageFlags.Ephemeral });
 
       const applicantLoc = await ctx.resolveLocale(interaction);
@@ -92,7 +83,6 @@ export const interactionHandler = {
       return;
     }
 
-    // ─── Button: accept or deny ───────────────────────────────────────────────
     if (interaction.isButton()) {
       const id = interaction.customId;
       if (!id.startsWith('app:accept:') && !id.startsWith('app:deny:')) return;
@@ -121,7 +111,6 @@ export const interactionHandler = {
       return;
     }
 
-    // ─── Modal: finalize accept/deny ──────────────────────────────────────────
     if (interaction.isModalSubmit() && interaction.customId.startsWith('app:note:')) {
       const parts = interaction.customId.split(':');
       const action = parts[2] as 'accept' | 'deny';
@@ -157,7 +146,6 @@ export const interactionHandler = {
       if (note) submission.reviewNote = note;
       await saveSubmission(ctx.storage, guildId, submission);
 
-      // Update the original review embed
       if (submission.reviewChannelId && submission.reviewMessageId) {
         const ch = interaction.guild?.channels.cache.get(submission.reviewChannelId);
         if (ch && 'messages' in ch) {
@@ -171,13 +159,11 @@ export const interactionHandler = {
         }
       }
 
-      // Assign accept role
       if (accepted && form.acceptRoleId) {
         const member = await interaction.guild?.members.fetch(submission.userId).catch(() => null);
         if (member) await member.roles.add(form.acceptRoleId).catch(() => null);
       }
 
-      // DM the applicant — in the applicant's own language.
       const applicantLoc = await ctx.resolveLocale({ user: { id: submission.userId }, guildId, guildLocale: interaction.guild?.preferredLocale });
       const dmt = (k: string, v?: Record<string, string | number>) => ctx.t(k, applicantLoc, v);
       const noteSuffix = note ? `\n\n> ${note}` : '';

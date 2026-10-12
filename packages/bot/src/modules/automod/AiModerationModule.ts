@@ -1,17 +1,4 @@
-/**
- * Context-aware moderation using the LLM.
- *
- * Keyword filters miss things phrased around them — subtle harassment, coded
- * hate, veiled threats, and social-engineering scams. This module asks the model
- * to classify a message and, when it is confidently harmful, either flags it for
- * moderators or deletes it.
- *
- * It is opt-in per guild and deliberately bounded, because running a model on
- * chat traffic is expensive:
- *  - a cheap length pre-gate skips trivial and giant messages,
- *  - a per-guild token-bucket caps how many messages are scanned per minute,
- *  - the default action is "flag" (alert only), never a silent auto-ban.
- */
+
 import { type Message, type TextChannel, EmbedBuilder } from 'discord.js';
 import { prisma } from '../../database.js';
 import { redis } from '../../redis.js';
@@ -21,14 +8,11 @@ import { logger, swallow} from '../../logger.js';
 import { notifyActionFailure } from '../../utils/permissionAlert.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 
-/** Only scan messages within this length band — skip "lol" and copy-paste walls. */
 const MIN_LENGTH = 24;
 const MAX_LENGTH = 800;
 
-/** Per-guild budget: at most this many AI scans per rolling minute. */
 const SCANS_PER_MINUTE = 20;
 
-/** Categories the model may return; `none` means the message is fine. */
 type Category = 'none' | 'harassment' | 'hate' | 'threat' | 'sexual' | 'scam' | 'self_harm';
 type Severity = 'low' | 'medium' | 'high';
 
@@ -47,7 +31,7 @@ const SYSTEM_PROMPT = [
 ].join(' ');
 
 export class AiModerationModule {
-  /** Returns true when this guild is within its per-minute scan budget. */
+
   private static async withinBudget(guildId: string): Promise<boolean> {
     const key = `automod:ai:budget:${guildId}`;
     const count = await redis.incr(key);
@@ -55,11 +39,6 @@ export class AiModerationModule {
     return count <= SCANS_PER_MINUTE;
   }
 
-  /**
-   * Classifies a message and acts if it is confidently harmful. Assumes the
-   * caller has already applied exempt-role/channel and bot-author filtering.
-   * Never throws — moderation must not break message handling.
-   */
   static async scan(message: Message, config: AutoModConfig): Promise<void> {
     if (!isLLMAvailable()) return;
 
@@ -81,7 +60,6 @@ export class AiModerationModule {
       const category = verdict.category ?? 'none';
       const severity = verdict.severity ?? 'low';
 
-      // Only act on a clear, non-trivial violation.
       if (category === 'none' || severity === 'low') return;
 
       await this.act(message, config, {
@@ -94,7 +72,6 @@ export class AiModerationModule {
     }
   }
 
-  /** Deletes (if configured) and logs the flagged message for moderators. */
   private static async act(message: Message, config: AutoModConfig, verdict: Verdict): Promise<void> {
     const deleted = config.aiModAction === 'delete';
     if (deleted) await message.delete().catch((e) => notifyActionFailure(message.guild!, { action: 'automodDelete', error: e, requiredPermission: 'Manage Messages', channelId: message.channelId, target: message.author.toString() }));
@@ -113,8 +90,6 @@ export class AiModerationModule {
       },
     }).catch(swallow);
 
-    // Post a moderator alert to the same channel when only flagging, so it is
-    // visible without a separate log channel; deletions are surfaced via the log.
     if (!deleted && 'send' in message.channel) {
       const loc = await resolveUserLocale({ user: { id: '' }, guildId: message.guild!.id, guildLocale: message.guild!.preferredLocale });
       const embed = new EmbedBuilder()

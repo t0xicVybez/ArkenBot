@@ -56,7 +56,6 @@ const xpChannelMultipliersApi = {
     api.delete(`/guilds/${guildId}/xp-channel-multipliers/${channelId}`),
 };
 
-
 export default function LevelingPage() {
   const { guildId } = useParams() as { guildId: string };
   const t = useTranslations('levelingPage');
@@ -297,7 +296,7 @@ export default function LevelingPage() {
         </div>
       </SettingsSection>
 
-      {/* Level Roles */}
+      {}
       <div className="card mb-6">
         <div className="mb-4">
           <h3 className="text-lg font-semibold text-white">{t('levelRolesTitle')}</h3>
@@ -313,7 +312,7 @@ export default function LevelingPage() {
           />
         </div>
 
-        {/* Add level role form */}
+        {}
         <form onSubmit={handleAddLevelRole} className="flex gap-3 mb-5 items-end">
           <div className="w-28">
             <label className="label">{t('levelLabel')}</label>
@@ -400,7 +399,7 @@ export default function LevelingPage() {
         )}
       </div>
 
-      {/* XP Role Multipliers */}
+      {}
       <div className="card">
         <h3 className="text-lg font-semibold text-white mb-1">{t('roleMultTitle')}</h3>
         <p className="text-sm text-gray-400 mb-4">{t('roleMultDesc')}</p>
@@ -466,7 +465,7 @@ export default function LevelingPage() {
         </form>
       </div>
 
-      {/* XP Channel Multipliers */}
+      {}
       <div className="card">
         <h3 className="text-lg font-semibold text-white mb-1">{t('chanMultTitle')}</h3>
         <p className="text-sm text-gray-400 mb-4">{t('chanMultDesc')}</p>
@@ -543,7 +542,7 @@ export default function LevelingPage() {
         </form>
       </div>
 
-      {/* Voice XP */}
+      {}
       <SettingsSection title={t('voiceXpTitle')} description={t('voiceXpDesc')}>
         <Toggle
           label={t('enableVoiceXp')}
@@ -568,7 +567,7 @@ export default function LevelingPage() {
         )}
       </SettingsSection>
 
-      {/* Prestige */}
+      {}
       <SettingsSection title={t('prestigeTitle')} description={t('prestigeDesc')}>
         <Toggle
           label={t('enablePrestige')}
@@ -593,7 +592,7 @@ export default function LevelingPage() {
         )}
       </SettingsSection>
 
-      {/* XP Decay */}
+      {}
       <SettingsSection title={t('decayTitle')} description={t('decayDesc')}>
         <Toggle
           label={t('enableDecay')}
@@ -631,7 +630,7 @@ export default function LevelingPage() {
         </div>
       </SettingsSection>
 
-      {/* Danger zone — Reset XP */}
+      {}
       <div className="card border border-red-500/20 bg-red-500/5">
         <div className="flex items-start gap-3">
           <AlertTriangle className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />

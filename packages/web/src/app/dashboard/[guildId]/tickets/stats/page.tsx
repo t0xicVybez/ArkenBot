@@ -7,7 +7,6 @@ import dynamic from 'next/dynamic';
 import { ChartSkeleton } from '@/components/charts/ChartSkeleton';
 import { ticketsApi } from '@/lib/api';
 
-// recharts is heavy; load each chart in its own chunk on demand.
 const DailyBarChart = dynamic(() => import('./_charts').then((m) => m.DailyBarChart), { ssr: false, loading: () => <ChartSkeleton height={280} /> });
 const BreakdownPie = dynamic(() => import('./_charts').then((m) => m.BreakdownPie), { ssr: false, loading: () => <ChartSkeleton height={160} /> });
 const RatingBarChart = dynamic(() => import('./_charts').then((m) => m.RatingBarChart), { ssr: false, loading: () => <ChartSkeleton height={200} /> });
@@ -16,8 +15,6 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import toast from 'react-hot-toast';
-
-// ─── Types ────────────────────────────────────────────────────────────────────
 
 interface StatsData {
   total: number; open: number; claimed: number; closed: number; waiting: number;
@@ -37,8 +34,6 @@ interface TimeseriesPoint { date: string; opened: number; closed: number; }
 
 const CHART_COLORS = ['#5865f2', '#57f287', '#fee75c', '#ed4245', '#eb459e', '#00aff4'];
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
 function fmtMinutes(mins: number | null): string {
   if (mins == null) return '—';
   if (mins < 60) return `${Math.round(mins)}m`;
@@ -48,10 +43,6 @@ function fmtMinutes(mins: number | null): string {
   const d = Math.floor(h / 24);
   return `${d}d ${h % 24}h`;
 }
-
-// ─── Custom tooltip ───────────────────────────────────────────────────────────
-
-// ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function TicketStatsPage() {
   const { guildId } = useParams() as { guildId: string };
@@ -89,12 +80,10 @@ export default function TicketStatsPage() {
   const stats  = statsRes?.data?.data as StatsData | undefined;
   const tsData = (tsRes?.data?.data ?? []) as TimeseriesPoint[];
 
-  // Condense dates for readability when viewing 90+ days
   const chartData = days > 60
     ? tsData.filter((_, i) => i % 7 === 0)
     : tsData;
 
-  // Pie data: status breakdown
   const pieStatus = stats
     ? [
         { name: t('statusOpen'),    value: stats.open,    color: '#57f287' },
@@ -104,19 +93,17 @@ export default function TicketStatsPage() {
       ].filter((d) => d.value > 0)
     : [];
 
-  // Pie data: per-panel breakdown
   const piePanel = (stats?.byPanel ?? [])
     .filter((p) => p.total > 0)
     .map((p, i) => ({ name: `${p.emoji} ${p.panelName}`, value: p.total, color: CHART_COLORS[i % CHART_COLORS.length] }));
 
-  // Rating distribution bar data
   const ratingData = stats
     ? [1, 2, 3, 4, 5].map((n) => ({ star: `${n}★`, count: stats.ratingDistribution[n] ?? 0 }))
     : [];
 
   return (
     <div className="p-3 sm:p-6 space-y-6 max-w-6xl">
-      {/* Header */}
+      {}
       <div className="flex items-center gap-4">
         <Link href={`/dashboard/${guildId}/tickets`} className="text-gray-400 hover:text-white transition-colors">
           <ArrowLeft className="w-5 h-5" />
@@ -133,7 +120,7 @@ export default function TicketStatsPage() {
         </button>
       </div>
 
-      {/* Summary cards — row 1 */}
+      {}
       {stats && (
         <>
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
@@ -142,14 +129,14 @@ export default function TicketStatsPage() {
             <StatCard icon={<div className="w-3 h-3 rounded-full bg-yellow-400" />} label={t('statusWaiting')}        value={stats.waiting} />
             <StatCard icon={<div className="w-3 h-3 rounded-full bg-red-400" />}   label={t('statusClosed')}          value={stats.closed} />
           </div>
-          {/* Summary cards — row 2 */}
+          {}
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <StatCard icon={<Star className="w-5 h-5 text-yellow-400" />}           label={t('avgRating')}       value={stats.avgRating != null ? `${stats.avgRating.toFixed(1)} / 5` : '—'} />
             <StatCard icon={<Clock className="w-5 h-5 text-blue-400" />}            label={t('avgResponse')}     value={fmtMinutes(stats.avgResponseMinutes)} />
             <StatCard icon={<CheckCircle className="w-5 h-5 text-green-400" />}     label={t('avgCloseTime')}   value={fmtMinutes(stats.avgCloseMinutes)} />
             <StatCard icon={<AlertTriangle className="w-5 h-5 text-red-400" />}     label={t('slaBreaches')}     value={stats.slaBreaches} accent={stats.slaBreaches > 0 ? 'red' : undefined} />
           </div>
-          {/* Row 3: extra context */}
+          {}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
             <StatCard icon={<Hourglass className="w-5 h-5 text-purple-400" />}      label={t('statusClaimed')}          value={stats.claimed} />
             <StatCard icon={<TrendingUp className="w-5 h-5 text-green-400" />}      label={t('closed7days')}  value={stats.recentlyClosed} />
@@ -159,7 +146,7 @@ export default function TicketStatsPage() {
         </>
       )}
 
-      {/* Time-series bar chart */}
+      {}
       <div className="card space-y-4">
         <div className="flex items-center justify-between flex-wrap gap-3">
           <h2 className="text-white font-semibold">{t('ticketsOverTime')}</h2>
@@ -187,9 +174,9 @@ export default function TicketStatsPage() {
         )}
       </div>
 
-      {/* Pie charts row */}
+      {}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Status breakdown */}
+        {}
         <div className="card space-y-4">
           <h2 className="text-white font-semibold">{t('statusBreakdown')}</h2>
           {pieStatus.length === 0 ? (
@@ -212,7 +199,7 @@ export default function TicketStatsPage() {
           )}
         </div>
 
-        {/* Per-panel breakdown */}
+        {}
         <div className="card space-y-4">
           <h2 className="text-white font-semibold">{t('byPanel')}</h2>
           {piePanel.length === 0 ? (
@@ -236,7 +223,7 @@ export default function TicketStatsPage() {
         </div>
       </div>
 
-      {/* Rating distribution */}
+      {}
       {stats && Object.values(stats.ratingDistribution).some((v) => v > 0) && (
         <div className="card space-y-4">
           <h2 className="text-white font-semibold">{t('ratingDistribution')}</h2>
@@ -244,7 +231,7 @@ export default function TicketStatsPage() {
         </div>
       )}
 
-      {/* Per-panel table */}
+      {}
       {stats && stats.byPanel.length > 0 && (
         <div className="card overflow-hidden p-0">
           <div className="px-4 py-3 border-b border-(--border-subtle)">
@@ -296,7 +283,7 @@ export default function TicketStatsPage() {
         </div>
       )}
 
-      {/* Per-agent leaderboard */}
+      {}
       {stats && (stats.byStaff?.length ?? 0) > 0 && (
         <div className="card overflow-hidden p-0">
           <div className="px-4 py-3 border-b border-(--border-subtle) flex items-center gap-2">

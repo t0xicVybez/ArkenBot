@@ -8,8 +8,6 @@ export const metadata: Metadata = {
   description: 'Updates, new features, and fixes shipped to Arken Bot — straight from the team.',
 };
 
-// Re-fetch from the API every 5 minutes so new staff announcements appear
-// without a redeploy.
 export const revalidate = 300;
 
 const CLIENT_ID = process.env.DISCORD_CLIENT_ID ?? process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID ?? '';

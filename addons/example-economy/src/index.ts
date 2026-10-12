@@ -1,15 +1,4 @@
 // @ts-nocheck
-/**
- * Example Economy Addon
- *
- * A reference addon demonstrating:
- * - Multiple slash commands (balance, pay, daily, economy-leaderboard)
- * - Per-guild settings (currency name, emoji, daily reward amount)
- * - Persistent user data via AddonStorage
- * - Anti-abuse daily cooldown using timestamped storage
- *
- * Copy and adapt this addon as a starting point for your own economy system.
- */
 
 import { SlashCommandBuilder, EmbedBuilder, type ChatInputCommandInteraction } from 'discord.js';
 import { defineAddon } from '@arkenbot/addon-sdk';
@@ -17,15 +6,13 @@ import type { AddonContext } from '@arkenbot/addon-sdk';
 import { COLORS } from '@arkenbot/shared';
 import { locales } from './locales.js';
 
-// ─── Helper Functions ─────────────────────────────────────────────────────────
-
 async function getBalance(ctx: AddonContext, guildId: string, userId: string): Promise<number> {
   const bal = await ctx.storage.get<number>(`balance:${userId}`, guildId);
   return bal ?? 0;
 }
 
 async function setBalance(ctx: AddonContext, guildId: string, userId: string, amount: number): Promise<void> {
-  // Clamp to zero so balances never go negative.
+
   await ctx.storage.set(`balance:${userId}`, Math.max(0, amount), guildId);
 }
 
@@ -45,8 +32,6 @@ async function getCurrencyInfo(ctx: AddonContext, guildId: string): Promise<{ na
   return { name, emoji, dailyAmount };
 }
 
-// ─── Addon Definition ─────────────────────────────────────────────────────────
-
 export default defineAddon({
   locales,
   manifest: {
@@ -64,7 +49,7 @@ export default defineAddon({
   },
 
   commands: [
-    // ─── /balance ─────────────────────────────────────────────────────────────
+
     {
       data: new SlashCommandBuilder()
         .setName('balance')
@@ -92,7 +77,6 @@ export default defineAddon({
       },
     },
 
-    // ─── /pay ─────────────────────────────────────────────────────────────────
     {
       data: new SlashCommandBuilder()
         .setName('pay')
@@ -147,7 +131,6 @@ export default defineAddon({
       },
     },
 
-    // ─── /daily ───────────────────────────────────────────────────────────────
     {
       data: new SlashCommandBuilder()
         .setName('daily')
@@ -187,7 +170,6 @@ export default defineAddon({
       },
     },
 
-    // ─── /economy-leaderboard ─────────────────────────────────────────────────
     {
       data: new SlashCommandBuilder()
         .setName('economy-leaderboard')

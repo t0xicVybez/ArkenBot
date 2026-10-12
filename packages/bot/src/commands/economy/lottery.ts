@@ -1,4 +1,4 @@
-/** /lottery buy|info — a weekly server raffle; winner takes the whole pot. */
+
 import { SlashCommandBuilder, EmbedBuilder, type ChatInputCommandInteraction } from 'discord.js';
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
@@ -54,7 +54,6 @@ const command: BotCommand = {
       return;
     }
 
-    // buy
     const count = interaction.options.getInteger('tickets', true);
     const cost = count * cfg.lotteryTicketPrice;
     const bal = await EconomyModule.getBalance(guildId, interaction.user.id, cfg.startingBalance);

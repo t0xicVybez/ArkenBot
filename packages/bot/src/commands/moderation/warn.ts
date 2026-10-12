@@ -1,7 +1,4 @@
-/**
- * /warn command — issues a warning to a member, creates a moderation case,
- * notifies the member via DM, and logs the action.
- */
+
 import {
   SlashCommandBuilder,
   PermissionFlagsBits,
@@ -113,7 +110,6 @@ const command: BotCommand = {
       })
       .catch(swallow);
 
-    // Check warning escalation thresholds stored in GuildSettings.extended
     let escalationNote = '';
     if (settings) {
       const extended = (settings.extended ?? {}) as Record<string, unknown>;
@@ -146,7 +142,7 @@ const command: BotCommand = {
             await targetMember.kick(`Auto-kick: ${warningCount} warnings`).catch((e) => notifyActionFailure(interaction.guild!, { action: 'modAutoEscalate', error: e, requiredPermission: 'Kick Members', channelId: interaction.channelId, target: targetUser.toString() }));
             escalationNote = `\n${t('cmd.warn.escalationKick', loc, { count: warningCount })}`;
           }
-        } catch { /* escalation errors are non-fatal */ }
+        } catch {  }
       }
     }
 

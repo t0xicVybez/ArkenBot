@@ -98,7 +98,7 @@ export default function LeaderboardDashboardPage() {
 
   return (
     <div className="p-3 sm:p-6">
-      {/* Header */}
+      {}
       <div className="page-head">
         <div className="page-head-icon"><TrendingUp className="w-5 h-5" /></div>
         <div className="min-w-0">
@@ -117,7 +117,7 @@ export default function LeaderboardDashboardPage() {
         </div>
       </div>
 
-      {/* Period selector + Reset */}
+      {}
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
         <div className="flex gap-1.5 bg-(--bg-base) rounded-lg p-1">
           {(['all', 'weekly', 'monthly'] as Period[]).map((p) => (
@@ -153,7 +153,7 @@ export default function LeaderboardDashboardPage() {
         )}
       </div>
 
-      {/* Search */}
+      {}
       <div className="card mb-4 flex gap-3 py-3">
         <div className="flex-1 relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -167,7 +167,7 @@ export default function LeaderboardDashboardPage() {
         </div>
       </div>
 
-      {/* Loading */}
+      {}
       {isLoading && (
         <div className="bg-(--bg-card) border border-(--border-subtle) rounded-xl overflow-hidden">
           {[...Array(10)].map((_, i) => (
@@ -178,7 +178,7 @@ export default function LeaderboardDashboardPage() {
         </div>
       )}
 
-      {/* Error */}
+      {}
       {isError && (
         <div className="bg-(--bg-card) border border-(--border-subtle) rounded-xl text-center py-12">
           <Trophy className="w-10 h-10 text-gray-600 mx-auto mb-3" />
@@ -187,7 +187,7 @@ export default function LeaderboardDashboardPage() {
         </div>
       )}
 
-      {/* Empty */}
+      {}
       {!isLoading && !isError && allEntries.length === 0 && (
         <div className="bg-(--bg-card) border border-(--border-subtle) rounded-xl text-center py-12">
           <Star className="w-10 h-10 text-gray-600 mx-auto mb-3" />
@@ -196,11 +196,11 @@ export default function LeaderboardDashboardPage() {
         </div>
       )}
 
-      {/* Entries */}
+      {}
       {!isLoading && !isError && entries.length > 0 && (
         <div className="bg-(--bg-card) border border-(--border-subtle) rounded-xl overflow-hidden">
           <div className="overflow-x-auto">
-          {/* Table header */}
+          {}
           <div className="grid grid-cols-[2rem_1fr_6rem_5rem] gap-4 px-4 py-2.5 bg-(--bg-base) border-b border-white/6 min-w-[340px]">
             <span className="text-xs font-medium text-gray-400 uppercase">#</span>
             <span className="text-xs font-medium text-gray-400 uppercase">{t('colMember')}</span>
@@ -222,14 +222,14 @@ export default function LeaderboardDashboardPage() {
                     top3 ? `${top3.bg} ring-inset ring-1 ${top3.ring}` : ''
                   }`}
                 >
-                  {/* Rank */}
+                  {}
                   <div className="flex items-center justify-center">
                     {top3 ? top3.icon : (
                       <span className="text-gray-500 text-sm font-mono">#{entry.rank}</span>
                     )}
                   </div>
 
-                  {/* User + XP bar */}
+                  {}
                   <div className="min-w-0">
                     <span className="text-white text-sm font-medium truncate block">{entry.userTag}</span>
                     <div className="mt-1.5 flex items-center gap-2">
@@ -245,13 +245,13 @@ export default function LeaderboardDashboardPage() {
                     </div>
                   </div>
 
-                  {/* Level */}
+                  {}
                   <div className="text-right">
                     <span className="text-sm font-semibold text-discord-blurple">{t('levelPrefix', { level: entry.level })}</span>
                     <p className="text-[10px] text-gray-500 mt-0.5">{t('totalXp', { xp: entry.xp.toLocaleString() })}</p>
                   </div>
 
-                  {/* Messages */}
+                  {}
                   <div className="text-right">
                     <div className="flex items-center justify-end gap-1 text-gray-300">
                       <MessageSquare className="w-3 h-3 text-gray-500" />
@@ -263,9 +263,9 @@ export default function LeaderboardDashboardPage() {
               );
             })}
           </div>
-          </div>{/* /overflow-x-auto */}
+          </div>{}
 
-          {/* Pagination footer */}
+          {}
           {(page > 1 || hasMore) && (
             <div className="px-4 py-3 border-t border-white/6 flex items-center justify-between">
               <p className="text-xs text-gray-400">
@@ -292,7 +292,7 @@ export default function LeaderboardDashboardPage() {
         </div>
       )}
 
-      {/* Search no results */}
+      {}
       {!isLoading && !isError && allEntries.length > 0 && entries.length === 0 && (
         <div className="bg-(--bg-card) border border-(--border-subtle) rounded-xl text-center py-12">
           <Search className="w-8 h-8 text-gray-600 mx-auto mb-2" />

@@ -1,7 +1,4 @@
-/**
- * inviteDelete event — removes a deleted guild invite from the invite tracker
- * cache to prevent stale attribution on future joins.
- */
+
 import type { Invite } from 'discord.js';
 import type { BotEvent } from '../types.js';
 import { InviteTrackerModule } from '../modules/inviteTracker/InviteTrackerModule.js';

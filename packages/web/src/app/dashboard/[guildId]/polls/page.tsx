@@ -58,7 +58,7 @@ export default function PollsPage() {
         </div>
       </div>
 
-      {/* Info notice */}
+      {}
       <div className="flex items-start gap-3 px-4 py-3 rounded-lg bg-discord-blurple/10 border border-discord-blurple/30 mb-6">
         <Info className="w-4 h-4 text-discord-blurple mt-0.5 flex-shrink-0" />
         <p className="text-sm text-gray-300">

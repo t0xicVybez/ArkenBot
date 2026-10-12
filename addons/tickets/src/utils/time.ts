@@ -1,10 +1,5 @@
 import type { BusinessHours } from '../types.js';
 
-/**
- * Whether `nowMs` falls within the configured support/business hours, evaluated
- * in the config's IANA timezone. Supports overnight windows (close <= open).
- * A bad timezone fails open (returns true) so SLA/away logic never hard-blocks.
- */
 export function isWithinBusinessHours(bh: BusinessHours, nowMs: number): boolean {
   try {
     const parts = new Intl.DateTimeFormat('en-US', {
@@ -28,7 +23,7 @@ export function isWithinBusinessHours(bh: BusinessHours, nowMs: number): boolean
     const open = oh * 60 + om;
     const close = ch * 60 + cm;
 
-    if (close <= open) return cur >= open || cur < close; // overnight window
+    if (close <= open) return cur >= open || cur < close;
     return cur >= open && cur < close;
   } catch {
     return true;

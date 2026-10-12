@@ -1,30 +1,16 @@
-/**
- * Static analysis rules for Python code.
- * Uses the Lezer Python parser for syntax error detection and adds
- * PEP 8 style checks via per-line pattern matching.
- */
+
 import { parser as pythonParser } from '@lezer/python';
 import type { Issue } from '../types.js';
 
-/** Keywords that require a trailing colon to open a block. */
 const COLON_KEYWORDS = [
   'def ', 'class ', 'if ', 'elif ', 'else', 'else:', 'for ', 'while ',
   'try', 'try:', 'except', 'except:', 'finally', 'finally:', 'with ', 'async def ', 'async for ',
 ];
 
-/**
- * Analyzes Python code for syntax errors and common style violations.
- * Syntax errors are detected using the Lezer parser tree; style issues use
- * pattern matching aligned with PEP 8.
- *
- * @param code - The Python source code string.
- * @returns An array of issues found.
- */
 export function analyzePython(code: string): Issue[] {
   const issues: Issue[] = [];
   const lines = code.split('\n');
 
-  // Use the Lezer parse tree to find syntax error nodes.
   const tree = pythonParser.parse(code);
   const cursor = tree.cursor();
   const seenLines = new Set<number>();
@@ -50,13 +36,11 @@ export function analyzePython(code: string): Issue[] {
     const lineNum = i + 1;
     const trimmed = line.trim();
 
-    // Skip blank lines and comments.
     if (!trimmed || trimmed.startsWith('#')) return;
 
-    // Check for keywords that must end with a colon to open a block.
     for (const kw of COLON_KEYWORDS) {
       if (trimmed.startsWith(kw) && !trimmed.endsWith(':') && !trimmed.includes('#')) {
-        // Ignore line continuations and open parentheses; they span multiple lines.
+
         if (!trimmed.endsWith('\\') && !trimmed.endsWith('(')) {
           issues.push({
             severity: 'error',
@@ -70,7 +54,6 @@ export function analyzePython(code: string): Issue[] {
     if (line.startsWith('\t')) hasTabs = true;
     if (line.startsWith('  ')) hasSpaces = true;
 
-    // PEP 8 requires indentation in multiples of 4 spaces.
     const indent = line.match(/^ */)?.[0].length ?? 0;
     if (indent > 0 && indent % 4 !== 0) {
       issues.push({
@@ -79,7 +62,6 @@ export function analyzePython(code: string): Issue[] {
       });
     }
 
-    // PEP 8 recommends a maximum line length of 79 characters.
     if (line.length > 79) {
       issues.push({
         severity: 'info',
@@ -87,7 +69,6 @@ export function analyzePython(code: string): Issue[] {
       });
     }
 
-    // Python 2 print statement without parentheses.
     if (/^print\s+[^(=]/.test(trimmed)) {
       issues.push({
         severity: 'warning',
@@ -95,7 +76,6 @@ export function analyzePython(code: string): Issue[] {
       });
     }
 
-    // Bare `except:` silently swallows all exceptions including KeyboardInterrupt.
     if (trimmed === 'except:') {
       issues.push({
         severity: 'warning',
@@ -103,7 +83,6 @@ export function analyzePython(code: string): Issue[] {
       });
     }
 
-    // Mutable default arguments are evaluated once at definition time, not per-call.
     if (/def\s+\w+\([^)]*=\s*[\[{]/.test(trimmed)) {
       issues.push({
         severity: 'warning',
@@ -118,7 +97,6 @@ export function analyzePython(code: string): Issue[] {
       });
     }
 
-    // `== True` / `== False` should use identity comparison or direct boolean evaluation.
     if (/==\s*(True|False)\b/.test(trimmed) || /(True|False)\s*==/.test(trimmed)) {
       issues.push({
         severity: 'warning',
@@ -127,7 +105,6 @@ export function analyzePython(code: string): Issue[] {
     }
   });
 
-  // Mixed tabs and spaces cause IndentationError at runtime in Python 3.
   if (hasTabs && hasSpaces) {
     issues.push({
       severity: 'error',

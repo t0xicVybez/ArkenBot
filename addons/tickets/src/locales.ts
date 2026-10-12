@@ -1,4 +1,4 @@
-/** Localized catalogs for the Tickets addon. Falls back to en-US per key. */
+
 export const locales = {
   "en-US": {
     "fieldOpenedBy": "Opened by",

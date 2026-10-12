@@ -1,20 +1,10 @@
-/**
- * messageReactionAdd event — resolves partial reaction/message/user objects
- * before dispatching to the reaction roles, starboard, and suggestion vote modules.
- *
- * Partials must be fetched because Discord only sends partial data for reactions
- * on messages that were not cached at startup.
- */
+
 import type { MessageReaction, PartialMessageReaction, User, PartialUser } from 'discord.js';
 import type { BotEvent } from '../types.js';
 import { ReactionRolesModule } from '../modules/reactionRoles/ReactionRolesModule.js';
 import { StarboardModule } from '../modules/starboard/StarboardModule.js';
 import { prisma } from '../database.js';
 
-/**
- * Increments the upvote or downvote count on a suggestion when a non-bot user
- * reacts with 👍 or 👎 on its posted message.
- */
 async function handleSuggestionVote(reaction: MessageReaction, user: User): Promise<void> {
   if (user.bot) return;
   const emoji = reaction.emoji.name;

@@ -1,13 +1,7 @@
-/**
- * Rust WebRCON client. Rust does not use Source RCON — it exposes a WebSocket
- * where you connect to `ws://host:port/password` and exchange JSON messages:
- *   send:    { Identifier: number, Message: string, Name: string }
- *   receive: { Message: string, Identifier: number, Type: string }
- */
+
 import WebSocket from 'ws';
 import { RconError } from './source.js';
 
-/** Run a single command against a Rust WebRCON server and return its output. */
 export function webRconCommand(
   host: string,
   port: number,
@@ -31,7 +25,7 @@ export function webRconCommand(
       if (settled) return;
       settled = true;
       clearTimeout(timer);
-      try { ws.close(); } catch { /* ignore */ }
+      try { ws.close(); } catch {  }
       if (err) reject(err);
       else resolve(value ?? '');
     };

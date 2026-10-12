@@ -15,7 +15,6 @@ export default function DashboardPage() {
   const t = useTranslations('serverSelectPage');
   const router = useRouter();
 
-  // Redirect only once the initial `/auth/me` check has resolved.
   useEffect(() => {
     if (status === 'unauthenticated') router.push('/auth');
   }, [status, router]);
@@ -74,7 +73,7 @@ export default function DashboardPage() {
       </header>
 
       <main className="max-w-6xl mx-auto px-6 py-8">
-        {/* Search */}
+        {}
         <div className="relative mb-6 max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input
@@ -118,7 +117,7 @@ export default function DashboardPage() {
           </div>
         ) : (
           <>
-            {/* Active servers */}
+            {}
             {activeGuilds.length > 0 && (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
                 {activeGuilds.map((guild) => (
@@ -134,7 +133,7 @@ export default function DashboardPage() {
               </div>
             )}
 
-            {/* Servers needing invite */}
+            {}
             {inactiveGuilds.length > 0 && (
               <>
                 <p className="text-xs font-semibold uppercase tracking-widest text-gray-500 mb-3">

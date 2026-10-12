@@ -1,4 +1,4 @@
-/** Localized catalogs for the Game Server Status addon. Falls back to en-US per key. */
+
 export const locales = {
   "en-US": {
     "graphTitle": "📈 Player History — {name}",

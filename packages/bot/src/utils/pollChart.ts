@@ -21,11 +21,9 @@ export async function generatePollChart(
   const canvas = createCanvas(canvasWidth, canvasHeight);
   const ctx = canvas.getContext('2d');
 
-  // Background
   ctx.fillStyle = '#1e1f22';
   ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-  // Title
   ctx.fillStyle = '#ffffff';
   ctx.font = 'bold 18px sans-serif';
   ctx.textAlign = 'center';
@@ -51,7 +49,6 @@ export async function generatePollChart(
     const barWidth = Math.max(4, (count / maxCount) * CHART_WIDTH);
     const color = PALETTE[i % PALETTE.length];
 
-    // Label
     ctx.fillStyle = '#b5bac1';
     ctx.font = '14px sans-serif';
     ctx.textAlign = 'right';
@@ -63,19 +60,16 @@ export async function generatePollChart(
     if (label !== opt) label = label.slice(0, -1) + '…';
     ctx.fillText(label, PADDING.left - 8, y + BAR_HEIGHT / 2 + 5);
 
-    // Bar background
     ctx.fillStyle = '#2b2d31';
     ctx.beginPath();
     roundRect(ctx, PADDING.left, y, CHART_WIDTH, BAR_HEIGHT, 6);
     ctx.fill();
 
-    // Bar fill
     ctx.fillStyle = color;
     ctx.beginPath();
     roundRect(ctx, PADDING.left, y, barWidth, BAR_HEIGHT, 6);
     ctx.fill();
 
-    // Count + percent label
     ctx.fillStyle = '#ffffff';
     ctx.font = 'bold 13px sans-serif';
     ctx.textAlign = 'left';
@@ -86,7 +80,6 @@ export async function generatePollChart(
     );
   });
 
-  // Footer
   ctx.fillStyle = '#72767d';
   ctx.font = '12px sans-serif';
   ctx.textAlign = 'center';

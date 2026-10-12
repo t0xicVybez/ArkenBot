@@ -1,7 +1,4 @@
-/**
- * /unban command — lifts a ban by user ID, resolves any active ban cases,
- * and records a new unban case.
- */
+
 import {
   SlashCommandBuilder,
   PermissionFlagsBits,
@@ -63,10 +60,8 @@ const command: BotCommand = {
 
       await interaction.guild.members.unban(userId, `${reason} | Moderator: ${interaction.user.tag}`);
 
-      // Reversing a ban withdraws our contribution to the ban network.
       void BanNetworkModule.removeBan(interaction.guild.id, userId);
 
-      // Mark existing active ban/tempban cases as resolved so dashboards reflect the change.
       await prisma.moderationCase.updateMany({
         where: {
           guildId: interaction.guild.id,

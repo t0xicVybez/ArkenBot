@@ -1,4 +1,4 @@
-/** Localized catalogs for the Application System addon. Falls back to en-US per key. */
+
 export const locales = {
   "en-US": {
     "reviewTitle": "📋 New Application: {name}",

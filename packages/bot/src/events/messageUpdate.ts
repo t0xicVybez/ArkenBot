@@ -1,7 +1,4 @@
-/**
- * messageUpdate event — logs message edits. Always fetches the latest version of
- * the updated message because the cached copy may be stale by the time the event fires.
- */
+
 import type { Message, PartialMessage } from 'discord.js';
 import type { BotEvent } from '../types.js';
 import { LoggingModule } from '../modules/logging/LoggingModule.js';
@@ -17,8 +14,6 @@ const event: BotEvent = {
       : await newMessage.fetch().catch(() => newMessage as Message);
     if (!fresh) return;
 
-    // oldMessage may be partial when it was not in cache before the edit.
-    // The logging module handles the missing content gracefully.
     await LoggingModule.logMessageEdit(newMessage.guild, oldMessage as Message, fresh);
   },
 };

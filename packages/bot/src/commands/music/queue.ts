@@ -1,6 +1,4 @@
-/**
- * /queue command — displays the currently playing track and the next 10 queued tracks.
- */
+
 import {
   MessageFlags,
   SlashCommandBuilder,

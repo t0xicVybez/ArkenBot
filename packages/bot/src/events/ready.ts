@@ -1,10 +1,4 @@
-/**
- * clientReady event — fires once when the bot establishes its WebSocket session.
- * Applies presence configuration from the database, syncs all guild records,
- * caches invite data, and subscribes to the Redis `api:events` channel to handle
- * real-time commands from the web dashboard (settings reloads, presence updates,
- * reaction-role deployments, embed sends, and announcements).
- */
+
 import { ActivityType, ActionRowBuilder, AttachmentBuilder, ButtonBuilder, ButtonStyle, ChannelType, EmbedBuilder, PermissionFlagsBits, type PresenceStatusData, type TextChannel } from 'discord.js';
 import type { BotEvent } from '../types.js';
 import { logger, swallow} from '../logger.js';
@@ -14,7 +8,6 @@ import { getGuildSettings } from '../utils/settings.js';
 import { ModmailModule } from '../modules/modmail/ModmailModule.js';
 import { t, resolveUserLocale } from '../i18n/index.js';
 
-/** Shape of the `botConfig` singleton row used for presence configuration. */
 type BotConfigRow = { activityType: string; activityText: string; status: string };
 
 const TYPE_COLOR: Record<string, number> = {
@@ -24,11 +17,6 @@ const TYPE_COLOR: Record<string, number> = {
   hotfix: 0xed4245,
 };
 
-/**
- * Delivers a dashboard announcement embed to each target guild's configured
- * announcement channel. Per-guild colour overrides are applied when set.
- * Failures for individual guilds are logged and do not abort delivery to others.
- */
 const TYPE_LABEL: Record<string, { emoji: string; label: string }> = {
   update:      { emoji: '📢', label: 'Update' },
   feature:     { emoji: '✨', label: 'New Feature' },
@@ -36,13 +24,6 @@ const TYPE_LABEL: Record<string, { emoji: string; label: string }> = {
   hotfix:      { emoji: '🚑', label: 'Hotfix' },
 };
 
-/**
- * Resolves where a bot announcement should go for a guild. Prefers the server's
- * chosen channel; otherwise auto-creates a gated '#arken-updates' channel (only
- * readable by members who can manage the server) — but only where the bot has
- * Manage Channels, skipping the guild otherwise. The created channel is saved as
- * the guild's announcement channel so it's reused next time.
- */
 async function resolveAnnouncementChannel(
   client: import('../client.js').BotClient,
   guildId: string,
@@ -127,10 +108,6 @@ async function sendAnnouncement(
   logger.info({ id: data.id, sent, total: data.targets.length }, 'Announcement delivered');
 }
 
-/**
- * Applies a presence configuration to the bot, substituting `{servers}` and
- * `{users}` placeholders with live counts from the guild and user caches.
- */
 function applyPresence(client: import('../client.js').BotClient, cfg: BotConfigRow): void {
   const typeMap: Record<string, ActivityType> = {
     Playing: ActivityType.Playing,
@@ -149,15 +126,12 @@ function applyPresence(client: import('../client.js').BotClient, cfg: BotConfigR
   });
 }
 
-
-
 const event: BotEvent = {
   name: 'clientReady',
   once: true,
   async execute(client: import('../client.js').BotClient) {
     logger.info(`Logged in as ${client.user?.tag}`);
 
-    // Upsert guarantees the singleton row exists on first boot.
     const presenceCfg = await prisma.botConfig.upsert({
       where: { id: 'main' },
       update: {},
@@ -191,16 +165,13 @@ const event: BotEvent = {
     sub.removeAllListeners('message');
     sub.on('message', async (_channel: string, message: string) => {
       try {
-        // Promotion tracking config changed in the dashboard — reload the hot-path
-        // cache so the toggle/keywords take effect immediately.
+
         if (_channel === 'promotion:config:updated') {
           const { PromotionModule } = await import('../modules/promotion/PromotionModule.js');
           await PromotionModule.refresh();
           return;
         }
 
-        // A forwarded top.gg vote — reward the voter. A guildId means it was a
-        // vote for that specific server; otherwise it was a vote for the bot.
         if (_channel === 'topgg:vote') {
           const { userId, weight, guildId } = JSON.parse(message) as { userId: string; weight: number; guildId?: string };
           const { TopggModule } = await import('../modules/topgg/TopggModule.js');
@@ -208,8 +179,6 @@ const event: BotEvent = {
           return;
         }
 
-        // A giveaway created from the dashboard — post its announcement message
-        // and seed the entry reaction (slash-command giveaways post inline).
         if (_channel === 'giveaway:start') {
           const { giveawayId } = JSON.parse(message) as { guildId: string; giveawayId: string };
           const { GiveawayModule } = await import('../modules/giveaway/GiveawayModule.js');
@@ -217,20 +186,15 @@ const event: BotEvent = {
           return;
         }
 
-        // A YouTube channel went live / posted a new video (from the WebSub
-        // callback or a backstop poll) — fan out to every guild watching it.
         if (_channel === 'youtube:live' || _channel === 'youtube:upload') {
           const { handleYouTubeEvent } = await import('../modules/streamAlerts/YouTubeAlerts.js');
           await handleYouTubeEvent(client, _channel === 'youtube:live' ? 'live' : 'upload', message);
           return;
         }
 
-        // Some channels (like 'api:events') publish JSON event objects, while
-        // others (like 'cache:invalidate:settings') publish a plain guildId.
         if (_channel === 'cache:invalidate:settings') {
           const guildId = message;
-          // Invalidate cache and, if verification is enabled, ensure the
-          // verify panel is posted to the configured channel.
+
           invalidateSettingsCache(guildId);
           logger.debug(`Settings cache invalidated for guild ${guildId}`);
 
@@ -245,7 +209,7 @@ const event: BotEvent = {
                 ? guild.channels.cache.get(verification.verifyChannelId) as TextChannel | undefined
                 : undefined;
               if (guild && channel?.isTextBased()) {
-                // Skip if the previously posted panel still exists in this channel.
+
                 const existingId = verification.panelMessageId as string | undefined;
                 const existing = existingId
                   ? await channel.messages.fetch(existingId).catch(swallow)
@@ -261,7 +225,7 @@ const event: BotEvent = {
                   } else {
                     const { VerificationModule } = await import('../modules/verification/VerificationModule.js');
                     const panelMsg = await VerificationModule.sendVerifyPanel(channel, guild);
-                    // Remember the panel message so future settings saves don't repost it.
+
                     await prisma.guildSettings.update({
                       where: { guildId },
                       data: { extended: { ...extended, verification: { ...verification, panelMessageId: panelMsg.id } } },
@@ -281,13 +245,11 @@ const event: BotEvent = {
 
         const event = JSON.parse(message);
         if (event.type === 'settings:reload') {
-          // Bust the Redis cache so the next command invocation fetches fresh settings.
+
           invalidateSettingsCache(event.data.guildId);
           logger.debug(`Settings cache invalidated for guild ${event.data.guildId}`);
         } else if (event.type === 'guild:reset') {
-          // A server admin wiped all data via the dashboard while the bot is still
-          // in the guild. Drop in-memory caches so nothing stale lingers; the Guild
-          // row is recreated with defaults on the next interaction (ensureGuildExists).
+
           const gid = event.data.guildId as string;
           InviteTrackerModule.clearGuild(gid);
           invalidateSettingsCache(gid);
@@ -331,8 +293,7 @@ const event: BotEvent = {
           const appeal = await prisma.moderationAppeal.findUnique({ where: { id: event.data.appealId as string } });
           if (appeal) await AppealsModule.applyDecision(client, appeal, event.data.approved as boolean, (event.data.reviewerTag as string) ?? 'staff');
         } else if (event.type === 'stats-channels:refresh') {
-          // Stats channels are updated by the BackgroundJobs scheduler on a 5-minute cycle;
-          // this event is acknowledged but requires no immediate action.
+
         } else if (event.type === 'welcome:test') {
           const { guildId, userId } = event.data as { guildId: string; userId: string };
           const guild = client.guilds.cache.get(guildId);
@@ -380,8 +341,6 @@ const event: BotEvent = {
               });
             }
 
-            // Converts a URL or base64 data URI to either a plain URL or a Discord
-            // attachment reference, registering the attachment in `files` when needed.
             const resolveImage = (
               dataOrUrl: string | null | undefined,
               filename: string,
@@ -440,7 +399,6 @@ const event: BotEvent = {
     await sub.subscribe('giveaway:start');
     await sub.subscribe('youtube:live');
     await sub.subscribe('youtube:upload');
-
 
     await ModmailModule.loadOpenThreads().catch(() => {});
     logger.info('Bot ready! Serving ' + client.guilds.cache.size + ' guilds');

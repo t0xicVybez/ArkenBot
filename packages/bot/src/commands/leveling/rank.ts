@@ -1,7 +1,4 @@
-/**
- * /rank command — generates and sends a graphical rank card for a member.
- * Falls back to an embed when canvas rendering fails.
- */
+
 import {
   SlashCommandBuilder,
   AttachmentBuilder,

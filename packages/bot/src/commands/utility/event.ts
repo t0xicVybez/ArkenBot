@@ -1,4 +1,4 @@
-/** /event create|list|cancel — schedule events with RSVP buttons. */
+
 import {
   SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits, MessageFlags,
   type ChatInputCommandInteraction, type TextChannel,
@@ -11,7 +11,6 @@ import { errorEmbed } from '../../utils/embed.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 import { EventsModule } from '../../modules/events/EventsModule.js';
 
-/** Resolve a "when" string to a future Date: relative duration (2d/3h) or an absolute date. */
 function resolveWhen(raw: string): Date | null {
   const dur = parseDuration(raw);
   if (dur && dur > 0) return new Date(Date.now() + dur * 1000);
@@ -49,7 +48,6 @@ const command: BotCommand = {
       return;
     }
 
-    // create & cancel require Manage Events / Manage Guild.
     const canManage = interaction.memberPermissions?.has(PermissionFlagsBits.ManageEvents) || interaction.memberPermissions?.has(PermissionFlagsBits.ManageGuild);
     if (!canManage) { await interaction.reply({ content: t('events.needManage', loc), flags: MessageFlags.Ephemeral }); return; }
 
@@ -58,7 +56,7 @@ const command: BotCommand = {
       const event = await prisma.scheduledEvent.findFirst({ where: { id, guildId: interaction.guild.id } });
       if (!event) { await interaction.reply({ content: t('events.gone', loc), flags: MessageFlags.Ephemeral }); return; }
       await prisma.scheduledEvent.update({ where: { id }, data: { cancelled: true } });
-      // Best-effort: strike through the original message.
+
       const channel = interaction.guild.channels.cache.get(event.channelId) as TextChannel | undefined;
       if (channel && event.messageId) {
         const rsvps = await prisma.eventRsvp.findMany({ where: { eventId: id } });
@@ -69,7 +67,6 @@ const command: BotCommand = {
       return;
     }
 
-    // create
     const title = interaction.options.getString('title', true).slice(0, 200);
     const when = resolveWhen(interaction.options.getString('when', true));
     if (!when) { await interaction.reply({ embeds: [errorEmbed(t('events.badWhenTitle', loc), t('events.badWhen', loc))], flags: MessageFlags.Ephemeral }); return; }

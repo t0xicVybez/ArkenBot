@@ -1,6 +1,4 @@
-/**
- * guildRoleDelete event — tracks role deletions for anti-nuke protection.
- */
+
 import { Events, AuditLogEvent, type Role } from 'discord.js';
 import type { BotEvent } from '../types.js';
 import { AntiNukeModule } from '../modules/antiNuke/AntiNukeModule.js';
@@ -18,8 +16,7 @@ const event: BotEvent = {
         await AntiNukeModule.trackAction(guild, entry.executor.id, 'roleDelete');
       }
     } catch (err) {
-      // A 403 just means the bot lacks View Audit Log here — anti-nuke tracking
-      // no-ops, no admin action needed. Only surface genuinely unexpected errors.
+
       if (isPermissionError(err)) {
         logger.debug({ err, guildId: guild.id }, 'guildRoleDelete: no audit-log access');
       } else {

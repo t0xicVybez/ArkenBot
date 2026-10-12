@@ -65,23 +65,19 @@ export default function ApplicationsPage() {
   const queryClient = useQueryClient();
   const [tab, setTab] = useState<Tab>('forms');
 
-  // Form creation state
   const [newFormName, setNewFormName] = useState('');
   const [newFormDesc, setNewFormDesc] = useState('');
   const [newFormChannel, setNewFormChannel] = useState('');
   const [newFormRole, setNewFormRole] = useState('');
 
-  // Expanded forms state
   const [expandedForms, setExpandedForms] = useState<Set<string>>(new Set());
 
-  // Add field state per form
   const [addFieldFormId, setAddFieldFormId] = useState<string | null>(null);
   const [newFieldLabel, setNewFieldLabel] = useState('');
   const [newFieldStyle, setNewFieldStyle] = useState<'short' | 'paragraph'>('short');
   const [newFieldRequired, setNewFieldRequired] = useState(true);
   const [newFieldPlaceholder, setNewFieldPlaceholder] = useState('');
 
-  // Submissions filter state
   const [filterFormId, setFilterFormId] = useState('');
   const [filterStatus, setFilterStatus] = useState('pending');
   const [expandedSubmissions, setExpandedSubmissions] = useState<Set<string>>(new Set());
@@ -218,7 +214,7 @@ export default function ApplicationsPage() {
         </div>
       </div>
 
-      {/* Tabs */}
+      {}
       <div className="flex gap-1 mb-6 border-b border-gray-700">
         {(['forms', 'submissions'] as Tab[]).map((tabKey) => (
           <button
@@ -235,10 +231,10 @@ export default function ApplicationsPage() {
         ))}
       </div>
 
-      {/* ── Forms Tab ── */}
+      {}
       {tab === 'forms' && (
         <div className="space-y-4">
-          {/* Create form */}
+          {}
           <div className="card">
             <h3 className="text-base font-semibold text-white mb-4">{t('createNewForm')}</h3>
             <div className="space-y-3">
@@ -304,7 +300,7 @@ export default function ApplicationsPage() {
             </div>
           </div>
 
-          {/* Existing forms */}
+          {}
           {formsLoading ? (
             <div className="space-y-3">
               {[...Array(2)].map((_, i) => (
@@ -485,10 +481,10 @@ export default function ApplicationsPage() {
         </div>
       )}
 
-      {/* ── Submissions Tab ── */}
+      {}
       {tab === 'submissions' && (
         <div className="space-y-4">
-          {/* Filters */}
+          {}
           <div className="card flex flex-wrap gap-3">
             <div className="flex-1 min-w-[150px]">
               <label className="label">{t('filterByForm')}</label>

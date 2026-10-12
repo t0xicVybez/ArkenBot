@@ -1,12 +1,4 @@
-/**
- * Identifies and optionally removes stale slash commands registered with
- * Discord that no longer have a matching definition in the codebase.
- *
- * Usage:
- *   pnpm --filter @arkenbot/bot cleanup:commands            # dry-run (default)
- *   pnpm --filter @arkenbot/bot cleanup:commands -- --confirm     # actually delete
- *   pnpm --filter @arkenbot/bot cleanup:commands -- --guild <ID>  # also check extra guild
- */
+
 
 import 'dotenv/config';
 import { REST, Routes } from 'discord.js';
@@ -18,18 +10,13 @@ import type { BotCommand } from '../types.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-// ── CLI flags ─────────────────────────────────────────────────────────────────
-
 const argv    = process.argv.slice(2);
 const DRY_RUN = !argv.includes('--confirm');
 
-// --guild <id> may be repeated to check additional guilds beyond DISCORD_GUILD_ID
 const extraGuildIds: string[] = [];
 for (let i = 0; i < argv.length; i++) {
   if (argv[i] === '--guild' && argv[i + 1]) extraGuildIds.push(argv[++i]);
 }
-
-// ── ANSI helpers ──────────────────────────────────────────────────────────────
 
 const R    = '\x1b[0m';
 const BOLD = '\x1b[1m';
@@ -46,8 +33,6 @@ const red  = (s: string) => `${RED}${s}${R}`;
 const grn  = (s: string) => `${GRN}${s}${R}`;
 const ylw  = (s: string) => `${YLW}${s}${R}`;
 const cyn  = (s: string) => `${CYN}${s}${R}`;
-
-// ── Source command discovery (mirrors deployCommands.ts exactly) ──────────────
 
 async function loadLocalCommandNames(): Promise<Set<string>> {
   const names        = new Set<string>();
@@ -69,7 +54,7 @@ async function loadLocalCommandNames(): Promise<Set<string>> {
         const command: BotCommand = module.default ?? module.command;
         if (command?.data) names.add(command.data.name);
       } catch {
-        // silently skip unloadable files
+
       }
     }
   }
@@ -98,22 +83,18 @@ async function loadAddonCommandNames(): Promise<Set<string>> {
         if (name) names.add(name);
       }
     } catch {
-      // addon not built or missing dist/index.js — skip
+
     }
   }
 
   return names;
 }
 
-// ── Registered command type ───────────────────────────────────────────────────
-
 interface RegisteredCommand {
   id:    string;
   name:  string;
-  scope: 'global' | string; // 'global' or a guild snowflake
+  scope: 'global' | string;
 }
-
-// ── Discord REST helpers ──────────────────────────────────────────────────────
 
 async function fetchRegistered(
   rest:     REST,
@@ -122,11 +103,9 @@ async function fetchRegistered(
 ): Promise<RegisteredCommand[]> {
   const result: RegisteredCommand[] = [];
 
-  // Global commands
   const globals = (await rest.get(Routes.applicationCommands(clientId))) as Array<{ id: string; name: string }>;
   for (const cmd of globals) result.push({ id: cmd.id, name: cmd.name, scope: 'global' });
 
-  // Per-guild commands
   for (const guildId of guildIds) {
     try {
       const guildCmds = (await rest.get(
@@ -141,15 +120,12 @@ async function fetchRegistered(
   return result;
 }
 
-// ── Main ──────────────────────────────────────────────────────────────────────
-
 async function main() {
   console.log(`\n${bold(hr())}`);
   console.log(`${bold('  ArkenBot — Stale Command Cleanup')}`);
   console.log(`  Mode: ${DRY_RUN ? ylw('DRY RUN') + dim('  (pass --confirm to delete)') : red('LIVE — will delete')}`);
   console.log(`${bold(hr())}\n`);
 
-  // 1. Load known command names from source
   console.log(cyn('Scanning command definitions in source...'));
   const localNames = await loadLocalCommandNames();
   const addonNames = await loadAddonCommandNames();
@@ -159,13 +135,11 @@ async function main() {
   console.log(`  Addon commands : ${addonNames.size}`);
   console.log(`  Total known    : ${bold(String(knownNames.size))}\n`);
 
-  // 2. Work out which guilds to inspect
   const guildIds = [
     ...(config.discord.guildId ? [config.discord.guildId] : []),
     ...extraGuildIds,
-  ].filter((v, i, a) => a.indexOf(v) === i); // deduplicate
+  ].filter((v, i, a) => a.indexOf(v) === i);
 
-  // 3. Fetch currently registered commands from Discord
   console.log(cyn('Fetching registered commands from Discord...'));
   const rest       = new REST({ version: '10' }).setToken(config.discord.token);
   const registered = await fetchRegistered(rest, config.discord.clientId, guildIds);
@@ -180,7 +154,6 @@ async function main() {
     console.log(dim('  (no DISCORD_GUILD_ID set — guild commands not checked)'));
   }
 
-  // 4. Find stale commands
   const stale = registered.filter(c => !knownNames.has(c.name));
 
   console.log(`\n${bold(hr())}`);
@@ -194,7 +167,6 @@ async function main() {
   console.log(`${red(bold(`  STALE COMMANDS FOUND: ${stale.length}`))}`);
   console.log(`${bold(hr())}\n`);
 
-  // 5. Print report grouped by scope
   const byScope = new Map<string, RegisteredCommand[]>();
   for (const cmd of stale) {
     if (!byScope.has(cmd.scope)) byScope.set(cmd.scope, []);
@@ -216,7 +188,6 @@ async function main() {
 
   console.log(bold(hr()));
 
-  // 6. Delete or report
   if (DRY_RUN) {
     console.log(`${ylw(bold('  DRY RUN — nothing was changed.'))}`);
     console.log(`  Re-run with ${bold('--confirm')} to permanently delete the ${stale.length} command(s) listed above.`);

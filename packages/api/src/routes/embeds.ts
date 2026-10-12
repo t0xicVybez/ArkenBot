@@ -1,8 +1,4 @@
-/**
- * Routes for creating and managing saved Discord embed templates for a guild.
- * Saved embeds can be sent to any channel via a dedicated send endpoint.
- * The body limit for create/update is 4 MB to accommodate base64-encoded images.
- */
+
 import type { FastifyInstance } from 'fastify';
 import { requireGuildAdmin } from '../middleware/auth.js';
 import { prisma } from '../database.js';
@@ -28,15 +24,6 @@ type EmbedBody = {
   embedFields?: EmbedField[];
 };
 
-/**
- * Registers embed template routes.
- *
- * GET    /guilds/:guildId/embeds         — list all saved embeds
- * POST   /guilds/:guildId/embeds         — create a new embed template
- * PATCH  /guilds/:guildId/embeds/:id     — update an embed template
- * DELETE /guilds/:guildId/embeds/:id     — delete an embed template
- * POST   /guilds/:guildId/embeds/:id/send — send an embed to a Discord channel
- */
 export async function embedRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/guilds/:guildId/embeds', { preHandler: [requireGuildAdmin] }, async (request, reply) => {

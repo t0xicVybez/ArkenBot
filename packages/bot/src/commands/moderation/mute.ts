@@ -1,7 +1,4 @@
-/**
- * /mute command — applies a Discord timeout to a member for a given duration
- * (maximum 28 days, the Discord API limit), creates a case, and logs the action.
- */
+
 import {
   SlashCommandBuilder,
   PermissionFlagsBits,
@@ -64,7 +61,7 @@ const command: BotCommand = {
       return;
     }
 
-    const maxTimeout = 28 * 24 * 60 * 60; // Discord enforces a 28-day maximum for timeouts.
+    const maxTimeout = 28 * 24 * 60 * 60;
     if (durationSeconds > maxTimeout) {
       await interaction.editReply({
         embeds: [errorEmbed(t('cmd.mute.tooLongTitle', loc), t('cmd.mute.tooLong', loc))],

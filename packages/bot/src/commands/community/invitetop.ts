@@ -1,7 +1,4 @@
-/**
- * /invitetop command — renders the top-10 invite leaderboard for the guild.
- * Requires the invite tracker to be enabled in guild settings.
- */
+
 import { SlashCommandBuilder, EmbedBuilder, type ChatInputCommandInteraction } from 'discord.js';
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';

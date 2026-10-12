@@ -1,8 +1,4 @@
-/**
- * Provides real-time message moderation: spam detection, word filtering with
- * escalating consequences, link blocking, mention-spam removal, excessive-caps
- * deletion, and anti-raid join-surge protection.
- */
+
 
 import { type Message, type GuildMember, type TextChannel, EmbedBuilder, PermissionFlagsBits, GuildVerificationLevel } from 'discord.js';
 import { prisma } from '../../database.js';
@@ -16,15 +12,11 @@ import { AiModerationModule } from './AiModerationModule.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 import { getGuildSettings } from '../../utils/settings.js';
 
-/** Redis key for the per-user word filter violation counter (24-hour rolling window). */
 const FILTER_VIOLATION_KEY = (guildId: string, userId: string) =>
   `automod:filter:${guildId}:${userId}`;
 
 export class AutoModModule {
-  /**
-   * Returns the AutoMod config for a guild, serving from a 60-second Redis cache
-   * to avoid hitting the database on every message.
-   */
+
   private static async getConfig(guildId: string): Promise<AutoModConfig | null> {
     const cached = await redis.get(`automod:config:${guildId}`);
     if (cached) return JSON.parse(cached) as AutoModConfig;
@@ -36,12 +28,6 @@ export class AutoModModule {
     return config as AutoModConfig | null;
   }
 
-  /**
-   * Runs all enabled AutoMod checks against an incoming message. Returns early
-   * if the author is a bot, an Administrator, or in an exempt role or channel.
-   * Checks are executed in priority order; each returns true when it has acted
-   * on the message, preventing subsequent checks from running.
-   */
   static async analyze(message: Message): Promise<void> {
     if (!message.guild || message.author.bot) return;
 
@@ -61,9 +47,6 @@ export class AutoModModule {
     if (config.antiMentionEnabled && this.checkMentions(message, config)) return;
     if (config.antiCapsEnabled && this.checkCaps(message, config)) return;
 
-    // Nothing deterministic caught it — hand off to the AI classifier when the
-    // guild has opted in. Fire-and-forget: it is rate-limited and must not add
-    // latency to (or throw into) the message pipeline.
     if (config.aiModEnabled) void AiModerationModule.scan(message, config);
   }
 
@@ -82,8 +65,6 @@ export class AutoModModule {
     return false;
   }
 
-  // ─── Word filter with violation escalation ────────────────────────────────
-
   private static async checkWordFilter(message: Message, config: AutoModConfig): Promise<boolean> {
     const content = message.content.toLowerCase();
     const matchedWord = config.filteredWords.find((word) =>
@@ -95,12 +76,6 @@ export class AutoModModule {
     return true;
   }
 
-  /**
-   * Handles a confirmed word filter match. Deletes the message, increments the
-   * per-user violation counter, creates a Warning record, and applies an
-   * escalating consequence (warn → timeout → kick) based on the violation count
-   * within the rolling 24-hour window.
-   */
   private static async handleWordFilterViolation(
     message: Message,
     config: AutoModConfig,
@@ -111,8 +86,6 @@ export class AutoModModule {
 
     await message.delete().catch((e) => notifyActionFailure(message.guild!, { action: 'automodDelete', error: e, requiredPermission: 'Manage Messages', channelId: message.channelId, target: message.author.toString() }));
 
-    // Track cumulative violations within a 24-hour rolling window. The expiry is
-    // set only on the first increment so subsequent hits don't extend the window.
     const key = FILTER_VIOLATION_KEY(guildId, userId);
     const count = await redis.incr(key);
     if (count === 1) {
@@ -130,7 +103,6 @@ export class AutoModModule {
       action = 'timeout';
     }
 
-    // Persist a Warning record so moderators see filter violations in /warnings.
     await prisma.warning.create({
       data: {
         guildId,
@@ -155,7 +127,7 @@ export class AutoModModule {
       await member.timeout(timeoutDuration * 1000, `AutoMod: Word filter violation #${count}`)
         .catch((e) => notifyActionFailure(message.guild!, { action: 'automodTimeout', error: e, requiredPermission: 'Timeout Members', channelId: message.channelId, target: message.author.toString() }));
     } else if (action === 'kick') {
-      // Attempt a DM notification before the kick so the user knows why they were removed.
+
       const authorLoc = await resolveUserLocale({ user: message.author, guildId, guildLocale: message.guild!.preferredLocale });
       const dmText = config.filterKickDMMessage
         ? config.filterKickDMMessage
@@ -175,12 +147,9 @@ export class AutoModModule {
 
       await member.kick(`AutoMod: Word filter violation #${count}`).catch((e) => notifyActionFailure(message.guild!, { action: 'automodKick', error: e, requiredPermission: 'Kick Members', channelId: message.channelId, target: message.author.toString() }));
 
-      // Reset the counter so a rejoining user starts fresh rather than being
-      // immediately kicked again on their first message.
       await redis.del(key);
     }
 
-    // Post a short-lived channel notification so other members see the action.
     if (!('send' in message.channel)) return;
     const ch = message.channel as TextChannel;
 
@@ -207,12 +176,6 @@ export class AutoModModule {
       .catch(swallow);
   }
 
-  // ─── Other checks ────────────────────────────────────────────────────────
-
-  /**
-   * Blocks links whose domains are not in the guild's allowlist. The check is
-   * skipped when `allowedDomains` is empty, effectively allowing all links.
-   */
   private static checkLinks(message: Message, config: AutoModConfig): boolean {
     const urlPattern = /https?:\/\/[^\s]+/gi;
     const urls = message.content.match(urlPattern);
@@ -311,25 +274,15 @@ export class AutoModModule {
     }
   }
 
-  /**
-   * Increments the join-surge counter for the guild and returns true when the
-   * count exceeds the configured raid threshold within the detection window.
-   */
-  /**
-   * Alt/raid protection at join time. A hard account-age gate can kick/ban (or
-   * just alert on) accounts younger than the configured minimum, and a softer
-   * flag posts a heads-up to the mod-log for newish accounts. Uses Discord
-   * relative timestamps so the account age auto-localizes for each viewer.
-   */
   static async checkAccountAge(member: GuildMember, config: AutoModConfig): Promise<void> {
     if (member.user.bot) return;
     const ageHours = (Date.now() - member.user.createdTimestamp) / 3_600_000;
 
     if (config.minAccountAgeEnabled && ageHours < config.minAccountAgeHours) {
-      const action = config.minAccountAgeAction; // kick | ban | alert | quarantine
+      const action = config.minAccountAgeAction;
       if (action === 'kick' || action === 'ban') {
         const loc = await resolveUserLocale({ user: member.user, guildId: member.guild.id, guildLocale: member.guild.preferredLocale });
-        // Only bans are appealable (a kicked user can simply rejoin).
+
         const appealsOn = action === 'ban' && await AppealsModule.enabled(member.guild.id);
         await member.send({
           embeds: [new EmbedBuilder().setColor(COLORS.ERROR)
@@ -343,8 +296,7 @@ export class AutoModModule {
           await member.kick('Alt/raid protection: account too new').catch((e) => notifyActionFailure(member.guild, { action: 'kick', error: e, requiredPermission: 'Kick Members', target: member.toString() }));
         }
       } else if (action === 'quarantine' && config.quarantineRoleId) {
-        // Keep the account in the server but strip its ability to interact,
-        // handing review to staff. The quarantine role should deny access.
+
         const role = member.guild.roles.cache.get(config.quarantineRoleId);
         const me = member.guild.members.me;
         if (role && me?.permissions.has(PermissionFlagsBits.ManageRoles) && role.position < me.roles.highest.position) {
@@ -363,7 +315,6 @@ export class AutoModModule {
     }
   }
 
-  /** Posts an alt/raid heads-up to the guild's mod-log (falling back to the log channel). */
   private static async postJoinAlert(member: GuildMember, kind: 'kick' | 'ban' | 'alert' | 'flag' | 'quarantine', thresholdHours: number): Promise<void> {
     const settings = await getGuildSettings(member.guild.id);
     const channelId = settings?.modLogChannelId ?? settings?.logChannelId;
@@ -398,17 +349,10 @@ export class AutoModModule {
     return count >= config.raidThreshold;
   }
 
-  /**
-   * Called on every `guildMemberAdd` event. When the join rate exceeds the
-   * configured raid threshold, takes the configured raid action: either kicking
-   * the incoming member or raising the guild's verification level to High to
-   * prevent new accounts from interacting until the surge subsides.
-   */
   static async handleMemberJoin(member: GuildMember): Promise<void> {
     const config = await this.getConfig(member.guild.id);
     if (!config) return;
 
-    // Account-age gate + new-account flagging run independently of anti-raid.
     await this.checkAccountAge(member, config).catch((err) => logger.error({ err }, 'account-age check failed'));
 
     if (!config.antiRaidEnabled) return;
@@ -424,9 +368,7 @@ export class AutoModModule {
           await member.kick('Anti-raid protection');
         }
       } else {
-        // Raising to High verification level blocks accounts younger than 5 minutes
-        // from sending messages, which is effective against bot-wave raids without
-        // requiring a full server lockdown.
+
         await member.guild.setVerificationLevel(
           GuildVerificationLevel.High,
           'Anti-raid: surge of joins detected — verification level raised to High',

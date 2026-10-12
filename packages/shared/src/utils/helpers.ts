@@ -1,19 +1,11 @@
-/** General-purpose utility functions used across the platform. */
+
 
 import { XP_PER_LEVEL_BASE, XP_MULTIPLIER } from './constants.js';
 
-/**
- * Returns the total XP required to reach a given level.
- * Uses an exponential curve: `floor(XP_PER_LEVEL_BASE * level ^ XP_MULTIPLIER)`.
- */
 export function xpForLevel(level: number): number {
   return Math.floor(XP_PER_LEVEL_BASE * Math.pow(level, XP_MULTIPLIER));
 }
 
-/**
- * Returns the level a user has reached given their total accumulated XP.
- * Iterates the level curve until the remaining XP is insufficient for the next level.
- */
 export function levelFromXp(xp: number): number {
   let level = 0;
   let totalXp = 0;
@@ -24,10 +16,6 @@ export function levelFromXp(xp: number): number {
   return level;
 }
 
-/**
- * Converts a duration in seconds to a human-readable string such as `1d 4h 30m`.
- * At least one unit is always included, so `0` seconds returns `"0s"`.
- */
 export function formatDuration(seconds: number): string {
   const days = Math.floor(seconds / 86400);
   const hours = Math.floor((seconds % 86400) / 3600);
@@ -43,10 +31,6 @@ export function formatDuration(seconds: number): string {
   return parts.join(' ');
 }
 
-/**
- * Parses a compact duration string (e.g. `"7d"`, `"2h"`, `"30m"`, `"60s"`) into seconds.
- * Returns `null` when the string does not match the expected format.
- */
 export function parseDuration(str: string): number | null {
   const match = str.match(/^(\d+)(s|m|h|d|w)$/i);
   if (!match) return null;
@@ -65,13 +49,6 @@ export function parseDuration(str: string): number | null {
   return value * (multipliers[unit] ?? 1);
 }
 
-/**
- * Replaces `{key}` placeholders in a template string with values from the provided map.
- * Unrecognised placeholders are left unchanged.
- *
- * @example
- * formatTemplate('Hello {user}!', { user: 'Alice' }) // 'Hello Alice!'
- */
 export function formatTemplate(
   template: string,
   variables: Record<string, string | number>
@@ -81,38 +58,19 @@ export function formatTemplate(
   });
 }
 
-/**
- * Truncates a string to `maxLength` characters, appending `suffix` when truncation occurs.
- * The total length of the returned string never exceeds `maxLength`.
- */
 export function truncate(str: string, maxLength: number, suffix = '...'): string {
   if (str.length <= maxLength) return str;
   return str.slice(0, maxLength - suffix.length) + suffix;
 }
 
-/**
- * Returns a Promise that resolves after the specified number of milliseconds.
- * Useful for rate-limit backoff without blocking the event loop.
- */
 export function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-/**
- * Returns `true` when the given string is a valid Discord snowflake ID
- * (17–20 decimal digits).
- */
 export function isSnowflake(id: string): boolean {
   return /^\d{17,20}$/.test(id);
 }
 
-/**
- * Returns a slice of `items` for the given 1-based page, along with pagination metadata.
- *
- * @param items - The full array to paginate.
- * @param page - The 1-based page number to retrieve.
- * @param pageSize - The maximum number of items per page.
- */
 export function paginate<T>(
   items: T[],
   page: number,

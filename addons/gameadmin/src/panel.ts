@@ -1,9 +1,4 @@
-/**
- * The `/gameadmin panel` control panel: a persistent embed with buttons that run
- * RCON actions (some directly, some via a modal for input). Button customIds are
- * `ga:btn:<action>:<serverId>` (direct) and `ga:mod:<action>:<serverId>` (modal),
- * with modal submits keyed `ga:submit:<action>:<serverId>`.
- */
+
 import {
   EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle,
   ModalBuilder, TextInputBuilder, TextInputStyle,
@@ -34,7 +29,6 @@ export function buildControlPanel(server: SavedGameServer, t: Translate): { embe
   return { embeds: [embed], components: [row1, row2] };
 }
 
-/** Builds the modal for actions that need text input (broadcast/kick/ban). */
 export function buildActionModal(action: 'broadcast' | 'kick' | 'ban', serverId: string, t: Translate): ModalBuilder {
   const modal = new ModalBuilder().setCustomId(`ga:submit:${action}:${serverId}`).setTitle(t(`gameadmin.modalTitle.${action}`));
   const rows: ActionRowBuilder<TextInputBuilder>[] = [];

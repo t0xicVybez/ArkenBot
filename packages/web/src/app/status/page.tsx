@@ -97,7 +97,7 @@ export default function StatusPage() {
           </p>
         </div>
 
-        {/* Overall banner */}
+        {}
         <div
           className={`rounded-lg border px-5 py-4 mb-8 text-sm font-semibold ${
             apiReachable === null

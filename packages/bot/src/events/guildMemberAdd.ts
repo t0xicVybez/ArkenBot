@@ -1,8 +1,4 @@
-/**
- * guildMemberAdd event — runs when a member joins a guild. Triggers welcome
- * messages, join logging, auto-mod account-age checks, analytics tracking,
- * invite attribution, and verification gate in parallel.
- */
+
 import type { GuildMember } from 'discord.js';
 import type { BotEvent } from '../types.js';
 import { WelcomeModule } from '../modules/welcome/WelcomeModule.js';

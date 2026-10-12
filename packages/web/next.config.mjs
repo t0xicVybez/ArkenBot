@@ -4,7 +4,6 @@ import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-// Load root .env for monorepo support (Next.js only reads its own package dir by default)
 try {
   const envFile = readFileSync(resolve(__dirname, '../../.env'), 'utf8');
   for (const line of envFile.split('\n')) {
@@ -16,10 +15,9 @@ try {
     }
   }
 } catch {
-  // .env not found, fall back to environment variables already set
+
 }
 
-/** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
   images: {
@@ -32,9 +30,7 @@ const nextConfig = {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000',
     NEXT_PUBLIC_WS_URL: process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:4000',
   },
-  // Static security headers for every route. The Content-Security-Policy is set
-  // per-request in middleware.ts (nonce-based), not here, so it can drop
-  // script-src 'unsafe-inline'/'unsafe-eval'.
+
   async headers() {
     return [
       {
@@ -53,7 +49,6 @@ const nextConfig = {
 
 import createNextIntlPlugin from 'next-intl/plugin';
 
-// Points at the request config; the active locale is read from the arken_locale cookie.
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
 export default withNextIntl(nextConfig);

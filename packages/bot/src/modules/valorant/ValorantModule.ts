@@ -1,8 +1,4 @@
-/**
- * VALORANT orchestration: periodic rank sync, rank→role automation, match-finished
- * alerts, and Discord-activity presence roles. All no-ops while the integration
- * is unconfigured (ValorantService.enabled === false).
- */
+
 import { EmbedBuilder, type Guild, type GuildMember, type TextChannel, type Presence } from 'discord.js';
 import { prisma } from '../../database.js';
 import { swallow } from '../../logger.js';
@@ -14,14 +10,12 @@ import type { BotClient } from '../../client.js';
 const ALL_RANK_ROLE_IDS = (rankRoles: Record<string, string>): Set<string> => new Set(Object.values(rankRoles));
 
 export class ValorantModule {
-  /** Guilds with presence roles enabled — cached so presenceUpdate (very hot) can
-   *  bail without a DB hit. Refreshed by the sync job; empty while dormant. */
+
   static presenceGuilds = new Set<string>();
 
-  /** Sync a batch of the least-recently-synced links (keeps us under Riot rate limits). */
   static async syncBatch(client: BotClient, limit = 20): Promise<void> {
     if (!ValorantService.enabled) return;
-    // refresh the presence-guild cache each cycle
+
     const pg = await prisma.valorantGuildConfig.findMany({
       where: { enabled: true, presenceEnabled: true, presenceRoleId: { not: null } },
       select: { guildId: true },
@@ -49,7 +43,6 @@ export class ValorantModule {
     }
   }
 
-  /** Apply the rank role in every enabled guild the member belongs to. */
   static async applyEverywhere(client: BotClient, discordId: string, tier: number): Promise<void> {
     const configs = await prisma.valorantGuildConfig.findMany({ where: { enabled: true, syncRolesEnabled: true } });
     for (const cfg of configs) {
@@ -60,7 +53,6 @@ export class ValorantModule {
     }
   }
 
-  /** Remove any other mapped rank roles and grant the one for this tier. */
   static async applyRankRoles(guild: Guild, member: GuildMember, rankRoles: Record<string, string>, tier: number): Promise<void> {
     const target = rankRoles[tierBase(tier)];
     const managed = ALL_RANK_ROLE_IDS(rankRoles);
@@ -74,7 +66,6 @@ export class ValorantModule {
     }
   }
 
-  /** Post a match-finished alert in every enabled guild the member is in. */
   static async alertEverywhere(client: BotClient, discordId: string, region: string, puuid: string, gameName: string, tagLine: string): Promise<void> {
     const configs = await prisma.valorantGuildConfig.findMany({ where: { enabled: true, matchAlertsEnabled: true, alertChannelId: { not: null } } });
     if (!configs.length) return;
@@ -95,7 +86,6 @@ export class ValorantModule {
     }
   }
 
-  /** Immediate role sync for one member (e.g. right after they link). */
   static async syncMember(guild: Guild, discordId: string): Promise<void> {
     if (!ValorantService.enabled) return;
     const [cfg, link] = await Promise.all([
@@ -109,9 +99,8 @@ export class ValorantModule {
     }
   }
 
-  /** Presence-based "Playing VALORANT" role toggle. */
   static async handlePresence(oldP: Presence | null, newP: Presence): Promise<void> {
-    // Hot path: bail without a DB hit unless this guild has presence roles on.
+
     if (!ValorantService.enabled || !newP.guild || !newP.member || !this.presenceGuilds.has(newP.guild.id)) return;
     const cfg = await prisma.valorantGuildConfig.findUnique({ where: { guildId: newP.guild.id } });
     if (!cfg?.enabled || !cfg.presenceEnabled || !cfg.presenceRoleId) return;
@@ -129,7 +118,6 @@ export class ValorantModule {
     }
   }
 
-  /** Tier names for the dashboard rank→role mapping UI (server-side helper). */
   static tierList(): string[] {
     return [...new Set(TIER_NAMES.map((n) => n.replace(/\s*\d+$/, '')))].filter((t) => t !== 'Unranked');
   }

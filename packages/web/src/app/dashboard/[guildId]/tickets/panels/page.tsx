@@ -8,8 +8,6 @@ import toast from 'react-hot-toast';
 import { Plus, Trash2, Edit, X, ChevronDown, ChevronUp, LayoutTemplate } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
 interface PanelField {
   id: string;
   label: string;
@@ -59,8 +57,6 @@ const DEFAULT_DRAFT: PanelDraft = {
   embedColor: '#5865F2', enabled: true,
 };
 
-// ─── Staff Roles Input ────────────────────────────────────────────────────────
-
 function StaffRolesInput({ roles, onChange }: { roles: string[]; onChange: (roles: string[]) => void }) {
   const t = useTranslations('ticketPanelsPage');
   const [input, setInput] = useState('');
@@ -99,8 +95,6 @@ function StaffRolesInput({ roles, onChange }: { roles: string[]; onChange: (role
   );
 }
 
-// ─── Embed Preview ────────────────────────────────────────────────────────────
-
 function EmbedPreview({ draft }: { draft: PanelDraft }) {
   const t = useTranslations('ticketPanelsPage');
   const color = draft.embedColor ?? '#5865F2';
@@ -113,7 +107,7 @@ function EmbedPreview({ draft }: { draft: PanelDraft }) {
 
   return (
     <div className="bg-[#36393f] rounded-lg overflow-hidden border border-gray-600 text-sm font-sans">
-      {/* Embed */}
+      {}
       <div className="flex p-3 gap-3" style={{ borderLeft: `4px solid ${color}` }}>
         {draft.embedAuthorIconUrl && (
           <img src={draft.embedAuthorIconUrl} alt="" className="w-8 h-8 rounded-full flex-shrink-0 mt-0.5" />
@@ -142,7 +136,7 @@ function EmbedPreview({ draft }: { draft: PanelDraft }) {
           <img src={draft.embedThumbnailUrl} alt="thumb" className="w-16 h-16 rounded-sm object-cover flex-shrink-0" />
         )}
       </div>
-      {/* Buttons */}
+      {}
       <div className="px-3 pb-3 flex flex-wrap gap-2">
         {activeButtons.map((b) => (
           <button
@@ -157,8 +151,6 @@ function EmbedPreview({ draft }: { draft: PanelDraft }) {
     </div>
   );
 }
-
-// ─── Button Editor Row ────────────────────────────────────────────────────────
 
 function ButtonStaffRoles({ roles, onChange }: { roles: string[]; onChange: (r: string[]) => void }) {
   const t = useTranslations('ticketPanelsPage');
@@ -243,8 +235,6 @@ function ButtonRow({
   );
 }
 
-// ─── Field Editor ─────────────────────────────────────────────────────────────
-
 function FieldRow({ field, onChange, onDelete }: { field: PanelField; onChange: (f: PanelField) => void; onDelete: () => void }) {
   const t = useTranslations('ticketPanelsPage');
   return (
@@ -300,8 +290,6 @@ function FieldRow({ field, onChange, onDelete }: { field: PanelField; onChange: 
   );
 }
 
-// ─── Panel Form (create / edit) ───────────────────────────────────────────────
-
 function PanelForm({
   guildId,
   initial,
@@ -343,10 +331,8 @@ function PanelForm({
   const removeButton = (id: string) =>
     set('buttons', (draft.buttons ?? []).filter((b) => b.id !== id));
 
-  // Which button's questions the Fields tab is editing: 'default' = the shared
-  // panel fields; otherwise a button id = that button's own questions.
   const [fieldTarget, setFieldTarget] = useState<string>('default');
-  // Fall back to 'default' if the selected button was removed.
+
   const effFieldTarget = () =>
     fieldTarget !== 'default' && !(draft.buttons ?? []).some((b) => b.id === fieldTarget) ? 'default' : fieldTarget;
   const targetFields = (): PanelField[] => {
@@ -374,9 +360,9 @@ function PanelForm({
 
   return (
     <div className="flex gap-6 h-full">
-      {/* Left: form */}
+      {}
       <div className="flex-1 min-w-0 space-y-4 overflow-y-auto pr-1">
-        {/* Tab bar */}
+        {}
         <div className="flex gap-1 border-b border-(--border-subtle) pb-0">
           {tabs.map((tab) => (
             <button
@@ -393,7 +379,7 @@ function PanelForm({
           ))}
         </div>
 
-        {/* ── Embed tab ── */}
+        {}
         {section === 'embed' && (
           <div className="space-y-3">
             <Row label={t('panelNameLabel')}>
@@ -451,7 +437,7 @@ function PanelForm({
           </div>
         )}
 
-        {/* ── Buttons tab ── */}
+        {}
         {section === 'buttons' && (
           <div className="space-y-3">
             <p className="text-gray-400 text-sm">
@@ -509,7 +495,7 @@ function PanelForm({
           </div>
         )}
 
-        {/* ── Fields tab ── */}
+        {}
         {section === 'fields' && (() => {
           const buttons = draft.buttons ?? [];
           const tgt = effFieldTarget();
@@ -556,7 +542,7 @@ function PanelForm({
           );
         })()}
 
-        {/* ── Settings tab ── */}
+        {}
         {section === 'settings' && (
           <div className="space-y-3">
             <Row label={t('staffRoles')}>
@@ -641,7 +627,7 @@ function PanelForm({
           </div>
         )}
 
-        {/* Save / Cancel */}
+        {}
         <div className="flex gap-3 pt-2 border-t border-(--border-subtle) sticky bottom-0 bg-discord-dark-bg py-3">
           <button
             onClick={() => saveMutation.mutate()}
@@ -654,7 +640,7 @@ function PanelForm({
         </div>
       </div>
 
-      {/* Right: live preview */}
+      {}
       <div className="w-80 flex-shrink-0 space-y-3 hidden lg:block">
         <p className="text-gray-400 text-xs uppercase tracking-wider font-medium">{t('livePreview')}</p>
         <EmbedPreview draft={draft} />
@@ -676,8 +662,6 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
     </div>
   );
 }
-
-// ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function PanelsPage() {
   const { guildId } = useParams() as { guildId: string };
@@ -701,7 +685,6 @@ export default function PanelsPage() {
 
   const panels = (panelsRes?.data?.data ?? []) as TicketPanel[];
 
-  // ── Form view ──
   if (editing !== null) {
     return (
       <div className="p-3 sm:p-6 h-full flex flex-col">
@@ -724,7 +707,6 @@ export default function PanelsPage() {
     );
   }
 
-  // ── List view ──
   return (
     <div className="p-3 sm:p-6 space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-3">
@@ -766,7 +748,7 @@ export default function PanelsPage() {
         </div>
       )}
 
-      {/* Slash command reminder */}
+      {}
       <div className="card border-gray-700/30 bg-gray-700/10 text-sm text-gray-400 space-y-1">
         <p className="text-gray-300 font-medium">{t('reminderTitle')}</p>
         <p>{t.rich('reminderText', { code: (c) => <code className="bg-gray-700/60 px-1.5 rounded-sm text-discord-blurple font-mono">{c}</code> })}</p>
@@ -775,8 +757,6 @@ export default function PanelsPage() {
   );
 }
 
-// ─── Panel Card ───────────────────────────────────────────────────────────────
-
 function PanelCard({ panel, onEdit, onDelete }: { panel: TicketPanel; onEdit: () => void; onDelete: () => void }) {
   const t = useTranslations('ticketPanelsPage');
   const [open, setOpen] = useState(false);
@@ -784,7 +764,7 @@ function PanelCard({ panel, onEdit, onDelete }: { panel: TicketPanel; onEdit: ()
 
   return (
     <div className="card space-y-3">
-      {/* Header */}
+      {}
       <div className="flex items-start gap-2">
         <span className="text-2xl">{panel.emoji}</span>
         <div className="flex-1 min-w-0">
@@ -798,7 +778,7 @@ function PanelCard({ panel, onEdit, onDelete }: { panel: TicketPanel; onEdit: ()
         </div>
       </div>
 
-      {/* Stats row */}
+      {}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
         <Chip label={t('chipMode')} value={panel.ticketMode === 'thread' ? t('chipThread') : t('chipChannel')} />
         <Chip label={t('chipButtons')}  value={buttonCount > 0 ? String(buttonCount) : t('chipOneDefault')} />
@@ -806,7 +786,7 @@ function PanelCard({ panel, onEdit, onDelete }: { panel: TicketPanel; onEdit: ()
         <Chip label={t('chipMaxUser')} value={String(panel.maxTicketsPerUser)} />
       </div>
 
-      {/* Embed preview toggle */}
+      {}
       <button
         onClick={() => setOpen((o) => !o)}
         className="text-gray-500 text-xs flex items-center gap-1 hover:text-gray-300 transition-colors"
@@ -819,7 +799,7 @@ function PanelCard({ panel, onEdit, onDelete }: { panel: TicketPanel; onEdit: ()
         <EmbedPreview draft={panel} />
       )}
 
-      {/* Actions */}
+      {}
       <div className="flex gap-2 pt-1 border-t border-(--border-subtle)">
         <button onClick={onEdit} className="btn-secondary flex-1 text-xs py-1.5 flex items-center justify-center gap-1.5">
           <Edit className="w-3 h-3" /> {t('edit')}

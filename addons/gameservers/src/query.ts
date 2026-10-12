@@ -1,62 +1,29 @@
-/**
- * Game server query dispatcher.
- *
- * Almost everything is delegated to GameQuery (our own dependency-free query
- * library, https://github.com/t0xicVybez/GameQuery): each supported game maps to
- * a GameQuery protocol (`source`/A2S for most dedicated servers, plus native
- * `bedrock`, `fivem`, `satisfactory`, …). Two games keep a bespoke handler here:
- * - Minecraft Java: SLP via minecraft-server-util for its SRV-record support,
- *   falling back to GameQuery's `minecraft` protocol.
- * - Palworld: authenticated REST (admin password + the /metrics max-players
- *   endpoint that GameQuery's lightweight `palworld` handler doesn't fetch).
- */
+
 import { GameQuery, type Result } from '@t0xicvybez/gamequery';
 import { status as mcJavaStatus } from 'minecraft-server-util';
 import type { QueryAuth, QueryResult, ServerStatus } from './types.js';
 
-/** Metadata associated with each supported game type. */
 export interface GameInfo {
   label: string;
-  /** Default port the query protocol answers on — what we actually talk to. */
+
   defaultPort: number;
   emoji: string;
-  /** The GameQuery protocol used to query this game. */
+
   protocol: string;
-  /**
-   * Default port players *join* on, when it differs from the query port (Killing
-   * Floor 2 is queried on 27015 but joined on 7777). Mirrors GameQuery's
-   * `gamePort`; used only to display a connect address, never to query.
-   */
+
   gamePort?: number;
 }
 
-/** The UDP port Palworld players connect on (`PublicPort`). */
 const PALWORLD_GAME_PORT = 8211;
 
-/** Default port of Palworld's REST API (`RESTAPIPort`). */
 export const PALWORLD_REST_PORT = 8212;
 
-/**
- * Games with no anonymous query protocol — they need a stored secret to check.
- * Palworld's REST API requires the admin password (collected through the
- * credential flow and stored encrypted). Terraria's TShock status endpoint is
- * public, so it is queried anonymously and is not listed here.
- */
 export const AUTHENTICATED_GAMES = new Set(['palworld']);
 
-/** Raised when a game's status API rejects the stored credential. */
 class UnauthorizedError extends Error {}
 
-/**
- * Registry of supported game types keyed by our own stable identifier.
- *
- * Every entry maps to a GameQuery protocol that can *actually* read the server
- * (A2S/`source` for Steam dedicated servers, plus GameQuery's native handlers).
- * Games with no working query protocol are deliberately absent — listing them
- * would only let users add servers that always report offline.
- */
 export const SUPPORTED_GAMES: Record<string, GameInfo> = {
-  // ── Sandbox / Survival ──────────────────────────────────────────────────────
+
   minecraft:            { label: 'Minecraft Java Edition',    defaultPort: 25565, emoji: '⛏️', protocol: 'minecraft' },
   minecraftbe:          { label: 'Minecraft Bedrock',         defaultPort: 19132, emoji: '⛏️', protocol: 'bedrock' },
   rust:                 { label: 'Rust',                      defaultPort: 28015, emoji: '🔧', protocol: 'source' },
@@ -78,7 +45,6 @@ export const SUPPORTED_GAMES: Record<string, GameInfo> = {
   spaceengineers:       { label: 'Space Engineers',           defaultPort: 27016, emoji: '🚀', protocol: 'source' },
   stationeers:          { label: 'Stationeers',               defaultPort: 27500, emoji: '🛸', protocol: 'source' },
 
-  // ── Co-op ───────────────────────────────────────────────────────────────────
   satisfactory:         { label: 'Satisfactory',              defaultPort: 7777,  emoji: '🏭', protocol: 'satisfactory' },
   terraria:             { label: 'Terraria (TShock)',         defaultPort: 7878,  emoji: '🌳', protocol: 'terraria', gamePort: 7777 },
   barotrauma:           { label: 'Barotrauma',                defaultPort: 27015, emoji: '🌊', protocol: 'source' },
@@ -86,7 +52,6 @@ export const SUPPORTED_GAMES: Record<string, GameInfo> = {
   l4d2:                 { label: 'Left 4 Dead 2',             defaultPort: 27015, emoji: '🧟', protocol: 'source' },
   unturned:             { label: 'Unturned',                  defaultPort: 27015, emoji: '🧟', protocol: 'source' },
 
-  // ── Competitive / FPS ───────────────────────────────────────────────────────
   cs2:                  { label: 'Counter-Strike 2',          defaultPort: 27015, emoji: '🎯', protocol: 'source' },
   csgo:                 { label: 'CS:GO',                     defaultPort: 27015, emoji: '🎯', protocol: 'source' },
   css:                  { label: 'Counter-Strike: Source',    defaultPort: 27015, emoji: '🎯', protocol: 'source' },
@@ -101,44 +66,32 @@ export const SUPPORTED_GAMES: Record<string, GameInfo> = {
   groundbranch:         { label: 'Ground Branch',             defaultPort: 27015, emoji: '🔫', protocol: 'source' },
   pavlovvr:             { label: 'Pavlov VR',                 defaultPort: 7777,  emoji: '🎮', protocol: 'source' },
 
-  // ── Arena / Retro (id Tech, Unreal, GameSpy) ────────────────────────────────
   quake3:               { label: 'Quake III Arena',           defaultPort: 27960, emoji: '🔺', protocol: 'quake3' },
   cod4:                 { label: 'Call of Duty 4',            defaultPort: 28960, emoji: '🔫', protocol: 'quake3' },
   doom3:                { label: 'Doom 3',                    defaultPort: 27666, emoji: '👹', protocol: 'doom3' },
   ut2004:               { label: 'Unreal Tournament 2004',    defaultPort: 7778,  emoji: '🎯', protocol: 'unreal2', gamePort: 7777 },
   bf1942:               { label: 'Battlefield 1942',          defaultPort: 23000, emoji: '✈️', protocol: 'gamespy2' },
 
-  // ── Racing ──────────────────────────────────────────────────────────────────
   assettocorsa:         { label: 'Assetto Corsa',             defaultPort: 8081,  emoji: '🏎️', protocol: 'assettocorsa', gamePort: 9600 },
   wreckfest:            { label: 'Wreckfest',                 defaultPort: 27015, emoji: '🏁', protocol: 'source' },
 
-  // ── GTA / Multiplayer mods ──────────────────────────────────────────────────
   fivem:                { label: 'FiveM (GTA V)',             defaultPort: 30120, emoji: '🚗', protocol: 'fivem' },
   mtasa:                { label: 'Multi Theft Auto',          defaultPort: 22126, emoji: '🚗', protocol: 'ase', gamePort: 22003 },
   samp:                 { label: 'SA-MP',                     defaultPort: 7777,  emoji: '🚗', protocol: 'samp' },
   openmp:               { label: 'open.mp',                   defaultPort: 7777,  emoji: '🚗', protocol: 'samp' },
 
-  // ── Mil-Sim / Open World ────────────────────────────────────────────────────
   arma3:                { label: 'Arma 3',                    defaultPort: 2303,  emoji: '🪖', protocol: 'source', gamePort: 2302 },
 
-  // ── Voice (queryable alongside game servers) ────────────────────────────────
   teamspeak3:           { label: 'TeamSpeak 3',               defaultPort: 10011, emoji: '🎙️', protocol: 'teamspeak3', gamePort: 9987 },
   mumble:               { label: 'Mumble',                    defaultPort: 64738, emoji: '🎙️', protocol: 'mumble' },
 };
 
-/** Query timeout for GameQuery lookups, in milliseconds. */
 const QUERY_TIMEOUT_MS = 8000;
 
-/** Retry count passed to GameQuery (total attempts = retries + 1). */
 const QUERY_RETRIES = 2;
 
-/**
- * Translates common network error messages into user-readable strings.
- * Raw error messages can contain internal library details that are not useful to end users.
- */
 function classifyError(err: unknown): string {
-  // Node's fetch reports every network failure as a bare "fetch failed" TypeError
-  // and hides the real errno on `cause`, so fold that in before matching.
+
   const cause = err instanceof Error && err.cause instanceof Error ? err.cause.message : '';
   const msg = `${err instanceof Error ? err.message : String(err)} ${cause}`.trim();
 
@@ -146,7 +99,7 @@ function classifyError(err: unknown): string {
     msg.includes('Failed after') || msg.includes('Failed all') ||
     msg.includes('timed out') || msg.includes('ETIMEDOUT') || msg.includes('timeout') ||
     msg.includes('EHOSTUNREACH') || msg.includes('ENETUNREACH') || msg.includes('Timed out') ||
-    // GameQuery's UDP transport reports an unreachable/unresolvable host as "send failed".
+
     msg.includes('send failed')
   ) return 'Server did not respond (offline or unreachable)';
   if (msg.includes('ECONNREFUSED')) return 'Connection refused — is the query port open?';
@@ -154,14 +107,6 @@ function classifyError(err: unknown): string {
   return msg.split('\n')[0].slice(0, 200);
 }
 
-/**
- * Queries a Minecraft Java Edition server using the Server List Ping protocol.
- * Uses minecraft-server-util for its SRV-record resolution (a domain can point at
- * a server on another host/port), falling back to GameQuery's `minecraft`
- * protocol when SLP fails (e.g. some proxied/modded setups).
- *
- * SRV lookups are skipped for raw IP addresses to avoid issues on some hosting providers.
- */
 async function queryMinecraft(host: string, port: number): Promise<ServerStatus> {
   const isIp = /^\d+\.\d+\.\d+\.\d+$/.test(host);
   try {
@@ -186,11 +131,6 @@ async function queryMinecraft(host: string, port: number): Promise<ServerStatus>
   }
 }
 
-/**
- * Maps a GameQuery result onto our own status shape using its normalized
- * accessors. `connectPort` is the port players join on, which is not always the
- * port we queried (see GameInfo.gamePort).
- */
 function toStatus(result: Result, host: string, connectPort: number): QueryResult {
   const version = typeof result.data.version === 'string' ? result.data.version : null;
   return {
@@ -207,7 +147,6 @@ function toStatus(result: Result, host: string, connectPort: number): QueryResul
   };
 }
 
-/** Queries a server through GameQuery on the given protocol and maps the result. */
 async function queryGameQuery(
   protocol: string,
   host: string,
@@ -230,19 +169,6 @@ async function queryGameQuery(
   }
 }
 
-/**
- * Queries a Palworld server through its REST API.
- *
- * Palworld exposes no anonymous status protocol — its dedicated servers do not
- * answer Steam A2S on any port — so the authenticated REST API is the only way to
- * read live status. The server must set `RESTAPIEnabled=True` in
- * PalWorldSettings.ini, and we need its `AdminPassword`. We keep a bespoke
- * handler (rather than GameQuery's `palworld`) because it also reads /metrics for
- * the max-player count.
- *
- * `auth.queryPort` is the REST port (`RESTAPIPort`, default 8212), which is
- * separate from the game port players connect on.
- */
 async function queryPalworld(host: string, gamePort: number, auth: QueryAuth): Promise<ServerStatus> {
   const restPort = auth.queryPort ?? PALWORLD_REST_PORT;
   const base = `http://${host}:${restPort}/v1/api`;
@@ -290,14 +216,6 @@ async function queryPalworld(host: string, gamePort: number, auth: QueryAuth): P
   }
 }
 
-/**
- * Queries a game server and returns its status.
- * Selects the appropriate query method based on the `game` identifier.
- *
- * @param game - A key from `SUPPORTED_GAMES` identifying the game type.
- * @param host - The server's IP address or hostname.
- * @param port - Optional port; falls back to the game's default port when omitted.
- */
 export async function queryServer(
   game: string,
   host: string,
@@ -306,9 +224,7 @@ export async function queryServer(
 ): Promise<ServerStatus> {
   const gameInfo = SUPPORTED_GAMES[game];
   const resolvedPort = port ?? gameInfo?.defaultPort ?? 27015;
-  // The port players join on isn't always the one we query. When we fell back to
-  // our own defaults we know both, so show the join port; if the caller gave an
-  // explicit port we can't infer their game port and echo what they supplied.
+
   const connectPort = port === undefined ? (gameInfo?.gamePort ?? resolvedPort) : resolvedPort;
 
   if (game === 'palworld') {
@@ -323,15 +239,10 @@ export async function queryServer(
     return queryPalworld(host, resolvedPort, auth);
   }
 
-  // Terraria (TShock): the /v2/server/status endpoint is public, so we query it
-  // anonymously. A token is only needed if an admin locked the endpoint down —
-  // passed through if the server happens to have one stored.
   if (game === 'terraria') {
     return queryGameQuery('terraria', host, resolvedPort, auth?.password ? { token: auth.password } : {}, connectPort);
   }
 
-  // Minecraft Java keeps its own handler for SRV support; everything else is
-  // queried through GameQuery on the protocol its game entry declares.
   if (game === 'minecraft') return queryMinecraft(host, resolvedPort);
 
   return queryGameQuery(gameInfo?.protocol ?? 'source', host, resolvedPort, {}, connectPort);

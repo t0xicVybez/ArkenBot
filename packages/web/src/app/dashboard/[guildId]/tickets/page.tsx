@@ -9,12 +9,9 @@ import { Ticket, LayoutTemplate, ChevronRight, BarChart2, Trash2, MessageSquare,
 import dynamic from 'next/dynamic';
 import { ChartSkeleton } from '@/components/charts/ChartSkeleton';
 
-// recharts is heavy; load the status donut in its own chunk on demand.
 const StatusPie = dynamic(() => import('./_charts'), { ssr: false, loading: () => <ChartSkeleton height={100} /> });
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-
-// ─── Types ────────────────────────────────────────────────────────────────────
 
 interface TicketRecord {
   id: string; number: number; userId: string; username: string;
@@ -34,8 +31,6 @@ interface StatsData {
 const PRIORITY_DOT = { low: 'bg-green-400', medium: 'bg-yellow-400', high: 'bg-orange-400', urgent: 'bg-red-400' };
 const STATUS_BADGE  = { open: 'badge-success', claimed: 'badge-info', closed: 'badge-secondary' };
 const PIE_COLORS    = ['#57f287', '#5865f2', '#ed4245'];
-
-// ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function TicketsPage() {
   const { guildId } = useParams() as { guildId: string };
@@ -177,7 +172,7 @@ export default function TicketsPage() {
           )}
         </div>
 
-        {/* Panel breakdown */}
+        {}
         <div className="card space-y-2">
           <h2 className="text-gray-400 text-xs uppercase tracking-wider font-medium">{t('ticketPanels', { count: stats?.panels ?? 0 })}</h2>
           {stats && stats.byPanel.length > 0 ? (

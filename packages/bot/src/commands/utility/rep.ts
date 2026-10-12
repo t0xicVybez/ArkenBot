@@ -1,8 +1,4 @@
-/**
- * /rep command — manages the per-guild reputation system: give a point to
- * another member (once per 24 hours), check a member's total, or view the
- * server leaderboard.
- */
+
 import {
   SlashCommandBuilder,
   EmbedBuilder,

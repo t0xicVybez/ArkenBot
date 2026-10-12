@@ -1,4 +1,4 @@
-/** /gamble coinflip|slots|dice|roulette|highlow — wager wallet currency on a minigame. */
+
 import { SlashCommandBuilder, EmbedBuilder, type ChatInputCommandInteraction } from 'discord.js';
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';

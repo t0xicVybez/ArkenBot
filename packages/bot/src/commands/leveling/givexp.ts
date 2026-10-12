@@ -1,7 +1,4 @@
-/**
- * /givexp command — grants a specified amount of XP to a member and applies
- * any resulting level-up. Restricted to members with the Manage Guild permission.
- */
+
 import {
   SlashCommandBuilder,
   EmbedBuilder,

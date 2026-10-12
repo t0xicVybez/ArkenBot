@@ -1,18 +1,7 @@
-/**
- * Static analysis rules for JavaScript and TypeScript.
- * Parses with Acorn to catch syntax errors first, then applies per-line lint rules.
- */
+
 import * as acorn from 'acorn';
 import type { Issue } from '../types.js';
 
-/**
- * Analyzes JavaScript or TypeScript code for common issues.
- * Returns immediately with a single syntax-error issue when parsing fails —
- * line-level rules are not meaningful on unparseable code.
- *
- * @param code - The source code string.
- * @param lang - `"javascript"` or `"typescript"`. TypeScript-specific checks run only for the latter.
- */
 export function analyzeJavaScript(code: string, lang: string): Issue[] {
   const issues: Issue[] = [];
 
@@ -30,7 +19,6 @@ export function analyzeJavaScript(code: string, lang: string): Issue[] {
     const lineNum = i + 1;
     const trimmed = line.trimStart();
 
-    // Skip comment lines to avoid false positives on documented examples.
     if (trimmed.startsWith('//') || trimmed.startsWith('*') || trimmed.startsWith('/*')) return;
 
     if (/\bvar\s+/.test(trimmed)) {
@@ -90,7 +78,6 @@ export function analyzeJavaScript(code: string, lang: string): Issue[] {
     }
   });
 
-  // TypeScript-specific file-level checks.
   if (lang === 'typescript') {
     if (/:\s*any\b/.test(code)) {
       issues.push({

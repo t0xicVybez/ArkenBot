@@ -48,7 +48,6 @@ interface AudioStream {
   kill: () => void;
 }
 
-/** Spawn yt-dlp piped into ffmpeg. Returns the stream and a kill() to clean up both processes. */
 function createAudioStream(videoUrl: string): AudioStream {
   const ytdlpArgs = [
     '-f', 'bestaudio/best',
@@ -60,8 +59,7 @@ function createAudioStream(videoUrl: string): AudioStream {
   if (process.env.YOUTUBE_COOKIES_FILE) {
     ytdlpArgs.push('--cookies', process.env.YOUTUBE_COOKIES_FILE);
   }
-  // Route only yt-dlp (YouTube) traffic through a residential proxy when set, so
-  // requests egress from a non-datacenter IP that YouTube does not block.
+
   if (process.env.YTDLP_PROXY) {
     ytdlpArgs.push('--proxy', process.env.YTDLP_PROXY);
   }
@@ -76,7 +74,6 @@ function createAudioStream(videoUrl: string): AudioStream {
     'pipe:1',
   ], { stdio: ['pipe', 'pipe', 'pipe'] });
 
-  // Suppress EPIPE errors on the pipe — these happen when we kill processes early
   ffmpeg.stdin!.on('error', (err: NodeJS.ErrnoException) => {
     if (err.code !== 'EPIPE') logger.error({ err }, 'ffmpeg stdin error');
   });
@@ -109,12 +106,10 @@ function createAudioStream(videoUrl: string): AudioStream {
   });
 
   const kill = () => {
-    // Unpipe first so Node.js stream buffers don't flush a burst of EPIPE writes
-    // to a dead ffmpeg stdin. Then SIGKILL both processes simultaneously — only
-    // one close event fires on ffmpeg.stdout, so onStreamError fires exactly once.
-    try { ytdlp.stdout?.unpipe(ffmpeg.stdin!); } catch { /* ignore */ }
-    try { ytdlp.kill('SIGKILL'); } catch { /* already dead */ }
-    try { ffmpeg.kill('SIGKILL'); } catch { /* already dead */ }
+
+    try { ytdlp.stdout?.unpipe(ffmpeg.stdin!); } catch {  }
+    try { ytdlp.kill('SIGKILL'); } catch {  }
+    try { ffmpeg.kill('SIGKILL'); } catch {  }
   };
 
   return { stream: ffmpeg.stdout!, kill };
@@ -131,8 +126,7 @@ export class MusicQueue {
   private connection: VoiceConnection;
   private resource: ReturnType<typeof createAudioResource> | null = null;
   private killStream: (() => void) | null = null;
-  /** True while an intentional skip/destroy is in progress — suppresses the
-   *  player error handler so a killed stream doesn't cause a spurious advance. */
+
   private isKilling = false;
 
   constructor(connection: VoiceConnection, guildId: string) {
@@ -142,9 +136,7 @@ export class MusicQueue {
     connection.subscribe(this.player);
 
     this.player.on(AudioPlayerStatus.Idle, () => {
-      // Do NOT reset isKilling here. player.stop() plays 5 silence frames (~100 ms)
-      // before emitting Idle, so the killed stream's async error arrives AFTER this
-      // handler and resets isKilling too early. The setTimeout in skip() owns the reset.
+
       if (this.loop === 'track' && this.currentTrack) {
         void this.playTrack(this.currentTrack, false);
         return;
@@ -154,7 +146,7 @@ export class MusicQueue {
       }
       const next = this.tracks.shift();
       if (next) {
-        void this.playTrack(next, true); // auto-advance → show now-playing
+        void this.playTrack(next, true);
       } else {
         this.currentTrack = null;
         void this.saveToDb();
@@ -163,8 +155,7 @@ export class MusicQueue {
 
     this.player.on('error', (err) => {
       if (this.isKilling) {
-        // Error is from an intentional kill (skip/destroy) — the Idle handler
-        // will advance the queue; ignore this to prevent double-advance.
+
         logger.debug({ err }, 'Player error suppressed — intentional stream kill');
         return;
       }
@@ -225,7 +216,7 @@ export class MusicQueue {
         ...(this.currentTrack ? [serializeTrack(this.currentTrack)] : []),
         ...this.tracks.map(serializeTrack),
       ];
-      // Cast through unknown — Prisma's Json type doesn't accept typed arrays directly
+
       const tracksJson = JSON.parse(JSON.stringify(serialized));
       await prisma.musicQueue.upsert({
         where: { guildId: this.guildId },
@@ -246,16 +237,12 @@ export class MusicQueue {
     try {
       logger.info({ title: track.title }, 'Starting yt-dlp → ffmpeg pipeline');
 
-      // Kill any previous stream processes before starting new ones
       this.killStream?.();
       this.killStream = null;
 
       const { stream: audioStream, kill } = createAudioStream(track.url);
       this.killStream = kill;
 
-      // If the stream errors (yt-dlp failure), notify and advance.
-      // Skip when isKilling — the error came from an intentional kill, not a
-      // genuine playback failure, and the Idle handler owns the advance.
       audioStream.once('error', (err: Error) => {
         if (this.isKilling) return;
         logger.error({ err, title: track.title }, 'Audio stream error');
@@ -290,8 +277,7 @@ export class MusicQueue {
     this.killStream?.();
     this.killStream = null;
     this.player.stop();
-    // Reset after 1 s — well beyond the window in which any async stream error
-    // from the killed ffmpeg process can arrive and trigger the error handler.
+
     setTimeout(() => { this.isKilling = false; }, 1000);
   }
   pause(): boolean { return this.player.pause(); }
@@ -334,7 +320,7 @@ export class MusicManager {
 
     try {
       if (YT_URL_RE.test(query)) {
-        // Direct YouTube URL — get metadata from youtube-sr
+
         const video = await YouTube.getVideo(query);
         trackInfo = {
           title: video?.title ?? 'Unknown',
@@ -343,7 +329,7 @@ export class MusicManager {
           thumbnail: video?.thumbnail?.url,
         };
       } else {
-        // Search query — search YouTube for metadata, stream via Invidious
+
         const results = await YouTube.search(query, { limit: 1, type: 'video' });
         const video = results[0];
         if (!video?.url) throw new Error('No results found');
@@ -395,10 +381,8 @@ export class MusicManager {
       queue = new MusicQueue(connection, guild.id);
       this.queues.set(guild.id, queue);
 
-      // Store text channel for auto-advance and error notifications
       if (textChannel) queue.textChannel = textChannel;
 
-      // Restore persisted volume/loop from DB (tracks are replayed fresh, not auto-resumed)
       const saved = await prisma.musicQueue.findUnique({ where: { guildId: guild.id } }).catch(swallow);
       if (saved) {
         queue.volume = saved.volume;
@@ -406,7 +390,6 @@ export class MusicManager {
       }
     }
 
-    // Always update text channel to the latest interaction channel
     if (textChannel) queue.textChannel = textChannel;
 
     if (!queue.currentTrack) {
@@ -419,8 +402,6 @@ export class MusicManager {
     }
   }
 }
-
-// ── Helpers ──────────────────────────────────────────────────────────────────
 
 function serializeTrack(track: Track): SerializedTrack {
   return {

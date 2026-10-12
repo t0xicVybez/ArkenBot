@@ -1,4 +1,4 @@
-/** birthdays scheduler job(s) — extracted from BackgroundJobs (P3 god-file split). */
+
 import { EmbedBuilder, type TextChannel } from 'discord.js';
 import { prisma } from '../../database.js';
 import { logger, swallow } from '../../logger.js';
@@ -84,8 +84,6 @@ async function sendBirthdayNotification(
       if (role && member.roles.cache.has(role.id) === false) {
         await member.roles.add(role, 'Birthday role').catch(swallow);
 
-        // Schedule role removal at midnight UTC so the birthday role lasts
-        // exactly one calendar day without needing a separate polling job.
         const msUntilTomorrow =
           new Date(Date.UTC(year, new Date().getUTCMonth(), new Date().getUTCDate() + 1)).getTime() -
           Date.now();

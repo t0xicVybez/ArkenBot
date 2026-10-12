@@ -1,6 +1,4 @@
-/**
- * REST routes for the report system and report config.
- */
+
 import type { FastifyInstance } from 'fastify';
 import { requireGuildAdmin } from '../middleware/auth.js';
 import { prisma } from '../database.js';
@@ -8,7 +6,6 @@ import { pub } from '../redis.js';
 
 export async function reportRoutes(server: FastifyInstance): Promise<void> {
 
-  // GET /guilds/:guildId/reports?status=pending — list reports
   server.get('/guilds/:guildId/reports', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const query = request.query as { status?: string };
@@ -24,7 +21,6 @@ export async function reportRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: reports });
   });
 
-  // GET /guilds/:guildId/reports/:reportId — get single report
   server.get('/guilds/:guildId/reports/:reportId', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, reportId } = request.params as { guildId: string; reportId: string };
 
@@ -34,7 +30,6 @@ export async function reportRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: report });
   });
 
-  // PATCH /guilds/:guildId/reports/:reportId — update status / staffNote
   server.patch('/guilds/:guildId/reports/:reportId', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, reportId } = request.params as { guildId: string; reportId: string };
     const body = request.body as { status?: string; staffNote?: string };
@@ -59,7 +54,6 @@ export async function reportRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: updated });
   });
 
-  // GET /guilds/:guildId/report-config — read extended.reportConfig
   server.get('/guilds/:guildId/report-config', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const settings = await prisma.guildSettings.findUnique({ where: { guildId }, select: { extended: true } });
@@ -67,7 +61,6 @@ export async function reportRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: extended.reportConfig ?? {} });
   });
 
-  // PATCH /guilds/:guildId/report-config — write extended.reportConfig
   server.patch('/guilds/:guildId/report-config', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const { channelId } = request.body as { channelId?: string | null };

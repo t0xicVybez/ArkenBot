@@ -1,25 +1,5 @@
 #!/usr/bin/env node
-/**
- * i18n-translate — fill locale files from en-US using the self-hosted
- * LibreTranslate (http://localhost:5000). Replaces hand-translation.
- *
- *   node scripts/i18n-translate.mjs                 # fill MISSING keys, bot + web
- *   node scripts/i18n-translate.mjs --all           # retranslate EVERY key (overwrites)
- *   node scripts/i18n-translate.mjs --web           # web messages only
- *   node scripts/i18n-translate.mjs --bot           # bot locales only
- *   node scripts/i18n-translate.mjs --locale=fr,de  # only these targets
- *   node scripts/i18n-translate.mjs --dry           # translate + report, don't write
- *
- * Correctness gates (never bypassed):
- *   • ICU {placeholders} are tokenised so LT can't translate their contents.
- *   • Rich-text <tags> pass through LT's HTML mode.
- *   • Strings containing ICU plural/select are SKIPPED (copied from en-US) —
- *     MT would destroy the ICU structure. Reported at the end.
- *   • A brand glossary (ArkenBot, VALORANT, Riot, Discord, …) is never translated.
- *   • After translating, every {placeholder} and <tag> from the source MUST be
- *     present in the output, else we fall back to the en-US value for that key.
- *   • Web strings get curly apostrophes (next-intl ICU safety).
- */
+
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -30,7 +10,6 @@ const LT_KEY = process.env.LIBRETRANSLATE_API_KEY || '';
 const CONCURRENCY = parseInt(process.env.LIBRETRANSLATE_CONCURRENCY || '4', 10);
 const TIMEOUT_MS = parseInt(process.env.LIBRETRANSLATE_TIMEOUT_MS || '20000', 10);
 
-// our locale → LibreTranslate code (this instance has pt-BR + zh-Hans natively)
 const LOCALE_TO_LT = {
   'es-ES': 'es', fr: 'fr', de: 'de', it: 'it', nl: 'nl', 'pt-BR': 'pt-BR',
   ru: 'ru', pl: 'pl', tr: 'tr', id: 'id', ja: 'ja', ko: 'ko', 'zh-CN': 'zh-Hans',
@@ -38,7 +17,6 @@ const LOCALE_TO_LT = {
 const BOT_DIR = path.join(ROOT, 'packages/bot/src/i18n/locales');
 const WEB_DIR = path.join(ROOT, 'packages/web/messages');
 
-// Never translate these (whole-word, case-sensitive).
 const GLOSSARY = [
   'ArkenBot', 'Arken Bot', 'LibreTranslate', 'Discord', 'VALORANT', 'Valorant',
   'Riot Sign-On', 'Riot ID', 'Riot', 'RSO', 'PUUID', 'Trello', 'Monday.com',
@@ -59,14 +37,13 @@ const ICU_COMPLEX = /\{\s*[\w.]+\s*,\s*(plural|select|selectordinal)\s*,/;
 const warnings = [];
 const cache = new Map();
 
-/** Mask ICU {placeholders}, glossary terms, `code`, and URLs as <x id="N"/> tokens. */
 function protect(str) {
   const tokens = [];
   const stash = (m) => { tokens.push(m); return `<x id="${tokens.length - 1}"/>`; };
   let s = str;
-  s = s.replace(/https?:\/\/\S+/g, stash);         // URLs
-  s = s.replace(/`[^`]*`/g, stash);                 // inline code
-  s = s.replace(/\{[^{}]+\}/g, stash);              // simple ICU placeholders
+  s = s.replace(/https?:\/\/\S+/g, stash);
+  s = s.replace(/`[^`]*`/g, stash);
+  s = s.replace(/\{[^{}]+\}/g, stash);
   for (const term of GLOSSARY) {
     s = s.replace(new RegExp(`\\b${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'g'), stash);
   }
@@ -79,7 +56,7 @@ const ENTITIES = { '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&#39;
 function decodeEntities(s) {
   return s.replace(/&(amp|lt|gt|quot|#39|#x27|nbsp|#160);/g, (m) => ENTITIES[m] ?? m);
 }
-/** Every {placeholder} and <tag> in src must survive in out. */
+
 function structureOk(src, out) {
   const ph = (x) => (x.match(/\{[^{}]+\}/g) || []).sort();
   const tg = (x) => (x.match(/<\/?[a-zA-Z][^>]*>/g) || []).map((t) => t.replace(/\s+/g, '').toLowerCase()).sort();
@@ -107,7 +84,6 @@ async function ltTranslate(text, target) {
   } finally { clearTimeout(to); }
 }
 
-/** Translate one source string → target locale, with all gates. Returns {value, status}. */
 async function translateString(src, locale) {
   if (typeof src !== 'string' || !src.trim()) return { value: src, status: 'copy' };
   if (ICU_COMPLEX.test(src)) { warnings.push(`[skip-ICU] ${locale}: ${src.slice(0, 60)}`); return { value: src, status: 'skip-icu' }; }
@@ -121,7 +97,6 @@ async function translateString(src, locale) {
   return { value: out, status: 'ok' };
 }
 
-/** Walk the en-US tree; fill target leaves. Mutates `target`. Collects jobs for concurrency. */
 function collectJobs(srcNode, tgtNode, locale, pathArr, jobs) {
   for (const [k, v] of Object.entries(srcNode)) {
     if (v && typeof v === 'object' && !Array.isArray(v)) {
@@ -143,7 +118,7 @@ async function runPool(jobs) {
       const isWeb = job.web;
       const r = await translateString(job.src, job.locale);
       let val = r.value;
-      if (isWeb && typeof val === 'string') val = val.replace(/'/g, '’'); // next-intl ICU apostrophe
+      if (isWeb && typeof val === 'string') val = val.replace(/'/g, '’');
       job.set(val);
       stats[r.status] = (stats[r.status] || 0) + 1;
       if (++done % 50 === 0) process.stdout.write(`\r  translated ${done}/${jobs.length}…`);
@@ -183,7 +158,7 @@ async function processDir(dir, label, isWeb) {
 
 (async () => {
   console.log(`LibreTranslate: ${LT_URL} · concurrency ${CONCURRENCY} · timeout ${TIMEOUT_MS}ms`);
-  // connectivity preflight
+
   try { const r = await fetch(`${LT_URL}/languages`, { signal: AbortSignal.timeout(5000) }); if (!r.ok) throw new Error(`HTTP ${r.status}`); }
   catch (e) { console.error(`✗ LibreTranslate unreachable at ${LT_URL}: ${e.message}`); process.exit(1); }
 

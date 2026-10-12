@@ -1,8 +1,4 @@
-/**
- * /poll command — creates an interactive poll with up to 10 options, optional
- * duration, and per-user vote toggling. Votes update the embed in real time via
- * button interactions handled by `handleButton`.
- */
+
 import {
   MessageFlags,
   SlashCommandBuilder,
@@ -21,14 +17,7 @@ import { t, resolveUserLocale } from '../../i18n/index.js';
 import { ensureGuildExists } from '../../utils/settings.js';
 
 import { swallow } from '../../logger.js';
-/**
- * Builds the poll embed showing each option's vote count and percentage bar.
- *
- * @param question - The poll question displayed as the embed title.
- * @param options  - The list of option labels.
- * @param votes    - Current vote records used to compute counts and percentages.
- * @param endsAt   - Optional expiry timestamp rendered as a relative Discord timestamp.
- */
+
 export function buildPollEmbed(question: string, options: string[], votes: { optionIndex: number }[], endsAt: Date | null | undefined, loc: string): EmbedBuilder {
   const total = votes.length;
   const description = options.map((opt, i) => {
@@ -48,15 +37,6 @@ export function buildPollEmbed(question: string, options: string[], votes: { opt
   return embed;
 }
 
-/**
- * Builds the button component rows for a poll, grouping options into rows of
- * up to 5 buttons (the Discord component limit). Appends an "End Poll" button
- * for open polls.
- *
- * @param pollId  - Database ID of the poll, embedded in each button's custom ID.
- * @param options - Option labels used as button labels (truncated to 80 chars).
- * @param closed  - When true, all buttons are rendered as disabled.
- */
 export function buildPollComponents(pollId: string, options: string[], closed: boolean, loc: string): ActionRowBuilder<ButtonBuilder>[] {
   const rows: ActionRowBuilder<ButtonBuilder>[] = [];
   const buttons: ButtonBuilder[] = options.map((opt, i) =>
@@ -67,7 +47,6 @@ export function buildPollComponents(pollId: string, options: string[], closed: b
       .setDisabled(closed)
   );
 
-  // Discord allows a maximum of 5 buttons per action row.
   for (let i = 0; i < buttons.length; i += 5) {
     rows.push(new ActionRowBuilder<ButtonBuilder>().addComponents(buttons.slice(i, i + 5)));
   }
@@ -116,8 +95,6 @@ const command: BotCommand = {
 
     const endsAt = duration ? new Date(Date.now() + duration * 60 * 1000) : null;
 
-    // Guarantee the guild row exists before the poll's FK references it (a guild
-    // that never finished syncing would otherwise fail with a P2003).
     if (interaction.guild) {
       await ensureGuildExists(interaction.guild.id, interaction.guild.name, interaction.guild.ownerId, interaction.guild.iconURL() ?? undefined);
     }
@@ -141,9 +118,6 @@ const command: BotCommand = {
 
     await prisma.poll.update({ where: { id: poll.id }, data: { messageId: resource!.message!.id } });
 
-    // Auto-close is handled durably by the BackgroundJobs poll sweep (closePolls),
-    // which reads endsAt — so it survives restarts and supports long durations
-    // (a month) that an in-process setTimeout could not.
   },
 
   async handleButton(interaction: ButtonInteraction, _client: BotClient) {

@@ -56,7 +56,6 @@ export default function ModerationPage() {
   const [warningUserId, setWarningUserId] = useState('');
   const [warningSearch, setWarningSearch] = useState('');
 
-  // Warning escalation state
   const [escalations, setEscalations] = useState<EscalationRule[]>([]);
   const [newEscCount, setNewEscCount] = useState('3');
   const [newEscAction, setNewEscAction] = useState('mute');
@@ -117,7 +116,6 @@ export default function ModerationPage() {
     onError: () => toast.error(t('warnsClearError')),
   });
 
-  // Group warnings by userId for "Clear all" per user
   const warningsByUser = warnings.reduce<Record<string, typeof warnings>>((acc, w) => {
     if (!acc[w.userId]) acc[w.userId] = [];
     acc[w.userId].push(w);
@@ -156,7 +154,7 @@ export default function ModerationPage() {
         />
       </SettingsSection>
 
-      {/* Tabs */}
+      {}
       <div className="flex gap-1 mb-6 border-b border-gray-700">
         <button
           onClick={() => setTab('cases')}
@@ -192,7 +190,7 @@ export default function ModerationPage() {
         </button>
       </div>
 
-      {/* ── Cases Tab ── */}
+      {}
       {tab === 'cases' && (
         <>
           <div className="card mb-6 flex flex-col sm:flex-row gap-3">
@@ -305,7 +303,7 @@ export default function ModerationPage() {
         </>
       )}
 
-      {/* ── Warnings Tab ── */}
+      {}
       {tab === 'warnings' && (
         <>
           <div className="card mb-6 flex gap-3">
@@ -384,7 +382,7 @@ export default function ModerationPage() {
         </>
       )}
 
-      {/* ── Escalation Tab ── */}
+      {}
       {tab === 'escalation' && (
         <div className="space-y-4">
           <div className="card">

@@ -1,7 +1,4 @@
-/**
- * /avatar command — fetches and displays a user's full-resolution avatar with
- * download links for PNG and WebP formats.
- */
+
 import {
   SlashCommandBuilder,
   EmbedBuilder,

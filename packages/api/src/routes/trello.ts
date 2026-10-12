@@ -6,7 +6,6 @@ const DISCORD_API = 'https://discord.com/api/v10';
 const TRELLO_API = 'https://api.trello.com/1';
 const PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'https://api.arkenbot.app';
 
-// ── Event metadata ──────────────────────────────────────────────────────────
 const EVENT_META: Record<string, { label: string; emoji: string; color: number }> = {
   create_card:     { label: 'Card Created',          emoji: '📝', color: 0x3dba6f },
   move_card:       { label: 'Card Moved',            emoji: '📦', color: 0x8b5cf6 },
@@ -26,7 +25,6 @@ const EVENT_META: Record<string, { label: string; emoji: string; color: number }
   checkitem_state: { label: 'Checklist Item Toggled', emoji: '☑️', color: 0x14b8a6 },
 };
 
-// ── Normalise a Trello action into one of our canonical event types ─────────
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function normalizeAction(action: Record<string, any>): string {
   const type: string = action.type ?? '';
@@ -56,7 +54,6 @@ function normalizeAction(action: Record<string, any>): string {
   }
 }
 
-// ── Embed builder ────────────────────────────────────────────────────────────
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function buildEmbed(normalizedType: string, action: Record<string, any>, boardLabel?: string | null) {
   const meta = EVENT_META[normalizedType] ?? { label: normalizedType, emoji: '🔔', color: 0x0079bf };
@@ -78,7 +75,6 @@ function buildEmbed(normalizedType: string, action: Record<string, any>, boardLa
   const cardField = () => addField('Card', cardUrl ? `[${card.name ?? 'View card'}](${cardUrl})` : (card.name ?? '—'));
   const boardField = () => addField('Board', boardUrl ? `[${boardName}](${boardUrl})` : boardName);
 
-  // Discord-native timestamp, or *none* when the value was cleared.
   const fmtDate = (v: unknown) =>
     typeof v === 'string' && v ? `<t:${Math.floor(Date.parse(v) / 1000)}:f>` : '*none*';
 
@@ -119,8 +115,7 @@ function buildEmbed(normalizedType: string, action: Record<string, any>, boardLa
     }
     case 'update_card': {
       cardField(); boardField();
-      // Trello's `data.old` holds the previous value of every field that
-      // changed — enumerate them so the embed says exactly what happened.
+
       const old = data.old ?? {};
       const changes: string[] = [];
       if ('desc' in old) {
@@ -183,7 +178,6 @@ function buildEmbed(normalizedType: string, action: Record<string, any>, boardLa
   };
 }
 
-// ── Send Discord embed ────────────────────────────────────────────────────────
 async function sendDiscordEmbed(channelId: string, embed: object): Promise<void> {
   const token = process.env.DISCORD_TOKEN;
   if (!token) return;
@@ -197,7 +191,6 @@ async function sendDiscordEmbed(channelId: string, embed: object): Promise<void>
   });
 }
 
-/** Extracts a board ID or shortlink from a raw ID, shortlink, or full board URL. */
 function parseBoardId(input: string): string | null {
   const trimmed = input.trim();
   const urlMatch = trimmed.match(/trello\.com\/b\/([A-Za-z0-9]+)/i);
@@ -206,12 +199,8 @@ function parseBoardId(input: string): string | null {
   return null;
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// Routes
-// ═══════════════════════════════════════════════════════════════════════════════
 export async function trelloRoutes(server: FastifyInstance): Promise<void> {
 
-  // ── GET /guilds/:guildId/trello-alerts ────────────────────────────────────
   server.get('/guilds/:guildId/trello-alerts', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const alerts = await prisma.trelloAlert.findMany({
@@ -221,9 +210,6 @@ export async function trelloRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: alerts });
   });
 
-  // ── POST /guilds/:guildId/trello-alerts ───────────────────────────────────
-  // Creates the alert AND registers the webhook with Trello using the caller's
-  // API key + token. The credentials are used once and never stored.
   server.post('/guilds/:guildId/trello-alerts', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const { discordChannelId, board, trelloKey, trelloToken, events } = request.body as Record<string, unknown>;
@@ -242,10 +228,6 @@ export async function trelloRoutes(server: FastifyInstance): Promise<void> {
 
     const auth = `key=${encodeURIComponent(trelloKey.trim())}&token=${encodeURIComponent(trelloToken.trim())}`;
 
-    // Resolve the board — validates credentials and gets the full ID + name.
-    // boardRef is encoded even though parseBoardId already constrains it to
-    // alphanumerics: it lands in the request path, so nothing user-derived should
-    // reach it without escaping.
     const boardRes = await fetch(`${TRELLO_API}/boards/${encodeURIComponent(boardRef)}?fields=id,name&${auth}`).catch(() => null);
     if (!boardRes?.ok) {
       const detail = boardRes ? await boardRes.text().catch(() => '') : '';
@@ -263,8 +245,6 @@ export async function trelloRoutes(server: FastifyInstance): Promise<void> {
       },
     });
 
-    // Register the webhook with Trello. Trello immediately sends a HEAD request
-    // to the callback URL, which our public endpoint below answers with 200.
     const callbackURL = `${PUBLIC_API_URL}/trello/webhook/${alert.webhookToken}`;
     const hookRes = await fetch(`${TRELLO_API}/webhooks/?${auth}`, {
       method: 'POST',
@@ -283,7 +263,6 @@ export async function trelloRoutes(server: FastifyInstance): Promise<void> {
     return reply.code(201).send({ success: true, data: updated });
   });
 
-  // ── PATCH /guilds/:guildId/trello-alerts/:id ──────────────────────────────
   server.patch('/guilds/:guildId/trello-alerts/:id', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, id } = request.params as { guildId: string; id: string };
     const body = request.body as Record<string, unknown>;
@@ -303,18 +282,12 @@ export async function trelloRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true });
   });
 
-  // ── DELETE /guilds/:guildId/trello-alerts/:id ─────────────────────────────
-  // Trello's webhook is cleaned up automatically: once the alert row is gone,
-  // the public endpoint answers 410 Gone and Trello deletes the webhook.
   server.delete('/guilds/:guildId/trello-alerts/:id', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, id } = request.params as { guildId: string; id: string };
     await prisma.trelloAlert.deleteMany({ where: { id, guildId } });
     return reply.code(204).send();
   });
 
-  // ── /trello/webhook/:token ────────────────────────────────────────────────
-  // Public endpoint — Trello verifies the callback with HEAD/GET at creation,
-  // then POSTs an action payload for every board event.
   server.head('/trello/webhook/:token', async (_request, reply) => reply.code(200).send());
   server.get('/trello/webhook/:token', async (_request, reply) => reply.code(200).send({ ok: true }));
 
@@ -326,7 +299,7 @@ export async function trelloRoutes(server: FastifyInstance): Promise<void> {
     const body = request.body as Record<string, any>;
 
     const alert = await prisma.trelloAlert.findUnique({ where: { webhookToken: token } });
-    // 410 tells Trello the webhook is dead — it deletes it on their side.
+
     if (!alert) return reply.code(410).send({ error: 'gone' });
     if (!alert.enabled) return reply.send({ ok: true });
 
@@ -335,14 +308,12 @@ export async function trelloRoutes(server: FastifyInstance): Promise<void> {
 
     const normalizedType = normalizeAction(action);
 
-    // Event filter: if the alert has a specific list, skip events not in it
     if (alert.events.length > 0 && !alert.events.includes(normalizedType)) {
       return reply.send({ ok: true });
     }
 
     const embed = buildEmbed(normalizedType, action, alert.boardName);
 
-    // Fire-and-forget — don't let Discord latency slow the webhook response
     sendDiscordEmbed(alert.discordChannelId, embed).catch((err) => {
       request.log.error({ err }, 'trello discord send failed');
     });

@@ -1,7 +1,4 @@
-/**
- * /resetxp command — permanently deletes all XP and level records for the guild.
- * Requires explicit confirmation via the `confirm` option to prevent accidental use.
- */
+
 import { SlashCommandBuilder, PermissionFlagsBits, type ChatInputCommandInteraction } from 'discord.js';
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';

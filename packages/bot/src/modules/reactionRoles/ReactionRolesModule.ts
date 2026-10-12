@@ -12,26 +12,13 @@ import { getGuildSettings } from '../../utils/settings.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 import { notifyActionFailure, isPermissionError } from '../../utils/permissionAlert.js';
 
-/**
- * Returns the canonical emoji key matching what the API stores in the DB:
- *   - Custom emoji  → "name:id"
- *   - Unicode emoji → stripped Unicode (no FE0F variation selectors)
- */
 function emojiKey(reaction: MessageReaction): string | null {
   if (reaction.emoji.id) return `${reaction.emoji.name}:${reaction.emoji.id}`;
   return reaction.emoji.name?.replace(/\uFE0F/g, '').trim() ?? null;
 }
 
 export class ReactionRolesModule {
-  /**
-   * Grants or toggles a role when a user adds a reaction to a configured panel message.
-   *
-   * - `add` mode: always grants the role.
-   * - `toggle` mode: grants the role if the user doesn't already have it, removes it otherwise.
-   * - `remove` mode: no action on reaction-add; role is only removed when the reaction is removed.
-   *
-   * Silently skips if the bot cannot edit the role (e.g. the role is above the bot in the hierarchy).
-   */
+
   static async handleReactionAdd(reaction: MessageReaction, user: User): Promise<void> {
     if (user.bot) return;
     if (!reaction.message.guild) return;
@@ -69,11 +56,6 @@ export class ReactionRolesModule {
     }
   }
 
-  /**
-   * Removes a role when a user takes back their reaction on a configured panel message.
-   * Only acts on `toggle` and `remove`-mode entries; `add`-only roles are unaffected
-   * by reaction removal.
-   */
   static async handleReactionRemove(reaction: MessageReaction, user: User): Promise<void> {
     if (user.bot) return;
     if (!reaction.message.guild) return;
@@ -100,19 +82,6 @@ export class ReactionRolesModule {
     }
   }
 
-  // ── Panel management ──────────────────────────────────────────────
-
-  /**
-   * Sends or updates the reaction role panel embed in the configured channel.
-   * After posting, the bot reacts with each configured emoji so members can
-   * click them directly. If the panel has been posted before (tracked by
-   * `messageId`), the existing message is edited in place; if the fetch fails
-   * (e.g. the message was deleted), a new message is posted instead.
-   *
-   * Emoji stored in the database are normalised to the canonical form Discord
-   * uses in reaction events — any mismatch between the stored value and the
-   * resolved form is corrected in the database automatically.
-   */
   static async deployPanel(client: BotClient, panelId: string): Promise<void> {
     const panel = await prisma.reactionRolePanel.findUnique({
       where: { id: panelId },
@@ -160,10 +129,6 @@ export class ReactionRolesModule {
       let failedReactions = 0;
       let lastReactError: unknown = null;
 
-      // React to msg and return the canonical emoji key Discord uses in events,
-      // or null if the reaction could not be added. Keycap emojis are stored
-      // without U+FE0F (to match reaction events), but the reaction API needs the
-      // full sequence — re-add it before reacting.
       const reactAndCanonicalise = async (
         msg: import('discord.js').Message,
         role: (typeof panel.roles)[number],
@@ -176,7 +141,7 @@ export class ReactionRolesModule {
           return null;
         });
         if (mr) {
-          // Use the emoji Discord resolved to — this is what reaction events return
+
           return mr.emoji.id
             ? `${mr.emoji.name}:${mr.emoji.id}`
             : (mr.emoji.name?.replace(/\uFE0F/g, '').trim() ?? role.emoji);
@@ -211,7 +176,6 @@ export class ReactionRolesModule {
         }
       }
 
-      // Persist messageId on the panel and all its linked roles
       await prisma.reactionRolePanel.update({
         where: { id: panelId },
         data: { messageId: discordMessageId },
@@ -221,9 +185,6 @@ export class ReactionRolesModule {
         data: { messageId: discordMessageId, channelId: panel.channelId },
       });
 
-      // Some reactions couldn't be added — the panel is posted but (partly)
-      // unclickable. Alert admins if it was a permission problem; the per-emoji
-      // warn log above covers the rest (e.g. an unresolvable emoji).
       if (failedReactions > 0 && lastReactError) {
         await notifyActionFailure(guild, {
           action: 'addReaction',
@@ -235,9 +196,7 @@ export class ReactionRolesModule {
 
       logger.info(`Deployed reaction role panel ${panelId} in guild ${panel.guildId}`);
     } catch (err) {
-      // A missing-permission failure (bot can't post/react in the target
-      // channel) means the panel silently never appears — surface it to the
-      // guild's admins via the alert channel instead of only logging.
+
       if (isPermissionError(err)) {
         await notifyActionFailure(guild, {
           action: 'sendMessage',
@@ -251,11 +210,6 @@ export class ReactionRolesModule {
     }
   }
 
-  /**
-   * Deletes the Discord message for a reaction role panel when the panel is
-   * removed from the database. Failures (e.g. message already deleted) are
-   * logged but do not throw, so the caller's database delete always succeeds.
-   */
   static async deletePanel(
     client: BotClient,
     guildId: string,

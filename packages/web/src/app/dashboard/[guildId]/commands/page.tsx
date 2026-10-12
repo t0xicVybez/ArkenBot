@@ -27,7 +27,6 @@ type CustomCommand = {
   uses: number;
 };
 
-
 type AutoResponse = {
   id: string;
   pattern: string;
@@ -74,7 +73,6 @@ export default function CommandsPage() {
   });
   const [arForm, setArForm] = useState({ pattern: '', flags: 'i', response: '', embed: false, embedColor: '#5865F2', deleteMessage: false });
 
-  // All commands visible to this guild, including any addon-registered commands.
   const { data: availableRes } = useQuery({
     queryKey: ['commands-available', guildId],
     queryFn: () => commandsApi.getAvailable(guildId),
@@ -157,7 +155,6 @@ export default function CommandsPage() {
     },
     onError: () => toast.error(t('customDeleteError')),
   });
-
 
   const createArMutation = useMutation({
     mutationFn: (data: object) => autoResponsesApi.create(guildId, data),
@@ -508,8 +505,6 @@ export default function CommandsPage() {
         )}
       </div>
 
-
-
       <div className="card mb-8">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
@@ -816,7 +811,7 @@ export default function CommandsPage() {
 
         ) : (
           <div className="space-y-1.5">
-            {/* Group by commandName+allow so all roles show on one line */}
+            {}
             {Object.values(
               cmdPerms.reduce<Record<string, { key: string; commandName: string; allow: boolean; entries: typeof cmdPerms }>>((acc, p) => {
                 const key = `${p.commandName}:${p.allow}`;

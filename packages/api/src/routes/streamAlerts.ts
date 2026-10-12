@@ -5,16 +5,10 @@ import { prisma } from '../database.js';
 import { resolveRoleMentions } from '../utils/roleMentions.js';
 import { resolveChannelId, ensureSubscription, removeSubscriptionIfUnused } from '../services/youtubeWebsub.js';
 
-/** Guardrail: max YouTube alerts per guild (abuse/hygiene, not a quota limit). */
 const YOUTUBE_ALERTS_PER_GUILD = parseInt(process.env.YOUTUBE_ALERTS_PER_GUILD ?? '25', 10);
 
 export async function streamAlertRoutes(server: FastifyInstance): Promise<void> {
 
-  // ══════════════════════════════════════════════════════════════════
-  // STREAM ALERTS
-  // ══════════════════════════════════════════════════════════════════
-
-  // GET /guilds/:guildId/stream-alerts?platform=twitch,kick
   server.get('/guilds/:guildId/stream-alerts', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const { platform } = request.query as { platform?: string };
@@ -26,7 +20,6 @@ export async function streamAlertRoutes(server: FastifyInstance): Promise<void> 
     return reply.send({ success: true, data: alerts });
   });
 
-  // POST /guilds/:guildId/stream-alerts
   server.post('/guilds/:guildId/stream-alerts', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const { platform, channelUsername, discordChannelId, message, notifyLive, notifyUploads } = request.body as Record<string, unknown>;
@@ -38,7 +31,6 @@ export async function streamAlertRoutes(server: FastifyInstance): Promise<void> 
       return reply.code(400).send({ success: false, error: 'platform must be twitch, kick, rss, youtube, or reddit' });
     }
 
-    // Per-guild YouTube cap — an abuse/hygiene guardrail, not a quota limit.
     if (platform === 'youtube') {
       const count = await prisma.streamAlert.count({ where: { guildId, platform: 'youtube' } });
       if (count >= YOUTUBE_ALERTS_PER_GUILD) {
@@ -50,7 +42,6 @@ export async function streamAlertRoutes(server: FastifyInstance): Promise<void> 
       return reply.code(400).send({ success: false, error: 'platform, channelUsername and discordChannelId are required' });
     }
 
-    // Normalise YouTube handles — strip URL prefix, ensure leading @
     let normalizedUsername = (channelUsername as string).trim();
     if (platform === 'youtube') {
       normalizedUsername = normalizedUsername
@@ -59,12 +50,11 @@ export async function streamAlertRoutes(server: FastifyInstance): Promise<void> 
         .trim();
       normalizedUsername = `@${normalizedUsername}`;
     } else if (platform === 'reddit') {
-      // Accept "gaming", "r/gaming", "/r/gaming", or a full reddit URL → store
-      // the bare subreddit name. Validate Reddit's naming rules (3–21 chars).
+
       normalizedUsername = normalizedUsername
         .replace(/^https?:\/\/(www\.|old\.|np\.)?reddit\.com\//i, '')
         .replace(/^\/?r\//i, '')
-        .split('/')[0] // keep only the first path segment (was /\/.*$/ — avoids ReDoS heuristic)
+        .split('/')[0]
         .trim();
       if (!/^[A-Za-z0-9_]{3,21}$/.test(normalizedUsername)) {
         return reply.code(400).send({ success: false, error: 'Enter a valid subreddit (e.g. "gaming" or "r/gaming").' });
@@ -75,8 +65,6 @@ export async function streamAlertRoutes(server: FastifyInstance): Promise<void> 
 
     const resolvedMessage = await resolveRoleMentions(guildId, typeof message === 'string' ? message : undefined);
 
-    // For YouTube, resolve the handle → channel ID up-front (validates it and lets
-    // us subscribe to the WebSub feed immediately, so alerts start with no polling).
     let channelId: string | null = null;
     if (platform === 'youtube') {
       channelId = await resolveChannelId(normalizedUsername);
@@ -104,14 +92,13 @@ export async function streamAlertRoutes(server: FastifyInstance): Promise<void> 
         },
       });
     } catch (err) {
-      // Duplicate: this guild already tracks this channel on this platform.
+
       if ((err as { code?: string }).code === 'P2002') {
         return reply.code(409).send({ success: false, error: 'This server already has an alert for that channel.' });
       }
       throw err;
     }
 
-    // Subscribe to the channel's push feed (idempotent across guilds sharing it).
     if (platform === 'youtube' && channelId) {
       void ensureSubscription(channelId);
     }
@@ -119,7 +106,6 @@ export async function streamAlertRoutes(server: FastifyInstance): Promise<void> 
     return reply.code(201).send({ success: true, data: alert });
   });
 
-  // PATCH /guilds/:guildId/stream-alerts/:id
   server.patch('/guilds/:guildId/stream-alerts/:id', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, id } = request.params as { guildId: string; id: string };
     const body = request.body as Record<string, unknown>;
@@ -143,15 +129,12 @@ export async function streamAlertRoutes(server: FastifyInstance): Promise<void> 
       if (body.notifyUploads !== undefined) data.notifyUploads = Boolean(body.notifyUploads);
     }
 
-    // Re-enabling or repointing an alert is the user telling us the problem is
-    // fixed. Clear the failure counter, or an auto-disabled alert would trip
-    // again on its very next failure instead of getting a fresh five attempts.
     if (body.enabled === true || body.discordChannelId) {
       data.failureCount = 0;
       data.lastError = null;
     }
 
-    let newChannelId: string | null | undefined; // undefined = channel unchanged
+    let newChannelId: string | null | undefined;
     if (body.channelUsername) {
       if (typeof body.channelUsername !== 'string' || body.channelUsername.length > 300) {
         return reply.code(400).send({ success: false, error: 'channelUsername is invalid' });
@@ -163,7 +146,7 @@ export async function streamAlertRoutes(server: FastifyInstance): Promise<void> 
           .replace(/^@/, '')
           .trim();
         newUsername = `@${newUsername}`;
-        // Re-resolve the channel ID and reset dedup state for the new channel.
+
         newChannelId = await resolveChannelId(newUsername);
         if (!newChannelId) {
           return reply.code(400).send({ success: false, error: 'Could not find that YouTube channel. Check the handle or paste the channel URL.' });
@@ -175,12 +158,12 @@ export async function streamAlertRoutes(server: FastifyInstance): Promise<void> 
         newUsername = newUsername
           .replace(/^https?:\/\/(www\.|old\.|np\.)?reddit\.com\//i, '')
           .replace(/^\/?r\//i, '')
-          .split('/')[0] // keep only the first path segment (was /\/.*$/ — avoids ReDoS heuristic)
+          .split('/')[0]
           .trim();
         if (!/^[A-Za-z0-9_]{3,21}$/.test(newUsername)) {
           return reply.code(400).send({ success: false, error: 'Enter a valid subreddit (e.g. "gaming" or "r/gaming").' });
         }
-        data.lastStreamId = null; // reset dedup for the new subreddit
+        data.lastStreamId = null;
       } else {
         newUsername = newUsername.toLowerCase();
       }
@@ -197,7 +180,6 @@ export async function streamAlertRoutes(server: FastifyInstance): Promise<void> 
 
     await prisma.streamAlert.update({ where: { id }, data: data as Prisma.StreamAlertUpdateInput });
 
-    // Reconcile YouTube WebSub subscriptions after the change.
     if (existing.platform === 'youtube') {
       const oldChannelId = existing.channelId;
       const effectiveChannelId = newChannelId ?? oldChannelId;
@@ -215,12 +197,11 @@ export async function streamAlertRoutes(server: FastifyInstance): Promise<void> 
     return reply.send({ success: true });
   });
 
-  // DELETE /guilds/:guildId/stream-alerts/:id
   server.delete('/guilds/:guildId/stream-alerts/:id', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, id } = request.params as { guildId: string; id: string };
     const existing = await prisma.streamAlert.findFirst({ where: { id, guildId } });
     await prisma.streamAlert.deleteMany({ where: { id, guildId } });
-    // Drop the WebSub subscription if no other enabled alert still watches it.
+
     if (existing?.platform === 'youtube' && existing.channelId) {
       void removeSubscriptionIfUnused(existing.channelId);
     }

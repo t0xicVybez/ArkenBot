@@ -1,8 +1,4 @@
-/**
- * /valorant — link a Riot account (token-based RSO start, no dashboard login),
- * show a VALORANT rank, or unlink. No-ops with a friendly message while the
- * integration is unconfigured.
- */
+
 import {
   SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle,
   MessageFlags, type ChatInputCommandInteraction,
@@ -52,7 +48,6 @@ const command: BotCommand = {
       return;
     }
 
-    // rank
     const user = interaction.options.getUser('user') ?? interaction.user;
     const link = await prisma.valorantLink.findUnique({ where: { discordId: user.id } });
     if (!link) {

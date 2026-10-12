@@ -1,10 +1,4 @@
-/**
- * Reddit new-post alerts — no Reddit API (they no longer issue keys). Polls each
- * watched subreddit's public RSS feed (`/r/<sub>/new/.rss`) with a descriptive
- * User-Agent (a generic UA gets 429'd). Alerts are grouped by subreddit so every
- * guild watching the same sub shares one fetch per cycle, keeping request volume
- * low and staying within Reddit's tolerance for feed readers.
- */
+
 import Parser from 'rss-parser';
 import { SocksProxyAgent } from 'socks-proxy-agent';
 import { EmbedBuilder, type TextChannel } from 'discord.js';
@@ -17,9 +11,6 @@ import type { BotClient } from '../../client.js';
 const UA = 'ArkenBot/1.0 (+https://arkenbot.app; Discord new-post alerts)';
 const directParser = new Parser({ headers: { 'User-Agent': UA }, timeout: 15000 });
 
-// A generic UA gets 429'd, and Reddit sometimes rate-limits datacenter IPs
-// outright. We fetch directly by default (free) and only fall back to the
-// residential SOCKS proxy on a 429/403, so proxy bandwidth stays near-zero.
 let proxyParser: Parser | null = null;
 function getProxyParser(): Parser | null {
   if (proxyParser) return proxyParser;
@@ -32,14 +23,12 @@ function getProxyParser(): Parser | null {
   return proxyParser;
 }
 
-/** Normalise stored value (a bare subreddit name) to its new-posts RSS URL. */
 function feedUrl(subreddit: string): string {
   return `https://www.reddit.com/r/${encodeURIComponent(subreddit)}/new/.rss`;
 }
 
 type Feed = Awaited<ReturnType<Parser['parseURL']>>;
 
-/** Fetch a subreddit feed direct-first, retrying via the proxy on a block. */
 async function fetchFeed(sub: string): Promise<Feed | null> {
   const url = feedUrl(sub);
   try {
@@ -52,7 +41,7 @@ async function fetchFeed(sub: string): Promise<Feed | null> {
           const feed = await pp.parseURL(url);
           logger.debug({ sub }, 'Reddit feed fetched via proxy fallback');
           return feed;
-        } catch { /* proxy also failed */ }
+        } catch {  }
       }
     }
     logger.debug({ sub, err: String(err).slice(0, 120) }, 'Reddit feed fetch failed (will retry next cycle)');
@@ -74,7 +63,7 @@ async function recordAlertFailure(id: string, reason: string): Promise<void> {
       await prisma.streamAlert.update({ where: { id }, data: { enabled: false } });
       logger.warn({ id, guildId: updated.guildId, feed: updated.channelUsername }, `Reddit alert auto-disabled after ${MAX} failures`);
     }
-  } catch { /* row deleted mid-flight */ }
+  } catch {  }
 }
 
 async function postAlert(client: BotClient, alert: AlertRow, sub: string, item: { title?: string; link?: string; creator?: string; author?: string }): Promise<void> {
@@ -122,12 +111,10 @@ async function postAlert(client: BotClient, alert: AlertRow, sub: string, item: 
   }
 }
 
-/** Poll every watched subreddit once and fan out new posts to its alerts. */
 export async function runRedditAlerts(client: BotClient): Promise<void> {
   const alerts = await prisma.streamAlert.findMany({ where: { platform: 'reddit', enabled: true } });
   if (!alerts.length) return;
 
-  // Group alerts by subreddit (case-insensitive) → one fetch per unique sub.
   const bySub = new Map<string, AlertRow[]>();
   for (const a of alerts) {
     const key = a.channelUsername.toLowerCase();
@@ -135,8 +122,7 @@ export async function runRedditAlerts(client: BotClient): Promise<void> {
   }
 
   for (const [sub, subAlerts] of bySub) {
-    // A rate-limited fetch is skipped this cycle and is NOT counted as a delivery
-    // failure, so it never auto-disables a working alert.
+
     const feed = await fetchFeed(sub);
     if (!feed) continue;
     const item = feed.items?.[0];
@@ -145,9 +131,7 @@ export async function runRedditAlerts(client: BotClient): Promise<void> {
     if (!itemId) continue;
 
     for (const alert of subAlerts) {
-      // Already alerted this post → skip. Otherwise post it (on a brand-new alert
-      // this fires the subreddit's current latest post, confirming setup works —
-      // matching how RSS alerts behave), then remember it for dedup.
+
       if (alert.lastStreamId === itemId) continue;
       await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastStreamId: itemId } }).catch(swallow);
       await postAlert(client, alert, sub, item as { title?: string; link?: string; creator?: string; author?: string });

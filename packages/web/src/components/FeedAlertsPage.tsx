@@ -11,8 +11,6 @@ import { useState } from 'react';
 import { Plus, Trash2, Pencil, X, Rss, Radio } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
-// Head-icon lookup: callers pass a string key (not a component) so the page
-// wrappers can be server components — functions can't cross the RSC boundary.
 const HEAD_ICONS = { rss: Rss, radio: Radio } as const;
 export type FeedAlertsIcon = keyof typeof HEAD_ICONS;
 
@@ -47,7 +45,6 @@ type StreamAlert = {
   lastError?: string | null;
 };
 
-/** Per-platform icon tile treatment for the alert list. */
 const PLATFORM_VISUALS: Record<string, { glyph: string; bg: string; fg: string }> = {
   twitch:  { glyph: 'T', bg: 'rgba(145,70,255,0.18)',  fg: '#b795ff' },
   kick:    { glyph: 'K', bg: 'rgba(83,252,24,0.14)',   fg: '#7ef15a' },
@@ -55,7 +52,6 @@ const PLATFORM_VISUALS: Record<string, { glyph: string; bg: string; fg: string }
   rss:     { glyph: '⊙', bg: 'rgba(245,158,11,0.16)',  fg: '#f5b04b' },
 };
 
-/** Platforms where a stored stream ID means "currently live". */
 const LIVE_PLATFORMS = new Set(['twitch', 'kick', 'youtube']);
 
 export function FeedAlertsPage({ title, description, icon, platforms, notice }: FeedAlertsPageProps) {
@@ -178,7 +174,7 @@ export function FeedAlertsPage({ title, description, icon, platforms, notice }: 
 
   return (
     <div className="p-3 sm:p-6 max-w-4xl space-y-5">
-      {/* Page head: icon tile · title · purpose · action */}
+      {}
       <div className="page-head">
         <div className="page-head-icon">
           <Icon className="w-5 h-5" />
@@ -199,7 +195,7 @@ export function FeedAlertsPage({ title, description, icon, platforms, notice }: 
         <div className="alert-warning text-xs">{notice}</div>
       )}
 
-      {/* Platform filter chips */}
+      {}
       {platforms.length > 1 && alerts.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {[{ value: 'all', label: t('all') }, ...platforms].map((p) => (
@@ -313,7 +309,7 @@ export function FeedAlertsPage({ title, description, icon, platforms, notice }: 
         </div>
       )}
 
-      {/* Alert list — rows, not a table */}
+      {}
       {visibleAlerts.length > 0 && (
         <div className="card p-0 overflow-hidden">
           <div className="px-4 py-3 border-b border-(--border-subtle)">

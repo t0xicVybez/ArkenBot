@@ -23,7 +23,6 @@ const METHOD_STYLES: Record<string, string> = {
   DELETE: 'bg-red-500/15 text-red-400 border-red-500/30',
 };
 
-/** "trello-alerts" → "Trello Alerts" */
 function humanizeSection(section: string): string {
   return section
     .split('-')

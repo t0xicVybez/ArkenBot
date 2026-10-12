@@ -1,16 +1,7 @@
-/**
- * Complete removal of all data belonging to a guild. Deleting the Guild row
- * cascades to every FK-linked model; the models listed explicitly store
- * guildId as a plain column (no foreign key) so the cascade cannot reach them.
- *
- * Called by the BackgroundJobs purge sweep once a guild has been gone for
- * longer than the grace period (rejoining within the window cancels the purge
- * because ensureGuildExists resets isActive/leftAt).
- */
+
 import { prisma } from '../database.js';
 import { logger } from '../logger.js';
 
-/** Hours a removed guild's data is retained before permanent deletion. */
 export const PURGE_GRACE_HOURS = 72;
 
 export async function purgeGuildData(guildId: string): Promise<boolean> {

@@ -1,9 +1,4 @@
-/**
- * Relational storage for tickets (P1.2) — maps the Ticket object onto the
- * AddonTicket table (hot/queried fields as columns, the long tail in `data`)
- * and back with full fidelity. Used behind the storage.ts facade during the
- * blob→table migration. DB handle comes from ./db.js.
- */
+
 import type { Ticket, TicketMessage } from '../types.js';
 import { getTicketDb } from './db.js';
 
@@ -18,7 +13,6 @@ interface Row {
   data: Record<string, unknown>;
 }
 
-/** Ticket → the AddonTicket row shape (columns + `data` JSON for the rest). */
 export function toRow(t: Ticket): Record<string, unknown> {
   const data: Record<string, unknown> = {
     tags: t.tags, notes: t.notes,
@@ -43,7 +37,6 @@ export function toRow(t: Ticket): Record<string, unknown> {
   };
 }
 
-/** AddonTicket row → Ticket. */
 export function fromRow(r: Row): Ticket {
   const d = r.data ?? {};
   const s = (k: string) => (d[k] as string | undefined);
@@ -70,7 +63,7 @@ export function fromRow(r: Row): Ticket {
 
 export async function repoSaveTicket(t: Ticket): Promise<void> {
   const row = toRow(t);
-  const { id, createdAt, guildId, number, ...mutable } = row; // keep immutables out of update
+  const { id, createdAt, guildId, number, ...mutable } = row;
   void createdAt; void guildId; void number;
   await getTicketDb().addonTicket.upsert({ where: { id }, create: row, update: mutable });
 }
@@ -104,7 +97,6 @@ export async function repoDeleteMessages(channelId: string): Promise<void> {
   await getTicketDb().addonTicketMessage.deleteMany({ where: { channelId } });
 }
 
-/** Backfill the relational table from an existing blob array (idempotent upserts). */
 export async function backfillTickets(tickets: Ticket[]): Promise<number> {
   for (const t of tickets) await repoSaveTicket(t);
   return tickets.length;

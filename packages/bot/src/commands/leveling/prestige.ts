@@ -1,4 +1,4 @@
-/** /prestige — reset to level 0 in exchange for a permanent prestige rank. */
+
 import { SlashCommandBuilder, EmbedBuilder, type ChatInputCommandInteraction } from 'discord.js';
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';

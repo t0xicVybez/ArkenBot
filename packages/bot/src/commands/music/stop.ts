@@ -1,7 +1,4 @@
-/**
- * /stop command — stops playback, clears the queue, and disconnects the bot
- * from the voice channel.
- */
+
 import {
   MessageFlags,
   SlashCommandBuilder,

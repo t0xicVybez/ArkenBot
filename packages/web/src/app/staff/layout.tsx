@@ -48,7 +48,6 @@ export default function StaffLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // The session cookie authenticates the WebSocket upgrade — no token needed.
   useEffect(() => {
     if (!isAuthenticated) return;
     wsClient.connect();
@@ -66,7 +65,7 @@ export default function StaffLayout({ children }: { children: React.ReactNode })
   const handleLogout = async () => {
     try {
       await authApi.logout();
-    } catch { /* ignore */ }
+    } catch {  }
     logout();
     router.push('/');
   };
@@ -82,7 +81,7 @@ export default function StaffLayout({ children }: { children: React.ReactNode })
         'md:relative md:translate-x-0',
         sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0',
       )}>
-        {/* Header */}
+        {}
         <div className="px-2.5 pt-3 pb-2">
           <div className="flex items-center gap-2.5 p-2.5 rounded-[10px] bg-(--bg-elevated) border border-(--border-subtle)">
             <div className="w-[34px] h-[34px] rounded-[10px] bg-linear-to-br from-(--accent) to-(--accent-2) flex items-center justify-center flex-shrink-0">
@@ -98,7 +97,7 @@ export default function StaffLayout({ children }: { children: React.ReactNode })
           </div>
         </div>
 
-        {/* Nav */}
+        {}
         <nav className="flex-1 px-2 py-2 overflow-y-auto space-y-0.5">
           {staffNav.map((item) => {
             const Icon = item.icon;
@@ -122,7 +121,7 @@ export default function StaffLayout({ children }: { children: React.ReactNode })
           })}
         </nav>
 
-        {/* Footer */}
+        {}
         <div className="px-2 py-2 border-t border-white/6 space-y-0.5">
           <Link
             href="/dashboard"
@@ -143,7 +142,7 @@ export default function StaffLayout({ children }: { children: React.ReactNode })
       </aside>
 
       <main className="flex-1 overflow-auto flex flex-col min-w-0">
-        {/* Mobile top bar */}
+        {}
         <div className="md:hidden flex items-center gap-3 px-4 py-3 border-b border-white/6 bg-(--bg-card)">
           <button onClick={() => setSidebarOpen(true)} className="text-gray-400 hover:text-white transition-colors" aria-label={t('openMenu')}>
             <Menu className="w-5 h-5" />

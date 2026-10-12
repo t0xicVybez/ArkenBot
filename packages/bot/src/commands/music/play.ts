@@ -1,7 +1,4 @@
-/**
- * /play command — resolves a search query or URL and either starts playback
- * immediately or adds the track to the existing queue.
- */
+
 import {
   SlashCommandBuilder,
   PermissionFlagsBits,

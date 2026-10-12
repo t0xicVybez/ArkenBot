@@ -1,7 +1,4 @@
-/**
- * /case command — view a specific moderation case by number, or bulk-close all
- * open cases for a user (e.g. when unbanning someone).
- */
+
 import {
   SlashCommandBuilder,
   PermissionFlagsBits,

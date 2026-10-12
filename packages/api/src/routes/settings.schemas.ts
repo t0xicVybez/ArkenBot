@@ -1,9 +1,4 @@
-/**
- * Request-body validation schemas for the settings routes, plus the emoji
- * normaliser. Extracted from settings.ts so the validation rules — the gate that
- * every settings write passes through — can be unit-tested without a running
- * server or database.
- */
+
 import { z } from 'zod';
 
 export const autoModAction = z.enum(['delete', 'warn', 'mute', 'kick', 'ban']);
@@ -110,14 +105,6 @@ export const WelcomePatchSchema = z.object({
   leaveMessage:     z.string().max(2000).optional(),
 }).strict();
 
-/**
- * Common Discord emoji shortcodes people type into the emoji field (e.g. `:one:`)
- * mapped to the actual Unicode emoji. Discord's REST API can only react with a
- * real Unicode/custom emoji — the `:name:` shortcode is a client-only rendering,
- * so a stored shortcode produces a panel with no reactable emoji. We convert the
- * ones people actually use for reaction-role panels; regional-indicator letters
- * are generated below.
- */
 const EMOJI_SHORTCODES: Record<string, string> = {
   zero: '0️⃣', one: '1️⃣', two: '2️⃣', three: '3️⃣', four: '4️⃣',
   five: '5️⃣', six: '6️⃣', seven: '7️⃣', eight: '8️⃣', nine: '9️⃣', ten: '🔟',
@@ -139,32 +126,21 @@ const EMOJI_SHORTCODES: Record<string, string> = {
   speech_balloon: '💬', pushpin: '📌', calendar: '📅', clipboard: '📋', label: '🏷️',
 };
 
-/**
- * Normalise an emoji string to the canonical form used by Discord.js reaction events:
- *   - Custom emoji <:name:id> or <a:name:id>  → "name:id"
- *   - `:shortcode:` (e.g. `:one:`) → the actual Unicode emoji
- *   - Unicode emoji → the variation selector (U+FE0F) stripped, matching the bot's
- *     `emojiKey()`; the keycap mark (U+20E3) is KEPT so keycaps like `1️⃣` still match.
- */
 export function normalizeEmoji(raw: string): string {
   let value = raw.trim();
 
   const custom = value.match(/^<a?:([\w~]+):(\d+)>$/);
   if (custom) return `${custom[1]}:${custom[2]}`;
 
-  // Resolve a :shortcode: (regional_indicator_a → 🇦, or the table above).
   const shortcode = value.match(/^:([a-z0-9_+-]+):$/i);
   if (shortcode) {
     const key = shortcode[1].toLowerCase();
     const ri = key.match(/^regional_indicator_([a-z])$/);
     if (ri) value = String.fromCodePoint(0x1f1e6 + (ri[1].charCodeAt(0) - 97));
     else if (EMOJI_SHORTCODES[key]) value = EMOJI_SHORTCODES[key];
-    // An unknown shortcode is left as-is; it won't be reactable, which the bot
-    // now surfaces as an alert rather than failing silently.
+
   }
 
-  // Strip only the U+FE0F variation selector and E0100-range tags, matching
-  // emojiKey() on the bot side so stored and reacted forms are identical.
   return value
     .replace(/️/g, '')
     .replace(/\uDB40[\uDC00-\uDCFF]/g, '')

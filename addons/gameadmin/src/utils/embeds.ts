@@ -4,7 +4,6 @@ import type { SavedGameServer } from '../types.js';
 
 type Translate = (key: string, vars?: Record<string, string | number>) => string;
 
-/** Result of a single RCON action. */
 export function buildResultEmbed(server: SavedGameServer, title: string, output: string, t: Translate, isError = false): EmbedBuilder {
   const label = GAMES[server.game]?.label ?? server.game;
   const body = output && output.length ? output : t('gameadmin.noOutput');
@@ -17,7 +16,6 @@ export function buildResultEmbed(server: SavedGameServer, title: string, output:
   return embed;
 }
 
-/** The configured-servers list for `/gameadmin list`. */
 export function buildServerListEmbed(servers: SavedGameServer[], t: Translate): EmbedBuilder {
   const embed = new EmbedBuilder().setColor(0x5865f2).setTitle(t('gameadmin.listTitle'));
   if (!servers.length) {

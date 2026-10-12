@@ -1,10 +1,4 @@
-/**
- * threadCreate event — handles forum post management on new thread creation.
- *
- * Checks if the parent channel is a ForumChannel, reads config from
- * GuildSettings.extended.forumManagement, applies auto-tags and sends
- * template messages as configured.
- */
+
 import { ChannelType, type AnyThreadChannel } from 'discord.js';
 import type { BotEvent } from '../types.js';
 import type { BotClient } from '../client.js';
@@ -40,7 +34,6 @@ const event: BotEvent = {
       const channelConfig = forumConfig.channels[parent.id];
       if (!channelConfig) return;
 
-      // Apply auto-tag if configured
       if (channelConfig.autoTagId) {
         const availableTags = parent.availableTags;
         const tag = availableTags.find(t => t.id === channelConfig.autoTagId);
@@ -52,7 +45,6 @@ const event: BotEvent = {
         }
       }
 
-      // Send template message if configured
       if (channelConfig.templateMessage) {
         await thread.send({ content: channelConfig.templateMessage }).catch(swallow);
       }

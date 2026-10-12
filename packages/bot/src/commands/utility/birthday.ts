@@ -1,7 +1,4 @@
-/**
- * /birthday command — manages birthday entries per guild: set, remove, list
- * upcoming birthdays, or check a specific member's birthday.
- */
+
 import {
   MessageFlags,
   SlashCommandBuilder,
@@ -13,7 +10,6 @@ import type { BotCommand } from '../../types.js';
 import { prisma } from '../../database.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 
-/** Localized long month name (1-12) for the given BCP-47 locale. */
 const monthName = (month: number, loc: string): string =>
   new Intl.DateTimeFormat(loc, { month: 'long', timeZone: 'UTC' }).format(new Date(Date.UTC(2000, month - 1, 1)));
 
@@ -89,7 +85,6 @@ const command: BotCommand = {
         return;
       }
 
-      // Sort by proximity to the current calendar date so the next upcoming birthday appears first.
       const sorted = [...birthdays].sort((a, b) => {
         const aFuture = a.month > currentMonth || (a.month === currentMonth && a.day >= currentDay);
         const bFuture = b.month > currentMonth || (b.month === currentMonth && b.day >= currentDay);

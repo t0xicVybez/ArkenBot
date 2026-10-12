@@ -1,10 +1,4 @@
-/**
- * Ticket-open flow — the panel button/dropdown handler, the open gates
- * (blacklist/cooldown/account-age/role/max), the reason+fields modal, and
- * createTicket (channel creation, welcome, user history, auto-triage, webhook,
- * staff notify, auto-assign). Extracted from events/interaction.ts (P3 split);
- * createTicket re-exported from interaction.ts.
- */
+
 import {
   MessageFlags,
   ModalBuilder,
@@ -37,8 +31,6 @@ import { isWithinBusinessHours } from '../utils/time.js';
 import { fireWebhook } from '../utils/webhook.js';
 import { runTriageModel, getUserTicketHistory, sendAssignmentBrief } from './triage.js';
 
-// ─── Open Ticket ──────────────────────────────────────────────────────────────
-
 export async function handleOpenTicket(
   ctx: AddonContext,
   interaction: ButtonInteraction | StringSelectMenuInteraction,
@@ -56,7 +48,6 @@ export async function handleOpenTicket(
     return;
   }
 
-  // Blacklist check
   const config = await getConfig(ctx.storage, guildId);
   if (config.blacklistedUsers.includes(interaction.user.id)) {
     await interaction.reply({
@@ -66,7 +57,6 @@ export async function handleOpenTicket(
     return;
   }
 
-  // Account-age gate
   if (config.minAccountAgeDays && config.minAccountAgeDays > 0) {
     const ageMs = Date.now() - interaction.user.createdTimestamp;
     if (ageMs < config.minAccountAgeDays * 86400000) {
@@ -75,7 +65,6 @@ export async function handleOpenTicket(
     }
   }
 
-  // Required-role gate
   if (config.requiredOpenRoleId) {
     const m = interaction.guild.members.cache.get(interaction.user.id)
       ?? (await interaction.guild.members.fetch(interaction.user.id).catch(() => null));
@@ -85,7 +74,6 @@ export async function handleOpenTicket(
     }
   }
 
-  // Open cooldown (based on the user's most recent ticket in this guild)
   if (config.openCooldownMinutes && config.openCooldownMinutes > 0) {
     const mine = (await getTickets(ctx.storage, guildId))
       .filter((x) => x.userId === interaction.user.id)
@@ -102,7 +90,6 @@ export async function handleOpenTicket(
     }
   }
 
-  // Max tickets check
   const openTickets = await getUserOpenTickets(ctx.storage, guildId, interaction.user.id);
   if (openTickets.length >= panel.maxTicketsPerUser) {
     const existing = openTickets[0];
@@ -113,8 +100,6 @@ export async function handleOpenTicket(
     return;
   }
 
-  // Resolve category tag + fields from the clicked button (per-button fields
-  // override the panel-level fields; see resolvePanelFields).
   const clickedBtn = buttonId ? panel.buttons?.find((b) => b.id === buttonId) : undefined;
   const categoryTag = clickedBtn?.categoryTag;
   const formFields = resolvePanelFields(panel, buttonId);
@@ -127,7 +112,7 @@ export async function handleOpenTicket(
       new ActionRowBuilder<TextInputBuilder>().addComponents(
         new TextInputBuilder()
           .setCustomId(f.id)
-          // Discord requires a 1–45 char label; guard empty/over-long values.
+
           .setLabel((f.label?.trim() || 'Response').slice(0, 45))
           .setStyle(f.style === 'short' ? TextInputStyle.Short : TextInputStyle.Paragraph)
           .setRequired(f.required)
@@ -138,7 +123,7 @@ export async function handleOpenTicket(
     modal.addComponents(...fieldRows);
     await interaction.showModal(modal);
   } else if (panel.requireReason) {
-    // Embed buttonId in modal customId so it survives through the modal submit
+
     const modal = new ModalBuilder()
       .setCustomId(`ticket:reason:${panelId}${buttonId ? `:${buttonId}` : ''}`)
       .setTitle(t('modalOpenTitle'))
@@ -159,8 +144,6 @@ export async function handleOpenTicket(
     await createTicket(ctx, interaction.guild, interaction.user.id, interaction.user.tag, panel, undefined, interaction, categoryTag, undefined, buttonId);
   }
 }
-
-// ─── Create Ticket ────────────────────────────────────────────────────────────
 
 export async function createTicket(
   ctx: AddonContext,
@@ -215,10 +198,8 @@ export async function createTicket(
     lastActivity: new Date().toISOString(),
   };
 
-  // Save ticket first so it's always recorded even if the send fails
   await saveTicket(ctx.storage, guildId, ticket);
 
-  // Send welcome embed + controls
   try {
     const embed = buildTicketEmbed(ticket, panel, member, t);
     const controls = buildTicketControls(channel.id, t);
@@ -235,7 +216,6 @@ export async function createTicket(
 
   const config = await getConfig(ctx.storage, guildId);
 
-  // ── User history (staff context) ──
   let historyLine = '';
   if (config.showUserHistory) {
     const hist = await getUserTicketHistory(ctx, guildId, userId, ticket.id);
@@ -244,7 +224,6 @@ export async function createTicket(
     }
   }
 
-  // ── AI auto-triage on open ──
   if (config.autoTriage && isLLMAvailable()) {
     try {
       const triage = await runTriageModel(ctx, ticket, channel, !!config.autoTriageTag);
@@ -270,12 +249,10 @@ export async function createTicket(
     }
   }
 
-  // Business-hours away notice
   if (config.businessHours?.enabled && config.businessHours.awayMessage && !isWithinBusinessHours(config.businessHours, Date.now())) {
     await channel.send(config.businessHours.awayMessage).catch(() => null);
   }
 
-  // Fire webhook
   if (config.webhookUrl) {
     fireWebhook(config.webhookUrl, {
       event: 'ticket.opened',
@@ -290,7 +267,6 @@ export async function createTicket(
     }).catch((err) => ctx.logger.warn(`Webhook delivery failed (ticket.opened): ${err}`));
   }
 
-  // Staff notification
   if (config.staffNotifyChannelId) {
     const notifyChannel = guild.channels.cache.get(config.staffNotifyChannelId) as TextChannel | undefined;
     if (notifyChannel?.isTextBased() && 'send' in notifyChannel) {
@@ -313,7 +289,6 @@ export async function createTicket(
     }
   }
 
-  // Auto-assign
   if (config.autoAssign && panel.staffRoles.length > 0) {
     try {
       const staffRole = guild.roles.cache.get(panel.staffRoles[0]);
@@ -338,10 +313,6 @@ export async function createTicket(
     }
   }
 }
-
-
-// ─── Rating ───────────────────────────────────────────────────────────────────
-
 
 export async function handleReasonModal(
   ctx: AddonContext,
@@ -373,7 +344,7 @@ export async function handleReasonModal(
         const val = interaction.fields.getTextInputValue(field.id).trim();
         if (val) formResponses[field.id] = val;
       } catch {
-        // field not present
+
       }
     }
     const firstTextField = submitFields[0];

@@ -54,8 +54,6 @@ async function loadAddonCommands() {
   const commands: AnyCommandJSON[] = [];
   const addonsPath = join(__dirname, "../../../../addons");
 
-
-  // Retired reference addons kept in-repo but never registered in production.
   const RETIRED_ADDONS = new Set(['example-economy']);
   const addonDirs = readdirSync(addonsPath).filter((dir) =>
     statSync(join(addonsPath, dir)).isDirectory()
@@ -81,7 +79,7 @@ async function loadAddonCommands() {
         console.log(`Found addon command: ${json.name}`);
       }
     } catch {
-      // Ignore addons without dist builds
+
     }
   }
 
@@ -92,8 +90,6 @@ async function deployCommands() {
   const localCommands = await loadLocalCommands();
   const addonCommands = await loadAddonCommands();
 
-  // Core commands are listed first and win on any name clash, so a demo/reference
-  // addon (e.g. example-economy) can never shadow a real command like /balance.
   const seen = new Set<string>();
   const allCommands: AnyCommandJSON[] = [];
   for (const cmd of [...localCommands, ...addonCommands]) {

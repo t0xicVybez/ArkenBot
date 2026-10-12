@@ -1,7 +1,4 @@
-/**
- * /botstatus command — reports runtime metrics: guild count, WebSocket latency,
- * uptime, and heap memory usage.
- */
+
 import { SlashCommandBuilder, type ChatInputCommandInteraction } from 'discord.js';
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';

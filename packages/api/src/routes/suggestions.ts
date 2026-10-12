@@ -6,18 +6,12 @@ import { prisma } from '../database.js';
 
 export async function suggestionRoutes(server: FastifyInstance): Promise<void> {
 
-  // ══════════════════════════════════════════════════════════════════
-  // SUGGESTIONS
-  // ══════════════════════════════════════════════════════════════════
-
-  // GET /guilds/:guildId/suggestions/config
   server.get('/guilds/:guildId/suggestions/config', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const config = await prisma.suggestionConfig.findUnique({ where: { guildId } });
     return reply.send({ success: true, data: config ?? { guildId, enabled: false, channelId: null, reviewChannelId: null, allowVoting: true } });
   });
 
-  // PATCH /guilds/:guildId/suggestions/config
   server.patch('/guilds/:guildId/suggestions/config', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const body = parse(z.object({
@@ -35,7 +29,6 @@ export async function suggestionRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: config });
   });
 
-  // GET /guilds/:guildId/suggestions?status=pending
   server.get('/guilds/:guildId/suggestions', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const { status } = request.query as { status?: string };
@@ -45,7 +38,6 @@ export async function suggestionRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: suggestions });
   });
 
-  // PATCH /guilds/:guildId/suggestions/:id
   server.patch('/guilds/:guildId/suggestions/:id', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, id } = request.params as { guildId: string; id: string };
     const body = parse(z.object({

@@ -1,24 +1,18 @@
 'use client';
 
-/**
- * Sticky top bar for dashboard and staff layouts: breadcrumb trail on the
- * left, quick actions (search, announcements) and the user avatar on the right.
- */
 import { usePathname, useRouter } from 'next/navigation';
 import { Search, Bell } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/lib/auth';
 
-/** Derives the current page slug (a `pages` message key) from the URL. */
 function slugFromPath(pathname: string): string {
   const parts = pathname.split('/').filter(Boolean);
   const last = parts[parts.length - 1] ?? '';
-  // /dashboard/<id> and /staff roots resolve to the Overview page
+
   if (parts.length <= 2 && (parts[0] === 'dashboard' || parts[0] === 'staff')) return 'overview';
   return last;
 }
 
-/** Title-cases an unknown slug as a fallback (e.g. `foo-bar` → `Foo Bar`). */
 function humanize(slug: string): string {
   return slug.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 }

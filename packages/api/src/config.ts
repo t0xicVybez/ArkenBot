@@ -1,23 +1,16 @@
-/**
- * Centralised runtime configuration derived from environment variables.
- * All required variables throw at startup if absent, preventing silent
- * misconfiguration in production.
- */
+
 import 'dotenv/config';
 
-/** Reads a required environment variable, throwing if it is absent or empty. */
 function required(name: string): string {
   const value = process.env[name];
   if (!value) throw new Error(`Missing required environment variable: ${name}`);
   return value;
 }
 
-/** Reads an optional environment variable, returning `defaultValue` if absent. */
 function optional(name: string, defaultValue = ''): string {
   return process.env[name] ?? defaultValue;
 }
 
-/** Reads an optional integer environment variable, falling back to `defaultValue`. */
 function optionalInt(name: string, defaultValue: number): number {
   const raw = process.env[name];
   if (!raw) return defaultValue;
@@ -33,7 +26,7 @@ export const config = {
   discord: {
     clientId: required('DISCORD_CLIENT_ID'),
     clientSecret: required('DISCORD_CLIENT_SECRET'),
-    // Now points at the API — the callback is handled server-side, not by the web app.
+
     redirectUri: optional('DISCORD_REDIRECT_URI', 'http://localhost:4000/auth/callback'),
     botToken: optional('DISCORD_TOKEN', ''),
   },
@@ -47,7 +40,6 @@ export const config = {
     password: optional('REDIS_PASSWORD'),
   },
 
-  /** Discord user IDs granted bot-owner privileges. */
   owners: optional('BOT_OWNER_IDS', '').split(',').map((id) => id.trim()).filter(Boolean),
   env: optional('NODE_ENV', 'development'),
   logLevel: optional('LOG_LEVEL', 'info'),
@@ -56,44 +48,25 @@ export const config = {
     origin: optional('CORS_ORIGIN', 'http://localhost:3000'),
   },
 
-  /** Public URL of the dashboard — the OAuth callback redirects the browser back here. */
   web: {
     url: optional('WEB_URL', 'http://localhost:3000'),
   },
 
-  /**
-   * Public base URL of THIS API, reachable from the internet. Used as the
-   * PubSubHubbub (WebSub) callback for YouTube push notifications. Falls back to
-   * NEXT_PUBLIC_API_URL (the same origin the dashboard already calls).
-   */
   publicApiUrl: (optional('PUBLIC_API_URL') || optional('NEXT_PUBLIC_API_URL', 'http://localhost:4000')).replace(/\/$/, ''),
 
-  /** YouTube Data API key (shared with the bot) — for handle→channelId + videos.list. */
   youtubeApiKey: optional('YOUTUBE_API_KEY', ''),
 
-  /**
-   * Riot Games / VALORANT integration (RSO). Empty until we're granted a
-   * Production key + RSO client. `isConfigured` gates the whole feature: every
-   * Valorant route/command no-ops (503 "not configured") while these are blank,
-   * so the code ships dormant and activates the moment the creds land.
-   */
   valorant: {
     clientId: optional('RIOT_CLIENT_ID', ''),
     clientSecret: optional('RIOT_CLIENT_SECRET', ''),
     apiKey: optional('RIOT_API_KEY', ''),
-    // Must match the redirect URI registered with Riot for the RSO client.
+
     redirectUri: optional('RIOT_RSO_REDIRECT', 'https://api.arkenbot.app/valorant/rso/callback'),
     get isConfigured(): boolean {
       return Boolean(process.env.RIOT_CLIENT_ID && process.env.RIOT_CLIENT_SECRET && process.env.RIOT_API_KEY);
     },
   },
 
-  /**
-   * Opaque session cookie. `secure` is enabled in production only so the flow
-   * still works over plain HTTP during local development. `sameSite: 'lax'` is
-   * sufficient because the dashboard and API are same-site (shared registrable
-   * domain in production); it still blocks cross-site request forgery.
-   */
   cookie: {
     name: optional('SESSION_COOKIE_NAME', 'arken_session'),
     domain: optional('SESSION_COOKIE_DOMAIN') || undefined,
@@ -101,14 +74,6 @@ export const config = {
     sameSite: 'lax' as const,
   },
 
-  /**
-   * Server-side session lifetimes (milliseconds).
-   * - `absoluteExpiryMs` — hard cap; a session cannot outlive this from creation.
-   * - `idleExpiryMs`     — sliding idle timeout, extended on each request.
-   * - `rotateAfterMs`    — reissue the opaque id once the current one is older than this.
-   * - `graceMs`          — window after a rotation in which the just-replaced id is
-   *                        still accepted (absorbs in-flight concurrent requests).
-   */
   session: {
     absoluteExpiryMs: optionalInt('SESSION_ABSOLUTE_EXPIRY_MS', 30 * 24 * 3600 * 1000),
     idleExpiryMs: optionalInt('SESSION_IDLE_EXPIRY_MS', 7 * 24 * 3600 * 1000),

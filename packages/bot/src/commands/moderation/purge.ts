@@ -1,7 +1,4 @@
-/**
- * /purge command — bulk-deletes up to 100 messages from a text channel with
- * optional filters for author, bot messages, or message content.
- */
+
 import { SlashCommandBuilder, PermissionFlagsBits, type ChatInputCommandInteraction } from 'discord.js';
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
@@ -39,7 +36,6 @@ const command: BotCommand = {
     if (botsOnly) toDelete = toDelete.filter(m => m.author.bot);
     if (contains) toDelete = toDelete.filter(m => m.content.toLowerCase().includes(contains.toLowerCase()));
 
-    // Discord's bulkDelete API rejects messages older than 14 days.
     const twoWeeksAgo = Date.now() - 14 * 24 * 60 * 60 * 1000;
     toDelete = toDelete.filter(m => m.createdTimestamp > twoWeeksAgo);
 

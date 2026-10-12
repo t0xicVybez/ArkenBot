@@ -21,7 +21,6 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: `${t('metaTitle')} · ArkenBot`, description: t('metaDesc') };
 }
 
-/** A little faux-Discord card used to visually demonstrate the planned UX. */
 function Mock({ children }: { children: React.ReactNode }) {
   return (
     <div className="rounded-xl border border-(--border) bg-(--bg-card) p-4 shadow-lg">{children}</div>
@@ -44,7 +43,7 @@ export default async function ValorantPage() {
       <LandingNav docsUrl={SITE.docsUrl} supportUrl={SITE.supportUrl} inviteUrl={SITE.inviteUrl} />
 
       <main className="mx-auto max-w-5xl px-6 py-16">
-        {/* Hero */}
+        {}
         <div className="grid items-center gap-10 md:grid-cols-2">
           <div>
             <span className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold" style={{ background: `${VAL_RED}1a`, color: VAL_RED }}>
@@ -60,7 +59,7 @@ export default async function ValorantPage() {
             </div>
           </div>
 
-          {/* Hero mockup — a rank card */}
+          {}
           <Mock>
             <div className="flex items-center gap-3">
               <div className="grid h-11 w-11 place-items-center rounded-lg font-bold text-white" style={{ background: VAL_RED }}>V</div>
@@ -81,7 +80,7 @@ export default async function ValorantPage() {
           </Mock>
         </div>
 
-        {/* How it works */}
+        {}
         <h2 className="mt-20 mb-8 text-center text-2xl font-bold text-(--text-primary)">{t('howTitle')}</h2>
         <div className="space-y-4">
           {steps.map(({ icon: Icon, key }, i) => (
@@ -97,7 +96,7 @@ export default async function ValorantPage() {
                 <p className="mt-1 text-sm leading-relaxed text-(--text-secondary)">{t(`${key}Desc`)}</p>
               </div>
 
-              {/* Per-step mockup */}
+              {}
               <div>
                 {key === 'step1' && (
                   <Mock>
@@ -156,7 +155,7 @@ export default async function ValorantPage() {
           ))}
         </div>
 
-        {/* Privacy / opt-in */}
+        {}
         <div className="mt-14 rounded-xl border border-(--border) bg-(--bg-card) p-6 text-center">
           <ShieldCheck className="mx-auto h-6 w-6" style={{ color: VAL_RED }} />
           <p className="mt-3 text-sm text-(--text-secondary)">

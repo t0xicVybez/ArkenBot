@@ -202,7 +202,6 @@ const command: BotCommand = {
     await interaction.respond(snips.filter((s) => s.name.toLowerCase().includes(focused)).slice(0, 25).map((s) => ({ name: s.name, value: s.name })));
   },
 
-  // Guild picker when a user DMs the bot from multiple modmail-enabled servers.
   async handleSelect(interaction: StringSelectMenuInteraction, client: BotClient): Promise<void> {
     if (!interaction.customId.startsWith('modmail:pick:')) return;
     const guildId = interaction.values[0];
@@ -210,7 +209,6 @@ const command: BotCommand = {
     await ModmailModule.completePick(client, interaction.user, guildId);
   },
 
-  // Post-close feedback rating buttons (DM'd to the user).
   async handleButton(interaction: ButtonInteraction, client: BotClient): Promise<void> {
     if (!interaction.customId.startsWith('modmail:rate:')) return;
     const [, , threadId, nStr] = interaction.customId.split(':');

@@ -4,13 +4,6 @@ import type { TicketMessage } from '../types.js';
 import { getTicketByChannel, appendMessage, saveTicket, getPanel } from '../utils/storage.js';
 import { updateControlsMessage } from './interaction.js';
 
-/**
- * Track messages inside ticket channels for transcript generation.
- * Also tracks first staff response time, updates lastActivity, and
- * automatically manages the waiting status:
- *   - Staff reply  → set ticket to "waiting" (waiting on user)
- *   - User reply when waiting → restore to "open" or "claimed"
- */
 export async function handleTicketMessage(ctx: AddonContext, message: Message): Promise<void> {
   if (message.author.bot) return;
   if (!message.guildId || !message.channelId) return;
@@ -38,12 +31,10 @@ export async function handleTicketMessage(ctx: AddonContext, message: Message): 
     panel.staffRoles.length === 0 ||
     panel.staffRoles.some((rid) => member?.roles.cache.has(rid));
 
-  // Track first staff response time
   if (!ticket.firstResponseAt && !isUser && isStaff) {
     ticket.firstResponseAt = now;
   }
 
-  // Auto-waiting: staff reply → waiting; user reply when waiting → open/claimed
   let statusChanged = false;
   if (isStaff && !isUser && ticket.status !== 'waiting') {
     ticket.status = 'waiting';
@@ -53,13 +44,10 @@ export async function handleTicketMessage(ctx: AddonContext, message: Message): 
     statusChanged = true;
   }
 
-  // Update last activity for auto-close tracking; clear any pending pre-close
-  // nudge so a re-activated ticket can be nudged again later.
   ticket.lastActivity = now;
   if (ticket.nudgedAt) ticket.nudgedAt = undefined;
   await saveTicket(ctx.storage, message.guildId, ticket);
 
-  // Reflect the new waiting state in the controls message buttons
   if (statusChanged) {
     await updateControlsMessage(ctx, ticket, !!ticket.claimedBy).catch(() => null);
   }

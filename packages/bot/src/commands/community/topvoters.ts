@@ -1,6 +1,4 @@
-/**
- * /topvoters — the bot's most dedicated top.gg voters, ranked by total votes.
- */
+
 import { SlashCommandBuilder, EmbedBuilder, type ChatInputCommandInteraction } from 'discord.js';
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';

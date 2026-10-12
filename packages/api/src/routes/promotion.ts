@@ -1,14 +1,4 @@
-/**
- * Server Promotion Tracking — dashboard API.
- *
- * Config:       GET/PATCH /promotion/:guildId/config        (guild admin)
- * Leaderboard:  GET       /promotion/:guildId/leaderboard    (guild admin)
- * Member view:  GET       /promotion/:guildId/members/:userId (guild admin)
- *
- * Durations are aggregated straight from `promotion_sessions`: each session
- * contributes `COALESCE(endedAt, now) - startedAt`, so an open session counts its
- * live elapsed time and offline/invisible gaps (which close sessions) don't count.
- */
+
 import type { FastifyInstance } from 'fastify';
 import axios from 'axios';
 import { isSnowflake } from '@arkenbot/shared';
@@ -49,7 +39,7 @@ function shapeRow(r: LeaderRow) {
 }
 
 export async function promotionRoutes(server: FastifyInstance): Promise<void> {
-  // ── Config ──────────────────────────────────────────────────────────────────
+
   server.get('/promotion/:guildId/config', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const cfg = await prisma.promotionConfig.findUnique({ where: { guildId } });
@@ -61,16 +51,12 @@ export async function promotionRoutes(server: FastifyInstance): Promise<void> {
 
   server.patch('/promotion/:guildId/config', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
-    // Validate the snowflake before it's ever interpolated into the Discord API
-    // URL below — blocks request-forgery via a crafted guildId (e.g. one that
-    // appends path segments to reach other bot-token endpoints). The staff/owner
-    // path skips requireGuildAdmin's guild check, so this guard is load-bearing.
+
     if (!isSnowflake(guildId)) return reply.code(400).send({ success: false, error: 'Invalid guild ID' });
     const b = (request.body ?? {}) as {
       enabled?: boolean; trackStatus?: boolean; trackTag?: boolean; keywords?: string[];
     };
 
-    // Sanitise keywords: trimmed, non-empty, de-duplicated, capped.
     let keywords: string[] | undefined;
     if (Array.isArray(b.keywords)) {
       keywords = [...new Set(b.keywords.map((k) => String(k).trim()).filter((k) => k.length > 0 && k.length <= 100))].slice(0, 25);
@@ -78,8 +64,6 @@ export async function promotionRoutes(server: FastifyInstance): Promise<void> {
 
     const existing = await prisma.promotionConfig.findUnique({ where: { guildId } });
 
-    // On first enable with no keywords, seed from the Discord server name so it
-    // works out of the box (owner can refine them after).
     if (b.enabled && !existing?.enabled && (keywords?.length ?? existing?.keywords.length ?? 0) === 0) {
       try {
         const { data } = await axios.get<{ name: string; vanity_url_code?: string | null }>(
@@ -88,7 +72,7 @@ export async function promotionRoutes(server: FastifyInstance): Promise<void> {
         );
         const seed = [data.name, data.vanity_url_code ? `.gg/${data.vanity_url_code}` : null].filter(Boolean) as string[];
         if (seed.length) keywords = seed;
-      } catch { /* best-effort seed */ }
+      } catch {  }
     }
 
     const cfg = await prisma.promotionConfig.upsert({
@@ -108,12 +92,10 @@ export async function promotionRoutes(server: FastifyInstance): Promise<void> {
       },
     });
 
-    // Tell the bot to reload its hot-path cache immediately.
     await pub.publish('promotion:config:updated', guildId).catch(() => undefined);
     return reply.send({ success: true, data: cfg });
   });
 
-  // ── Leaderboard ───────────────────────────────────────────────────────────────
   server.get('/promotion/:guildId/leaderboard', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const q = request.query as { limit?: string; offset?: string };
@@ -142,7 +124,6 @@ export async function promotionRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: rows.map(shapeRow) });
   });
 
-  // ── Member detail (aggregates + recent session history) ─────────────────────────
   server.get('/promotion/:guildId/members/:userId', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, userId } = request.params as { guildId: string; userId: string };
 

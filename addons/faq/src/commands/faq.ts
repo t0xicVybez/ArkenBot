@@ -26,7 +26,7 @@ const command: AddonCommandDefinition = {
     if (!entries.length) { await interaction.reply({ content: t('noEntries'), flags: MessageFlags.Ephemeral }); return; }
 
     const raw = interaction.options.getString('query', true);
-    // Autocomplete hands us an entry id; a typed query falls through to search.
+
     const entry = (await findEntry(ctx.storage, guildId, raw)) ?? search(entries, raw)[0] ?? null;
     if (!entry) { await interaction.reply({ content: t('notFound'), flags: MessageFlags.Ephemeral }); return; }
 

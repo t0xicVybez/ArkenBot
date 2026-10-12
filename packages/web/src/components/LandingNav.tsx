@@ -1,10 +1,5 @@
 'use client';
 
-/**
- * Sticky navigation bar for public-facing pages.
- * Tracks scroll depth for background blur, active section via IntersectionObserver,
- * and shows a collapsible mobile drawer.
- */
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -25,10 +20,6 @@ const NAV_LINKS = [
   { key: 'addons', href: '/addons' },
 ];
 
-/**
- * Renders the landing page navigation with scroll-aware styling,
- * active section highlighting, and a mobile drawer.
- */
 export function LandingNav({ docsUrl, supportUrl, inviteUrl }: LandingNavProps) {
   const t = useTranslations('landingNav');
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -36,8 +27,6 @@ export function LandingNav({ docsUrl, supportUrl, inviteUrl }: LandingNavProps) 
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
 
-  // The auth store hydrates from localStorage on the client, so gate on a mounted
-  // flag to avoid a server/client markup mismatch (matches the dashboard pattern).
   const isAuthenticated = useAuth((s) => s.isAuthenticated);
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => { setHydrated(true); }, []);
@@ -67,7 +56,6 @@ export function LandingNav({ docsUrl, supportUrl, inviteUrl }: LandingNavProps) 
     return () => observers.forEach((o) => o.disconnect());
   }, []);
 
-  // Close mobile menu on resize to desktop
   useEffect(() => {
     const onResize = () => { if (window.innerWidth >= 768) setMobileOpen(false); };
     window.addEventListener('resize', onResize);

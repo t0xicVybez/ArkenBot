@@ -5,7 +5,7 @@ import { parse } from '../utils/validate.js';
 import { prisma } from '../database.js';
 
 export async function moderationRoutes(server: FastifyInstance): Promise<void> {
-  // GET /guilds/:guildId/cases
+
   server.get('/guilds/:guildId/cases', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const query = request.query as { page?: string; pageSize?: string; type?: string; userId?: string };
@@ -35,7 +35,6 @@ export async function moderationRoutes(server: FastifyInstance): Promise<void> {
     });
   });
 
-  // GET /guilds/:guildId/cases/:caseNumber
   server.get('/guilds/:guildId/cases/:caseNumber', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, caseNumber } = request.params as { guildId: string; caseNumber: string };
 
@@ -48,7 +47,6 @@ export async function moderationRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: modCase });
   });
 
-  // PATCH /guilds/:guildId/cases/:caseNumber - Update reason
   server.patch('/guilds/:guildId/cases/:caseNumber', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, caseNumber } = request.params as { guildId: string; caseNumber: string };
     const input = parse(z.object({ reason: z.string().trim().min(1).max(512) }), request.body, reply);
@@ -62,7 +60,6 @@ export async function moderationRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: updated });
   });
 
-  // GET /guilds/:guildId/warnings
   server.get('/guilds/:guildId/warnings', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const query = request.query as { userId?: string; active?: string };
@@ -79,7 +76,6 @@ export async function moderationRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: warnings });
   });
 
-  // DELETE /guilds/:guildId/warnings/:id - Clear a single warning
   server.delete('/guilds/:guildId/warnings/:id', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, id } = request.params as { guildId: string; id: string };
 
@@ -88,7 +84,6 @@ export async function moderationRoutes(server: FastifyInstance): Promise<void> {
 
     await prisma.warning.update({ where: { id }, data: { active: false } });
 
-    // Record the clear action as a case
     const lastCase = await prisma.moderationCase.findFirst({ where: { guildId }, orderBy: { caseNumber: 'desc' } });
     const caseNumber = (lastCase?.caseNumber ?? 0) + 1;
     const portalUserId = (request as unknown as { user?: { id: string; username: string } }).user;
@@ -109,14 +104,12 @@ export async function moderationRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, message: 'Warning cleared' });
   });
 
-  // DELETE /guilds/:guildId/warnings - Bulk-clear all active warnings for a user
   server.delete('/guilds/:guildId/warnings', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const { userId } = request.query as { userId?: string };
 
     if (!userId) return reply.code(400).send({ success: false, error: 'userId query parameter required' });
 
-    // Grab info before clearing
     const sample = await prisma.warning.findFirst({ where: { guildId, userId, active: true } });
 
     const result = await prisma.warning.updateMany({
@@ -146,7 +139,6 @@ export async function moderationRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: { cleared: result.count } });
   });
 
-  // GET /guilds/:guildId/logs
   server.get('/guilds/:guildId/logs', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const query = request.query as { page?: string; pageSize?: string; type?: string; userId?: string; dateFrom?: string; dateTo?: string };

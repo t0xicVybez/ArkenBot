@@ -74,7 +74,7 @@ const command: AddonCommandDefinition = {
     .addSubcommand((s) =>
       s.setName('stop').setDescription('Stop / shut down the server')
         .addStringOption((o) => o.setName('server').setDescription('Which server').setRequired(true).setAutocomplete(true)))
-    // ── control panel + audit + scheduling ──────────────────────────────────────
+
     .addSubcommand((s) =>
       s.setName('panel').setDescription('Post a control panel with buttons for a server')
         .addStringOption((o) => o.setName('server').setDescription('Which server').setRequired(true).setAutocomplete(true)))
@@ -102,7 +102,6 @@ const command: AddonCommandDefinition = {
     const sub = interaction.options.getSubcommand();
     const guildId = interaction.guildId;
 
-    // ── add: collect the password via a private modal ──
     if (sub === 'add') {
       if (!canStoreCredentials()) {
         await interaction.reply({ content: t('gameadmin.noKey'), flags: MessageFlags.Ephemeral });
@@ -204,7 +203,6 @@ const command: AddonCommandDefinition = {
       return;
     }
 
-    // ── everything else runs a command against a saved server ──
     const server = await findServer(ctx.storage, guildId, interaction.options.getString('server', true));
     if (!server) { await interaction.reply({ content: t('gameadmin.notFound'), flags: MessageFlags.Ephemeral }); return; }
 
@@ -232,7 +230,7 @@ const command: AddonCommandDefinition = {
           const target = await resolvePlayerTarget(server, interaction.options.getString('player', true));
           rawCommand = (builder as (t: string) => string)(target);
         }
-        else rawCommand = builder as string; // players / save / stop
+        else rawCommand = builder as string;
         title = t(`gameadmin.titles.${action}`, { server: server.name });
       }
 

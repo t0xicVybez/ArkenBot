@@ -1,20 +1,4 @@
-/**
- * VALORANT integration via Riot Sign-On (RSO).
- *
- * DORMANT until a Production key + RSO client are granted: every route guards on
- * `config.valorant.isConfigured` and 503s while the RIOT_* env vars are blank.
- *
- * Link flow (official RSO OAuth):
- *   1. GET  /valorant/rso/login    (authed) → store state→discordId, redirect to Riot authorize
- *   2. GET  /valorant/rso/callback → verify state, exchange code, fetch PUUID + Riot ID, upsert link
- *   3. GET  /valorant/link         (authed) → current user's link status
- *   4. DEL  /valorant/link         (authed) → unlink
- *   5. GET/PATCH /valorant/config/:guildId (guild admin) → per-guild config
- *   6. GET  /valorant/leaderboard/:guildId → linked members ranked (from cached tiers)
- *
- * NOTE: live rank/match DATA fetching (VAL-MATCH / MMR) is intentionally NOT wired
- * here yet — it can't be tested without a real key. See ValorantService (bot side).
- */
+
 import type { FastifyInstance } from 'fastify';
 import { randomBytes } from 'node:crypto';
 import axios from 'axios';
@@ -26,9 +10,8 @@ import { config } from '../config.js';
 const RSO_AUTHORIZE = 'https://auth.riotgames.com/authorize';
 const RSO_TOKEN = 'https://auth.riotgames.com/token';
 const RSO_USERINFO = 'https://auth.riotgames.com/userinfo';
-const STATE_TTL = 600; // seconds
+const STATE_TTL = 600;
 
-/** Regional routing host for account-v1 (Riot ID lookup). */
 function accountHost(region: string): string {
   if (['eu', 'europe', 'eune', 'euw'].includes(region)) return 'europe';
   if (['ap', 'asia', 'kr'].includes(region)) return 'asia';
@@ -44,7 +27,6 @@ export async function valorantRoutes(server: FastifyInstance): Promise<void> {
     return true;
   };
 
-  // 1. Begin RSO — redirect the browser to Riot's authorize page.
   server.get('/valorant/rso/login', { preHandler: [requireAuth] }, async (request, reply) => {
     if (!guard(reply)) return;
     const discordId = request.user!.id;
@@ -60,9 +42,6 @@ export async function valorantRoutes(server: FastifyInstance): Promise<void> {
     return reply.redirect(`${RSO_AUTHORIZE}?${params.toString()}`);
   });
 
-  // 1b. Token-based start — used by the bot's /valorant link command so members
-  // can link straight from Discord (no dashboard login). The bot writes
-  // `valorant:link:<token>` → discordId to Redis; we redeem it and begin RSO.
   server.get('/valorant/rso/start', async (request, reply) => {
     if (!config.valorant.isConfigured) return reply.redirect(`${config.web.url}/dashboard?valorant=unavailable`);
     const { token } = request.query as { token?: string };
@@ -82,7 +61,6 @@ export async function valorantRoutes(server: FastifyInstance): Promise<void> {
     return reply.redirect(`${RSO_AUTHORIZE}?${params.toString()}`);
   });
 
-  // 2. RSO callback — exchange the code, resolve PUUID + Riot ID, store the link.
   server.get('/valorant/rso/callback', async (request, reply) => {
     if (!config.valorant.isConfigured) return reply.redirect(`${config.web.url}/dashboard?valorant=unavailable`);
     const { code, state, error } = request.query as { code?: string; state?: string; error?: string };
@@ -93,7 +71,7 @@ export async function valorantRoutes(server: FastifyInstance): Promise<void> {
     await redis.del(`valorant:rso:${state}`);
 
     try {
-      // Exchange the authorization code for tokens (client basic auth).
+
       const basic = Buffer.from(`${config.valorant.clientId}:${config.valorant.clientSecret}`).toString('base64');
       const tokenRes = await axios.post(
         RSO_TOKEN,
@@ -102,12 +80,10 @@ export async function valorantRoutes(server: FastifyInstance): Promise<void> {
       );
       const { access_token, refresh_token, expires_in } = tokenRes.data as { access_token: string; refresh_token?: string; expires_in?: number };
 
-      // PUUID from the RSO userinfo endpoint.
       const userinfo = await axios.get(RSO_USERINFO, { headers: { Authorization: `Bearer ${access_token}` } });
       const puuid = (userinfo.data as { sub?: string }).sub;
       if (!puuid) return reply.redirect(`${config.web.url}/dashboard?valorant=error`);
 
-      // Riot ID (gameName#tagLine) via account-v1 (needs the production API key).
       let gameName = '', tagLine = '';
       try {
         const acct = await axios.get(
@@ -116,7 +92,7 @@ export async function valorantRoutes(server: FastifyInstance): Promise<void> {
         );
         gameName = (acct.data as { gameName?: string }).gameName ?? '';
         tagLine = (acct.data as { tagLine?: string }).tagLine ?? '';
-      } catch { /* Riot ID is best-effort; the link still works via PUUID */ }
+      } catch {  }
 
       await prisma.valorantLink.upsert({
         where: { discordId },
@@ -138,7 +114,6 @@ export async function valorantRoutes(server: FastifyInstance): Promise<void> {
     }
   });
 
-  // 3. Current user's link status.
   server.get('/valorant/link', { preHandler: [requireAuth] }, async (request, reply) => {
     const link = await prisma.valorantLink.findUnique({
       where: { discordId: request.user!.id },
@@ -147,13 +122,11 @@ export async function valorantRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: { configured: config.valorant.isConfigured, link } });
   });
 
-  // 4. Unlink.
   server.delete('/valorant/link', { preHandler: [requireAuth] }, async (request, reply) => {
     await prisma.valorantLink.deleteMany({ where: { discordId: request.user!.id } });
     return reply.send({ success: true });
   });
 
-  // 5a. Per-guild config.
   server.get('/valorant/config/:guildId', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const cfg = await prisma.valorantGuildConfig.findUnique({ where: { guildId } });
@@ -163,7 +136,6 @@ export async function valorantRoutes(server: FastifyInstance): Promise<void> {
     });
   });
 
-  // 5b. Update per-guild config (whitelisted fields).
   server.patch('/valorant/config/:guildId', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const b = request.body as {
@@ -183,8 +155,6 @@ export async function valorantRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: cfg });
   });
 
-  // 6. Server leaderboard — ranks linked members by their cached competitive tier.
-  //    (Tiers are populated by the sync job once the integration is live.)
   server.get('/valorant/leaderboard/:guildId', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const rows = await prisma.valorantLink.findMany({
       where: { currentTier: { not: null } },

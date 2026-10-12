@@ -1,9 +1,4 @@
-/**
- * /permcheck — reports which permissions ArkenBot is missing in the current
- * server (guild-wide) and in individual channels, so admins can see exactly why
- * a feature is silently failing instead of hitting a Missing Permissions error.
- * Restricted to members with Manage Server.
- */
+
 import {
   SlashCommandBuilder,
   PermissionFlagsBits,
@@ -20,10 +15,6 @@ import { COLORS } from '@arkenbot/shared';
 import { errorEmbed } from '../../utils/embed.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 
-// Guild-wide permissions the bot's features rely on, with the Discord label
-// (kept in Discord's own English wording — these are product feature names, not
-// translatable app copy) and a short feature hint key is not used to keep the
-// list compact; the label alone is what admins match against Discord's UI.
 const NEEDED: { flag: bigint; label: string }[] = [
   { flag: PermissionFlagsBits.ViewAuditLog,   label: 'View Audit Log' },
   { flag: PermissionFlagsBits.ManageRoles,    label: 'Manage Roles' },
@@ -55,7 +46,6 @@ const command: BotCommand = {
     const me = await interaction.guild.members.fetchMe();
     const embed = new EmbedBuilder().setTitle(t('cmd.permcheck.title', loc)).setColor(COLORS.INFO);
 
-    // Administrator short-circuits everything.
     if (me.permissions.has(PermissionFlagsBits.Administrator)) {
       embed.setColor(0x57f287).setDescription(t('cmd.permcheck.allGoodAdmin', loc));
       await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
@@ -64,7 +54,6 @@ const command: BotCommand = {
 
     const missingGuild = NEEDED.filter((p) => !me.permissions.has(p.flag)).map((p) => p.label);
 
-    // Channel-level: text channels where the bot can't view or fully post.
     const channelIssues: string[] = [];
     const textChannels = interaction.guild.channels.cache.filter(
       (c): c is GuildTextBasedChannel =>

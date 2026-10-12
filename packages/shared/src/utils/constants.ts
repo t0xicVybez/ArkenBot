@@ -1,9 +1,7 @@
-/** Platform-wide constants for leveling, permissions, logging, colors, and Redis key templates. */
 
-/** Base XP required to reach level 1. Higher levels require more XP via the multiplier. */
+
 export const XP_PER_LEVEL_BASE = 100;
 
-/** Exponential multiplier applied to XP thresholds as levels increase. */
 export const XP_MULTIPLIER = 1.5;
 
 export const DEFAULT_PREFIX = '!';
@@ -12,7 +10,6 @@ export const DEFAULT_COLOR = '#5865F2';
 export const MAX_WARNINGS = 10;
 export const MAX_CUSTOM_COMMANDS = 50;
 
-/** Numeric permission tiers used by the bot's permission system. */
 export const PERMISSION_LEVELS = {
   EVERYONE: 0,
   MODERATOR: 1,
@@ -22,7 +19,6 @@ export const PERMISSION_LEVELS = {
   BOT_OWNER: 5,
 } as const;
 
-/** Canonical string identifiers for log event types. */
 export const LOG_TYPES = {
   MESSAGE_DELETE: 'message_delete',
   MESSAGE_EDIT: 'message_edit',
@@ -43,7 +39,6 @@ export const LOG_TYPES = {
 
 export type LogType = (typeof LOG_TYPES)[keyof typeof LOG_TYPES];
 
-/** Embed colors used consistently across all bot features. */
 export const COLORS = {
   SUCCESS: 0x57f287,
   ERROR: 0xed4245,
@@ -53,10 +48,8 @@ export const COLORS = {
   NEUTRAL: 0x99aab5,
 } as const;
 
-/** Prefix applied to all addon permission category identifiers. */
 export const ADDON_CATEGORY_PREFIX = 'addon:';
 
-/** Redis key factory functions. Using functions ensures consistent namespacing across the codebase. */
 export const REDIS_KEYS = {
   GUILD_SETTINGS: (guildId: string) => `guild:settings:${guildId}`,
   GUILD_ADDON: (guildId: string, addonName: string) => `guild:addon:${guildId}:${addonName}`,

@@ -25,7 +25,7 @@ export function CommandPalette({
   useEffect(() => {
     if (open) {
       setQ('');
-      // focus after paint
+
       const t = setTimeout(() => inputRef.current?.focus(), 20);
       return () => clearTimeout(t);
     }

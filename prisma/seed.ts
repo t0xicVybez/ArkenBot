@@ -5,7 +5,6 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('Seeding database...');
 
-  // Create example addons
   await prisma.addon.upsert({
     where: { name: 'example-greeting' },
     update: {},
@@ -28,9 +27,6 @@ async function main() {
       },
     },
   });
-
-  // example-economy is retired (superseded by the core economy) and no longer
-  // seeded; the core economy is the real feature.
 
   console.log('Seeding complete.');
 }

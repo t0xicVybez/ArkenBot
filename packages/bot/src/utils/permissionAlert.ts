@@ -1,27 +1,13 @@
-/**
- * Permission-failure alerts.
- *
- * When the bot is blocked from performing an action by a missing Discord
- * permission (or role-hierarchy) it normally fails silently via `.catch(swallow)`.
- * `notifyActionFailure` is a drop-in replacement for `swallow` in those `.catch`
- * handlers: it preserves the swallow behaviour (debug-log, return null, never
- * throw) but, when the error is a permission error, also posts an alert to the
- * guild's mod-log/log channel pinging the configured alert role.
- *
- * Alerts are de-duplicated per guild + action for a short window so a
- * misconfigured server gets one heads-up, not a flood.
- */
+
 import { EmbedBuilder, DiscordAPIError, type Guild } from 'discord.js';
 import { getGuildSettings } from './settings.js';
 import { resolveUserLocale, t } from '../i18n/index.js';
 import { logger, swallow } from '../logger.js';
 
-/** Discord API error codes that mean "the bot lacks permission to do this". */
-const PERMISSION_ERROR_CODES = new Set([50013, 50001]); // Missing Permissions, Missing Access
-const DEDUPE_TTL_MS = 10 * 60 * 1000; // one alert per guild+action per 10 minutes
+const PERMISSION_ERROR_CODES = new Set([50013, 50001]);
+const DEDUPE_TTL_MS = 10 * 60 * 1000;
 const lastAlertAt = new Map<string, number>();
 
-/** True when `err` is a Discord "missing permission / access" error. */
 export function isPermissionError(err: unknown): boolean {
   if (err instanceof DiscordAPIError) return PERMISSION_ERROR_CODES.has(Number(err.code));
   const code = (err as { code?: unknown } | null)?.code;
@@ -29,33 +15,26 @@ export function isPermissionError(err: unknown): boolean {
 }
 
 export interface ActionFailureOptions {
-  /** Action id — used both as the dedupe key and the `permAlert.actions.<id>` i18n key. */
+
   action: string;
-  /** The caught error. */
+
   error: unknown;
-  /** Human-readable permission the bot likely needs, e.g. "Timeout Members". */
+
   requiredPermission?: string;
-  /** Where the action was attempted (rendered as a channel mention). */
+
   channelId?: string | null;
-  /** Who/what the action targeted (mention or tag). */
+
   target?: string | null;
 }
 
-/**
- * Drop-in `.catch()` handler. Always returns null and never throws, so it does
- * not change control flow. Emits a permission alert when the error is a
- * missing-permission error and the guild has a mod-log/log channel configured.
- */
 export async function notifyActionFailure(guild: Guild, opts: ActionFailureOptions): Promise<null> {
   const { action, error } = opts;
-  // Preserve swallow's behaviour first, whatever happens next.
+
   logger.debug({ err: error, action, guildId: guild.id }, 'bot action failed');
 
   try {
     if (!isPermissionError(error)) return null;
 
-    // Mark the error so the global REST interceptor treats this as already handled
-    // (it fires only as a fallback for actions without a call-site handler).
     if (error && typeof error === 'object') {
       (error as { __arkenHandled?: boolean }).__arkenHandled = true;
     }
@@ -66,7 +45,6 @@ export async function notifyActionFailure(guild: Guild, opts: ActionFailureOptio
     const channelId = settings.modLogChannelId ?? settings.logChannelId;
     if (!channelId) return null;
 
-    // De-duplicate: one alert per guild+action+channel per window.
     const key = `${guild.id}:${action}:${opts.channelId ?? ''}`;
     const now = Date.now();
     const last = lastAlertAt.get(key);

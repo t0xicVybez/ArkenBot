@@ -1,6 +1,4 @@
-/**
- * Routes for managing guild-specific custom text commands.
- */
+
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { requireGuildAdmin } from '../middleware/auth.js';
@@ -18,14 +16,6 @@ const cmdFields = {
   cooldown: z.number().int().min(0).max(86400).optional(),
 };
 
-/**
- * Registers custom command routes.
- *
- * GET    /guilds/:guildId/custom-commands      — list all custom commands
- * POST   /guilds/:guildId/custom-commands      — create a new custom command
- * PATCH  /guilds/:guildId/custom-commands/:id  — update a custom command
- * DELETE /guilds/:guildId/custom-commands/:id  — delete a custom command
- */
 export async function customCommandRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/guilds/:guildId/custom-commands', { preHandler: [requireGuildAdmin] }, async (request, reply) => {

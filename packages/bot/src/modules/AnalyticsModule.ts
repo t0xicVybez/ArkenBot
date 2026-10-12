@@ -1,8 +1,4 @@
-/**
- * Tracks per-guild daily activity metrics in Redis and flushes them to the
- * `ServerDailyStats` database table once per day. Using Redis counters avoids
- * a database write on every message and command interaction.
- */
+
 
 import { prisma } from '../database.js';
 import { redis } from '../redis.js';
@@ -11,42 +7,29 @@ import type { BotClient } from '../client.js';
 
 const REDIS_PREFIX = 'analytics';
 
-/**
- * Returns the Redis key for a per-guild, per-metric daily counter.
- * Keys are scoped to the current UTC date so they naturally roll over at midnight.
- */
 function dayKey(guildId: string, metric: string): string {
   const today = new Date().toISOString().slice(0, 10);
   return `${REDIS_PREFIX}:${guildId}:${today}:${metric}`;
 }
 
 export class AnalyticsModule {
-  /** Increments the message counter for the guild. Call on every `messageCreate` event. */
+
   static async trackMessage(guildId: string): Promise<void> {
     await redis.incr(dayKey(guildId, 'messages'));
   }
 
-  /** Increments the command counter for the guild. Call on every handled `interactionCreate`. */
   static async trackCommand(guildId: string): Promise<void> {
     await redis.incr(dayKey(guildId, 'commands'));
   }
 
-  /** Increments the member-join counter for the guild. */
   static async trackJoin(guildId: string): Promise<void> {
     await redis.incr(dayKey(guildId, 'joins'));
   }
 
-  /** Increments the member-leave counter for the guild. */
   static async trackLeave(guildId: string): Promise<void> {
     await redis.incr(dayKey(guildId, 'leaves'));
   }
 
-  /**
-   * Persists yesterday's Redis counters to `ServerDailyStats` and deletes the
-   * corresponding Redis keys. Guilds with zero activity across all metrics are
-   * skipped to avoid creating empty database rows. Called once per day by
-   * `BackgroundJobs`.
-   */
   static async flushDailyStats(client: BotClient): Promise<void> {
     const yesterday = new Date();
     yesterday.setUTCDate(yesterday.getUTCDate() - 1);

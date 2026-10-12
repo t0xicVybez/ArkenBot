@@ -6,13 +6,6 @@ import {
 import type { AddonContext, AddonCommandDefinition } from '@arkenbot/addon-sdk';
 import { generateTriage } from '../events/interaction.js';
 
-/**
- * Standalone `/triage` command. Kept separate from `/ticket` (rather than a
- * subcommand) so it can be restricted independently in Commands → Role
- * Permissions — command permissions apply per top-level command, not per
- * subcommand. Run inside a ticket channel; the bot still enforces staff-only at
- * runtime regardless of how permissions are configured.
- */
 const command: AddonCommandDefinition = {
   data: new SlashCommandBuilder()
     .setName('triage')

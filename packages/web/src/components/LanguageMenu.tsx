@@ -8,13 +8,6 @@ import { clsx } from 'clsx';
 import { LOCALES } from '@arkenbot/shared';
 import api from '@/lib/api';
 
-/**
- * Compact language picker for the public navigation bar. A globe button opens a
- * dropdown of shipped locales. Selecting one sets the `arken_locale` cookie (so
- * SSR renders the chosen locale), best-effort persists to the signed-in user's
- * preferences (silently ignored when logged out), then refreshes to apply.
- * The full labeled variant used on the settings page is `LanguageSwitcher`.
- */
 export function LanguageMenu({ className }: { className?: string }) {
   const locale = useLocale();
   const t = useTranslations('language');

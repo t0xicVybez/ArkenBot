@@ -1,11 +1,7 @@
-/**
- * Lightweight in-memory submission cooldown (per guild+user). Resets on restart,
- * which is fine — it only throttles spam, it is not a security control.
- */
+
 const last = new Map<string, number>();
 const key = (g: string, u: string) => `${g}:${u}`;
 
-/** Seconds remaining before the user may submit again (0 = ready). */
 export function cooldownRemaining(guildId: string, userId: string, cooldownSec: number): number {
   const prev = last.get(key(guildId, userId));
   if (prev === undefined) return 0;

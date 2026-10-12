@@ -19,7 +19,7 @@ describe('wallClockToUtc (UTC round-trip)', () => {
 });
 
 describe('computeNextOccurrence', () => {
-  const base = new Date('2026-06-15T09:30:00Z'); // a Monday
+  const base = new Date('2026-06-15T09:30:00Z');
 
   it('returns null for a one-shot (no repeat)', () => {
     expect(computeNextOccurrence(base, null)).toBeNull();
@@ -40,13 +40,13 @@ describe('computeNextOccurrence', () => {
   });
 
   it('weekly with days lands on the next matching weekday within 7 days', () => {
-    const days = [3, 5]; // Wed, Fri
+    const days = [3, 5];
     const next = computeNextOccurrence(base, 'weekly', 'UTC', days)!;
     expect(days).toContain(next.getUTCDay());
     const deltaDays = Math.round((next.getTime() - base.getTime()) / D);
     expect(deltaDays).toBeGreaterThanOrEqual(1);
     expect(deltaDays).toBeLessThanOrEqual(7);
-    // same wall-clock time preserved
+
     expect(next.getUTCHours()).toBe(9);
     expect(next.getUTCMinutes()).toBe(30);
   });

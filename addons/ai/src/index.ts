@@ -1,9 +1,4 @@
-/**
- * AI Assistant addon.
- * Registers `/ask` (general assistant) and `/summarize` (catch up on a channel),
- * both powered by the shared Groq LLM client. Degrades gracefully when no
- * `GROQ_API_KEY` is configured.
- */
+
 import { defineAddon } from '@arkenbot/addon-sdk';
 import type { AddonContext } from '@arkenbot/addon-sdk';
 import { isLLMAvailable } from '@arkenbot/shared';

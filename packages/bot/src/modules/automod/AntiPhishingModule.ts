@@ -1,10 +1,4 @@
-/**
- * Scans messages for known phishing / scam domains. Maintains an in-memory
- * blocklist that is refreshed hourly from a public phishing-domain feed.
- *
- * On a match the offending message is deleted. If the config action is
- * "delete_mute" the author is also timed-out for 10 minutes.
- */
+
 
 import { type Message, PermissionFlagsBits } from 'discord.js';
 import { prisma } from '../../database.js';
@@ -15,9 +9,7 @@ import { t, resolveUserLocale } from '../../i18n/index.js';
 import axios from 'axios';
 
 const BLOCKLIST_REDIS_KEY = 'antiphishing:domains';
-const REFRESH_INTERVAL_MS = 60 * 60 * 1000; // 1 hour
-
-// ── Domain blocklist ──────────────────────────────────────────────────────────
+const REFRESH_INTERVAL_MS = 60 * 60 * 1000;
 
 let domainSet = new Set<string>();
 let lastRefreshed = 0;
@@ -31,7 +23,7 @@ async function refreshBlocklist(): Promise<void> {
     if (Array.isArray(res.data)) {
       domainSet = new Set(res.data.map((d) => d.toLowerCase().trim()));
       lastRefreshed = Date.now();
-      // Cache in Redis so other processes can read it (TTL 90 min)
+
       await redis.setex(BLOCKLIST_REDIS_KEY, 5400, JSON.stringify([...domainSet]));
       logger.info({ count: domainSet.size }, 'Anti-phishing blocklist refreshed');
     }
@@ -43,15 +35,12 @@ async function refreshBlocklist(): Promise<void> {
         domainSet = new Set(JSON.parse(cached) as string[]);
         lastRefreshed = Date.now();
       }
-    } catch { /* keep previous in-memory set */ }
+    } catch {  }
   }
 }
 
-// Bootstrap on first import; subsequent refreshes happen on a timer.
 void refreshBlocklist();
 setInterval(() => void refreshBlocklist(), REFRESH_INTERVAL_MS).unref();
-
-// ── URL extraction ────────────────────────────────────────────────────────────
 
 const URL_REGEX = /https?:\/\/([a-zA-Z0-9\-._~:/?#[\]@!$&'()*+,;=%]+)/gi;
 
@@ -63,12 +52,10 @@ function extractDomains(content: string): string[] {
     try {
       const url = new URL(match[0]);
       domains.push(url.hostname.toLowerCase().replace(/^www\./, ''));
-    } catch { /* invalid URL */ }
+    } catch {  }
   }
   return domains;
 }
-
-// ── Config cache ──────────────────────────────────────────────────────────────
 
 interface PhishingConfig {
   antiPhishingEnabled: boolean;
@@ -87,8 +74,6 @@ async function getConfig(guildId: string): Promise<PhishingConfig | null> {
   return config as PhishingConfig | null;
 }
 
-// ── Public API ────────────────────────────────────────────────────────────────
-
 export class AntiPhishingModule {
   static async analyze(message: Message): Promise<void> {
     if (!message.guild || message.author.bot) return;
@@ -97,7 +82,6 @@ export class AntiPhishingModule {
     const config = await getConfig(message.guild.id);
     if (!config?.antiPhishingEnabled) return;
 
-    // Ensure blocklist is populated (may still be loading on first run)
     if (domainSet.size === 0 || Date.now() - lastRefreshed > REFRESH_INTERVAL_MS * 2) {
       await refreshBlocklist();
     }
@@ -107,7 +91,6 @@ export class AntiPhishingModule {
     const member = message.member;
     if (!member) return;
 
-    // Admins and exempt roles/channels are skipped
     if (member.permissions.has(PermissionFlagsBits.Administrator)) return;
     if (config.exemptRoles?.some((r) => member.roles.cache.has(r))) return;
     if (config.exemptChannels?.includes(message.channelId)) return;
@@ -118,10 +101,8 @@ export class AntiPhishingModule {
 
     logger.warn({ guildId: message.guild.id, userId: message.author.id, domain: hit }, 'Phishing domain detected');
 
-    // Delete the message
     await message.delete().catch((e) => notifyActionFailure(message.guild!, { action: 'automodDelete', error: e, requiredPermission: 'Manage Messages', channelId: message.channelId, target: message.author.toString() }));
 
-    // Warn the user in-channel (brief ephemeral-style message that deletes itself)
     const channel = message.channel;
     if ('send' in channel) {
       const loc = await resolveUserLocale({ user: { id: '' }, guildId: message.guild.id, guildLocale: message.guild.preferredLocale });
@@ -131,7 +112,6 @@ export class AntiPhishingModule {
       if (warning) setTimeout(() => warning.delete().catch(swallow), 8_000);
     }
 
-    // Optionally mute (10-minute Discord timeout)
     if (config.antiPhishingAction === 'delete_mute') {
       await member
         .disableCommunicationUntil(Date.now() + 10 * 60 * 1000, 'Anti-phishing: sent a phishing link')

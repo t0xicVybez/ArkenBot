@@ -1,7 +1,4 @@
-/**
- * Configures and returns the Fastify application instance with all plugins,
- * route handlers, WebSocket gateway, and global error handling.
- */
+
 import Fastify, { type FastifyError } from 'fastify';
 import fastifyCors from '@fastify/cors';
 import fastifyHelmet from '@fastify/helmet';
@@ -58,12 +55,6 @@ import { prisma } from './database.js';
 import { SessionService } from './services/SessionService.js';
 import { collectDefaultMetrics } from 'prom-client';
 
-/**
- * Builds and configures the Fastify server instance.
- * Registers all plugins, route groups, the WebSocket gateway, and a
- * `/health` endpoint. The body limit is set to 4 MB to support base64
- * image payloads from the embed builder.
- */
 export async function createServer() {
   collectDefaultMetrics();
 
@@ -79,12 +70,10 @@ export async function createServer() {
           : undefined,
     },
     bodyLimit: 4 * 1024 * 1024,
-    // Behind nginx in production: trust X-Forwarded-For so `request.ip` (used for
-    // session metadata and rate-limit keying) reflects the real client.
+
     trustProxy: config.env === 'production',
   });
 
-  // ─── Plugins ──────────────────────────────────────────────────────
   await server.register(fastifyCors, {
     origin: config.cors.origin,
     credentials: true,
@@ -95,9 +84,6 @@ export async function createServer() {
     contentSecurityPolicy: config.env === 'production',
   });
 
-  // Rate limiting uses Redis so limits are shared across multiple API processes.
-  // Authenticated requests are keyed by user ID rather than IP to avoid
-  // penalising users behind shared NAT.
   await server.register(fastifyRateLimit, {
     global: true,
     max: 100,
@@ -113,34 +99,22 @@ export async function createServer() {
 
   await server.register(fastifyWebSocket);
 
-  // ─── CSRF defence ─────────────────────────────────────────────────
-  // Session auth rides on a SameSite=Lax cookie, which already blocks cross-site
-  // form/navigation forgery. As defence-in-depth for scripted cross-origin
-  // requests, reject state-changing methods whose `Origin` is not the dashboard.
-  // Same-origin requests (no `Origin`, or an allowed one) pass through.
   const CSRF_METHODS = new Set(['POST', 'PATCH', 'PUT', 'DELETE']);
   const allowedOrigins = new Set(
     [config.cors.origin, config.web.url].flatMap((o) => o.split(',')).map((o) => o.trim()).filter(Boolean)
   );
   server.addHook('onRequest', async (request, reply) => {
     if (!CSRF_METHODS.has(request.method)) return;
-    // Inbound webhooks (top.gg, Monday, Trello) are called by third parties and
-    // authenticate by token/signature, not by cookie, so the Origin check does
-    // not apply. They also carry no browser Origin, but exempt them explicitly.
+
     const path = request.url.split('?')[0];
     if (path.includes('/webhook') || path.startsWith('/topgg/')) return;
     const origin = request.headers.origin;
-    if (!origin) return; // non-browser / same-origin server-to-server calls
+    if (!origin) return;
     if (!allowedOrigins.has(origin)) {
       reply.code(403).send({ success: false, error: 'Cross-origin request blocked' });
     }
   });
 
-
-  // ─── Dashboard Audit Trail ────────────────────────────────────────
-  // Records every successful mutating dashboard request against a guild
-  // (who changed what, when). Bodies are never stored — they can contain
-  // tokens and secrets. Root scope so it observes all route plugins.
   const AUDIT_MUTATING = new Set(['POST', 'PATCH', 'DELETE']);
   const AUDIT_GUILD_PATH = /^\/guilds\/(\d+)\/([^/?]+)/;
   server.addHook('onResponse', async (request, reply) => {
@@ -164,10 +138,9 @@ export async function createServer() {
           statusCode: reply.statusCode,
         },
       }).catch(() => undefined);
-    } catch { /* auditing must never break request handling */ }
+    } catch {  }
   });
 
-  // ─── Routes ───────────────────────────────────────────────────────
   await server.register(authRoutes);
   await server.register(guildRoutes);
   await server.register(permissionHealthRoutes);
@@ -210,17 +183,14 @@ export async function createServer() {
   await server.register(configTransferRoutes);
   await server.register(dataControlsRoutes);
 
-  // ─── WebSocket Gateway ────────────────────────────────────────────
   await setupWebSocket(server);
 
-  // ─── Health Check ─────────────────────────────────────────────────
   server.get('/health', async () => ({
     status: 'ok',
     uptime: Math.floor(process.uptime()),
     timestamp: new Date().toISOString(),
   }));
 
-  // ─── Error Handler ────────────────────────────────────────────────
   server.setErrorHandler((error: FastifyError, request, reply) => {
     logger.error({ err: error, url: request.url }, 'Request error');
 
@@ -228,7 +198,6 @@ export async function createServer() {
       return reply.code(400).send({ success: false, error: 'Validation error', details: error.validation });
     }
 
-    // Report genuine server errors (5xx, or anything with no explicit status) to Sentry.
     if (!error.statusCode || error.statusCode >= 500) {
       captureError(error, { url: request.url, method: request.method });
     }

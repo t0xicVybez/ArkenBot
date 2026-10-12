@@ -6,7 +6,6 @@ import { prisma } from '../database.js';
 const DISCORD_API = 'https://discord.com/api/v10';
 const MONDAY_API = 'https://api.monday.com/v2';
 
-// ── User name cache — keyed by `${tokenSuffix}:${userId}`, TTL 1 hour ────────
 const userNameCache = new Map<string, { name: string; expiresAt: number }>();
 
 async function resolveMondayUserName(userId: number | string, apiToken: string): Promise<string | null> {
@@ -28,12 +27,11 @@ async function resolveMondayUserName(userId: number | string, apiToken: string):
       return name;
     }
   } catch {
-    // Silently fall back to profile link
+
   }
   return null;
 }
 
-// ── Event metadata ──────────────────────────────────────────────────────────
 const EVENT_META: Record<string, { label: string; emoji: string; color: number }> = {
   create_item:          { label: 'New Item Created',    emoji: '📝', color: 0x3dba6f },
   delete_item:          { label: 'Item Deleted',         emoji: '🗑️', color: 0xe53535 },
@@ -49,22 +47,8 @@ const EVENT_META: Record<string, { label: string; emoji: string; color: number }
   duplicate_item:       { label: 'Item Duplicated',      emoji: '📋', color: 0x7c3aed },
 };
 
-/** Longest comment body we will run the tag-stripper over. */
 const MAX_BODY_INPUT = 4096;
 
-/**
- * Reduces a Monday comment body to plain text for a Discord embed.
- *
- * The body is HTML from an inbound webhook, so it is untrusted on two counts:
- *
- *  - Tag-stripping with `<[^>]*>` is quadratic on input that is mostly '<' with
- *    no '>' to close it, so a large enough payload burns CPU on the API. The
- *    input is length-capped first, which bounds the work.
- *  - A single strip pass can be defeated: split markup like '<scr<script>ipt>'
- *    leaves a fresh '<script>' behind after one replacement. The strip is
- *    therefore repeated until the string stops changing, so no tag can be
- *    reconstructed from the leftovers.
- */
 function stripHtml(input: unknown): string {
   let text = String(input).slice(0, MAX_BODY_INPUT);
   let previous: string;
@@ -75,7 +59,6 @@ function stripHtml(input: unknown): string {
   return text.trim().slice(0, 512);
 }
 
-// ── Embed builder ────────────────────────────────────────────────────────────
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function buildEmbed(event: Record<string, any>, boardName?: string | null, resolvedUserName?: string | null) {
   const meta = EVENT_META[event.type] ?? { label: event.type, emoji: '🔔', color: 0x5865f2 };
@@ -86,14 +69,12 @@ function buildEmbed(event: Record<string, any>, boardName?: string | null, resol
     ? `https://app.monday.com/boards/${event.boardId}/pulses/${event.itemId}`
     : null;
 
-   
   const fields: Array<{ name: string; value: string; inline?: boolean }> = [];
 
   const addField = (name: string, value: string, inline = true) => {
     if (value) fields.push({ name, value: value.slice(0, 1024), inline });
   };
 
-  // Show resolved display name, or fall back to a profile link
   const fmtUser = (id?: number | string) => {
     if (!id) return '—';
     if (resolvedUserName) return `**${resolvedUserName}**`;
@@ -125,7 +106,7 @@ function buildEmbed(event: Record<string, any>, boardName?: string | null, resol
 
     case 'change_column_value': {
       const colTitle = event.columnTitle ?? event.columnId ?? 'Column';
-      // Extract human-readable values from Monday.com's value objects
+
       const prevText = extractColumnText(event.previousValue);
       const newText = extractColumnText(event.value);
       addField('Item', itemUrl ? `[${event.itemName}](${itemUrl})` : (event.itemName ?? '—'));
@@ -220,33 +201,31 @@ function buildEmbed(event: Record<string, any>, boardName?: string | null, resol
   };
 }
 
-// ── Extract human-readable text from Monday.com column value objects ─────────
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function extractColumnText(val: any): string {
   if (!val) return '';
   if (typeof val === 'string') return val;
   if (typeof val !== 'object') return String(val);
-  // Status / label (color columns)
+
   if (val.label?.text) return val.label.text;
-  // Person / team
+
   if (val.personsAndTeams) {
     const names = val.personsAndTeams.map((p: { name?: string; id?: number }) => p.name ?? `User ${p.id}`);
     return names.join(', ');
   }
-  // Plain text columns store value as { value: "..." }
+
   if (typeof val.value === 'string') return val.value;
-  // Date
+
   if (val.date) return val.date;
-  // Long text
+
   if (val.text) return val.text;
-  // Numbers
+
   if (val.number !== undefined) return String(val.number);
-  // Fallback: stringify top-level scalars
+
   const simple = Object.values(val).filter((v) => typeof v === 'string' || typeof v === 'number');
   return simple.length ? simple.join(', ') : JSON.stringify(val).slice(0, 200);
 }
 
-// ── Send Discord embed ────────────────────────────────────────────────────────
 async function sendDiscordEmbed(channelId: string, embed: object): Promise<void> {
   const token = process.env.DISCORD_TOKEN;
   if (!token) return;
@@ -260,19 +239,15 @@ async function sendDiscordEmbed(channelId: string, embed: object): Promise<void>
   });
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// Routes
-// ═══════════════════════════════════════════════════════════════════════════════
 export async function mondayRoutes(server: FastifyInstance): Promise<void> {
 
-  // ── GET /guilds/:guildId/monday-alerts ────────────────────────────────────
   server.get('/guilds/:guildId/monday-alerts', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const alerts = await prisma.mondayAlert.findMany({
       where: { guildId },
       orderBy: { createdAt: 'desc' },
     });
-    // Never expose the raw API token — return a boolean indicating whether it's set
+
     const safeAlerts = alerts.map(({ mondayApiToken, ...a }) => ({
       ...a,
       hasApiToken: !!mondayApiToken,
@@ -280,7 +255,6 @@ export async function mondayRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: safeAlerts });
   });
 
-  // ── POST /guilds/:guildId/monday-alerts ───────────────────────────────────
   server.post('/guilds/:guildId/monday-alerts', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const { discordChannelId, boardName, events } = request.body as Record<string, unknown>;
@@ -302,7 +276,6 @@ export async function mondayRoutes(server: FastifyInstance): Promise<void> {
     return reply.code(201).send({ success: true, data: alert });
   });
 
-  // ── PATCH /guilds/:guildId/monday-alerts/:id ──────────────────────────────
   server.patch('/guilds/:guildId/monday-alerts/:id', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, id } = request.params as { guildId: string; id: string };
     const body = request.body as Record<string, unknown>;
@@ -318,7 +291,7 @@ export async function mondayRoutes(server: FastifyInstance): Promise<void> {
 
     if (typeof body.mondayApiToken === 'string') {
       data.mondayApiToken = body.mondayApiToken.trim() ? encryptSecret(body.mondayApiToken.trim()) : null;
-      // Clear cache entries for this alert so the new token takes effect immediately
+
       for (const key of userNameCache.keys()) {
         if (key.includes(':')) userNameCache.delete(key);
       }
@@ -330,15 +303,12 @@ export async function mondayRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true });
   });
 
-  // ── DELETE /guilds/:guildId/monday-alerts/:id ─────────────────────────────
   server.delete('/guilds/:guildId/monday-alerts/:id', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, id } = request.params as { guildId: string; id: string };
     await prisma.mondayAlert.deleteMany({ where: { id, guildId } });
     return reply.code(204).send();
   });
 
-  // ── POST /monday/webhook/:token ───────────────────────────────────────────
-  // Public endpoint — Monday.com POSTs here when board events fire.
   server.post('/monday/webhook/:token', {
     config: { rateLimit: { max: 300, timeWindow: '1 minute' } },
   }, async (request, reply) => {
@@ -346,12 +316,10 @@ export async function mondayRoutes(server: FastifyInstance): Promise<void> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const body = request.body as Record<string, any>;
 
-    // Monday.com challenge handshake — must be echoed back on webhook creation
     if (body?.challenge) {
       return reply.send({ challenge: body.challenge });
     }
 
-    // Debug: log the full payload so we can see Monday.com's actual event type strings
     request.log.info({ mondayPayload: JSON.stringify(body).slice(0, 2000) }, 'monday webhook payload');
 
     const event = body?.event;
@@ -360,19 +328,17 @@ export async function mondayRoutes(server: FastifyInstance): Promise<void> {
     const alert = await prisma.mondayAlert.findUnique({ where: { webhookToken: token } });
     if (!alert || !alert.enabled) return reply.send({ ok: true });
 
-    // Normalise Monday.com's various event type names to our canonical names
     const TYPE_MAP: Record<string, string> = {
       create_pulse:         'create_item',
       delete_pulse:         'delete_item',
       archive_pulse:        'archive_item',
       restore_pulse:        'restore_item',
       move_pulse_to_group:  'move_item_to_group',
-      move_pulse_into_group:'move_item_to_group', // actual event name Monday.com sends
-      update_column_value:  'change_column_value', // Monday.com uses both names
+      move_pulse_into_group:'move_item_to_group',
+      update_column_value:  'change_column_value',
     };
     const normalizedType = TYPE_MAP[event.type] ?? event.type;
 
-    // For update_name the new/old names live in event.value.name / event.previousValue.name
     const isNameChange = normalizedType === 'update_name';
 
     const normalizedEvent = {
@@ -382,23 +348,20 @@ export async function mondayRoutes(server: FastifyInstance): Promise<void> {
       itemName:         event.itemName        ?? event.pulseName ?? (isNameChange ? event.value?.name : undefined),
       previousItemName: event.previousItemName ?? event.previousPulseName ?? (isNameChange ? event.previousValue?.name : undefined),
       groupName:        event.groupName,
-      destGroup:        event.destGroup, // { id, title, color } for move events
+      destGroup:        event.destGroup,
     };
 
-    // Event filter: if the alert has a specific list, skip events not in it
     if (alert.events.length > 0 && !alert.events.includes(normalizedEvent.type)) {
       request.log.info({ type: normalizedEvent.type, filter: alert.events }, 'monday event filtered out');
       return reply.send({ ok: true });
     }
 
-    // Resolve user display name if API token is configured
     const resolvedUserName = alert.mondayApiToken && normalizedEvent.userId
       ? await resolveMondayUserName(normalizedEvent.userId, decryptSecretLenient(alert.mondayApiToken))
       : null;
 
     const embed = buildEmbed(normalizedEvent, alert.boardName, resolvedUserName);
 
-    // Fire-and-forget — don't let Discord latency slow the webhook response
     sendDiscordEmbed(alert.discordChannelId, embed).catch((err) => {
       request.log.error({ err }, 'monday discord send failed');
     });

@@ -1,8 +1,4 @@
-/**
- * Code Review addon — lets users submit code snippets via a modal and
- * receive static analysis feedback (or AI-powered feedback when configured).
- * Supports JavaScript, TypeScript, Python, JSON, CSS, and HTML.
- */
+
 import { defineAddon } from '@arkenbot/addon-sdk';
 import type { AddonContext } from '@arkenbot/addon-sdk';
 import {
@@ -59,8 +55,7 @@ export default defineAddon({
 
   commands: [
     {
-      // addStringOption() narrows the return type to SlashCommandOptionsOnlyBuilder,
-      // so we cast back to SlashCommandBuilder to satisfy the SDK interface.
+
       data: new SlashCommandBuilder()
         .setName('reviewcode')
         .setDescription('Analyze a code snippet for issues and formatting')
@@ -81,8 +76,6 @@ export default defineAddon({
         const loc = await ctx.resolveLocale(interaction);
         const langHint = interaction.options.getString('language') ?? 'auto';
 
-        // Embed the language hint in the modal's customId so the submit handler
-        // can retrieve it without additional storage.
         const modal = new ModalBuilder()
           .setCustomId(`${MODAL_PREFIX}${langHint}`)
           .setTitle(ctx.t('modalTitle', loc))
@@ -106,8 +99,7 @@ export default defineAddon({
   events: [
     {
       event: 'interactionCreate',
-      // The SDK types the handler as (...args: ClientEvents[EventName]) without
-      // narrowing on `event`, so we accept unknown[] and cast the first argument.
+
       handler: async (ctx: AddonContext, ...args: unknown[]): Promise<void> => {
         const interaction = args[0] as ModalSubmitInteraction;
         if (!interaction?.isModalSubmit?.()) return;

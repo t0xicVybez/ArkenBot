@@ -22,7 +22,6 @@ function CustomTooltip({ active, payload, label }: { active?: boolean; payload?:
   );
 }
 
-/** Opened-vs-closed daily bar chart. */
 export function DailyBarChart({ data, t }: { data: { date: string; opened: number; closed: number }[]; t: T }) {
   return (
     <ResponsiveContainer width="100%" height={280}>
@@ -46,7 +45,6 @@ export function DailyBarChart({ data, t }: { data: { date: string; opened: numbe
   );
 }
 
-/** Donut breakdown (status or per-panel). */
 export function BreakdownPie({ data }: { data: PieDatum[] }) {
   return (
     <ResponsiveContainer width={160} height={160}>
@@ -59,7 +57,6 @@ export function BreakdownPie({ data }: { data: PieDatum[] }) {
   );
 }
 
-/** Rating distribution bar chart. */
 export function RatingBarChart({ data, t }: { data: { star: string; count: number }[]; t: T }) {
   return (
     <ResponsiveContainer width="100%" height={200}>

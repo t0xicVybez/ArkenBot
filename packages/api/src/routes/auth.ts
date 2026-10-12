@@ -1,12 +1,4 @@
-/**
- * Discord OAuth2 authentication routes — a fully server-mediated flow.
- *
- * The browser never sees the authorisation code or a token. `/auth/login`
- * redirects to Discord; Discord redirects back to `/auth/callback` (this API);
- * the callback exchanges the code, creates an opaque server-side session, sets
- * an httpOnly cookie, and redirects to the dashboard. Everything else reads the
- * session from that cookie via `requireAuth`.
- */
+
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { randomBytes } from 'crypto';
@@ -17,13 +9,8 @@ import { requireAuth } from '../middleware/auth.js';
 import { config } from '../config.js';
 import { setSessionCookie, clearSessionCookie } from '../utils/sessionCookie.js';
 
-/** Redis key holding the state → { verifier, redirect } binding during the OAuth round-trip. */
 const stateKey = (state: string) => `oauth:state:${state}`;
 
-/**
- * Validates a post-login redirect target: same-origin relative paths only, so
- * the `redirect` query parameter cannot be abused as an open redirect.
- */
 function safeRedirect(target: unknown): string {
   if (typeof target !== 'string') return '/dashboard';
   if (!target.startsWith('/') || target.startsWith('//')) return '/dashboard';
@@ -32,7 +19,7 @@ function safeRedirect(target: unknown): string {
 }
 
 export async function authRoutes(server: FastifyInstance): Promise<void> {
-  // ── Begin OAuth: stash state + PKCE verifier server-side, redirect to Discord ──
+
   server.get('/auth/login', async (request, reply) => {
     const state = randomBytes(16).toString('hex');
     const { verifier, challenge } = AuthService.generatePkce();
@@ -42,8 +29,6 @@ export async function authRoutes(server: FastifyInstance): Promise<void> {
     return reply.redirect(AuthService.getOAuthUrl(state, challenge));
   });
 
-  // ── OAuth callback: exchange code, create session, set cookie, back to dashboard ──
-  // Rate-limited because each call makes two Discord API requests and a DB write.
   server.get(
     '/auth/callback',
     { config: { rateLimit: { max: 20, timeWindow: '1 minute' } } },
@@ -56,7 +41,6 @@ export async function authRoutes(server: FastifyInstance): Promise<void> {
       }
       const { code, state } = parsed.data;
 
-      // Consume the state atomically-ish: read then delete so it cannot be replayed.
       const raw = await redis.get(stateKey(state));
       await redis.del(stateKey(state));
       if (!raw) {
@@ -83,7 +67,6 @@ export async function authRoutes(server: FastifyInstance): Promise<void> {
     }
   );
 
-  // ── Current user profile (cookie-authenticated) ──
   server.get('/auth/me', { preHandler: [requireAuth] }, async (request, reply) => {
     const { prisma } = await import('../database.js');
     const user = await prisma.portalUser.findUnique({ where: { id: request.user!.id } });
@@ -103,7 +86,6 @@ export async function authRoutes(server: FastifyInstance): Promise<void> {
     });
   });
 
-  // ── Logout: revoke this session and clear the cookie ──
   server.post('/auth/logout', { preHandler: [requireAuth] }, async (request, reply) => {
     const sid = request.cookies[config.cookie.name];
     if (sid) await SessionService.revoke(sid);
@@ -111,14 +93,12 @@ export async function authRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, message: 'Logged out' });
   });
 
-  // ── Logout everywhere: revoke every session for the user ──
   server.post('/auth/logout-all', { preHandler: [requireAuth] }, async (request, reply) => {
     await SessionService.revokeAllForUser(request.user!.id);
     clearSessionCookie(reply);
     return reply.send({ success: true, message: 'Logged out of all sessions' });
   });
 
-  // ── Active sessions for the current user (device management) ──
   server.get('/auth/sessions', { preHandler: [requireAuth] }, async (request, reply) => {
     const currentId = request.sessionId;
     const sessions = await SessionService.list(request.user!.id);
@@ -135,7 +115,6 @@ export async function authRoutes(server: FastifyInstance): Promise<void> {
     });
   });
 
-  // ── Revoke one session by id (cannot be used to revoke someone else's) ──
   server.delete('/auth/sessions/:id', { preHandler: [requireAuth] }, async (request, reply) => {
     const { id } = request.params as { id: string };
     const revoked = await SessionService.revokeById(request.user!.id, id);

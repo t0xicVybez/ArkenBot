@@ -16,10 +16,6 @@ import { canStoreCredentials, decryptCredential } from '../utils/crypto.js';
 import { buildCredentialModal } from '../utils/modal.js';
 import type { QueryAuth, SavedServer } from '../types.js';
 
-/**
- * Rebuilds the auth needed to query a saved server, for games that have no
- * anonymous status protocol. Returns undefined for everything else.
- */
 function authFor(server: SavedServer): QueryAuth | undefined {
   if (!server.credential) return undefined;
   return { password: decryptCredential(server.credential), queryPort: server.queryPort };
@@ -29,7 +25,7 @@ const command: AddonCommandDefinition = {
   data: new SlashCommandBuilder()
     .setName('server')
     .setDescription('Game server status commands')
-    // ── /server status ──────────────────────────────────────────────────────────
+
     .addSubcommand((s) =>
       s
         .setName('status')
@@ -53,7 +49,7 @@ const command: AddonCommandDefinition = {
             .setMaxValue(65535),
         ),
     )
-    // ── /server check ──────────────────────────────────────────────────────────
+
     .addSubcommand((s) =>
       s
         .setName('check')
@@ -66,7 +62,7 @@ const command: AddonCommandDefinition = {
             .setAutocomplete(true),
         ),
     )
-    // ── /server add ────────────────────────────────────────────────────────────
+
     .addSubcommand((s) =>
       s
         .setName('add')
@@ -97,7 +93,7 @@ const command: AddonCommandDefinition = {
             .setMaxValue(65535),
         ),
     )
-    // ── /server remove ─────────────────────────────────────────────────────────
+
     .addSubcommand((s) =>
       s
         .setName('remove')
@@ -110,20 +106,20 @@ const command: AddonCommandDefinition = {
             .setAutocomplete(true),
         ),
     )
-    // ── /server list ───────────────────────────────────────────────────────────
+
     .addSubcommand((s) =>
       s.setName('list').setDescription('List all saved game servers for this guild'),
     )
-    // ── /server checkall ───────────────────────────────────────────────────────
+
     .addSubcommand((s) =>
       s.setName('checkall').setDescription('Query all saved servers and show a status summary'),
     )
-    // ── /server graph ────────────────────────────────────────────────────────────
+
     .addSubcommand((s) =>
       s.setName('graph').setDescription('Show a player-count history graph for a saved server')
         .addStringOption((o) => o.setName('name').setDescription('Saved server name').setRequired(true).setAutocomplete(true)),
     )
-    // ── monitoring ───────────────────────────────────────────────────────────────
+
     .addSubcommand((s) =>
       s.setName('board').setDescription('Post a live status board that auto-updates (admin)')
         .addChannelOption((o) => o.setName('channel').setDescription('Channel for the status board').addChannelTypes(ChannelType.GuildText).setRequired(true)),
@@ -154,7 +150,6 @@ const command: AddonCommandDefinition = {
 
     const sub = interaction.options.getSubcommand();
 
-    // ── status ─────────────────────────────────────────────────────────────────
     if (sub === 'status') {
       const address = interaction.options.getString('address', true).trim();
       const game = interaction.options.getString('game', true);
@@ -165,8 +160,6 @@ const command: AddonCommandDefinition = {
         return;
       }
 
-      // Games with no anonymous query protocol need a password before we can ask
-      // anything. showModal must be the first response, so this precedes the defer.
       if (AUTHENTICATED_GAMES.has(game)) {
         await setPending(ctx.storage, interaction.guildId, interaction.user.id, {
           action: 'status',
@@ -184,7 +177,6 @@ const command: AddonCommandDefinition = {
       return;
     }
 
-    // ── check ──────────────────────────────────────────────────────────────────
     if (sub === 'check') {
       const name = interaction.options.getString('name', true);
       const saved = await getServerByName(ctx.storage, interaction.guildId, name);
@@ -204,7 +196,6 @@ const command: AddonCommandDefinition = {
       return;
     }
 
-    // ── add ────────────────────────────────────────────────────────────────────
     if (sub === 'add') {
       const member = interaction.guild?.members.cache.get(interaction.user.id);
       if (!member?.permissions.has(PermissionFlagsBits.ManageGuild)) {
@@ -277,7 +268,6 @@ const command: AddonCommandDefinition = {
       return;
     }
 
-    // ── remove ─────────────────────────────────────────────────────────────────
     if (sub === 'remove') {
       const member = interaction.guild?.members.cache.get(interaction.user.id);
       if (!member?.permissions.has(PermissionFlagsBits.ManageGuild)) {
@@ -298,7 +288,6 @@ const command: AddonCommandDefinition = {
       return;
     }
 
-    // ── list ───────────────────────────────────────────────────────────────────
     if (sub === 'list') {
       const servers = await getServers(ctx.storage, interaction.guildId);
       const embed = buildServerListEmbed(servers, interaction.guild?.name ?? t('thisServer'), t);
@@ -306,7 +295,6 @@ const command: AddonCommandDefinition = {
       return;
     }
 
-    // ── checkall ───────────────────────────────────────────────────────────────
     if (sub === 'checkall') {
       const servers = await getServers(ctx.storage, interaction.guildId);
       if (servers.length === 0) {
@@ -328,7 +316,6 @@ const command: AddonCommandDefinition = {
       await interaction.editReply({ embeds: [buildCheckAllEmbed(results, interaction.guild?.name ?? t('thisServer'), t)] });
     }
 
-    // ── graph ────────────────────────────────────────────────────────────────────
     if (sub === 'graph') {
       const name = interaction.options.getString('name', true);
       const server = await getServerByName(ctx.storage, interaction.guildId, name);
@@ -357,7 +344,6 @@ const command: AddonCommandDefinition = {
       return;
     }
 
-    // ── monitoring setup (admin only) ────────────────────────────────────────────
     if (sub === 'board' || sub === 'alerts' || sub === 'statchannel' || sub === 'monitoroff') {
       const member = interaction.member;
       const perms = member && typeof member.permissions !== 'string' ? member.permissions : null;
@@ -377,7 +363,7 @@ const command: AddonCommandDefinition = {
       const channel = interaction.options.getChannel('channel', true);
       if (sub === 'board') {
         cfg.boardChannelId = channel.id;
-        cfg.boardMessageId = undefined; // re-post on next poll
+        cfg.boardMessageId = undefined;
         await setMonitorConfig(ctx.storage, interaction.guildId, cfg);
         await interaction.reply({ content: t('boardSet', { channel: `<#${channel.id}>` }), flags: MessageFlags.Ephemeral });
       } else if (sub === 'alerts') {

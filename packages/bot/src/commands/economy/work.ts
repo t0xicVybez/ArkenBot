@@ -1,4 +1,4 @@
-/** /work — earn a randomised reward on a cooldown, with a flavour job line. */
+
 import { SlashCommandBuilder, EmbedBuilder, type ChatInputCommandInteraction } from 'discord.js';
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
@@ -8,7 +8,7 @@ import { errorEmbed } from '../../utils/embed.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 import { EconomyModule } from '../../modules/economy/EconomyModule.js';
 
-const JOB_COUNT = 8; // economy.jobs.0 .. economy.jobs.7
+const JOB_COUNT = 8;
 
 const command: BotCommand = {
   data: new SlashCommandBuilder().setName('work').setDescription('Work a shift to earn some currency'),

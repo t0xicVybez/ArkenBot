@@ -88,7 +88,6 @@ function embedToForm(e: GuildEmbed): FormState {
   };
 }
 
-// ─── Image URL / Upload input ──────────────────────────────────────────────────
 function ImageInput({
   label,
   value,
@@ -156,7 +155,6 @@ function ImageInput({
   );
 }
 
-// ─── Discord-style embed preview ──────────────────────────────────────────────
 function DiscordPreview({ form }: { form: FormState }) {
   const t = useTranslations('embedsPage');
   const color = form.embedColor || '#5865F2';
@@ -289,7 +287,6 @@ function DiscordPreview({ form }: { form: FormState }) {
   );
 }
 
-// ─── Main page ────────────────────────────────────────────────────────────────
 export default function EmbedsPage() {
   const { guildId } = useParams() as { guildId: string };
   const t = useTranslations('embedsPage');
@@ -399,7 +396,6 @@ export default function EmbedsPage() {
     if (!form.name.trim()) return toast.error(t('nameRequired'));
     if (!form.channelId) return toast.error(t('selectChannelPublish'));
 
-    // Save the embed first (creating it if new) so it has a stable ID before sending.
     const payload = buildPayload();
     let targetId = editingId;
 
@@ -799,7 +795,6 @@ export default function EmbedsPage() {
   );
 }
 
-// ─── Inline send button with channel picker ───────────────────────────────────
 function SendRowButton({
   embed,
   textChannels,

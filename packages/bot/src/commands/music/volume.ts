@@ -1,6 +1,4 @@
-/**
- * /volume command — adjusts the playback volume for the active queue (1–100).
- */
+
 import {
   MessageFlags,
   SlashCommandBuilder,

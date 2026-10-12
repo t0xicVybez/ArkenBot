@@ -1,10 +1,5 @@
 'use client';
 
-/**
- * Ctrl/Cmd+K command palette — search-first navigation across all dashboard
- * pages. Opens via keyboard shortcut or a `cmdk:open` window event (fired by
- * the sidebar search button).
- */
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search } from 'lucide-react';
@@ -12,7 +7,6 @@ import { useTranslations } from 'next-intl';
 
 type Entry = { label: string; path: string; section: string };
 
-// [pageKey (pages namespace), path, sectionKey (sections namespace)]
 const PAGES: Array<[string, string, string]> = [
   ['overview', '', 'general'], ['setup', '/setup', 'general'], ['analytics', '/analytics', 'general'],
   ['moderation', '/moderation', 'moderation'], ['automod', '/automod', 'moderation'],

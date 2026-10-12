@@ -1,7 +1,4 @@
-/**
- * /leveling command — administrative controls for the leveling system, including
- * XP multiplier configuration, role-stacking behaviour, and bulk role sync.
- */
+
 import {
   SlashCommandBuilder,
   PermissionFlagsBits,

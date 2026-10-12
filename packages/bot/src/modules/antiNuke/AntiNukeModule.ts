@@ -1,11 +1,4 @@
-/**
- * Anti-nuke protection module.
- *
- * Tracks destructive actions (channel deletes, role deletes, bans, kicks) per
- * user in Redis with a 60-second rolling window. When a user exceeds the
- * configured threshold the module strips their roles, notifies admins and
- * optionally bans or kicks them, then posts an alert embed.
- */
+
 
 import { type Guild, EmbedBuilder, PermissionFlagsBits } from 'discord.js';
 import { redis } from '../../redis.js';
@@ -63,7 +56,7 @@ export class AntiNukeModule {
 
       const threshold = thresholdFor(config, actionType);
       if (count >= threshold) {
-        // Reset counter immediately to avoid repeated punishments
+
         await redis.del(key);
         await AntiNukeModule.punish(guild, userId, actionType, config);
       }
@@ -77,7 +70,6 @@ export class AntiNukeModule {
       const loc = await resolveUserLocale({ user: { id: '' }, guildId: guild.id, guildLocale: guild.preferredLocale });
       const member = guild.members.cache.get(userId) ?? await guild.members.fetch(userId).catch(swallow);
 
-      // Remove all roles from the offender
       if (member) {
         const rolesToRemove = member.roles.cache.filter(r => r.id !== guild.id);
         for (const [, role] of rolesToRemove) {
@@ -85,7 +77,6 @@ export class AntiNukeModule {
         }
       }
 
-      // DM all admins using the cache (no bulk member fetch)
       const adminMembers = guild.members.cache.filter(
         m => !m.user.bot && m.permissions.has(PermissionFlagsBits.Administrator) && m.id !== userId
       );
@@ -99,14 +90,12 @@ export class AntiNukeModule {
         await admin.send({ embeds: [dmEmbed] }).catch(swallow);
       }
 
-      // Apply configured punishment
       if (config.action === 'ban' && guild.members.me?.permissions.has(PermissionFlagsBits.BanMembers)) {
         await guild.members.ban(userId, { reason: `Anti-nuke: ${actionType} threshold exceeded` }).catch((e) => notifyActionFailure(guild, { action: 'antiNuke', error: e, requiredPermission: 'Ban Members', target: `<@${userId}>` }));
       } else if (config.action === 'kick' && member && guild.members.me?.permissions.has(PermissionFlagsBits.KickMembers)) {
         await member.kick(`Anti-nuke: ${actionType} threshold exceeded`).catch((e) => notifyActionFailure(guild, { action: 'antiNuke', error: e, requiredPermission: 'Kick Members', target: `<@${userId}>` }));
       }
 
-      // Send alert embed to configured channel
       if (config.alertChannelId) {
         const alertChannel = guild.channels.cache.get(config.alertChannelId);
         if (alertChannel?.isTextBased() && 'send' in alertChannel) {

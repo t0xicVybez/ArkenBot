@@ -10,7 +10,7 @@ const PatchSchema = z.object({
 }).strict();
 
 export async function personalizationRoutes(server: FastifyInstance): Promise<void> {
-  // GET /guilds/:guildId/personalization
+
   server.get('/guilds/:guildId/personalization', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const settings = await prisma.guildSettings.findUnique({ where: { guildId } });
@@ -24,7 +24,6 @@ export async function personalizationRoutes(server: FastifyInstance): Promise<vo
     });
   });
 
-  // PATCH /guilds/:guildId/personalization
   server.patch('/guilds/:guildId/personalization', { preHandler: [requireGuildAdmin], bodyLimit: 4 * 1024 * 1024 }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const { nickname, botAvatarUrl } = PatchSchema.parse(request.body);

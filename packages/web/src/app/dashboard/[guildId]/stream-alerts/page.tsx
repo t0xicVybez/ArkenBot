@@ -1,8 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { FeedAlertsPage } from '@/components/FeedAlertsPage';
 
-// Server component: resolves translations + builds the (static) platform config
-// on the server; only the interactive FeedAlertsPage ships to the client.
 export default async function StreamAlertsPage() {
   const t = await getTranslations('streamAlerts');
   const PLATFORMS = [

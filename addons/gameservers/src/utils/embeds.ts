@@ -2,7 +2,6 @@ import { EmbedBuilder } from 'discord.js';
 import type { ServerStatus, SavedServer } from '../types.js';
 import { SUPPORTED_GAMES } from '../query.js';
 
-/** Translator bound to the viewer's locale, passed in from the addon context. */
 type Translate = (key: string, vars?: Record<string, string | number>) => string;
 
 export function buildStatusEmbed(
@@ -17,14 +16,10 @@ export function buildStatusEmbed(
   const gameLabel = gameInfo?.label ?? game;
   const emoji = gameInfo?.emoji ?? '🎮';
 
-  // Show the address players connect on, which for some games is not the port we
-  // query (Killing Floor 2 answers A2S on 27015 but is joined on 7777). An
-  // explicit port from the caller wins — we can't infer their game port.
   const queryPort = port ?? gameInfo?.defaultPort;
   const joinPort = port ?? gameInfo?.gamePort ?? gameInfo?.defaultPort;
   const address = status.online && status.connect ? status.connect : joinPort ? `${host}:${joinPort}` : host;
-  // When the two differ, say which port was actually probed — it's the first
-  // thing you want to know when a server reports offline.
+
   const queriedNote =
     queryPort && joinPort && queryPort !== joinPort ? `\n${t('queriedOn', { host, port: queryPort })}` : '';
 

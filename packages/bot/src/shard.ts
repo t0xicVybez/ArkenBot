@@ -1,17 +1,4 @@
-/**
- * Sharding entry point. Run this file instead of index.ts to enable horizontal
- * scaling across multiple processes.
- *
- * Each shard spawned by the ShardingManager runs dist/index.js and handles a
- * disjoint subset of guilds. Set SHARD_COUNT to a specific number to override
- * Discord's automatic shard recommendation.
- *
- * Usage:
- *   node dist/shard.js
- *
- * Environment variables:
- *   SHARD_COUNT — number of shards to spawn (default: 'auto', delegates to Discord)
- */
+
 
 import 'dotenv/config';
 import { ShardingManager } from 'discord.js';

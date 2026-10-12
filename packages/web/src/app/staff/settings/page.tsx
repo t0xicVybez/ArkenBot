@@ -67,7 +67,7 @@ export default function StaffSettingsPage() {
         </div>
       </div>
 
-      {/* Bot Presence */}
+      {}
       <div className="card p-6">
         <div className="flex items-center gap-2 mb-4">
           <Bot className="w-5 h-5 text-gray-400" />
@@ -85,7 +85,7 @@ export default function StaffSettingsPage() {
         ) : (
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
-              {/* Status */}
+              {}
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-1">{t('statusLabel')}</label>
                 <select
@@ -99,7 +99,7 @@ export default function StaffSettingsPage() {
                 </select>
               </div>
 
-              {/* Activity Type */}
+              {}
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-1">{t('activityTypeLabel')}</label>
                 <select
@@ -114,7 +114,7 @@ export default function StaffSettingsPage() {
               </div>
             </div>
 
-            {/* Activity Text */}
+            {}
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-1">{t('activityTextLabel')}</label>
               <input
@@ -127,7 +127,7 @@ export default function StaffSettingsPage() {
               />
             </div>
 
-            {/* Preview */}
+            {}
             <div className="bg-gray-800/50 rounded-lg p-3 border border-(--border-subtle)">
               <p className="text-xs text-gray-400 mb-1">{t('preview')}</p>
               <p className="text-white text-sm">

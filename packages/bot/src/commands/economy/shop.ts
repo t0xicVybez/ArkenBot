@@ -1,4 +1,4 @@
-/** /shop view|buy — browse the guild shop and purchase items (roles / collectibles). */
+
 import { SlashCommandBuilder, EmbedBuilder, PermissionsBitField, type ChatInputCommandInteraction, type AutocompleteInteraction } from 'discord.js';
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
@@ -59,7 +59,6 @@ const command: BotCommand = {
       return;
     }
 
-    // buy
     const itemId = interaction.options.getString('item', true);
     const item = await prisma.economyShopItem.findFirst({ where: { id: itemId, guildId, enabled: true } });
     if (!item) {
@@ -75,7 +74,7 @@ const command: BotCommand = {
       await interaction.editReply({ embeds: [errorEmbed(t('economy.errorTitle', loc), t('economy.cantAfford', loc, { item: item.name, price: EconomyModule.format(item.price, cfg) }))] });
       return;
     }
-    // Grant the role first (if any) so we don't debit on a permission failure.
+
     if (item.roleId) {
       const member = await interaction.guild.members.fetch(interaction.user.id).catch(() => null);
       const role = interaction.guild.roles.cache.get(item.roleId);

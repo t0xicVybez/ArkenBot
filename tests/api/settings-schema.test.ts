@@ -6,22 +6,16 @@ import {
   normalizeEmoji,
 } from '../../packages/api/src/routes/settings.schemas.js';
 
-/**
- * These schemas are the gate every settings write passes through. `.strict()`
- * means an unknown key is rejected outright — that guard has silently 400'd real
- * PATCHes before, so it (and the range/format rules) are worth locking down.
- */
-
 describe('GuildSettingsPatchSchema', () => {
   it('accepts a valid partial patch', () => {
     expect(GuildSettingsPatchSchema.safeParse({ moderationEnabled: true }).success).toBe(true);
-    expect(GuildSettingsPatchSchema.safeParse({}).success).toBe(true); // empty patch is valid
+    expect(GuildSettingsPatchSchema.safeParse({}).success).toBe(true);
     expect(GuildSettingsPatchSchema.safeParse({ logChannelId: null }).success).toBe(true);
   });
 
   it('rejects unknown keys (.strict)', () => {
     expect(GuildSettingsPatchSchema.safeParse({ notARealField: 1 }).success).toBe(false);
-    // a valid field alongside an unknown one still fails the whole body
+
     expect(GuildSettingsPatchSchema.safeParse({ moderationEnabled: true, foo: 'bar' }).success).toBe(false);
   });
 
@@ -42,7 +36,7 @@ describe('GuildSettingsPatchSchema', () => {
     expect(GuildSettingsPatchSchema.safeParse({ accentColor: '#5865F2' }).success).toBe(true);
     expect(GuildSettingsPatchSchema.safeParse({ accentColor: 'red' }).success).toBe(false);
     expect(GuildSettingsPatchSchema.safeParse({ accentColor: '#zzz' }).success).toBe(false);
-    // loggingColor uniquely permits an empty string (meaning "unset")
+
     expect(GuildSettingsPatchSchema.safeParse({ loggingColor: '' }).success).toBe(true);
     expect(GuildSettingsPatchSchema.safeParse({ accentColor: '' }).success).toBe(false);
   });
@@ -89,7 +83,7 @@ describe('normalizeEmoji', () => {
     expect(normalizeEmoji('<a:spin:987654321>')).toBe('spin:987654321');
   });
   it('strips the FE0F variation selector from unicode emoji', () => {
-    expect(normalizeEmoji('⭐️')).toBe('⭐'); // ⭐️ → ⭐
+    expect(normalizeEmoji('⭐️')).toBe('⭐');
   });
   it('passes a plain unicode emoji through, trimmed', () => {
     expect(normalizeEmoji('  🎫 ')).toBe('🎫');

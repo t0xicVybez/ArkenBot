@@ -6,10 +6,10 @@ import { prisma } from '../database.js';
 import { pub } from '../redis.js';
 
 export async function appealsRoutes(server: FastifyInstance): Promise<void> {
-  // ── Public (any logged-in user): servers where they can appeal ──
+
   server.get('/me/appealable', { preHandler: [requireAuth] }, async (request, reply) => {
-    const userId = request.user!.id; // PortalUser.id is the Discord user ID
-    // Active ban/mute cases for this user, in guilds that have appeals enabled.
+    const userId = request.user!.id;
+
     const cases = await prisma.moderationCase.findMany({
       where: { userId, active: true, type: { in: ['ban', 'tempban', 'mute'] } },
       select: { guildId: true, type: true, reason: true, createdAt: true },
@@ -27,7 +27,6 @@ export async function appealsRoutes(server: FastifyInstance): Promise<void> {
     const pendingSet = new Set(pending.map((p) => p.guildId));
     const guildMap = new Map(guilds.map((g) => [g.id, g]));
 
-    // One appealable entry per guild (dedupe cases), preferring a ban over a mute.
     const seen = new Set<string>();
     const data = [] as Array<{ guildId: string; guildName: string; guildIcon: string | null; type: string; reason: string; hasPending: boolean }>;
     for (const c of cases) {
@@ -46,7 +45,6 @@ export async function appealsRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data });
   });
 
-  // ── Public: submit an appeal for a guild the user is banned/muted in ──
   server.post('/me/appeals', { preHandler: [requireAuth] }, async (request, reply) => {
     const userId = request.user!.id;
     const userTag = request.user!.username;
@@ -68,7 +66,6 @@ export async function appealsRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: { id: appeal.id } });
   });
 
-  // ── Staff (guild admin): list appeals for a guild ──
   server.get('/guilds/:guildId/appeals', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const { status } = request.query as { status?: string };
@@ -78,13 +75,12 @@ export async function appealsRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: appeals });
   });
 
-  // ── Staff: approve/deny an appeal from the dashboard ──
   server.post('/guilds/:guildId/appeals/:id/decision', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, id } = request.params as { guildId: string; id: string };
     const body = parse(z.object({ action: z.enum(['approve', 'deny']) }), request.body, reply);
     if (!body) return;
     const approved = body.action === 'approve';
-    // Atomically claim the pending appeal so the Discord buttons can't double-handle it.
+
     const claimed = await prisma.moderationAppeal.updateMany({
       where: { id, guildId, status: 'pending' },
       data: { status: approved ? 'approved' : 'denied', reviewedBy: request.user!.id, reviewedAt: new Date() },

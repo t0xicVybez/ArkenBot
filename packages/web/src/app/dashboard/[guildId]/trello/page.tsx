@@ -130,7 +130,7 @@ export default function TrelloPage() {
 
   return (
     <div className="p-3 sm:p-6 max-w-4xl space-y-6">
-      {/* Header */}
+      {}
       <div className="page-head">
         <div className="page-head-icon"><svg className="w-6 h-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <rect width="24" height="24" rx="3" fill="#0079BF"/>
@@ -152,7 +152,7 @@ export default function TrelloPage() {
         </div>
       </div>
 
-      {/* How it works */}
+      {}
       <div className="card border border-blue-500/20 bg-blue-500/5 p-4 space-y-2">
         <p className="text-sm font-semibold text-blue-300">{t('howToTitle')}</p>
         <ol className="text-xs text-gray-400 space-y-1 list-decimal list-inside">
@@ -163,7 +163,7 @@ export default function TrelloPage() {
         </ol>
       </div>
 
-      {/* Create form */}
+      {}
       {showForm && (
         <SettingsSection title={t('newAlertTitle')} description={t('newAlertDesc')}>
           <form onSubmit={handleCreate} className="space-y-4">
@@ -244,7 +244,7 @@ export default function TrelloPage() {
         </SettingsSection>
       )}
 
-      {/* Empty state */}
+      {}
       {alerts.length === 0 && !showForm && (
         <div className="card empty-state" style={{ padding: 0 }}>
           <div className="empty-state">
@@ -256,7 +256,7 @@ export default function TrelloPage() {
         </div>
       )}
 
-      {/* Alert list */}
+      {}
       {alerts.length > 0 && (
         <div className="card p-0 overflow-hidden">
           <div className="px-4 py-3 border-b border-(--border-subtle)">
@@ -342,7 +342,7 @@ export default function TrelloPage() {
         </div>
       )}
 
-      {/* Supported events reference */}
+      {}
       <SettingsSection title={t('supportedTitle')} description={t('supportedDesc')}>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {ALL_EVENTS.map((ev) => (

@@ -1,7 +1,4 @@
-/**
- * /clearwarnings command — deactivates all active warnings for a member,
- * records a clearwarn case, and notifies the member via DM.
- */
+
 import {
   SlashCommandBuilder,
   PermissionFlagsBits,

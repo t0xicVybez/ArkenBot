@@ -1,12 +1,4 @@
-/**
- * voiceStateUpdate event — manages "Join-to-Create" temporary voice channels.
- *
- * When a member joins any configured trigger channel (TempVoiceTrigger rows for
- * the guild) the bot creates a new voice channel named after the member, moves
- * them in, and records it. Each trigger can optionally specify a target category;
- * if omitted the new channel inherits the trigger channel's own category.
- * When the temporary channel becomes empty the bot deletes it.
- */
+
 
 import { ChannelType, PermissionFlagsBits, type VoiceState } from 'discord.js';
 import type { BotEvent } from '../types.js';
@@ -20,7 +12,6 @@ const event: BotEvent = {
     const guild = newState.guild ?? oldState.guild;
     if (!guild) return;
 
-    // ── Member joined a channel — check if it's a trigger ─────────────────────
     if (newState.channelId && newState.channelId !== oldState.channelId && newState.member) {
       const trigger = await prisma.tempVoiceTrigger.findUnique({
         where: { guildId_channelId: { guildId: guild.id, channelId: newState.channelId } },
@@ -68,7 +59,6 @@ const event: BotEvent = {
       }
     }
 
-    // ── Member left a channel — check if it's an empty temp channel ───────────
     const leftChannelId = oldState.channelId;
     if (leftChannelId && leftChannelId !== newState.channelId) {
       const record = await prisma.tempVoiceChannel.findUnique({

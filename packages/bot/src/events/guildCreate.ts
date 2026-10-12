@@ -1,8 +1,4 @@
-/**
- * guildCreate event — runs when the bot joins a new guild. Ensures the guild
- * record exists in the database, immediately deploys application commands to the
- * guild, and publishes a join event to the Redis pub/sub channel.
- */
+
 import {
   REST,
   Routes,
@@ -31,11 +27,6 @@ const DASHBOARD_URL = 'https://arkenbot.app/dashboard';
 const DOCS_URL = 'https://docs.arkenbot.app/';
 const SUPPORT_URL = 'https://discord.gg/fXJnYPdHRX';
 
-/**
- * Sends the onboarding message after joining a guild. Prefers a DM to whoever
- * added the bot (from the audit log), then the guild owner, and finally falls
- * back to the guild's system channel or the first text channel we can post in.
- */
 async function sendWelcomeMessage(guild: Guild): Promise<void> {
   const loc = await resolveUserLocale({ user: { id: '' }, guildId: guild.id, guildLocale: guild.preferredLocale });
   const embed = new EmbedBuilder()
@@ -67,17 +58,16 @@ async function sendWelcomeMessage(guild: Guild): Promise<void> {
 
   const payload = { embeds: [embed], components: [row] };
 
-  // 1) DM whoever added the bot, if the audit log is readable.
   let inviter: User | null = null;
   try {
     if (guild.members.me?.permissions.has(PermissionFlagsBits.ViewAuditLog)) {
       const logs = await guild.fetchAuditLogs({ type: AuditLogEvent.BotAdd, limit: 5 });
       const entry = logs.entries.find((e) => e.target?.id === guild.client.user?.id);
       const executor = entry?.executor ?? null;
-      // Audit log executors can be partial — fetch the full user before DMing.
+
       inviter = executor ? await guild.client.users.fetch(executor.id).catch(swallow) : null;
     }
-  } catch { /* no audit log access — fall through */ }
+  } catch {  }
 
   if (inviter && !inviter.bot) {
     const sent = await inviter.send(payload).then(() => true).catch(() => false);
@@ -87,7 +77,6 @@ async function sendWelcomeMessage(guild: Guild): Promise<void> {
     }
   }
 
-  // 2) DM the guild owner.
   const owner = await guild.fetchOwner().catch(swallow);
   if (owner && owner.id !== inviter?.id) {
     const sent = await owner.send(payload).then(() => true).catch(() => false);
@@ -97,7 +86,6 @@ async function sendWelcomeMessage(guild: Guild): Promise<void> {
     }
   }
 
-  // 3) Fall back to a channel in the guild.
   const me = guild.members.me;
   const canPost = (ch: GuildBasedChannel | null): ch is TextChannel =>
     !!ch && ch.type === ChannelType.GuildText && !!me &&
@@ -121,7 +109,6 @@ async function sendWelcomeMessage(guild: Guild): Promise<void> {
   logger.warn({ guildId: guild.id }, 'Could not deliver welcome message (DMs closed, no writable channel)');
 }
 
-
 const event: BotEvent = {
   name: 'guildCreate',
   async execute(_client: unknown, guild: Guild) {
@@ -134,8 +121,6 @@ const event: BotEvent = {
       guild.iconURL() ?? undefined
     );
 
-    // Commands are registered per-guild immediately rather than waiting for the next
-    // global deploy cycle, so members can use slash commands straight away.
     try {
       const client = _client as BotClient;
       const commands = [...client.commands.values()].map((cmd) => localizeCommandJSON(cmd.data.toJSON()));

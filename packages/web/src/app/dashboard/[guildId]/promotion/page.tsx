@@ -87,13 +87,13 @@ export default function PromotionDashPage() {
         </div>
       </div>
 
-      {/* Honest limitation note */}
+      {}
       <div className="flex items-start gap-2.5 bg-(--bg-elevated) border border-(--border-subtle) rounded-xl p-3.5 mb-5 text-[13px] text-(--text-muted)">
         <Info className="w-4 h-4 mt-0.5 flex-shrink-0 text-(--accent)" />
         <p>{t('limitationNote')}</p>
       </div>
 
-      {/* Config */}
+      {}
       <div className="bg-(--bg-card) border border-(--border-subtle) rounded-xl p-5 mb-5 space-y-4">
         <div className="flex items-center justify-between">
           <div>
@@ -126,7 +126,7 @@ export default function PromotionDashPage() {
             <Toggle enabled={trackTag} onChange={setTrackTag} />
           </div>
 
-          {/* Keywords */}
+          {}
           <div className={trackStatus ? 'border-t border-(--border-subtle) pt-4' : 'border-t border-(--border-subtle) pt-4 opacity-50 pointer-events-none'}>
             <div className="text-[13.5px] font-semibold text-gray-200">{t('keywordsTitle')}</div>
             <div className="text-[12px] text-(--text-muted) mt-0.5 mb-2.5">{t('keywordsDesc')}</div>
@@ -164,7 +164,7 @@ export default function PromotionDashPage() {
         </div>
       </div>
 
-      {/* Leaderboard */}
+      {}
       <div className="bg-(--bg-card) border border-(--border-subtle) rounded-xl overflow-hidden">
         <div className="flex items-center gap-2 px-5 py-3.5 border-b border-(--border-subtle)">
           <Trophy className="w-4 h-4 text-(--accent)" />

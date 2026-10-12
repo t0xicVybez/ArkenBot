@@ -1,10 +1,4 @@
-/**
- * Seed built-in addons into the database.
- * Run once after initial setup or when new addons are added:
- *   npx ts-node scripts/seed-addons.ts
- * or via:
- *   npx tsx scripts/seed-addons.ts
- */
+
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();

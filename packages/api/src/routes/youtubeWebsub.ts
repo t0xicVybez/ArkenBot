@@ -1,14 +1,4 @@
-/**
- * YouTube WebSub (PubSubHubbub) callback — public, unauthenticated.
- *
- *   GET  /youtube/websub  — hub verification handshake (echo hub.challenge)
- *   POST /youtube/websub  — Atom push: a channel published a video / went live
- *
- * POST bodies are verified with X-Hub-Signature (sha1 HMAC over the raw body,
- * keyed by the per-subscription secret). On a verified push we do ONE batched
- * videos.list (1 unit) to classify the video, then publish a Redis event the
- * bot fans out to every guild watching that channel.
- */
+
 import crypto from 'crypto';
 import type { FastifyInstance, FastifyRequest } from 'fastify';
 import { prisma } from '../database.js';
@@ -25,10 +15,9 @@ type VideoInfo = {
   thumbnail: string | null;
   live: boolean;
   upcoming: boolean;
-  isStream: boolean; // has liveStreamingDetails (stream or its VOD) vs a plain upload
+  isStream: boolean;
 };
 
-/** One batched videos.list call → classify each video. Costs 1 unit. */
 async function fetchVideos(ids: string[]): Promise<Map<string, VideoInfo>> {
   const out = new Map<string, VideoInfo>();
   if (!ids.length || !config.youtubeApiKey) return out;
@@ -66,7 +55,7 @@ async function fetchVideos(ids: string[]): Promise<Map<string, VideoInfo>> {
 }
 
 export async function youtubeWebsubRoutes(server: FastifyInstance): Promise<void> {
-  // Capture the raw Atom body so we can HMAC-verify the push signature.
+
   server.addContentTypeParser(
     ['application/atom+xml', 'application/xml', 'text/xml'],
     { parseAs: 'string' },
@@ -76,9 +65,6 @@ export async function youtubeWebsubRoutes(server: FastifyInstance): Promise<void
     },
   );
 
-  // ── Hub verification handshake ──────────────────────────────────────────────
-  // The hub is exempt from the global rate limiter — pushes arrive from shared
-  // Google IPs and can burst well past the per-IP cap.
   server.get('/youtube/websub', { config: { rateLimit: false } }, async (request, reply) => {
     const q = request.query as Record<string, string>;
     const mode = q['hub.mode'];
@@ -93,7 +79,7 @@ export async function youtubeWebsubRoutes(server: FastifyInstance): Promise<void
 
     const sub = await prisma.youtubeSubscription.findUnique({ where: { channelId } });
     if (!sub) {
-      // Reject verification for a channel we never asked to subscribe.
+
       return reply.code(404).send('not found');
     }
 
@@ -107,14 +93,13 @@ export async function youtubeWebsubRoutes(server: FastifyInstance): Promise<void
         },
       }).catch(() => null);
     }
-    // Echo the challenge to confirm the (un)subscription either way.
+
     return reply.code(200).type('text/plain').send(challenge);
   });
 
-  // ── Push notification ───────────────────────────────────────────────────────
   server.post('/youtube/websub', { config: { rateLimit: false } }, async (request, reply) => {
     const raw = (request as FastifyRequest & { rawBody?: string }).rawBody ?? '';
-    // Acknowledge quickly; the hub only needs a 2xx.
+
     reply.code(204).send();
 
     try {
@@ -124,7 +109,6 @@ export async function youtubeWebsubRoutes(server: FastifyInstance): Promise<void
       const sub = await prisma.youtubeSubscription.findUnique({ where: { channelId } });
       if (!sub) return;
 
-      // Verify X-Hub-Signature: sha1=<hex> over the raw body, keyed by our secret.
       const sig = (request.headers['x-hub-signature'] as string | undefined) ?? '';
       const [algo, provided] = sig.split('=');
       if (algo !== 'sha1' || !provided) return;
@@ -138,7 +122,6 @@ export async function youtubeWebsubRoutes(server: FastifyInstance): Promise<void
         data: { lastNotifiedAt: new Date() },
       }).catch(() => null);
 
-      // Ignore deletion notifications.
       if (/<at:deleted-entry/.test(raw)) return;
 
       const videoId = /<yt:videoId>([\w-]{11})<\/yt:videoId>/.exec(raw)?.[1];
@@ -155,26 +138,22 @@ export async function youtubeWebsubRoutes(server: FastifyInstance): Promise<void
       }
 
       if (info.upcoming) {
-        // Track the scheduled stream so the bot's targeted poller catches go-live
-        // even if the hub doesn't push the transition.
+
         await redis.hset('youtube:upcoming', videoId, channelId).catch(() => null);
         return;
       }
 
-      // liveBroadcastContent === 'none'
       if (info.isStream) {
-        // A finished-stream VOD — the live alert already fired; don't re-alert.
+
         await redis.hdel('youtube:upcoming', videoId).catch(() => null);
         return;
       }
 
-      // A plain new upload. Guard against edit-pushes of old videos: only treat as
-      // new when published within the last 2 hours.
       const publishedAt = published ? Date.parse(published) : Date.now();
       if (Date.now() - publishedAt > 2 * 3600 * 1000) return;
       await pub.publish('youtube:upload', JSON.stringify({ channelId, video: info })).catch(() => null);
     } catch {
-      /* never throw from the push handler; we've already 204'd */
+
     }
   });
 }

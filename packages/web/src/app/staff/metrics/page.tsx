@@ -6,7 +6,6 @@ import dynamic from 'next/dynamic';
 import { ChartSkeleton } from '@/components/charts/ChartSkeleton';
 import { BarChart3, X } from 'lucide-react';
 
-// recharts is heavy; load the memory chart in its own chunk on demand.
 const MemoryChart = dynamic(() => import('./_charts'), { ssr: false, loading: () => <ChartSkeleton height={192} /> });
 import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
@@ -30,7 +29,6 @@ export default function StaffMetricsPage() {
 
   const stats = statsRes?.data?.data;
 
-  // Build memory history
   useEffect(() => {
     const mem = stats?.memoryUsage;
     if (mem != null) {
@@ -50,7 +48,7 @@ export default function StaffMetricsPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Memory Usage Chart */}
+        {}
         <div className="card">
           <h3 className="text-lg font-semibold text-white mb-4">{t('memoryChart')}</h3>
           <div className="h-48">
@@ -58,7 +56,7 @@ export default function StaffMetricsPage() {
           </div>
         </div>
 
-        {/* Current Stats */}
+        {}
         <div className="card">
           <h3 className="text-lg font-semibold text-white mb-4">{t('currentStats')}</h3>
           <dl className="space-y-3">
@@ -79,7 +77,7 @@ export default function StaffMetricsPage() {
         </div>
       </div>
 
-      {/* Prometheus Metrics */}
+      {}
       <div className="card mt-6">
         <h3 className="text-lg font-semibold text-white mb-2">{t('prometheusTitle')}</h3>
         <p className="text-gray-400 text-sm mb-3">
@@ -103,7 +101,7 @@ export default function StaffMetricsPage() {
         </button>
       </div>
 
-      {/* Raw metrics modal */}
+      {}
       {showRaw && rawMetrics && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
           <div className="bg-discord-dark-bg border border-gray-700 rounded-xl w-full max-w-4xl max-h-[80vh] flex flex-col">

@@ -1,10 +1,4 @@
-/**
- * Posts the Discord announcement for a giveaway that was created outside a slash
- * command (currently the web dashboard). The dashboard writes the giveaway row
- * and publishes a `giveaway:start` Redis event; without this, the row exists but
- * no message is ever posted, so members can't enter and the end-job finds no
- * 🎉 reaction to draw winners from.
- */
+
 import { EmbedBuilder, type TextChannel } from 'discord.js';
 import type { BotClient } from '../../client.js';
 import { prisma } from '../../database.js';
@@ -14,11 +8,7 @@ import { logger, swallow } from '../../logger.js';
 import { notifyActionFailure, isPermissionError } from '../../utils/permissionAlert.js';
 
 export class GiveawayModule {
-  /**
-   * Posts the giveaway embed to its channel and seeds the 🎉 entry reaction,
-   * then stores the resulting message id. Idempotent: a giveaway that has
-   * already been posted or ended is skipped.
-   */
+
   static async post(client: BotClient, giveawayId: string): Promise<void> {
     const giveaway = await prisma.giveaway.findUnique({ where: { id: giveawayId } }).catch(swallow);
     if (!giveaway || giveaway.ended || giveaway.messageId) return;
@@ -35,8 +25,6 @@ export class GiveawayModule {
       ? (parseInt(guildSettings.giveawayColor.replace('#', ''), 16) as number)
       : 0xf1c40f;
 
-    // Bonus entries are stored as [{ roleId, bonusEntries }]; tolerate the older
-    // dashboard shape ({ roleId, entries }) for display too.
     const bonus = Array.isArray(giveaway.bonusRoleEntries)
       ? (giveaway.bonusRoleEntries[0] as { roleId?: string; bonusEntries?: number; entries?: number } | undefined)
       : undefined;

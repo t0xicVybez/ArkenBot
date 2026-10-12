@@ -1,4 +1,4 @@
-/** /inventory — list the items a member owns from shop purchases. */
+
 import { SlashCommandBuilder, EmbedBuilder, type ChatInputCommandInteraction } from 'discord.js';
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';

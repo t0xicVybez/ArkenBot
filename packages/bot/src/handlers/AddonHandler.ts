@@ -1,8 +1,4 @@
-/**
- * Discovers, loads, and manages the lifecycle of addon packages from the addons
- * directory. Each addon is auto-registered in the database on first load; no
- * manual portal registration is required.
- */
+
 
 import { readdirSync, statSync, existsSync } from 'fs';
 import { join, resolve, dirname } from 'path';
@@ -17,28 +13,17 @@ import { prisma } from '../database.js';
 import { redis } from '../redis.js';
 import { logger } from '../logger.js';
 
-/** Release a Redis lock only if we still own it (compare-and-delete). */
 const RELEASE_LOCK = 'if redis.call("get", KEYS[1]) == ARGV[1] then return redis.call("del", KEYS[1]) else return 0 end';
 import { resolveUserLocale } from '../i18n/index.js';
 import { ADDON_CATEGORY_PREFIX } from '@arkenbot/shared';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-/**
- * Provides key-value persistence for a single addon scoped to either a specific
- * guild or globally (no guild). Backed by the `AddonData` Prisma model.
- */
 class AddonStorage {
   constructor(private addonDbId: string) {}
 
-  /**
-   * Retrieves a stored value for the given key.
-   * @param key - Storage key.
-   * @param guildId - Guild scope. Omit for global (cross-guild) data.
-   */
   async get<T>(key: string, guildId?: string): Promise<T | null> {
-    // `findUnique` cannot match a null column in a composite unique index, so
-    // global records (guildId IS NULL) must be fetched with `findFirst`.
+
     const record = guildId
       ? await prisma.addonData.findUnique({
           where: { guildId_addonId_key: { guildId, addonId: this.addonDbId, key } },
@@ -49,12 +34,6 @@ class AddonStorage {
     return record ? (record.value as T) : null;
   }
 
-  /**
-   * Stores or updates a value for the given key.
-   * @param key - Storage key.
-   * @param value - Value to persist. Must be JSON-serialisable.
-   * @param guildId - Guild scope. Omit for global (cross-guild) data.
-   */
   async set<T>(key: string, value: T, guildId?: string): Promise<void> {
     if (guildId) {
       await prisma.addonData.upsert({
@@ -63,8 +42,7 @@ class AddonStorage {
         create: { guildId, addonId: this.addonDbId, key, value: value as object },
       });
     } else {
-      // Global records have guildId = null and no Guild foreign key, so upsert
-      // requires a two-step find-then-update/create.
+
       const existing = await prisma.addonData.findFirst({
         where: { guildId: null, addonId: this.addonDbId, key },
         select: { id: true },
@@ -77,13 +55,6 @@ class AddonStorage {
     }
   }
 
-  /**
-   * Atomically read-modify-write a value under a per-(addon,guild,key) Redis
-   * lock, so concurrent mutations of the same JSON blob can't clobber each
-   * other (e.g. two tickets opening at once). Best-effort: if the lock can't be
-   * acquired within the window the mutation still proceeds (logged), so a stuck
-   * lock never deadlocks an addon.
-   */
   async mutate<T>(key: string, mutator: (current: T | null) => T | Promise<T>, guildId?: string): Promise<T> {
     const lockKey = `addonlock:${this.addonDbId}:${guildId ?? 'global'}:${key}`;
     const token = randomUUID();
@@ -100,7 +71,6 @@ class AddonStorage {
     }
   }
 
-  /** Acquire a Redis lock (SET NX PX) with bounded retry. Returns false on give-up. */
   private async acquireLock(lockKey: string, token: string): Promise<boolean> {
     const LOCK_TTL_MS = 5000;
     const MAX_WAIT_MS = 3000;
@@ -116,21 +86,12 @@ class AddonStorage {
     }
   }
 
-  /**
-   * Deletes the stored value for the given key.
-   * @param key - Storage key to remove.
-   * @param guildId - Guild scope. Omit to target global records.
-   */
   async delete(key: string, guildId?: string): Promise<void> {
     await prisma.addonData.deleteMany({
       where: { guildId: guildId ?? null, addonId: this.addonDbId, key },
     });
   }
 
-  /**
-   * Returns all keys stored for this addon in the given scope.
-   * @param guildId - Guild scope. Omit to list global keys.
-   */
   async keys(guildId?: string): Promise<string[]> {
     const records = await prisma.addonData.findMany({
       where: { guildId: guildId ?? null, addonId: this.addonDbId },
@@ -140,10 +101,6 @@ class AddonStorage {
   }
 }
 
-/**
- * Wraps the application logger with a fixed `addon` field so that all messages
- * emitted by an addon are identifiable in structured log output.
- */
 class AddonLogger {
   constructor(private addonName: string) {}
 
@@ -161,17 +118,14 @@ class AddonLogger {
   }
 }
 
-/** Internal record for a successfully activated addon. */
 interface LoadedAddon {
   definition: AddonDefinition;
   context: AddonContext;
   eventBus: AddonEventBus;
-  /** Cleanup functions collected during activation; called on deactivation. */
+
   unsubscribers: Array<() => void>;
 }
 
-/** Discovers, loads, activates, and deactivates addon packages at runtime. */
-/** Reference/demo addons kept in-repo but never loaded in production. */
 const RETIRED_ADDONS = new Set(['example-economy']);
 
 export class AddonHandler {
@@ -183,10 +137,6 @@ export class AddonHandler {
     this.client = client;
   }
 
-  /**
-   * Scans the addons directory and loads every subdirectory that contains a
-   * built `dist/index.js`. Silently skips the directory if it does not exist.
-   */
   async loadAddons(): Promise<void> {
     const addonsDir = resolve(__dirname, '..', '..', '..', '..', 'addons');
 
@@ -200,9 +150,7 @@ export class AddonHandler {
     );
 
     for (const folder of addonFolders) {
-      // Retired reference addons: kept in-repo as SDK examples but never loaded in
-      // production. example-economy is superseded by the built-in economy feature
-      // (its /balance, /pay, /daily collided with the real commands).
+
       if (RETIRED_ADDONS.has(folder)) {
         logger.info(`Skipping retired reference addon: ${folder}`);
         continue;
@@ -213,12 +161,6 @@ export class AddonHandler {
     logger.info(`Loaded ${this.loadedAddons.size} addons`);
   }
 
-  /**
-   * Loads and activates a single addon from its directory path. The addon's
-   * manifest is upserted into the database so the staff portal always reflects
-   * the current on-disk state — placing a new addon folder and restarting the
-   * bot is all that is needed to register it.
-   */
   async loadAddon(addonPath: string): Promise<void> {
     try {
       const indexPath = join(addonPath, 'dist', 'index.js');
@@ -273,10 +215,6 @@ export class AddonHandler {
     }
   }
 
-  /**
-   * Wires up an addon's commands, events, and lifecycle hooks, then registers
-   * it in the loaded-addon map. Called internally by `loadAddon`.
-   */
   async activateAddon(definition: AddonDefinition, dbAddonId: string): Promise<void> {
     const { name } = definition.manifest;
     const eventBus = new AddonEventBus();
@@ -301,8 +239,7 @@ export class AddonHandler {
         });
         return Boolean(ga?.enabled);
       },
-      // Wire the addon's own localized catalogs and the shared locale resolver so
-      // `ctx.t()` / `ctx.resolveLocale()` reply in the viewer's language.
+
       messages: definition.locales,
       resolveLocale: resolveUserLocale,
     });
@@ -319,9 +256,7 @@ export class AddonHandler {
             ? (interaction, _client) => cmd.autocomplete!(interaction, context)
             : undefined,
         };
-        // Core (built-in) commands take precedence: never let an addon shadow a
-        // command name that a first-party command already owns (e.g. the demo
-        // example-economy addon vs. the real /balance, /pay, /daily).
+
         const existing = this.client.commands.get(cmd.data.name);
         if (existing && !existing.category?.startsWith(ADDON_CATEGORY_PREFIX)) {
           logger.warn(`Addon ${name} command "${cmd.data.name}" ignored — a core command already owns that name`);
@@ -338,10 +273,7 @@ export class AddonHandler {
         const handler = (...args: any[]) => {
           const result = (eventDef.handler as (...a: unknown[]) => Promise<void>)(context, ...args);
           result.catch((err) => {
-            // An autocomplete interaction expires the instant the user types
-            // another character, so a 10062 "Unknown interaction" when responding
-            // to one is benign noise (the user moved on), not a bug. Log it at
-            // debug and keep error-level for everything else.
+
             const isAutocomplete = args.some((a) => typeof a?.isAutocomplete === 'function' && a.isAutocomplete());
             if (isAutocomplete && (err as { code?: number })?.code === 10062) {
               logger.debug({ addon: name, event: eventDef.event }, 'autocomplete interaction expired (10062) — ignored');
@@ -373,10 +305,6 @@ export class AddonHandler {
     logger.info(`Activated addon: ${name} v${definition.manifest.version}`);
   }
 
-  /**
-   * Runs the addon's `onUnload` hook, removes its event listeners and commands,
-   * and evicts it from the loaded-addon map.
-   */
   async deactivateAddon(name: string): Promise<void> {
     const loaded = this.loadedAddons.get(name);
     if (!loaded) return;
@@ -399,15 +327,10 @@ export class AddonHandler {
     logger.info(`Deactivated addon: ${name}`);
   }
 
-  /** Returns the names of all currently active addons. */
   getLoadedAddons(): string[] {
     return Array.from(this.loadedAddons.keys());
   }
 
-  /**
-   * Forwards updated guild settings to an addon's `onSettingsUpdate` hook.
-   * Called by the API whenever a staff member saves addon settings in the portal.
-   */
   async notifySettingsUpdate(addonName: string, guildId: string, settings: Record<string, unknown>): Promise<void> {
     const loaded = this.loadedAddons.get(addonName);
     if (loaded?.definition.hooks?.onSettingsUpdate) {

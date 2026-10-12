@@ -13,13 +13,11 @@ import dynamic from 'next/dynamic';
 import { ChartSkeleton } from '@/components/charts/ChartSkeleton';
 import { useTranslations } from 'next-intl';
 
-// recharts is heavy; load the actions-per-day chart in its own chunk on demand.
 const AutomodChart = dynamic(() => import('./_charts'), {
   ssr: false,
   loading: () => <ChartSkeleton height={120} />,
 });
 
-// ─── Filter-type label map (backend reason → i18n key) ────────────────────────
 const FILTER_LABELS: Record<string, string> = {
   'Word filter violation': 'labelWordFilter',
   'Spam detected':         'labelAntiSpam',
@@ -29,7 +27,6 @@ const FILTER_LABELS: Record<string, string> = {
   'Raid detected':         'labelAntiRaid',
 };
 
-// ─── Automod analytics panel ──────────────────────────────────────────────────
 function AutoModStats({ guildId }: { guildId: string }) {
   const t = useTranslations('automodPage');
   const [days, setDays] = useState(14);
@@ -84,13 +81,13 @@ function AutoModStats({ guildId }: { guildId: string }) {
         <p className="text-gray-500 text-sm text-center py-4">{t('noActions')}</p>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          {/* Time-series chart */}
+          {}
           <div>
             <p className="text-xs text-gray-500 mb-2">{t('actionsPerDay')}</p>
             <AutomodChart data={chartData} />
           </div>
 
-          {/* Filter breakdown */}
+          {}
           <div>
             <p className="text-xs text-gray-500 mb-2">{t('byFilterType')}</p>
             <div className="space-y-1.5">
@@ -264,7 +261,7 @@ export default function AutoModPage() {
         />
         {config.filterEnabled && (
           <div className="pt-2 space-y-4">
-            {/* Word list */}
+            {}
             <div className="space-y-3">
               <div className="flex gap-2">
                 <input
@@ -293,7 +290,7 @@ export default function AutoModPage() {
               </div>
             </div>
 
-            {/* Escalation thresholds */}
+            {}
             <div className="border-t border-(--border-subtle) pt-4">
               <p className="text-sm font-medium text-white mb-3">{t('escalation')}</p>
               <p className="text-xs text-gray-500 mb-3">
@@ -348,7 +345,7 @@ export default function AutoModPage() {
                 </div>
               </div>
 
-              {/* Summary */}
+              {}
               <div className="mt-3 p-3 rounded-sm bg-(--bg-card) text-xs text-gray-400 space-y-1">
                 <p>{t('sum1Prefix', { max: (config.filterWarnBeforeTimeout ?? 3) - 1 })} <span className="text-yellow-400">{t('deleteWarn')}</span></p>
                 <p>{t('sum2Prefix', { from: config.filterWarnBeforeTimeout ?? 3, to: (config.filterWarnBeforeKick ?? 5) - 1 })} <span className="text-orange-400">{t('timeoutLabel', { min: Math.ceil((config.filterTimeoutDuration ?? 300) / 60) })}</span></p>
@@ -356,7 +353,7 @@ export default function AutoModPage() {
               </div>
             </div>
 
-            {/* Custom messages */}
+            {}
             <div className="border-t border-(--border-subtle) pt-4 space-y-4">
               <p className="text-sm font-medium text-white">{t('messages')}</p>
               <p className="text-xs text-gray-500 -mt-2">

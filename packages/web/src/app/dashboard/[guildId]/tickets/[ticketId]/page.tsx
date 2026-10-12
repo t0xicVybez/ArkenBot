@@ -10,8 +10,6 @@ import toast from 'react-hot-toast';
 import { ArrowLeft, RefreshCw, AlertTriangle, Clock, Tag, StickyNote, UserCheck, ArrowRightLeft, Trash2, Send, Download } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
 interface TicketNote {
   id: string;
   authorId: string;
@@ -76,8 +74,6 @@ const STATUS_BADGE: Record<string, string> = {
   closed: 'badge-secondary',
 };
 
-// ─── Status Timeline ──────────────────────────────────────────────────────────
-
 function Timeline({ ticket }: { ticket: TicketRecord }) {
   const t = useTranslations('ticketDetailPage');
   const events: { time: string; label: string; color: string }[] = [
@@ -87,7 +83,7 @@ function Timeline({ ticket }: { ticket: TicketRecord }) {
     events.push({ time: ticket.firstResponseAt, label: t('firstStaffResponse'), color: 'bg-blue-400' });
   }
   if (ticket.claimedByTag) {
-    // We don't store claimed timestamp separately, so skip if no data
+
   }
   if (ticket.transferredToTag) {
     events.push({ time: ticket.lastActivity, label: t('transferredToTag', { tag: ticket.transferredToTag }), color: 'bg-purple-400' });
@@ -115,8 +111,6 @@ function Timeline({ ticket }: { ticket: TicketRecord }) {
     </div>
   );
 }
-
-// ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function TicketDetailPage() {
   const { guildId, ticketId } = useParams() as { guildId: string; ticketId: string };
@@ -168,7 +162,7 @@ export default function TicketDetailPage() {
     onSuccess: () => {
       setReplyInput('');
       toast.success(t('messageSent'));
-      // Refresh transcript after a short delay so the bot has time to append it
+
       setTimeout(() => invalidate(), 1500);
     },
     onError: () => toast.error(t('messageError')),
@@ -249,13 +243,12 @@ export default function TicketDetailPage() {
   const { ticket, messages, panel } = data;
   const priority = PRIORITY_CONFIG[ticket.priority] ?? PRIORITY_CONFIG.medium;
 
-  // SLA warning: open longer than configured threshold with no staff response
   const slaWarning = ticket.status !== 'closed' && !ticket.firstResponseAt && slaHours > 0 &&
     (Date.now() - new Date(ticket.createdAt).getTime()) >= slaHours * 60 * 60 * 1000;
 
   return (
     <div className="p-3 sm:p-6 space-y-6 max-w-4xl">
-      {/* Header */}
+      {}
       <div className="flex items-center gap-4 flex-wrap">
         <Link href={`/dashboard/${guildId}/tickets`} className="text-gray-400 hover:text-white transition-colors">
           <ArrowLeft className="w-5 h-5" />
@@ -304,7 +297,7 @@ export default function TicketDetailPage() {
         </button>
       </div>
 
-      {/* Info Grid */}
+      {}
       <div className="card grid grid-cols-2 md:grid-cols-3 gap-4">
         <InfoCell label={t('openedBy')}  value={ticket.username} />
         <InfoCell label={t('panel')}      value={panel?.name ?? ticket.panelId} />
@@ -346,7 +339,7 @@ export default function TicketDetailPage() {
         {ticket.categoryTag && <InfoCell label={t('category')} value={ticket.categoryTag} />}
       </div>
 
-      {/* Timeline */}
+      {}
       <div className="card space-y-3">
         <h2 className="text-white font-semibold flex items-center gap-2">
           <Clock className="w-4 h-4 text-gray-400" /> {t('timeline')}
@@ -354,12 +347,12 @@ export default function TicketDetailPage() {
         <Timeline ticket={ticket} />
       </div>
 
-      {/* Actions (only for open/claimed tickets) */}
+      {}
       {ticket.status !== 'closed' && (
         <div className="card space-y-4">
           <h2 className="text-white font-semibold border-b border-(--border-subtle) pb-2">{t('staffActions')}</h2>
 
-          {/* Claim / Unclaim */}
+          {}
           <div className="flex items-center gap-3 flex-wrap">
             <UserCheck className="w-4 h-4 text-gray-400 flex-shrink-0" />
             <span className="text-gray-400 text-sm w-24">{t('claim')}</span>
@@ -373,7 +366,7 @@ export default function TicketDetailPage() {
             )}
           </div>
 
-          {/* Transfer */}
+          {}
           <div className="flex items-start gap-3 flex-wrap">
             <ArrowRightLeft className="w-4 h-4 text-gray-400 flex-shrink-0 mt-2" />
             <span className="text-gray-400 text-sm w-24 mt-2">{t('transfer')}</span>
@@ -388,7 +381,7 @@ export default function TicketDetailPage() {
             </div>
           </div>
 
-          {/* Priority */}
+          {}
           <div className="flex items-center gap-3">
             <span className="text-gray-400 text-sm w-24 pl-7">{t('priority')}</span>
             <select
@@ -403,7 +396,7 @@ export default function TicketDetailPage() {
             </select>
           </div>
 
-          {/* Tags */}
+          {}
           <div className="flex items-start gap-3">
             <Tag className="w-4 h-4 text-gray-400 flex-shrink-0 mt-2" />
             <span className="text-gray-400 text-sm w-24 mt-2">{t('tags')}</span>
@@ -431,7 +424,7 @@ export default function TicketDetailPage() {
             </div>
           </div>
 
-          {/* Add Note */}
+          {}
           <div className="flex items-start gap-3">
             <StickyNote className="w-4 h-4 text-gray-400 flex-shrink-0 mt-2" />
             <span className="text-gray-400 text-sm w-24 mt-2">{t('addNote')}</span>
@@ -449,7 +442,7 @@ export default function TicketDetailPage() {
         </div>
       )}
 
-      {/* AI Triage */}
+      {}
       {ticket.aiTriage && (
         <div className="card space-y-3">
           <h2 className="text-white font-semibold flex items-center gap-2">🧠 {t('aiTriage')}</h2>
@@ -472,7 +465,7 @@ export default function TicketDetailPage() {
         </div>
       )}
 
-      {/* Staff Notes */}
+      {}
       {ticket.notes.length > 0 && (
         <div className="card space-y-3">
           <h2 className="text-white font-semibold flex items-center gap-2">
@@ -493,7 +486,7 @@ export default function TicketDetailPage() {
         </div>
       )}
 
-      {/* Reply to ticket channel */}
+      {}
       {ticket.status !== 'closed' && (
         <div className="card space-y-3">
           <h2 className="text-white font-semibold flex items-center gap-2">
@@ -528,7 +521,7 @@ export default function TicketDetailPage() {
         </div>
       )}
 
-      {/* Transcript */}
+      {}
       <div className="card space-y-3">
         <div className="flex items-center justify-between">
           <h2 className="text-white font-semibold">

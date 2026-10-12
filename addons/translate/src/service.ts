@@ -1,4 +1,4 @@
-/** LibreTranslate client for the translate addon. Self-hosted on localhost:5000. */
+
 
 const LT_URL = (process.env.LIBRETRANSLATE_URL || 'http://localhost:5000').replace(/\/$/, '');
 const LT_KEY = process.env.LIBRETRANSLATE_API_KEY || '';
@@ -17,7 +17,6 @@ function remember(key: string, val: { text: string; detected: string }) {
 
 export class TranslateError extends Error {}
 
-/** Translate `q` into `target`; `source='auto'` lets LT detect it. */
 export async function translate(q: string, target: string, source = 'auto'): Promise<{ text: string; detected: string }> {
   const key = `${source}\u0000${target}\u0000${q}`;
   const hit = cache.get(key);
@@ -45,7 +44,6 @@ export async function translate(q: string, target: string, source = 'auto'): Pro
   }
 }
 
-/** Human-readable name for an LT language code. */
 const NAMES: Record<string, string> = {
   en: 'English', es: 'Spanish', fr: 'French', de: 'German', it: 'Italian', 'pt-BR': 'Portuguese', pt: 'Portuguese',
   nl: 'Dutch', ru: 'Russian', pl: 'Polish', tr: 'Turkish', id: 'Indonesian', ja: 'Japanese', ko: 'Korean',
@@ -56,7 +54,6 @@ export function langName(code: string): string {
   return NAMES[code] ?? code;
 }
 
-/** Target-language choices for the /translate command (Discord caps at 25). */
 export const LANG_CHOICES: { name: string; value: string }[] = [
   ['English', 'en'], ['Spanish', 'es'], ['French', 'fr'], ['German', 'de'], ['Italian', 'it'],
   ['Portuguese', 'pt-BR'], ['Dutch', 'nl'], ['Russian', 'ru'], ['Polish', 'pl'], ['Turkish', 'tr'],
@@ -65,7 +62,6 @@ export const LANG_CHOICES: { name: string; value: string }[] = [
   ['Vietnamese', 'vi'], ['Thai', 'th'], ['Swedish', 'sv'], ['Czech', 'cs'], ['Greek', 'el'], ['Hebrew', 'he'],
 ].map(([name, value]) => ({ name, value }));
 
-/** Country-flag emoji → LT language code, for flag-reaction translation. */
 export const FLAG_TO_LANG: Record<string, string> = {
   '🇺🇸': 'en', '🇬🇧': 'en', '🇦🇺': 'en', '🇨🇦': 'en',
   '🇪🇸': 'es', '🇲🇽': 'es', '🇦🇷': 'es',
@@ -77,7 +73,6 @@ export const FLAG_TO_LANG: Record<string, string> = {
   '🇸🇪': 'sv', '🇨🇿': 'cs', '🇬🇷': 'el', '🇮🇱': 'he',
 };
 
-/** Map a user's Discord locale to the closest LT code (for right-click default target). */
 export function localeToLt(locale: string): string {
   const l = (locale || 'en').toLowerCase();
   const m: Record<string, string> = {

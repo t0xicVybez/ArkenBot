@@ -31,14 +31,13 @@ function Section({ id, title, children }: { id: string; title: string; children:
   );
 }
 
-/** Renderer helpers for next-intl rich text. */
 const extLink = (href: string) => (chunks: ReactNode) => (
   <a href={href} target="_blank" rel="noopener noreferrer" className="text-discord-blurple hover:underline">{chunks}</a>
 );
 const intLink = (href: string) => (chunks: ReactNode) => (
   <a href={href} className="text-discord-blurple hover:underline">{chunks}</a>
 );
-/** Inline formatting tags shared across every rich paragraph. */
+
 const fmt = {
   b: (chunks: ReactNode) => <span className="text-white font-medium">{chunks}</span>,
   w: (chunks: ReactNode) => <span className="text-white">{chunks}</span>,

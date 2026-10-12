@@ -67,8 +67,7 @@ const command: AddonCommandDefinition = {
 
     try {
       const fetched = await channel.messages.fetch({ limit: count });
-      // Oldest-first, drop empty/bot-noise, cap each line so a few long messages
-      // can't blow the token budget.
+
       const lines = [...fetched.values()]
         .reverse()
         .filter((m: Message) => m.content.trim().length > 0 && !m.author.bot)

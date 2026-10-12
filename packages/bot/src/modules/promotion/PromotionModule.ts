@@ -1,19 +1,4 @@
-/**
- * Server Promotion Tracking.
- *
- * Tracks members who promote the server via their **custom status** (containing a
- * configured keyword / invite / phrase) or by displaying the server's **Discord
- * tag** (`user.primaryGuild`). Opt-in per guild, off by default.
- *
- * Model: one open `PromotionSession` (endedAt = null) per member per kind while
- * they're visibly promoting. It closes when they remove it, go offline/invisible,
- * leave, or the sweep reconciles. Total promotion time = sum of session durations,
- * so offline/invisible gaps simply aren't counted (Discord hides custom status
- * from everyone, including bots, while a user is invisible — a known limitation).
- *
- * The hot path (`handlePresence`) bails immediately unless the guild is enabled,
- * so this very high-volume event stays cheap at scale.
- */
+
 import { ActivityType, type Presence, type User, type Client, type Guild } from 'discord.js';
 import { prisma } from '../../database.js';
 import { logger } from '../../logger.js';
@@ -24,7 +9,7 @@ interface CachedConfig {
   enabled: boolean;
   trackStatus: boolean;
   trackTag: boolean;
-  keywords: string[]; // already lower-cased
+  keywords: string[];
 }
 
 export interface PromoAggregate {
@@ -37,14 +22,12 @@ export interface PromoAggregate {
 }
 
 export class PromotionModule {
-  /** Guild IDs with promotion enabled — the hot-path gate. */
+
   private static enabledGuilds = new Set<string>();
-  /** Per-guild config cache, kept in sync with `enabledGuilds`. */
+
   private static configs = new Map<string, CachedConfig>();
   private static loaded = false;
 
-  /** (Re)load enabled guild configs into memory. Cheap; called on ready, on the
-   * reconcile sweep, and on dashboard config changes (via Redis invalidation). */
   static async refresh(): Promise<void> {
     try {
       const rows = await prisma.promotionConfig.findMany({ where: { enabled: true } });
@@ -71,9 +54,6 @@ export class PromotionModule {
     return this.enabledGuilds.has(guildId);
   }
 
-  // ─── Aggregates (shared with the /promotion command) ────────────────────────────
-
-  /** Total promotion seconds + live-status flags per member, ranked. */
   static async getLeaderboard(guildId: string, limit = 10): Promise<PromoAggregate[]> {
     return prisma.$queryRaw<PromoAggregate[]>`
       SELECT * FROM (
@@ -92,7 +72,6 @@ export class PromotionModule {
       LIMIT ${Math.min(Math.max(limit, 1), 25)}`;
   }
 
-  /** Single-member aggregate (null if they have never promoted). */
   static async getSummary(guildId: string, userId: string): Promise<PromoAggregate | null> {
     const rows = await prisma.$queryRaw<PromoAggregate[]>`
       SELECT
@@ -108,24 +87,19 @@ export class PromotionModule {
     return rows[0] ?? null;
   }
 
-  // ─── Matching ───────────────────────────────────────────────────────────────
-
-  /** The custom-status text, or null if the member isn't visibly showing one. */
   private static customStatusText(presence: Presence | null): string | null {
-    if (!presence || presence.status === 'offline') return null; // invisible == offline to us
+    if (!presence || presence.status === 'offline') return null;
     const custom = presence.activities.find((a) => a.type === ActivityType.Custom);
     const text = custom?.state?.trim();
     return text && text.length > 0 ? text : null;
   }
 
-  /** Returns the matched status text if it contains any configured keyword. */
   private static matchStatus(text: string | null, keywords: string[]): string | null {
     if (!text || keywords.length === 0) return null;
     const hay = text.toLowerCase();
     return keywords.some((k) => hay.includes(k)) ? text : null;
   }
 
-  /** Whether `user` currently displays `guildId`'s server tag. */
   private static matchTag(user: User | null, guildId: string): string | null {
     const pg = user?.primaryGuild;
     if (pg && pg.identityEnabled && pg.identityGuildId === guildId) {
@@ -134,10 +108,6 @@ export class PromotionModule {
     return null;
   }
 
-  // ─── Session helpers ──────────────────────────────────────────────────────────
-
-  /** Open a session if none is active for this (guild, user, kind). No-op if one
-   * is already open (keeps the original startedAt so duration stays continuous). */
   private static async openSession(
     guildId: string,
     userId: string,
@@ -155,7 +125,6 @@ export class PromotionModule {
     });
   }
 
-  /** Close the active session (if any) for this (guild, user, kind). */
   private static async closeSession(guildId: string, userId: string, kind: Kind, reason: string): Promise<void> {
     await prisma.promotionSession.updateMany({
       where: { guildId, userId, kind, endedAt: null },
@@ -163,9 +132,6 @@ export class PromotionModule {
     });
   }
 
-  // ─── Event handlers ───────────────────────────────────────────────────────────
-
-  /** presenceUpdate — custom-status tracking. Hot path: bails unless enabled. */
   static async handlePresence(_old: Presence | null, next: Presence | null): Promise<void> {
     const guildId = next?.guild?.id;
     if (!guildId || !this.enabledGuilds.has(guildId)) return;
@@ -179,25 +145,22 @@ export class PromotionModule {
       const u = next?.user ? { username: next.user.username, avatar: next.user.avatar } : null;
       await this.openSession(guildId, userId, 'status', matched, u);
     } else {
-      // No visible matching status: offline/invisible vs removed, recorded distinctly.
+
       const reason = !next || next.status === 'offline' ? 'offline' : 'removed';
       await this.closeSession(guildId, userId, 'status', reason);
     }
   }
 
-  /** userUpdate — server-tag tracking. A user's primaryGuild is global, so we act
-   * on the guild they now display and the one they stopped displaying. */
   static async handleUserUpdate(oldUser: User | null, newUser: User): Promise<void> {
     if (newUser.bot) return;
     const oldId = oldUser?.primaryGuild?.identityEnabled ? oldUser.primaryGuild.identityGuildId : null;
     const newId = newUser.primaryGuild?.identityEnabled ? newUser.primaryGuild.identityGuildId : null;
-    if (oldId === newId) return; // tag unchanged — ignore (userUpdate fires for many reasons)
+    if (oldId === newId) return;
 
-    // Stopped displaying a tag we track → close.
     if (oldId && oldId !== newId && this.configs.get(oldId)?.trackTag) {
       await this.closeSession(oldId, newUser.id, 'tag', 'removed');
     }
-    // Now displaying a tag we track → open (only if they're a member of it).
+
     if (newId && this.configs.get(newId)?.trackTag) {
       const guild = newUser.client.guilds.cache.get(newId);
       const isMember = guild ? guild.members.cache.has(newUser.id) || (await guild.members.fetch(newUser.id).then(() => true).catch(() => false)) : false;
@@ -210,11 +173,6 @@ export class PromotionModule {
     }
   }
 
-  /** messageCreate — opportunistic tag detection. A message author carries a
-   * fresh `primaryGuild` (unlike the member cache), so this reliably catches a
-   * member's server tag the moment they send a message. Only opens (closing is
-   * handled by the sweep/userUpdate) and only touches the DB for tagged members,
-   * so it's cheap on the message hot path. */
   static async handleMessage(guildId: string, author: User): Promise<void> {
     if (author.bot || !this.enabledGuilds.has(guildId)) return;
     if (!this.configs.get(guildId)?.trackTag) return;
@@ -222,7 +180,6 @@ export class PromotionModule {
     if (tag) await this.openSession(guildId, author.id, 'tag', tag, { username: author.username, avatar: author.avatar });
   }
 
-  /** guildMemberRemove — close any open sessions when a member leaves. */
   static async handleMemberRemove(guildId: string, userId: string): Promise<void> {
     if (!this.enabledGuilds.has(guildId)) return;
     await prisma.promotionSession.updateMany({
@@ -231,13 +188,6 @@ export class PromotionModule {
     });
   }
 
-  // ─── Reconciliation sweep ──────────────────────────────────────────────────────
-
-  /**
-   * Periodic backstop: reconcile DB sessions against what's actually visible, so
-   * missed gateway events (restarts, invisibility, tag changes) don't drift.
-   * For each enabled guild, walk cached members and open/close to match reality.
-   */
   static async reconcile(client: Client): Promise<void> {
     await this.refresh();
     for (const guildId of this.enabledGuilds) {
@@ -257,7 +207,6 @@ export class PromotionModule {
     type Truth = { value: string; username: string; avatar: string | null };
     const activeTruth = new Map<string, Truth>();
 
-    // Status: read from the member/presence cache (presence is cached reliably).
     if (cfg.trackStatus) {
       for (const member of guild.members.cache.values()) {
         if (member.user.bot) continue;
@@ -266,16 +215,11 @@ export class PromotionModule {
       }
     }
 
-    // Open sessions the DB thinks are active.
     const open = await prisma.promotionSession.findMany({
       where: { guildId, endedAt: null },
       select: { id: true, userId: true, kind: true },
     });
 
-    // Tag: `user.primaryGuild` is NOT reliably in the member cache, so force-fetch
-    // fresh user objects for a bounded candidate set — everyone who currently has
-    // an open tag session (to detect removals) plus online members (to detect new
-    // tags), capped so big guilds don't hammer the REST API each sweep.
     if (cfg.trackTag) {
       const TAG_FETCH_CAP = 60;
       const candidates = new Set<string>(open.filter((s) => s.kind === 'tag').map((s) => s.userId));
@@ -296,7 +240,7 @@ export class PromotionModule {
     for (const s of open) {
       const key = `${s.userId}:${s.kind}`;
       openKeys.add(key);
-      if (!activeTruth.has(key)) toClose.push(s.id); // no longer visibly promoting
+      if (!activeTruth.has(key)) toClose.push(s.id);
     }
     if (toClose.length > 0) {
       await prisma.promotionSession.updateMany({
@@ -305,7 +249,6 @@ export class PromotionModule {
       });
     }
 
-    // Anything visibly promoting but with no open session → open it.
     const toOpen = [...activeTruth.entries()].filter(([key]) => !openKeys.has(key));
     if (toOpen.length > 0) {
       await prisma.promotionSession.createMany({

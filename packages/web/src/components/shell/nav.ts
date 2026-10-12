@@ -11,26 +11,24 @@ export interface NavItem {
   key: string;
   label: string;
   icon: LucideIcon;
-  /** Real dashboard route segment (''=overview). Used to build /dashboard/<guildId>/<slug>. */
+
   slug: string;
-  /** Static fallback href for the design previews (no guildId). */
+
   href: string;
   badge?: string;
 }
 export interface NavGroup {
-  /** Stable i18n key (label is the English fallback / reference). */
+
   key: string;
   label: string;
   items: NavItem[];
 }
 
-/** Build the real route for a nav item, or the static preview href when no guild. */
 export function hrefFor(item: NavItem, guildId?: string): string {
   if (!guildId) return item.href;
   return item.slug ? `/dashboard/${guildId}/${item.slug}` : `/dashboard/${guildId}`;
 }
 
-/** Which nav item matches the current pathname (for active state). */
 export function activeKeyForPath(pathname: string, guildId?: string): string | undefined {
   if (!guildId) return undefined;
   const base = `/dashboard/${guildId}`;
@@ -43,7 +41,6 @@ export function activeKeyForPath(pathname: string, guildId?: string): string | u
 
 const it = (key: string, label: string, icon: LucideIcon, slug: string, href = '#', badge?: string): NavItem => ({ key, label, icon, slug, href, badge });
 
-/** The regrouped v2 information architecture (30+ pages → 5 buckets). */
 export const NAV: NavGroup[] = [
   {
     key: 'home', label: 'Home',

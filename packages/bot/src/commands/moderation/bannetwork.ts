@@ -1,9 +1,4 @@
-/**
- * /bannetwork — staff tools for the cross-server ban network.
- *   check <user>  — how many network servers banned a user, and why
- *   scan          — flag current members who are network-banned, with a
- *                   one-click "Ban all flagged" action
- */
+
 import {
   SlashCommandBuilder,
   PermissionFlagsBits,
@@ -40,7 +35,7 @@ const command: BotCommand = {
 
     if (sub === 'check') {
       const user = interaction.options.getUser('user', true);
-      // Count ALL network servers (including this one) so a user you banned shows.
+
       const info = await BanNetworkModule.userBanInfo(user.id, '');
       if (info.count === 0) {
         await interaction.reply({ content: t('banNetwork.checkNone', loc, { user: `<@${user.id}>` }), flags: MessageFlags.Ephemeral });
@@ -60,7 +55,6 @@ const command: BotCommand = {
       return;
     }
 
-    // scan
     await interaction.deferReply({ flags: MessageFlags.Ephemeral });
     const members = await BanNetworkModule.scanGuild(interaction.guild, threshold);
     if (!members.length) {

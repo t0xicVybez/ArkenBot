@@ -7,16 +7,16 @@ import {
 describe('xpForLevel / levelFromXp', () => {
   it('uses the exponential curve (base 100, exp 1.5)', () => {
     expect(xpForLevel(1)).toBe(100);
-    expect(xpForLevel(4)).toBe(800);      // 100 * 4^1.5
-    expect(xpForLevel(2)).toBe(282);      // floor(100 * 2.828…)
+    expect(xpForLevel(4)).toBe(800);
+    expect(xpForLevel(2)).toBe(282);
   });
 
   it('level 0 needs no xp; boundaries are exact', () => {
     expect(levelFromXp(0)).toBe(0);
     expect(levelFromXp(99)).toBe(0);
-    expect(levelFromXp(100)).toBe(1);     // exactly xpForLevel(1)
-    expect(levelFromXp(381)).toBe(1);     // just below 100+282
-    expect(levelFromXp(382)).toBe(2);     // 100 + 282
+    expect(levelFromXp(100)).toBe(1);
+    expect(levelFromXp(381)).toBe(1);
+    expect(levelFromXp(382)).toBe(2);
   });
 
   it('is monotonic non-decreasing in xp', () => {
@@ -93,10 +93,10 @@ describe('truncate', () => {
 describe('isSnowflake', () => {
   it('accepts 17–20 digit ids only', () => {
     expect(isSnowflake('1157354594159046658')).toBe(true);
-    expect(isSnowflake('12345678901234567')).toBe(true);   // 17
-    expect(isSnowflake('1234567890123456')).toBe(false);   // 16
+    expect(isSnowflake('12345678901234567')).toBe(true);
+    expect(isSnowflake('1234567890123456')).toBe(false);
     expect(isSnowflake('abc')).toBe(false);
-    expect(isSnowflake('123456789012345678901')).toBe(false); // 21
+    expect(isSnowflake('123456789012345678901')).toBe(false);
   });
 });
 

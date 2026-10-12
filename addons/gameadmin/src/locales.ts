@@ -1,4 +1,4 @@
-/** Localized catalogs for the Game Server Admin addon. Falls back to en-US per key. */
+
 export const locales = {
   "en-US": {
     "gameadmin": {

@@ -1,7 +1,4 @@
-/**
- * Bot entry point. Connects to all external services, loads handlers and addons,
- * then logs the client in and registers process signal handlers for graceful shutdown.
- */
+
 
 import 'dotenv/config';
 import { config } from './config.js';
@@ -15,9 +12,6 @@ import { connectRedis } from './redis.js';
 import { logger, swallow} from './logger.js';
 import { initSentry, captureError } from './sentry.js';
 
-// When the ShardingManager spawns shard processes it sets SHARDS to a JSON
-// array of shard IDs (e.g. "[0]"). Each shard gets its own lock key so they
-// don't incorrectly block each other at startup.
 const shardIds = process.env.SHARDS ? (JSON.parse(process.env.SHARDS) as number[]) : null;
 const INSTANCE_LOCK_KEY = shardIds !== null
   ? `bot:instance:lock:shard:${shardIds[0]}`
@@ -26,14 +20,11 @@ const LOCK_TTL_SECONDS = 30;
 
 async function main() {
   logger.info('Starting Discord bot...');
-  initSentry(); // inert unless SENTRY_DSN is set
+  initSentry();
 
   await connectDatabase();
   await connectRedis();
 
-  // Singleton guard: abort immediately if another bot process already holds the
-  // lock. The lock refreshes every 15 seconds; if the current holder crashes
-  // without releasing it, the TTL lets a new process acquire it within 30 s.
   const { redis } = await import('./redis.js');
   const acquired = await redis.set(INSTANCE_LOCK_KEY, process.pid, 'EX', LOCK_TTL_SECONDS, 'NX');
   if (!acquired) {
@@ -43,7 +34,6 @@ async function main() {
   }
   logger.info(`Instance lock acquired (PID ${process.pid})`);
 
-  // Refresh the lock every 15 seconds so it outlives the TTL between refreshes.
   const lockRefresher = setInterval(async () => {
     await redis.set(INSTANCE_LOCK_KEY, process.pid, 'EX', LOCK_TTL_SECONDS, 'XX').catch(swallow);
   }, 15_000);
@@ -58,7 +48,6 @@ async function main() {
   await eventHandler.loadEvents();
   await addonHandler.loadAddons();
 
-  // Register background jobs before login so the clientReady event is never missed.
   const jobs = new BackgroundJobs(client);
   client.once('clientReady', () => jobs.start());
 

@@ -1,29 +1,15 @@
-/**
- * Processes top.gg votes forwarded from the API over Redis.
- *
- * A vote is global (a user votes for the bot, not a guild), so on each vote we
- * update the user's global voter record — total votes, streak, cooldown — and
- * then apply each opted-in guild's configured rewards to that user where they are
- * a member: a temporary "voter" role, bonus XP, and a public thank-you. Weekend
- * votes (weight 2) can double the XP.
- */
+
 import type { Client, GuildMember, TextChannel } from 'discord.js';
 import { prisma } from '../../database.js';
 import { logger, swallow} from '../../logger.js';
 import { classifyError } from '@arkenbot/shared';
 
-/** Cooldown between votes, in ms (top.gg allows a vote every 12 hours). */
 const VOTE_COOLDOWN_MS = 12 * 60 * 60 * 1000;
-/** A vote within this window of the previous one continues the streak. */
+
 const STREAK_WINDOW_MS = 36 * 60 * 60 * 1000;
 
 export class TopggModule {
-  /**
-   * Handles one forwarded vote: records it globally, then applies rewards.
-   * When `guildId` is set the vote was for that specific server, so rewards are
-   * scoped to it; otherwise it was a vote for the bot and every opted-in guild
-   * the voter belongs to is rewarded.
-   */
+
   static async processVote(client: Client, userId: string, weight: number, guildId?: string): Promise<void> {
     const now = new Date();
     const doubled = weight >= 2;
@@ -31,7 +17,6 @@ export class TopggModule {
     const voter = await this.recordVote(userId, now);
     logger.info({ userId, weight, guildId: guildId ?? null, streak: voter.currentStreak, total: voter.totalVotes }, 'top.gg vote received');
 
-    // A server vote links back to the server's top.gg page; a bot vote to the bot's.
     const voteUrl = guildId
       ? `https://top.gg/servers/${guildId}/vote`
       : `https://top.gg/bot/${client.user!.id}/vote`;
@@ -45,7 +30,7 @@ export class TopggModule {
       const guild = client.guilds.cache.get(config.guildId);
       if (!guild) continue;
       const member = await guild.members.fetch(userId).catch(swallow);
-      if (!member) continue; // user isn't in this guild
+      if (!member) continue;
 
       await this.grantVoterRole(member, config.voterRoleId, config.voterRoleHours).catch((err) =>
         logger.warn({ err: classifyError(err), guildId: config.guildId }, 'top.gg voter-role grant failed'),
@@ -58,7 +43,6 @@ export class TopggModule {
     }
   }
 
-  /** Updates the global voter record and returns it (with the new streak/total). */
   private static async recordVote(userId: string, now: Date) {
     const existing = await prisma.topggVoter.findUnique({ where: { userId } });
     const withinStreak =
@@ -82,7 +66,6 @@ export class TopggModule {
     });
   }
 
-  /** Assigns the voter role and records a temp-role so the existing sweep removes it. */
   private static async grantVoterRole(member: GuildMember, roleId: string | null, hours: number): Promise<void> {
     if (!roleId) return;
     const role = member.guild.roles.cache.get(roleId);
@@ -97,7 +80,6 @@ export class TopggModule {
     });
   }
 
-  /** Adds bonus XP to the member's leveling record. */
   private static async grantXp(guildId: string, member: GuildMember, amount: number): Promise<void> {
     await prisma.userLevel
       .upsert({
@@ -108,7 +90,6 @@ export class TopggModule {
       .catch((err) => logger.warn({ err: classifyError(err), guildId }, 'top.gg XP grant failed'));
   }
 
-  /** Posts the configured thank-you message to the announcement channel. */
   private static async announce(
     channelId: string | null,
     template: string,

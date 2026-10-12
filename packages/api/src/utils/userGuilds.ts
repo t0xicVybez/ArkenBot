@@ -1,19 +1,8 @@
-/**
- * Fetches the authenticated user's Discord guild list (`/users/@me/guilds`)
- * with two layers of protection against Discord rate limits:
- *
- *  1. **Redis cache** (short TTL) — subsequent dashboard loads reuse the list
- *     instead of re-hitting Discord.
- *  2. **In-process coalescing** — a single dashboard load fires many guild-admin
- *     endpoints in parallel; without this, each would independently call
- *     `/users/@me/guilds` and trip Discord's 429, surfacing as blanket 500s.
- *     The in-flight promise is shared so those parallel requests make one call.
- */
+
 import { redis } from '../redis.js';
 
 export type UserGuild = { id: string; permissions: string; owner?: boolean };
 
-/** Thrown when Discord rate-limits the guild-list fetch. */
 export class GuildFetchRateLimited extends Error {
   constructor(public retryAfterSeconds: number) {
     super('Rate limited by Discord while fetching guild list');
@@ -24,21 +13,15 @@ export class GuildFetchRateLimited extends Error {
 const CACHE_TTL_SECONDS = 60;
 const cacheKey = (userId: string) => `api:user_guilds:${userId}`;
 
-// Coalesces concurrent fetches for the same user within this process.
 const inflight = new Map<string, Promise<UserGuild[]>>();
 
-/**
- * Returns the user's guild list, served from Redis when fresh and otherwise
- * fetched from Discord (with concurrent callers sharing one request). Throws
- * {@link GuildFetchRateLimited} if Discord returns 429.
- */
 export async function getUserGuilds(userId: string, accessToken: string): Promise<UserGuild[]> {
   const cached = await redis.get(cacheKey(userId)).catch(() => null);
   if (cached) {
     try {
       return JSON.parse(cached) as UserGuild[];
     } catch {
-      // fall through to a fresh fetch on a corrupt cache entry
+
     }
   }
 
@@ -64,7 +47,7 @@ async function fetchFromDiscord(accessToken: string): Promise<UserGuild[]> {
   let after: string | undefined;
 
   try {
-    // Paginate (200/page); stop early once fewer than a full page is returned.
+
     for (let page = 0; page < 10; page++) {
       const url = `https://discord.com/api/v10/users/@me/guilds?limit=200${after ? `&after=${after}` : ''}`;
       const res = await axios.get<UserGuild[]>(url, { headers: { Authorization: `Bearer ${accessToken}` } });

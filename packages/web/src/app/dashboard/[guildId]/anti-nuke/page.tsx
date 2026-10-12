@@ -88,7 +88,7 @@ export default function AntiNukePage() {
         </div>
       </div>
 
-      {/* Info card */}
+      {}
       <div className="card mb-6 border border-blue-500/20 bg-blue-500/5 flex items-start gap-3">
         <Info className="w-5 h-5 text-blue-400 flex-shrink-0 mt-0.5" />
         <p className="text-sm text-blue-300">

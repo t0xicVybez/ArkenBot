@@ -1,34 +1,17 @@
 #!/usr/bin/env tsx
-/**
- * Grant or revoke staff portal access for a Discord user.
- *
- * Usage:
- *   pnpm grant-staff <discord-user-id>            # grant staff
- *   pnpm grant-staff <discord-user-id> --revoke   # revoke staff
- *   pnpm grant-staff <discord-user-id> --owner    # grant bot owner (full access)
- *
- * The user does NOT need to have logged in yet — the record is created and
- * populated with their real username on first OAuth login.
- *
- * How to get a Discord user ID:
- *   1. Open Discord → Settings → Advanced → Enable Developer Mode
- *   2. Right-click any user's name → "Copy User ID"
- */
 
 import { PrismaClient } from '@prisma/client';
 
-// Load .env automatically when run directly (Node 20.6+)
 try {
   (process as NodeJS.Process & { loadEnvFile?: (path: string) => void }).loadEnvFile?.('.env');
 } catch {
-  // .env not found or already loaded via environment — that's fine
+
 }
 
 const [, , userId, ...flags] = process.argv;
 const revoke = flags.includes('--revoke');
 const makeOwner = flags.includes('--owner');
 
-// Discord snowflake IDs are 17–20 digits
 if (!userId || !/^\d{17,20}$/.test(userId)) {
   console.error('');
   console.error('  Usage:');
@@ -70,12 +53,12 @@ async function main(): Promise<void> {
     update: updateData,
     create: {
       id: userId,
-      username: 'pending-login', // replaced with real username on first OAuth
+      username: 'pending-login',
       ...updateData,
     },
   });
 
-  console.error(''); // spacer
+  console.error('');
   if (revoke) {
     console.log(`✓  Revoked staff access from user ${userId}`);
   } else if (makeOwner) {

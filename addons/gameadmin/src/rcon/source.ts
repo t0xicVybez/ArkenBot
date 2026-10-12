@@ -1,18 +1,4 @@
-/**
- * Minimal Source RCON (Valve) client over TCP — used by Minecraft, Palworld,
- * ARK, 7 Days to Die, and any server that speaks the Source RCON protocol.
- *
- * Packet layout (all integers little-endian):
- *   int32 length  (of the rest of the packet)
- *   int32 id
- *   int32 type
- *   body  (ASCII, null-terminated)
- *   byte  0x00    (empty string terminator)
- *
- * Types: 3 = auth, 2 = exec/auth-response, 0 = response. A failed auth replies
- * with id = -1. Large responses arrive in multiple type-0 packets, so after the
- * command we send a sentinel exec and read until its echo comes back.
- */
+
 import { Socket } from 'net';
 
 const SERVERDATA_AUTH = 3;
@@ -44,7 +30,6 @@ interface Packet {
   body: string;
 }
 
-/** One attempt: run a command against a Source RCON server, return its text output. */
 function sourceRconOnce(
   host: string,
   port: number,
@@ -78,12 +63,12 @@ function sourceRconOnce(
     });
 
     socket.connect(port, host, () => {
-      socket.write(encode(SERVERDATA_EXECCOMMAND, SERVERDATA_AUTH, password)); // id, type=auth
+      socket.write(encode(SERVERDATA_EXECCOMMAND, SERVERDATA_AUTH, password));
     });
 
     socket.on('data', (chunk) => {
       buffer = Buffer.concat([buffer, chunk]);
-      // Drain all complete packets in the buffer.
+
       while (buffer.length >= 4) {
         const size = buffer.readInt32LE(0);
         if (buffer.length < size + 4) break;
@@ -97,12 +82,11 @@ function sourceRconOnce(
 
     function handle(pkt: Packet): void {
       if (!authed) {
-        // Auth response is type 2. id === -1 means wrong password.
+
         if (pkt.type === SERVERDATA_EXECCOMMAND || pkt.type === SERVERDATA_RESPONSE_VALUE) {
           if (pkt.id === -1) return done(new RconError('Authentication failed — wrong RCON password.'));
           authed = true;
-          // Send the command, then a sentinel so we know when the (possibly
-          // multi-packet) response is complete.
+
           socket.write(encode(SERVERDATA_EXECCOMMAND, SERVERDATA_EXECCOMMAND, command));
           socket.write(encode(SENTINEL_ID, SERVERDATA_EXECCOMMAND, ''));
         }
@@ -111,8 +95,7 @@ function sourceRconOnce(
       if (pkt.id === SENTINEL_ID) return done(null, parts.join('').trim());
       if (pkt.type === SERVERDATA_RESPONSE_VALUE) {
         parts.push(pkt.body);
-        // Palworld's RCON never echoes the sentinel packet, so it can't mark
-        // completion — resolve shortly after the last response packet instead.
+
         if (settleTimer) clearTimeout(settleTimer);
         settleTimer = setTimeout(() => done(null, parts.join('').trim()), 300);
       }
@@ -120,12 +103,6 @@ function sourceRconOnce(
   });
 }
 
-/**
- * Runs a Source RCON command, retrying once on a transient failure. Palworld's
- * RCON in particular drops or stalls the occasional connection; a single retry
- * turns those intermittent timeouts into a success. Auth failures are never
- * retried (a wrong password won't fix itself).
- */
 export async function sourceRconCommand(
   host: string,
   port: number,

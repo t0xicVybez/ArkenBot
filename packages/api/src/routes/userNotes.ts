@@ -1,13 +1,10 @@
-/**
- * REST routes for per-user staff notes.
- */
+
 import type { FastifyInstance } from 'fastify';
 import { requireGuildAdmin } from '../middleware/auth.js';
 import { prisma } from '../database.js';
 
 export async function userNoteRoutes(server: FastifyInstance): Promise<void> {
 
-  // GET /guilds/:guildId/user-notes/:userId — list notes for a user
   server.get('/guilds/:guildId/user-notes/:userId', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, userId } = request.params as { guildId: string; userId: string };
     const notes = await prisma.userNote.findMany({
@@ -17,7 +14,6 @@ export async function userNoteRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: notes });
   });
 
-  // POST /guilds/:guildId/user-notes/:userId — create a note
   server.post('/guilds/:guildId/user-notes/:userId', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, userId } = request.params as { guildId: string; userId: string };
     const { content } = request.body as { content?: string };
@@ -35,7 +31,6 @@ export async function userNoteRoutes(server: FastifyInstance): Promise<void> {
     return reply.code(201).send({ success: true, data: note });
   });
 
-  // DELETE /guilds/:guildId/user-notes/:noteId — delete a note
   server.delete('/guilds/:guildId/user-notes/:noteId', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, noteId } = request.params as { guildId: string; noteId: string };
 

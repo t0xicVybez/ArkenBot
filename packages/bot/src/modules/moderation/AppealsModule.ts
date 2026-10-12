@@ -1,12 +1,4 @@
-/**
- * AppealsModule — ban/mute appeal flow.
- *
- * Flow: on a ban/mute the offender is DM'd an "Appeal" button. Clicking opens a
- * modal; submitting posts the appeal to a staff review channel with Approve /
- * Deny buttons. Approving reverses the action (unban / remove timeout) and DMs
- * the user; denying just records and DMs the outcome. Works from DMs, so a
- * banned user (no longer in the guild) can still appeal.
- */
+
 import {
   EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle,
   ModalBuilder, TextInputBuilder, TextInputStyle,
@@ -19,20 +11,18 @@ import { swallow } from '../../logger.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 
 export class AppealsModule {
-  /** A button attached to a ban/mute DM so the user can appeal. */
+
   static appealButton(guildId: string, type: 'ban' | 'mute', loc: string): ActionRowBuilder<ButtonBuilder> {
     return new ActionRowBuilder<ButtonBuilder>().addComponents(
       new ButtonBuilder().setCustomId(`appeal:start:${guildId}:${type}`).setLabel(t('appeals.appealButton', loc)).setStyle(ButtonStyle.Primary).setEmoji('📝'),
     );
   }
 
-  /** Whether appeals are enabled for a guild (used before attaching the button). */
   static async enabled(guildId: string): Promise<boolean> {
     const s = await prisma.guildSettings.findUnique({ where: { guildId }, select: { appealsEnabled: true, appealChannelId: true } });
     return !!(s?.appealsEnabled && s.appealChannelId);
   }
 
-  /** `appeal:start:<guildId>:<type>` — open the appeal modal. */
   static async handleStart(interaction: ButtonInteraction): Promise<void> {
     const [, , guildId, type] = interaction.customId.split(':');
     const loc = await resolveUserLocale({ user: interaction.user, guildId, guildLocale: null });
@@ -46,7 +36,6 @@ export class AppealsModule {
     await interaction.showModal(modal).catch(() => {});
   }
 
-  /** `appeal:modal:<guildId>:<type>` — record the appeal and post it for review. */
   static async handleModal(client: BotClient, interaction: ModalSubmitInteraction): Promise<void> {
     const [, , guildId, type] = interaction.customId.split(':');
     const loc = await resolveUserLocale({ user: interaction.user, guildId, guildLocale: null });
@@ -56,10 +45,6 @@ export class AppealsModule {
     await interaction.reply({ content: msg, ephemeral: true }).catch(() => {});
   }
 
-  /**
-   * Create an appeal and post it to the guild's review channel. Shared by the
-   * in-Discord modal flow and the public web-form flow (via a pub/sub event).
-   */
   static async submitAppeal(
     client: BotClient,
     input: { guildId: string; userId: string; userTag: string; type: string; reason: string },
@@ -75,7 +60,6 @@ export class AppealsModule {
     return 'ok';
   }
 
-  /** Post (or re-post) an appeal to its guild's review channel with Approve/Deny buttons. */
   static async postForReview(client: BotClient, appealId: string): Promise<void> {
     const appeal = await prisma.moderationAppeal.findUnique({ where: { id: appealId } });
     if (!appeal || appeal.status !== 'pending') return;
@@ -98,11 +82,6 @@ export class AppealsModule {
     await (channel as TextChannel).send({ embeds: [embed], components: [row] }).catch(swallow);
   }
 
-  /**
-   * Apply an already-recorded decision: reverse the action on approval and DM
-   * the user the outcome. The caller is responsible for having atomically moved
-   * the appeal out of "pending" first. Returns a short reversal note.
-   */
   static async applyDecision(client: BotClient, appeal: { id: string; guildId: string; userId: string; type: string }, approved: boolean, reviewerTag = 'staff'): Promise<string> {
     const guild = client.guilds.cache.get(appeal.guildId);
     const staffLoc = await resolveUserLocale({ user: { id: '' }, guildId: appeal.guildId, guildLocale: guild?.preferredLocale ?? null });
@@ -128,12 +107,11 @@ export class AppealsModule {
     return reversalNote;
   }
 
-  /** `appeal:approve|deny:<appealId>` — staff decision from the review channel. */
   static async handleReview(client: BotClient, interaction: ButtonInteraction): Promise<void> {
     const [, action, appealId] = interaction.customId.split(':');
     const staffLoc = await resolveUserLocale({ user: interaction.user, guildId: interaction.guildId, guildLocale: interaction.guild?.preferredLocale ?? null });
     const approved = action === 'approve';
-    // Atomically claim the pending appeal so web + button can't double-handle it.
+
     const claimed = await prisma.moderationAppeal.updateMany({
       where: { id: appealId, status: 'pending' },
       data: { status: approved ? 'approved' : 'denied', reviewedBy: interaction.user.id, reviewedAt: new Date() },

@@ -2,8 +2,6 @@ import { EmbedBuilder, type MessageReaction, type PartialMessageReaction, type U
 import type { AddonContext } from '@arkenbot/addon-sdk';
 import { translate, isTranslateAvailable, langName, FLAG_TO_LANG } from '../service.js';
 
-// Debounce: don't re-translate the same message→language within 60s even if
-// several people react with the same flag.
 const recent = new Map<string, number>();
 
 export async function onFlagReaction(
@@ -44,6 +42,6 @@ export async function onFlagReaction(
       await channel.send({ embeds: [embed], reply: { messageReference: message.id, failIfNotExists: false } });
     }
   } catch {
-    /* swallow — a failed translation shouldn't spam the channel */
+
   }
 }

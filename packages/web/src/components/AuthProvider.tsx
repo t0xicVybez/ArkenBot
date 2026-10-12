@@ -1,11 +1,5 @@
 'use client';
 
-/**
- * Hydrates the auth store on mount by calling `/auth/me`. The httpOnly session
- * cookie authenticates that request, so a returning user is recognised without
- * any token being stored in the browser. Renders children immediately — pages
- * gate their own content on `useAuth().status` (loading → authenticated/​not).
- */
 import { useEffect } from 'react';
 import { authApi } from '@/lib/api';
 import { useAuth } from '@/lib/auth';

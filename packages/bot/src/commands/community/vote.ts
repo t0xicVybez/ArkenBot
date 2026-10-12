@@ -1,7 +1,4 @@
-/**
- * /vote — shows the top.gg vote link, the user's vote status and streak, this
- * server's vote rewards, and lets the user opt in/out of vote reminders.
- */
+
 import { SlashCommandBuilder, EmbedBuilder, MessageFlags, type ChatInputCommandInteraction } from 'discord.js';
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
@@ -26,15 +23,12 @@ const command: BotCommand = {
     await interaction.deferReply({ flags: MessageFlags.Ephemeral });
     const loc = await resolveUserLocale(interaction);
 
-    // Prefer this server's configured vote link (e.g. its own top.gg server
-    // listing); fall back to the bot's vote page.
     const guildConfig = interaction.guildId
       ? await prisma.topggConfig.findUnique({ where: { guildId: interaction.guildId } })
       : null;
     const voteUrl = guildConfig?.voteUrl || `https://top.gg/bot/${client.user!.id}/vote`;
     const reminders = interaction.options.getString('reminders');
 
-    // Toggle reminders if requested.
     if (reminders) {
       const optIn = reminders === 'on';
       await prisma.topggVoter.upsert({
@@ -62,7 +56,6 @@ const command: BotCommand = {
         { name: t('cmd.vote.reminders', loc), value: voter?.remindersOptIn ? t('cmd.vote.on', loc) : t('cmd.vote.off', loc), inline: true },
       );
 
-    // Show this server's configured rewards, if any.
     if (guildConfig?.enabled) {
       const perks: string[] = [];
       if (guildConfig.voterRoleId) perks.push(t('cmd.vote.perkRole', loc, { role: `<@&${guildConfig.voterRoleId}>`, hours: guildConfig.voterRoleHours }));

@@ -1,10 +1,4 @@
-/**
- * Reports which permissions the bot is missing in a guild — server-wide and
- * per-channel — so the dashboard can show a "Permission Health" panel. Computes
- * effective permissions from the guild's roles and each channel's permission
- * overwrites using Discord's documented algorithm (the API has no gateway state,
- * so it derives this from REST data with the bot token).
- */
+
 import type { FastifyInstance } from 'fastify';
 import { isSnowflake } from '@arkenbot/shared';
 import { requireGuildAdmin } from '../middleware/auth.js';
@@ -27,7 +21,6 @@ const F = {
   MODERATE_MEMBERS: 1n << 40n,
 };
 
-// Guild-wide permissions the bot's features rely on (Discord's own labels).
 const NEEDED_GUILD: [bigint, string][] = [
   [F.VIEW_AUDIT_LOG, 'View Audit Log'],
   [F.MANAGE_ROLES, 'Manage Roles'],
@@ -45,7 +38,6 @@ type Role = { id: string; permissions: string; position: number; name: string };
 type Overwrite = { id: string; type: number; allow: string; deny: string };
 type Channel = { id: string; name: string; type: number; permission_overwrites?: Overwrite[] };
 
-/** Computes a channel's effective permissions for the bot per Discord's algorithm. */
 function channelPerms(base: bigint, isAdmin: boolean, ch: Channel, guildId: string, botRoleIds: Set<string>, botId: string): bigint {
   if (isAdmin) return ~0n;
   let perms = base;
@@ -65,8 +57,7 @@ function channelPerms(base: bigint, isAdmin: boolean, ch: Channel, guildId: stri
 export async function permissionHealthRoutes(server: FastifyInstance): Promise<void> {
   server.get('/guilds/:guildId/permission-health', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
-    // Constrain guildId to a Discord snowflake before it flows into any outbound
-    // request URL (prevents SSRF / path injection via the route param).
+
     if (!isSnowflake(guildId)) return reply.code(400).send({ success: false, error: 'Invalid guild ID' });
     const token = process.env.DISCORD_TOKEN;
     const botId = process.env.DISCORD_CLIENT_ID;
@@ -89,7 +80,6 @@ export async function permissionHealthRoutes(server: FastifyInstance): Promise<v
       const roleMap = new Map(rolesRes.data.map((r) => [r.id, r]));
       const botRoleIds = new Set(memberRes.data.roles ?? []);
 
-      // Base guild permissions = @everyone + all of the bot's roles.
       let guildPerms = 0n;
       const everyone = roleMap.get(guildId);
       if (everyone) guildPerms |= BigInt(everyone.permissions);
@@ -102,7 +92,6 @@ export async function permissionHealthRoutes(server: FastifyInstance): Promise<v
 
       const missing = isAdmin ? [] : NEEDED_GUILD.filter(([flag]) => (guildPerms & flag) !== flag).map(([, label]) => label);
 
-      // Per-channel: text (0) and announcement (5) channels the bot can't fully use.
       const channelIssues: { id: string; name: string; missing: string[] }[] = [];
       if (!isAdmin) {
         for (const ch of channelsRes.data.filter((c) => c.type === 0 || c.type === 5)) {
@@ -122,8 +111,7 @@ export async function permissionHealthRoutes(server: FastifyInstance): Promise<v
 
       return reply.send({ success: true, data: { botInGuild: true, administrator: isAdmin, botHighestPosition: botHighest, missing, channels: channelIssues } });
     } catch (err) {
-      // Discord rate-limited us — transient, not a bug. Surface as 429 so the
-      // dashboard can retry, and log at warn so it doesn't trip the error alerts.
+
       const status = (err as { response?: { status?: number }; status?: number })?.response?.status
         ?? (err as { status?: number })?.status;
       if (status === 429) {

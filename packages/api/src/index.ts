@@ -1,7 +1,4 @@
-/**
- * Entry point for the ArkenBot API server. Connects to the database and Redis,
- * starts the Fastify server, and registers OS signal handlers for graceful shutdown.
- */
+
 import 'dotenv/config';
 import { config } from './config.js';
 import { logger } from './logger.js';
@@ -13,7 +10,7 @@ import { reconcileSubscriptions, retryPendingSubscriptions } from './services/yo
 
 async function main() {
   logger.info('Starting API server...');
-  initSentry(); // inert unless SENTRY_DSN is set
+  initSentry();
 
   await connectDatabase();
   await connectRedis();
@@ -23,15 +20,10 @@ async function main() {
   await server.listen({ port: config.port, host: config.host });
   logger.info(`API server listening on port ${config.port}`);
 
-  // YouTube WebSub: reconcile + renew subscriptions on startup and hourly. The
-  // hourly cadence also retries channels stuck 'failed'/'pending' — e.g. while
-  // Google's public hub is 503-ing — so push resumes automatically when it
-  // recovers. WebSub (un)subscribe costs no YouTube Data API quota.
   if (config.youtubeApiKey) {
     setTimeout(() => void reconcileSubscriptions().catch((err) => logger.warn({ err }, 'YouTube WebSub reconcile failed')), 30_000);
     setInterval(() => void reconcileSubscriptions().catch((err) => logger.warn({ err }, 'YouTube WebSub reconcile failed')), 60 * 60 * 1000);
-    // Tighter retry for subscriptions stuck failed/pending (Google hub 503s):
-    // re-POST every 10 min so push latches on within minutes of recovery.
+
     setInterval(() => void retryPendingSubscriptions().catch((err) => logger.warn({ err }, 'YouTube WebSub retry failed')), 10 * 60 * 1000);
   }
 

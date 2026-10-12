@@ -12,7 +12,6 @@ import {
 import type { Ticket, TicketPanel } from '../types.js';
 import { pickEmoji } from './format.js';
 
-/** Translator bound to the viewer's locale, passed in from the addon context. */
 export type Translate = (key: string, vars?: Record<string, string | number>) => string;
 
 const COLORS = {
@@ -31,7 +30,6 @@ const PRIORITY_EMOJI: Record<string, string> = {
   urgent: '🔴',
 };
 
-/** Localized display label for a ticket status / priority enum value. */
 function statusLabel(t: Translate, status: string): string {
   return t('status' + status.charAt(0).toUpperCase() + status.slice(1));
 }
@@ -51,8 +49,6 @@ function toButtonStyle(color: string): ButtonStyle {
     ButtonStyle.Primary
   );
 }
-
-// ─── Panel Embed (author-configured text — not translated) ────────────────────
 
 export function buildPanelEmbed(panel: TicketPanel, guild: Guild): EmbedBuilder {
   const embed = new EmbedBuilder()
@@ -75,28 +71,17 @@ export function buildPanelEmbed(panel: TicketPanel, guild: Guild): EmbedBuilder 
   return embed;
 }
 
-/** Set a button's emoji only when the raw value yields a valid one. */
 function applyEmoji(btn: ButtonBuilder, raw?: string): void {
   const e = pickEmoji(raw);
-  if (e) { try { btn.setEmoji(e); } catch { /* malformed — leave emoji off */ } }
+  if (e) { try { btn.setEmoji(e); } catch {  } }
 }
 
-/**
- * Build the interactive components for a ticket panel message. Depending on
- * `panel.panelStyle` this is either a grid of buttons (default) or a single
- * string-select dropdown. `selectPlaceholder` is the guild-localized prompt
- * shown on the dropdown; it falls back to the panel's button label.
- *
- * Dropdown only applies with 2+ ticket options — a single-option panel always
- * renders as one button regardless of style.
- */
 export function buildPanelComponents(
   panel: TicketPanel,
   selectPlaceholder?: string,
 ): ActionRowBuilder<MessageActionRowComponentBuilder>[] {
   const buttons = panel.buttons && panel.buttons.length > 0 ? panel.buttons : null;
 
-  // ── Dropdown style ──────────────────────────────────────────────────────
   if (panel.panelStyle === 'dropdown' && buttons && buttons.length > 1) {
     const menu = new StringSelectMenuBuilder()
       .setCustomId(`ticket:select:${panel.id}`)
@@ -110,14 +95,13 @@ export function buildPanelComponents(
             .setValue(b.id);
           if (b.categoryTag?.trim()) opt.setDescription(b.categoryTag.trim().slice(0, 100));
           const e = pickEmoji(b.emoji);
-          if (e) { try { opt.setEmoji(e); } catch { /* malformed — leave emoji off */ } }
+          if (e) { try { opt.setEmoji(e); } catch {  } }
           return opt;
         }),
       );
     return [new ActionRowBuilder<MessageActionRowComponentBuilder>().addComponents(menu)];
   }
 
-  // ── Button style (default) ──────────────────────────────────────────────
   if (!buttons) {
     const btn = new ButtonBuilder()
       .setCustomId(`ticket:open:${panel.id}`)
@@ -145,10 +129,7 @@ export function buildPanelComponents(
   return rows;
 }
 
-/** @deprecated use {@link buildPanelComponents}. Kept for any external callers. */
 export const buildPanelButtons = buildPanelComponents;
-
-// ─── Ticket Open Embed ────────────────────────────────────────────────────────
 
 export function buildTicketEmbed(ticket: Ticket, panel: TicketPanel, member: GuildMember, t: Translate): EmbedBuilder {
   const fields = [
@@ -159,7 +140,6 @@ export function buildTicketEmbed(ticket: Ticket, panel: TicketPanel, member: Gui
 
   if (ticket.categoryTag) fields.push({ name: t('fieldCategory'), value: ticket.categoryTag, inline: true });
 
-  // Use the clicked button's own fields when it defines them, else the panel's.
   const btn = ticket.buttonId ? panel.buttons?.find((b) => b.id === ticket.buttonId) : undefined;
   const formFields = (btn?.fields && btn.fields.length > 0) ? btn.fields : (panel.fields ?? []);
   if (ticket.formResponses && formFields.length > 0) {
@@ -214,8 +194,6 @@ export function buildClaimedControls(channelId: string, t: Translate, waiting = 
     ),
   ];
 }
-
-// ─── Ticket Closed / Rating / Transcript embeds ───────────────────────────────
 
 export function buildClosedEmbed(ticket: Ticket, closedByTag: string, t: Translate): EmbedBuilder {
   return new EmbedBuilder()
@@ -296,8 +274,6 @@ export function buildReopenButton(channelId: string, t: Translate): ActionRowBui
       .setStyle(ButtonStyle.Success),
   );
 }
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function getDuration(startIso: string, endIso: string): string {
   const diffMs = new Date(endIso).getTime() - new Date(startIso).getTime();

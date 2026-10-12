@@ -1,4 +1,4 @@
-/** streamAlerts scheduler job(s) — extracted from BackgroundJobs (P3 god-file split). */
+
 import { EmbedBuilder, type TextChannel } from 'discord.js';
 import { prisma } from '../../database.js';
 import { logger, swallow } from '../../logger.js';
@@ -14,16 +14,13 @@ export async function runStreamAlerts(client: BotClient): Promise<void> {
   const twitchClientSecret = process.env.TWITCH_CLIENT_SECRET;
 
   try {
-    // YouTube (WebSub + feed poll) and Reddit (grouped RSS poll) are handled
-    // separately; this timer covers Twitch, Kick, and RSS per-alert.
+
     void runRedditAlerts(client).catch((err) => logger.error({ err }, 'Reddit alerts check failed'));
     const otherAlerts = await prisma.streamAlert.findMany({
       where: { enabled: true, platform: { notIn: ['youtube', 'reddit'] } },
     });
     if (!otherAlerts.length) return;
 
-    // Obtain a Twitch app token once up-front so every Twitch alert in this
-    // cycle can reuse it rather than each alert hitting the token endpoint.
     let twitchToken: string | null = null;
     if (twitchClientId && twitchClientSecret && otherAlerts.some((a) => a.platform === 'twitch')) {
       const tokenRes = await fetch(
@@ -38,8 +35,6 @@ export async function runStreamAlerts(client: BotClient): Promise<void> {
 
     const rssParser = new RSSParser();
 
-    // Process alerts in parallel batches of 5 so we don't hammer external APIs
-    // with all requests at once while still being much faster than sequential.
     const BATCH = 5;
     for (let i = 0; i < otherAlerts.length; i += BATCH) {
       await Promise.allSettled(
@@ -154,8 +149,7 @@ async function processStreamAlert(
       logger.info({ guildId: alert.guildId, streamer: alert.channelUsername }, 'Kick stream alert sent');
 
     } else if (alert.platform === 'rss') {
-      // For RSS/Podcast alerts, `channelUsername` stores the feed URL rather
-      // than a platform username, as there is no separate channel concept.
+
       const feed = await rssParser.parseURL(alert.channelUsername).catch(swallow);
       if (!feed) return;
 
@@ -171,8 +165,7 @@ async function processStreamAlert(
       const feedTitle = feed.title ?? t('streamAlert.rssFeedFallback', loc);
       const postFallback = t('streamAlert.rssPostFallback', loc);
       const message = alert.message
-        // {feed} is the RSS-appropriate name; {streamer} kept as an alias so
-        // messages saved before the rename keep working.
+
         .replace(/\{feed\}/g, feedTitle)
         .replace(/\{streamer\}/g, feedTitle)
         .replace(/\{url\}/g, itemUrl)
@@ -199,7 +192,7 @@ async function recordAlertPermissionFailure(client: BotClient, id: string, err: 
   const code = (err as { code?: number }).code;
   if (code !== 50001 && code !== 50013 && code !== 10003) return;
   await recordAlertFailure(id, `Discord error ${code}: ${(err as Error).message ?? 'permission denied'}`);
-  // On a genuine missing-permission error, also ping the guild's alert role.
+
   if (code === 50013 || code === 50001) {
     const alert = await prisma.streamAlert
       .findUnique({ where: { id }, select: { guildId: true, discordChannelId: true } })
@@ -231,5 +224,5 @@ async function recordAlertFailure(id: string, reason: string): Promise<void> {
         `Stream alert auto-disabled after ${MAX_FAILURES} consecutive failures`,
       );
     }
-  } catch { /* row deleted mid-flight — nothing to record */ }
+  } catch {  }
 }

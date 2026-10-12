@@ -1,4 +1,4 @@
-/** /daily — claim a once-per-day reward with a consecutive-day streak bonus. */
+
 import { SlashCommandBuilder, EmbedBuilder, type ChatInputCommandInteraction } from 'discord.js';
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
@@ -35,18 +35,16 @@ const command: BotCommand = {
       });
       return;
     }
-    // Streak continues only if the last claim was inside the previous 48h window.
+
     const withinStreak = bal.lastDaily ? now - bal.lastDaily.getTime() < 2 * DAY_MS : false;
     const streak = withinStreak ? bal.dailyStreak + 1 : 1;
     const streakBonus = Math.min(streak - 1, 6) * cfg.dailyStreakBonus;
 
-    // Income roles: a passive bonus for members holding configured roles.
     const roleIds = interaction.member && 'roles' in interaction.member
       ? Array.from((interaction.member.roles as { cache: Map<string, unknown> }).cache?.keys?.() ?? [])
       : [];
     const income = await EconomyModule.incomeForRoles(interaction.guild.id, roleIds as string[]);
 
-    // Bank interest: a daily percentage on whatever is banked, capped by config.
     const interest = EconomyModule.bankInterest(bal.bank, cfg);
 
     const total = cfg.dailyAmount + streakBonus + income;

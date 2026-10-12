@@ -1,7 +1,4 @@
-/**
- * "🔨 Ban Member" user context-menu command.
- * Shows a modal for reason, then bans the target if the executor outranks them.
- */
+
 import {
   ContextMenuCommandBuilder,
   ApplicationCommandType,
@@ -88,8 +85,6 @@ const command: BotCommand = {
 
     const settings = await getGuildSettings(guild.id);
 
-    // DM the user (with an appeal button when enabled) BEFORE the ban so the
-    // message can actually be delivered while they still share this server.
     const appealsOn = await AppealsModule.enabled(guild.id);
     const targetLoc = await resolveUserLocale({ user: { id: targetUser.id }, guildId: guild.id, guildLocale: guild.preferredLocale });
     await targetUser.send({

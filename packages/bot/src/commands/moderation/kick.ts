@@ -1,7 +1,4 @@
-/**
- * /kick command — removes a member from the guild, creates a moderation case,
- * and logs the action. Sends a DM notification before kicking where possible.
- */
+
 import {
   SlashCommandBuilder,
   PermissionFlagsBits,

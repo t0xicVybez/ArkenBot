@@ -1,9 +1,4 @@
-/**
- * Read-only dashboard endpoints for the gameservers and gameadmin addons. They
- * surface what's configured (saved servers, monitoring, schedules, player-count
- * history) without ever exposing the encrypted credentials/passwords stored
- * alongside them.
- */
+
 import type { FastifyInstance } from 'fastify';
 import { requireGuildAdmin } from '../middleware/auth.js';
 import { prisma } from '../database.js';
@@ -24,7 +19,7 @@ async function readKey<T>(guildId: string, name: string, key: string): Promise<T
 }
 
 export async function gameAddonRoutes(server: FastifyInstance): Promise<void> {
-  // ── Game Server Status (gameservers) ─────────────────────────────────────────
+
   server.get('/guilds/:guildId/addons/gameservers', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
 
@@ -32,8 +27,6 @@ export async function gameAddonRoutes(server: FastifyInstance): Promise<void> {
     const monitor = (await readKey<Record<string, unknown>>(guildId, 'gameservers', 'monitor')) ?? {};
     const history = (await readKey<Record<string, Array<{ t: number; p: number }>>>(guildId, 'gameservers', 'history')) ?? {};
 
-    // Strip the encrypted credential; keep only safe display fields + a compact
-    // history series (player counts) per server for a sparkline.
     const safe = servers.map((s) => ({
       id: s.id,
       name: s.name,
@@ -57,7 +50,6 @@ export async function gameAddonRoutes(server: FastifyInstance): Promise<void> {
     });
   });
 
-  // ── Game Server Admin (gameadmin) ────────────────────────────────────────────
   server.get('/guilds/:guildId/addons/gameadmin', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
 
@@ -65,7 +57,6 @@ export async function gameAddonRoutes(server: FastifyInstance): Promise<void> {
     const config = (await readKey<Record<string, unknown>>(guildId, 'gameadmin', 'gaConfig')) ?? {};
     const schedules = (await readKey<Array<Record<string, unknown>>>(guildId, 'gameadmin', 'schedules')) ?? [];
 
-    // Never expose the encrypted RCON password.
     const safeServers = servers.map((s) => ({ id: s.id, name: s.name, game: s.game, host: s.host, port: s.port }));
     const safeSchedules = schedules.map((s) => {
       const srv = servers.find((x) => x.id === s.serverId);

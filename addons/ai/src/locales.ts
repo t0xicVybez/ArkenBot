@@ -1,4 +1,4 @@
-/** Localized catalogs for the AI Assistant addon. Falls back to en-US per key. */
+
 export const locales = {
   "en-US": {
     "cooldown": "⏳ Slow down — try again in {seconds}s.",

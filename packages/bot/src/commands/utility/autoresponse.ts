@@ -1,8 +1,4 @@
-/**
- * /autoresponse command — manage regex-triggered auto-responses for the guild.
- * Patterns are compiled at message-time; this command validates the regex before
- * saving and invalidates the Redis cache so changes take effect within seconds.
- */
+
 import {
   SlashCommandBuilder,
   EmbedBuilder,
@@ -17,7 +13,7 @@ import { errorEmbed, successEmbed } from '../../utils/embed.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 
 import { swallow } from '../../logger.js';
-/** Invalidates the guild's cached auto-response list so the next message picks up the change. */
+
 async function bustCache(guildId: string): Promise<void> {
   await redis.del(`ar:list:${guildId}`).catch(swallow);
 }
@@ -75,7 +71,6 @@ const command: BotCommand = {
       const embedColor  = interaction.options.getString('embed_color');
       const deleteMsg   = interaction.options.getBoolean('delete_message') ?? false;
 
-      // Validate regex before persisting — catches catastrophic patterns early.
       try {
         new RegExp(pattern, flags);
       } catch {

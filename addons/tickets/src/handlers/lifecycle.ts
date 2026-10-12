@@ -1,9 +1,4 @@
-/**
- * Ticket lifecycle handlers — close/finalize, reopen, claim/unclaim, the
- * keep-open + close-request confirmation, the controls message, and the
- * transcript button. Extracted from events/interaction.ts (P3 split); public
- * surface (closeTicket, updateControlsMessage) re-exported from interaction.ts.
- */
+
 import {
   MessageFlags,
   type ButtonInteraction,
@@ -32,13 +27,7 @@ import { generateTranscriptHtml } from '../utils/transcript.js';
 import { fireWebhook } from '../utils/webhook.js';
 import { sendClaimBrief } from './triage.js';
 
-/**
- * Pending close timers keyed by channelId — cancel the fallback timer when the
- * user submits their rating.
- */
 const pendingClose = new Map<string, ReturnType<typeof setTimeout>>();
-
-// ─── Close Ticket ─────────────────────────────────────────────────────────────
 
 export async function handleCloseButton(
   ctx: AddonContext,
@@ -57,11 +46,6 @@ export async function handleCloseButton(
   await closeTicket(ctx, interaction, ticket, undefined);
 }
 
-/**
- * Finalize a ticket close: send the staff transcript to the log channel,
- * fire any webhook, then delete or archive the Discord channel.
- * Safe to call from both the fallback timer and immediately after rating.
- */
 export async function finalizeTicketClose(
   ctx: AddonContext,
   guildId: string,
@@ -73,7 +57,7 @@ export async function finalizeTicketClose(
 ): Promise<void> {
   const loc = await ctx.resolveLocale({ user: { id: '' }, guildId, guildLocale: ctx.getGuild(guildId)?.preferredLocale });
   const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
-  // Cancel any pending fallback timer so it doesn't run twice
+
   const existing = pendingClose.get(channelId);
   if (existing) {
     clearTimeout(existing);
@@ -86,7 +70,6 @@ export async function finalizeTicketClose(
   const channel = ctx.client.channels.cache.get(channelId) as TextChannel | undefined;
   const freshMessages = await getMessages(ctx.storage, channelId);
 
-  // Send staff transcript to log channel (includes staff notes)
   if (logChannelId && panel && channel) {
     const logChannel = ctx.client.channels.cache.get(logChannelId) as TextChannel | undefined;
     if (logChannel) {
@@ -103,7 +86,6 @@ export async function finalizeTicketClose(
     }
   }
 
-  // Fire webhook with final rating data
   if (webhookUrl) {
     fireWebhook(webhookUrl, {
       event: 'ticket.closed',
@@ -120,7 +102,6 @@ export async function finalizeTicketClose(
     }).catch((err) => ctx.logger.warn(`Webhook delivery failed (ticket.closed): ${err}`));
   }
 
-  // Delete or archive channel
   if (channel) {
     try {
       if (closeAction === 'archive') {
@@ -134,9 +115,6 @@ export async function finalizeTicketClose(
   }
 }
 
-/**
- * Exported so the `/ticket close` command can call this same logic.
- */
 export async function closeTicket(
   ctx: AddonContext,
   interaction: ButtonInteraction | import('discord.js').ChatInputCommandInteraction,
@@ -159,7 +137,6 @@ export async function closeTicket(
   if (reason) ticket.reason = reason;
   await saveTicket(ctx.storage, guildId, ticket);
 
-  // Send closed embed
   const closeAction = panel?.closeAction ?? 'delete';
   const closedEmbed = buildClosedEmbed(ticket, interaction.user.tag, ownerT);
   if (channel) {
@@ -178,7 +155,6 @@ export async function closeTicket(
   const messages = await getMessages(ctx.storage, ticket.channelId);
   const resolvedLogChannelId = panel?.logChannelId ?? config.transcriptChannelId;
 
-  // DM the user their transcript (no staff notes)
   if (panel) {
     try {
       const user = await ctx.client.users.fetch(ticket.userId);
@@ -188,11 +164,10 @@ export async function closeTicket(
         files: [{ attachment: userHtml, name: `ticket-${ticket.number}.html` }],
       });
     } catch {
-      // User may have DMs disabled — non-fatal
+
     }
   }
 
-  // Send rating prompt
   if (channel && closeAction === 'delete') {
     try {
       const ratingEmbed = buildRatingEmbed(ticket, ownerT);
@@ -219,16 +194,12 @@ export async function closeTicket(
     }
   }
 
-  // Reply to interaction
   if (interaction.deferred || interaction.replied) {
     await interaction.editReply(t('ticketBeingClosed'));
   } else {
     await interaction.reply({ content: t('closingTicket'), flags: MessageFlags.Ephemeral });
   }
 
-  // For delete: finalize after rating is submitted (handleRateModal calls finalizeTicketClose).
-  // Start a 10-minute fallback timer in case the user skips rating.
-  // For archive: run finalization after the rating window; the channel will be archived not deleted.
   const fallbackMs = (config.ratingWindowMinutes ?? 10) * 60 * 1000;
   const timer = setTimeout(async () => {
     pendingClose.delete(ticket.channelId);
@@ -240,8 +211,6 @@ export async function closeTicket(
   }, fallbackMs);
   pendingClose.set(ticket.channelId, timer);
 }
-
-// ─── Reopen Button ────────────────────────────────────────────────────────────
 
 export async function handleReopenButton(
   ctx: AddonContext,
@@ -282,7 +251,7 @@ export async function handleReopenButton(
 
   const channel = ctx.client.channels.cache.get(channelId) as TextChannel | undefined;
   if (channel) {
-    // Restore access if the channel was archived
+
     const panel = await getPanel(ctx.storage, interaction.guildId, ticket.panelId);
     if (panel?.closeAction === 'archive') {
       await restoreTicketChannel(channel, ticket).catch((err) =>
@@ -301,11 +270,8 @@ export async function handleReopenButton(
   await saveTicket(ctx.storage, interaction.guildId, ticket);
   await interaction.reply({ content: t('reopenedOk'), flags: MessageFlags.Ephemeral });
 
-  // Disable the reopen button
   await interaction.message.edit({ components: [] }).catch(() => null);
 }
-
-// ─── Claim / Unclaim ──────────────────────────────────────────────────────────
 
 export async function handleClaimButton(
   ctx: AddonContext,
@@ -354,7 +320,7 @@ export async function handleKeepOpenButton(ctx: AddonContext, interaction: Butto
     await interaction.reply({ content: t('ticketNotFoundOrClosed'), flags: MessageFlags.Ephemeral });
     return;
   }
-  // Reset the inactivity timer and clear any pending nudge / close request.
+
   ticket.lastActivity = new Date().toISOString();
   ticket.nudgedAt = undefined;
   ticket.closeRequestedBy = undefined;
@@ -434,8 +400,6 @@ export async function updateControlsMessage(ctx: AddonContext, ticket: Ticket, c
   }
 }
 
-// ─── Transcript Button ────────────────────────────────────────────────────────
-
 export async function handleTranscriptButton(
   ctx: AddonContext,
   interaction: ButtonInteraction,
@@ -469,7 +433,7 @@ export async function handleTranscriptButton(
 
   await interaction.deferReply({ flags: MessageFlags.Ephemeral });
   const messages = await getMessages(ctx.storage, channelId);
-  // Staff always gets the notes-included version; users get the public version
+
   const html = generateTranscriptHtml(ticket, panel, messages, t, isStaff);
   const embed = buildTranscriptEmbed(ticket, messages.length, t);
   await interaction.editReply({

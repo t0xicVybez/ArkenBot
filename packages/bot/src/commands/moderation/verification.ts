@@ -1,6 +1,4 @@
-/**
- * /verification command — admin setup for the verification gate.
- */
+
 import {
   SlashCommandBuilder,
   PermissionFlagsBits,
@@ -62,7 +60,6 @@ const command: BotCommand = {
       });
       await invalidateSettingsCache(interaction.guildId!);
 
-      // Send the verify panel to the configured channel
       const textChannel = interaction.guild!.channels.cache.get(channel.id) as TextChannel | undefined;
       if (textChannel?.isTextBased()) {
         await VerificationModule.sendVerifyPanel(textChannel as TextChannel, interaction.guild!);

@@ -78,7 +78,6 @@ const command: BotCommand = {
       }
     }
 
-    // add ──────────────────────────────────────────────────────────────────────
     if (sub === 'add') {
       const role    = interaction.options.getRole('role', true);
       const rawName = interaction.options.getString('name') ?? role.name;
@@ -109,7 +108,6 @@ const command: BotCommand = {
       return;
     }
 
-    // remove ───────────────────────────────────────────────────────────────────
     if (sub === 'remove') {
       const name    = interaction.options.getString('name', true).toLowerCase();
       const deleted = await prisma.selfRole.deleteMany({ where: { guildId, name } });
@@ -124,7 +122,6 @@ const command: BotCommand = {
       return;
     }
 
-    // list ─────────────────────────────────────────────────────────────────────
     if (sub === 'list') {
       const roles = await getSelfRoles(guildId);
 

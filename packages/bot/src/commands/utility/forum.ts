@@ -1,6 +1,4 @@
-/**
- * /forum-setup command — admin configuration for forum post management.
- */
+
 import {
   SlashCommandBuilder,
   PermissionFlagsBits,
@@ -57,7 +55,6 @@ const command: BotCommand = {
     const sub = interaction.options.getSubcommand();
     const channel = interaction.options.getChannel('channel', true);
 
-    // Verify it's a forum channel (type 15 = GuildForum)
     if (sub !== 'clear' && channel.type !== ChannelType.GuildForum) {
       await interaction.editReply({ embeds: [errorEmbed(t('cmd.forum.invalidChannelTitle', loc), t('cmd.forum.invalidChannel', loc))] });
       return;

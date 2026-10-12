@@ -106,7 +106,6 @@ const command: AddonCommandDefinition = {
       return;
     }
 
-    // status
     const embed = new EmbedBuilder()
       .setColor(0x8b5cf6)
       .setTitle(t('statusTitle'))

@@ -1,10 +1,4 @@
-/**
- * Verification gate module.
- *
- * On join, assigns a "pending" role and DMs the member with a link to the
- * verify channel. When the member clicks "Verify", the pending role is swapped
- * for the member role.
- */
+
 import { type GuildMember, type ButtonInteraction, type TextChannel, type Guild, type Message, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, MessageFlags } from 'discord.js';
 import { getGuildSettings } from '../../utils/settings.js';
 import { logger, swallow} from '../../logger.js';

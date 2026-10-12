@@ -17,8 +17,6 @@ const SITE = {
   supportUrl: 'https://discord.gg/fXJnYPdHRX',
 };
 
-// Visual config only — text (title, tagline, description, bullets) comes from
-// the `addonsPage.addons.<id>` message objects.
 const FIRST_PARTY_ADDONS = [
   {
     id: 'tickets',
@@ -64,7 +62,7 @@ export default async function AddonsPage() {
     <div className="min-h-screen bg-discord-darkest-bg text-gray-200 flex flex-col">
       <LandingNav docsUrl={SITE.docsUrl} supportUrl={SITE.supportUrl} inviteUrl={SITE.inviteUrl} />
 
-      {/* ── Hero ── */}
+      {}
       <section className="relative overflow-hidden px-6 pt-20 pb-16 text-center">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-fuchsia-500/5 rounded-full blur-3xl" />
@@ -87,7 +85,7 @@ export default async function AddonsPage() {
             {t('heroSubtitle')}
           </p>
 
-          {/* Jump links */}
+          {}
           <div className="flex flex-wrap justify-center gap-2">
             {FIRST_PARTY_ADDONS.map((a) => (
               <a
@@ -108,7 +106,7 @@ export default async function AddonsPage() {
         </div>
       </section>
 
-      {/* ── Addon cards ── */}
+      {}
       <div className="max-w-5xl mx-auto px-6 pb-16 space-y-6">
         {FIRST_PARTY_ADDONS.map((a, idx) => {
           const Icon = a.icon;
@@ -120,7 +118,7 @@ export default async function AddonsPage() {
                 idx % 2 === 0 ? 'bg-discord-darker-bg' : 'bg-discord-darker-bg/60'
               }`}
             >
-              {/* Header */}
+              {}
               <div className={`flex items-start gap-4 p-6 border-b border-white/6 ${a.bg}`}>
                 <div className={`w-11 h-11 rounded-xl ${a.bg} border ${a.accentBorder} flex items-center justify-center flex-shrink-0`}>
                   <Icon className={`w-5 h-5 ${a.color}`} />
@@ -136,7 +134,7 @@ export default async function AddonsPage() {
                 </div>
               </div>
 
-              {/* Body */}
+              {}
               <div className="p-6">
                 <p className="text-gray-400 text-sm leading-relaxed mb-5">{t(`addons.${a.id}.description`)}</p>
                 <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
@@ -155,7 +153,7 @@ export default async function AddonsPage() {
         })}
       </div>
 
-      {/* ── SDK section ── */}
+      {}
       <section id="sdk" className="scroll-mt-20 border-t border-white/6 bg-discord-darker-bg/30 py-20 px-6">
         <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
@@ -197,7 +195,7 @@ export default async function AddonsPage() {
         </div>
       </section>
 
-      {/* ── CTA ── */}
+      {}
       <section className="py-20 px-6 text-center border-t border-white/4 bg-discord-darker-bg/30">
         <div className="max-w-2xl mx-auto">
           <h2 className="text-3xl font-bold text-white mb-3 tracking-tight">
@@ -222,7 +220,7 @@ export default async function AddonsPage() {
         </div>
       </section>
 
-      {/* ── Footer ── */}
+      {}
       <footer className="border-t border-white/6 py-8 px-6">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">

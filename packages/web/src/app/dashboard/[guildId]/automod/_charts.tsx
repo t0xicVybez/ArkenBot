@@ -2,10 +2,6 @@
 
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 
-/**
- * Automod "actions per day" bar chart. Isolated so recharts loads in its own
- * lazy chunk (via next/dynamic in the page) rather than the route's initial JS.
- */
 export default function AutomodChart({ data }: { data: { date: string; Hits: number }[] }) {
   return (
     <ResponsiveContainer width="100%" height={120}>

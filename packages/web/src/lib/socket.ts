@@ -1,9 +1,5 @@
 'use client';
 
-/**
- * Singleton WebSocket client and `useWebSocket` hook for the Arken Bot dashboard.
- * The client handles authentication, keep-alive pings, and automatic reconnection.
- */
 import { useEffect, useRef } from 'react';
 import type { WebSocketEvent, WebSocketEventType } from '@arkenbot/shared';
 
@@ -11,7 +7,6 @@ const WS_URL = process.env.NEXT_PUBLIC_WS_URL ?? 'ws://localhost:4000';
 
 type Handler = (event: WebSocketEvent) => void;
 
-/** Manages a single authenticated WebSocket connection with keep-alive and reconnect logic. */
 class WebSocketClient {
   private ws: WebSocket | null = null;
   private handlers = new Map<WebSocketEventType, Set<Handler>>();
@@ -23,9 +18,7 @@ class WebSocketClient {
     if (this.ws?.readyState === WebSocket.OPEN) return;
 
     const url = `${WS_URL}/ws`;
-    // The httpOnly session cookie is sent automatically on the upgrade handshake,
-    // so the server authenticates the connection without any token from JS. We
-    // just declare which guilds to receive events for once the socket opens.
+
     this.ws = new WebSocket(url);
 
     this.ws.onopen = () => {
@@ -49,7 +42,7 @@ class WebSocketClient {
           }
         }
       } catch {
-        // Ignore parse errors
+
       }
     };
 
@@ -95,13 +88,8 @@ class WebSocketClient {
   }
 }
 
-/** Singleton client shared across the application — import this, not the class directly. */
 export const wsClient = new WebSocketClient();
 
-/**
- * Subscribes a component to a WebSocket event type.
- * Stores the handler in a ref to avoid stale closures without re-subscribing on every render.
- */
 export function useWebSocket(
   eventType: WebSocketEventType,
   handler: Handler,

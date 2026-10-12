@@ -1,8 +1,4 @@
-/**
- * /language — lets a user set, clear, or view the language the bot replies in.
- * The preference is stored per Discord user in UserPreferences and takes
- * priority over Discord-locale auto-detection. See ../../i18n for resolution.
- */
+
 import {
   SlashCommandBuilder,
   MessageFlags,
@@ -52,7 +48,7 @@ const command: BotCommand = {
         update: { language: input },
       });
       const native = LOCALES.find((l) => l.code === input)?.native ?? input;
-      // Reply in the newly-chosen language so the user sees it take effect.
+
       await interaction.reply({
         embeds: [infoEmbed(t('language.setTitle', input), t('language.set', input, { language: native }))],
         flags: MessageFlags.Ephemeral,
@@ -74,7 +70,6 @@ const command: BotCommand = {
       return;
     }
 
-    // show
     const pref = await prisma.userPreferences.findUnique({ where: { userId }, select: { language: true } });
     const loc = await resolveUserLocale(interaction);
     const native = LOCALES.find((l) => l.code === loc)?.native ?? loc;

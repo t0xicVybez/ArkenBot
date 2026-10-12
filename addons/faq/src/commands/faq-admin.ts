@@ -71,7 +71,6 @@ const command: AddonCommandDefinition = {
       return;
     }
 
-    // list
     const entries = await getEntries(ctx.storage, guildId);
     if (!entries.length) { await interaction.reply({ content: t('emptyList'), flags: MessageFlags.Ephemeral }); return; }
     const lines = entries

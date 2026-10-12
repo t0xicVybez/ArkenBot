@@ -1,15 +1,4 @@
-/**
- * YouTube stream/upload alerts — WebSub-driven fan-out plus backstop polls.
- *
- * Detection is push-based: the API's PubSubHubbub callback publishes Redis
- * `youtube:live` / `youtube:upload` events, which `handleYouTubeEvent` fans out
- * to every guild watching that channel (0-quota for idle channels). Two polls
- * back it up within a strict daily quota budget:
- *   - `pollUpcoming`  — tracks scheduled streams until they go live.
- *   - `pollSafetyNet` — round-robins channels to catch any missed push.
- * Both simply publish the same Redis events, so all posting flows through one
- * deduplicated fan-out path.
- */
+
 import { EmbedBuilder, type TextChannel } from 'discord.js';
 import { prisma } from '../../database.js';
 import { redis, pub } from '../../redis.js';
@@ -18,7 +7,6 @@ import { getGuildSettings } from '../../utils/settings.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 import type { BotClient } from '../../client.js';
 
-/** Leave ~15k of the 60k/day cap as headroom; polls stop when we cross this. */
 const QUOTA_BUDGET = parseInt(process.env.YOUTUBE_QUOTA_BUDGET ?? '45000', 10);
 const YT = 'https://www.googleapis.com/youtube/v3';
 
@@ -34,8 +22,6 @@ type VideoInfo = {
 };
 type EventKind = 'live' | 'upload';
 
-// ── Quota metering (shared Redis counter with the API) ────────────────────────
-
 function quotaKey(): string {
   return `youtube:quota:${new Date().toISOString().slice(0, 10)}`;
 }
@@ -43,7 +29,7 @@ export async function spendQuota(units: number): Promise<void> {
   try {
     const total = await redis.incrby(quotaKey(), units);
     if (total === units) await redis.expire(quotaKey(), 48 * 3600);
-  } catch { /* best-effort */ }
+  } catch {  }
 }
 async function overBudget(): Promise<boolean> {
   try {
@@ -59,7 +45,6 @@ function chunk<T>(arr: T[], n: number): T[][] {
   return out;
 }
 
-/** One batched videos.list (≤50 ids) → classify each. Costs 1 unit. */
 async function fetchVideos(ids: string[], apiKey: string): Promise<Map<string, VideoInfo>> {
   const out = new Map<string, VideoInfo>();
   if (!ids.length) return out;
@@ -89,8 +74,6 @@ async function fetchVideos(ids: string[], apiKey: string): Promise<Map<string, V
   return out;
 }
 
-// ── Delivery ──────────────────────────────────────────────────────────────────
-
 async function recordAlertFailure(id: string, reason: string): Promise<void> {
   const MAX = 5;
   try {
@@ -103,7 +86,7 @@ async function recordAlertFailure(id: string, reason: string): Promise<void> {
       await prisma.streamAlert.update({ where: { id }, data: { enabled: false } });
       logger.warn({ id, guildId: updated.guildId, feed: updated.channelUsername }, `YouTube alert auto-disabled after ${MAX} failures`);
     }
-  } catch { /* row deleted mid-flight */ }
+  } catch {  }
 }
 
 async function postAlert(client: BotClient, alert: AlertRow, video: VideoInfo, kind: EventKind): Promise<void> {
@@ -160,11 +143,6 @@ async function postAlert(client: BotClient, alert: AlertRow, video: VideoInfo, k
   }
 }
 
-/**
- * Fan a Redis `youtube:live`/`youtube:upload` event out to every guild watching
- * the channel. A global NX lock collapses YouTube's aggressive resends; the
- * per-alert lastStreamId/lastUploadId is the durable idempotency guard.
- */
 export async function handleYouTubeEvent(client: BotClient, kind: EventKind, raw: string): Promise<void> {
   let payload: { channelId: string; video: VideoInfo };
   try {
@@ -176,7 +154,7 @@ export async function handleYouTubeEvent(client: BotClient, kind: EventKind, raw
   if (!channelId || !video?.id) return;
 
   const lock = await redis.set(`youtube:sent:${kind}:${video.id}`, '1', 'EX', 6 * 3600, 'NX').catch(() => null);
-  if (lock !== 'OK') return; // another worker/resend already handled this video
+  if (lock !== 'OK') return;
 
   const alerts = await prisma.streamAlert.findMany({
     where: {
@@ -188,14 +166,12 @@ export async function handleYouTubeEvent(client: BotClient, kind: EventKind, raw
   });
   for (const alert of alerts) {
     if (kind === 'live') {
-      // Each stream has a unique ID; alert once per new live video.
+
       if (alert.lastStreamId === video.id) continue;
       await postAlert(client, alert as AlertRow, video, 'live');
     } else {
       if (alert.lastUploadId === video.id) continue;
-      // Baseline: the first upload we ever see for this alert is the channel's
-      // current newest — seed it silently so the pre-existing back catalogue
-      // never fires. Only genuinely new uploads after this point alert.
+
       if (alert.lastUploadId === null) {
         await prisma.streamAlert.update({ where: { id: alert.id }, data: { lastUploadId: video.id } }).catch(swallow);
         continue;
@@ -204,8 +180,6 @@ export async function handleYouTubeEvent(client: BotClient, kind: EventKind, raw
     }
   }
 }
-
-// ── Backstop poll: scheduled ("upcoming") streams until they go live ──────────
 
 export async function pollUpcoming(): Promise<void> {
   const apiKey = process.env.YOUTUBE_API_KEY;
@@ -226,24 +200,16 @@ export async function pollUpcoming(): Promise<void> {
         await redis.hdel('youtube:upcoming', vid).catch(swallow);
         await pub.publish('youtube:live', JSON.stringify({ channelId: chId, video: info })).catch(swallow);
       } else if (!info.upcoming) {
-        await redis.hdel('youtube:upcoming', vid).catch(swallow); // ended / not a stream anymore
+        await redis.hdel('youtube:upcoming', vid).catch(swallow);
       } else if (now - (parseInt(tsStr ?? '0', 10) || 0) > 48 * 3600 * 1000) {
-        await redis.hdel('youtube:upcoming', vid).catch(swallow); // stale schedule
+        await redis.hdel('youtube:upcoming', vid).catch(swallow);
       }
     }
   }
 }
 
-// ── Primary detection: poll the public Atom feed (0 YouTube Data API quota) ───
-
-/**
- * The channel's real RSS/Atom feed — a public endpoint, NOT the Data API, so
- * polling it costs zero quota. Note: `/feeds/videos.xml` returns the actual
- * entries; the `/xml/feeds/…` path is only the WebSub *topic identifier* stub.
- */
 const FEED = (channelId: string) => `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
 
-/** Fetch + parse a channel's Atom feed → video IDs, newest first. Zero quota. */
 async function fetchFeedVideoIds(channelId: string): Promise<string[]> {
   try {
     const res = await fetch(FEED(channelId), { headers: { 'user-agent': 'ArkenBot-StreamAlerts/1.0' } });
@@ -259,21 +225,10 @@ async function fetchFeedVideoIds(channelId: string): Promise<string[]> {
   }
 }
 
-/**
- * Primary, reliable, quota-free detector. Polls every watched channel's public
- * Atom feed over plain HTTP (no Data API quota, no dependency on Google's
- * WebSub hub), finds video IDs newer than a per-channel marker, and spends a
- * `videos.list` unit only to classify those genuinely-new videos. Publishes the
- * same `youtube:live`/`youtube:upload` events as the push path, so everything
- * flows through the one deduplicated fan-out (WebSub push, when the hub is up,
- * simply wins the race and the poll's later publish is de-duped).
- */
 export async function pollFeeds(): Promise<void> {
   const apiKey = process.env.YOUTUBE_API_KEY;
   if (!apiKey) return;
 
-  // YouTube ToS: don't retain video IDs beyond 30 days (turnover handles this
-  // normally; safety net for edge cases).
   const cutoff = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
   await prisma.streamAlert.updateMany({
     where: { platform: 'youtube', createdAt: { lt: cutoff }, OR: [{ lastStreamId: { not: null } }, { lastUploadId: { not: null } }] },
@@ -288,7 +243,6 @@ export async function pollFeeds(): Promise<void> {
   const channels = rows.map((r) => r.channelId).filter(Boolean) as string[];
   if (!channels.length) return;
 
-  // Discover new video IDs across all channels (0 quota), 10 feeds at a time.
   const toClassify: Array<{ videoId: string; channelId: string }> = [];
   for (const group of chunk(channels, 10)) {
     await Promise.all(group.map(async (chId) => {
@@ -298,21 +252,18 @@ export async function pollFeeds(): Promise<void> {
       const marker = await redis.get(markerKey).catch(() => null);
       await redis.set(markerKey, ids[0]).catch(swallow);
       if (!marker) {
-        // First observation → baseline. Classify only the newest so a channel
-        // that's live *right now* still alerts; a plain newest upload is seeded
-        // silently by the fan-out's upload baseline (no back-catalogue spam).
+
         toClassify.push({ videoId: ids[0], channelId: chId });
         return;
       }
-      if (ids[0] === marker) return; // nothing new
+      if (ids[0] === marker) return;
       const idx = ids.indexOf(marker);
-      const fresh = idx === -1 ? ids.slice(0, 5) : ids.slice(0, idx); // cap if marker aged off the feed
+      const fresh = idx === -1 ? ids.slice(0, 5) : ids.slice(0, idx);
       for (const vid of fresh) toClassify.push({ videoId: vid, channelId: chId });
     }));
   }
   if (!toClassify.length) return;
 
-  // Classify ONLY the new videos with batched videos.list (1 unit / 50 ids).
   const byId = new Map<string, VideoInfo>();
   for (const grp of chunk([...new Set(toClassify.map((c) => c.videoId))], 50)) {
     if (await overBudget()) break;
@@ -329,6 +280,6 @@ export async function pollFeeds(): Promise<void> {
     } else if (!info.isStream) {
       await pub.publish('youtube:upload', JSON.stringify({ channelId, video: info })).catch(swallow);
     }
-    // isStream && !live && !upcoming → finished-stream VOD; ignore.
+
   }
 }

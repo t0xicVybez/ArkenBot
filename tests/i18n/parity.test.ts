@@ -4,7 +4,6 @@ import { join } from 'path';
 
 const SHIPPED = ['en-US','es-ES','fr','de','pt-BR','ru','ja','ko','it','pl','zh-CN','tr','nl','id'];
 
-/** Flatten a nested catalog into dotted keys (arrays indexed) → string leaves. */
 function flatten(obj: unknown, prefix = '', out: Record<string, string> = {}): Record<string, string> {
   if (Array.isArray(obj)) {
     obj.forEach((v, i) => flatten(v, prefix ? `${prefix}.${i}` : String(i), out));

@@ -1,4 +1,4 @@
-/** /balance — show a member's wallet, bank and net worth plus their richest rank. */
+
 import { SlashCommandBuilder, EmbedBuilder, type ChatInputCommandInteraction } from 'discord.js';
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';

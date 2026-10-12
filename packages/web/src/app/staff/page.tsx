@@ -8,7 +8,6 @@ import type { SystemStats } from '@arkenbot/shared';
 import { useTranslations } from 'next-intl';
 import { useWebSocket } from '@/lib/socket';
 
-/** Mock-pattern stat tile: uppercase label, big tabular value. Optionally a link. */
 function StatTile({ label, value, href }: { label: string; value: string | number; href?: string }) {
   const cls = 'bg-(--bg-card) border border-(--border-subtle) rounded-xl px-4 pt-[15px] pb-3';
   const inner = (
@@ -58,7 +57,7 @@ export default function StaffDashboard() {
         </div>
       </div>
 
-      {/* Stat tiles */}
+      {}
       {isLoading ? (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 mb-6">
           {[...Array(9)].map((_, i) => (
@@ -80,7 +79,7 @@ export default function StaffDashboard() {
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Quick actions */}
+        {}
         <div className="bg-(--bg-card) border border-(--border-subtle) rounded-xl p-0 overflow-hidden">
           <div className="px-[18px] py-[13px] border-b border-(--border-subtle)">
             <h2 className="text-[13.5px] font-bold text-white">{t('quickActions')}</h2>
@@ -110,7 +109,7 @@ export default function StaffDashboard() {
           </div>
         </div>
 
-        {/* System health */}
+        {}
         <div className="bg-(--bg-card) border border-(--border-subtle) rounded-xl p-0 overflow-hidden">
           <div className="flex items-center px-[18px] py-[13px] border-b border-(--border-subtle)">
             <h2 className="text-[13.5px] font-bold text-white">{t('systemHealth')}</h2>

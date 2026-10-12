@@ -81,7 +81,7 @@ export default function AnnouncementsSettingsPage() {
         title={t('sectionTitle')}
         description={t('sectionDesc')}
       >
-        {/* Enable toggle */}
+        {}
         <div className="flex items-center justify-between">
           <div>
             <p className="text-white font-medium text-sm">{t('enableLabel')}</p>
@@ -101,7 +101,7 @@ export default function AnnouncementsSettingsPage() {
           </button>
         </div>
 
-        {/* Channel picker — only shown when enabled */}
+        {}
         {settings.announcementsEnabled && (
           <div>
             <label className="label">{t('channelLabel')}</label>

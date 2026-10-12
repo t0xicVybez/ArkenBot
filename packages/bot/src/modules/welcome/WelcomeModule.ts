@@ -22,7 +22,6 @@ export class WelcomeModule {
 
     const message = formatTemplate(config.welcomeMessage, variables);
 
-    // Send to welcome channel
     if (config.welcomeChannelId) {
       const channel = guild.channels.cache.get(config.welcomeChannelId);
       if (channel?.isTextBased()) {
@@ -57,13 +56,11 @@ export class WelcomeModule {
       }
     }
 
-    // Send DM
     if (config.welcomeDMEnabled && config.welcomeDMMessage) {
       const dmMessage = formatTemplate(config.welcomeDMMessage, variables);
       await member.user.send({ content: dmMessage }).catch(swallow);
     }
 
-    // Auto-role
     const settings = await prisma.guildSettings.findUnique({ where: { guildId: guild.id } });
     if (settings?.autoRoleId) {
       const role = guild.roles.cache.get(settings.autoRoleId);
@@ -73,7 +70,6 @@ export class WelcomeModule {
     }
   }
 
-  /** Posts a one-off sample welcome to the configured channel (setup wizard "test"). */
   static async sendTest(guild: Guild, member: GuildMember): Promise<void> {
     const config = await prisma.welcomeConfig.findUnique({ where: { guildId: guild.id } });
     if (!config?.welcomeChannelId) return;

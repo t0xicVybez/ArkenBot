@@ -1,7 +1,4 @@
-/**
- * /ping command — measures roundtrip latency and WebSocket heartbeat latency,
- * then reports both values.
- */
+
 import { SlashCommandBuilder, type ChatInputCommandInteraction } from 'discord.js';
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';

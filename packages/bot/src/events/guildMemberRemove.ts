@@ -1,8 +1,4 @@
-/**
- * guildMemberRemove event — runs when a member leaves or is removed from a guild.
- * Fetches full member data if the Discord.js cache provides only a partial object,
- * then triggers farewell messages, leave logging, analytics, and invite tracking.
- */
+
 import type { GuildMember, PartialGuildMember } from 'discord.js';
 import type { BotEvent } from '../types.js';
 import { WelcomeModule } from '../modules/welcome/WelcomeModule.js';
@@ -16,9 +12,9 @@ const event: BotEvent = {
   name: 'guildMemberRemove',
   async execute(_client: unknown, member: GuildMember | PartialGuildMember) {
     if (!member.guild) return;
-    // Close promotion sessions using the partial (a left member can't be fetched).
+
     void PromotionModule.handleMemberRemove(member.guild.id, member.id).catch(swallow);
-    // Partial members lack roles and other data needed by downstream handlers.
+
     const fullMember = member.partial
       ? await member.guild.members.fetch(member.id).catch(swallow)
       : member;

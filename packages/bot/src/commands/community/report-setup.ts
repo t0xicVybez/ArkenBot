@@ -1,6 +1,4 @@
-/**
- * /report-setup command — admin command to configure report channel.
- */
+
 import {
   SlashCommandBuilder,
   PermissionFlagsBits,

@@ -8,7 +8,6 @@ import dynamic from 'next/dynamic';
 import { ChartSkeleton } from '@/components/charts/ChartSkeleton';
 import { LineChart as LineChartIcon, TrendingUp, TrendingDown, Users, MessageSquare } from 'lucide-react';
 
-// recharts is heavy; load the trend charts in their own chunk on demand.
 const AnalyticsCharts = dynamic(() => import('./_charts'), {
   ssr: false,
   loading: () => <div className="space-y-6">{[...Array(3)].map((_, i) => <div key={i} className="card"><ChartSkeleton height={220} /></div>)}</div>,
@@ -60,7 +59,7 @@ export default function AnalyticsPage() {
         <div className="min-w-0"><h1>{t('title')}</h1><div className="page-head-desc">{t('description')}</div></div>
       </div>
 
-      {/* Time-range selector */}
+      {}
       <div className="flex gap-2">
         {RANGES.map((r) => (
           <button key={r} onClick={() => setDays(r)}
@@ -70,7 +69,7 @@ export default function AnalyticsPage() {
         ))}
       </div>
 
-      {/* Summary cards (period) */}
+      {}
       {s && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <SummaryCard icon={<Users className="w-4 h-4" />} label={t('sumMembers')} value={s.currentMembers != null ? nf(s.currentMembers) : '—'} />
@@ -85,7 +84,7 @@ export default function AnalyticsPage() {
         </div>
       )}
 
-      {/* 24h quick stats */}
+      {}
       <div className="grid grid-cols-3 gap-4">
         <StatCard label={t('newMembers24h')} value={data.newMembers24h} color="text-green-400" />
         <StatCard label={t('leftMembers24h')} value={data.leftMembers24h} color="text-red-400" />
@@ -98,7 +97,7 @@ export default function AnalyticsPage() {
         <AnalyticsCharts history={history} modTrend={modTrend} t={t} />
       )}
 
-      {/* Top active members */}
+      {}
       <div className="card">
         <h3 className="text-base font-semibold text-white mb-3">{t('topMembers')}</h3>
         {topMembers.length === 0 ? (

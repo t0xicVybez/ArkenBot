@@ -1,6 +1,4 @@
-/**
- * guildChannelDelete event — tracks channel deletions for anti-nuke protection.
- */
+
 import { Events, AuditLogEvent, type GuildChannel } from 'discord.js';
 import type { BotEvent } from '../types.js';
 import { AntiNukeModule } from '../modules/antiNuke/AntiNukeModule.js';
@@ -19,8 +17,7 @@ const event: BotEvent = {
         await AntiNukeModule.trackAction(guild, entry.executor.id, 'channelDelete');
       }
     } catch (err) {
-      // A 403 just means the bot lacks View Audit Log here — anti-nuke tracking
-      // no-ops, no admin action needed. Only surface genuinely unexpected errors.
+
       if (isPermissionError(err)) {
         logger.debug({ err, guildId: guild.id }, 'guildChannelDelete: no audit-log access');
       } else {

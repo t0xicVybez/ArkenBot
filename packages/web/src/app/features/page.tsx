@@ -9,8 +9,6 @@ import {
 import { getTranslations } from 'next-intl/server';
 import { LandingNav } from '@/components/LandingNav';
 
-// ─── Shared constants ─────────────────────────────────────────────────────────
-
 const CLIENT_ID = process.env.DISCORD_CLIENT_ID ?? process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID ?? '';
 
 const SITE = {
@@ -22,10 +20,6 @@ const SITE = {
   supportUrl: 'https://discord.gg/fXJnYPdHRX',
 };
 
-// ─── Feature detail data ──────────────────────────────────────────────────────
-
-// Visual config only — title/tagline/description/bullets come from the
-// `featuresPage.sections.<id>` message objects.
 const FEATURE_SECTIONS = [
   { id: 'moderation', icon: Shield, color: 'text-blue-400', bg: 'bg-blue-500/10', border: 'border-blue-500/20', accentBorder: 'border-blue-500/40' },
   { id: 'automod', icon: Bot, color: 'text-red-400', bg: 'bg-red-500/10', border: 'border-red-500/20', accentBorder: 'border-red-500/40' },
@@ -58,8 +52,6 @@ const FEATURE_SECTIONS = [
   { id: 'reports', icon: Flag, color: 'text-orange-400', bg: 'bg-orange-500/10', border: 'border-orange-500/20', accentBorder: 'border-orange-500/40' },
 ];
 
-// ─── Page ─────────────────────────────────────────────────────────────────────
-
 export const metadata = {
   title: 'Features — Arken Bot',
   description:
@@ -72,7 +64,7 @@ export default async function FeaturesPage() {
     <div className="min-h-screen bg-discord-darkest-bg text-gray-200 flex flex-col">
       <LandingNav docsUrl={SITE.docsUrl} supportUrl={SITE.supportUrl} inviteUrl={SITE.inviteUrl} />
 
-      {/* ── Hero ── */}
+      {}
       <section className="relative overflow-hidden px-6 pt-20 pb-16 text-center">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-discord-blurple/6 rounded-full blur-3xl" />
@@ -95,7 +87,7 @@ export default async function FeaturesPage() {
             {t('heroSubtitle')}
           </p>
 
-          {/* Quick jump links */}
+          {}
           <div className="flex flex-wrap justify-center gap-2">
             {FEATURE_SECTIONS.map((f) => (
               <a
@@ -110,7 +102,7 @@ export default async function FeaturesPage() {
         </div>
       </section>
 
-      {/* ── Feature detail sections ── */}
+      {}
       <div className="max-w-5xl mx-auto px-6 pb-24 space-y-6">
         {FEATURE_SECTIONS.map((f, idx) => {
           const Icon = f.icon;
@@ -122,7 +114,7 @@ export default async function FeaturesPage() {
                 idx % 2 === 0 ? 'bg-discord-darker-bg' : 'bg-discord-darker-bg/60'
               }`}
             >
-              {/* Header */}
+              {}
               <div className={`flex items-start gap-4 p-6 border-b border-white/6 ${f.bg}`}>
                 <div className={`w-11 h-11 rounded-xl ${f.bg} border ${f.accentBorder} flex items-center justify-center flex-shrink-0`}>
                   <Icon className={`w-5 h-5 ${f.color}`} />
@@ -133,7 +125,7 @@ export default async function FeaturesPage() {
                 </div>
               </div>
 
-              {/* Body */}
+              {}
               <div className="p-6 grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6">
                 <div>
                   <p className="text-gray-400 text-sm leading-relaxed mb-5">{t(`sections.${f.id}.description`)}</p>
@@ -154,7 +146,7 @@ export default async function FeaturesPage() {
         })}
       </div>
 
-      {/* ── Addons callout ── */}
+      {}
       <div className="max-w-5xl mx-auto px-6 pb-16">
         <div className="rounded-2xl border border-fuchsia-500/20 bg-fuchsia-500/6 p-8 flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
           <div className="flex-1">
@@ -173,7 +165,7 @@ export default async function FeaturesPage() {
         </div>
       </div>
 
-      {/* ── CTA ── */}
+      {}
       <section className="py-20 px-6 text-center border-t border-white/4 bg-discord-darker-bg/30">
         <div className="max-w-2xl mx-auto">
           <h2 className="text-3xl font-bold text-white mb-3 tracking-tight">
@@ -198,7 +190,7 @@ export default async function FeaturesPage() {
         </div>
       </section>
 
-      {/* ── Footer ── */}
+      {}
       <footer className="border-t border-white/6 py-8 px-6">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">

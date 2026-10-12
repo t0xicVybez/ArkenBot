@@ -1,16 +1,4 @@
 // @ts-nocheck
-/**
- * Example Greeting Addon
- *
- * A minimal reference addon demonstrating the core addon patterns:
- * - Registering a slash command
- * - Handling Discord gateway events
- * - Reading per-guild settings
- * - Using the addon storage API
- * - Implementing lifecycle hooks
- *
- * Copy and adapt this addon as a starting point for your own addon.
- */
 
 import { SlashCommandBuilder, EmbedBuilder, type GuildMember } from 'discord.js';
 import { defineAddon } from '@arkenbot/addon-sdk';
@@ -83,7 +71,6 @@ export default defineAddon({
 
         await interaction.reply({ embeds: [embed] });
 
-        // Persist the last greeter so the portal or other addons can read it.
         await ctx.storage.set('lastGreeter', interaction.user.tag, interaction.guildId ?? undefined);
         await ctx.logger.info(`${interaction.user.tag} greeted ${targetUser.tag}`);
       },
@@ -121,7 +108,6 @@ export default defineAddon({
           .setFooter({ text: ctx.t('footerMemberCount', loc, { count: member.guild.memberCount }) })
           .setTimestamp();
 
-        // Silently discard errors — the channel may have been deleted since config was saved.
         await channel.send({ embeds: [embed] }).catch(() => null);
       },
     },

@@ -4,12 +4,10 @@ import { redis } from '../redis.js';
 import { xpForLevel } from '@arkenbot/shared';
 
 export async function publicRoutes(server: FastifyInstance): Promise<void> {
-  // GET /public/status — component health for the public status page.
-  // Reports only live, measured facts: no synthetic uptime percentages.
+
   server.get('/public/status', async (_request, reply) => {
     const now = Date.now();
 
-    // Database
     let database = false;
     let dbLatencyMs: number | null = null;
     try {
@@ -17,15 +15,13 @@ export async function publicRoutes(server: FastifyInstance): Promise<void> {
       await prisma.$queryRaw`SELECT 1`;
       dbLatencyMs = Date.now() - t;
       database = true;
-    } catch { /* down */ }
+    } catch {  }
 
-    // Redis
     let cache = false;
     try {
       cache = (await redis.ping()) === 'PONG';
-    } catch { /* down */ }
+    } catch {  }
 
-    // Bot — heartbeat key written every 30s by the bot process (EX 120)
     let bot: { online: boolean; guilds: number | null; wsPingMs: number | null; lastSeen: string | null } =
       { online: false, guilds: null, wsPingMs: null, lastSeen: null };
     try {
@@ -39,7 +35,7 @@ export async function publicRoutes(server: FastifyInstance): Promise<void> {
           lastSeen: new Date(hb.at).toISOString(),
         };
       }
-    } catch { /* leave defaults */ }
+    } catch {  }
 
     return reply.send({
       success: true,
@@ -53,7 +49,6 @@ export async function publicRoutes(server: FastifyInstance): Promise<void> {
     });
   });
 
-  // GET /public/stats — live stats for the landing page
   server.get('/public/stats', async (_request, reply) => {
     const [servers, users] = await Promise.all([
       prisma.guild.count({ where: { isActive: true } }),
@@ -62,7 +57,6 @@ export async function publicRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: { servers, users } });
   });
 
-  // GET /public/changelog — staff announcements, newest first, for the public changelog page
   server.get('/public/changelog', async (request, reply) => {
     const query = request.query as { page?: string; limit?: string };
     const page = Math.max(1, parseInt(query.page ?? '1', 10));
@@ -73,7 +67,7 @@ export async function publicRoutes(server: FastifyInstance): Promise<void> {
         orderBy: { sentAt: 'desc' },
         skip: (page - 1) * limit,
         take: limit,
-        // authorId and guildCount are internal — expose only public fields
+
         select: { id: true, title: true, body: true, type: true, sentAt: true },
       }),
       prisma.botAnnouncement.count(),
@@ -82,7 +76,6 @@ export async function publicRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: { entries, total, page, pages: Math.ceil(total / limit) } });
   });
 
-  // GET /public/leaderboard/:guildId — no auth required
   server.get('/public/leaderboard/:guildId', async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const query = request.query as { page?: string; limit?: string; period?: string };
@@ -90,7 +83,7 @@ export async function publicRoutes(server: FastifyInstance): Promise<void> {
     const page = Math.max(1, parseInt(query.page ?? '1', 10));
     const limit = Math.min(50, Math.max(1, parseInt(query.limit ?? '25', 10)));
     const skip = (page - 1) * limit;
-    const period = query.period ?? 'all'; // all | weekly | monthly
+    const period = query.period ?? 'all';
 
     const guild = await prisma.guild.findUnique({
       where: { id: guildId, isActive: true },
@@ -110,7 +103,6 @@ export async function publicRoutes(server: FastifyInstance): Promise<void> {
       return reply.code(403).send({ success: false, error: 'Leveling is not enabled for this server' });
     }
 
-    // For time-filtered periods, only show users active within the window
     const periodWhere: Record<string, unknown> = { guildId };
     if (period === 'weekly') {
       const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
@@ -131,7 +123,6 @@ export async function publicRoutes(server: FastifyInstance): Promise<void> {
       prisma.userLevel.count({ where: periodWhere }),
     ]);
 
-    // Compute xp needed for next level for each entry
     const enriched = entries.map((entry, i) => {
       const rank = skip + i + 1;
       const xpForNext = xpForLevel(entry.level + 1);

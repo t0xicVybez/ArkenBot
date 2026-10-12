@@ -1,7 +1,6 @@
 import { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import type { ApplicationForm, ApplicationSubmission } from '../types.js';
 
-/** Translator bound to the viewer's locale, passed in from the addon context. */
 type Translate = (key: string, vars?: Record<string, string | number>) => string;
 
 export function buildReviewEmbed(form: ApplicationForm, sub: ApplicationSubmission, t: Translate): EmbedBuilder {

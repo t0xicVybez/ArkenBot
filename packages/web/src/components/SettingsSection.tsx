@@ -1,8 +1,4 @@
-/**
- * Layout wrapper for a dashboard settings group: renders a titled card with
- * an optional description and stacked children, using the shared card anatomy
- * (bordered header row, padded body).
- */
+
 interface SettingsSectionProps {
   title: string;
   description?: string;

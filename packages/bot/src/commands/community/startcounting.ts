@@ -1,7 +1,4 @@
-/**
- * /startcounting command — posts a counting-game announcement in the configured
- * counting channel, including current state and configured rule settings.
- */
+
 import { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits, type ChatInputCommandInteraction, type TextChannel } from 'discord.js';
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
@@ -11,8 +8,7 @@ import { t, resolveUserLocale } from '../../i18n/index.js';
 import { COLORS } from '@arkenbot/shared';
 
 import { swallow } from '../../logger.js';
-// Prisma is cast to `any` here because the `countingState` model is generated
-// by an addon migration that the shared Prisma client type does not include.
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = prisma as any;
 
@@ -38,8 +34,6 @@ const command: BotCommand = {
       return;
     }
 
-    // Counting is a core feature: set up (or move) it to the channel this was
-    // run in, so it works without any add-on. Existing counts are preserved.
     const state = await db.countingState.upsert({
       where:  { guildId: interaction.guild.id },
       update: { channelId: countingChannel.id },

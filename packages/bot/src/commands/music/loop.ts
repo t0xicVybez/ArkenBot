@@ -1,6 +1,4 @@
-/**
- * /loop command — sets the queue loop mode to off, single-track, or full-queue repeat.
- */
+
 import {
   MessageFlags,
   SlashCommandBuilder,

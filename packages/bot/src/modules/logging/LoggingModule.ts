@@ -1,10 +1,4 @@
-/**
- * Centralises all structured logging for guild events: moderation actions,
- * message edits and deletions, and member join/leave events. Each log method
- * writes an embed to the configured log channel and persists a `LogEntry` record
- * to the database. Moderation actions and member joins are additionally broadcast
- * to the dashboard via the Redis pub channel.
- */
+
 
 import {
   type Guild,
@@ -22,10 +16,7 @@ import { pub } from '../../redis.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 
 export class LoggingModule {
-  /**
-   * Resolves a log channel from the guild's channel cache.
-   * Returns `null` when the channel ID is absent or the channel is not text-based.
-   */
+
   static async getLogChannel(guild: Guild, channelId: string | null | undefined): Promise<TextChannel | null> {
     if (!channelId) return null;
     const channel = guild.channels.cache.get(channelId);
@@ -33,18 +24,11 @@ export class LoggingModule {
     return channel as TextChannel;
   }
 
-  /**
-   * Sends a log embed to the appropriate channel and persists a `LogEntry` record.
-   * Moderation- and automod-type events are routed to `modLogChannelId` when
-   * configured, falling back to the general `logChannelId`.
-   */
   static async log(guild: Guild, type: LogType, embed: EmbedBuilder, data: Record<string, unknown> = {}): Promise<void> {
     try {
       const settings = await getGuildSettings(guild.id);
       if (!settings?.loggingEnabled) return;
 
-      // Moderation and automod events go to the dedicated mod-log channel when one
-      // is configured; all other events go to the general log channel.
       const logChannelId = type.startsWith('member_') || type === 'automod'
         ? (settings.modLogChannelId ?? settings.logChannelId)
         : settings.logChannelId;
@@ -69,7 +53,6 @@ export class LoggingModule {
     }
   }
 
-  /** Logs a moderation action and broadcasts it to the dashboard via Redis pub/sub. */
   static async logModerationAction(guild: Guild, action: ModerationAction): Promise<void> {
     const typeEmojis: Record<string, string> = {
       ban: '🔨', tempban: '⏱️', kick: '👢', mute: '🔇',
@@ -101,7 +84,6 @@ export class LoggingModule {
       reason: action.reason,
     });
 
-    // Broadcast to dashboard via WebSocket
     await pub.publish('api:ws:broadcast', JSON.stringify({
       type: 'moderation:action',
       guildId: action.guildId,
@@ -180,7 +162,6 @@ export class LoggingModule {
       memberCount: guild.memberCount,
     });
 
-    // Broadcast to dashboard via WebSocket
     await pub.publish('api:ws:broadcast', JSON.stringify({
       type: 'member:join',
       guildId: guild.id,

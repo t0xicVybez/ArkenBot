@@ -1,6 +1,5 @@
-/** Standard API response shapes shared between the bot, API server, and web portal. */
 
-/** Generic envelope for all API responses. */
+
 export interface ApiResponse<T = unknown> {
   success: boolean;
   data?: T;
@@ -8,7 +7,6 @@ export interface ApiResponse<T = unknown> {
   message?: string;
 }
 
-/** Paginated list response. */
 export interface PaginatedResponse<T> {
   items: T[];
   total: number;
@@ -17,32 +15,28 @@ export interface PaginatedResponse<T> {
   hasMore: boolean;
 }
 
-/** OAuth2 token pair returned after successful authentication. */
 export interface AuthTokens {
   accessToken: string;
   refreshToken: string;
   expiresIn: number;
 }
 
-/** Response body for the Discord OAuth2 login endpoint. */
 export interface LoginResponse {
   user: import('./user.js').PortalUser;
   tokens: AuthTokens;
 }
 
-/** Summary of a Discord guild shown in the portal guild list. */
 export interface GuildOverview {
   id: string;
   name: string;
   iconUrl?: string;
   memberCount: number;
-  /** Whether the bot is currently a member of this guild. */
+
   botPresent: boolean;
   hasAdminPermission: boolean;
   guildAddons?: Array<{ addon: { name: string; displayName: string } }>;
 }
 
-/** Aggregate runtime statistics for the bot instance. */
 export interface SystemStats {
   totalGuilds: number;
   activeGuilds: number;
@@ -51,17 +45,16 @@ export interface SystemStats {
   totalCases: number;
   totalWarnings: number;
   totalAddons: number;
-  /** Process uptime in seconds. */
+
   uptime: number;
-  /** Bot process resident memory (RSS), in MB. Null if it can't be read. */
+
   memoryUsage: number | null;
-  /** Combined resident memory (RSS) of all ArkenBot PM2 processes, in MB. Null if it can't be read. */
+
   totalMemoryUsage?: number | null;
   cpuUsage: number;
   version: string;
 }
 
-/** Per-guild analytics for the last 24 hours. */
 export interface GuildAnalytics {
   guildId: string;
   messageCount24h: number;

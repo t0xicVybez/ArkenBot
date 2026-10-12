@@ -1,4 +1,4 @@
-/** polls scheduler job(s) — extracted from BackgroundJobs (P3 god-file split). */
+
 import { type TextChannel } from 'discord.js';
 import { prisma } from '../../database.js';
 import { logger, swallow } from '../../logger.js';
@@ -34,7 +34,7 @@ export async function closePolls(client: BotClient): Promise<void> {
           components: buildPollComponents(poll.id, options, true, loc),
           files: chart ? [{ attachment: chart, name: 'poll-results.png' }] : [],
         });
-      } catch { /* poll message may have been deleted */ }
+      } catch {  }
     }
   } catch (err) {
     logger.error({ err }, 'Poll auto-close failed');

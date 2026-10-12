@@ -1,8 +1,4 @@
-/**
- * Routes for managing the addon registry and per-guild addon installations.
- * Guild administrators may install, uninstall, and configure addons.
- * Staff members may register and update addon definitions in the registry.
- */
+
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { requireGuildAdmin, requireStaff } from '../middleware/auth.js';
@@ -10,23 +6,8 @@ import { parse } from '../utils/validate.js';
 import { prisma } from '../database.js';
 import { pub } from '../redis.js';
 
-/**
- * Registers addon routes.
- *
- * Public/guild-scoped routes:
- *   GET    /addons                            — list available addons
- *   GET    /guilds/:guildId/addons            — list addons installed in a guild
- *   POST   /guilds/:guildId/addons/:addonId   — install an addon
- *   DELETE /guilds/:guildId/addons/:addonId   — uninstall an addon
- *   GET    /guilds/:guildId/addons/:addonId/settings  — read addon settings
- *   PATCH  /guilds/:guildId/addons/:addonId/settings  — update addon settings
- *
- * Staff-only routes:
- *   POST   /admin/addons      — register a new addon
- *   PATCH  /admin/addons/:id  — update an existing addon definition
- */
 export async function addonRoutes(server: FastifyInstance): Promise<void> {
-  // List available addons. Staff may pass ?all=true to include disabled addons.
+
   server.get('/addons', async (request, reply) => {
     const query = request.query as { all?: string };
     const showAll = query.all === 'true';
@@ -106,8 +87,7 @@ export async function addonRoutes(server: FastifyInstance): Promise<void> {
 
   server.patch('/guilds/:guildId/addons/:addonId/settings', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, addonId } = request.params as { guildId: string; addonId: string };
-    // Addon settings are addon-defined key/value config; validate the shape is a
-    // JSON object (not a primitive/array) but leave the values to each addon.
+
     const settings = parse(z.record(z.string(), z.any()), request.body, reply);
     if (!settings) return;
 
@@ -124,8 +104,6 @@ export async function addonRoutes(server: FastifyInstance): Promise<void> {
 
     return reply.send({ success: true, data: guildAddon.settings });
   });
-
-  // ─── Staff-only routes ────────────────────────────────────────────────────
 
   server.post('/admin/addons', { preHandler: [requireStaff] }, async (request, reply) => {
     const data = request.body as {

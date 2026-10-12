@@ -1,9 +1,4 @@
-/**
- * messageCreate event — the central message pipeline. Runs auto-moderation,
- * XP leveling, activity tracking, auto-slowmode, the counting game, and
- * regex-triggered auto-responses in parallel for every non-bot guild message.
- * Also handles prefix-based custom commands (prefix: `!`).
- */
+
 import type { Message, TextChannel } from 'discord.js';
 import { EmbedBuilder } from 'discord.js';
 import type { BotEvent } from '../types.js';
@@ -20,22 +15,14 @@ import { logger, swallow} from '../logger.js';
 import { ensureGuildExists } from '../utils/settings.js';
 import { PromotionModule } from '../modules/promotion/PromotionModule.js';
 
-// Per-user cooldown tracker for custom commands: `${commandId}:${userId}` → expiry timestamp
 const cooldownMap = new Map<string, number>();
 
-// Guilds whose DB row we've confirmed this process. The `ready` pass ensures all
-// guilds, but a message can land in the startup window (or for a guild whose ensure
-// failed) before its Guild row exists, which FK-violates the activity upserts below.
-// Ensuring once per guild per process closes that gap without a write per message.
 const ensuredGuilds = new Set<string>();
 
-// Sliding-window message rate tracker for auto-slowmode: channelId → message timestamps
 const msgRateTracker = new Map<string, number[]>();
-// Tracks channels with active auto-slowmode to avoid redundant Discord API calls.
+
 const slowmodeActive = new Map<string, NodeJS.Timeout>();
 
-// Sweep expired custom-command cooldown entries every 10 minutes so the Map
-// doesn't accumulate entries for users who haven't sent a command in a long time.
 setInterval(() => {
   const now = Date.now();
   for (const [key, expiry] of cooldownMap) {
@@ -43,9 +30,6 @@ setInterval(() => {
   }
 }, 10 * 60 * 1000).unref();
 
-// Sweep stale slowmode tracker entries every 5 minutes. Channels that stop
-// receiving messages keep their Map entry alive indefinitely without this.
-// We use 1 hour as a generous upper bound for any configured window.
 setInterval(() => {
   const now = Date.now();
   for (const [channelId, timestamps] of msgRateTracker) {
@@ -67,10 +51,9 @@ async function trackActivity(guildId: string): Promise<void> {
       update: { count: { increment: 1 } },
       create: { guildId, date: today, count: 1 },
     });
-  } catch { /* non-critical */ }
+  } catch {  }
 }
 
-// Shape of a cached auto-response row stored in Redis.
 type AutoResponseRow = {
   id: string;
   pattern: string;
@@ -101,14 +84,13 @@ async function checkAutoResponses(message: Message): Promise<void> {
     }).catch(swallow);
     if (!dbRows) return;
     rows = dbRows as AutoResponseRow[];
-    // Cache for 120 s. 'null' sentinel avoids re-querying guilds with no rules.
+
     await redis.setex(cacheKey, 120, rows.length ? JSON.stringify(rows) : 'null').catch(swallow);
     if (!rows.length) return;
   }
 
   if (!rows.length) return;
 
-  // Resolve member once only when at least one row has role gates.
   const needsRoles = rows.some((r) => r.requiredRoles.length > 0 || r.ignoredRoles.length > 0);
   const member = needsRoles
     ? (message.member ?? await message.guild.members.fetch(message.author.id).catch(swallow))
@@ -125,7 +107,7 @@ async function checkAutoResponses(message: Message): Promise<void> {
     try {
       matches = new RegExp(row.pattern, row.flags).test(message.content);
     } catch {
-      // Invalid regex in DB — skip silently rather than crashing the pipeline.
+
       continue;
     }
     if (!matches) continue;
@@ -142,13 +124,12 @@ async function checkAutoResponses(message: Message): Promise<void> {
     }
 
     await textChannel.send(payload).catch(swallow);
-    // Fire-and-forget usage counter — never block the message pipeline.
+
     prisma.autoResponse.update({ where: { id: row.id }, data: { uses: { increment: 1 } } }).catch(swallow);
-    break; // Stop at first match per message to avoid response spam.
+    break;
   }
 }
 
-// Shape of a cached slowmode config entry (null → "no config for this channel").
 type SlowmodeCfg = { enabled: boolean; windowSeconds: number; threshold: number; slowmodeSeconds: number; resetAfter: number };
 
 async function checkSlowmode(message: Message): Promise<void> {
@@ -167,7 +148,7 @@ async function checkSlowmode(message: Message): Promise<void> {
     config = await prisma.slowmodeConfig.findUnique({
       where: { guildId_channelId: { guildId, channelId } },
     }).catch(swallow) as SlowmodeCfg | null;
-    // Cache for 60 s. 'null' string sentinel avoids re-querying unconfigured channels.
+
     await redis.setex(cacheKey, 60, config ? JSON.stringify(config) : 'null').catch(swallow);
   }
 
@@ -187,18 +168,17 @@ async function checkSlowmode(message: Message): Promise<void> {
       );
       logger.info({ guildId, channelId }, 'Auto-slowmode applied');
 
-      // Resets slowmode after the configured inactivity window elapses.
       const timer = setTimeout(async () => {
         try {
           await (message.channel as TextChannel).setRateLimitPerUser(0, 'Auto-slowmode: inactivity reset');
           slowmodeActive.delete(channelId);
           msgRateTracker.delete(channelId);
           logger.info({ guildId, channelId }, 'Auto-slowmode removed');
-        } catch { /* channel may have been deleted */ }
+        } catch {  }
       }, config.resetAfter * 1000);
 
       slowmodeActive.set(channelId, timer);
-    } catch { /* missing permissions */ }
+    } catch {  }
   }
 }
 
@@ -207,19 +187,16 @@ const event: BotEvent = {
   async execute(_client: BotClient, message: Message) {
     if (!message.author || message.author.bot) return;
 
-    // Modmail: a DM opens or continues a private support thread.
     if (!message.guild) {
       await ModmailModule.handleUserDM(_client, message).catch((err) => logger.error({ err }, 'modmail DM failed'));
       return;
     }
-    // Modmail: a staff message in an open thread channel relays to the user.
+
     if (ModmailModule.hasOpenThread(message.channel.id)) {
       await ModmailModule.handleStaffMessage(message).catch(swallow);
       return;
     }
 
-    // Guarantee the Guild row exists before the activity/analytics upserts, which
-    // have FK constraints on guildId. Runs once per guild per process (see above).
     if (!ensuredGuilds.has(message.guild.id)) {
       ensuredGuilds.add(message.guild.id);
       await ensureGuildExists(
@@ -267,7 +244,6 @@ const event: BotEvent = {
             cooldownMap.set(key, Date.now() + custom.cooldown * 1000);
           }
 
-          // Resolve member for display-name substitution, falling back to a fetch if not cached.
           const member = message.member ?? await message.guild.members.fetch(message.author.id).catch(swallow);
           const mentionedUser = message.mentions.users.first() ?? message.author;
           const substitute = (str: string) => str
@@ -305,7 +281,6 @@ const event: BotEvent = {
             await textChannel.send(payload).catch(swallow);
           }
 
-          // Fire-and-forget: failure to increment the counter should not affect the response.
           prisma.customCommand.update({ where: { id: custom.id }, data: { uses: { increment: 1 } } }).catch(swallow);
         }
       }

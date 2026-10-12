@@ -1,6 +1,4 @@
-/**
- * /resume command — resumes a paused track in the guild's music queue.
- */
+
 import {
   MessageFlags,
   SlashCommandBuilder,

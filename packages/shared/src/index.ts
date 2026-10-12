@@ -1,4 +1,4 @@
-/** Shared types, constants, and utilities used across the ArkenBot platform. */
+
 export * from './types/guild.js';
 export * from './types/user.js';
 export * from './types/moderation.js';

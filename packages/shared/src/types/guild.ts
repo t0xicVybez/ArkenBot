@@ -1,6 +1,5 @@
-/** Guild data models including settings, auto-mod, welcome configuration, and custom commands. */
 
-/** Core guild record stored in the database. */
+
 export interface GuildData {
   id: string;
   name: string;
@@ -12,14 +11,12 @@ export interface GuildData {
   settings?: GuildSettings;
 }
 
-/** Full guild configuration record. */
 export interface GuildSettings {
   guildId: string;
   prefix: string;
   locale: string;
   timezone: string;
 
-  // Feature toggles
   moderationEnabled: boolean;
   autoModEnabled: boolean;
   levelingEnabled: boolean;
@@ -29,11 +26,9 @@ export interface GuildSettings {
   reactionRolesEnabled: boolean;
   highlightsEnabled: boolean;
 
-  // Onboarding / setup wizard
   setupStep?: number;
   setupCompletedAt?: string | null;
 
-  // Channels
   logChannelId?: string;
   modLogChannelId?: string;
   welcomeChannelId?: string;
@@ -41,12 +36,10 @@ export interface GuildSettings {
   levelUpChannelId?: string;
   highlightsChannelId?: string | null;
 
-  // Roles
   muteRoleId?: string;
   autoRoleId?: string;
   memberRoleId?: string;
 
-  // Permission-failure alerts
   permissionAlertsEnabled?: boolean;
   permissionAlertRoleId?: string;
   appealsEnabled?: boolean;
@@ -57,7 +50,6 @@ export interface GuildSettings {
   banNetworkThreshold?: number;
   banNetworkChannelId?: string | null;
 
-  // Leveling
   xpPerMessage: number;
   xpCooldown: number;
   xpMultiplier: number;
@@ -72,7 +64,6 @@ export interface GuildSettings {
   prestigeEnabled: boolean;
   prestigeLevel: number;
 
-  // Embed accent colors (hex strings)
   accentColor: string;
   musicColor: string;
   levelUpColor: string;
@@ -86,11 +77,9 @@ export interface GuildSettings {
   loggingColor: string;
   announcementColor: string;
 
-  /** Addon-specific extended settings stored as a freeform map. */
   extended: Record<string, unknown>;
 }
 
-/** Auto-moderation configuration for a guild. */
 export interface AutoModConfig {
   guildId: string;
   antiSpamEnabled: boolean;
@@ -131,10 +120,8 @@ export interface AutoModConfig {
   exemptChannels: string[];
 }
 
-/** Action taken by auto-mod when a rule is triggered. */
 export type AutoModAction = 'delete' | 'warn' | 'mute' | 'kick' | 'ban';
 
-/** Welcome and leave message configuration for a guild. */
 export interface WelcomeConfig {
   guildId: string;
   welcomeEnabled: boolean;
@@ -149,7 +136,6 @@ export interface WelcomeConfig {
   leaveMessage: string;
 }
 
-/** A single reaction-role mapping. */
 export interface ReactionRole {
   id: string;
   guildId: string;
@@ -157,11 +143,10 @@ export interface ReactionRole {
   messageId: string;
   emoji: string;
   roleId: string;
-  /** `toggle` adds or removes the role; `add` only adds; `remove` only removes. */
+
   type: 'toggle' | 'add' | 'remove';
 }
 
-/** A guild-defined text command that responds with a fixed message. */
 export interface CustomCommand {
   id: string;
   guildId: string;

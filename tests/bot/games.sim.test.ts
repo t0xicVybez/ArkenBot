@@ -4,11 +4,10 @@ import {
   freshDeck, handValue, dealerPlay, blackjackPayout, type Card,
 } from '../../packages/bot/src/modules/economy/games.js';
 
-const BET = 1000;         // large enough that the 0.95 flooring doesn't distort the edge
-const N = 300_000;        // Monte-Carlo trials for even-money games
+const BET = 1000;
+const N = 300_000;
 const pct = (edge: number) => `${(edge * 100).toFixed(2)}%`;
 
-/** Measured house edge = −(mean net delta) / bet. Positive = house wins long-run. */
 function measureEdge(play: () => number, trials = N): number {
   let sum = 0;
   for (let i = 0; i < trials; i++) sum += play();
@@ -47,7 +46,7 @@ describe('house edges (measured over ' + N.toLocaleString() + ' trials)', () => 
   it('roulette straight-up number ≈ 2.70% (35:1)', () => {
     const edge = measureEdge(() => roulette(BET, '17').delta);
     console.log('roulette number house edge:', pct(edge));
-    expect(edge).toBeGreaterThan(-0.01);   // 35:1 → high variance, wider band
+    expect(edge).toBeGreaterThan(-0.01);
     expect(edge).toBeLessThan(0.06);
   });
 
@@ -67,11 +66,11 @@ describe('house edges (measured over ' + N.toLocaleString() + ' trials)', () => 
       const player: Card[] = [deck.pop()!, deck.pop()!];
       const dealer: Card[] = [deck.pop()!, deck.pop()!];
       if (handValue(player) !== 21) {
-        // simplified basic strategy (no double/split exists in this game)
+
         for (;;) {
           const pv = handValue(player);
           if (pv >= 17) break;
-          if (pv >= 12 && pv <= 16 && upValue(dealer[0]) >= 2 && upValue(dealer[0]) <= 6) break; // stand vs weak dealer
+          if (pv >= 12 && pv <= 16 && upValue(dealer[0]) >= 2 && upValue(dealer[0]) <= 6) break;
           player.push(deck.pop()!);
           if (handValue(player) >= 21) break;
         }
@@ -81,16 +80,16 @@ describe('house edges (measured over ' + N.toLocaleString() + ' trials)', () => 
     }
     const edge = -sum / (hands * BET);
     console.log('blackjack house edge (basic-ish play):', pct(edge));
-    expect(edge).toBeGreaterThan(-0.02);  // not player-favorable by much
-    expect(edge).toBeLessThan(0.08);      // not absurdly punishing
+    expect(edge).toBeGreaterThan(-0.02);
+    expect(edge).toBeLessThan(0.08);
   });
 }, 60_000);
 
 describe('game invariants', () => {
   it('handValue treats aces as 11 then 1 to avoid busting', () => {
-    expect(handValue([{ rank: 'A', suit: '♠' }, { rank: 'K', suit: '♥' }])).toBe(21); // blackjack
-    expect(handValue([{ rank: 'A', suit: '♠' }, { rank: 'A', suit: '♥' }])).toBe(12); // 11 + 1
-    expect(handValue([{ rank: 'A', suit: '♠' }, { rank: '9', suit: '♥' }, { rank: '9', suit: '♦' }])).toBe(19); // ace demotes
+    expect(handValue([{ rank: 'A', suit: '♠' }, { rank: 'K', suit: '♥' }])).toBe(21);
+    expect(handValue([{ rank: 'A', suit: '♠' }, { rank: 'A', suit: '♥' }])).toBe(12);
+    expect(handValue([{ rank: 'A', suit: '♠' }, { rank: '9', suit: '♥' }, { rank: '9', suit: '♦' }])).toBe(19);
   });
   it('a fresh deck is 52 unique cards', () => {
     const d = freshDeck();

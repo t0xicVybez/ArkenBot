@@ -1,4 +1,4 @@
-/** /trade — offer coins and/or an owned item to another member, who must accept. */
+
 import {
   SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle,
   type ChatInputCommandInteraction, type ButtonInteraction, type AutocompleteInteraction,
@@ -45,7 +45,6 @@ const command: BotCommand = {
     if (recipient.bot) { await interaction.editReply({ embeds: [errorEmbed(t('economy.errorTitle', loc), t('economy.noBots', loc))] }); return; }
     if (coins <= 0 && !itemId) { await interaction.editReply({ embeds: [errorEmbed(t('economy.errorTitle', loc), t('trade.empty', loc))] }); return; }
 
-    // Validate the sender can back the offer right now (re-checked on accept).
     const bal = await EconomyModule.getBalance(interaction.guild.id, interaction.user.id, cfg.startingBalance);
     if (coins > bal.wallet) { await interaction.editReply({ embeds: [errorEmbed(t('economy.errorTitle', loc), t('economy.insufficientWallet', loc))] }); return; }
     let itemName: string | null = null;
@@ -86,7 +85,6 @@ const command: BotCommand = {
       return;
     }
 
-    // Accept — re-validate and move atomically.
     const cfg = await EconomyModule.getConfigOrDefault(offer.guildId);
     try {
       await prisma.$transaction(async (tx) => {

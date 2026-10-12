@@ -1,19 +1,11 @@
-/**
- * Applies configurable XP decay to inactive users. Guilds enable decay and set
- * the inactivity threshold and percentage via guild settings. The decay run is
- * triggered once per day by `BackgroundJobs`.
- */
+
 
 import { prisma } from '../../database.js';
 import { levelFromXp } from '@arkenbot/shared';
 import { logger } from '../../logger.js';
 
 export class XPDecayModule {
-  /**
-   * Iterates every guild with XP decay enabled and applies the configured
-   * percentage reduction to users who have not earned XP within the inactivity
-   * window. Called once per day by `BackgroundJobs`.
-   */
+
   static async runDecay(): Promise<void> {
     try {
       const guilds = await prisma.guildSettings.findMany({
@@ -37,11 +29,6 @@ export class XPDecayModule {
     }
   }
 
-  /**
-   * Applies XP decay to all users in a guild who have not earned XP since the
-   * cutoff date. XP is floored at 0 and the stored level is recalculated to
-   * stay consistent with the new XP value.
-   */
   private static async decayGuild(
     guildId: string,
     inactiveDays: number,

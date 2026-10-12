@@ -1,8 +1,4 @@
-/**
- * Implements the counting game: validates messages in the designated counting
- * channel, supports simple math expressions, enforces same-user and consecutive-
- * number rules, and optionally resets the count on failure.
- */
+
 
 import type { Message } from 'discord.js';
 import { prisma } from '../../database.js';
@@ -12,18 +8,10 @@ import { t, resolveUserLocale } from '../../i18n/index.js';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = prisma as any;
 
-/**
- * Evaluates a simple math expression containing only digits and the operators
- * `+ - * / ( ) .`. Returns `NaN` for any expression that contains other
- * characters or that does not produce a finite integer.
- *
- * The input is validated against a strict allowlist before evaluation to prevent
- * arbitrary code execution.
- */
 function safeEval(expr: string): number {
   if (!/^[\d\s+\-*/.()]+$/.test(expr)) return NaN;
   try {
-     
+
     const result = Function('"use strict"; return (' + expr + ')')();
     return typeof result === 'number' && isFinite(result) ? Math.floor(result) : NaN;
   } catch {
@@ -32,11 +20,7 @@ function safeEval(expr: string): number {
 }
 
 export class CountingModule {
-  /**
-   * Validates a message posted in the guild's counting channel. Reacts with ✅
-   * on a correct count, ❌ and optionally resets on an incorrect count or a
-   * same-user repeat, and celebrates with 🎉 every 100 counts.
-   */
+
   static async check(message: Message): Promise<void> {
     if (!message.guild || message.author.bot) return;
     if (!message.channel.isTextBased()) return;
@@ -48,8 +32,7 @@ export class CountingModule {
 
     const expected = (state.currentCount ?? 0) + 1;
     const raw = message.content.trim();
-    // Silently ignore non-numeric messages so the channel can still be used for
-    // bot output, reactions, etc. without triggering false failures.
+
     if (!/^[\d\s+\-*/.()]+$/.test(raw)) return;
     const num = safeEval(raw);
     const allowSameUser = state.allowSameUser === true;
@@ -98,7 +81,6 @@ export class CountingModule {
       },
     }).catch((err: unknown) => logger.error({ err }, 'CountingModule: failed to update state'));
 
-    // Milestone every 100 counts gets a celebration reaction.
     await message.react(num % 100 === 0 ? '🎉' : '✅').catch(swallow);
   }
 }

@@ -9,8 +9,6 @@ import { useState, useEffect } from 'react';
 import type { AddonSettingSchema } from '@arkenbot/shared';
 import { useTranslations } from 'next-intl';
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
 interface AddonRecord {
   id: string;
   name: string;
@@ -24,8 +22,6 @@ interface AddonRecord {
 
 interface Channel { id: string; name: string; type: number }
 interface Role    { id: string; name: string; color: number }
-
-// ─── Settings Modal ───────────────────────────────────────────────────────────
 
 function AddonSettingsModal({
   addon,
@@ -41,13 +37,11 @@ function AddonSettingsModal({
   const [values, setValues] = useState<Record<string, unknown>>({});
   const [loaded, setLoaded] = useState(false);
 
-  // Fetch current saved settings
   const { data: settingsRes } = useQuery({
     queryKey: ['addon-settings', guildId, addon.id],
     queryFn: () => addonsApi.getSettings(guildId, addon.id),
   });
 
-  // Fetch channels + roles only if the schema needs them
   const needsChannel = schema.some((s) => s.type === 'channel');
   const needsRole    = schema.some((s) => s.type === 'role');
 
@@ -65,7 +59,6 @@ function AddonSettingsModal({
   const channels = (channelsRes?.data?.data ?? []) as Channel[];
   const roles    = (rolesRes?.data?.data    ?? []) as Role[];
 
-  // Populate form once settings arrive, seeding defaults for missing keys
   useEffect(() => {
     if (settingsRes && !loaded) {
       const saved = (settingsRes.data?.data ?? {}) as Record<string, unknown>;
@@ -117,7 +110,7 @@ function AddonSettingsModal({
         className="card w-full max-w-lg max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
+        {}
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-white font-semibold text-lg">{addon.displayName}</h2>
@@ -128,7 +121,7 @@ function AddonSettingsModal({
           </button>
         </div>
 
-        {/* Fields */}
+        {}
         <div className="space-y-4">
           {schema.map((field) => (
             <div key={field.key}>
@@ -240,7 +233,7 @@ function AddonSettingsModal({
           ))}
         </div>
 
-        {/* Footer */}
+        {}
         <div className="flex gap-3 mt-6 pt-4 border-t border-(--border-subtle)">
           <button
             onClick={() => saveMutation.mutate()}
@@ -255,8 +248,6 @@ function AddonSettingsModal({
     </div>
   );
 }
-
-// ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function AddonsPage() {
   const { guildId } = useParams() as { guildId: string };

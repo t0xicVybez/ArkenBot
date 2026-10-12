@@ -1,15 +1,9 @@
-/**
- * REST routes for the Applications addon dashboard.
- * Forms and submissions are stored in the AddonData table (KV per guild).
- * The addon name is 'applications'; keys are 'forms' and 'submissions'.
- */
+
 import type { FastifyInstance } from 'fastify';
 import { randomUUID } from 'crypto';
 import { requireGuildAdmin } from '../middleware/auth.js';
 import { prisma } from '../database.js';
 import { pub } from '../redis.js';
-
-// ─── Local types ──────────────────────────────────────────────────────────────
 
 interface FormField {
   id: string;
@@ -44,8 +38,6 @@ interface ApplicationSubmission {
   updatedAt: string;
 }
 
-// ─── AddonData helpers ────────────────────────────────────────────────────────
-
 const ADDON_NAME = 'applications';
 let _addonDbId: string | null = null;
 
@@ -74,19 +66,13 @@ async function writeData<T>(guildId: string, key: string, value: T): Promise<voi
   });
 }
 
-// ─── Routes ───────────────────────────────────────────────────────────────────
-
 export async function applicationRoutes(server: FastifyInstance): Promise<void> {
-
-  // ── Forms: list ───────────────────────────────────────────────────────────
 
   server.get('/guilds/:guildId/applications/forms', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const forms = (await readData<ApplicationForm[]>(guildId, 'forms')) ?? [];
     return reply.send({ success: true, data: forms });
   });
-
-  // ── Forms: create ─────────────────────────────────────────────────────────
 
   server.post('/guilds/:guildId/applications/forms', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
@@ -117,8 +103,6 @@ export async function applicationRoutes(server: FastifyInstance): Promise<void> 
     return reply.code(201).send({ success: true, data: form });
   });
 
-  // ── Forms: update ─────────────────────────────────────────────────────────
-
   server.patch('/guilds/:guildId/applications/forms/:formId', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, formId } = request.params as { guildId: string; formId: string };
     const body = request.body as Partial<Pick<ApplicationForm, 'name' | 'description' | 'enabled' | 'acceptRoleId'>>;
@@ -136,8 +120,6 @@ export async function applicationRoutes(server: FastifyInstance): Promise<void> 
     return reply.send({ success: true, data: forms[idx] });
   });
 
-  // ── Forms: delete ─────────────────────────────────────────────────────────
-
   server.delete('/guilds/:guildId/applications/forms/:formId', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, formId } = request.params as { guildId: string; formId: string };
 
@@ -148,8 +130,6 @@ export async function applicationRoutes(server: FastifyInstance): Promise<void> 
     await writeData(guildId, 'forms', filtered);
     return reply.send({ success: true });
   });
-
-  // ── Forms: add field ──────────────────────────────────────────────────────
 
   server.post('/guilds/:guildId/applications/forms/:formId/fields', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, formId } = request.params as { guildId: string; formId: string };
@@ -174,8 +154,6 @@ export async function applicationRoutes(server: FastifyInstance): Promise<void> 
     return reply.code(201).send({ success: true, data: field });
   });
 
-  // ── Forms: remove field ───────────────────────────────────────────────────
-
   server.delete('/guilds/:guildId/applications/forms/:formId/fields/:fieldId', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, formId, fieldId } = request.params as { guildId: string; formId: string; fieldId: string };
 
@@ -191,8 +169,6 @@ export async function applicationRoutes(server: FastifyInstance): Promise<void> 
     return reply.send({ success: true });
   });
 
-  // ── Submissions: list ─────────────────────────────────────────────────────
-
   server.get('/guilds/:guildId/applications/submissions', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const query = request.query as { formId?: string; status?: string };
@@ -206,8 +182,6 @@ export async function applicationRoutes(server: FastifyInstance): Promise<void> 
 
     return reply.send({ success: true, data: submissions });
   });
-
-  // ── Submissions: review (accept / deny) ───────────────────────────────────
 
   server.post('/guilds/:guildId/applications/submissions/:submissionId/review', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, submissionId } = request.params as { guildId: string; submissionId: string };
@@ -236,7 +210,6 @@ export async function applicationRoutes(server: FastifyInstance): Promise<void> 
 
     await writeData(guildId, 'submissions', submissions);
 
-    // Notify bot to assign roles / send DMs
     pub.publish('applications:review', JSON.stringify({
       guildId,
       submissionId,

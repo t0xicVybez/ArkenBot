@@ -1,8 +1,4 @@
-/**
- * /help command — generates a paginated, permission-aware command reference for
- * the invoking member. Pages are built at runtime so disabled commands, addon
- * commands, and role-restricted commands are correctly filtered per guild.
- */
+
 import {
   SlashCommandBuilder,
   EmbedBuilder,
@@ -32,30 +28,15 @@ const CATEGORY_META: Record<string, { emoji: string; labelKey: string }> = {
 interface CmdOption { type: number; name: string; description: string; options?: CmdOption[] }
 interface CmdJSON   { name: string; description: string; options?: CmdOption[] }
 
-// Discord option type constants — used to detect subcommands when building per-category pages.
 const SUB_COMMAND = 1;
 const SUB_COMMAND_GROUP = 2;
 
-/**
- * Returns display metadata (emoji and label) for a command category string.
- * Addon categories (prefixed with `addon:`) receive a generic puzzle-piece emoji
- * and a title-cased label derived from the addon name.
- */
 function getCategoryMeta(cat: string, loc: string): { emoji: string; label: string } {
   if (CATEGORY_META[cat]) return { emoji: CATEGORY_META[cat]!.emoji, label: t(CATEGORY_META[cat]!.labelKey, loc) };
   const label = cat.replace(/^addon:/i, '').replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
   return { emoji: '🧩', label };
 }
 
-/**
- * Builds the paginated help embed list for a guild member.
- * Filters commands by guild-level disables, owner-only flags, required Discord
- * permissions, addon enablement, and role-based permission rules.
- *
- * @param client  - The active bot client, used to iterate registered commands.
- * @param member  - The guild member requesting help, or null in DMs.
- * @param guildId - The guild ID for permission lookups, or null in DMs.
- */
 async function buildPages(
   client: BotClient,
   member: GuildMember | null,
@@ -75,8 +56,6 @@ async function buildPages(
 
     if (disabledSet.has(name)) continue;
 
-    // Skip right-click (context-menu) commands — they aren't typeable and
-    // duplicate their slash equivalents; users find them by right-clicking.
     const cmdType = (cmd.data as { toJSON?: () => { type?: number } }).toJSON?.().type;
     if (cmdType === 2 || cmdType === 3) continue;
 
@@ -96,7 +75,6 @@ async function buildPages(
       if (!enabled) continue;
     }
 
-    // Administrators bypass all role-based command restrictions.
     if (!member?.permissions.has('Administrator')) {
       const cmdRolePerms = rolePerms.filter((p) => p.commandName === name);
       if (cmdRolePerms.length > 0) {
@@ -169,8 +147,6 @@ async function buildPages(
         (o) => o.type === SUB_COMMAND || o.type === SUB_COMMAND_GROUP,
       );
 
-      // Fallback + cap: an empty description or an over-long value makes
-      // EmbedBuilder.addFields throw ("Received one or more errors").
       let value = json.description?.trim() || '—';
       if (subs.length > 0) {
         value += '\n> ' + subs.map((s) => `\`${s.name}\``).join('  ');
@@ -190,10 +166,6 @@ async function buildPages(
   return pages;
 }
 
-/**
- * Constructs the navigation button row for the help paginator.
- * Previous and next buttons are disabled at the boundary pages.
- */
 function makeRow(page: number, total: number, loc: string) {
   return new ActionRowBuilder<ButtonBuilder>().addComponents(
     new ButtonBuilder()

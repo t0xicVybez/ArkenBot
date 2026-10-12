@@ -1,17 +1,10 @@
-/**
- * /remind command — stores a reminder in the database for delivery by the
- * background job scheduler. Maximum duration is 28 days.
- */
+
 import { SlashCommandBuilder, type ChatInputCommandInteraction } from 'discord.js';
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
 import { prisma } from '../../database.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 
-/**
- * Parses a short duration string (e.g. `10m`, `2h`, `1d`) into milliseconds.
- * Returns null if the format is unrecognised.
- */
 function parseDuration(str: string): number | null {
   const match = str.match(/^(\d+)(s|m|h|d|w)$/i);
   if (!match) return null;

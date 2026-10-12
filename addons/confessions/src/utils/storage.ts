@@ -4,7 +4,7 @@ import { DEFAULT_CONFIG } from '../types.js';
 
 const KEY_CONFIG = 'config';
 const KEY_RECORDS = 'records';
-/** Keep the most recent N records for staff audit (whois); older ones are pruned. */
+
 const MAX_RECORDS = 300;
 
 export async function getConfig(storage: AddonStorage, guildId: string): Promise<ConfessionConfig> {
@@ -16,7 +16,6 @@ export async function saveConfig(storage: AddonStorage, guildId: string, config:
   await storage.set(KEY_CONFIG, config, guildId);
 }
 
-/** Atomically bump and persist the confession counter, returning the new number. */
 export async function nextNumber(storage: AddonStorage, guildId: string): Promise<{ number: number; config: ConfessionConfig }> {
   const config = await getConfig(storage, guildId);
   config.counter += 1;
@@ -41,7 +40,7 @@ export async function saveRecord(storage: AddonStorage, guildId: string, record:
   const idx = records.findIndex((r) => r.id === record.id);
   if (idx >= 0) records[idx] = record;
   else records.push(record);
-  // Prune oldest by keeping the last MAX_RECORDS entries.
+
   if (records.length > MAX_RECORDS) records = records.slice(records.length - MAX_RECORDS);
   await storage.set(KEY_RECORDS, records, guildId);
 }

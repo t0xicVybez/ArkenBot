@@ -1,6 +1,4 @@
-/**
- * /report command — lets any member report another user to staff.
- */
+
 import {
   SlashCommandBuilder,
   EmbedBuilder,
@@ -244,7 +242,6 @@ const command: BotCommand = {
       createdAt: updatedReport.createdAt,
     }, loc, true);
 
-    // ModalSubmitInteraction has no .update(); fetch the original report message and edit it
     if (updatedReport.messageId && updatedReport.reviewChannelId && interaction.guild) {
       const reportChannel = interaction.guild.channels.cache.get(updatedReport.reviewChannelId);
       if (reportChannel?.isTextBased() && 'messages' in reportChannel) {

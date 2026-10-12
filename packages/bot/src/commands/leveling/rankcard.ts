@@ -1,7 +1,4 @@
-/**
- * /rankcard command — allows members to personalise their rank card with a
- * custom accent colour or background image, and preview the result.
- */
+
 import {
   SlashCommandBuilder,
   AttachmentBuilder,

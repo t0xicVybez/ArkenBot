@@ -1,12 +1,4 @@
-/**
- * Reads and parses the running services' PM2 log files for the staff dashboard.
- *
- * PM2 writes each service's stdout/stderr to `~/.pm2/logs/<service>-<stream>.log`.
- * The bot and API log Pino JSON (one object per line); the web (Next.js) logs
- * plain text. This tails those files, normalises both formats into a common
- * shape, and enriches anything that looks like an error with a friendly
- * classification via {@link classifyError}.
- */
+
 import { open, stat } from 'fs/promises';
 import { homedir } from 'os';
 import { join } from 'path';
@@ -15,41 +7,37 @@ import { classifyError, type ClassifiedError } from '@arkenbot/shared';
 export const LOG_SERVICES = ['bot', 'api', 'web'] as const;
 export type LogService = (typeof LOG_SERVICES)[number];
 
-/** PM2 file suffix per stream. */
 const STREAM_SUFFIX: Record<'out' | 'err', string> = { out: 'out', err: 'error' };
 
-/** Pino numeric levels → names. */
 const PINO_LEVELS: Record<number, LogLevel> = { 10: 'trace', 20: 'debug', 30: 'info', 40: 'warn', 50: 'error', 60: 'fatal' };
 
 export type LogLevel = 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal';
 const LEVEL_RANK: Record<LogLevel, number> = { trace: 10, debug: 20, info: 30, warn: 40, error: 50, fatal: 60 };
 
-/** How much of each file's tail to scan (bytes). */
 const MAX_TAIL_BYTES = 512 * 1024;
 
 export interface ServiceLogEntry {
   service: LogService;
   stream: 'out' | 'err';
   level: LogLevel;
-  /** Epoch ms. Pino lines carry their own time; plain lines use the file mtime. */
+
   time: number;
   message: string;
-  /** The Discord guild the entry relates to, when it can be determined. */
+
   guildId?: string;
-  /** Resolved guild name (from the database), when available. */
+
   guildName?: string;
-  /** The Discord channel the entry relates to, when it can be determined. */
+
   channelId?: string;
-  /** Resolved channel name (from Discord), when available. */
+
   channelName?: string;
-  /** Present for warn/error lines: the friendly classification. */
+
   error?: ClassifiedError;
-  /** Raw error type and stack, when available, for the detail view. */
+
   errorType?: string;
   stack?: string;
 }
 
-/** A Discord snowflake as it appears in a URL path or free text. */
 const SNOWFLAKE = '(\\d{17,20})';
 
 function firstMatch(text: string | undefined, re: RegExp): string | undefined {
@@ -61,11 +49,6 @@ function asString(v: unknown): string | undefined {
   return typeof v === 'string' && v ? v : undefined;
 }
 
-/**
- * Best-effort extraction of the guild and channel an entry relates to, from
- * (in order) explicit Pino fields, the failed request URL on a Discord error,
- * the Fastify request URL, and finally the message text.
- */
 function extractContext(
   obj: Record<string, unknown>,
   rawErr: { url?: string } | undefined,
@@ -93,20 +76,15 @@ function extractContext(
 export interface ServiceLogQuery {
   service?: LogService | 'all';
   stream?: 'out' | 'err' | 'all';
-  /** Minimum level to include. */
+
   minLevel?: LogLevel;
-  /** Case-insensitive substring filter over the message. */
+
   search?: string;
   limit?: number;
 }
 
 const logDir = process.env.PM2_LOG_DIR || join(homedir(), '.pm2', 'logs');
 
-/**
- * Reads the last `maxBytes` of a file as UTF-8. `truncated` is true when the read
- * started mid-file, which means the first line is a partial fragment the caller
- * should discard.
- */
 async function tail(path: string, maxBytes: number): Promise<{ text: string; mtimeMs: number; truncated: boolean }> {
   try {
     const st = await stat(path);
@@ -126,12 +104,10 @@ async function tail(path: string, maxBytes: number): Promise<{ text: string; mti
   }
 }
 
-/** Parses one line from a service's log into a normalised entry, or null to skip. */
 function parseLine(line: string, service: LogService, stream: 'out' | 'err', mtimeMs: number): ServiceLogEntry | null {
   const trimmed = line.trim();
   if (!trimmed) return null;
 
-  // Pino JSON (bot + api).
   if (trimmed.startsWith('{')) {
     try {
       const obj = JSON.parse(trimmed) as Record<string, unknown>;
@@ -156,11 +132,10 @@ function parseLine(line: string, service: LogService, stream: 'out' | 'err', mti
         return entry;
       }
     } catch {
-      // fall through to plain-text handling
+
     }
   }
 
-  // Plain text (web / Next.js, or non-JSON stderr warnings). Infer the level.
   const level: LogLevel = /(^|\s)(error|✖|⨯|uncaught|unhandled)/i.test(trimmed)
     ? 'error'
     : /(^|\s)(warn|deprecat)/i.test(trimmed)
@@ -171,15 +146,8 @@ function parseLine(line: string, service: LogService, stream: 'out' | 'err', mti
   return entry;
 }
 
-/**
- * Tails and parses the selected service log files, returning the most recent
- * entries first after applying the level, stream, and search filters.
- */
 export async function readServiceLogs(query: ServiceLogQuery = {}): Promise<ServiceLogEntry[]> {
-  // Resolve the requested service(s) back to our own constants before they reach
-  // a filename. Callers are already expected to validate, but re-deriving the
-  // value from LOG_SERVICES here means the string interpolated into the log path
-  // is provably one of 'bot' | 'api' | 'web' and never caller-supplied input.
+
   const requested = query.service && query.service !== 'all' ? [query.service] : [...LOG_SERVICES];
   const services = requested
     .map((name) => LOG_SERVICES.find((allowed) => allowed === name))
@@ -196,7 +164,7 @@ export async function readServiceLogs(query: ServiceLogQuery = {}): Promise<Serv
       const { text, mtimeMs, truncated } = await tail(join(logDir, `${service}-${STREAM_SUFFIX[stream]}.log`), MAX_TAIL_BYTES);
       if (!text) continue;
       const lines = text.split('\n');
-      if (truncated) lines.shift(); // drop the partial first line
+      if (truncated) lines.shift();
       for (const line of lines) {
         const entry = parseLine(line, service, stream, mtimeMs);
         if (!entry) continue;

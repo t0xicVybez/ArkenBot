@@ -16,7 +16,6 @@ import { buildPanelEmbed, buildPanelComponents } from './utils/embeds.js';
 import type { TicketNote } from './types.js';
 import { locales } from './locales.js';
 
-// Auto-close / SLA check interval (every 30 minutes)
 const AUTO_CLOSE_INTERVAL_MS = 30 * 60 * 1000;
 let autoCloseTimer: ReturnType<typeof setInterval> | null = null;
 let redisSub: Redis | null = null;
@@ -42,7 +41,6 @@ export default defineAddon({
       handler: async (ctx: AddonContext, ...args: unknown[]): Promise<void> => {
         const interaction = args[0] as Interaction;
 
-        // Route autocomplete to the ticket command's autocomplete handler
         if (interaction.isAutocomplete()) {
           if (interaction.commandName === 'ticket' && ticketCommand.autocomplete) {
             await ticketCommand.autocomplete(interaction as AutocompleteInteraction, ctx);
@@ -83,8 +81,6 @@ export default defineAddon({
     },
   },
 });
-
-// ─── Panel Auto-Sync (Redis pub/sub) ─────────────────────────────────────────
 
 async function startPanelSyncListener(ctx: AddonContext): Promise<void> {
   try {
@@ -154,7 +150,6 @@ async function handlePortalReply(
 
   const now = new Date().toISOString();
 
-  // Append to transcript storage (bot messages are excluded from messageCreate, so do it manually)
   await appendMessage(ctx.storage, channelId, {
     authorId: 'portal',
     authorTag: `${authorTag} (Portal)`,
@@ -163,7 +158,6 @@ async function handlePortalReply(
     timestamp: now,
   });
 
-  // Staff reply → set to waiting (waiting on user response)
   const wasWaiting = ticket.status === 'waiting';
   if (!wasWaiting) {
     ticket.status = 'waiting';
@@ -200,8 +194,6 @@ async function syncPanelMessage(ctx: AddonContext, guildId: string, panelId: str
   }
 }
 
-// ─── Auto-Close / SLA Loop ────────────────────────────────────────────────────
-
 function startAutoCloseLoop(ctx: AddonContext): void {
   autoCloseTimer = setInterval(async () => {
     try {
@@ -222,12 +214,11 @@ async function runAutoCloseAndSLA(ctx: AddonContext): Promise<void> {
     const tickets = await getTickets(ctx.storage, guild.id);
     const config = await getConfig(ctx.storage, guild.id);
 
-    // ── Weekly stats digest ──
     if (config.weeklyDigestChannelId) {
       const WEEK = 7 * 24 * 60 * 60 * 1000;
       const last = await ctx.storage.get<string>('digest:last', guild.id);
       if (!last) {
-        // Seed the marker on first sight so the first digest arrives a week out.
+
         await ctx.storage.set('digest:last', new Date(now).toISOString(), guild.id);
       } else if (now - new Date(last).getTime() >= WEEK) {
         await ctx.storage.set('digest:last', new Date(now).toISOString(), guild.id);
@@ -247,7 +238,6 @@ async function runAutoCloseAndSLA(ctx: AddonContext): Promise<void> {
     for (const ticket of tickets) {
       if (ticket.status === 'closed') continue;
 
-      // ── Snooze reminder (fires for any open status) ──
       if (ticket.reminderAt && new Date(ticket.reminderAt).getTime() <= now) {
         const by = ticket.reminderBy;
         const note = ticket.reminderNote;
@@ -261,13 +251,12 @@ async function runAutoCloseAndSLA(ctx: AddonContext): Promise<void> {
         }
       }
 
-      if (ticket.status === 'waiting') continue; // waiting tickets don't auto-close or accrue SLA
+      if (ticket.status === 'waiting') continue;
 
       const panel = panels.find((p) => p.id === ticket.panelId);
       const lastActivity = new Date(ticket.lastActivity).getTime();
       const idleMs = now - lastActivity;
 
-      // ── Pre-close inactivity nudge ────────────────────────────────
       if (panel && panel.autoCloseHours > 0 && config.nudgeBeforeCloseHours && config.nudgeBeforeCloseHours > 0 && !ticket.nudgedAt) {
         const closeMs = panel.autoCloseHours * 60 * 60 * 1000;
         const nudgeAtMs = (panel.autoCloseHours - config.nudgeBeforeCloseHours) * 60 * 60 * 1000;
@@ -284,7 +273,6 @@ async function runAutoCloseAndSLA(ctx: AddonContext): Promise<void> {
         }
       }
 
-      // ── Auto-close ────────────────────────────────────────────────
       if (panel && panel.autoCloseHours > 0) {
         const thresholdMs = panel.autoCloseHours * 60 * 60 * 1000;
         if (idleMs >= thresholdMs) {
@@ -308,16 +296,14 @@ async function runAutoCloseAndSLA(ctx: AddonContext): Promise<void> {
           } catch (err) {
             ctx.logger.error(`Failed to auto-close ticket #${ticket.number}`, String(err));
           }
-          continue; // skip SLA warning for auto-closed ticket
+          continue;
         }
       }
 
-      // ── Business hours: pause SLA outside support hours ───────────
       if (config.businessHours?.enabled && config.businessHours.pauseSla && !isWithinBusinessHours(config.businessHours, now)) {
-        continue; // SLA timers don't advance outside business hours
+        continue;
       }
 
-      // ── SLA Warning (with optional auto-escalation) ───────────────
       if (config.slaLevels && config.slaLevels.length > 0 && !ticket.firstResponseAt) {
         const openMs = now - new Date(ticket.createdAt).getTime();
         for (const level of config.slaLevels.sort((a, b) => a.hours - b.hours)) {
@@ -325,7 +311,7 @@ async function runAutoCloseAndSLA(ctx: AddonContext): Promise<void> {
           const warnTag = `sla-level-${level.hours}h`;
           if (openMs >= slaMs && !ticket.tags.includes(warnTag)) {
             ticket.tags.push(warnTag);
-            // Auto-escalation: bump priority on breach.
+
             if (level.escalatePriority) ticket.priority = level.escalatePriority;
             await saveTicket(ctx.storage, guild.id, ticket);
             const channel = ctx.client.channels.cache.get(ticket.channelId) as import('discord.js').TextChannel | undefined;

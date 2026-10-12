@@ -1,7 +1,4 @@
-/**
- * /userinfo command — displays account and server membership details for a user,
- * including roles, join date, account creation date, and Nitro boost status.
- */
+
 import {
   MessageFlags,
   SlashCommandBuilder,

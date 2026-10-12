@@ -1,8 +1,4 @@
-/**
- * EventsModule — scheduled events with RSVP buttons.
- * Members RSVP Going / Maybe / Can't; "Going" optionally grants a role. A
- * reminder is sent to the event channel shortly before it starts.
- */
+
 import {
   EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, PermissionFlagsBits,
   type ButtonInteraction, type Guild, type TextChannel,
@@ -49,7 +45,6 @@ export class EventsModule {
     )];
   }
 
-  /** `event:rsvp:<eventId>:<status>` — record/toggle an RSVP and update the message. */
   static async handleRsvp(interaction: ButtonInteraction): Promise<void> {
     const [, , eventId, status] = interaction.customId.split(':');
     const loc = await resolveUserLocale({ user: interaction.user, guildId: interaction.guildId, guildLocale: interaction.guild?.preferredLocale ?? null });
@@ -58,11 +53,10 @@ export class EventsModule {
     if (!event || event.cancelled) { await interaction.reply({ content: t('events.gone', loc), ephemeral: true }).catch(() => {}); return; }
 
     const existing = await prisma.eventRsvp.findUnique({ where: { eventId_userId: { eventId, userId: interaction.user.id } } });
-    // Clicking your current status again clears the RSVP.
+
     if (existing?.status === status) await prisma.eventRsvp.delete({ where: { id: existing.id } });
     else await prisma.eventRsvp.upsert({ where: { eventId_userId: { eventId, userId: interaction.user.id } }, create: { eventId, userId: interaction.user.id, status }, update: { status } });
 
-    // Sync the "going" role.
     if (event.roleId && interaction.guild) {
       const wantRole = existing?.status !== status && status === 'going';
       const member = await interaction.guild.members.fetch(interaction.user.id).catch(() => null);
@@ -79,14 +73,12 @@ export class EventsModule {
     await interaction.update({ embeds: [this.buildEmbed(event, rsvps, staffLoc)], components: this.components(eventId, staffLoc) }).catch(() => {});
   }
 
-  /** Post the event message and store its id. */
   static async publish(guild: Guild, channel: TextChannel, event: ScheduledEvent): Promise<void> {
     const loc = await resolveUserLocale({ user: { id: '' }, guildId: guild.id, guildLocale: guild.preferredLocale });
     const msg = await channel.send({ embeds: [this.buildEmbed(event, [], loc)], components: this.components(event.id, loc) }).catch(() => null);
     if (msg) await prisma.scheduledEvent.update({ where: { id: event.id }, data: { messageId: msg.id } });
   }
 
-  /** Remind "going" RSVPs shortly before events start. Invoked each minute. */
   static async runReminders(client: BotClient): Promise<void> {
     const now = Date.now();
     const soon = new Date(now + 15 * 60 * 1000);

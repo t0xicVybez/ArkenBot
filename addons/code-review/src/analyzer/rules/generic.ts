@@ -1,13 +1,6 @@
-/** Generic linting rules applied to all languages regardless of type. */
+
 import type { Issue } from '../types.js';
 
-/**
- * Checks for common formatting issues that apply to any text file.
- * Currently detects trailing whitespace on each line and a missing trailing newline.
- *
- * @param code - The full source code string.
- * @returns An array of issues found.
- */
 export function analyzeGeneric(code: string): Issue[] {
   const issues: Issue[] = [];
   const lines = code.split('\n');

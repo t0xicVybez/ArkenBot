@@ -11,7 +11,6 @@ import type { Ticket } from '../../addons/tickets/src/types.js';
 const GUILD = '222222222222222222';
 const now = '2026-10-12T00:00:00.000Z';
 
-/** A ticket with every field populated — the worst case for the column/data split. */
 function richTicket(over: Partial<Ticket> = {}): Ticket {
   return {
     id: over.id ?? 'rt-' + Math.random().toString(36).slice(2),
@@ -113,10 +112,10 @@ describe.skipIf(!TEST_DB_URL)('ticketsRepo (integration, arkenbot_test)', () => 
     const storage = makeStorage(addonId);
     const t = richTicket({ number: 42, channelId: 'dw-chan' });
     await saveTicket(storage, GUILD, t);
-    // reads (via storage facade) come from the table, full-fidelity
+
     expect((await getTickets(storage, GUILD)).find((x) => x.id === t.id)).toEqual(t);
     expect(await repoGetById(t.id)).toEqual(t);
-    // the old JSON ticket blob is NOT written
+
     expect(await storage.get('tickets', GUILD)).toBeNull();
   });
 
@@ -126,7 +125,7 @@ describe.skipIf(!TEST_DB_URL)('ticketsRepo (integration, arkenbot_test)', () => 
     expect(n).toBe(3);
     const rows = await repoGetTickets(GUILD);
     expect(rows).toHaveLength(3);
-    // parity: backfilled rows equal the source blob (order-independent)
+
     const byId = new Map(rows.map((r) => [r.id, r]));
     for (const t of blob) expect(byId.get(t.id)).toEqual(t);
   });

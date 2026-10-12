@@ -48,7 +48,6 @@ const command: BotCommand = {
       return;
     }
 
-    // set-channel and disable require Manage Guild
     if (!interaction.memberPermissions?.has(PermissionFlagsBits.ManageGuild)) {
       await interaction.reply({
         embeds: [errorEmbed(t('cmd.analytics.missingPermTitle', loc), t('cmd.analytics.missingPerm', loc))],

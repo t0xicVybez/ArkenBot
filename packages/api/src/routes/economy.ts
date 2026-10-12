@@ -40,19 +40,18 @@ const DEFAULTS = {
 };
 
 export async function economyRoutes(server: FastifyInstance): Promise<void> {
-  // GET config
+
   server.get('/guilds/:guildId/economy/config', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const config = await prisma.economyConfig.findUnique({ where: { guildId } });
     return reply.send({ success: true, data: config ?? { guildId, ...DEFAULTS } });
   });
 
-  // PATCH config
   server.patch('/guilds/:guildId/economy/config', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const body = parse(ConfigSchema, request.body, reply);
     if (!body) return;
-    // Keep workMin ≤ workMax so /work never picks an empty range.
+
     if (body.workMin !== undefined && body.workMax !== undefined && body.workMin > body.workMax) {
       return reply.code(400).send({ success: false, error: 'workMin cannot exceed workMax' });
     }
@@ -64,14 +63,12 @@ export async function economyRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: config });
   });
 
-  // GET shop items
   server.get('/guilds/:guildId/economy/shop', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const items = await prisma.economyShopItem.findMany({ where: { guildId }, orderBy: { createdAt: 'desc' } });
     return reply.send({ success: true, data: items });
   });
 
-  // POST shop item
   server.post('/guilds/:guildId/economy/shop', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const body = parse(z.object({
@@ -89,7 +86,6 @@ export async function economyRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: item });
   });
 
-  // PATCH shop item
   server.patch('/guilds/:guildId/economy/shop/:itemId', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, itemId } = request.params as { guildId: string; itemId: string };
     const body = parse(z.object({
@@ -107,7 +103,6 @@ export async function economyRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: item });
   });
 
-  // DELETE shop item
   server.delete('/guilds/:guildId/economy/shop/:itemId', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, itemId } = request.params as { guildId: string; itemId: string };
     const res = await prisma.economyShopItem.deleteMany({ where: { id: itemId, guildId } });
@@ -115,14 +110,12 @@ export async function economyRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true });
   });
 
-  // GET income roles
   server.get('/guilds/:guildId/economy/income-roles', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const rows = await prisma.economyIncomeRole.findMany({ where: { guildId }, orderBy: { amount: 'desc' } });
     return reply.send({ success: true, data: rows });
   });
 
-  // PUT income role (upsert by role)
   server.put('/guilds/:guildId/economy/income-roles', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const body = parse(z.object({
@@ -141,7 +134,6 @@ export async function economyRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: row });
   });
 
-  // DELETE income role
   server.delete('/guilds/:guildId/economy/income-roles/:roleId', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, roleId } = request.params as { guildId: string; roleId: string };
     const res = await prisma.economyIncomeRole.deleteMany({ where: { guildId, roleId } });

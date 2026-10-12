@@ -33,7 +33,6 @@ function mkTicket(over: Partial<Ticket> = {}): Ticket {
   };
 }
 
-// Gated: skips when the test DB isn't available (e.g. CI without .env).
 describe.skipIf(!TEST_DB_URL)('tickets storage (integration, arkenbot_test)', () => {
   let storage: AddonStorage;
 
@@ -41,7 +40,7 @@ describe.skipIf(!TEST_DB_URL)('tickets storage (integration, arkenbot_test)', ()
     const addonId = await seedAddon('tickets');
     await seedGuild(GUILD);
     storage = makeStorage(addonId);
-    // tickets/messages are DB-only now; panels/config/canned/counter stay in the blob.
+
     setTicketDb(testPrisma() as unknown as TicketDb);
   });
   afterAll(async () => { await closeTestDb(); });
@@ -91,10 +90,6 @@ describe.skipIf(!TEST_DB_URL)('tickets storage (integration, arkenbot_test)', ()
     expect(await nextTicketNumber(storage, GUILD)).toBe(2);
     expect(await nextTicketNumber(storage, GUILD)).toBe(3);
   });
-
-  // Note: concurrent-write atomicity is a property of the production
-  // Redis-locked AddonStorage.mutate (proven separately in the P1.1 work), not
-  // of this storage-logic harness (whose mutate is a plain read-modify-write).
 
   it('saves/gets/deletes panels', async () => {
     const panel = { id: 'p1', name: 'Support', namingPattern: 'ticket-{number}' } as TicketPanel;

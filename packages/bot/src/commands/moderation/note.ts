@@ -1,6 +1,4 @@
-/**
- * /note command — staff notes on users (stored in UserNote).
- */
+
 import {
   SlashCommandBuilder,
   PermissionFlagsBits,

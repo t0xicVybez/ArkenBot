@@ -1,7 +1,4 @@
-/**
- * inviteCreate event — caches a newly created guild invite so the invite tracker
- * can attribute joins to the correct inviter.
- */
+
 import type { Invite } from 'discord.js';
 import type { BotEvent } from '../types.js';
 import { InviteTrackerModule } from '../modules/inviteTracker/InviteTrackerModule.js';

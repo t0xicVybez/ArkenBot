@@ -12,7 +12,6 @@ const inter = Inter({
   display: 'swap',
 });
 
-// v2 typefaces — expose as CSS variables; only applied inside a `.v2` subtree.
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
   variable: '--font-space-grotesk',

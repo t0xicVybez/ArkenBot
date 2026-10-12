@@ -271,7 +271,7 @@ export default function TicketSettingsPage() {
         </div>
       </div>
 
-      {/* General */}
+      {}
       <div className="card space-y-5">
         <h2 className="text-white font-semibold border-b border-(--border-subtle) pb-2">{t('general')}</h2>
         <Row label={t('transcriptChannel')} hint={t('transcriptHint')}>
@@ -288,7 +288,7 @@ export default function TicketSettingsPage() {
         </Row>
       </div>
 
-      {/* Staff Notifications */}
+      {}
       <div className="card space-y-5">
         <h2 className="text-white font-semibold border-b border-(--border-subtle) pb-2">{t('staffNotifications')}</h2>
         <p className="text-gray-400 text-sm">{t('staffNotifyDesc')}</p>
@@ -311,7 +311,7 @@ export default function TicketSettingsPage() {
         </Row>
       </div>
 
-      {/* SLA */}
+      {}
       <div className="card space-y-5">
         <h2 className="text-white font-semibold border-b border-(--border-subtle) pb-2">{t('slaEscalation')}</h2>
         <p className="text-gray-400 text-sm">{t('slaEscalationDesc')}</p>
@@ -324,7 +324,7 @@ export default function TicketSettingsPage() {
         </div>
       </div>
 
-      {/* AI Assist */}
+      {}
       <div className="card space-y-5">
         <h2 className="text-white font-semibold border-b border-(--border-subtle) pb-2">{t('aiAssist')}</h2>
         <p className="text-gray-400 text-sm">{t('aiAssistDesc')}</p>
@@ -346,7 +346,7 @@ export default function TicketSettingsPage() {
         </Row>
       </div>
 
-      {/* Lifecycle */}
+      {}
       <div className="card space-y-5">
         <h2 className="text-white font-semibold border-b border-(--border-subtle) pb-2">{t('lifecycle')}</h2>
         <Row label={t('nudgeBeforeClose')} hint={t('nudgeBeforeCloseHint')}>
@@ -354,7 +354,7 @@ export default function TicketSettingsPage() {
         </Row>
       </div>
 
-      {/* Business Hours */}
+      {}
       <div className="card space-y-5">
         <h2 className="text-white font-semibold border-b border-(--border-subtle) pb-2">{t('businessHours')}</h2>
         <p className="text-gray-400 text-sm">{t('businessHoursDesc')}</p>
@@ -398,7 +398,7 @@ export default function TicketSettingsPage() {
         )}
       </div>
 
-      {/* Quality & Feedback */}
+      {}
       <div className="card space-y-5">
         <h2 className="text-white font-semibold border-b border-(--border-subtle) pb-2">{t('qualityFeedback')}</h2>
         <p className="text-gray-400 text-sm">{t('qualityFeedbackDesc')}</p>
@@ -428,7 +428,7 @@ export default function TicketSettingsPage() {
         )}
       </div>
 
-      {/* Access & Abuse */}
+      {}
       <div className="card space-y-5">
         <h2 className="text-white font-semibold border-b border-(--border-subtle) pb-2">{t('accessControls')}</h2>
         <p className="text-gray-400 text-sm">{t('accessControlsDesc')}</p>
@@ -448,7 +448,7 @@ export default function TicketSettingsPage() {
         </Row>
       </div>
 
-      {/* Weekly Digest */}
+      {}
       <div className="card space-y-5">
         <h2 className="text-white font-semibold border-b border-(--border-subtle) pb-2">{t('weeklyDigest')}</h2>
         <Row label={t('digestChannel')} hint={t('digestChannelHint')}>
@@ -459,7 +459,7 @@ export default function TicketSettingsPage() {
         </Row>
       </div>
 
-      {/* Blacklist */}
+      {}
       <div className="card space-y-5">
         <h2 className="text-white font-semibold border-b border-(--border-subtle) pb-2">{t('blacklistedUsers')}</h2>
         <p className="text-gray-400 text-sm">{t('blacklistDesc')}</p>

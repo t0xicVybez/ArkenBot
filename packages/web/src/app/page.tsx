@@ -31,8 +31,6 @@ export const metadata: Metadata = {
   },
 };
 
-// ─── Easy-to-edit content ────────────────────────────────────────────────────
-
 const CLIENT_ID = process.env.DISCORD_CLIENT_ID ?? process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID ?? '';
 
 const SITE = {
@@ -47,8 +45,6 @@ const SITE = {
   supportUrl: 'https://discord.gg/fXJnYPdHRX',
 };
 
-// Visual config only — title/desc text comes from the `landing.features.items`
-// message array, zipped by index.
 const FEATURES = [
   { icon: Shield,         color: 'text-blue-400',    bg: 'bg-blue-500/10',    border: 'border-blue-500/20' },
   { icon: Bot,            color: 'text-red-400',     bg: 'bg-red-500/10',     border: 'border-red-500/20' },
@@ -75,14 +71,11 @@ const FEATURES = [
   { icon: Puzzle,         color: 'text-fuchsia-400', bg: 'bg-fuchsia-500/10', border: 'border-fuchsia-500/20' },
 ];
 
-
 const DISCORD_ICON = (
   <svg fill="currentColor" viewBox="0 0 24 24">
     <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.030z" />
   </svg>
 );
-
-// ─── Server-side stats fetch ──────────────────────────────────────────────────
 
 async function getStats(): Promise<{ servers: number; users: number } | null> {
   try {
@@ -95,8 +88,6 @@ async function getStats(): Promise<{ servers: number; users: number } | null> {
     return null;
   }
 }
-
-// ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default async function LandingPage() {
   const stats = await getStats();
@@ -115,14 +106,14 @@ export default async function LandingPage() {
 
       <LandingNav docsUrl={SITE.docsUrl} supportUrl={SITE.supportUrl} inviteUrl={SITE.inviteUrl} />
 
-      {/* ── Hero ── */}
+      {}
       <section className="relative overflow-hidden px-6 pt-24 pb-20">
-        {/* Background glows */}
+        {}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1100px] h-[650px] bg-discord-blurple/8 rounded-full blur-3xl" />
           <div className="absolute top-32 left-1/4 w-[400px] h-[300px] bg-purple-500/4 rounded-full blur-3xl" />
           <div className="absolute top-32 right-1/4 w-[400px] h-[300px] bg-blue-500/4 rounded-full blur-3xl" />
-          {/* Subtle CSS grid pattern */}
+          {}
           <div
             className="absolute inset-0 opacity-[0.03]"
             style={{
@@ -163,7 +154,7 @@ export default async function LandingPage() {
             </Link>
           </div>
 
-          {/* Stats row */}
+          {}
           <div className="flex flex-wrap gap-x-12 gap-y-4 justify-center mb-16">
             {[
               { value: stats ? fmt(stats.servers) : '30+', label: t('statServers') },
@@ -178,7 +169,7 @@ export default async function LandingPage() {
             ))}
           </div>
 
-          {/* Mini feature cards */}
+          {}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
             {[Shield, Zap, TrendingUp, LayoutDashboard].map((Icon, i) => ({ icon: Icon, title: heroCards[i].title, desc: heroCards[i].desc })).map((f) => (
               <div key={f.title} className="flex gap-3.5 bg-(--bg-card) border border-(--border-subtle) rounded-xl p-5">
@@ -195,7 +186,7 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* ── Trust bar ── */}
+      {}
       <div className="border-y border-(--border-subtle) bg-(--bg-card)/30 py-4 px-6">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
           {[Check, Zap, Shield, Globe].map((Icon, i) => ({ icon: Icon, text: trustBar[i] })).map(({ icon: Icon, text }, i) => (
@@ -208,7 +199,7 @@ export default async function LandingPage() {
         </div>
       </div>
 
-      {/* ── Features ── */}
+      {}
       <section id="features" className="py-24 px-6 bg-(--bg-surface)">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-14">
@@ -244,7 +235,7 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* ── Ticket System spotlight ── */}
+      {}
       <section className="py-24 px-6 border-y border-(--border-subtle) bg-(--bg-card)/20">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
           <div>
@@ -272,9 +263,9 @@ export default async function LandingPage() {
             </a>
           </div>
 
-          {/* Ticket mock UI */}
+          {}
           <div className="space-y-3">
-            {/* Panel embed mock */}
+            {}
             <div className="bg-[#1e1f22] rounded-xl border border-white/6 overflow-hidden shadow-xl shadow-black/30 p-4">
               <p className="text-[10px] text-(--text-muted) uppercase tracking-wider mb-3 font-semibold">{t('mockPanelPreview')}</p>
               <div className="bg-[#2b2d31] rounded-lg overflow-hidden" style={{ borderLeft: '4px solid #00b0f4' }}>
@@ -290,7 +281,7 @@ export default async function LandingPage() {
               </div>
             </div>
 
-            {/* SLA levels mock */}
+            {}
             <div className="bg-(--bg-card) rounded-xl border border-(--border) p-4 shadow-lg shadow-black/20">
               <p className="text-[10px] text-(--text-muted) uppercase tracking-wider mb-3 font-semibold">{t('mockSlaTitle')}</p>
               <div className="space-y-2">
@@ -308,7 +299,7 @@ export default async function LandingPage() {
               </div>
             </div>
 
-            {/* Ticket stats mock */}
+            {}
             <div className="grid grid-cols-3 gap-2">
               {[
                 { label: t('mockStatOpen'), value: '8', color: 'text-discord-green' },
@@ -325,7 +316,7 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* ── Feature comparison ── */}
+      {}
       <section id="compare" className="py-24 px-6 bg-(--bg-surface)">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-14">
@@ -341,12 +332,12 @@ export default async function LandingPage() {
           </div>
 
           <div className="bg-(--bg-card) rounded-2xl border border-(--border) overflow-hidden shadow-xl shadow-black/20">
-            {/* Header */}
+            {}
             <div className="grid grid-cols-[1fr_auto] px-5 py-3 border-b border-(--border-subtle) bg-black/10">
               <span className="text-xs font-semibold text-(--text-secondary) uppercase tracking-wider">{t('compareColFeature')}</span>
               <span className="text-xs font-semibold text-discord-blurple uppercase tracking-wider text-center w-28">{t('compareColArken')}</span>
             </div>
-            {/* Rows */}
+            {}
             {comparison.map((row, i) => (
               <div
                 key={row.feature}
@@ -371,7 +362,7 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* ── Dashboard spotlight ── */}
+      {}
       <section className="py-24 px-6 border-y border-(--border-subtle) bg-(--bg-card)/20">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div>
@@ -399,7 +390,7 @@ export default async function LandingPage() {
             </Link>
           </div>
 
-          {/* Mock dashboard preview */}
+          {}
           <div className="bg-(--bg-card) rounded-xl border border-(--border) overflow-hidden shadow-2xl shadow-black/40">
             <div className="flex items-center gap-1.5 px-4 py-3 border-b border-(--border-subtle) bg-black/20">
               <div className="w-2.5 h-2.5 rounded-full bg-discord-red/60" />
@@ -408,7 +399,7 @@ export default async function LandingPage() {
               <span className="ml-2 text-[11px] text-(--text-muted)">arkenbot.app/dashboard</span>
             </div>
             <div className="flex">
-              {/* Mini sidebar */}
+              {}
               <div className="w-36 border-r border-(--border-subtle) p-2 space-y-0.5 bg-(--bg-elevated)">
                 <div className="flex items-center gap-2 px-2 py-1.5 mb-2">
                   <div className="w-5 h-5 rounded-lg bg-discord-blurple/80" />
@@ -436,7 +427,7 @@ export default async function LandingPage() {
                   </div>
                 ))}
               </div>
-              {/* Content */}
+              {}
               <div className="flex-1 p-3 space-y-2 bg-(--bg-surface)">
                 <div className="grid grid-cols-2 gap-1.5">
                   {[t('dashStatMod'), t('dashStatMembers'), t('dashStatTickets'), t('dashStatEvents')].map((label) => (
@@ -464,7 +455,7 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* ── Open source / GameQuery ── */}
+      {}
       <section className="py-24 px-6 bg-(--bg-surface)">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
@@ -555,7 +546,7 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* ── CTA ── */}
+      {}
       <section className="py-28 px-6 text-center relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, transparent 0%, var(--accent-glow) 50%, transparent 100%)' }} />
@@ -592,7 +583,7 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* ── Footer ── */}
+      {}
       <Footer variant="full" docsUrl={SITE.docsUrl} supportUrl={SITE.supportUrl} inviteUrl={SITE.inviteUrl} />
     </div>
   );

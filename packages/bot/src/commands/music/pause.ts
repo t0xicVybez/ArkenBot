@@ -1,6 +1,4 @@
-/**
- * /pause command — pauses the currently playing track in the guild's music queue.
- */
+
 import {
   MessageFlags,
   SlashCommandBuilder,

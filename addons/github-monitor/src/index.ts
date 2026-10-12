@@ -3,7 +3,6 @@ import { defineAddon, AddonContext } from '@arkenbot/addon-sdk';
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import { locales } from './locales.js';
 
-/** Resolve the guild's locale for background-posted (non-interaction) embeds. */
 function guildLoc(ctx: AddonContext, guildId: string): Promise<string> {
   return ctx.resolveLocale({ user: { id: '' }, guildId, guildLocale: ctx.getGuild(guildId)?.preferredLocale });
 }
@@ -36,14 +35,14 @@ interface GitHubIssue {
   body: string | null;
   created_at: string;
   labels: Array<{ name: string; color: string }>;
-  pull_request?: unknown; // present when the "issue" is actually a PR
+  pull_request?: unknown;
 }
 
 interface GitHubRepo {
   default_branch: string;
 }
 
-const POLL_INTERVAL_MS = 5 * 60 * 1000; // 5 minutes
+const POLL_INTERVAL_MS = 5 * 60 * 1000;
 const GITHUB_API = 'https://api.github.com';
 
 let pollTimer: ReturnType<typeof setInterval> | null = null;
@@ -63,8 +62,6 @@ async function githubFetch<T>(path: string): Promise<T | null> {
   }
 }
 
-// Resolves the branch to use — if the configured branch yields no commits, falls
-// back to the repo's actual default branch and caches it for future polls.
 async function resolveDefaultBranch(
   ctx: AddonContext,
   guildId: string,
@@ -217,7 +214,6 @@ async function checkIssues(
   );
   if (!items) return;
 
-  // The issues endpoint returns PRs too — filter them out
   const issues = items.filter((i) => !i.pull_request);
 
   const highestNum = issues.length > 0 ? issues[0].number : 0;

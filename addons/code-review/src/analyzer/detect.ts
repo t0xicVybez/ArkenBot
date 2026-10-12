@@ -1,4 +1,4 @@
-/** Language detection via weighted pattern matching against known language signatures. */
+
 
 interface LangPattern {
   lang: string;
@@ -44,16 +44,6 @@ const LANG_PATTERNS: LangPattern[] = [
   },
 ];
 
-/**
- * Detects the most likely programming language for a code snippet by counting
- * pattern matches for each known language.
- *
- * When two languages score equally, the one listed earlier in `LANG_PATTERNS`
- * (more specific) is preferred. Returns `"text"` when no patterns match.
- *
- * @param code - The raw source code string to classify.
- * @returns A language identifier string (e.g. `"typescript"`, `"python"`).
- */
 export function detectLanguage(code: string): string {
   const scores: Record<string, number> = {};
 
@@ -66,8 +56,6 @@ export function detectLanguage(code: string): string {
 
   if (!best || best[1] === 0) return 'text';
 
-  // When two languages are tied, prefer the one that appears first in
-  // LANG_PATTERNS because more specific languages are listed earlier.
   if (runner && runner[1] === best[1]) {
     const bestIdx = LANG_PATTERNS.findIndex((p) => p.lang === best[0]);
     const runnerIdx = LANG_PATTERNS.findIndex((p) => p.lang === runner[0]);

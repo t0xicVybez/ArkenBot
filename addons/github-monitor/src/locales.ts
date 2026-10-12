@@ -1,4 +1,4 @@
-/** Localized catalogs for the GitHub Monitor addon. Falls back to en-US per key. */
+
 export const locales = {
   "en-US": {
     "commitTitle": "New commit: {title}",

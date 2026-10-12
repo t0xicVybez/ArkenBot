@@ -1,11 +1,4 @@
-/**
- * Handles gameadmin interactions:
- *  - `gameadmin:add:pw`     — the private RCON-password modal finishing `/gameadmin add`
- *  - `ga:btn:<a>:<id>`      — control-panel buttons that run an action directly
- *  - `ga:mod:<a>:<id>`      — control-panel buttons that open an input modal
- *  - `ga:submit:<a>:<id>`   — those modals coming back
- * All panel actions are Manage-Server gated and audit-logged.
- */
+
 import {
   MessageFlags, PermissionFlagsBits,
   type Interaction, type ButtonInteraction, type ModalSubmitInteraction,
@@ -40,7 +33,6 @@ function isAdmin(interaction: ButtonInteraction | ModalSubmitInteraction): boole
   return interaction.memberPermissions?.has(PermissionFlagsBits.ManageGuild) ?? false;
 }
 
-/** Runs an RCON action, replies with the result, and writes an audit entry. */
 async function runAndReply(
   ctx: AddonContext,
   interaction: ButtonInteraction | ModalSubmitInteraction,
@@ -85,7 +77,7 @@ async function handlePanelButton(ctx: AddonContext, interaction: ButtonInteracti
     await interaction.showModal(buildActionModal(action as 'broadcast' | 'kick' | 'ban', serverId, t));
     return;
   }
-  // direct buttons: players / save / stop
+
   await runAndReply(ctx, interaction, server, action as RconAction, {});
 }
 

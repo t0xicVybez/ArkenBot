@@ -7,7 +7,7 @@ import { KeyRound, ShieldCheck, ShieldAlert, RefreshCw, ExternalLink, Hash } fro
 import { useTranslations } from 'next-intl';
 
 const CLIENT_ID = process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID ?? '';
-// Full permission set (matches the /invite command and the corrected site link).
+
 const INVITE_URL = CLIENT_ID
   ? `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&permissions=8824675953536247&integration_type=0&scope=bot+applications.commands`
   : 'https://discord.com';

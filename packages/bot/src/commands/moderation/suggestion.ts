@@ -1,7 +1,4 @@
-/**
- * /suggestion command — moderator controls for approving, denying, or marking
- * suggestions as under consideration. Updates the original suggestion embed in place.
- */
+
 import { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits, type ChatInputCommandInteraction } from 'discord.js';
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';

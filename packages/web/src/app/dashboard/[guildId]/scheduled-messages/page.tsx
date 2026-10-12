@@ -128,7 +128,7 @@ export default function ScheduledMessagesPage() {
     createMutation.mutate({
       channelId: newChannelId,
       content: newContent,
-      scheduledAt: newScheduledAt, // naive wall-clock; interpreted in the chosen timezone by the API
+      scheduledAt: newScheduledAt,
       repeat: newRepeat,
       timezone: newTimezone,
       ...(newRepeat === 'weekly' ? { daysOfWeek: newDays } : {}),

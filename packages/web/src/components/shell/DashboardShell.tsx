@@ -8,10 +8,6 @@ import { CommandPalette } from './CommandPalette';
 import { NAV, activeKeyForPath, hrefFor } from './nav';
 import { cn } from '../ui/cn';
 
-/**
- * v2 dashboard shell for the real per-guild routes (behind the beta flag).
- * Wires real guild data, route-based active state + breadcrumb, theme, and ⌘K.
- */
 export function DashboardShell({
   guildId,
   guildName,
@@ -33,7 +29,7 @@ export function DashboardShell({
       const s = localStorage.getItem('v2-theme');
       if (s === 'light' || s === 'dark') setTheme(s);
     } catch {
-      /* ignore */
+
     }
   }, []);
 
@@ -43,7 +39,7 @@ export function DashboardShell({
       try {
         localStorage.setItem('v2-theme', next);
       } catch {
-        /* ignore */
+
       }
       return next;
     });
@@ -67,8 +63,7 @@ export function DashboardShell({
     { label: guildName ?? 'Server', href: `/dashboard/${guildId}` },
     ...(group && item
       ? [
-          // The "Home" group crumb returns to the main dashboard (server list);
-          // other group crumbs jump to the first page in that group.
+
           { label: group.label, href: group.key === 'home' ? '/dashboard' : hrefFor(group.items[0], guildId) },
           { label: item.label },
         ]
@@ -82,14 +77,14 @@ export function DashboardShell({
       style={{ background: 'var(--bg-surface)' }}
     >
       <div className="flex h-full">
-        {/* mobile backdrop */}
+        {}
         {mobileNav && (
           <div
             className="fixed inset-0 z-40 bg-black/55 md:hidden"
             onClick={() => setMobileNav(false)}
           />
         )}
-        {/* sidebar: static on md+, off-canvas drawer on mobile */}
+        {}
         <div
           className={cn(
             'fixed inset-y-0 left-0 z-50 w-(--sidebar-w) shrink-0 transition-transform duration-200 ease-out md:static md:z-auto md:translate-x-0',

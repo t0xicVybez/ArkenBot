@@ -1,6 +1,4 @@
-/**
- * Routes for managing guild-specific regex auto-responses.
- */
+
 import vm from 'node:vm';
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
@@ -19,10 +17,6 @@ const arFields = {
 
 const MAX_PATTERN_LENGTH = 500;
 
-// Validates the pattern inside a vm sandbox so user data never flows into
-// new RegExp() directly in this module. The sandbox catches both SyntaxErrors
-// (invalid pattern/flags) and ERR_SCRIPT_EXECUTION_TIMEOUT (ReDoS).
-// Pattern and flags are passed as context variables, not embedded in source.
 const VALIDATE_SCRIPT = new vm.Script('new RegExp(pattern, flags).test(probe)');
 
 function validatePattern(pattern: unknown, flags: unknown): string | null {
@@ -40,12 +34,6 @@ function validatePattern(pattern: unknown, flags: unknown): string | null {
   }
 }
 
-/**
- * GET    /guilds/:guildId/auto-responses      — list all auto-responses
- * POST   /guilds/:guildId/auto-responses      — create a new auto-response
- * PATCH  /guilds/:guildId/auto-responses/:id  — update (enable/disable/edit)
- * DELETE /guilds/:guildId/auto-responses/:id  — delete an auto-response
- */
 export async function autoResponseRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/guilds/:guildId/auto-responses', { preHandler: [requireGuildAdmin] }, async (request, reply) => {

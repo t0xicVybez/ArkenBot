@@ -1,8 +1,4 @@
-/**
- * Discovers and loads slash command modules from the `src/commands` directory,
- * and provides helpers for dynamically registering and unregistering commands
- * at runtime (used by AddonHandler).
- */
+
 
 import { readdirSync, statSync } from 'fs';
 import { join, dirname } from 'path';
@@ -13,7 +9,6 @@ import { logger } from '../logger.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-/** Loads all file-based commands into the client's command collection at startup. */
 export class CommandHandler {
   private client: BotClient;
 
@@ -21,10 +16,6 @@ export class CommandHandler {
     this.client = client;
   }
 
-  /**
-   * Recursively reads each category subdirectory under `src/commands` and imports
-   * every `.js` (or uncompiled `.ts`) file as a `BotCommand` module.
-   */
   async loadCommands(): Promise<void> {
     const commandsPath = join(__dirname, '..', 'commands');
     const categories = readdirSync(commandsPath).filter((dir) =>
@@ -59,19 +50,11 @@ export class CommandHandler {
     logger.info(`Loaded ${this.client.commands.size} commands`);
   }
 
-  /**
-   * Adds a command to the client's command collection at runtime.
-   * Used by `AddonHandler` when an addon defines commands.
-   */
   registerCommand(command: BotCommand): void {
     this.client.commands.set(command.data.name, command);
     logger.info(`Registered addon command: ${command.data.name}`);
   }
 
-  /**
-   * Removes a command from the client's command collection at runtime.
-   * Used by `AddonHandler` when an addon is deactivated.
-   */
   unregisterCommand(name: string): void {
     this.client.commands.delete(name);
     logger.info(`Unregistered command: ${name}`);

@@ -8,7 +8,6 @@ export interface DayStats {
   leftMembers: number;
 }
 
-// ── Palette ───────────────────────────────────────────────────────────────────
 const BG       = '#111214';
 const SURFACE  = '#1a1d21';
 const BORDER   = 'rgba(255,255,255,0.08)';
@@ -19,8 +18,6 @@ const TEXT     = '#f2f3f5';
 const SUBTEXT  = '#72767d';
 const GRID     = 'rgba(255,255,255,0.06)';
 const BASELINE = 'rgba(255,255,255,0.12)';
-
-// ── Helpers ───────────────────────────────────────────────────────────────────
 
 type Ctx = ReturnType<ReturnType<typeof createCanvas>['getContext']>;
 
@@ -40,7 +37,6 @@ function shortDate(d: Date): string {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
 }
 
-// Round up to a "nice" number for the y-axis ceiling.
 function niceMax(raw: number): number {
   if (raw <= 0) return 5;
   const mag  = Math.pow(10, Math.floor(Math.log10(raw)));
@@ -49,7 +45,6 @@ function niceMax(raw: number): number {
   return nice * mag;
 }
 
-// Choose integer y-axis steps that avoid duplicates.
 function ySteps(max: number, steps = 4): number[] {
   const step = Math.max(1, Math.ceil(max / steps));
   const out: number[] = [0];
@@ -71,12 +66,11 @@ function roundRect(ctx: Ctx, x: number, y: number, w: number, h: number, r: numb
   ctx.closePath();
 }
 
-// Bar rounded only on top.
 function barPath(ctx: Ctx, x: number, y: number, w: number, h: number, r: number) {
   const cr = Math.min(r, w / 2, Math.max(0, h));
   ctx.beginPath();
   if (h <= cr * 2) {
-    // Very short bar — just a rounded rect.
+
     roundRect(ctx, x, y, w, Math.max(h, 2), cr);
   } else {
     ctx.moveTo(x, y + h);
@@ -89,15 +83,13 @@ function barPath(ctx: Ctx, x: number, y: number, w: number, h: number, r: number
   }
 }
 
-// ── Chart drawing ─────────────────────────────────────────────────────────────
-
 interface Series { label: string; color: string; values: number[] }
 
-const CHART_PAD_L  = 52;   // room for y-axis labels
+const CHART_PAD_L  = 52;
 const CHART_PAD_R  = 20;
-const CHART_PAD_T  = 48;   // room for title
-const CHART_PAD_B  = 52;   // room for x-axis labels
-const LEGEND_H     = 28;   // legend strip at the very bottom of the card
+const CHART_PAD_T  = 48;
+const CHART_PAD_B  = 52;
+const LEGEND_H     = 28;
 
 function drawChart(
   ctx: Ctx,
@@ -108,7 +100,7 @@ function drawChart(
   series: Series[],
   labelEvery: number,
 ) {
-  // ── Card ────────────────────────────────────────────────────────────────────
+
   ctx.fillStyle = SURFACE;
   roundRect(ctx, cardX, cardY, cardW, cardH, 12);
   ctx.fill();
@@ -117,13 +109,11 @@ function drawChart(
   roundRect(ctx, cardX, cardY, cardW, cardH, 12);
   ctx.stroke();
 
-  // ── Title ────────────────────────────────────────────────────────────────────
   ctx.fillStyle = TEXT;
   ctx.font = 'bold 16px sans-serif';
   ctx.textAlign = 'left';
   ctx.fillText(title, cardX + CHART_PAD_L, cardY + 30);
 
-  // ── Plot area ────────────────────────────────────────────────────────────────
   const plotX = cardX + CHART_PAD_L;
   const plotW = cardW - CHART_PAD_L - CHART_PAD_R;
   const plotY = cardY + CHART_PAD_T;
@@ -133,7 +123,6 @@ function drawChart(
   const maxVal  = niceMax(Math.max(1, ...series.flatMap(s => s.values)));
   const steps   = ySteps(maxVal);
 
-  // Grid lines + y-axis labels
   for (const step of steps) {
     const gy = plotBottom - (step / maxVal) * plotH;
 
@@ -152,7 +141,6 @@ function drawChart(
     ctx.fillText(String(step), plotX - 8, gy + 4);
   }
 
-  // ── Bars ─────────────────────────────────────────────────────────────────────
   const n        = labels.length;
   const groupW   = plotW / n;
   const gap      = 1.5;
@@ -170,7 +158,6 @@ function drawChart(
       const bx  = barStart + si * (barW + gap);
       const by  = plotBottom - bh;
 
-      // Subtle glow / alpha layering for depth
       ctx.globalAlpha = 0.15;
       ctx.fillStyle   = series[si].color;
       barPath(ctx, bx - 1, by + 2, barW + 2, bh, 4);
@@ -182,7 +169,6 @@ function drawChart(
       ctx.fill();
     }
 
-    // X-axis label — only every nth day, plus always the last
     if (i % labelEvery === 0 || i === n - 1) {
       ctx.fillStyle  = SUBTEXT;
       ctx.font       = '11px sans-serif';
@@ -191,7 +177,6 @@ function drawChart(
     }
   }
 
-  // ── Legend (bottom strip of card) ────────────────────────────────────────────
   const legendY    = cardY + cardH - LEGEND_H + 4;
   const dotR       = 5;
   const itemWidths = series.map(s => {
@@ -201,7 +186,6 @@ function drawChart(
   const totalLegendW = itemWidths.reduce((a, b) => a + b, 0) + (series.length - 1) * 20;
   let lx = cardX + cardW / 2 - totalLegendW / 2;
 
-  // Subtle divider above legend
   ctx.strokeStyle = BORDER;
   ctx.lineWidth   = 1;
   ctx.setLineDash([]);
@@ -212,7 +196,7 @@ function drawChart(
 
   for (let si = 0; si < series.length; si++) {
     const s = series[si];
-    // Filled circle dot
+
     ctx.fillStyle = s.color;
     ctx.beginPath();
     ctx.arc(lx + dotR, legendY + dotR, dotR, 0, Math.PI * 2);
@@ -225,8 +209,6 @@ function drawChart(
     lx += itemWidths[si] + 20;
   }
 }
-
-// ── Public API ────────────────────────────────────────────────────────────────
 
 export async function generateAnalyticsImage(rawStats: DayStats[]): Promise<Buffer> {
   const stats      = padDays(rawStats, 30);
@@ -242,7 +224,6 @@ export async function generateAnalyticsImage(rawStats: DayStats[]): Promise<Buff
   const canvas = createCanvas(W, H);
   const ctx    = canvas.getContext('2d');
 
-  // Outer background
   ctx.fillStyle = BG;
   ctx.fillRect(0, 0, W, H);
 

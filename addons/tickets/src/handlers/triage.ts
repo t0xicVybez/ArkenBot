@@ -1,10 +1,4 @@
-/**
- * AI triage subsystem for the Tickets addon — the on-demand /triage, the
- * auto-triage on open, the smart-refresh on claim, and the DM brief on
- * transfer/auto-assign, plus the triage action buttons. Extracted from
- * events/interaction.ts (P3 god-file split); public surface unchanged
- * (re-exported from interaction.ts).
- */
+
 import {
   MessageFlags,
   EmbedBuilder,
@@ -24,20 +18,13 @@ import { getPanel, getTicketByChannel, saveTicket, getMessages, getTickets } fro
 import { resolvePanelFields } from '../utils/fields.js';
 import type { Translate } from '../utils/embeds.js';
 
-/**
- * After a staff member claims a ticket, privately send them the AI triage brief
- * (summary + suggested reply + action buttons) so they don't have to run
- * `/ticket notes`. Ephemeral — only the claimer sees it. No-op when there's no
- * AI triage (e.g. auto-triage disabled or no AI key).
- */
 export async function sendClaimBrief(
   ctx: AddonContext,
   interaction: ButtonInteraction | import('discord.js').ChatInputCommandInteraction,
   ticket: Ticket,
   t: Translate,
 ): Promise<void> {
-  // Smart-refresh: reuse the cached brief unless the conversation has advanced
-  // since it was made (then regenerate so the claimer sees current context).
+
   const triage = await freshTriage(ctx, ticket, false);
   if (!triage) return;
   await interaction.followUp({
@@ -48,19 +35,11 @@ export async function sendClaimBrief(
   }).catch(() => null);
 }
 
-/** Resolve the ticket's channel as something with a `messages.fetch`. */
 function ticketMsgChannel(ctx: AddonContext, ticket: Ticket): MsgFetchable | null {
   const ch = ctx.client.channels.cache.get(ticket.channelId);
   return ch && 'messages' in ch ? (ch as unknown as MsgFetchable) : null;
 }
 
-/**
- * Return an up-to-date triage for a ticket: regenerate from the live
- * conversation when `force` is set, when there's no cached brief, or when a
- * message has arrived since the cached brief was made; otherwise reuse the
- * cache. Persists a regenerated brief onto the ticket. Falls back to the stale
- * cache if the AI is unavailable or regeneration fails.
- */
 export async function freshTriage(
   ctx: AddonContext,
   ticket: Ticket,
@@ -74,7 +53,7 @@ export async function freshTriage(
     if (lastMsgAt > new Date(cached.at).getTime()) needRegen = true;
   }
   if (!needRegen) return cached;
-  if (!isLLMAvailable()) return cached; // can't regenerate — use stale if any
+  if (!isLLMAvailable()) return cached;
   try {
     const fresh = await runTriageModel(ctx, ticket, ticketMsgChannel(ctx, ticket), true);
     if (fresh) {
@@ -88,14 +67,6 @@ export async function freshTriage(
   return cached;
 }
 
-/**
- * DM a staff member the ticket's AI brief when they're assigned it without
- * clicking anything — i.e. via `/ticket transfer` (force a regenerate so the
- * brief covers the whole conversation) or round-robin auto-assign on open
- * (the brief is already fresh, so `force` stays false). If the DM can't be
- * delivered, drop a quiet in-channel ping to `/triage` — never the private AI
- * content.
- */
 export async function sendAssignmentBrief(
   ctx: AddonContext,
   ticket: Ticket,
@@ -117,13 +88,6 @@ export async function sendAssignmentBrief(
   }
 }
 
-/**
- * Generates an AI triage of the ticket for staff — a short summary of the user's
- * issue, an urgency estimate, and a suggested first reply. Shown ephemerally so
- * the suggestion stays private to the staff member who requested it, and only run
- * on demand to keep the model cost bounded. Invoked by the `/ticket triage`
- * subcommand.
- */
 export async function generateTriage(
   ctx: AddonContext,
   interaction: ButtonInteraction | ChatInputCommandInteraction,
@@ -180,7 +144,6 @@ export async function generateTriage(
     return;
   }
 
-  // Cache on the ticket so the action buttons can act without re-calling the model.
   ticket.aiTriage = triage;
   await saveTicket(ctx.storage, interaction.guildId, ticket);
 
@@ -190,14 +153,10 @@ export async function generateTriage(
   });
 }
 
-// ─── AI triage helpers (shared by /triage and auto-triage-on-open) ─────────────
-
 type MsgFetchable = { messages: { fetch: (o: { limit: number }) => Promise<Map<string, Message>> } };
 
-/** Model used for ticket triage — bigger/smarter, on its own Groq token budget. */
 const TRIAGE_MODEL = 'openai/gpt-oss-120b';
 
-/** Call the LLM to summarize a ticket. Returns null when there's nothing to triage. */
 export async function runTriageModel(
   ctx: AddonContext,
   ticket: Ticket,
@@ -206,8 +165,7 @@ export async function runTriageModel(
 ): Promise<AiTriage | null> {
   const details: string[] = [];
   if (ticket.reason) details.push(`Reason given: ${ticket.reason}`);
-  // Map form-field IDs → their human question labels so the model sees the
-  // actual questions, not internal UUIDs.
+
   const triagePanel = await getPanel(ctx.storage, ticket.guildId, ticket.panelId);
   const labelById = new Map((triagePanel ? resolvePanelFields(triagePanel, ticket.buttonId) : []).map((f) => [f.id, f.label]));
   for (const [k, v] of Object.entries(ticket.formResponses ?? {})) details.push(`${labelById.get(k) ?? k}: ${v}`);
@@ -215,15 +173,13 @@ export async function runTriageModel(
   let transcript: string[] = [];
   if (channel) {
     try {
-      // Keep the context tight: the most recent ~15 messages carry the current
-      // state of the conversation, and fewer tokens per call means more daily
-      // headroom on the model's token budget.
+
       const fetched = await channel.messages.fetch({ limit: 15 });
       transcript = [...fetched.values()]
         .reverse()
         .filter((m: Message) => m.content.trim().length > 0)
         .map((m: Message) => `${m.author.bot ? '[bot] ' : ''}${m.author.username}: ${m.content.replace(/\n+/g, ' ').slice(0, 300)}`);
-    } catch { /* fall back to just the ticket details */ }
+    } catch {  }
   }
 
   const context = [
@@ -246,9 +202,7 @@ export async function runTriageModel(
       },
       { role: 'user', content: context },
     ],
-    // Use the larger gpt-oss-120b for triage quality. Groq rate-limits per
-    // model, so this runs on its own token budget, separate from other AI
-    // features (which stay on the default model).
+
     { model: TRIAGE_MODEL, temperature: 0.3, maxTokens: 600 },
   );
 
@@ -290,7 +244,6 @@ export function buildTriageActions(channelId: string, t: Translate): ActionRowBu
   );
 }
 
-/** Count a user's prior tickets in this guild and their average rating. */
 export async function getUserTicketHistory(
   ctx: AddonContext,
   guildId: string,
@@ -304,14 +257,13 @@ export async function getUserTicketHistory(
   return { count: prior.length, avgRating };
 }
 
-/** Handle the AI action buttons (Set priority / Post reply / Save as note). */
 export async function handleAiAction(ctx: AddonContext, interaction: ButtonInteraction, id: string): Promise<void> {
   const guildId = interaction.guildId;
   if (!guildId) return;
   const loc = await ctx.resolveLocale(interaction);
   const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
 
-  const parts = id.split(':'); // ticket:ai:{action}:{channelId}
+  const parts = id.split(':');
   const action = parts[2];
   const channelId = parts.slice(3).join(':');
 
@@ -362,6 +314,4 @@ export async function handleAiAction(ctx: AddonContext, interaction: ButtonInter
     await interaction.reply({ content: t('aiNoteSaved'), flags: MessageFlags.Ephemeral });
   }
 }
-
-// ─── Keep-open (pre-close nudge + close request) ───────────────────────────────
 

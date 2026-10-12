@@ -1,26 +1,13 @@
-/**
- * Centralised runtime configuration loaded from environment variables.
- * Required variables throw at startup if absent; optional variables fall back
- * to safe development defaults.
- */
+
 
 import 'dotenv/config';
 
-/**
- * Returns the value of a required environment variable.
- * Throws at startup if the variable is missing or empty, preventing silent
- * misconfiguration in production.
- */
 function required(name: string): string {
   const value = process.env[name];
   if (!value) throw new Error(`Missing required environment variable: ${name}`);
   return value;
 }
 
-/**
- * Returns the value of an optional environment variable, falling back to
- * `defaultValue` when the variable is absent.
- */
 function optional(name: string, defaultValue = ''): string {
   return process.env[name] ?? defaultValue;
 }
@@ -55,10 +42,6 @@ export const config = {
   logLevel: optional('LOG_LEVEL', 'info'),
   addonsDir: optional('ADDONS_DIR', '../../addons'),
 
-  /**
-   * Riot / VALORANT (RSO). Dormant until a Production key lands — every Valorant
-   * command and the sync job no-op while `isConfigured` is false.
-   */
   valorant: {
     clientId: optional('RIOT_CLIENT_ID', ''),
     clientSecret: optional('RIOT_CLIENT_SECRET', ''),

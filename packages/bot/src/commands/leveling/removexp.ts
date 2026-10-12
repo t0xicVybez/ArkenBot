@@ -1,7 +1,4 @@
-/**
- * /removexp command — deducts XP from a member, clamping to zero, and
- * recalculates their level. Restricted to members with the Manage Guild permission.
- */
+
 import {
   SlashCommandBuilder,
   EmbedBuilder,

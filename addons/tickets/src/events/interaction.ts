@@ -13,8 +13,6 @@ import {
   getTicketByChannel,
 } from '../utils/storage.js';
 
-
-// Lifecycle handlers live in ./handlers/lifecycle.js (P3 split).
 import {
   handleCloseButton,
   handleClaimButton,
@@ -30,9 +28,7 @@ import { handleRateButton, handleRateModal } from '../handlers/rating.js';
 import { handleOpenTicket, handleReasonModal } from '../handlers/open.js';
 export { createTicket } from '../handlers/open.js';
 export { resolvePanelFields } from '../utils/fields.js';
-// AI triage subsystem lives in ./handlers/triage.js (P3 split). Import what the
-// router/createTicket use internally; re-export the full public surface so
-// existing importers of this module are unaffected.
+
 import {
   handleAiAction,
 } from '../handlers/triage.js';
@@ -69,25 +65,21 @@ export async function handleTicketInteraction(
   }
 }
 
-// ─── Select-Menu Handler (dropdown-style panels) ───────────────────────────────
-
 async function handleSelect(ctx: AddonContext, interaction: StringSelectMenuInteraction): Promise<void> {
   const id = interaction.customId;
   if (id.startsWith('ticket:select:')) {
-    // Format: ticket:select:{panelId}, selected value = the button id
+
     const panelId = id.slice('ticket:select:'.length);
     const buttonId = interaction.values[0];
     await handleOpenTicket(ctx, interaction, panelId, buttonId);
   }
 }
 
-// ─── Button Handler ───────────────────────────────────────────────────────────
-
 async function handleButton(ctx: AddonContext, interaction: ButtonInteraction): Promise<void> {
   const id = interaction.customId;
 
   if (id.startsWith('ticket:open:')) {
-    // Format: ticket:open:{panelId} OR ticket:open:{panelId}:{buttonId}
+
     const parts = id.slice('ticket:open:'.length).split(':');
     const panelId = parts[0];
     const buttonId = parts[1];
@@ -108,7 +100,7 @@ async function handleButton(ctx: AddonContext, interaction: ButtonInteraction): 
     const channelId = id.slice('ticket:reopen:'.length);
     await handleReopenButton(ctx, interaction, channelId);
   } else if (id.startsWith('ticket:rate:')) {
-    const parts = id.split(':'); // ticket:rate:guildId:channelId:rating
+    const parts = id.split(':');
     const guildId = parts[2];
     const channelId = parts[3];
     const rating = parseInt(parts[4] ?? '0', 10);
@@ -127,30 +119,21 @@ async function handleButton(ctx: AddonContext, interaction: ButtonInteraction): 
   }
 }
 
-
-// ─── Modal Handler ────────────────────────────────────────────────────────────
-
 async function handleModal(ctx: AddonContext, interaction: ModalSubmitInteraction): Promise<void> {
   const id = interaction.customId;
 
   if (id.startsWith('ticket:reason:')) {
-    // Format: ticket:reason:{panelId} OR ticket:reason:{panelId}:{buttonId}
+
     const parts = id.slice('ticket:reason:'.length).split(':');
     await handleReasonModal(ctx, interaction, parts[0], parts[1]);
   } else if (id.startsWith('ticket:rate-modal:')) {
-    const parts = id.split(':'); // ticket:rate-modal:guildId:channelId:rating
+    const parts = id.split(':');
     const guildId = parts[2];
     const channelId = parts[3];
     const rating = parseInt(parts[4] ?? '0', 10);
     await handleRateModal(ctx, interaction, guildId, channelId, rating);
   }
 }
-
-// ─── Rate Modal Handler ───────────────────────────────────────────────────────
-
-
-
-// ─── Waiting Button ───────────────────────────────────────────────────────────
 
 async function handleWaitingButton(
   ctx: AddonContext,
@@ -194,11 +177,7 @@ async function handleWaitingButton(
   }
 }
 
-// Notes are saved to the ticket record and visible in the dashboard.
- 
 export async function postNoteToThread(_ctx: AddonContext, _ticket: Ticket, _guildId: string, _note: TicketNote): Promise<void> {
-  // no-op — notes are stored in the DB and surfaced via the dashboard
-}
 
-// ─── Webhook Helper ───────────────────────────────────────────────────────────
+}
 

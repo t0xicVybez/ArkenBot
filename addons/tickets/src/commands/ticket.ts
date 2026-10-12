@@ -160,7 +160,7 @@ const command: AddonCommandDefinition = {
     const focused = interaction.options.getFocused(true);
 
     if (focused.name === 'tag') {
-      // Collect all unique tags used in this guild's tickets
+
       const tickets = await getTickets(ctx.storage, interaction.guildId);
       const tagSet = new Set<string>();
       for (const t of tickets) {
@@ -176,7 +176,7 @@ const command: AddonCommandDefinition = {
     }
 
     if (focused.name === 'name') {
-      // Canned response autocomplete
+
       const responses = await getCannedResponses(ctx.storage, interaction.guildId);
       const query = focused.value.toLowerCase();
       const choices = responses
@@ -201,7 +201,6 @@ const command: AddonCommandDefinition = {
 
     const sub = interaction.options.getSubcommand();
 
-    // These run anywhere (not inside a specific ticket channel).
     if (sub === 'find' || sub === 'mine') {
       await handleSearchSub(ctx, interaction, sub, t);
       return;
@@ -216,7 +215,7 @@ const command: AddonCommandDefinition = {
     const OPEN_ONLY_SUBS = ['close', 'claim', 'unclaim', 'transfer', 'add', 'remove', 'rename', 'priority', 'tag', 'note', 'respond', 'waiting', 'requestclose', 'snooze'];
     if (ticket.status === 'closed' && OPEN_ONLY_SUBS.includes(sub)) {
       if (sub === 'reopen') {
-        // handled below
+
       } else {
         await interaction.reply({ content: t('alreadyClosed'), flags: MessageFlags.Ephemeral });
         return;
@@ -226,7 +225,6 @@ const command: AddonCommandDefinition = {
     const member = interaction.guild!.members.cache.get(interaction.user.id);
     const panel = await getPanel(ctx.storage, interaction.guildId, ticket.panelId);
 
-    // Staff check helper
     const isStaff =
       panel &&
       (panel.staffRoles.length === 0 ||
@@ -289,13 +287,13 @@ const command: AddonCommandDefinition = {
         await saveTicket(ctx.storage, interaction.guildId, ticket);
 
         const channel = interaction.channel as TextChannel;
-        // Restore permissions if the channel was archived
+
         if (panel?.closeAction === 'archive') {
           await restoreTicketChannel(channel, ticket).catch((err) =>
             ctx.logger.warn(`Failed to restore archived channel: ${err}`),
           );
         }
-        // Post reopen message and re-pin controls
+
         const controls = buildTicketControls(channel.id, t);
         const controlsMsg = await channel.send({
           content: t('reopenedMsg', { user: interaction.user.tag, mention: `<@${ticket.userId}>` }),
@@ -335,7 +333,6 @@ const command: AddonCommandDefinition = {
         ticket.lastActivity = new Date().toISOString();
         await saveTicket(ctx.storage, interaction.guildId, ticket);
 
-        // Add new staff to the channel if not already present
         const channel = interaction.channel as TextChannel;
         await addUserToTicket(channel, target.id).catch(() => null);
         await updateControlsMessage(ctx, ticket, true);
@@ -491,7 +488,7 @@ const command: AddonCommandDefinition = {
           await interaction.reply({ content: t('cannedNotFound', { name }), flags: MessageFlags.Ephemeral });
           return;
         }
-        // Substitute {user} {username} {staff} {staffname} {ticket} placeholders.
+
         const opener = await interaction.guild!.members.fetch(ticket.userId).catch(() => null);
         const content = applyCannedVars(canned.content, {
           user: `<@${ticket.userId}>`,
@@ -561,7 +558,6 @@ const command: AddonCommandDefinition = {
   },
 };
 
-/** `/ticket find` (staff) and `/ticket mine` (anyone) — run outside a ticket channel. */
 async function handleSearchSub(
   ctx: AddonContext,
   interaction: ChatInputCommandInteraction,
@@ -583,7 +579,6 @@ async function handleSearchSub(
     return;
   }
 
-  // find — staff only
   const member = interaction.guild!.members.cache.get(interaction.user.id)
     ?? (await interaction.guild!.members.fetch(interaction.user.id).catch(() => null));
   const panels = await getPanels(ctx.storage, guildId);

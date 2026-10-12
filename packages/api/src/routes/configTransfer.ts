@@ -2,20 +2,9 @@ import type { FastifyInstance } from 'fastify';
 import { requireGuildAdmin } from '../middleware/auth.js';
 import { prisma } from '../database.js';
 
-/**
- * Server configuration export / import.
- *
- * Exports CONFIGURATION only — never user data (levels, warnings, cases,
- * birthdays, reputation) and never secrets (Monday API tokens, webhook
- * tokens). Records tied to Discord message IDs (reaction-role panels,
- * starboard entries) are excluded because those messages don't survive
- * a bot removal.
- */
-
 const FORMAT = 'arkenbot-config';
 const VERSION = 1;
 
-/** Runtime/identity fields stripped from every exported record. */
 const STRIP = new Set(['id', 'guildId', 'createdAt', 'updatedAt']);
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -30,7 +19,6 @@ function clean<T extends Record<string, any>>(row: T, extraStrip: string[] = [])
 
 export async function configTransferRoutes(server: FastifyInstance): Promise<void> {
 
-  // ── GET /guilds/:guildId/config-export ────────────────────────────────────
   server.get('/guilds/:guildId/config-export', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
 
@@ -85,16 +73,15 @@ export async function configTransferRoutes(server: FastifyInstance): Promise<voi
         autoResponses: autoResponses.map((r) => clean(r)),
         selfRoles: selfRoles.map((r) => clean(r)),
         statsChannels: statsChannels.map((r) => clean(r)),
-        // lastSentAt is runtime state; failure tracking restarts fresh
+
         scheduledMessages: scheduledMessages.map((r) => clean(r, ['lastSentAt', 'failureCount', 'lastError'])),
-        // lastStreamId/lastMessage* are runtime state
+
         streamAlerts: streamAlerts.map((r) => clean(r, ['lastStreamId', 'lastMessageId', 'lastMessageChannelId', 'channelId'])),
         tempVoiceTriggers: tempVoiceTriggers.map((r) => clean(r)),
         disabledCommands: disabledCommands.map((r) => clean(r)),
         commandRolePermissions: commandRolePermissions.map((r) => clean(r)),
         embeds: embeds.map((r) => clean(r, ['lastSentMessageId', 'lastSentChannelId'])),
-        // webhookToken and mondayApiToken are secrets — a fresh webhook URL is
-        // generated on import and must be re-pasted into monday.com
+
         mondayAlerts: mondayAlerts.map((r) => clean(r, ['webhookToken', 'mondayApiToken'])),
       },
     };
@@ -104,9 +91,6 @@ export async function configTransferRoutes(server: FastifyInstance): Promise<voi
     return reply.send(payload);
   });
 
-  // ── POST /guilds/:guildId/config-import ───────────────────────────────────
-  // Replaces each section present in the file; sections absent from the file
-  // are left untouched.
   server.post('/guilds/:guildId/config-import', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -134,7 +118,6 @@ export async function configTransferRoutes(server: FastifyInstance): Promise<voi
       return out;
     };
 
-    // One-to-one configs: upsert. Arrays: wipe and recreate.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const upsertOne = async (key: string, model: any) => {
       const data = sections[key];
@@ -158,7 +141,7 @@ export async function configTransferRoutes(server: FastifyInstance): Promise<voi
         try {
           await model.create({ data: { guildId, ...strip(row) } });
           count++;
-        } catch { /* skip rows that no longer validate (e.g. schema drift) */ }
+        } catch {  }
       }
       imported[key] = count;
     };

@@ -37,7 +37,7 @@ const command: AddonCommandDefinition = {
     .setName('ticket-setup')
     .setDescription('Manage ticket panels and configuration')
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
-    // ── Panel subcommands ──
+
     .addSubcommandGroup((g) =>
       g
         .setName('panel')
@@ -168,7 +168,7 @@ const command: AddonCommandDefinition = {
             ),
         ),
     )
-    // ── Config subcommands ──
+
     .addSubcommandGroup((g) =>
       g
         .setName('config')
@@ -219,7 +219,7 @@ const command: AddonCommandDefinition = {
             ),
         ),
     )
-    // ── SLA subcommands ──
+
     .addSubcommandGroup((g) =>
       g
         .setName('sla')
@@ -293,8 +293,6 @@ const command: AddonCommandDefinition = {
 
 export default command;
 
-// ─── Handlers ─────────────────────────────────────────────────────────────────
-
 async function handlePanelCreate(
   interaction: ChatInputCommandInteraction,
   ctx: AddonContext,
@@ -306,7 +304,6 @@ async function handlePanelCreate(
   const name = interaction.options.getString('name', true);
   const description = interaction.options.getString('description', true);
 
-  // Check for duplicate name
   const panels = await getPanels(ctx.storage, guildId);
   if (panels.some((p) => p.name.toLowerCase() === name.toLowerCase())) {
     await interaction.reply({
@@ -378,7 +375,6 @@ async function handlePanelSend(
 
   const msg = await channel.send({ embeds: [embed], components: rows });
 
-  // Store channel/message reference on the panel
   panel.channelId = channel.id;
   panel.messageId = msg.id;
   await savePanel(ctx.storage, guildId, panel);

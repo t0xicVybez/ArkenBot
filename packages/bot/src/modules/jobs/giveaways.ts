@@ -1,25 +1,15 @@
-/**
- * Giveaway scheduler job — ends giveaways whose time is up, picks winners, and
- * announces them. Extracted from BackgroundJobs (P3 split). The entry-weighting
- * and winner-selection are pure functions so they can be unit-tested without a
- * live Discord/DB.
- */
+
 import { EmbedBuilder } from 'discord.js';
 import { prisma } from '../../database.js';
 import { logger, swallow } from '../../logger.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 import type { BotClient } from '../../client.js';
 
-/** An eligible entrant and the role IDs they hold (for bonus-entry weighting). */
 export interface GiveawayEntrant {
   id: string;
   roleIds: string[];
 }
 
-/**
- * Build the weighted entry pool: one entry per eligible user, plus extra copies
- * for each bonus role they hold. Pure.
- */
 export function buildGiveawayEntries(
   eligible: GiveawayEntrant[],
   bonusRoleEntries: Array<{ roleId: string; bonusEntries: number }> | null | undefined,
@@ -37,11 +27,6 @@ export function buildGiveawayEntries(
   return entries;
 }
 
-/**
- * Pick up to `count` unique winner IDs from a weighted entry pool. More entries
- * = higher chance; a user winning multiple weighted slots counts once. `rng` is
- * injectable for deterministic tests. Pure.
- */
 export function pickGiveawayWinners(
   entries: Array<{ id: string }>,
   count: number,
@@ -53,7 +38,6 @@ export function pickGiveawayWinners(
   return [...new Set(winners.map((w) => w.id))];
 }
 
-/** Scheduler entry point: end all giveaways whose time has elapsed. */
 export async function runGiveaways(client: BotClient): Promise<void> {
   const now = new Date();
   try {
@@ -86,13 +70,11 @@ async function endGiveaway(
     const users = reaction ? await reaction.users.fetch().catch(swallow) : null;
     const eligibleBase = users?.filter((u) => !u.bot && u.id !== giveaway.hostId);
 
-    // Filter by required role if set.
     const requiredRoleId = (giveaway as Record<string, unknown>).requiredRoleId as string | null | undefined;
     const eligible = requiredRoleId && eligibleBase
       ? eligibleBase.filter((_u: import('discord.js').User, id: string) => guild.members.cache.get(id)?.roles.cache.has(requiredRoleId) ?? false)
       : eligibleBase;
 
-    // Map Discord users → {id, roleIds} and build the weighted pool / winners (pure).
     const bonusRoleEntries = (giveaway as Record<string, unknown>).bonusRoleEntries as Array<{ roleId: string; bonusEntries: number }> | null;
     const eligibleArr: GiveawayEntrant[] = eligible
       ? [...eligible.values()].map((u) => ({ id: u.id, roleIds: [...(guild.members.cache.get(u.id)?.roles.cache.keys() ?? [])] }))

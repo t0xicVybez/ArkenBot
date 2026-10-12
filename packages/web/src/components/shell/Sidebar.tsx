@@ -39,14 +39,13 @@ export function Sidebar({
   const serverName = guildName ?? 'Server';
   const initials = serverName.slice(0, 2).toUpperCase();
 
-  // Server switcher dropdown
   const [switchOpen, setSwitchOpen] = useState(false);
   const switchRef = useRef<HTMLDivElement>(null);
   const { data: guildsRes } = useQuery({
     queryKey: ['guilds'],
     queryFn: () => guildsApi.list(),
     staleTime: 60_000,
-    enabled: switchOpen, // only fetch once the switcher is opened
+    enabled: switchOpen,
   });
   const fetched = ((guildsRes?.data?.data ?? []) as SwitchGuild[]);
   const guilds: SwitchGuild[] = fetched.length

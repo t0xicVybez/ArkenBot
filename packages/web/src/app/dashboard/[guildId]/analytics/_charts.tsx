@@ -25,10 +25,6 @@ function ChartCard({ title, children }: { title: string; children: React.ReactEl
   );
 }
 
-/**
- * The analytics page's four trend charts. Isolated so recharts loads in its own
- * lazy chunk (via next/dynamic in the page) rather than the route's initial JS.
- */
 export default function AnalyticsCharts({ history, modTrend, t }: { history: HistPoint[]; modTrend: ModPoint[]; t: T }) {
   return (
     <>

@@ -20,7 +20,6 @@ export default function StaffGuildsPage() {
     queryFn: () => adminApi.getGuilds({ page, search: search || undefined, active: activeFilter || undefined }),
   });
 
-  // Invalidate guild list instantly when bot joins or leaves a server
   useWebSocket('guild:joined', () => queryClient.invalidateQueries({ queryKey: ['admin-guilds'] }));
   useWebSocket('guild:left', () => queryClient.invalidateQueries({ queryKey: ['admin-guilds'] }));
 

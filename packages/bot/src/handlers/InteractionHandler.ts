@@ -1,9 +1,4 @@
-/**
- * Routes incoming Discord interactions to the appropriate command handler.
- * Enforces addon availability, per-guild command disables, role-based permission
- * rules, per-user cooldowns, and required member permissions before delegating
- * to the command's execute function.
- */
+
 
 import {
   MessageFlags,
@@ -26,7 +21,6 @@ import { VerificationModule } from '../modules/verification/VerificationModule.j
 import { AppealsModule } from '../modules/moderation/AppealsModule.js';
 import { EventsModule } from '../modules/events/EventsModule.js';
 
-/** Routes and pre-validates all incoming Discord interactions before command execution. */
 export class InteractionHandler {
   private client: BotClient;
 
@@ -34,10 +28,6 @@ export class InteractionHandler {
     this.client = client;
   }
 
-  /**
-   * Dispatches an interaction to the appropriate typed handler. Context-menu
-   * commands are treated as chat input interactions for routing purposes.
-   */
   async handle(interaction: Interaction): Promise<void> {
     if (interaction.isChatInputCommand()) {
       await this.handleChatCommand(interaction);
@@ -65,7 +55,6 @@ export class InteractionHandler {
       return;
     }
 
-    // Addon commands are gated by per-guild addon enable state.
     if (command.category?.startsWith(ADDON_CATEGORY_PREFIX) && interaction.guildId) {
       const addonName = command.category.slice(ADDON_CATEGORY_PREFIX.length);
       const enabled = await isAddonEnabledForGuild(addonName, interaction.guildId);
@@ -92,10 +81,6 @@ export class InteractionHandler {
       }
     }
 
-    // Role-based permission rules: when no rules exist for a command the check
-    // is skipped entirely (allow-all default). Administrators bypass all rules.
-    // Deny entries take precedence over allow entries. When allow rules exist,
-    // the user must hold at least one allowed role (whitelist mode).
     if (interaction.guildId) {
       const rolePerms = await prisma.commandRolePermission.findMany({
         where: { guildId: interaction.guildId, commandName: command.data.name },
@@ -167,16 +152,12 @@ export class InteractionHandler {
         `Command execution error — ${classified.summary}`,
       );
 
-      // An expired/duplicate interaction can no longer be responded to.
       if (classified.category === 'interaction') return;
 
-      // Report genuine bugs (not user-permission/Discord-API conditions) to Sentry.
       if (classified.category === 'unknown') {
         captureError(err, { command: command.data.name, guildId: interaction.guildId ?? undefined });
       }
 
-      // Surface the specific reason for known failures (e.g. a missing
-      // permission), and fall back to a generic message for anything unclassified.
       const description =
         classified.category === 'unknown'
           ? 'An error occurred while executing this command.'
@@ -202,15 +183,8 @@ export class InteractionHandler {
     }
   }
 
-  /**
-   * Routes button interactions using a `commandName:...` customId convention
-   * so each command owns its own button handling logic.
-   *
-   * Special cases:
-   *   - `verify:*`  → VerificationModule.handleVerifyButton
-   */
   private async handleButton(interaction: ButtonInteraction): Promise<void> {
-    // Verification gate buttons
+
     if (interaction.customId.startsWith('verify:')) {
       try {
         await VerificationModule.handleVerifyButton(interaction);
@@ -220,7 +194,6 @@ export class InteractionHandler {
       return;
     }
 
-    // Event RSVP buttons.
     if (interaction.customId.startsWith('event:rsvp:')) {
       try {
         await EventsModule.handleRsvp(interaction);
@@ -230,7 +203,6 @@ export class InteractionHandler {
       return;
     }
 
-    // Cross-server ban network flag buttons (Ban / Dismiss).
     if (interaction.customId.startsWith('bannet:')) {
       try {
         const { BanNetworkModule } = await import('../modules/moderation/BanNetworkModule.js');
@@ -241,7 +213,6 @@ export class InteractionHandler {
       return;
     }
 
-    // Ban/mute appeal buttons (start from a DM; approve/deny from the staff channel).
     if (interaction.customId.startsWith('appeal:')) {
       const [, sub] = interaction.customId.split(':');
       try {
@@ -265,9 +236,6 @@ export class InteractionHandler {
     }
   }
 
-  /**
-   * Routes select-menu interactions using a `commandName:...` customId convention.
-   */
   private async handleSelectMenu(interaction: StringSelectMenuInteraction): Promise<void> {
     const [commandName] = interaction.customId.split(':');
     const command = this.client.commands.get(commandName);
@@ -281,11 +249,8 @@ export class InteractionHandler {
     }
   }
 
-  /**
-   * Routes modal-submit interactions using a `commandName:...` customId convention.
-   */
   private async handleModal(interaction: ModalSubmitInteraction): Promise<void> {
-    // Appeal submission modal (arrives from a DM, so route it explicitly).
+
     if (interaction.customId.startsWith('appeal:modal:')) {
       try {
         await AppealsModule.handleModal(this.client, interaction);
@@ -307,14 +272,6 @@ export class InteractionHandler {
     }
   }
 
-  /**
-   * Checks and sets a per-user, per-command cooldown in Redis.
-   *
-   * @returns Remaining cooldown in seconds (0 when the user is not on cooldown).
-   *
-   * `pttl` returns -2 when the key does not exist and -1 when the key has no
-   * expiry; both values are treated as "no active cooldown".
-   */
   private async checkCooldown(
     interaction: ChatInputCommandInteraction,
     commandName: string,

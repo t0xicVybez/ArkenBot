@@ -1,7 +1,4 @@
-/**
- * /warnings command — lists up to 10 warnings for a member, optionally
- * including previously cleared warnings.
- */
+
 import {
   SlashCommandBuilder,
   PermissionFlagsBits,

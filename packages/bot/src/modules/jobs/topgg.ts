@@ -1,4 +1,4 @@
-/** topgg scheduler job(s) — extracted from BackgroundJobs (P3 god-file split). */
+
 import { prisma } from '../../database.js';
 import { logger, swallow } from '../../logger.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
@@ -39,7 +39,7 @@ export async function runTopggReminders(client: BotClient): Promise<void> {
           t('topgg.voteReminder', loc, { bot: client.user.username, url: voteUrl }),
         );
       } catch {
-        // DMs closed or user gone — mark as sent anyway so we don't retry every cycle.
+
       }
       await prisma.topggVoter.update({ where: { userId: voter.userId }, data: { reminderSent: true } }).catch(swallow);
     }

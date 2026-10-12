@@ -1,4 +1,4 @@
-/** /bank deposit|withdraw — move currency between wallet and bank. */
+
 import { SlashCommandBuilder, EmbedBuilder, type ChatInputCommandInteraction } from 'discord.js';
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
@@ -8,7 +8,6 @@ import { errorEmbed } from '../../utils/embed.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 import { EconomyModule } from '../../modules/economy/EconomyModule.js';
 
-/** Parse an amount option that also accepts the literal "all". */
 function parseAmount(raw: string, max: number): number | null {
   if (raw.trim().toLowerCase() === 'all') return max;
   const n = Number(raw.replace(/[, ]/g, ''));

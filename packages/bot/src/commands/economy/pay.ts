@@ -1,4 +1,4 @@
-/** /pay — transfer wallet currency to another member (atomic, no negatives). */
+
 import { SlashCommandBuilder, EmbedBuilder, type ChatInputCommandInteraction } from 'discord.js';
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';

@@ -108,7 +108,7 @@ export default function AnnouncementsPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Compose */}
+        {}
         <div className="card p-6 space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold text-white">{t('compose')}</h2>
@@ -127,7 +127,7 @@ export default function AnnouncementsPage() {
             </button>
           </div>
 
-          {/* Type picker */}
+          {}
           <div>
             <label className="label">{t('typeLabel')}</label>
             <div className="grid grid-cols-2 gap-2">
@@ -148,7 +148,7 @@ export default function AnnouncementsPage() {
             </div>
           </div>
 
-          {/* Title */}
+          {}
           <div>
             <label className="label">{t('titleLabel')}</label>
             <input
@@ -162,7 +162,7 @@ export default function AnnouncementsPage() {
             <p className="text-xs text-gray-500 mt-1">{title.length}/100</p>
           </div>
 
-          {/* Body */}
+          {}
           <div>
             <label className="label">{t('messageLabel')}</label>
             <textarea
@@ -175,7 +175,7 @@ export default function AnnouncementsPage() {
             <p className="text-xs text-gray-500 mt-1">{body.length}/2000</p>
           </div>
 
-          {/* Preview */}
+          {}
           {(title || body) && (
             <div
               className="bg-gray-800/60 rounded-lg p-4 border-l-4 space-y-1"
@@ -197,7 +197,7 @@ export default function AnnouncementsPage() {
           </button>
         </div>
 
-        {/* History */}
+        {}
         <div className="space-y-3">
           <h2 className="text-lg font-semibold text-white">{t('history')}</h2>
           {isLoading ? (

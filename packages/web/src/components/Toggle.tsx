@@ -1,9 +1,5 @@
 'use client';
 
-/**
- * Accessible toggle switch with optional label and description.
- * Renders a `role="switch"` button so screen readers announce the state correctly.
- */
 import { clsx } from 'clsx';
 
 interface ToggleProps {

@@ -1,9 +1,4 @@
-/**
- * Live monitoring for saved game servers: a poll loop that (optionally, per
- * guild) keeps an auto-updating status board, posts up/down alerts, and shows
- * the total online player count in a voice-channel name. All three ride on the
- * same poll so servers are queried once per cycle.
- */
+
 import { EmbedBuilder, type Guild, type TextChannel, type VoiceChannel } from 'discord.js';
 import type { AddonContext, AddonStorage } from '@arkenbot/addon-sdk';
 import { getServers } from './utils/storage.js';
@@ -30,10 +25,9 @@ type Translate = (key: string, vars?: Record<string, string | number>) => string
 const CFG_KEY = 'monitor';
 const STATE_KEY = 'monitorState';
 const HISTORY_KEY = 'history';
-const MAX_SAMPLES = 96; // ~4.8h at a 3-min poll
+const MAX_SAMPLES = 96;
 export const POLL_INTERVAL_MS = 3 * 60 * 1000;
-// Discord rate-limits channel renames hard (~2 per 10 min); only rename when the
-// value changed and at least this long since the last rename.
+
 const STAT_RENAME_COOLDOWN_MS = 5 * 60 * 1000;
 
 export interface Sample { t: number; p: number }
@@ -42,7 +36,6 @@ export async function getMonitorConfig(storage: AddonStorage, guildId: string): 
   return (await storage.get<MonitorConfig>(CFG_KEY, guildId)) ?? {};
 }
 
-/** Player-count history per server, capped to the most recent {@link MAX_SAMPLES}. */
 export async function getHistory(storage: AddonStorage, guildId: string, serverId: string): Promise<Sample[]> {
   const all = (await storage.get<Record<string, Sample[]>>(HISTORY_KEY, guildId)) ?? {};
   return all[serverId] ?? [];
@@ -52,7 +45,7 @@ async function recordHistory(storage: AddonStorage, guildId: string, results: Re
   const all = (await storage.get<Record<string, Sample[]>>(HISTORY_KEY, guildId)) ?? {};
   const now = Date.now();
   for (const { server, status } of results) {
-    if (!status.online) continue; // only record reachable samples
+    if (!status.online) continue;
     const list = all[server.id] ?? [];
     list.push({ t: now, p: (status as QueryResult).players });
     if (list.length > MAX_SAMPLES) list.splice(0, list.length - MAX_SAMPLES);
@@ -61,7 +54,6 @@ async function recordHistory(storage: AddonStorage, guildId: string, results: Re
   await storage.set(HISTORY_KEY, all, guildId);
 }
 
-/** A compact Unicode sparkline of the given values. */
 export function sparkline(values: number[]): string {
   if (values.length === 0) return '';
   const bars = '▁▂▃▄▅▆▇█';
@@ -96,7 +88,6 @@ async function queryAll(servers: SavedServer[]): Promise<Result[]> {
   );
 }
 
-/** Polls every guild that has any monitoring configured, once per cycle. */
 export async function pollAllGuilds(ctx: AddonContext): Promise<void> {
   for (const guild of ctx.client.guilds.cache.values()) {
     try {
@@ -105,7 +96,7 @@ export async function pollAllGuilds(ctx: AddonContext): Promise<void> {
       const cfg = await getMonitorConfig(ctx.storage, guild.id);
 
       const results = await queryAll(servers);
-      await recordHistory(ctx.storage, guild.id, results); // always, so /server graph has data
+      await recordHistory(ctx.storage, guild.id, results);
       const state = (await ctx.storage.get<MonitorState>(STATE_KEY, guild.id)) ?? { online: {} };
       const loc = await ctx.resolveLocale({ user: { id: '' }, guildId: guild.id, guildLocale: guild.preferredLocale });
       const t: Translate = (k, v) => ctx.t(k, loc, v);
@@ -149,7 +140,7 @@ async function checkAlerts(ctx: AddonContext, guild: Guild, cfg: MonitorConfig, 
 
   for (const { server, status } of results) {
     const prev = state.online[server.id];
-    if (prev === undefined) continue; // first observation — establish baseline, don't alert
+    if (prev === undefined) continue;
     if (prev === status.online) continue;
 
     const embed = new EmbedBuilder()

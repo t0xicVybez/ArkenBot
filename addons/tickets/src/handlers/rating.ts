@@ -1,8 +1,4 @@
-/**
- * Ticket rating flow — the post-close star buttons, the feedback modal, the
- * low-rating staff alert, and triggering finalization once a rating is in.
- * Extracted from events/interaction.ts (P3 split).
- */
+
 import {
   MessageFlags,
   ModalBuilder,
@@ -42,7 +38,6 @@ export async function handleRateButton(
     return;
   }
 
-  // Show a modal so the user can optionally leave text feedback
   const modal = new ModalBuilder()
     .setCustomId(`ticket:rate-modal:${guildId}:${channelId}:${rating}`)
     .setTitle(`${t('rateModalTitle')} (${'⭐'.repeat(rating)})`)
@@ -94,11 +89,9 @@ export async function handleRateModal(
     flags: MessageFlags.Ephemeral,
   });
 
-  // Trigger finalization now that rating is complete (cancels the fallback timer)
   const panel = await getPanel(ctx.storage, guildId, ticket.panelId);
   const config = await getConfig(ctx.storage, guildId);
 
-  // Low-rating alert — ping staff when CSAT is at or below the threshold.
   if (config.lowRatingThreshold && config.lowRatingThreshold > 0 && rating <= config.lowRatingThreshold) {
     const alertChannelId = config.lowRatingAlertChannelId || config.staffNotifyChannelId;
     const guild = ctx.getGuild(guildId);

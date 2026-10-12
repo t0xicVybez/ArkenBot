@@ -20,7 +20,7 @@ type TopggConfig = {
   weekendDouble: boolean;
   voteUrl: string | null;
   hasWebhookSecret: boolean;
-  /** Write-only: sent when the admin sets a secret, never returned by the API. */
+
   webhookSecret?: string;
   announceChannelId: string | null;
   announceMessage: string;

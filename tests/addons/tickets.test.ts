@@ -4,7 +4,6 @@ import { resolveChannelName } from '../../addons/tickets/src/utils/channel.js';
 import { isWithinBusinessHours } from '../../addons/tickets/src/utils/time.js';
 import type { TicketPanel, BusinessHours } from '../../addons/tickets/src/types.js';
 
-// ─── Canned-response placeholders ──────────────────────────────────────────────
 describe('applyCannedVars', () => {
   const vars = { user: '<@1>', username: 'trucker', staff: '<@2>', staffname: 'senpai', ticket: '#9' };
 
@@ -24,7 +23,6 @@ describe('applyCannedVars', () => {
   });
 });
 
-// ─── Emoji sanitizer ───────────────────────────────────────────────────────────
 describe('pickEmoji', () => {
   it('keeps a custom emoji token', () => {
     expect(pickEmoji('<:feedback:123456789>')).toBe('<:feedback:123456789>');
@@ -45,7 +43,6 @@ describe('pickEmoji', () => {
   });
 });
 
-// ─── Channel naming ────────────────────────────────────────────────────────────
 describe('resolveChannelName', () => {
   const panel = (namingPattern: string): TicketPanel => ({ namingPattern } as TicketPanel);
 
@@ -68,15 +65,14 @@ describe('resolveChannelName', () => {
   });
 });
 
-// ─── Business hours ────────────────────────────────────────────────────────────
 describe('isWithinBusinessHours', () => {
   const bh = (over: Partial<BusinessHours> = {}): BusinessHours => ({
     enabled: true, timezone: 'UTC', openTime: '09:00', closeTime: '17:00', days: [1, 2, 3, 4, 5], ...over,
   });
-  // Fixed instants (UTC): 2026-10-12 is a Monday.
-  const monday10 = Date.parse('2026-10-12T10:00:00Z'); // Mon 10:00 UTC
-  const monday20 = Date.parse('2026-10-12T20:00:00Z'); // Mon 20:00 UTC
-  const sunday10 = Date.parse('2026-10-11T10:00:00Z'); // Sun 10:00 UTC
+
+  const monday10 = Date.parse('2026-10-12T10:00:00Z');
+  const monday20 = Date.parse('2026-10-12T20:00:00Z');
+  const sunday10 = Date.parse('2026-10-11T10:00:00Z');
 
   it('is open during hours on an active day', () => {
     expect(isWithinBusinessHours(bh(), monday10)).toBe(true);
@@ -89,9 +85,9 @@ describe('isWithinBusinessHours', () => {
   });
   it('handles an overnight window (close <= open)', () => {
     const overnight = bh({ openTime: '22:00', closeTime: '06:00', days: [0, 1, 2, 3, 4, 5, 6] });
-    expect(isWithinBusinessHours(overnight, Date.parse('2026-10-12T23:30:00Z'))).toBe(true);  // late night
-    expect(isWithinBusinessHours(overnight, Date.parse('2026-10-12T05:00:00Z'))).toBe(true);  // early morning
-    expect(isWithinBusinessHours(overnight, monday10)).toBe(false);                            // midday
+    expect(isWithinBusinessHours(overnight, Date.parse('2026-10-12T23:30:00Z'))).toBe(true);
+    expect(isWithinBusinessHours(overnight, Date.parse('2026-10-12T05:00:00Z'))).toBe(true);
+    expect(isWithinBusinessHours(overnight, monday10)).toBe(false);
   });
   it('fails open on a bad timezone', () => {
     expect(isWithinBusinessHours(bh({ timezone: 'Not/AZone' }), monday20)).toBe(true);

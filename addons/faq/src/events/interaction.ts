@@ -1,8 +1,4 @@
-/**
- * FAQ admin modal routing:
- *  - `faq:add`            — create a new knowledge-base entry
- *  - `faq:edit:<entryId>` — update an existing entry
- */
+
 import { MessageFlags, type Interaction } from 'discord.js';
 import type { AddonContext } from '@arkenbot/addon-sdk';
 import { findEntry, findByTitle, saveEntry, getEntries, atCapacity, generateId } from '../utils/storage.js';
@@ -39,7 +35,6 @@ export const interactionHandler = {
       return;
     }
 
-    // faq:edit:<id>
     const id = interaction.customId.split(':')[2];
     const entry = await findEntry(ctx.storage, guildId, id);
     if (!entry) { await interaction.reply({ content: t('entryGone'), flags: MessageFlags.Ephemeral }); return; }

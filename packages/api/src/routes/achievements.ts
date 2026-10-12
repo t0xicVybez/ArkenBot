@@ -1,16 +1,8 @@
-/**
- * Routes for reading guild achievement data. Achievement definitions are
- * declared here and must stay in sync with the AchievementsModule in the bot.
- */
+
 import type { FastifyInstance } from 'fastify';
 import { requireGuildAdmin } from '../middleware/auth.js';
 import { prisma } from '../database.js';
 
-/**
- * Canonical achievement definitions keyed by achievement ID.
- * These must remain in sync with the AchievementsModule on the bot side,
- * as the bot writes achievement IDs and the API enriches them with metadata.
- */
 const ACHIEVEMENT_DEFS: Record<string, { name: string; description: string; emoji: string }> = {
   level_5:   { name: 'Rising Star',   description: 'Reach level 5',        emoji: '🥉' },
   level_10:  { name: 'Active Member', description: 'Reach level 10',       emoji: '🥈' },
@@ -24,12 +16,6 @@ const ACHIEVEMENT_DEFS: Record<string, { name: string; description: string; emoj
   msg_10000: { name: 'Transcendent',  description: 'Send 10,000 messages', emoji: '🏆' },
 };
 
-/**
- * Registers achievement routes.
- *
- * GET /guilds/:guildId/achievements/:userId — all achievements earned by a specific member
- * GET /guilds/:guildId/achievements         — top 10 members ranked by achievement count
- */
 export async function achievementRoutes(server: FastifyInstance): Promise<void> {
 
   server.get('/guilds/:guildId/achievements/:userId', { preHandler: [requireGuildAdmin] }, async (request, reply) => {

@@ -1,17 +1,7 @@
-/**
- * Shared pino logger instance. Uses pino-pretty with human-readable output
- * outside of production, and structured JSON in production.
- */
+
 import pino from 'pino';
 import { config } from './config.js';
 
-/**
- * Error serializer that keeps useful diagnostics (message, stack, status, url)
- * but strips request/response headers and bodies. Axios and Discord REST errors
- * otherwise serialise their whole `config`/`request` — including the
- * `Authorization: Bearer …` header (and the raw `request._header` string) —
- * straight into the logs.
- */
 interface SerializedError {
   [key: string]: unknown;
   type: string;
@@ -44,8 +34,8 @@ export function errSerializer(err: unknown): SerializedError {
     out.url = e.config.url;
   }
   if (e.response?.status !== undefined) out.responseStatus = e.response.status;
-  if (e.method !== undefined) out.method = e.method; // discord.js REST errors
-  if (e.url !== undefined) out.url = e.url; // discord.js REST errors
+  if (e.method !== undefined) out.method = e.method;
+  if (e.url !== undefined) out.url = e.url;
   return out;
 }
 

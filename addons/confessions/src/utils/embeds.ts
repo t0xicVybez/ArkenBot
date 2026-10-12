@@ -3,9 +3,8 @@ import type { ConfessionRecord } from '../types.js';
 
 type T = (key: string, vars?: Record<string, string | number>) => string;
 
-const COLOR = 0x8b5cf6; // violet
+const COLOR = 0x8b5cf6;
 
-/** The public-facing anonymous post. Deliberately carries no author information. */
 export function buildPublicEmbed(record: ConfessionRecord, t: T): EmbedBuilder {
   return new EmbedBuilder()
     .setColor(COLOR)
@@ -15,7 +14,6 @@ export function buildPublicEmbed(record: ConfessionRecord, t: T): EmbedBuilder {
     .setTimestamp(new Date(record.createdAt));
 }
 
-/** Staff review card — also blind to the author (use /confess-setup whois for accountability). */
 export function buildReviewEmbed(record: ConfessionRecord, t: T): EmbedBuilder {
   return new EmbedBuilder()
     .setColor(COLOR)

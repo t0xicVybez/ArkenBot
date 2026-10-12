@@ -1,7 +1,4 @@
-/**
- * /leaderboard command — displays a paginated XP leaderboard for the guild,
- * with a link button to the full web leaderboard.
- */
+
 import {
   SlashCommandBuilder,
   EmbedBuilder,
@@ -56,8 +53,6 @@ const command: BotCommand = {
     const pageSize = 10;
     const period = interaction.options.getString('period') ?? 'all';
 
-    // Time-filtered periods rank users who have been active within the window
-    // (mirrors the web leaderboard's `updatedAt` filter).
     const where: { guildId: string; updatedAt?: { gte: Date } } = { guildId: interaction.guild.id };
     if (period === 'weekly') where.updatedAt = { gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) };
     else if (period === 'monthly') where.updatedAt = { gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) };

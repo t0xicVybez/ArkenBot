@@ -1,9 +1,4 @@
-/**
- * WebSocket gateway for real-time dashboard updates. Clients authenticate via
- * the session cookie sent on the upgrade handshake, then subscribe to specific
- * guild IDs. Events originating from the bot arrive via Redis pub/sub and are
- * forwarded to all relevant connected clients.
- */
+
 import type { FastifyInstance } from 'fastify';
 import { sub, pub } from '../redis.js';
 import { config } from '../config.js';
@@ -24,14 +19,8 @@ interface WSClient {
   isStaff: boolean;
 }
 
-/** Active WebSocket clients keyed by a transient connection ID. */
 const clients = new Map<string, WSClient>();
 
-/**
- * Registers the `/ws` WebSocket route and subscribes to the Redis channels
- * used by the bot to emit events. Incoming Redis messages are forwarded to
- * connected clients that have subscribed to the relevant guild.
- */
 export async function setupWebSocket(server: FastifyInstance): Promise<void> {
   await sub.subscribe('bot:events');
   await sub.subscribe('api:ws:broadcast');
@@ -41,7 +30,7 @@ export async function setupWebSocket(server: FastifyInstance): Promise<void> {
       const parsed = JSON.parse(message);
 
       if (channel === 'bot:events') {
-        // Map internal bot event types to their WebSocket equivalents.
+
         const typeMap: Record<string, WebSocketEventType> = {
           'guild:left': 'guild:left',
           'guild:joined': 'guild:joined',
@@ -52,7 +41,7 @@ export async function setupWebSocket(server: FastifyInstance): Promise<void> {
           broadcastEvent({ type: wsType, data: parsed.data, timestamp: Date.now() });
         }
       } else {
-        // api:ws:broadcast messages are already in WebSocketEvent format.
+
         broadcastEvent(parsed as WebSocketEvent);
       }
     } catch (err) {
@@ -64,9 +53,6 @@ export async function setupWebSocket(server: FastifyInstance): Promise<void> {
     let client: WSClient | null = null;
     const clientId = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
-    // Authenticate at the upgrade using the httpOnly session cookie (sent
-    // automatically on the handshake). Resolve without rotating — a WS cannot
-    // deliver a rotated cookie back to the browser.
     const sid = request.cookies[config.cookie.name];
     const resolved = sid
       ? await SessionService.resolve(sid, {}, { rotate: false })
@@ -125,19 +111,12 @@ export async function setupWebSocket(server: FastifyInstance): Promise<void> {
   });
 }
 
-/**
- * Sends a WebSocket event to all eligible connected clients.
- *
- * Guild-scoped events are delivered to staff and to clients subscribed to
- * that guild. Global events (no `guildId`) are delivered to staff only.
- * Clients whose connections are no longer open (readyState !== OPEN) are skipped.
- */
 function broadcastEvent(event: WebSocketEvent): void {
   const message = JSON.stringify(event);
 
   for (const [, client] of clients) {
     try {
-      if (client.ws.readyState !== 1) continue; // 1 = OPEN
+      if (client.ws.readyState !== 1) continue;
 
       if (event.guildId) {
         if (client.isStaff || client.guildIds.has(event.guildId)) {
@@ -149,21 +128,16 @@ function broadcastEvent(event: WebSocketEvent): void {
         }
       }
     } catch {
-      // Ignore errors from clients that closed between the readyState check and send.
+
     }
   }
 }
 
-/**
- * Publishes a guild-scoped event to the `api:ws:broadcast` Redis channel so it
- * is forwarded to all connected WebSocket clients across every API process.
- */
 export async function broadcastToGuild(guildId: string, event: Omit<WebSocketEvent, 'guildId'>): Promise<void> {
   const fullEvent: WebSocketEvent = { ...event, guildId, timestamp: Date.now() };
   await pub.publish('api:ws:broadcast', JSON.stringify(fullEvent));
 }
 
-/** Returns the number of currently connected WebSocket clients. */
 export function getConnectedClientCount(): number {
   return clients.size;
 }

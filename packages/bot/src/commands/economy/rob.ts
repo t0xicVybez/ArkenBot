@@ -1,4 +1,4 @@
-/** /rob — attempt to steal from another member's wallet; fail and pay a fine. */
+
 import { SlashCommandBuilder, EmbedBuilder, type ChatInputCommandInteraction } from 'discord.js';
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';
@@ -53,7 +53,7 @@ const command: BotCommand = {
       await interaction.editReply({ embeds: [errorEmbed(t('economy.errorTitle', loc), t('economy.robTooPoor', loc, { user: `<@${target.id}>`, min: EconomyModule.format(cfg.robMinBalance, cfg) }))] });
       return;
     }
-    // Stamp the cooldown regardless of outcome.
+
     await prisma.economyBalance.update({ where: { guildId_userId: { guildId, userId: interaction.user.id } }, data: { lastRob: new Date(now) } });
 
     const success = Math.random() * 100 < cfg.robSuccessRate;

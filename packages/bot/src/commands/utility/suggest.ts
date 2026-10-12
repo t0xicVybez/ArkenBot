@@ -1,7 +1,4 @@
-/**
- * /suggest command — submits a member's suggestion to the configured suggestions
- * channel. Adds voting reactions if the guild has voting enabled.
- */
+
 import { SlashCommandBuilder, EmbedBuilder, type ChatInputCommandInteraction } from 'discord.js';
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';

@@ -1,6 +1,4 @@
-/**
- * guildBanAdd event — tracks bans for anti-nuke protection.
- */
+
 import { Events, AuditLogEvent, type GuildBan } from 'discord.js';
 import type { BotEvent } from '../types.js';
 import { AntiNukeModule } from '../modules/antiNuke/AntiNukeModule.js';

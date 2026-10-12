@@ -1,23 +1,4 @@
-/**
- * i18n translation generator.
- *
- * Reads a base-locale JSON catalog and produces one file per supported locale
- * via the LLM, preserving keys, {placeholders}, and Discord markdown. Writes a
- * `_meta.json` alongside recording which locales are AI-generated and unreviewed
- * so native speakers can be pointed at exactly what still needs a human pass.
- *
- * The catalog is flattened to dotted keys and translated in small chunks so each
- * request stays well within the model's output-token budget (a single request
- * for a 600+ key catalog would truncate into invalid JSON). Requests rotate
- * across every configured Groq key (GROQ_API_KEY, GROQ_API_KEY_2, …) round-robin
- * to spread load across each key's independent daily quota.
- *
- * Usage:
- *   tsx -r dotenv/config scripts/i18n-generate.ts <base-en.json> <output-dir> [--only=es-ES,fr] [--force] [--chunk=40]
- *
- * By default it skips locales that already have a file (resume-friendly); pass
- * --force to regenerate everything.
- */
+
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
 import { LOCALES, DEFAULT_LOCALE } from '../packages/shared/src/i18n/locales.js';
@@ -34,10 +15,9 @@ const only = onlyFlag ? onlyFlag.slice('--only='.length).split(',') : null;
 const chunkFlag = flags.find((f) => f.startsWith('--chunk='));
 const CHUNK_SIZE = chunkFlag ? parseInt(chunkFlag.slice('--chunk='.length)) : 40;
 const delayFlag = flags.find((f) => f.startsWith('--delay='));
-// Pace between chunks to stay near Groq's tokens-per-minute ceiling and avoid a 429 storm.
+
 const CHUNK_DELAY = delayFlag ? parseInt(delayFlag.slice('--delay='.length)) : 1500;
 
-// Collect every configured Groq key for round-robin rotation.
 const KEYS = [process.env.GROQ_API_KEY, process.env.GROQ_API_KEY_2, process.env.GROQ_API_KEY_3]
   .filter((k): k is string => Boolean(k));
 if (KEYS.length === 0) {
@@ -49,7 +29,6 @@ const nextKey = (): string => KEYS[keyIdx++ % KEYS.length]!;
 
 type Json = Record<string, unknown>;
 
-/** Flatten nested object → { "a.b.c": "value" } (leaf strings only). */
 function flatten(obj: Json, prefix = '', out: Record<string, string> = {}): Record<string, string> {
   for (const [k, v] of Object.entries(obj)) {
     const key = prefix ? `${prefix}.${k}` : k;
@@ -59,7 +38,6 @@ function flatten(obj: Json, prefix = '', out: Record<string, string> = {}): Reco
   return out;
 }
 
-/** Rebuild nested object from dotted keys. */
 function unflatten(flat: Record<string, string>): Json {
   const root: Json = {};
   for (const [dotted, val] of Object.entries(flat)) {
@@ -83,7 +61,6 @@ const metaPath = join(outDir, '_meta.json');
 const meta: Record<string, { aiGenerated: boolean; reviewed: boolean; generatedAt: string }> =
   existsSync(metaPath) ? JSON.parse(readFileSync(metaPath, 'utf8')) : {};
 
-// Always (re)write the base locale verbatim.
 writeFileSync(join(outDir, `${DEFAULT_LOCALE}.json`), JSON.stringify(source, null, 2) + '\n');
 
 const targets = LOCALES.filter((l) => l.code !== DEFAULT_LOCALE && (!only || only.includes(l.code)));
@@ -141,7 +118,7 @@ async function main(): Promise<void> {
         const batch: Record<string, string> = {};
         for (const k of slice) batch[k] = flatSource[k]!;
         const out = await translateChunk(loc, batch);
-        // Keep only keys we asked for; fall back to English for any the model dropped.
+
         for (const k of slice) merged[k] = typeof out[k] === 'string' ? out[k]! : flatSource[k]!;
         await sleep(CHUNK_DELAY);
       }

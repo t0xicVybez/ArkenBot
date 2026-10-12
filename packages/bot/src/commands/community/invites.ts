@@ -1,7 +1,4 @@
-/**
- * /invites command — displays invite counts for a given member, sourced from the
- * InviteTracker module. Requires the invite tracker to be enabled in guild settings.
- */
+
 import { SlashCommandBuilder, EmbedBuilder, type ChatInputCommandInteraction } from 'discord.js';
 import type { BotCommand } from '../../types.js';
 import type { BotClient } from '../../client.js';

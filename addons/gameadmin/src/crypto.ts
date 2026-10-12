@@ -1,8 +1,4 @@
-/**
- * AES-256-GCM sealing for RCON passwords held at rest. Storage is plain JSON,
- * so passwords are encrypted before they ever reach it. The key is derived from
- * ADDON_ENCRYPTION_KEY (falling back to API_SECRET).
- */
+
 import { createCipheriv, createDecipheriv, randomBytes, scryptSync } from 'crypto';
 
 const ALGORITHM = 'aes-256-gcm';

@@ -1,22 +1,9 @@
-/**
- * Site footer for public-facing pages.
- *
- * Two shapes:
- *  - `full`    — the landing page's three-column footer (brand, links, community)
- *                above the utility row. Needs `docsUrl`, `supportUrl`, `inviteUrl`.
- *  - `compact` — a single utility row, used on the legal/status/changelog pages.
- *                Pass `supportUrl` to include a Support link; set `maxWidthClass`
- *                to match the page's content width.
- *
- * URLs are passed in rather than read from env so this stays usable from both
- * server and client pages (mirrors how `LandingNav` receives them).
- */
+
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 
 const SITE_NAME = 'Arken Bot';
 
-/** Operational + legal links shown in the utility row of every footer. */
 const UTILITY_LINKS = [
   { key: 'changelog', href: '/changelog' },
   { key: 'status', href: '/status' },
@@ -32,11 +19,11 @@ const DISCORD_ICON = (
 
 interface FooterProps {
   variant?: 'full' | 'compact';
-  /** Container max-width for the `compact` variant, to match the page content. */
+
   maxWidthClass?: string;
-  /** When set, a Support link is shown (compact) and the community column populated (full). */
+
   supportUrl?: string;
-  /** `full` variant only. */
+
   docsUrl?: string;
   inviteUrl?: string;
 }

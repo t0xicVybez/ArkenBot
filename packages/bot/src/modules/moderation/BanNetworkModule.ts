@@ -1,10 +1,4 @@
-/**
- * Cross-server ban network (opt-in). Opted-in guilds contribute their bans to a
- * shared list; a user is only *flagged* in a receiving guild once they've been
- * banned in >= that guild's threshold of OTHER opted-in guilds, so no single
- * rogue admin can blacklist someone network-wide. Default action is a staff
- * alert (with anonymised reasons); a guild can opt up to auto-ban.
- */
+
 import {
   EmbedBuilder,
   ActionRowBuilder,
@@ -24,7 +18,7 @@ import { notifyActionFailure } from '../../utils/permissionAlert.js';
 import { logger, swallow } from '../../logger.js';
 
 export class BanNetworkModule {
-  /** Record a ban contributed by an opted-in, contributing guild. */
+
   static async recordBan(guildId: string, userId: string, reason: string | null): Promise<void> {
     try {
       const settings = await getGuildSettings(guildId);
@@ -39,12 +33,10 @@ export class BanNetworkModule {
     }
   }
 
-  /** Remove a guild's contribution when it unbans the user. */
   static async removeBan(guildId: string, userId: string): Promise<void> {
     await prisma.federatedBan.deleteMany({ where: { guildId, userId } }).catch(swallow);
   }
 
-  /** Network ban count + sample reasons for one user (excluding a guild). */
   static async userBanInfo(userId: string, excludeGuildId: string): Promise<{ count: number; reasons: string[] }> {
     const bans = await prisma.federatedBan.findMany({
       where: { userId, guildId: { not: excludeGuildId } },
@@ -54,7 +46,6 @@ export class BanNetworkModule {
     return { count: bans.length, reasons };
   }
 
-  /** User IDs banned in >= threshold guilds other than excludeGuildId. */
   static async flaggedUserIds(excludeGuildId: string, threshold: number): Promise<string[]> {
     const groups = await prisma.federatedBan.groupBy({
       by: ['userId'],
@@ -65,7 +56,6 @@ export class BanNetworkModule {
     return groups.map((g) => g.userId);
   }
 
-  /** Members currently in the guild who are network-flagged (fetches only them). */
   static async scanGuild(guild: import('discord.js').Guild, threshold: number): Promise<GuildMember[]> {
     const ids = await this.flaggedUserIds(guild.id, threshold);
     if (!ids.length) return [];
@@ -77,7 +67,6 @@ export class BanNetworkModule {
     return present;
   }
 
-  /** Ban every currently-present flagged member. Returns how many were banned. */
   static async banAllFlagged(guild: import('discord.js').Guild, threshold: number, moderatorTag: string): Promise<number> {
     const members = await this.scanGuild(guild, threshold);
     let banned = 0;
@@ -89,7 +78,6 @@ export class BanNetworkModule {
     return banned;
   }
 
-  /** On join: flag / auto-ban a member banned in >= threshold other guilds. */
   static async checkMember(member: GuildMember): Promise<void> {
     try {
       if (member.user.bot) return;
@@ -120,7 +108,6 @@ export class BanNetworkModule {
     }
   }
 
-  /** Post a staff flag to the network channel (falls back to mod-log / log). */
   private static async postFlag(member: GuildMember, count: number, reasons: string[], autoBanned: boolean): Promise<void> {
     const settings = await getGuildSettings(member.guild.id);
     const channelId = settings?.banNetworkChannelId || settings?.modLogChannelId || settings?.logChannelId;
@@ -153,7 +140,6 @@ export class BanNetworkModule {
     );
   }
 
-  /** Handle the Ban / Dismiss buttons on a flag alert. */
   static async handleButton(interaction: ButtonInteraction, _client: Client): Promise<void> {
     const loc = await resolveUserLocale(interaction);
     if (!interaction.inGuild() || !interaction.guild) return;

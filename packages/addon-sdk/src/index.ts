@@ -1,4 +1,4 @@
-/** Public API surface for the ArkenBot addon SDK. Import from this module in your addon. */
+
 export { Addon } from './Addon.js';
 export { AddonContext } from './AddonContext.js';
 export { AddonEventBus } from './AddonEventBus.js';

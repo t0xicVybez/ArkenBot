@@ -12,13 +12,11 @@ import dynamic from 'next/dynamic';
 import { ChartSkeleton } from '@/components/charts/ChartSkeleton';
 import { useTranslations } from 'next-intl';
 
-// recharts is heavy; load it in its own chunk only when this view renders.
 const ActivityChart = dynamic(() => import('./_charts/ActivityChart'), {
   ssr: false,
   loading: () => <ChartSkeleton height={160} />,
 });
 
-/** Mock-pattern stat tile: uppercase label, big tabular value, optional delta and sparkline. */
 function StatTile({ label, value, delta, spark }: {
   label: string; value: number; delta?: number | null; spark?: number[];
 }) {
@@ -62,7 +60,6 @@ export default function GuildOverviewPage() {
   const [liveEvents, setLiveEvents] = useState<{ id: number; label: string; type: 'mod' | 'member'; ts: number }[]>([]);
   const eventIdRef = useRef(0);
 
-  // Auto-expire events older than 5 minutes
   useEffect(() => {
     const timer = setInterval(() => {
       const cutoff = Date.now() - 5 * 60 * 1000;

@@ -1,9 +1,5 @@
 'use client';
 
-/**
- * Dashboard sidebar with collapsible nav sections, per-guild navigation,
- * and a user footer with logout. Section collapsed state is persisted in localStorage.
- */
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { clsx } from 'clsx';
@@ -72,12 +68,6 @@ interface SidebarProps {
 interface NavItem { href: string; key: string; icon: LucideIcon }
 interface NavSection { labelKey?: string; items: NavItem[] }
 
-/**
- * Builds the sidebar navigation tree for a guild.
- * Addon sections are only included when the corresponding addon is installed.
- * `key` on each item resolves against the `pages` message namespace, and
- * `labelKey` on a section resolves against the `sections` namespace.
- */
 const buildNavSections = (guildId: string, installedAddons: string[]): NavSection[] => {
   const addonItems = [
     { href: `/dashboard/${guildId}/tickets`, key: 'tickets', icon: Ticket, addon: 'tickets' },
@@ -161,22 +151,14 @@ const buildNavSections = (guildId: string, installedAddons: string[]): NavSectio
 };
 
 const STORAGE_KEY = 'sidebar_collapsed';
-/** localStorage key for pinned favorite pages. */
+
 const PINS_KEY = 'sidebar_pins';
 
-/**
- * Reads persisted section-collapse state from localStorage.
- * Returns an empty object on SSR (window is not defined) or if the stored value is invalid.
- */
 function loadCollapsed(): Record<string, boolean> {
   if (typeof window === 'undefined') return {};
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '{}'); } catch { return {}; }
 }
 
-/**
- * Full-width sidebar for the per-guild dashboard.
- * On mobile, renders as an off-canvas drawer controlled by `open`/`onClose`.
- */
 export function Sidebar({ guildId, guildName, guildIcon, memberCount, installedAddons = [], open = false, onClose }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
@@ -189,7 +171,7 @@ export function Sidebar({ guildId, guildName, guildIcon, memberCount, installedA
 
   useEffect(() => {
     setCollapsed(loadCollapsed());
-    try { setPins(JSON.parse(localStorage.getItem(PINS_KEY) ?? '[]')); } catch { /* ignore */ }
+    try { setPins(JSON.parse(localStorage.getItem(PINS_KEY) ?? '[]')); } catch {  }
   }, []);
 
   const togglePin = (href: string) => {
@@ -215,7 +197,7 @@ export function Sidebar({ guildId, guildName, guildIcon, memberCount, installedA
   const handleLogout = async () => {
     try {
       await authApi.logout();
-    } catch { /* ignore */ }
+    } catch {  }
     logout();
     router.push('/');
   };
@@ -237,7 +219,7 @@ export function Sidebar({ guildId, guildName, guildIcon, memberCount, installedA
         'md:relative md:translate-x-0 md:flex',
         open ? 'translate-x-0' : '-translate-x-full md:translate-x-0',
       )}>
-        {/* Guild switcher card */}
+        {}
         <div className="px-2.5 pt-3 pb-1">
           <div className="flex items-center gap-2.5">
             <Link
@@ -285,7 +267,7 @@ export function Sidebar({ guildId, guildName, guildIcon, memberCount, installedA
           </button>
         </div>
 
-        {/* Navigation */}
+        {}
         <nav className="flex-1 px-2 py-2 overflow-y-auto space-y-0.5">
           {pins.length > 0 && (
             <div className="mb-3">
@@ -360,7 +342,7 @@ export function Sidebar({ guildId, guildName, guildIcon, memberCount, installedA
           })}
         </nav>
 
-        {/* Footer */}
+        {}
         <div className="px-2 py-2 border-t border-(--border-subtle) space-y-0.5">
           {isStaff && (
             <Link

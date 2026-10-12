@@ -1,9 +1,6 @@
 import tseslint from 'typescript-eslint';
 import unusedImports from 'eslint-plugin-unused-imports';
 
-// Warn-first lint config. Everything is a warning for now so `eslint` exits 0
-// and doesn't block CI — the goal is visibility, not a hard gate yet. Promote
-// individual rules to "error" (and fix them) over time to make lint a real gate.
 export default tseslint.config(
   {
     ignores: [
@@ -14,9 +11,7 @@ export default tseslint.config(
       '**/.docusaurus/**',
       'GameQuery/**',
       'packages/docs/**',
-      // web needs react/next-specific lint rules (its inline disables reference
-      // react-hooks) — set up separately; base config covers the previously
-      // unlinted server packages + addons.
+
       'packages/web/**',
       '**/*.config.*',
       '**/*.js',
@@ -36,9 +31,7 @@ export default tseslint.config(
     rules: {
       'no-console': 'error',
       '@typescript-eslint/no-explicit-any': 'warn',
-      // unused-imports/no-unused-imports is auto-fixable (removes the import);
-      // the base no-unused-vars rule is not. Keep the tseslint rule for the
-      // remaining (non-import) unused vars.
+
       'unused-imports/no-unused-imports': 'error',
       '@typescript-eslint/no-unused-vars': [
         'warn',
@@ -47,9 +40,7 @@ export default tseslint.config(
     },
   },
   {
-    // CLI scripts, DB seeds, and simulation/unit tests are command-line tools,
-    // not long-running services — plain console output is the right thing there
-    // (e.g. the house-edge sims print their results), not the structured logger.
+
     files: ['**/scripts/**', 'prisma/**', 'tests/**'],
     rules: { 'no-console': 'off' },
   },

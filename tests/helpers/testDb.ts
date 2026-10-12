@@ -1,15 +1,9 @@
-/**
- * Integration-test harness: a Prisma client + addon-storage shim backed by the
- * dedicated `arkenbot_test` Postgres database. Gated on TEST_DATABASE_URL being
- * resolvable (from the env or the local .env), so environments without the test
- * DB — e.g. CI — skip the DB suites instead of failing them.
- */
+
 import { readFileSync, existsSync } from 'fs';
 import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import type { AddonStorage } from '../../packages/addon-sdk/src/types.js';
 
-/** Resolve the test DB URL from the env, falling back to the repo .env. Null when unavailable. */
 export function resolveTestDbUrl(): string | null {
   if (process.env.TEST_DATABASE_URL) return process.env.TEST_DATABASE_URL;
   try {
@@ -35,7 +29,6 @@ export async function closeTestDb(): Promise<void> {
   _prisma = null;
 }
 
-/** Ensure an Addon row exists (FK target for AddonData); returns its id. */
 export async function seedAddon(name = 'tickets'): Promise<string> {
   const p = testPrisma();
   const existing = await p.addon.findUnique({ where: { name }, select: { id: true } });
@@ -46,7 +39,6 @@ export async function seedAddon(name = 'tickets'): Promise<string> {
   return row.id;
 }
 
-/** Ensure a Guild row exists (FK target for guild-scoped AddonData). */
 export async function seedGuild(guildId: string): Promise<void> {
   const p = testPrisma();
   await p.guild.upsert({
@@ -56,17 +48,10 @@ export async function seedGuild(guildId: string): Promise<void> {
   });
 }
 
-/** Wipe all AddonData so each test starts clean (keeps seeded addon/guild rows). */
 export async function clearAddonData(): Promise<void> {
   await testPrisma().addonData.deleteMany({});
 }
 
-/**
- * A real-DB-backed AddonStorage (get/set/mutate/delete/keys) over the
- * `addon_data` table — the same shape the bot's AddonStorage persists. mutate()
- * is a plain read-modify-write here (single-threaded tests); the production
- * Redis lock is covered separately.
- */
 export function makeStorage(addonId: string): AddonStorage {
   const p = testPrisma();
   const self: AddonStorage = {

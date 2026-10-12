@@ -1,4 +1,4 @@
-/** tempExpiry scheduler job(s) — extracted from BackgroundJobs (P3 god-file split). */
+
 import { prisma } from '../../database.js';
 import { logger, swallow } from '../../logger.js';
 import type { BotClient } from '../../client.js';

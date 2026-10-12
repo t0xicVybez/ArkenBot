@@ -1,4 +1,4 @@
-/** system scheduler job(s) — extracted from BackgroundJobs (P3 god-file split). */
+
 import { prisma } from '../../database.js';
 import { logger } from '../../logger.js';
 import { ValorantModule } from '../valorant/ValorantModule.js';
@@ -27,7 +27,7 @@ export async function beatHeartbeat(client: BotClient): Promise<void> {
       guilds: client.guilds.cache.size,
       ws: client.ws.ping,
     }), 'EX', 120);
-  } catch { /* redis hiccup — next beat will recover */ }
+  } catch {  }
 }
 
 export async function runGuildPurgeSweep(_client: BotClient): Promise<void> {

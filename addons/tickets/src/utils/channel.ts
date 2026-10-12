@@ -10,10 +10,6 @@ import {
 } from 'discord.js';
 import type { Ticket, TicketPanel } from '../types.js';
 
-/**
- * Resolve the ticket channel name from the panel naming pattern.
- * Supports {number}, {username}.
- */
 export function resolveChannelName(panel: TicketPanel, number: number, username: string, categoryTag?: string): string {
   const category = (categoryTag ?? '').toLowerCase().replace(/[^a-z0-9-]/g, '') || 'ticket';
   return panel.namingPattern
@@ -23,24 +19,20 @@ export function resolveChannelName(panel: TicketPanel, number: number, username:
     .slice(0, 100);
 }
 
-/**
- * Create a private text channel for a ticket.
- * Grants view permission to the ticket owner and all staff roles.
- */
 export async function createTicketChannel(
   guild: Guild,
   panel: TicketPanel,
   member: GuildMember,
   channelName: string,
 ): Promise<TextChannel> {
-  // Base permission overwrites: deny everyone, allow the bot, allow the opener
+
   const permissionOverwrites: import('discord.js').OverwriteResolvable[] = [
     {
       id: guild.roles.everyone,
       deny: [PermissionFlagsBits.ViewChannel],
     },
     {
-      // Bot must be explicitly granted access even when @everyone is denied
+
       id: guild.client.user!.id,
       allow: [
         PermissionFlagsBits.ViewChannel,
@@ -63,7 +55,6 @@ export async function createTicketChannel(
     },
   ];
 
-  // Allow each staff role
   for (const roleId of panel.staffRoles) {
     if (guild.roles.cache.has(roleId)) {
       permissionOverwrites.push({
@@ -94,10 +85,6 @@ export async function createTicketChannel(
   return channel as TextChannel;
 }
 
-/**
- * Archive a ticket channel by removing the user's view permission.
- * Staff can still access the channel.
- */
 export async function archiveTicketChannel(
   channel: TextChannel,
   ticket: Ticket,
@@ -110,9 +97,6 @@ export async function archiveTicketChannel(
   await channel.setTopic(`[ARCHIVED] Ticket #${ticket.number}`);
 }
 
-/**
- * Restore an archived ticket channel — re-grant user access and strip the archived- prefix.
- */
 export async function restoreTicketChannel(
   channel: TextChannel,
   ticket: Ticket,
@@ -157,9 +141,6 @@ export async function createTicketThread(
   return thread;
 }
 
-/**
- * Add a user to an open ticket channel.
- */
 export async function addUserToTicket(channel: TextChannel, userId: string): Promise<void> {
   await channel.permissionOverwrites.edit(userId, {
     ViewChannel: true,
@@ -169,9 +150,6 @@ export async function addUserToTicket(channel: TextChannel, userId: string): Pro
   });
 }
 
-/**
- * Remove a user from a ticket channel.
- */
 export async function removeUserFromTicket(channel: TextChannel, userId: string): Promise<void> {
   await channel.permissionOverwrites.delete(userId);
 }

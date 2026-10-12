@@ -115,7 +115,7 @@ export default function ReportsPage() {
         </div>
       </div>
 
-      {/* Config */}
+      {}
       <div className="card mb-6">
         <h3 className="text-base font-semibold text-white mb-3">{t('reportChannel')}</h3>
         <div className="flex gap-3 items-end">
@@ -142,7 +142,7 @@ export default function ReportsPage() {
         </div>
       </div>
 
-      {/* Tabs */}
+      {}
       <div className="flex gap-1 mb-6 border-b border-gray-700">
         <button
           onClick={() => setTab('pending')}

@@ -4,7 +4,6 @@ import { prisma } from '../database.js';
 
 export async function reputationRoutes(server: FastifyInstance): Promise<void> {
 
-  // GET /guilds/:guildId/reputation/top — top 25 by rep count
   server.get('/guilds/:guildId/reputation/top', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
 
@@ -22,7 +21,6 @@ export async function reputationRoutes(server: FastifyInstance): Promise<void> {
     });
   });
 
-  // GET /guilds/:guildId/reputation/:userId
   server.get('/guilds/:guildId/reputation/:userId', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, userId } = request.params as { guildId: string; userId: string };
 

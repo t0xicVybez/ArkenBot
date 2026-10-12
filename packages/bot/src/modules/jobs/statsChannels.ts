@@ -1,4 +1,4 @@
-/** statsChannels scheduler job(s) — extracted from BackgroundJobs (P3 god-file split). */
+
 import { type VoiceChannel } from 'discord.js';
 import { prisma } from '../../database.js';
 import { logger, swallow } from '../../logger.js';
@@ -34,9 +34,7 @@ async function updateStatsChannel(
         value = guild.memberCount.toLocaleString();
         break;
       case 'online': {
-        // Read from the presence cache rather than bulk-fetching members.
-        // Bulk member fetches are rate-limited to one request per guild per 30 s,
-        // making them unsuitable for a 5-minute polling interval.
+
         const online = guild.presences.cache.filter(
           (p) => p.status !== 'offline' && !p.user?.bot,
         ).size;

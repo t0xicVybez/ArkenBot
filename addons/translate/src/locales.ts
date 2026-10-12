@@ -1,5 +1,4 @@
-/** Localized catalogs for the Translator addon. Falls back to en-US per key.
- * Non-English strings generated via self-hosted LibreTranslate (scripts/i18n workflow). */
+
 export const locales = {
   "en-US": {
     "unavailable": "🌐 Translation is not available right now. An administrator needs to configure LibreTranslate.",

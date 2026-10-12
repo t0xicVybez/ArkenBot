@@ -11,7 +11,7 @@ import {
 } from './settings.schemas.js';
 
 export async function settingsRoutes(server: FastifyInstance): Promise<void> {
-  // GET /guilds/:guildId/settings
+
   server.get('/guilds/:guildId/settings', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const settings = await SettingsService.getGuildSettings(guildId);
@@ -21,7 +21,6 @@ export async function settingsRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: settings });
   });
 
-  // PATCH /guilds/:guildId/settings
   server.patch('/guilds/:guildId/settings', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const parsed = GuildSettingsPatchSchema.safeParse(request.body);
@@ -32,14 +31,12 @@ export async function settingsRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: updated });
   });
 
-  // GET /guilds/:guildId/settings/automod
   server.get('/guilds/:guildId/settings/automod', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const config = await SettingsService.getAutoModConfig(guildId);
     return reply.send({ success: true, data: config ?? {} });
   });
 
-  // PATCH /guilds/:guildId/settings/automod
   server.patch('/guilds/:guildId/settings/automod', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const parsed = AutoModPatchSchema.safeParse(request.body);
@@ -50,14 +47,12 @@ export async function settingsRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: updated });
   });
 
-  // GET /guilds/:guildId/settings/welcome
   server.get('/guilds/:guildId/settings/welcome', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const config = await SettingsService.getWelcomeConfig(guildId);
     return reply.send({ success: true, data: config ?? {} });
   });
 
-  // PATCH /guilds/:guildId/settings/welcome
   server.patch('/guilds/:guildId/settings/welcome', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const parsed = WelcomePatchSchema.safeParse(request.body);
@@ -68,8 +63,6 @@ export async function settingsRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: updated });
   });
 
-  // POST /guilds/:guildId/settings/welcome/test — bot posts a sample welcome to
-  // the configured channel, rendered for the requesting admin (setup wizard).
   server.post('/guilds/:guildId/settings/welcome/test', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const config = await prisma.welcomeConfig.findUnique({ where: { guildId }, select: { welcomeChannelId: true } });
@@ -83,7 +76,6 @@ export async function settingsRoutes(server: FastifyInstance): Promise<void> {
     return reply.code(202).send({ success: true });
   });
 
-  // GET /guilds/:guildId/settings/announcements
   server.get('/guilds/:guildId/settings/announcements', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const settings = await prisma.guildSettings.findUnique({
@@ -93,7 +85,6 @@ export async function settingsRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: settings ?? { announcementsEnabled: false, announcementChannelId: null } });
   });
 
-  // PATCH /guilds/:guildId/settings/announcements
   server.patch('/guilds/:guildId/settings/announcements', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const { announcementsEnabled, announcementChannelId } = request.body as {
@@ -118,14 +109,12 @@ export async function settingsRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: updated });
   });
 
-  // GET /guilds/:guildId/reaction-roles
   server.get('/guilds/:guildId/reaction-roles', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const roles = await prisma.reactionRole.findMany({ where: { guildId } });
     return reply.send({ success: true, data: roles });
   });
 
-  // POST /guilds/:guildId/reaction-roles
   server.post('/guilds/:guildId/reaction-roles', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const { channelId, messageId, emoji, roleId, type } = request.body as {
@@ -149,7 +138,6 @@ export async function settingsRoutes(server: FastifyInstance): Promise<void> {
     }
   });
 
-  // DELETE /guilds/:guildId/reaction-roles/:id
   server.delete('/guilds/:guildId/reaction-roles/:id', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, id } = request.params as { guildId: string; id: string };
 
@@ -160,9 +148,6 @@ export async function settingsRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, message: 'Deleted' });
   });
 
-  // ── Reaction Role Panels ─────────────────────────────────────────
-
-  // GET /guilds/:guildId/reaction-roles/panels
   server.get('/guilds/:guildId/reaction-roles/panels', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const panels = await prisma.reactionRolePanel.findMany({
@@ -173,7 +158,6 @@ export async function settingsRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: panels });
   });
 
-  // POST /guilds/:guildId/reaction-roles/panels
   server.post('/guilds/:guildId/reaction-roles/panels', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const { channelId, title, description } = request.body as {
@@ -196,7 +180,6 @@ export async function settingsRoutes(server: FastifyInstance): Promise<void> {
     return reply.code(201).send({ success: true, data: panel });
   });
 
-  // PATCH /guilds/:guildId/reaction-roles/panels/:panelId
   server.patch('/guilds/:guildId/reaction-roles/panels/:panelId', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, panelId } = request.params as { guildId: string; panelId: string };
     const { title, description } = request.body as { title?: string; description?: string };
@@ -214,14 +197,12 @@ export async function settingsRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: updated });
   });
 
-  // DELETE /guilds/:guildId/reaction-roles/panels/:panelId
   server.delete('/guilds/:guildId/reaction-roles/panels/:panelId', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, panelId } = request.params as { guildId: string; panelId: string };
 
     const existing = await prisma.reactionRolePanel.findFirst({ where: { id: panelId, guildId } });
     if (!existing) return reply.code(404).send({ success: false, error: 'Panel not found' });
 
-    // Notify bot to delete the Discord message before removing from DB
     await pub.publish('api:events', JSON.stringify({
       type: 'reaction-role:panel-delete',
       data: { guildId, channelId: existing.channelId, messageId: existing.messageId },
@@ -231,7 +212,6 @@ export async function settingsRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, message: 'Deleted' });
   });
 
-  // POST /guilds/:guildId/reaction-roles/panels/:panelId/roles
   server.post('/guilds/:guildId/reaction-roles/panels/:panelId/roles', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, panelId } = request.params as { guildId: string; panelId: string };
     const { emoji, roleId, type } = request.body as { emoji: string; roleId: string; type?: string };
@@ -239,7 +219,6 @@ export async function settingsRoutes(server: FastifyInstance): Promise<void> {
     const panel = await prisma.reactionRolePanel.findFirst({ where: { id: panelId, guildId } });
     if (!panel) return reply.code(404).send({ success: false, error: 'Panel not found' });
 
-    // Use the panel's current messageId if deployed, else use panelId as placeholder
     const placeholderMsgId = panel.messageId ?? panelId;
 
     let role;
@@ -266,7 +245,6 @@ export async function settingsRoutes(server: FastifyInstance): Promise<void> {
     return reply.code(201).send({ success: true, data: role });
   });
 
-  // DELETE /guilds/:guildId/reaction-roles/panels/:panelId/roles/:roleId
   server.delete('/guilds/:guildId/reaction-roles/panels/:panelId/roles/:roleId', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, panelId, roleId } = request.params as { guildId: string; panelId: string; roleId: string };
 
@@ -278,9 +256,6 @@ export async function settingsRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, message: 'Deleted' });
   });
 
-  // ── Warning Escalation ──────────────────────────────────────────────────────
-
-  // GET /guilds/:guildId/warning-escalation
   server.get('/guilds/:guildId/warning-escalation', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const settings = await prisma.guildSettings.findUnique({ where: { guildId }, select: { extended: true } });
@@ -288,7 +263,6 @@ export async function settingsRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: extended.warnEscalation ?? [] });
   });
 
-  // PUT /guilds/:guildId/warning-escalation
   server.put('/guilds/:guildId/warning-escalation', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const { escalations } = request.body as { escalations: Array<{ count: number; action: string; duration?: number }> };
@@ -309,9 +283,6 @@ export async function settingsRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: escalations });
   });
 
-  // ── Temp Voice Triggers (Join-to-Create, multi-channel) ────────────────────
-
-  // GET /guilds/:guildId/temp-voice/triggers
   server.get('/guilds/:guildId/temp-voice/triggers', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const triggers = await prisma.tempVoiceTrigger.findMany({
@@ -322,7 +293,6 @@ export async function settingsRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: triggers });
   });
 
-  // POST /guilds/:guildId/temp-voice/triggers
   server.post('/guilds/:guildId/temp-voice/triggers', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const { channelId, categoryId } = request.body as { channelId: string; categoryId?: string | null };
@@ -337,7 +307,6 @@ export async function settingsRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: trigger });
   });
 
-  // DELETE /guilds/:guildId/temp-voice/triggers/:channelId
   server.delete('/guilds/:guildId/temp-voice/triggers/:channelId', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, channelId } = request.params as { guildId: string; channelId: string };
     await prisma.tempVoiceTrigger.delete({
@@ -346,9 +315,6 @@ export async function settingsRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true });
   });
 
-  // ── Anti-Nuke Config ────────────────────────────────────────────────────────
-
-  // GET /guilds/:guildId/anti-nuke/config
   server.get('/guilds/:guildId/anti-nuke/config', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const settings = await prisma.guildSettings.findUnique({ where: { guildId }, select: { extended: true } });
@@ -356,7 +322,6 @@ export async function settingsRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: extended.antiNuke ?? {} });
   });
 
-  // PATCH /guilds/:guildId/anti-nuke/config
   server.patch('/guilds/:guildId/anti-nuke/config', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const body = request.body as {
@@ -385,9 +350,6 @@ export async function settingsRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: merged });
   });
 
-  // ── Verification Config ─────────────────────────────────────────────────────
-
-  // GET /guilds/:guildId/verification/config
   server.get('/guilds/:guildId/verification/config', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const settings = await prisma.guildSettings.findUnique({ where: { guildId }, select: { extended: true } });
@@ -395,7 +357,6 @@ export async function settingsRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: extended.verification ?? {} });
   });
 
-  // PATCH /guilds/:guildId/verification/config
   server.patch('/guilds/:guildId/verification/config', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const body = request.body as {
@@ -422,9 +383,6 @@ export async function settingsRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: merged });
   });
 
-  // ── Forum Management Config ─────────────────────────────────────────────────
-
-  // GET /guilds/:guildId/forum-management/config
   server.get('/guilds/:guildId/forum-management/config', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const settings = await prisma.guildSettings.findUnique({ where: { guildId }, select: { extended: true } });
@@ -432,7 +390,6 @@ export async function settingsRoutes(server: FastifyInstance): Promise<void> {
     return reply.send({ success: true, data: extended.forumManagement ?? {} });
   });
 
-  // PATCH /guilds/:guildId/forum-management/config
   server.patch('/guilds/:guildId/forum-management/config', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const body = request.body as {

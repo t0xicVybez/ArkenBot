@@ -7,7 +7,7 @@ import { AuthService } from '../services/AuthService.js';
 import { canManageGuild } from '../utils/guildAccess.js';
 
 export async function guildRoutes(server: FastifyInstance): Promise<void> {
-  // GET /guilds - List guilds the user can manage
+
   server.get('/guilds', { preHandler: [requireAuth] }, async (request, reply) => {
     const accessToken = await AuthService.getValidAccessToken(request.user!.id);
     if (!accessToken) {
@@ -23,9 +23,7 @@ export async function guildRoutes(server: FastifyInstance): Promise<void> {
         owner: boolean;
         approximate_member_count?: number;
       };
-      // /users/@me/guilds returns at most 200 guilds per page. Paginate with the
-      // `after` cursor so users in 200+ servers still see all of them (otherwise
-      // recently-joined servers — which sort last by ID — get cut off).
+
       const allGuilds: DiscordGuild[] = [];
       let after: string | undefined;
       for (let page = 0; page < 10; page++) {
@@ -36,11 +34,8 @@ export async function guildRoutes(server: FastifyInstance): Promise<void> {
         after = res.data[res.data.length - 1].id;
       }
 
-      // Access is granted to the server owner, or anyone with Administrator or
-      // Manage Server — the standard "can configure this server" threshold.
       const adminGuilds = allGuilds.filter((g) => canManageGuild(g.permissions, g.owner));
 
-      // Enrich with bot presence
       const guildIds = adminGuilds.map((g) => g.id);
       const botGuilds = await prisma.guild.findMany({
         where: { id: { in: guildIds } },
@@ -57,7 +52,6 @@ export async function guildRoutes(server: FastifyInstance): Promise<void> {
         memberCount: g.approximate_member_count ?? 0,
       }));
 
-
       return reply.send({ success: true, data: enriched });
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
@@ -66,7 +60,6 @@ export async function guildRoutes(server: FastifyInstance): Promise<void> {
     }
   });
 
-  // GET /guilds/:guildId - Get guild overview
   server.get('/guilds/:guildId', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
 
@@ -84,7 +77,6 @@ export async function guildRoutes(server: FastifyInstance): Promise<void> {
       return reply.code(404).send({ success: false, error: 'Guild not found' });
     }
 
-    // Stats
     const [caseCount, warningCount, levelCount, customCommandCount] = await Promise.all([
       prisma.moderationCase.count({ where: { guildId } }),
       prisma.warning.count({ where: { guildId, active: true } }),
@@ -101,7 +93,6 @@ export async function guildRoutes(server: FastifyInstance): Promise<void> {
     });
   });
 
-  // GET /guilds/:guildId/channels - List channels
   server.get('/guilds/:guildId/channels', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
 
@@ -116,15 +107,11 @@ export async function guildRoutes(server: FastifyInstance): Promise<void> {
     }
   });
 
-  // POST /guilds/:guildId/channels - Create a text channel (setup wizard "create for me")
   server.post('/guilds/:guildId/channels', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     if (!isSnowflake(guildId)) return reply.code(400).send({ success: false, error: 'Invalid guild ID' });
     const body = (request.body ?? {}) as { name?: string };
-    // Normalise to Discord's text-channel naming rules (lowercase, dashes).
-    // Bound the length up front so the regexes only ever see short input — a
-    // channel name is max 100 chars anyway, and this avoids super-linear
-    // backtracking (ReDoS) on a hostile, very long `name`.
+
     const name = (body.name ?? '')
       .slice(0, 200)
       .trim()
@@ -151,7 +138,6 @@ export async function guildRoutes(server: FastifyInstance): Promise<void> {
     }
   });
 
-  // GET /guilds/:guildId/roles - List roles
   server.get('/guilds/:guildId/roles', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
 
@@ -166,7 +152,6 @@ export async function guildRoutes(server: FastifyInstance): Promise<void> {
     }
   });
 
-  // GET /guilds/:guildId/analytics/automod
   server.get('/guilds/:guildId/analytics/automod', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const { days = '14' } = request.query as Record<string, string>;
@@ -179,7 +164,6 @@ export async function guildRoutes(server: FastifyInstance): Promise<void> {
       orderBy: { createdAt: 'asc' },
     });
 
-    // Aggregate by filter type (reason) and action
     const byFilter: Record<string, number> = {};
     const byAction: Record<string, number> = {};
     const dailyMap: Map<string, number> = new Map();
@@ -195,7 +179,6 @@ export async function guildRoutes(server: FastifyInstance): Promise<void> {
       dailyMap.set(dateKey, (dailyMap.get(dateKey) ?? 0) + 1);
     }
 
-    // Build a complete daily time-series with zero-fill for missing dates
     const timeseries: { date: string; hits: number }[] = [];
     for (let i = daysNum - 1; i >= 0; i--) {
       const d = new Date(Date.now() - i * 24 * 3600 * 1000);
@@ -214,7 +197,6 @@ export async function guildRoutes(server: FastifyInstance): Promise<void> {
     });
   });
 
-  // GET /guilds/:guildId/analytics?days=7|14|30|90
   server.get('/guilds/:guildId/analytics', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const requested = parseInt((request.query as { days?: string }).days ?? '30', 10);
@@ -234,7 +216,6 @@ export async function guildRoutes(server: FastifyInstance): Promise<void> {
     const joinEvents = logEntries24h.find((e) => e.type === 'member_join')?._count.type ?? 0;
     const leaveEvents = logEntries24h.find((e) => e.type === 'member_leave')?._count.type ?? 0;
 
-    // Period summary derived from the daily stats.
     const totalMessages = dailyHistory.reduce((s, d) => s + d.messagesCount, 0);
     const totalCommands = dailyHistory.reduce((s, d) => s + d.commandsCount, 0);
     const totalJoins = dailyHistory.reduce((s, d) => s + d.newMembers, 0);
@@ -243,7 +224,7 @@ export async function guildRoutes(server: FastifyInstance): Promise<void> {
     const summary = {
       currentMembers: dailyHistory.at(-1)?.memberCount ?? null,
       netGrowth: totalJoins - totalLeaves,
-      // Simple churn proxy: share of joiners not offset by leavers over the window.
+
       retentionPct: totalJoins > 0 ? Math.max(0, Math.round((1 - totalLeaves / totalJoins) * 100)) : null,
       totalMessages,
       totalCommands,
@@ -254,7 +235,6 @@ export async function guildRoutes(server: FastifyInstance): Promise<void> {
       peakMessages: peak?.messagesCount ?? 0,
     };
 
-    // Moderation actions per day, split by type.
     const bucket: Record<string, { date: string; ban: number; kick: number; mute: number; warn: number; other: number }> = {};
     for (const c of modCases) {
       const day = c.createdAt.toISOString().slice(0, 10);

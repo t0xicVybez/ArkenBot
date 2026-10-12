@@ -1,10 +1,4 @@
-/**
- * Per-game RCON dialects. Each game maps the friendly actions (players, say,
- * kick, ban, unban, save, stop) to the raw console command that game expects,
- * plus which transport and default port it uses. Actions left undefined aren't
- * available for that game — the command falls back to a "use /gameadmin exec"
- * hint. Raw `exec` works for every game regardless.
- */
+
 import { sourceRconCommand } from './rcon/source.js';
 import { webRconCommand } from './rcon/webrcon.js';
 import { telnetCommand } from './rcon/telnet.js';
@@ -16,7 +10,7 @@ export interface GameDef {
   label: string;
   transport: Transport;
   defaultPort: number;
-  /** Shown when configuring — e.g. how to find the RCON password / caveats. */
+
   note?: string;
   cmd: {
     players?: string;
@@ -111,7 +105,6 @@ export const GAMES: Record<string, GameDef> = {
 
 export const GAME_CHOICES = Object.values(GAMES).map((g) => ({ name: g.label, value: g.id }));
 
-/** Dispatch a raw command to the right transport for the game. */
 export function runGameCommand(
   game: string,
   host: string,

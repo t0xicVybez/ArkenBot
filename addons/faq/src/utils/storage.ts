@@ -37,7 +37,6 @@ export function atCapacity(count: number): boolean {
   return count >= MAX_ENTRIES;
 }
 
-/** Rank entries against a query over title + tags. Returns best matches first. */
 export function search(entries: FaqEntry[], query: string): FaqEntry[] {
   const q = query.trim().toLowerCase();
   if (!q) return entries.slice().sort((a, b) => b.uses - a.uses);

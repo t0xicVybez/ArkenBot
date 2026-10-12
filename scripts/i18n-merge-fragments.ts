@@ -1,12 +1,4 @@
-/**
- * Deep-merges all `<en-src-dir>/*.json` translation fragments (produced by the
- * extraction agents) into a base `en-US.json` catalog. Existing keys are kept;
- * fragment keys are added, and on a conflict the fragment value wins (the
- * fragments are the fuller extraction). Run once per catalog, then regenerate
- * the other locales with i18n-generate.ts.
- *
- *   tsx scripts/i18n-merge-fragments.ts <base-en.json> <en-src-dir>
- */
+
 import { readFileSync, writeFileSync, existsSync, readdirSync } from 'fs';
 import { join } from 'path';
 
@@ -20,7 +12,7 @@ type Json = Record<string, unknown>;
 
 function deepMerge(target: Json, source: Json): Json {
   for (const [k, v] of Object.entries(source)) {
-    // Skip prototype-polluting keys so a crafted fragment can't mutate Object.prototype.
+
     if (k === '__proto__' || k === 'constructor' || k === 'prototype') continue;
     if (v && typeof v === 'object' && !Array.isArray(v) && target[k] && typeof target[k] === 'object' && !Array.isArray(target[k])) {
       deepMerge(target[k] as Json, v as Json);

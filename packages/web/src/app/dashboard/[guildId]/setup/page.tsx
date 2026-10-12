@@ -24,7 +24,6 @@ const STEPS = [
   { id: 'done',        icon: PartyPopper },
 ];
 
-// Reusable channel dropdown with a "create it for me" button (#5).
 function ChannelPicker({ guildId, channels, value, onChange, defaultName, allowNone }: {
   guildId: string; channels: GuildChannel[]; value: string;
   onChange: (id: string) => void; defaultName: string; allowNone?: boolean;
@@ -96,14 +95,10 @@ export default function SetupWizardPage() {
   const [applying, setApplying] = useState(false);
   const [seeded, setSeeded] = useState(false);
 
-  // Persist wizard progress so a refresh resumes where the admin left off, and
-  // the Overview can show a "finish setup" banner until it's completed.
   const persist = (data: { setupStep?: number; setupCompletedAt?: string }) => {
-    settingsApi.update(guildId, data).catch(() => {/* non-blocking */});
+    settingsApi.update(guildId, data).catch(() => {});
   };
 
-  // #3 — reflect what's already configured so returning admins don't restart
-  // from a blank slate. A step counts as "done" when its module is enabled.
   const stepConfigured = (i: number): boolean => {
     switch (i) {
       case 0: return Boolean(welcome?.welcomeEnabled);
@@ -115,14 +110,13 @@ export default function SetupWizardPage() {
     }
   };
 
-  // Seed completed-set + resume point once the live data has loaded (once only).
   useEffect(() => {
     if (seeded || !settings || !welcome || !automod) return;
     const done = new Set<number>();
     for (let i = 0; i < STEPS.length - 1; i++) if (stepConfigured(i)) done.add(i);
     setCompleted(done);
     if (settings.setupCompletedAt) {
-      setStep(STEPS.length - 1); // already finished → land on the summary
+      setStep(STEPS.length - 1);
     } else {
       const saved = typeof settings.setupStep === 'number' ? settings.setupStep : 0;
       setStep(Math.min(Math.max(saved, 0), STEPS.length - 1));
@@ -140,8 +134,6 @@ export default function SetupWizardPage() {
     }
   };
 
-  // #2 — one-click "recommended" that turns on sensible defaults across every
-  // module, marks the wizard complete, and jumps to the summary.
   const applyRecommended = async () => {
     setApplying(true);
     try {
@@ -165,7 +157,7 @@ export default function SetupWizardPage() {
 
   return (
     <div className="p-3 sm:p-6 max-w-2xl mx-auto">
-      {/* Header */}
+      {}
       <div className="page-head">
         <div className="page-head-icon"><Sparkles className="w-5 h-5" /></div>
         <div className="min-w-0">
@@ -174,7 +166,7 @@ export default function SetupWizardPage() {
         </div>
       </div>
 
-      {/* #7 — permission preflight: warn if the bot can't do what setup enables */}
+      {}
       {permHealth && !permHealth.administrator && (!permHealth.botInGuild || permHealth.missing?.length > 0) && (
         <div className="mb-4 rounded-xl border border-amber-500/30 bg-amber-500/5 p-4 flex flex-col sm:flex-row sm:items-center gap-3">
           <AlertTriangle className="w-5 h-5 text-amber-400 flex-shrink-0" />
@@ -192,7 +184,7 @@ export default function SetupWizardPage() {
         </div>
       )}
 
-      {/* One-click recommended setup */}
+      {}
       {step === 0 && !settings?.setupCompletedAt && (
         <div className="mb-4 rounded-xl border border-discord-green/30 bg-discord-green/5 p-4 flex flex-col sm:flex-row sm:items-center gap-3">
           <div className="flex-1">
@@ -211,7 +203,7 @@ export default function SetupWizardPage() {
         </div>
       )}
 
-      {/* Restore from a backup instead of configuring from scratch */}
+      {}
       {step === 0 && (
         <div className="mb-6 rounded-xl border border-discord-blurple/25 bg-discord-blurple/5 p-4 flex flex-col sm:flex-row sm:items-center gap-3">
           <div className="flex-1">
@@ -246,7 +238,7 @@ export default function SetupWizardPage() {
         </div>
       )}
 
-      {/* Step progress */}
+      {}
       <div className="flex items-center gap-1 mb-8 overflow-x-auto pb-1">
         {STEPS.map((s, i) => {
           const Icon = s.icon;
@@ -273,7 +265,7 @@ export default function SetupWizardPage() {
         })}
       </div>
 
-      {/* Step panels */}
+      {}
       <div className="bg-(--bg-card) border border-(--border-subtle) rounded-xl p-6">
         {step === 0 && (
           <WelcomeStep
@@ -318,7 +310,7 @@ export default function SetupWizardPage() {
         )}
       </div>
 
-      {/* Nav buttons */}
+      {}
       {!isLast && (
         <div className="flex justify-between mt-4">
           <button
@@ -336,8 +328,6 @@ export default function SetupWizardPage() {
     </div>
   );
 }
-
-// ─── Step: Welcome Messages ───────────────────────────────────────────────────
 
 function WelcomeStep({
   guildId,
@@ -410,8 +400,6 @@ function WelcomeStep({
   );
 }
 
-// ─── Step: Moderation ─────────────────────────────────────────────────────────
-
 function ModerationStep({
   guildId,
   settings,
@@ -460,8 +448,6 @@ function ModerationStep({
   );
 }
 
-// ─── Step: Auto-Mod ───────────────────────────────────────────────────────────
-
 function AutoModStep({
   guildId,
   automod,
@@ -505,8 +491,6 @@ function AutoModStep({
     </div>
   );
 }
-
-// ─── Step: Logging ────────────────────────────────────────────────────────────
 
 function LoggingStep({
   guildId,
@@ -554,8 +538,6 @@ function LoggingStep({
   );
 }
 
-// ─── Step: Leveling ───────────────────────────────────────────────────────────
-
 function LevelingStep({
   guildId,
   settings,
@@ -593,8 +575,6 @@ function LevelingStep({
     </div>
   );
 }
-
-// ─── Step: Done ───────────────────────────────────────────────────────────────
 
 function DoneStep({ guildId, completed }: { guildId: string; completed: Set<number> }) {
   const t = useTranslations('setupWizardPage');
@@ -634,7 +614,7 @@ function DoneStep({ guildId, completed }: { guildId: string; completed: Set<numb
         ))}
       </div>
 
-      {/* #6 — discover more modules beyond the core wizard steps */}
+      {}
       <div className="text-left">
         <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">{t('exploreMore')}</p>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">

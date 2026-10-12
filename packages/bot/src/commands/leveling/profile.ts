@@ -1,7 +1,4 @@
-/**
- * /profile command — displays a member's full leveling profile including rank,
- * XP progress bar, message count, server join date, and earned achievements.
- */
+
 import {
   SlashCommandBuilder,
   EmbedBuilder,

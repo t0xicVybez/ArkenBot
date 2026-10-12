@@ -1,8 +1,4 @@
-/**
- * /economy — admin controls for the guild economy (ManageGuild).
- * Subcommands: give, take, reset, additem, removeitem. Full configuration
- * (currency, reward amounts, rob/gambling tuning) lives on the dashboard.
- */
+
 import {
   SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits, MessageFlags,
   type ChatInputCommandInteraction, type AutocompleteInteraction,
@@ -99,7 +95,7 @@ const command: BotCommand = {
       await interaction.reply({ embeds: [new EmbedBuilder().setColor(COLORS.WARNING).setTitle(t('economy.takeTitle', loc)).setDescription(t('economy.takeDesc', loc, { amount: EconomyModule.format(dec, cfg), user: `<@${target.id}>`, wallet: EconomyModule.format(updated.wallet, cfg) }))], flags: MessageFlags.Ephemeral });
       return;
     }
-    // reset
+
     await prisma.economyBalance.update({ where: { guildId_userId: { guildId, userId: target.id } }, data: { wallet: 0, bank: 0, dailyStreak: 0 } });
     await interaction.reply({ embeds: [new EmbedBuilder().setColor(COLORS.WARNING).setTitle(t('economy.resetTitle', loc)).setDescription(t('economy.resetDesc', loc, { user: `<@${target.id}>` }))], flags: MessageFlags.Ephemeral });
   },

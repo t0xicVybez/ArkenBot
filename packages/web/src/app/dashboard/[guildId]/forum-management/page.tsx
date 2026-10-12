@@ -63,7 +63,7 @@ export default function ForumManagementPage() {
   });
 
   const allChannels = (channelsRes?.data as { data?: Array<{ id: string; name: string; type: number }> })?.data ?? [];
-  // type 15 = forum channel in Discord
+
   const forumChannels = allChannels.filter((c) => c.type === 15);
   const configuredChannelIds = Object.keys(channelConfigs);
   const availableForumChannels = forumChannels.filter((c) => !configuredChannelIds.includes(c.id));
@@ -122,7 +122,7 @@ export default function ForumManagementPage() {
         </div>
       </div>
 
-      {/* Add forum channel */}
+      {}
       <div className="card mb-6">
         <h3 className="text-base font-semibold text-white mb-4">{t('addTitle')}</h3>
         <div className="space-y-3">
@@ -158,7 +158,7 @@ export default function ForumManagementPage() {
         </div>
       </div>
 
-      {/* Configured channels */}
+      {}
       {configuredChannelIds.length === 0 ? (
         <div className="card text-center py-10 text-gray-500">
           <MessagesSquare className="w-8 h-8 mx-auto mb-2 opacity-40" />

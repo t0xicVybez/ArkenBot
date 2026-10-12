@@ -28,7 +28,7 @@ export interface ApplicationSubmission {
   guildId: string;
   userId: string;
   userTag: string;
-  answers: Record<string, string>; // fieldId → answer
+  answers: Record<string, string>;
   status: 'pending' | 'accepted' | 'denied';
   reviewerId?: string;
   reviewerTag?: string;

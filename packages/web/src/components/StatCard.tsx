@@ -1,6 +1,4 @@
-/**
- * Displays a single stat metric with an icon, optional trend indicator, and colour theming.
- */
+
 import { clsx } from 'clsx';
 import type { LucideIcon } from 'lucide-react';
 

@@ -1,4 +1,4 @@
-/** reminders scheduler job(s) — extracted from BackgroundJobs (P3 god-file split). */
+
 import { prisma } from '../../database.js';
 import { logger, swallow } from '../../logger.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';

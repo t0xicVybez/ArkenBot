@@ -25,7 +25,7 @@ const PatchSchema = z.object({
 }).strict();
 
 export async function inviteTrackerRoutes(server: FastifyInstance): Promise<void> {
-  // GET /guilds/:guildId/invite-tracker
+
   server.get('/guilds/:guildId/invite-tracker', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
 
@@ -38,7 +38,6 @@ export async function inviteTrackerRoutes(server: FastifyInstance): Promise<void
       take:    25,
     });
 
-    // Fetch all InviteJoin records for these inviters in one query.
     const inviterIds = rows.map((r) => r.userId);
     const joinRecords = inviterIds.length > 0
       ? await prisma.inviteJoin.findMany({
@@ -47,7 +46,6 @@ export async function inviteTrackerRoutes(server: FastifyInstance): Promise<void
         })
       : [];
 
-    // Group join records by inviterId.
     const joinsByInviter = new Map<string, typeof joinRecords>();
     for (const rec of joinRecords) {
       const list = joinsByInviter.get(rec.inviterId) ?? [];
@@ -76,7 +74,6 @@ export async function inviteTrackerRoutes(server: FastifyInstance): Promise<void
     });
   });
 
-  // PATCH /guilds/:guildId/invite-tracker
   server.patch('/guilds/:guildId/invite-tracker', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const { enabled } = PatchSchema.parse(request.body);
@@ -93,7 +90,6 @@ export async function inviteTrackerRoutes(server: FastifyInstance): Promise<void
     return reply.send({ success: true });
   });
 
-  // PATCH /guilds/:guildId/invite-tracker/bonus — add/remove bonus invites manually
   server.patch('/guilds/:guildId/invite-tracker/bonus', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const { userId, bonus } = request.body as { userId: string; bonus: number };

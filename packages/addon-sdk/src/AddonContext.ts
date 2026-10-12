@@ -1,8 +1,4 @@
-/**
- * Runtime context injected into every addon command handler, event handler, and lifecycle hook.
- * Provides scoped access to the Discord client, persistent storage, structured logging,
- * the inter-addon event bus, and per-guild settings.
- */
+
 
 import type { Client } from 'discord.js';
 import type { AddonStorage, AddonLogger, AddonMessages, LocaleResolvable } from './types.js';
@@ -10,7 +6,6 @@ import type { AddonEventBus } from './AddonEventBus.js';
 
 const DEFAULT_LOCALE = 'en-US';
 
-/** Resolve a dot-path key against a nested message catalog. */
 function lookup(msgs: Record<string, unknown> | undefined, key: string): string | undefined {
   if (!msgs) return undefined;
   let cur: unknown = msgs;
@@ -30,11 +25,7 @@ export class AddonContext {
   public readonly storage: AddonStorage;
   public readonly logger: AddonLogger;
   public readonly events: AddonEventBus;
-  /**
-   * Host database handle (the bot's Prisma client), for first-party addons that
-   * need relational storage beyond the KV `storage`. Typed `unknown` so the SDK
-   * doesn't depend on the generated client; consumers cast to the shape they use.
-   */
+
   public readonly db?: unknown;
 
   private _getSettings: (guildId: string) => Promise<Record<string, unknown>>;
@@ -48,14 +39,14 @@ export class AddonContext {
     storage: AddonStorage;
     logger: AddonLogger;
     events: AddonEventBus;
-    /** Host database handle (the bot's Prisma client) for first-party addons. */
+
     db?: unknown;
     getSettings: (guildId: string) => Promise<Record<string, unknown>>;
-    /** Whether this addon is installed AND enabled in the given guild. */
+
     isInstalled?: (guildId: string) => Promise<boolean>;
-    /** Localized catalogs declared by the addon (locale -> nested dict). */
+
     messages?: AddonMessages;
-    /** Host-provided locale resolver (reads the user's saved preference, etc.). */
+
     resolveLocale?: (arg: LocaleResolvable) => Promise<string>;
   }) {
     this.addonName = options.addonName;
@@ -70,11 +61,6 @@ export class AddonContext {
     this._resolveLocale = options.resolveLocale;
   }
 
-  /**
-   * Translate a dot-path `key` into `locale` using this addon's declared catalogs.
-   * Interpolates `{name}` placeholders from `vars`. Falls back requested locale ->
-   * `en-US` -> the key itself, so a missing translation is visible but never throws.
-   */
   t(key: string, locale: string, vars?: Record<string, string | number>): string {
     let str =
       lookup(this._messages[locale], key) ??
@@ -88,55 +74,24 @@ export class AddonContext {
     return str;
   }
 
-  /**
-   * Resolve which language to reply in for a given interaction (or event-derived
-   * `{ user, guildId, guildLocale }`). Delegates to the host resolver, which reads
-   * the user's saved `arken_locale` preference, then Discord locale, then guild
-   * settings. Falls back to `en-US` when no resolver is wired.
-   */
   async resolveLocale(arg: LocaleResolvable): Promise<string> {
     if (!this._resolveLocale) return DEFAULT_LOCALE;
     return this._resolveLocale(arg);
   }
 
-  /**
-   * Returns all addon settings configured for the given guild.
-   * Returns an empty object if no settings have been saved.
-   *
-   * @param guildId - The Discord guild snowflake ID.
-   */
   async getSettings(guildId: string): Promise<Record<string, unknown>> {
     return this._getSettings(guildId);
   }
 
-  /**
-   * Whether this addon is installed and enabled in the guild. Useful inside raw
-   * event handlers (which fire globally) to skip guilds that don't have the addon.
-   * Returns `true` when the host didn't wire a resolver (dev/test fallback).
-   */
   async isInstalled(guildId: string): Promise<boolean> {
     return this._isInstalled ? this._isInstalled(guildId) : true;
   }
 
-  /**
-   * Returns a single setting value for the given guild, falling back to `defaultValue`
-   * when the key is absent.
-   *
-   * @param guildId - The Discord guild snowflake ID.
-   * @param key - The setting key as declared in the addon manifest.
-   * @param defaultValue - Value returned when the setting is not configured.
-   */
   async getSetting<T = unknown>(guildId: string, key: string, defaultValue?: T): Promise<T> {
     const settings = await this._getSettings(guildId);
     return (settings[key] ?? defaultValue) as T;
   }
 
-  /**
-   * Retrieves a guild from the Discord client's cache by ID.
-   * Returns `undefined` when the guild is not cached.
-   *
-   * @param guildId - The Discord guild snowflake ID.
-   */
   getGuild(guildId: string) {
     return this.client.guilds.cache.get(guildId);
   }

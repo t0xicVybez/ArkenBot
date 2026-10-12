@@ -1,6 +1,4 @@
-/**
- * /skip command — skips the currently playing track and advances the queue.
- */
+
 import {
   MessageFlags,
   SlashCommandBuilder,

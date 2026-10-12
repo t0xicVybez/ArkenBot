@@ -1,4 +1,4 @@
-/** scheduledMessages scheduler job(s) — extracted from BackgroundJobs (P3 god-file split). */
+
 import { EmbedBuilder, type TextChannel } from 'discord.js';
 import { computeNextOccurrence } from '@arkenbot/shared';
 import { prisma } from '../../database.js';
@@ -31,9 +31,7 @@ async function sendScheduledMessage(
 ): Promise<void> {
   if (!msg) return;
   try {
-    // Claim the message atomically by matching the expected lastSentAt value.
-    // If a concurrent worker already sent it, `count` will be 0 and we abort
-    // to prevent duplicate delivery.
+
     const claimed = await prisma.scheduledMessage.updateMany({
       where: {
         id: msg.id,
@@ -72,8 +70,6 @@ async function sendScheduledMessage(
       await channel.send({ content: `${roleMention}${msg.content}` });
     }
 
-    // Advance to the next occurrence; disable the record if it has no repeat
-    // interval. A successful send also resets the consecutive-failure counter.
     const nextAt = computeNextOccurrence(msg.scheduledAt, msg.repeat ?? null, msg.timezone ?? null, msg.daysOfWeek ?? []);
     await prisma.scheduledMessage.update({
       where: { id: msg.id },
@@ -85,8 +81,7 @@ async function sendScheduledMessage(
     logger.info({ id: msg.id, guildId: msg.guildId }, 'Scheduled message sent');
   } catch (err) {
     logger.error({ err, id: msg.id }, 'Failed to send scheduled message');
-    // Permission-type failures repeat forever until someone fixes the
-    // channel — count them and auto-disable instead of retrying every minute.
+
     const code = (err as { code?: number }).code;
     if (code === 50001 || code === 50013 || code === 10003) {
       const reason = `Discord error ${code}: ${(err as Error).message ?? 'permission denied'}`;
@@ -110,5 +105,5 @@ async function recordScheduledFailure(id: string, reason: string): Promise<void>
         `Scheduled message auto-disabled after ${MAX_FAILURES} consecutive failures`,
       );
     }
-  } catch { /* row deleted mid-flight — nothing to record */ }
+  } catch {  }
 }

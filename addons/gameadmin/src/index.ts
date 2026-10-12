@@ -1,8 +1,4 @@
-/**
- * Game Server Admin addon — RCON control for Minecraft, Palworld, ARK, Rust,
- * Valheim, and 7 Days to Die. All commands are gated behind Manage Server.
- * RCON passwords are sealed with AES-256-GCM before they touch storage.
- */
+
 import { defineAddon } from '@arkenbot/addon-sdk';
 import type { AddonContext } from '@arkenbot/addon-sdk';
 import type { Interaction } from 'discord.js';
@@ -12,7 +8,7 @@ import { runDueSchedules } from './admin.js';
 import { locales } from './locales.js';
 
 let schedTimer: ReturnType<typeof setInterval> | null = null;
-const SCHED_CHECK_MS = 60_000; // check due schedules every minute
+const SCHED_CHECK_MS = 60_000;
 
 export default defineAddon({
   locales,
@@ -31,8 +27,7 @@ export default defineAddon({
 
   events: [
     {
-      // Autocomplete is auto-routed by the host to the command; here we only
-      // need to finish `/gameadmin add` when its password modal comes back.
+
       event: 'interactionCreate',
       handler: async (ctx: AddonContext, ...args: unknown[]): Promise<void> => {
         const interaction = args[0] as Interaction;

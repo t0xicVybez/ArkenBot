@@ -1,11 +1,5 @@
 'use client';
 
-/**
- * Account & Security — active session management. Lists every device with a live
- * session (from `GET /auth/sessions`), lets the user revoke individual sessions,
- * and offers a "log out everywhere" action. The session backing the current
- * browser is flagged and cannot be self-revoked from the list (use logout).
- */
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -19,7 +13,6 @@ import { useTranslations } from 'next-intl';
 
 type Translate = (key: string, values?: Record<string, string | number>) => string;
 
-/** Derives a coarse, human-readable device label from a User-Agent string. */
 function deviceLabel(ua: string | null, t: Translate): string {
   if (!ua) return t('unknownDevice');
   const browser =

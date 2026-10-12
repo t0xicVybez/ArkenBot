@@ -8,10 +8,6 @@ const PRIORITY_COLOR: Record<string, string> = {
   urgent: '#ed4245',
 };
 
-/**
- * Generate an HTML transcript for a ticket.
- * Returns a Buffer ready to be uploaded as a Discord file attachment.
- */
 export function generateTranscriptHtml(
   ticket: Ticket,
   panel: TicketPanel,

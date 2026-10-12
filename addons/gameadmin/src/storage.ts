@@ -35,7 +35,6 @@ export function newServerId(): string {
   return randomUUID().slice(0, 8);
 }
 
-/** A parked `/gameadmin add` awaiting its RCON password from a modal. */
 export interface PendingAdd {
   name: string;
   game: string;

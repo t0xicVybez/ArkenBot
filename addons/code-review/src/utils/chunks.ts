@@ -1,18 +1,8 @@
-/** Utility for sending formatted code as one or more Discord messages. */
+
 import type { ModalSubmitInteraction } from 'discord.js';
 
-/** Maximum safe character count for a single Discord message, leaving a small buffer. */
 const MAX_MSG = 1980;
 
-/**
- * Sends formatted code as one or more ephemeral follow-up messages.
- * Splits output at line boundaries to avoid breaking code blocks mid-line.
- * Discord message length is capped at `MAX_MSG` characters (including fences).
- *
- * @param interaction - The modal submit interaction to follow up on.
- * @param lang - The language identifier used in the code fence (e.g. `"typescript"`).
- * @param code - The formatted source code string to send.
- */
 export async function sendFormattedCode(
   interaction: ModalSubmitInteraction,
   lang: string,

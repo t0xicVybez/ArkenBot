@@ -2,10 +2,6 @@
 
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
-/**
- * Staff memory-usage line chart. Isolated so recharts loads in its own lazy
- * chunk (via next/dynamic in the page) rather than the route's initial JS.
- */
 export default function MemoryChart({ data }: { data: Array<{ time: string; value: number }> }) {
   return (
     <ResponsiveContainer width="100%" height="100%">

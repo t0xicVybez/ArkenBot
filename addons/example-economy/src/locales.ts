@@ -1,4 +1,4 @@
-/** Localized catalogs for the example economy addon's user-facing output. */
+
 export const locales = {
   'en-US': {
     balanceTitle: '{emoji} {name} Balance', balanceDesc: '**{tag}** has **{balance} {name}** {emoji}',

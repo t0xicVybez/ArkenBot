@@ -1,4 +1,4 @@
-/** Localized catalogs for the FAQ / Knowledge Base addon. Falls back to en-US per key. */
+
 export const locales = {
   "en-US": {
     "guildOnly": "This command can only be used in a server.",
