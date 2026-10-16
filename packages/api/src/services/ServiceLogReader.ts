@@ -42,6 +42,17 @@ export interface ServiceLogEntry {
 
 const SNOWFLAKE = '(\\d{17,20})';
 
+// Known-benign web noise we never surface in the dashboard. These are Next.js
+// server-action requests that can't be honoured but are harmless: a scanner (or
+// a client on an old build) sends a bogus/stale `Next-Action` header, Next
+// rejects it and moves on. Nothing is broken, so filter them out of the view.
+// (The raw lines still exist in the PM2 log file if deep debugging is needed.)
+const IGNORED_LINE_PATTERNS: RegExp[] = [
+  /Server Reference ID did not match the expected format/i,
+  /Failed to find Server Action/i,
+  /failed-to-find-server-action/i,
+];
+
 function firstMatch(text: string | undefined, re: RegExp): string | undefined {
   if (!text) return undefined;
   return text.match(re)?.[1];
@@ -109,6 +120,7 @@ async function tail(path: string, maxBytes: number): Promise<{ text: string; mti
 function parseLine(line: string, service: LogService, stream: 'out' | 'err', mtimeMs: number): ServiceLogEntry | null {
   const trimmed = line.trim();
   if (!trimmed) return null;
+  if (IGNORED_LINE_PATTERNS.some((re) => re.test(trimmed))) return null;
 
   if (trimmed.startsWith('{')) {
     try {
