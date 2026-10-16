@@ -128,6 +128,10 @@ async function buildPages(
 
   pages.push(overview);
 
+  // A Discord embed allows at most 25 fields, so a category with more commands
+  // than that is split across several pages (e.g. "Utility (1/2)").
+  const FIELDS_PER_EMBED = 25;
+
   for (const cat of sortedCats) {
     const cmds = grouped.get(cat)!.sort((a, b) => {
       const an = (a.data as { name: string }).name;
@@ -135,28 +139,32 @@ async function buildPages(
       return an.localeCompare(bn);
     });
     const meta = getCategoryMeta(cat, loc);
+    const partCount = Math.ceil(cmds.length / FIELDS_PER_EMBED);
 
-    const embed = new EmbedBuilder()
-      .setColor(COLORS.INFO)
-      .setAuthor({ name: botName, iconURL: botAvatar })
-      .setTitle(`${meta.emoji} ${meta.label}`);
+    for (let start = 0; start < cmds.length; start += FIELDS_PER_EMBED) {
+      const part = start / FIELDS_PER_EMBED + 1;
+      const embed = new EmbedBuilder()
+        .setColor(COLORS.INFO)
+        .setAuthor({ name: botName, iconURL: botAvatar })
+        .setTitle(`${meta.emoji} ${meta.label}${partCount > 1 ? ` (${part}/${partCount})` : ''}`);
 
-    for (const cmd of cmds) {
-      const json = (cmd.data as { toJSON(): CmdJSON }).toJSON();
-      const subs = (json.options ?? []).filter(
-        (o) => o.type === SUB_COMMAND || o.type === SUB_COMMAND_GROUP,
-      );
+      for (const cmd of cmds.slice(start, start + FIELDS_PER_EMBED)) {
+        const json = (cmd.data as { toJSON(): CmdJSON }).toJSON();
+        const subs = (json.options ?? []).filter(
+          (o) => o.type === SUB_COMMAND || o.type === SUB_COMMAND_GROUP,
+        );
 
-      let value = json.description?.trim() || '—';
-      if (subs.length > 0) {
-        value += '\n> ' + subs.map((s) => `\`${s.name}\``).join('  ');
+        let value = json.description?.trim() || '—';
+        if (subs.length > 0) {
+          value += '\n> ' + subs.map((s) => `\`${s.name}\``).join('  ');
+        }
+        value = value.slice(0, 1024);
+
+        embed.addFields({ name: `/${json.name}`.slice(0, 256), value, inline: false });
       }
-      value = value.slice(0, 1024);
 
-      embed.addFields({ name: `/${json.name}`.slice(0, 256), value, inline: false });
+      pages.push(embed);
     }
-
-    pages.push(embed);
   }
 
   pages.forEach((p, i) =>
