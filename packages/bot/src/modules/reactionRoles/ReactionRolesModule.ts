@@ -138,7 +138,16 @@ export class ReactionRolesModule {
         msg: import('discord.js').Message,
         role: (typeof panel.roles)[number],
       ): Promise<string | null> => {
-        const reactable = role.emoji.replace(/([#*0-9])⃣/g, '$1️⃣');
+        const reactable = (role.emoji ?? '').replace(/([#*0-9])⃣/g, '$1️⃣').trim();
+        // A blank emoji would throw "Emoji must be a string or GuildEmoji" at the
+        // API; skip it up front. (Deleted custom emoji and missing Add-Reactions
+        // permission still surface via the catch below — those are real config
+        // issues the admin should see.)
+        if (!reactable) {
+          failedReactions++;
+          logger.debug({ panelId }, 'ReactionRoles: skipping empty panel emoji');
+          return null;
+        }
         const mr = await msg.react(reactable).catch((err: unknown) => {
           failedReactions++;
           lastReactError = err;

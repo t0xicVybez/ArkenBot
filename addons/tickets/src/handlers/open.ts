@@ -175,7 +175,12 @@ export async function createTicket(
   try {
     channel = await createTicketChannel(guild, panel, member, channelName);
   } catch (err) {
-    ctx.logger.error('Failed to create ticket channel', String(err));
+    // Include the real cause in the message — the addon logger forwards extra
+    // args as pino interpolation values, which get dropped when the message has
+    // no placeholder, so the error was previously invisible. Usual causes:
+    // missing Manage Channels, a deleted/invalid category, or Discord's
+    // 50-channels-per-category limit.
+    ctx.logger.error(`Failed to create ticket channel (guild ${guildId}): ${err instanceof Error ? err.message : String(err)}`);
     await interaction.editReply(t('failedCreateChannel'));
     return;
   }

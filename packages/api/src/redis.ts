@@ -3,6 +3,7 @@
  */
 import { Redis } from 'ioredis';
 import { config } from './config.js';
+import { logger } from './logger.js';
 
 export const redis = new Redis(config.redis.url, {
   password: config.redis.password || undefined,
@@ -20,6 +21,13 @@ export const sub = new Redis(config.redis.url, {
   password: config.redis.password || undefined,
   lazyConnect: true,
 });
+
+// Every ioredis client must have an 'error' listener, or a connection blip
+// (e.g. Redis restarting) emits an unhandled 'error' event and logs noisy
+// "[ioredis] Unhandled error event" lines. ioredis reconnects on its own.
+for (const [name, client] of [['redis', redis], ['pub', pub], ['sub', sub]] as const) {
+  client.on('error', (err: Error) => logger.warn({ err, client: name }, 'Redis connection error (will retry)'));
+}
 
 export async function connectRedis(): Promise<void> {
   await redis.connect();

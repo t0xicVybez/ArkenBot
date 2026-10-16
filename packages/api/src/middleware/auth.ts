@@ -85,7 +85,9 @@ export async function requireGuildAdmin(request: FastifyRequest, reply: FastifyR
   }
 
   if (request.user?.isStaff || request.user?.isBotOwner) {
-    await ensureGuildRow(guildId);
+    if (!(await ensureGuildRow(guildId))) {
+      reply.code(409).send({ success: false, error: 'ArkenBot is not in this server. Add the bot first.' });
+    }
     return;
   }
 
@@ -115,7 +117,13 @@ export async function requireGuildAdmin(request: FastifyRequest, reply: FastifyR
       return;
     }
 
-    await ensureGuildRow(guildId);
+    // The caller can manage this guild, but if the bot isn't in it there's no
+    // guild row to read or write against — reject cleanly instead of letting a
+    // later child-table upsert fail with a foreign-key violation (500).
+    if (!(await ensureGuildRow(guildId))) {
+      reply.code(409).send({ success: false, error: 'ArkenBot is not in this server. Add the bot first.' });
+      return;
+    }
   } catch (err) {
     if (err instanceof GuildFetchRateLimited) {
       reply.header('Retry-After', String(err.retryAfterSeconds));

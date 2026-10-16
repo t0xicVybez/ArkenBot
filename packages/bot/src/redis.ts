@@ -37,6 +37,12 @@ export const sub = new Redis(config.redis.url, {
   lazyConnect: true,
 });
 
+// The pub/sub clients need their own 'error' listeners too — without them a
+// Redis blip emits an unhandled 'error' event and logs noisy ioredis warnings.
+// ioredis reconnects on its own.
+pub.on('error', (err) => logger.warn({ err, client: 'pub' }, 'Redis pub error (will retry)'));
+sub.on('error', (err) => logger.warn({ err, client: 'sub' }, 'Redis sub error (will retry)'));
+
 export async function connectRedis(): Promise<void> {
   await redis.connect();
   await pub.connect();
