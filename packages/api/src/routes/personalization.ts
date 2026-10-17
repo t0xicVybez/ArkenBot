@@ -31,7 +31,11 @@ export async function personalizationRoutes(server: FastifyInstance): Promise<vo
     });
   });
 
-  server.patch('/guilds/:guildId/personalization', { preHandler: [requireGuildAdmin], bodyLimit: 4 * 1024 * 1024 }, async (request, reply) => {
+  // The avatar is sent as a base64 data URI, which is ~33% larger than the raw
+  // file. The dashboard caps the raw image at 3MB, so the encoded body can reach
+  // ~4MB — allow 6MB here for headroom. (nginx needs a matching
+  // client_max_body_size, or it rejects the upload with a 413 first.)
+  server.patch('/guilds/:guildId/personalization', { preHandler: [requireGuildAdmin], bodyLimit: 6 * 1024 * 1024 }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const { nickname, botAvatarUrl } = PatchSchema.parse(request.body);
 
