@@ -47,7 +47,10 @@ export async function embedRoutes(server: FastifyInstance): Promise<void> {
 
   server.post('/guilds/:guildId/embeds', {
     preHandler: [requireGuildAdmin],
-    bodyLimit: 4 * 1024 * 1024,
+    // Embed images are sent as base64 data URIs (~33% larger than the raw file);
+    // the dashboard caps the raw image at 3MB, so allow 6MB here (matches the
+    // personalization route and nginx's client_max_body_size).
+    bodyLimit: 6 * 1024 * 1024,
   }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const body = request.body as EmbedBody;
@@ -82,7 +85,8 @@ export async function embedRoutes(server: FastifyInstance): Promise<void> {
 
   server.patch('/guilds/:guildId/embeds/:id', {
     preHandler: [requireGuildAdmin],
-    bodyLimit: 4 * 1024 * 1024,
+    // See the POST handler: base64 image uploads need headroom over the raw 3MB cap.
+    bodyLimit: 6 * 1024 * 1024,
   }, async (request, reply) => {
     const { guildId, id } = request.params as { guildId: string; id: string };
     const body = request.body as EmbedBody;
