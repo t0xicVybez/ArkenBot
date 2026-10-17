@@ -42,6 +42,56 @@ describe('GuildSettingsPatchSchema', () => {
   });
 });
 
+describe('GuildSettingsPatchSchema — dashboard field completeness (regression guard)', () => {
+  // The leveling page saves via PATCH /settings, which is .strict(): any field the
+  // dashboard sends that is missing from the schema fails the WHOLE request. These
+  // bugs ("Failed to save leveling settings") were invisible until a user hit them,
+  // so this test pins the full set of fields each settings-saving page sends.
+  // If someone adds a dashboard setting without adding it here (and to the schema),
+  // this fails — the exact class of bug that broke leveling and the XP-decay section.
+  const LEVELING_FIELDS = {
+    levelingEnabled: true,
+    xpPerMessage: 50,
+    xpCooldown: 30,
+    levelUpMessage: 'gg {user}, level {level}!',
+    levelUpEmbed: false,
+    levelUpChannelId: '123456789012345678',
+    levelUpColor: '#5865F2',
+    keepPreviousRoles: true,
+    xpDecayEnabled: true,
+    xpDecayDays: 30,
+    xpDecayPercent: 5,
+    voiceXpEnabled: true,
+    voiceXpPerMinute: 10,
+    prestigeEnabled: true,
+    prestigeLevel: 100,
+  };
+
+  it('accepts every field the leveling page sends (incl. XP-decay + keepPreviousRoles)', () => {
+    const r = GuildSettingsPatchSchema.safeParse(LEVELING_FIELDS);
+    expect(r.success, r.success ? '' : JSON.stringify(r.error.flatten().fieldErrors)).toBe(true);
+  });
+
+  it('accepts each leveling field individually', () => {
+    for (const [k, v] of Object.entries(LEVELING_FIELDS)) {
+      const r = GuildSettingsPatchSchema.safeParse({ [k]: v });
+      expect(r.success, `field "${k}" rejected`).toBe(true);
+    }
+  });
+
+  it('accepts the common toggles/colors other settings pages send', () => {
+    const payload = {
+      moderationEnabled: true, autoModEnabled: true, welcomeEnabled: true,
+      loggingEnabled: true, musicEnabled: true, reactionRolesEnabled: true,
+      highlightsEnabled: true, permissionAlertsEnabled: true,
+      accentColor: '#112233', musicColor: '#aabbcc', moderationColor: '#000000',
+      logChannelId: null, modLogChannelId: '123456789012345678',
+    };
+    const r = GuildSettingsPatchSchema.safeParse(payload);
+    expect(r.success, r.success ? '' : JSON.stringify(r.error.flatten().fieldErrors)).toBe(true);
+  });
+});
+
 describe('AutoModPatchSchema', () => {
   it('accepts valid config and enums', () => {
     expect(AutoModPatchSchema.safeParse({ raidAction: 'kick' }).success).toBe(true);
