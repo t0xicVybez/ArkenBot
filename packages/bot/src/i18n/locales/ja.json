@@ -100,7 +100,10 @@
     "triggeredDescription": "{user} は **{action}** アクションのしきい値を超えたため処罰されました。",
     "actionTaken": "実行した措置",
     "deopped": "権限剥奪（ロール削除）",
-    "trigger": "トリガー"
+    "trigger": "トリガー",
+    "ownerAlertOnly": "アラートのみ — サーバの所有者は自動罰されることができません",
+    "triggeredDescriptionOwner": "{user} ** 超過{action}** 行動しきい値。 サーバの所有者として、自動で罰せられることはできませんので、これはアラートのみです。",
+    "alertDescriptionOwner": "ユーザー登録 {user} ** 超過{action}** しきい値 **{server}メニュー サーバの所有者として、自動で罰せられることはできませんので、これはアラートのみです。"
   },
   "onboarding": {
     "title": "👋 ArkenBot を追加していただきありがとうございます！",

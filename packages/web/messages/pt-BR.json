@@ -1241,7 +1241,18 @@
     "none": "Nenhum",
     "alertChannelHelp": "Canal para o qual enviar os alertas de nuke.",
     "saving": "Salvando…",
-    "saveChanges": "Salvar alterações"
+    "saveChanges": "Salvar alterações",
+    "trustedTitle": "Funções e usuários confiáveis",
+    "trustedDesc": "Membros com um papel confiável, e usuários confiáveis, estão totalmente isentos - suas ações nunca desencadeiam anti-nucleares. O dono do servidor é sempre tratado como alerta.",
+    "trustedRolesLabel": "Papel de confiança",
+    "addTrustedRole": "Adicione um papel confiável...",
+    "noTrustedRoles": "Nenhum papel confiável ainda.",
+    "trustedUsersLabel": "Usuários confiáveis.",
+    "addTrustedUserBtn": "Adicionar",
+    "trustedUserPlaceholder": "ID do usuário (clique com o botão direito em um usuário → Copiar ID do usuário)",
+    "noTrustedUsers": "Nenhum usuário confiável ainda.",
+    "invalidUserId": "Digite uma identificação de usuário válida (17-20 dígitos).",
+    "ownerNote": "O dono do servidor nunca pode ser auto-punido, então eles são sempre apenas alerta - administradores ainda são notificados, mas nenhuma ação é tomada."
   },
   "slowmodePage": {
     "deleted": "Configuração de modo lento excluída",

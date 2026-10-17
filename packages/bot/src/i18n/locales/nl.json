@@ -100,7 +100,10 @@
     "triggeredDescription": "{user} is bestraft voor het overschrijden van de **{action}**-actiedrempel.",
     "actionTaken": "Ondernomen Actie",
     "deopped": "De-opped (rollen verwijderd)",
-    "trigger": "Trigger"
+    "trigger": "Trigger",
+    "ownerAlertOnly": "Alarm alleen de eigenaar van de server kan niet automatisch worden gestraft",
+    "triggeredDescriptionOwner": "{user} overschreed het{action}** actiedrempel. Als servereigenaar kunnen ze niet automatisch worden gestraft, dus dit is alleen een waarschuwing.",
+    "alertDescriptionOwner": "Gebruiker {user} overschreed het{action}** drempel in **{server}**. Als servereigenaar kunnen ze niet automatisch worden gestraft, dus dit is alleen een waarschuwing."
   },
   "onboarding": {
     "title": "👋 Bedankt voor het toevoegen van ArkenBot!",

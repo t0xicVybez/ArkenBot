@@ -365,12 +365,23 @@ export async function settingsRoutes(server: FastifyInstance): Promise<void> {
       banThreshold?: number;
       action?: string;
       alertChannelId?: string | null;
+      whitelistRoles?: unknown;
+      whitelistUsers?: unknown;
     };
 
     const settings = await prisma.guildSettings.findUnique({ where: { guildId }, select: { extended: true } });
     const extended = (settings?.extended ?? {}) as Record<string, unknown>;
     const prev = (extended.antiNuke ?? {}) as Record<string, unknown>;
-    const merged = { ...prev, ...body };
+    const merged: Record<string, unknown> = { ...prev, ...body };
+
+    // Trusted role/user lists: keep only valid snowflakes, de-duplicated and
+    // capped, so junk from the client can never reach the bot's config blob.
+    const sanitizeIds = (v: unknown): string[] =>
+      Array.isArray(v)
+        ? [...new Set(v.filter((x): x is string => typeof x === 'string' && /^\d{17,20}$/.test(x)))].slice(0, 100)
+        : [];
+    if ('whitelistRoles' in body) merged.whitelistRoles = sanitizeIds(body.whitelistRoles);
+    if ('whitelistUsers' in body) merged.whitelistUsers = sanitizeIds(body.whitelistUsers);
 
     const updatedExtended = { ...extended, antiNuke: merged };
     await prisma.guildSettings.upsert({

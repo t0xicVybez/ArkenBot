@@ -1241,7 +1241,18 @@
     "none": "Brak",
     "alertChannelHelp": "Kanał, na który wysyłane są alerty o nuke.",
     "saving": "Zapisywanie…",
-    "saveChanges": "Zapisz zmiany"
+    "saveChanges": "Zapisz zmiany",
+    "trustedTitle": "Zaufane Roles & Użytkownicy",
+    "trustedDesc": "Członkowie z zaufaną rolą i zaufani użytkownicy są całkowicie zwolnieni - ich działania nigdy nie wywołują anty-atomówki. (Właściciel serwera jest zawsze traktowany jako alert- only.)",
+    "trustedRolesLabel": "Zaufane role",
+    "addTrustedRole": "Dodaj zaufaną rolę...",
+    "noTrustedRoles": "Jeszcze żadnych zaufanych ról.",
+    "trustedUsersLabel": "Zaufani użytkownicy",
+    "addTrustedUserBtn": "Dodaj",
+    "trustedUserPlaceholder": "Identyfikator użytkownika (kliknij prawym przyciskiem myszy użytkownika → Kopiuj ID użytkownika)",
+    "noTrustedUsers": "Jeszcze żadnych zaufanych użytkowników.",
+    "invalidUserId": "Podaj poprawny identyfikator użytkownika (17- 20 cyfr).",
+    "ownerNote": "Właściciel serwera nigdy nie może być automatycznie ukarany, więc są one zawsze alarmowane- tylko - administratorzy są nadal zgłaszane, ale nie podejmuje żadnych działań."
   },
   "slowmodePage": {
     "deleted": "Usunięto konfigurację trybu wolnego",

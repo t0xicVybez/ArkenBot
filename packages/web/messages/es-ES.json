@@ -1241,7 +1241,18 @@
     "none": "Ninguno",
     "alertChannelHelp": "Canal al que enviar las alertas de nuke.",
     "saving": "Guardando…",
-    "saveChanges": "Guardar cambios"
+    "saveChanges": "Guardar cambios",
+    "trustedRolesLabel": "Funciones fiduciarias",
+    "addTrustedRole": "Añade un papel de confianza...",
+    "trustedTitle": "Funciones confiadas \" Usuarios",
+    "trustedDesc": "Los miembros con un papel de confianza, y los usuarios de confianza, están totalmente exentos — sus acciones nunca desencadenan anti-nuke. (El propietario del servidor siempre es tratado como sólo alerta.)",
+    "noTrustedRoles": "Todavía no hay papeles de confianza.",
+    "addTrustedUserBtn": "Añadir",
+    "trustedUsersLabel": "Usuarios confiados",
+    "trustedUserPlaceholder": "ID de usuario (haga clic directamente en un usuario → Copiar ID de usuario)",
+    "noTrustedUsers": "Todavía no hay usuarios de confianza.",
+    "invalidUserId": "Introduzca un ID de usuario válido (17–20 dígitos).",
+    "ownerNote": "El propietario del servidor nunca puede ser auto-publicado, por lo que siempre están solos de alerta: los administradores todavía están notificados, pero no se adopta ninguna acción."
   },
   "slowmodePage": {
     "deleted": "Configuración de modo lento eliminada",

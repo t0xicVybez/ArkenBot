@@ -1241,7 +1241,18 @@
     "none": "无",
     "alertChannelHelp": "发送核爆警报的频道。",
     "saving": "正在保存…",
-    "saveChanges": "保存更改"
+    "saveChanges": "保存更改",
+    "trustedTitle": "信任的角色和用户",
+    "trustedDesc": "具有可信赖角色的成员,以及可信赖的用户,完全可以免责——他们的行为永远不会触发反诺克. (服务器所有者总是被视为只注意警报).",
+    "trustedRolesLabel": "受托角色",
+    "addTrustedRole": "添加一个信任的角色...",
+    "noTrustedRoles": "还没有信任的角色。",
+    "trustedUsersLabel": "信任的用户",
+    "addTrustedUserBtn": "添加",
+    "trustedUserPlaceholder": "用户名( 右键点击用户名 ~ 复制用户名)",
+    "noTrustedUsers": "还没有信任的用户 。",
+    "invalidUserId": "输入有效的用户ID( 17–20 位数) 。",
+    "ownerNote": "服务器所有者永远不能被自动惩罚,所以他们总是只发出警报——仍然通知管理员,但没有采取任何行动."
   },
   "slowmodePage": {
     "deleted": "已删除慢速模式配置",

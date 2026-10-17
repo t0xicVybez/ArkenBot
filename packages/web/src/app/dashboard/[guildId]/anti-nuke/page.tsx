@@ -11,7 +11,7 @@ import { Toggle } from '@/components/Toggle';
 import { SettingsSection } from '@/components/SettingsSection';
 import toast from 'react-hot-toast';
 import { useState, useEffect } from 'react';
-import { ShieldAlert, Info } from 'lucide-react';
+import { ShieldAlert, Info, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 type AntiNukeConfig = {
@@ -21,6 +21,8 @@ type AntiNukeConfig = {
   banThreshold: number;
   action: 'deop' | 'kick' | 'ban';
   alertChannelId?: string | null;
+  whitelistRoles: string[];
+  whitelistUsers: string[];
 };
 
 const antiNukeApi = {
@@ -36,6 +38,8 @@ const DEFAULT_CONFIG: AntiNukeConfig = {
   banThreshold: 5,
   action: 'deop',
   alertChannelId: null,
+  whitelistRoles: [],
+  whitelistUsers: [],
 };
 
 export default function AntiNukePage() {
@@ -54,6 +58,13 @@ export default function AntiNukePage() {
     queryFn: () => guildsApi.channels(guildId),
   });
 
+  const { data: rolesRes } = useQuery({
+    queryKey: ['roles', guildId],
+    queryFn: () => guildsApi.roles(guildId),
+  });
+
+  const [userIdInput, setUserIdInput] = useState('');
+
   useEffect(() => {
     const cfg = (configRes?.data as { data?: AntiNukeConfig })?.data;
     if (cfg) setConfig({ ...DEFAULT_CONFIG, ...cfg });
@@ -70,6 +81,26 @@ export default function AntiNukePage() {
 
   const allChannels = (channelsRes?.data as { data?: Array<{ id: string; name: string; type: number }> })?.data ?? [];
   const textChannels = allChannels.filter((c) => c.type === 0);
+  const allRoles = ((rolesRes?.data as { data?: Array<{ id: string; name: string }> })?.data ?? [])
+    .filter((r) => r.id !== guildId && r.name !== '@everyone');
+
+  const addTrustedRole = (roleId: string) => {
+    if (config.whitelistRoles.includes(roleId)) return;
+    setConfig((c) => ({ ...c, whitelistRoles: [...c.whitelistRoles, roleId] }));
+  };
+  const removeTrustedRole = (roleId: string) =>
+    setConfig((c) => ({ ...c, whitelistRoles: c.whitelistRoles.filter((id) => id !== roleId) }));
+
+  const addTrustedUser = () => {
+    const id = userIdInput.trim();
+    if (!/^\d{17,20}$/.test(id)) { toast.error(t('invalidUserId')); return; }
+    if (!config.whitelistUsers.includes(id)) {
+      setConfig((c) => ({ ...c, whitelistUsers: [...c.whitelistUsers, id] }));
+    }
+    setUserIdInput('');
+  };
+  const removeTrustedUser = (id: string) =>
+    setConfig((c) => ({ ...c, whitelistUsers: c.whitelistUsers.filter((u) => u !== id) }));
 
   if (isLoading) {
     return (
@@ -177,6 +208,77 @@ export default function AntiNukePage() {
               ))}
             </select>
             <p className="text-xs text-gray-500 mt-1">{t('alertChannelHelp')}</p>
+          </div>
+        </div>
+      </SettingsSection>
+
+      <SettingsSection title={t('trustedTitle')} description={t('trustedDesc')}>
+        <div className="card mb-4 border border-yellow-500/20 bg-yellow-500/5 flex items-start gap-3">
+          <Info className="w-5 h-5 text-yellow-400 flex-shrink-0 mt-0.5" />
+          <p className="text-sm text-yellow-200/90">{t('ownerNote')}</p>
+        </div>
+
+        <div className="space-y-3">
+          <label className="label">{t('trustedRolesLabel')}</label>
+          <select
+            className="input"
+            value=""
+            onChange={(e) => { if (e.target.value) addTrustedRole(e.target.value); }}
+          >
+            <option value="">{t('addTrustedRole')}</option>
+            {allRoles
+              .filter((r) => !config.whitelistRoles.includes(r.id))
+              .map((r) => (
+                <option key={r.id} value={r.id}>{r.name}</option>
+              ))}
+          </select>
+          <div className="flex flex-wrap gap-2">
+            {config.whitelistRoles.length === 0 && (
+              <p className="text-gray-500 text-xs">{t('noTrustedRoles')}</p>
+            )}
+            {config.whitelistRoles.map((roleId) => {
+              const role = allRoles.find((r) => r.id === roleId);
+              return (
+                <span
+                  key={roleId}
+                  className="inline-flex items-center gap-1 bg-discord-blurple/20 text-discord-blurple border border-discord-blurple/40 rounded-sm px-2 py-0.5 text-xs"
+                >
+                  @{role?.name ?? roleId}
+                  <button onClick={() => removeTrustedRole(roleId)} className="hover:text-white ml-1"><X className="w-3 h-3" /></button>
+                </span>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="space-y-3 mt-5">
+          <label className="label">{t('trustedUsersLabel')}</label>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              className="input flex-1"
+              placeholder={t('trustedUserPlaceholder')}
+              value={userIdInput}
+              onChange={(e) => setUserIdInput(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addTrustedUser(); } }}
+            />
+            <button type="button" onClick={addTrustedUser} className="btn-secondary whitespace-nowrap">
+              {t('addTrustedUserBtn')}
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {config.whitelistUsers.length === 0 && (
+              <p className="text-gray-500 text-xs">{t('noTrustedUsers')}</p>
+            )}
+            {config.whitelistUsers.map((id) => (
+              <span
+                key={id}
+                className="inline-flex items-center gap-1 bg-green-900/30 text-green-400 border border-green-700/50 rounded-sm px-2 py-0.5 text-xs font-mono"
+              >
+                {id}
+                <button onClick={() => removeTrustedUser(id)} className="hover:text-white ml-1"><X className="w-3 h-3" /></button>
+              </span>
+            ))}
           </div>
         </div>
       </SettingsSection>

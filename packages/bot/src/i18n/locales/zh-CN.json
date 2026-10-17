@@ -100,7 +100,10 @@
     "triggeredDescription": "{user} 因超过 **{action}** 操作阈值而受到处罚。",
     "actionTaken": "已采取的措施",
     "deopped": "已移除权限（身份组已删除）",
-    "trigger": "触发条件"
+    "trigger": "触发条件",
+    "ownerAlertOnly": "只提醒—— 服务器所有者不能被自动罚款",
+    "triggeredDescriptionOwner": "{user} 超过**{action}** 行动阈值。 作为服务器的拥有者,它们不能被自动罚款,因此这只是一个提醒.",
+    "alertDescriptionOwner": "用户 {user} 超过**{action}** 起始数**{server}页:1 作为服务器的拥有者,它们不能被自动罚款,因此这只是一个提醒."
   },
   "onboarding": {
     "title": "👋 感谢添加 ArkenBot！",

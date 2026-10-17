@@ -100,7 +100,10 @@
     "triggeredDescription": "{user} dihukum karena melampaui ambang tindakan **{action}**.",
     "actionTaken": "Tindakan Diambil",
     "deopped": "Peran dicabut (peran dihapus)",
-    "trigger": "Pemicu"
+    "trigger": "Pemicu",
+    "ownerAlertOnly": "Peringatan saja - pemilik server tidak dapat otomatis - dihukum",
+    "triggeredDescriptionOwner": "{user} melebihi * *{action}* * Ambang aksi. Sebagai pemilik server, mereka tidak dapat otomatis dihukum, jadi ini hanya peringatan.",
+    "alertDescriptionOwner": "Pengguna {user} melebihi * *{action}* * threshold in * *{server}* *. Sebagai pemilik server, mereka tidak dapat otomatis dihukum, jadi ini hanya peringatan."
   },
   "onboarding": {
     "title": "👋 Terima kasih telah menambahkan ArkenBot!",

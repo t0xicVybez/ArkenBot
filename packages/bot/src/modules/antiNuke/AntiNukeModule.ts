@@ -25,6 +25,11 @@ interface AntiNukeConfig {
   banThreshold: number;
   action: 'deop' | 'ban' | 'kick';
   alertChannelId: string | null;
+  // Trusted roles/users are fully exempt — their destructive actions are never
+  // counted, so senior staff who legitimately do bulk channel/role cleanup
+  // don't trip the protection at all.
+  whitelistRoles: string[];
+  whitelistUsers: string[];
 }
 
 function defaultConfig(): AntiNukeConfig {
@@ -35,6 +40,8 @@ function defaultConfig(): AntiNukeConfig {
     banThreshold: 5,
     action: 'deop',
     alertChannelId: null,
+    whitelistRoles: [],
+    whitelistUsers: [],
   };
 }
 
@@ -67,6 +74,13 @@ export class AntiNukeModule {
       if (!rawConfig?.enabled) return;
 
       const config: AntiNukeConfig = { ...defaultConfig(), ...rawConfig };
+
+      // Trusted users/roles are exempt entirely — don't even start counting.
+      if (config.whitelistUsers.includes(userId)) return;
+      if (config.whitelistRoles.length > 0) {
+        const member = guild.members.cache.get(userId) ?? await guild.members.fetch(userId).catch(swallow);
+        if (member && config.whitelistRoles.some((roleId) => member.roles.cache.has(roleId))) return;
+      }
 
       const key = `antinuke:actions:${guild.id}:${userId}:${actionType}`;
       const count = await redis.incr(key);
@@ -111,7 +125,11 @@ export class AntiNukeModule {
       const dmEmbed = new EmbedBuilder()
         .setColor(0xff0000)
         .setTitle(t('antiNuke.alertTitle', loc))
-        .setDescription(t('antiNuke.alertDescription', loc, { user: `<@${userId}>`, action: actionType, server: guild.name }))
+        .setDescription(
+          isOwner
+            ? t('antiNuke.alertDescriptionOwner', loc, { user: `<@${userId}>`, action: actionType, server: guild.name })
+            : t('antiNuke.alertDescription', loc, { user: `<@${userId}>`, action: actionType, server: guild.name }),
+        )
         .setTimestamp();
 
       for (const [, admin] of adminMembers) {
@@ -129,12 +147,21 @@ export class AntiNukeModule {
       if (config.alertChannelId) {
         const alertChannel = guild.channels.cache.get(config.alertChannelId);
         if (alertChannel?.isTextBased() && 'send' in alertChannel) {
+          const actionTakenValue = isOwner
+            ? t('antiNuke.ownerAlertOnly', loc)
+            : config.action === 'deop'
+              ? t('antiNuke.deopped', loc)
+              : config.action;
           const alertEmbed = new EmbedBuilder()
             .setColor(0xff0000)
             .setTitle(t('antiNuke.triggeredTitle', loc))
-            .setDescription(t('antiNuke.triggeredDescription', loc, { user: `<@${userId}>`, action: actionType }))
+            .setDescription(
+              isOwner
+                ? t('antiNuke.triggeredDescriptionOwner', loc, { user: `<@${userId}>`, action: actionType })
+                : t('antiNuke.triggeredDescription', loc, { user: `<@${userId}>`, action: actionType }),
+            )
             .addFields(
-              { name: t('antiNuke.actionTaken', loc), value: config.action === 'deop' ? t('antiNuke.deopped', loc) : config.action, inline: true },
+              { name: t('antiNuke.actionTaken', loc), value: actionTakenValue, inline: true },
               { name: t('antiNuke.trigger', loc), value: actionType, inline: true },
             )
             .setTimestamp();

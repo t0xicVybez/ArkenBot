@@ -100,7 +100,10 @@
     "triggeredDescription": "{user} został(a) ukarany(-a) za przekroczenie progu akcji **{action}**.",
     "actionTaken": "Podjęte działanie",
     "deopped": "Odebrano uprawnienia (usunięto role)",
-    "trigger": "Wyzwalacz"
+    "trigger": "Wyzwalacz",
+    "ownerAlertOnly": "Tylko alarm - właściciel serwera nie może być automatycznie ukarany",
+    "triggeredDescriptionOwner": "{user} powyżej * *{action}* * Próg działania. Jako właściciel serwera, nie mogą być automatycznie ukarani, więc jest to tylko ostrzeżenie.",
+    "alertDescriptionOwner": "Użytkownik {user} powyżej * *{action}* * progi w * *{server}* *. Jako właściciel serwera, nie mogą być automatycznie ukarani, więc jest to tylko ostrzeżenie."
   },
   "onboarding": {
     "title": "👋 Dziękujemy za dodanie ArkenBot!",

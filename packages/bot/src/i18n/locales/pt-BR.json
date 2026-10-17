@@ -100,7 +100,10 @@
     "triggeredDescription": "{user} foi punido por exceder o limite da ação **{action}**.",
     "actionTaken": "Ação tomada",
     "deopped": "Permissões removidas (cargos removidos)",
-    "trigger": "Gatilho"
+    "trigger": "Gatilho",
+    "ownerAlertOnly": "Alerta apenas: o dono do servidor não pode ser punido automaticamente.",
+    "triggeredDescriptionOwner": "{user} Excedeu o **{action}Um limiar de ação. Como o dono do servidor, eles não podem ser punidos automaticamente, então isso é apenas um alerta.",
+    "alertDescriptionOwner": "Usuário {user} Excedeu o **{action}** Limiar em **{server}**. Como o dono do servidor, eles não podem ser punidos automaticamente, então isso é apenas um alerta."
   },
   "onboarding": {
     "title": "👋 Obrigado por adicionar o ArkenBot!",

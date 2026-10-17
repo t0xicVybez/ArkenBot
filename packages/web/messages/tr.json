@@ -1241,7 +1241,18 @@
     "none": "Yok",
     "alertChannelHelp": "Nuke uyarılarının gönderileceği kanal.",
     "saving": "Kaydediliyor…",
-    "saveChanges": "Değişiklikleri Kaydet"
+    "saveChanges": "Değişiklikleri Kaydet",
+    "trustedTitle": "Güvenilen Roller & Kullanıcılar",
+    "trustedDesc": "Güvenilir bir rolü olan üyeler ve güvenilir kullanıcılar tamamen muaftır - eylemleri asla anti-nuke tetiklemez. ( sunucu sahibi her zaman uyarı olarak muamele edilir.)",
+    "trustedRolesLabel": "Güvenilen roller",
+    "addTrustedRole": "Güvenilir bir rol ekleyin...",
+    "noTrustedRoles": "Henüz güvenilmeyen roller yok.",
+    "trustedUsersLabel": "Güvenilen kullanıcılar",
+    "addTrustedUserBtn": "Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add Add",
+    "trustedUserPlaceholder": "Kullanıcı ID (sağ tıklama bir kullanıcı → Kopya Kullanıcı ID)",
+    "noTrustedUsers": "Henüz güvenilmeyen kullanıcılar yok.",
+    "invalidUserId": "Geçerli bir kullanıcı ID (17-20 basamak) girin.",
+    "ownerNote": "Sunucu sahibi asla oto-punishedilemez, bu yüzden her zaman uyarıda bulunurlar - yöneticiler hala bilgilendirilir, ancak hiçbir eylem yapılmadı."
   },
   "slowmodePage": {
     "deleted": "Yavaş mod yapılandırması silindi",

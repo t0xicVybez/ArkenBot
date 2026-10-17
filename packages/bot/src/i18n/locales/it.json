@@ -100,7 +100,10 @@
     "triggeredDescription": "{user} è stato punito per aver superato la soglia dell'azione **{action}**.",
     "actionTaken": "Azione intrapresa",
     "deopped": "Permessi revocati (ruoli rimossi)",
-    "trigger": "Attivatore"
+    "trigger": "Attivatore",
+    "ownerAlertOnly": "Avviso solo — il proprietario del server non può essere auto-punished",
+    "triggeredDescriptionOwner": "{user} superata la **{action}** soglia d'azione. Come proprietario del server, non possono essere auto-punished, quindi questo è un solo avviso.",
+    "alertDescriptionOwner": "Utente {user} superata la **{action}** soglia in **{server}**. Come proprietario del server, non possono essere auto-punished, quindi questo è un solo avviso."
   },
   "onboarding": {
     "title": "👋 Grazie per aver aggiunto ArkenBot!",

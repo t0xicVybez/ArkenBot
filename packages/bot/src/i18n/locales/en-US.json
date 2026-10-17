@@ -100,7 +100,10 @@
     "triggeredDescription": "{user} was punished for exceeding the **{action}** action threshold.",
     "actionTaken": "Action Taken",
     "deopped": "De-opped (roles removed)",
-    "trigger": "Trigger"
+    "trigger": "Trigger",
+    "ownerAlertOnly": "Alert only — the server owner cannot be auto-punished",
+    "alertDescriptionOwner": "User {user} exceeded the **{action}** threshold in **{server}**. As the server owner, they cannot be auto-punished, so this is an alert only.",
+    "triggeredDescriptionOwner": "{user} exceeded the **{action}** action threshold. As the server owner, they cannot be auto-punished, so this is an alert only."
   },
   "onboarding": {
     "title": "👋 Thanks for adding ArkenBot!",

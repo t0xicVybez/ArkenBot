@@ -1241,7 +1241,18 @@
     "none": "None",
     "alertChannelHelp": "Channel to send nuke alerts to.",
     "saving": "Saving…",
-    "saveChanges": "Save Changes"
+    "saveChanges": "Save Changes",
+    "trustedTitle": "Trusted Roles & Users",
+    "trustedDesc": "Members with a trusted role, and trusted users, are fully exempt — their actions never trigger anti-nuke. (The server owner is always treated as alert-only.)",
+    "trustedRolesLabel": "Trusted roles",
+    "addTrustedRole": "Add a trusted role…",
+    "noTrustedRoles": "No trusted roles yet.",
+    "trustedUsersLabel": "Trusted users",
+    "addTrustedUserBtn": "Add",
+    "trustedUserPlaceholder": "User ID (right-click a user → Copy User ID)",
+    "noTrustedUsers": "No trusted users yet.",
+    "invalidUserId": "Enter a valid user ID (17–20 digits).",
+    "ownerNote": "The server owner can never be auto-punished, so they are always alert-only — admins are still notified, but no action is taken."
   },
   "slowmodePage": {
     "deleted": "Slowmode config deleted",

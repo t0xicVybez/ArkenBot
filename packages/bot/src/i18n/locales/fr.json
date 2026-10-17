@@ -100,7 +100,10 @@
     "triggeredDescription": "{user} a été sanctionné pour avoir dépassé le seuil de l'action **{action}**.",
     "actionTaken": "Action effectuée",
     "deopped": "Permissions retirées (rôles supprimés)",
-    "trigger": "Déclencheur"
+    "trigger": "Déclencheur",
+    "ownerAlertOnly": "Alerte seulement — le propriétaire du serveur ne peut pas être puni automatiquement",
+    "alertDescriptionOwner": "Utilisateur {user} supérieur au **{action}** seuil en **{server}**. En tant que propriétaire du serveur, ils ne peuvent pas être punis automatiquement, donc c'est une alerte seulement.",
+    "triggeredDescriptionOwner": "{user} supérieur au **{action}** seuil d'action. En tant que propriétaire du serveur, ils ne peuvent pas être punis automatiquement, donc c'est une alerte seulement."
   },
   "onboarding": {
     "title": "👋 Merci d'avoir ajouté ArkenBot !",

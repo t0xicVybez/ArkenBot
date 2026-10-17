@@ -1241,7 +1241,18 @@
     "none": "Nessuno",
     "alertChannelHelp": "Canale a cui inviare gli avvisi di nuke.",
     "saving": "Salvataggio…",
-    "saveChanges": "Salva modifiche"
+    "saveChanges": "Salva modifiche",
+    "trustedTitle": "Ruoli e utenti fidati",
+    "trustedRolesLabel": "ruoli fidati",
+    "trustedDesc": "I membri con un ruolo fidato, e gli utenti fidati, sono completamente esenti — le loro azioni non innescano mai anti-nuke. (Il proprietario del server è sempre trattato come allarme-solo.)",
+    "addTrustedRole": "Aggiungi un ruolo fidato...",
+    "noTrustedRoles": "Non ci sono ancora ruoli fidati.",
+    "trustedUsersLabel": "Utenti fidati",
+    "addTrustedUserBtn": "Aggiungi",
+    "trustedUserPlaceholder": "ID utente (click destro di un utente → Copia ID utente)",
+    "noTrustedUsers": "Nessun utente fidato ancora.",
+    "invalidUserId": "Inserisci un ID utente valido (17-20 cifre).",
+    "ownerNote": "Il proprietario del server non può mai essere auto-punished, quindi sono sempre allerta-solo — gli amministratori sono ancora notificati, ma nessuna azione è presa."
   },
   "slowmodePage": {
     "deleted": "Configurazione della modalità lenta eliminata",

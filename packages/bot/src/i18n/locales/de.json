@@ -100,7 +100,10 @@
     "triggeredDescription": "{user} wurde bestraft, weil der Schwellenwert der Aktion **{action}** überschritten wurde.",
     "actionTaken": "Ergriffene Maßnahme",
     "deopped": "Deopped (Rollen entfernt)",
-    "trigger": "Auslöser"
+    "trigger": "Auslöser",
+    "ownerAlertOnly": "Nur Alarm: Der Serverbesitzer kann nicht automatisch bestraft werden",
+    "triggeredDescriptionOwner": "{user} Überschritten die **{action}** Aktionsschwelle. Als Serverbesitzer können sie nicht automatisch bestraft werden, daher ist dies nur eine Warnung.",
+    "alertDescriptionOwner": "Nutzer {user} Überschritten die **{action}** Schwellenwert in **{server}**. Als Serverbesitzer können sie nicht automatisch bestraft werden, daher ist dies nur eine Warnung."
   },
   "onboarding": {
     "title": "👋 Danke, dass du ArkenBot hinzugefügt hast!",

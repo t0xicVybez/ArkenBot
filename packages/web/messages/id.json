@@ -1241,7 +1241,18 @@
     "none": "Tidak Ada",
     "alertChannelHelp": "Kanal untuk mengirim peringatan nuke.",
     "saving": "Menyimpan…",
-    "saveChanges": "Simpan Perubahan"
+    "saveChanges": "Simpan Perubahan",
+    "trustedTitle": "Role Dipercaya & Pengguna",
+    "trustedDesc": "Anggota dengan peran terpercaya, dan pengguna terpercaya, sepenuhnya dibebaskan - tindakan mereka tidak pernah memicu anti- nuke. (Pemilik server selalu diperlakukan sebagai peringatan saja.)",
+    "trustedRolesLabel": "Peran terpercaya",
+    "addTrustedRole": "Tambahkan peran terpercaya...",
+    "noTrustedRoles": "Belum ada peran yang dipercaya.",
+    "trustedUsersLabel": "Pengguna terpercaya",
+    "addTrustedUserBtn": "Tambah",
+    "trustedUserPlaceholder": "ID Pengguna (right--click sebuah user --help Salin ID Pengguna)",
+    "noTrustedUsers": "Belum ada pengguna terpercaya.",
+    "invalidUserId": "Masukkan ID pemakai yang valid (17- 20 digit).",
+    "ownerNote": "Pemilik server tidak pernah bisa otomatis dihukum, sehingga mereka selalu waspada -hanya - admin masih diberitahu, tapi tidak ada tindakan yang diambil."
   },
   "slowmodePage": {
     "deleted": "Konfigurasi slowmode dihapus",

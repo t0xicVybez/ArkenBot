@@ -1241,7 +1241,18 @@
     "none": "なし",
     "alertChannelHelp": "ニュークアラートを送信するチャンネル。",
     "saving": "保存中…",
-    "saveChanges": "変更を保存"
+    "saveChanges": "変更を保存",
+    "trustedTitle": "信頼できる役割とユーザー",
+    "trustedDesc": "信頼できる役割を持つメンバー、信頼できるユーザーは、完全に免除されます。その行動は、反核を誘発しません。 (サーバー所有者は、常にアラート専用として扱われます。)",
+    "trustedRolesLabel": "信頼できる役割",
+    "addTrustedRole": "信頼できる役割を追加します。",
+    "noTrustedRoles": "信頼できる役割はまだありません。",
+    "trustedUsersLabel": "信頼できるユーザー",
+    "addTrustedUserBtn": "追加する",
+    "trustedUserPlaceholder": "ユーザーID(右クリック→ユーザIDのコピー)",
+    "noTrustedUsers": "信頼できるユーザーはまだいません。",
+    "invalidUserId": "有効なユーザーID(17～20桁)を入力してください。",
+    "ownerNote": "サーバの所有者は自動罰されることはできませんので、彼らは常に警戒している - 管理者はまだ通知されますが、行動は取られません。"
   },
   "slowmodePage": {
     "deleted": "低速モードの設定を削除しました",

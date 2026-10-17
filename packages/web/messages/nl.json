@@ -1241,7 +1241,18 @@
     "none": "Geen",
     "alertChannelHelp": "Kanaal waarnaar nuke-meldingen worden gestuurd.",
     "saving": "Opslaan…",
-    "saveChanges": "Wijzigingen Opslaan"
+    "saveChanges": "Wijzigingen Opslaan",
+    "trustedTitle": "Vertrouwde rollen en gebruikers",
+    "trustedDesc": "Leden met een vertrouwde rol, en vertrouwde gebruikers, zijn volledig vrijgesteld van hun acties nooit leiden tot anti-nuke. (De eigenaar van de server wordt altijd behandeld als alert-only.)",
+    "trustedRolesLabel": "Vertrouwde rollen",
+    "addTrustedRole": "Voeg een vertrouwde rol toe...",
+    "noTrustedRoles": "Nog geen vertrouwde rollen.",
+    "trustedUsersLabel": "Vertrouwde gebruikers",
+    "addTrustedUserBtn": "Voeg toe",
+    "trustedUserPlaceholder": "Gebruikers-ID (klik met de rechtermuisknop op een gebruiker → Gebruikers-ID kopiëren)",
+    "noTrustedUsers": "Nog geen vertrouwde gebruikers.",
+    "invalidUserId": "Voer een geldige gebruikers-ID in (17",
+    "ownerNote": "De eigenaar van de server kan nooit automatisch worden gestraft, dus ze zijn altijd alert-only admins worden nog steeds gemeld, maar er wordt geen actie ondernomen."
   },
   "slowmodePage": {
     "deleted": "Slowmode-configuratie verwijderd",

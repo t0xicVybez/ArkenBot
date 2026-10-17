@@ -100,7 +100,10 @@
     "triggeredDescription": "{user}님이 **{action}** 작업 임계값을 초과하여 제재되었습니다.",
     "actionTaken": "취한 조치",
     "deopped": "권한 해제됨(역할 제거됨)",
-    "trigger": "트리거"
+    "trigger": "트리거",
+    "ownerAlertOnly": "Alert 만 - 서버 소유자는 자동 완성 될 수 없습니다",
+    "triggeredDescriptionOwner": "{user} 더 알아보기{action}** 동작 임계 값. 서버 소유자로서, 그들은 자동 완성 될 수 없습니다, 그래서 이것은 경고입니다.",
+    "alertDescriptionOwner": "사용자 이름 {user} 더 알아보기{action}** 임계값{server}이름 * 서버 소유자로서, 그들은 자동 완성 될 수 없습니다, 그래서 이것은 경고입니다."
   },
   "onboarding": {
     "title": "👋 ArkenBot을 추가해 주셔서 감사합니다!",

@@ -1241,7 +1241,18 @@
     "none": "Keiner",
     "alertChannelHelp": "Kanal, an den Nuke-Warnungen gesendet werden.",
     "saving": "Wird gespeichert…",
-    "saveChanges": "Änderungen speichern"
+    "saveChanges": "Änderungen speichern",
+    "trustedTitle": "Vertrauenswürdige Rollen & Benutzer",
+    "trustedDesc": "Mitglieder mit einer vertrauenswürdigen rolle und vertrauenswürdige benutzer sind vollständig ausgenommen - ihre aktionen lösen niemals anti-nuke aus. (Der Serverbesitzer wird immer nur als Alarm behandelt.)",
+    "trustedRolesLabel": "Vertrauensvolle Rollen",
+    "addTrustedRole": "Hinzufügen einer vertrauenswürdigen Rolle...",
+    "noTrustedRoles": "Noch keine vertrauenswürdigen Rollen.",
+    "trustedUsersLabel": "Vertrauenswürdige Nutzer",
+    "addTrustedUserBtn": "Addition",
+    "trustedUserPlaceholder": "Benutzer-ID (Rechtsklick auf einen Benutzer → Benutzer-ID kopieren)",
+    "noTrustedUsers": "Noch keine vertrauenswürdigen Benutzer.",
+    "invalidUserId": "Geben Sie eine gültige Benutzer-ID (17-20 Ziffern) ein.",
+    "ownerNote": "Der Serverbesitzer kann niemals automatisch bestraft werden, daher sind sie immer nur alarmiert - Administratoren werden immer noch benachrichtigt, aber es werden keine Maßnahmen ergriffen."
   },
   "slowmodePage": {
     "deleted": "Slowmode-Konfiguration gelöscht",

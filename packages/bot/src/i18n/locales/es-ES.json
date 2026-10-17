@@ -100,7 +100,10 @@
     "triggeredDescription": "{user} fue sancionado por superar el umbral de la acción **{action}**.",
     "actionTaken": "Acción tomada",
     "deopped": "Permisos retirados (roles eliminados)",
-    "trigger": "Desencadenante"
+    "trigger": "Desencadenante",
+    "ownerAlertOnly": "Alerta sólo: el propietario del servidor no puede ser auto-publicado",
+    "triggeredDescriptionOwner": "{user} excedido del **{action}** umbral de acción. Como propietario del servidor, no pueden ser auto-publicados, por lo que esto es sólo una alerta.",
+    "alertDescriptionOwner": "Usuario {user} excedido del **{action}** umbral en **{server}** Como propietario del servidor, no pueden ser auto-publicados, por lo que esto es sólo una alerta."
   },
   "onboarding": {
     "title": "👋 ¡Gracias por añadir ArkenBot!",

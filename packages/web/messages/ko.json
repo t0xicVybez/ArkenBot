@@ -1241,7 +1241,18 @@
     "none": "없음",
     "alertChannelHelp": "뉴크 알림을 보낼 채널.",
     "saving": "저장 중…",
-    "saveChanges": "변경사항 저장"
+    "saveChanges": "변경사항 저장",
+    "trustedTitle": "신뢰할 수있는 역할 및 사용자",
+    "trustedDesc": "신뢰할 수 있는 역할과 신뢰할 수 있는 사용자를 가진 구성원은 완전히 면제됩니다 — 그들의 행동은 반대로 핵을 결코 방아쇠하지 않습니다. (서버 소유자는 항상 alert-only로 처리됩니다.)",
+    "trustedRolesLabel": "신뢰할 수있는 역할",
+    "addTrustedRole": "신뢰할 수있는 역할 추가 ...",
+    "noTrustedRoles": "믿을 수 없는 역할.",
+    "trustedUsersLabel": "신뢰할 수 있는 사용자",
+    "addTrustedUserBtn": "기타 제품",
+    "trustedUserPlaceholder": "사용자 ID (오른쪽 클릭 사용자 → 복사 사용자 ID)",
+    "noTrustedUsers": "신뢰할 수 있는 사용자 없음.",
+    "invalidUserId": "유효한 사용자 ID를 입력하십시오 (17~20 자리).",
+    "ownerNote": "서버 소유자는 자동 펀딩 할 수 없습니다, 그래서 그들은 항상 경고 - 만 - 관리자는 여전히 통보되지 않습니다, 하지만 행동은 촬영되지 않습니다."
   },
   "slowmodePage": {
     "deleted": "슬로우 모드 설정을 삭제했습니다",

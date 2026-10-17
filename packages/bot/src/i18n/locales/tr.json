@@ -100,7 +100,10 @@
     "triggeredDescription": "{user} **{action}** işlem eşiğini aştığı için cezalandırıldı.",
     "actionTaken": "Uygulanan İşlem",
     "deopped": "Yetkileri alındı (roller kaldırıldı)",
-    "trigger": "Tetikleyici"
+    "trigger": "Tetikleyici",
+    "ownerAlertOnly": "Sadece Uyarı - sunucu sahibi oto-punishedilemez",
+    "triggeredDescriptionOwner": "{user} **{action}** aksiyon eşi. Sunucu sahibi olarak, oto-punishedilemezler, bu yüzden bu sadece bir uyarıdır.",
+    "alertDescriptionOwner": "Kullanıcı {user} **{action}** eşliği **{server}**. Sunucu sahibi olarak, oto-punishedilemezler, bu yüzden bu sadece bir uyarıdır."
   },
   "onboarding": {
     "title": "👋 ArkenBot'u eklediğin için teşekkürler!",

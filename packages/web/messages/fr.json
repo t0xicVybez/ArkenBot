@@ -1241,7 +1241,18 @@
     "none": "Aucun",
     "alertChannelHelp": "Salon où envoyer les alertes de nuke.",
     "saving": "Enregistrement…",
-    "saveChanges": "Enregistrer les modifications"
+    "saveChanges": "Enregistrer les modifications",
+    "trustedTitle": "Rôles et utilisateurs de confiance",
+    "trustedDesc": "Les membres ayant un rôle de confiance, et les utilisateurs de confiance, sont totalement exemptés — leurs actions ne déclenchent jamais anti-nuque. (Le propriétaire du serveur est toujours traité comme une alerte seulement.)",
+    "trustedRolesLabel": "Rôles fiables",
+    "addTrustedRole": "Ajoutez un rôle de confiance...",
+    "noTrustedRoles": "Pas encore de rôles de confiance.",
+    "trustedUsersLabel": "Utilisateurs fiables",
+    "addTrustedUserBtn": "Ajouter",
+    "trustedUserPlaceholder": "ID utilisateur (clic droit sur un utilisateur → Copier l’ID utilisateur)",
+    "noTrustedUsers": "Pas encore d’utilisateurs de confiance.",
+    "invalidUserId": "Entrez un ID utilisateur valide (17 à 20 chiffres).",
+    "ownerNote": "Le propriétaire du serveur ne peut jamais être puni automatiquement, de sorte qu’il n’est toujours qu’alerte — les administrateurs sont toujours informés, mais aucune mesure n’est prise."
   },
   "slowmodePage": {
     "deleted": "Configuration du mode lent supprimée",
