@@ -2466,7 +2466,12 @@
     "delete": "Удалить",
     "pageInfo": "Страница {page} • всего {total} серверов",
     "previous": "Назад",
-    "next": "Вперёд"
+    "next": "Вперёд",
+    "colRetention": "Сохранение данных",
+    "leftOn": "Левый {date}",
+    "deletesIn": "Удалить в {time}",
+    "deletionPending": "Удаление в ожидании",
+    "retentionHelp": "Данные неактивных серверов удаляются через 72 часа после ArkenBot Листья."
   },
   "staffLogs": {
     "title": "Системные логи",

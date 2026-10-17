@@ -2466,7 +2466,12 @@
     "delete": "Usuń",
     "pageInfo": "Strona {page} • {total} serwerów łącznie",
     "previous": "Poprzednia",
-    "next": "Następna"
+    "next": "Następna",
+    "colRetention": "Zatrzymanie danych",
+    "leftOn": "Lewo {date}",
+    "deletesIn": "Usuwa {time}",
+    "retentionHelp": "Dane serwerów nieaktywnych są trwale usuwane 72 godziny po ArkenBot Liście.",
+    "deletionPending": "Usuwanie oczekujących"
   },
   "staffLogs": {
     "title": "Dzienniki systemowe",

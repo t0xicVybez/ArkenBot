@@ -5,11 +5,25 @@
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { adminApi } from '@/lib/api';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, Server, ExternalLink, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useWebSocket } from '@/lib/socket';
+
+// An inactive guild's data is permanently purged this long after the bot
+// leaves. Must match PURGE_GRACE_HOURS in packages/bot/src/utils/guildPurge.ts.
+const RETENTION_MS = 72 * 60 * 60 * 1000;
+
+function formatRemaining(ms: number): string {
+  const totalMin = Math.floor(ms / 60000);
+  const d = Math.floor(totalMin / 1440);
+  const h = Math.floor((totalMin % 1440) / 60);
+  const m = totalMin % 60;
+  if (d > 0) return `${d}d ${h}h`;
+  if (h > 0) return `${h}h ${m}m`;
+  return `${m}m`;
+}
 
 export default function StaffGuildsPage() {
   const t = useTranslations('staffGuilds');
@@ -17,6 +31,13 @@ export default function StaffGuildsPage() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [activeFilter, setActiveFilter] = useState<string>('');
+
+  // Tick every minute so the deletion countdown stays current without a refetch.
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 60_000);
+    return () => clearInterval(id);
+  }, []);
 
   const { data: guildsRes, isLoading } = useQuery({
     queryKey: ['admin-guilds', page, search, activeFilter],
@@ -39,6 +60,7 @@ export default function StaffGuildsPage() {
     memberCount: number | null;
     isActive: boolean;
     joinedAt: string;
+    leftAt?: string | null;
   }>;
   const total = guildsRes?.data?.data?.total ?? 0;
   const hasMore = guildsRes?.data?.data?.hasMore ?? false;
@@ -83,6 +105,7 @@ export default function StaffGuildsPage() {
               <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colId')}</th>
               <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colStatus')}</th>
               <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colJoined')}</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase" title={t('retentionHelp')}>{t('colRetention')}</th>
               <th className="text-left px-4 py-3 text-xs font-medium text-gray-400 uppercase">{t('colActions')}</th>
             </tr>
           </thead>
@@ -90,14 +113,14 @@ export default function StaffGuildsPage() {
             {isLoading ? (
               [...Array(10)].map((_, i) => (
                 <tr key={i} className="animate-pulse">
-                  <td colSpan={5} className="px-4 py-3">
+                  <td colSpan={6} className="px-4 py-3">
                     <div className="h-4 bg-gray-700 rounded-sm" />
                   </td>
                 </tr>
               ))
             ) : guilds.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-gray-500">
+                <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
                   {t('noGuilds')}
                 </td>
               </tr>
@@ -124,6 +147,26 @@ export default function StaffGuildsPage() {
                   </td>
                   <td className="px-4 py-3 text-sm text-gray-400">
                     {new Date(guild.joinedAt).toLocaleDateString()}
+                  </td>
+                  <td className="px-4 py-3 text-sm">
+                    {guild.isActive || !guild.leftAt ? (
+                      <span className="text-gray-600">—</span>
+                    ) : (
+                      (() => {
+                        const left = new Date(guild.leftAt);
+                        const remaining = left.getTime() + RETENTION_MS - now;
+                        return (
+                          <div className="flex flex-col gap-0.5">
+                            <span className="text-gray-400">{t('leftOn', { date: left.toLocaleDateString() })}</span>
+                            {remaining > 0 ? (
+                              <span className="text-xs text-amber-400">{t('deletesIn', { time: formatRemaining(remaining) })}</span>
+                            ) : (
+                              <span className="text-xs text-red-400">{t('deletionPending')}</span>
+                            )}
+                          </div>
+                        );
+                      })()
+                    )}
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap items-center gap-2">

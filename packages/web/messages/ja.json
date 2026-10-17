@@ -2466,7 +2466,12 @@
     "delete": "削除",
     "pageInfo": "{page} ページ • 合計 {total} サーバー",
     "previous": "前へ",
-    "next": "次へ"
+    "next": "次へ",
+    "colRetention": "データ保持",
+    "leftOn": "ふりがな {date}",
+    "deletesIn": "削除する {time}",
+    "deletionPending": "削除の終了",
+    "retentionHelp": "無効なサーバーのデータが永久に72時間後に削除されます ArkenBot 葉。"
   },
   "staffLogs": {
     "title": "システムログ",

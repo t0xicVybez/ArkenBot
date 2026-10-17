@@ -2466,7 +2466,12 @@
     "delete": "Delete",
     "pageInfo": "Page {page} • {total} total guilds",
     "previous": "Previous",
-    "next": "Next"
+    "next": "Next",
+    "colRetention": "Data Retention",
+    "retentionHelp": "Inactive servers’ data is permanently deleted 72 hours after ArkenBot leaves.",
+    "leftOn": "Left {date}",
+    "deletesIn": "Deletes in {time}",
+    "deletionPending": "Deletion pending"
   },
   "staffLogs": {
     "title": "System Logs",

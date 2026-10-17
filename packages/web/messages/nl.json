@@ -2466,7 +2466,12 @@
     "delete": "Verwijderen",
     "pageInfo": "Pagina {page} • {total} totaal servers",
     "previous": "Vorige",
-    "next": "Volgende"
+    "next": "Volgende",
+    "colRetention": "Gegevensbewaring",
+    "leftOn": "Links {date}",
+    "deletesIn": "Verwijdert in {time}",
+    "deletionPending": "Verwijdering in behandeling",
+    "retentionHelp": "Inactieve servers ArkenBot bladeren."
   },
   "staffLogs": {
     "title": "Systeemlogboeken",

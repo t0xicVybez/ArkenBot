@@ -2466,7 +2466,12 @@
     "delete": "Hapus",
     "pageInfo": "Halaman {page} • total {total} server",
     "previous": "Sebelumnya",
-    "next": "Berikutnya"
+    "next": "Berikutnya",
+    "colRetention": "Retensi Data",
+    "leftOn": "Kiri {date}",
+    "deletesIn": "Hapus masuk {time}",
+    "deletionPending": "Penghapusan tertunda",
+    "retentionHelp": "Data server tidak aktif akan dihapus permanen 72 jam setelah ArkenBot daun."
   },
   "staffLogs": {
     "title": "Log Sistem",

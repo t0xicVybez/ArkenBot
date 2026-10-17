@@ -2466,7 +2466,12 @@
     "delete": "删除",
     "pageInfo": "第 {page} 页 • 共 {total} 个服务器",
     "previous": "上一页",
-    "next": "下一页"
+    "next": "下一页",
+    "colRetention": "数据保留",
+    "leftOn": "左边 {date}",
+    "deletesIn": "删除在 {time}",
+    "deletionPending": "待删除",
+    "retentionHelp": "不活动服务器的数据在72小时后被永久删除 ArkenBot 叶子"
   },
   "staffLogs": {
     "title": "系统日志",

@@ -2466,7 +2466,12 @@
     "delete": "Excluir",
     "pageInfo": "Página {page} • {total} servidores no total",
     "previous": "Anterior",
-    "next": "Próximo"
+    "next": "Próximo",
+    "colRetention": "Retenção de dados",
+    "leftOn": "Esquerda. {date}",
+    "deletesIn": "Apaga em {time}",
+    "deletionPending": "Supressão pendente",
+    "retentionHelp": "Os dados dos servidores inativos são excluídos permanentemente 72 horas depois. ArkenBot Folhas."
   },
   "staffLogs": {
     "title": "Logs do sistema",

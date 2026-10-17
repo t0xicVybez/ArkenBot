@@ -2466,7 +2466,12 @@
     "delete": "삭제",
     "pageInfo": "{page} 페이지 • 총 {total}개 서버",
     "previous": "이전",
-    "next": "다음"
+    "next": "다음",
+    "colRetention": "데이터 보유",
+    "leftOn": "왼쪽 {date}",
+    "deletesIn": "삭제하기 {time}",
+    "deletionPending": "관련 상품",
+    "retentionHelp": "Inactive 서버의 데이터는 영구적으로 72시간 후 삭제됩니다. ArkenBot 잎."
   },
   "staffLogs": {
     "title": "시스템 로그",

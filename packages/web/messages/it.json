@@ -2466,7 +2466,12 @@
     "delete": "Elimina",
     "pageInfo": "Pagina {page} • {total} server in totale",
     "previous": "Precedente",
-    "next": "Successivo"
+    "next": "Successivo",
+    "colRetention": "Ritenzione dei dati",
+    "leftOn": "Sinistra {date}",
+    "deletesIn": "Elimina {time}",
+    "deletionPending": "Cancellazione in sospeso",
+    "retentionHelp": "I dati dei server inattivi vengono cancellati in modo permanente 72 ore dopo ArkenBot foglie."
   },
   "staffLogs": {
     "title": "Registri di sistema",

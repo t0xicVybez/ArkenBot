@@ -2466,7 +2466,12 @@
     "delete": "Sil",
     "pageInfo": "Sayfa {page} • toplam {total} sunucu",
     "previous": "Önceki",
-    "next": "Sonraki"
+    "next": "Sonraki",
+    "colRetention": "Data Retention",
+    "leftOn": "Sol sol sol {date}",
+    "deletesIn": "Deletes in {time}",
+    "deletionPending": "Deletion waiting",
+    "retentionHelp": "Inaktif sunucuların verileri kalıcı olarak 72 saat sonra silinir ArkenBot yaprakları."
   },
   "staffLogs": {
     "title": "Sistem Kayıtları",

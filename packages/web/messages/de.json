@@ -2466,7 +2466,12 @@
     "delete": "Löschen",
     "pageInfo": "Seite {page} • {total} Server insgesamt",
     "previous": "Zurück",
-    "next": "Weiter"
+    "next": "Weiter",
+    "colRetention": "Vorratsdatenspeicherung",
+    "leftOn": "Links {date}",
+    "deletesIn": "Löscht in {time}",
+    "deletionPending": "Streichung noch ausstehend",
+    "retentionHelp": "Daten von inaktiven Servern werden 72 Stunden nach ArkenBot Blätter."
   },
   "staffLogs": {
     "title": "Systemprotokolle",

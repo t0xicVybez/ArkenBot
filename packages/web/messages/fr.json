@@ -2466,7 +2466,12 @@
     "delete": "Supprimer",
     "pageInfo": "Page {page} • {total} serveurs au total",
     "previous": "Précédent",
-    "next": "Suivant"
+    "next": "Suivant",
+    "colRetention": "Conservation des données",
+    "leftOn": "Gauche {date}",
+    "retentionHelp": "Serveurs inactifs Les données sont supprimées en permanence 72 heures après ArkenBot les feuilles.",
+    "deletesIn": "Supprime {time}",
+    "deletionPending": "Suppression pendante"
   },
   "staffLogs": {
     "title": "Journaux système",
