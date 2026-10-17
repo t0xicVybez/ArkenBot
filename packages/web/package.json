@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3000",
-    "build": "next build",
+    "build": "next build --webpack",
     "start": "next start -p 3000",
     "typecheck": "tsc --noEmit",
     "lint": "echo 'web lint pending react/next flat-config setup — see eslint.config.mjs'"
