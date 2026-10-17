@@ -112,7 +112,9 @@ export class WelcomeModule {
         .setTimestamp();
       await textChannel.send({ content: prefix, embeds: [embed] }).catch(swallow);
     } else {
-      await textChannel.send({ content: `${prefix}\n${message}` }).catch(swallow);
+      // Clamp to Discord's 2000-char message limit so an over-long welcome
+      // template sends (truncated) instead of silently failing the send.
+      await textChannel.send({ content: `${prefix}\n${message}`.slice(0, 2000) }).catch(swallow);
     }
   }
 

@@ -1,4 +1,5 @@
 import type { FastifyInstance } from 'fastify';
+import { isSnowflake } from '@arkenbot/shared';
 import { requireGuildAdmin } from '../middleware/auth.js';
 import { encryptSecret, decryptSecretLenient } from '../utils/crypto.js';
 import { prisma } from '../database.js';
@@ -229,6 +230,9 @@ function extractColumnText(val: any): string {
 async function sendDiscordEmbed(channelId: string, embed: object): Promise<void> {
   const token = process.env.DISCORD_TOKEN;
   if (!token) return;
+  // channelId comes from stored alert config; validate it's a plain snowflake
+  // before interpolating into the Discord API URL (request-forgery guard).
+  if (!isSnowflake(channelId)) return;
   await fetch(`${DISCORD_API}/channels/${channelId}/messages`, {
     method: 'POST',
     headers: {

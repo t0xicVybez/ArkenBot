@@ -2,12 +2,17 @@
  * Turns @role-name text in a message into real Discord role mentions by matching against the guild's roles.
  */
 import axios from 'axios';
+import { isSnowflake } from '@arkenbot/shared';
 
 const DISCORD_API = 'https://discord.com/api/v10';
 
 export async function resolveRoleMentions(guildId: string, message?: string): Promise<string | undefined> {
   if (!message || !message.includes('@')) return message;
   if (!process.env.DISCORD_TOKEN) return message;
+  // Defence-in-depth: guildId is interpolated into the Discord API URL below, so
+  // reject anything that isn't a plain snowflake (prevents request-forgery via a
+  // crafted id that appends path segments).
+  if (!isSnowflake(guildId)) return message;
 
   try {
     const res = await axios.get(`${DISCORD_API}/guilds/${guildId}/roles`, {

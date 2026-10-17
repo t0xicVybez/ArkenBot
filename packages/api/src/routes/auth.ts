@@ -58,7 +58,12 @@ export async function authRoutes(server: FastifyInstance): Promise<void> {
       if (!raw) {
         return reply.redirect(`${config.web.url}/auth?error=invalid_state`);
       }
-      const { verifier, redirect } = JSON.parse(raw) as { verifier: string; redirect: string };
+      let verifier: string, redirect: string;
+      try {
+        ({ verifier, redirect } = JSON.parse(raw) as { verifier: string; redirect: string });
+      } catch {
+        return reply.redirect(`${config.web.url}/auth?error=invalid_state`);
+      }
 
       try {
         const tokens = await AuthService.exchangeCode(code, verifier);
