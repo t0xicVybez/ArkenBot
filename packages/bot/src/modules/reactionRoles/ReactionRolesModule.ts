@@ -151,7 +151,17 @@ export class ReactionRolesModule {
         const mr = await msg.react(reactable).catch((err: unknown) => {
           failedReactions++;
           lastReactError = err;
-          logger.warn({ err: (err as Error)?.message, emoji: role.emoji, panelId }, 'ReactionRoles: failed to add panel reaction');
+          // 10014 (Unknown Emoji — a deleted/invalid emoji the admin configured)
+          // and 50013 (Missing Permissions) are expected misconfigurations the
+          // bot can't fix and which recur on every panel re-deploy, so log them
+          // at debug to keep them out of the dashboard. Anything else is a real
+          // surprise and stays a warning.
+          const code = (err as { code?: number })?.code;
+          const expected = code === 10014 || code === 50013;
+          logger[expected ? 'debug' : 'warn'](
+            { err: (err as Error)?.message, emoji: role.emoji, panelId },
+            'ReactionRoles: failed to add panel reaction',
+          );
           return null;
         });
         if (mr) {

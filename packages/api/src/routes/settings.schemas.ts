@@ -151,8 +151,16 @@ export function normalizeEmoji(raw: string): string {
 
   }
 
-  return value
+  const normalized = value
     .replace(/️/g, '')
     .replace(/\uDB40[\uDC00-\uDCFF]/g, '')
     .trim();
+
+  // A lone keycap base (0-9, # or *) is almost always meant as the keycap emoji
+  // (someone types "3" meaning 3️⃣). A bare digit isn't a valid Discord reaction,
+  // so append the enclosing-keycap mark; the bot reconstitutes the full 3️⃣ when
+  // it reacts. Without this, number reaction roles silently fail with
+  // "Unknown Emoji".
+  if (/^[0-9#*]$/.test(normalized)) return `${normalized}⃣`;
+  return normalized;
 }
