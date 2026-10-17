@@ -47,6 +47,17 @@ function thresholdFor(config: AntiNukeConfig, actionType: ActionType): number {
   }
 }
 
+const ACTION_WINDOW_SECONDS = 60;
+
+// Human-readable phrasing for the service log, so the dashboard shows what
+// actually happened ("deleted roles") rather than the raw enum ("roleDelete").
+const ACTION_LABELS: Record<ActionType, string> = {
+  channelDelete: 'deleted channels',
+  roleDelete:    'deleted roles',
+  ban:           'banned members',
+  kick:          'kicked members',
+};
+
 export class AntiNukeModule {
   static async trackAction(guild: Guild, userId: string, actionType: ActionType): Promise<void> {
     try {
@@ -60,7 +71,7 @@ export class AntiNukeModule {
       const key = `antinuke:actions:${guild.id}:${userId}:${actionType}`;
       const count = await redis.incr(key);
       if (count === 1) {
-        await redis.expire(key, 60);
+        await redis.expire(key, ACTION_WINDOW_SECONDS);
       }
 
       const threshold = thresholdFor(config, actionType);
@@ -79,7 +90,15 @@ export class AntiNukeModule {
       const loc = await resolveUserLocale({ user: { id: '' }, guildId: guild.id, guildLocale: guild.preferredLocale });
       const member = guild.members.cache.get(userId) ?? await guild.members.fetch(userId).catch(swallow);
 
-      if (member) {
+      // Discord never lets a bot strip roles from, ban, or kick a server owner,
+      // so attempting it only produces failed-permission noise (and the owner
+      // tripping their own threshold while reorganising roles is the most
+      // common false positive). For the owner we skip the punishment and only
+      // raise the alert, so a compromised owner account is still flagged.
+      const isOwner = userId === guild.ownerId;
+      const punishmentApplied = !isOwner;
+
+      if (member && !isOwner) {
         const rolesToRemove = member.roles.cache.filter(r => r.id !== guild.id);
         for (const [, role] of rolesToRemove) {
           await member.roles.remove(role, 'Anti-nuke: destructive action threshold exceeded').catch((e) => notifyActionFailure(guild, { action: 'antiNuke', error: e, requiredPermission: 'Manage Roles', target: `<@${userId}>` }));
@@ -99,10 +118,12 @@ export class AntiNukeModule {
         await admin.send({ embeds: [dmEmbed] }).catch(swallow);
       }
 
-      if (config.action === 'ban' && guild.members.me?.permissions.has(PermissionFlagsBits.BanMembers)) {
-        await guild.members.ban(userId, { reason: `Anti-nuke: ${actionType} threshold exceeded` }).catch((e) => notifyActionFailure(guild, { action: 'antiNuke', error: e, requiredPermission: 'Ban Members', target: `<@${userId}>` }));
-      } else if (config.action === 'kick' && member && guild.members.me?.permissions.has(PermissionFlagsBits.KickMembers)) {
-        await member.kick(`Anti-nuke: ${actionType} threshold exceeded`).catch((e) => notifyActionFailure(guild, { action: 'antiNuke', error: e, requiredPermission: 'Kick Members', target: `<@${userId}>` }));
+      if (!isOwner) {
+        if (config.action === 'ban' && guild.members.me?.permissions.has(PermissionFlagsBits.BanMembers)) {
+          await guild.members.ban(userId, { reason: `Anti-nuke: ${actionType} threshold exceeded` }).catch((e) => notifyActionFailure(guild, { action: 'antiNuke', error: e, requiredPermission: 'Ban Members', target: `<@${userId}>` }));
+        } else if (config.action === 'kick' && member && guild.members.me?.permissions.has(PermissionFlagsBits.KickMembers)) {
+          await member.kick(`Anti-nuke: ${actionType} threshold exceeded`).catch((e) => notifyActionFailure(guild, { action: 'antiNuke', error: e, requiredPermission: 'Kick Members', target: `<@${userId}>` }));
+        }
       }
 
       if (config.alertChannelId) {
@@ -121,7 +142,26 @@ export class AntiNukeModule {
         }
       }
 
-      logger.warn({ guildId: guild.id, userId, actionType, punishment: config.action }, 'Anti-nuke triggered');
+      const actorTag = member?.user?.tag ?? userId;
+      const threshold = thresholdFor(config, actionType);
+      const response = isOwner
+        ? `${config.action} skipped — ${actorTag} is the server owner (alert only)`
+        : config.action;
+      logger.warn(
+        {
+          guildId: guild.id,
+          guildName: guild.name,
+          userId,
+          actorTag,
+          actionType,
+          threshold,
+          windowSeconds: ACTION_WINDOW_SECONDS,
+          punishment: config.action,
+          punishmentApplied,
+          isOwner,
+        },
+        `Anti-nuke triggered in "${guild.name}": ${actorTag} ${ACTION_LABELS[actionType]} ${threshold}+ times within ${ACTION_WINDOW_SECONDS}s — response: ${response}`,
+      );
     } catch (err) {
       logger.error({ err, guildId: guild.id, userId }, 'AntiNuke punish error');
     }
