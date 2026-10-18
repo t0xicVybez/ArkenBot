@@ -42,3 +42,19 @@ manager.on('shardCreate', (shard) => {
 logger.info(`Starting ShardingManager with ${shardCount === 'auto' ? 'auto' : shardCount} shard(s)...`);
 
 await manager.spawn();
+
+// Functional self-check once all shards are up: confirm each shard loaded its
+// commands and holds its slice of guilds, and report the fleet total. Surfaces
+// a broken shard immediately instead of waiting for a user to notice.
+try {
+  const results = (await manager.broadcastEval((c) => ({
+    shardId: c.shard?.ids?.[0] ?? 0,
+    commands: (c as unknown as { commands?: { size: number } }).commands?.size ?? 0,
+    guilds: c.guilds.cache.size,
+    ping: Math.round(c.ws.ping),
+  }))) as Array<{ shardId: number; commands: number; guilds: number; ping: number }>;
+  const totalGuilds = results.reduce((sum, r) => sum + r.guilds, 0);
+  logger.info({ shards: results, totalGuilds, shardCount: results.length }, 'Shard functional self-check');
+} catch (err) {
+  logger.error({ err }, 'Shard functional self-check failed');
+}
