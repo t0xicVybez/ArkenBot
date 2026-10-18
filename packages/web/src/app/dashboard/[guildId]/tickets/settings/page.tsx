@@ -194,7 +194,7 @@ export default function TicketSettingsPage() {
     webhookUrl: '',
     staffNotifyChannelId: '',
     staffNotifyRoleId: '',
-    ratingWindowMinutes: 5,
+    ratingWindowMinutes: 10,
     autoAssign: false,
     slaLevels: [],
     autoTriage: false,
@@ -221,7 +221,7 @@ export default function TicketSettingsPage() {
       webhookUrl: cfg.webhookUrl ?? '',
       staffNotifyChannelId: cfg.staffNotifyChannelId ?? '',
       staffNotifyRoleId: cfg.staffNotifyRoleId ?? '',
-      ratingWindowMinutes: cfg.ratingWindowMinutes ?? 5,
+      ratingWindowMinutes: cfg.ratingWindowMinutes ?? 10,
       autoAssign: cfg.autoAssign ?? false,
       slaLevels: cfg.slaLevels ?? [],
       autoTriage: cfg.autoTriage ?? false,
@@ -253,7 +253,7 @@ export default function TicketSettingsPage() {
       staffNotifyChannelId: draft.staffNotifyChannelId || undefined,
       staffNotifyRoleId: draft.staffNotifyRoleId || undefined,
       slaHours: draft.slaHours ?? 0,
-      ratingWindowMinutes: draft.ratingWindowMinutes ?? 5,
+      ratingWindowMinutes: draft.ratingWindowMinutes ?? 10,
     }),
     onSuccess: () => { toast.success(t('saved')); queryClient.invalidateQueries({ queryKey: ['tickets-config', guildId] }); },
     onError: () => toast.error(t('saveError')),
@@ -287,7 +287,7 @@ export default function TicketSettingsPage() {
           <input className="input text-sm" placeholder="https://your-webhook.com/tickets" value={draft.webhookUrl ?? ''} onChange={(e) => set('webhookUrl', e.target.value)} />
         </Row>
         <Row label={t('ratingWindow')} hint={t('ratingWindowHint')}>
-          <input type="number" min={1} max={1440} className="input w-28" value={draft.ratingWindowMinutes ?? 5} onChange={(e) => set('ratingWindowMinutes', Math.max(1, parseInt(e.target.value) || 5))} />
+          <input type="number" min={1} max={1440} className="input w-28" value={draft.ratingWindowMinutes ?? 10} onChange={(e) => set('ratingWindowMinutes', Math.max(1, parseInt(e.target.value) || 10))} />
         </Row>
       </div>
 

@@ -902,7 +902,9 @@
     "aiTriage": "AI Triage",
     "aiSummary": "Özet Özet Özet Özet",
     "aiUrgency": "Selam",
-    "aiSuggestedReply": "Önerilen cevap"
+    "aiSuggestedReply": "Önerilen cevap",
+    "transcriptFormat": "Transcript format",
+    "transcriptFormatText": "Text Text Text Text"
   },
   "ticketPanelsPage": {
     "pasteRoleId": "Bir Rol Kimliği yapıştır ve Ekle’ye bas",

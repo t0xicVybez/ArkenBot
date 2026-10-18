@@ -902,7 +902,9 @@
     "aiTriage": "AI-triage",
     "aiSummary": "Samenvatting",
     "aiUrgency": "Spoedgeval",
-    "aiSuggestedReply": "Voorgesteld antwoord"
+    "aiSuggestedReply": "Voorgesteld antwoord",
+    "transcriptFormatText": "Tekst",
+    "transcriptFormat": "Transcriptformaat"
   },
   "ticketPanelsPage": {
     "pasteRoleId": "Plak een Rol-ID en druk op Toevoegen",

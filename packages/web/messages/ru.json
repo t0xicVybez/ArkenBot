@@ -902,7 +902,9 @@
     "aiTriage": "Прохождение AI Triage",
     "aiSummary": "Резюме",
     "aiUrgency": "срочность",
-    "aiSuggestedReply": "Предлагаемый ответ"
+    "aiSuggestedReply": "Предлагаемый ответ",
+    "transcriptFormat": "Формат транскрипта",
+    "transcriptFormatText": "Текст"
   },
   "ticketPanelsPage": {
     "pasteRoleId": "Вставьте ID роли и нажмите «Добавить»",

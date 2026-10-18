@@ -128,16 +128,23 @@ export default function TicketDetailPage() {
   const [transferInput, setTransferInput] = useState('');
   const [transferTagInput, setTransferTagInput] = useState('');
   const [downloadingTranscript, setDownloadingTranscript] = useState(false);
+  const [transcriptFormat, setTranscriptFormat] = useState<'html' | 'json' | 'txt'>('html');
+
+  const TRANSCRIPT_MIME: Record<'html' | 'json' | 'txt', string> = {
+    html: 'text/html',
+    json: 'application/json',
+    txt: 'text/plain',
+  };
 
   const downloadTranscript = async () => {
     setDownloadingTranscript(true);
     try {
-      const res = await ticketsApi.getTranscript(guildId, ticketId);
-      const blob = new Blob([res.data as BlobPart], { type: 'text/html' });
+      const res = await ticketsApi.getTranscript(guildId, ticketId, transcriptFormat);
+      const blob = new Blob([res.data as BlobPart], { type: TRANSCRIPT_MIME[transcriptFormat] });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `ticket-${data?.ticket?.number ?? ticketId}.html`;
+      a.download = `ticket-${data?.ticket?.number ?? ticketId}.${transcriptFormat}`;
       a.click();
       URL.revokeObjectURL(url);
     } catch {
@@ -282,14 +289,26 @@ export default function TicketDetailPage() {
             {reopenMut.isPending ? t('reopening') : t('reopenTicket')}
           </button>
         )}
-        <button
-          onClick={downloadTranscript}
-          disabled={downloadingTranscript}
-          className="flex items-center gap-2 text-sm px-3 py-1.5 rounded-sm text-gray-400 hover:text-white hover:bg-white/5 border border-white/10 transition-colors disabled:opacity-40"
-        >
-          <Download className="w-4 h-4" />
-          {downloadingTranscript ? t('exporting') : t('transcript')}
-        </button>
+        <div className="flex items-center gap-1 border border-white/10 rounded-sm overflow-hidden">
+          <button
+            onClick={downloadTranscript}
+            disabled={downloadingTranscript}
+            className="flex items-center gap-2 text-sm px-3 py-1.5 text-gray-400 hover:text-white hover:bg-white/5 transition-colors disabled:opacity-40"
+          >
+            <Download className="w-4 h-4" />
+            {downloadingTranscript ? t('exporting') : t('transcript')}
+          </button>
+          <select
+            value={transcriptFormat}
+            onChange={(e) => setTranscriptFormat(e.target.value as 'html' | 'json' | 'txt')}
+            className="bg-transparent text-xs text-gray-500 hover:text-gray-300 border-l border-white/10 py-1.5 pl-1.5 pr-1 focus:outline-none"
+            aria-label={t('transcriptFormat')}
+          >
+            <option value="html">HTML</option>
+            <option value="json">JSON</option>
+            <option value="txt">{t('transcriptFormatText')}</option>
+          </select>
+        </div>
         <button
           onClick={() => { if (confirm(t('confirmDelete', { number: ticket.number }))) deleteMut.mutate(); }}
           disabled={deleteMut.isPending}

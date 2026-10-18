@@ -902,7 +902,9 @@
     "aiTriage": "AL Triage",
     "aiSummary": "Resumo",
     "aiUrgency": "Urgência",
-    "aiSuggestedReply": "Sugestão de resposta"
+    "aiSuggestedReply": "Sugestão de resposta",
+    "transcriptFormat": "Formato transcrito",
+    "transcriptFormatText": "Texto"
   },
   "ticketPanelsPage": {
     "pasteRoleId": "Cole um ID de cargo e clique em Adicionar",

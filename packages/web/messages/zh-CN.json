@@ -902,7 +902,9 @@
     "aiTriage": "AI 线条",
     "aiSummary": "内容提要",
     "aiUrgency": "紧急性",
-    "aiSuggestedReply": "建议的答复"
+    "aiSuggestedReply": "建议的答复",
+    "transcriptFormatText": "文本",
+    "transcriptFormat": "语录格式"
   },
   "ticketPanelsPage": {
     "pasteRoleId": "粘贴身份组 ID 并点击“添加”",

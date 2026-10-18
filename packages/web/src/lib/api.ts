@@ -157,8 +157,8 @@ export const ticketsApi = {
     api.post(`/addons/tickets/${guildId}/tickets/${ticketId}/notes`, data),
   replyTicket: (guildId: string, ticketId: string, data: { content: string; authorTag: string }) =>
     api.post(`/addons/tickets/${guildId}/tickets/${ticketId}/reply`, data),
-  getTranscript: (guildId: string, ticketId: string) =>
-    api.get(`/addons/tickets/${guildId}/tickets/${ticketId}/transcript`, { responseType: 'blob' }),
+  getTranscript: (guildId: string, ticketId: string, format?: 'html' | 'json' | 'txt') =>
+    api.get(`/addons/tickets/${guildId}/tickets/${ticketId}/transcript`, { responseType: 'blob', params: format && format !== 'html' ? { format } : undefined }),
   getStats:      (guildId: string) => api.get(`/addons/tickets/${guildId}/stats`),
   getTimeseries: (guildId: string, days?: number) => api.get(`/addons/tickets/${guildId}/stats/timeseries`, { params: { days } }),
   exportCsv:     (guildId: string) => api.get(`/addons/tickets/${guildId}/tickets/export`, { responseType: 'blob' }),

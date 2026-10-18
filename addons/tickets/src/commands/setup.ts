@@ -212,7 +212,7 @@ const command: AddonCommandDefinition = {
             .addIntegerOption((o) =>
               o
                 .setName('rating_window')
-                .setDescription('Minutes before ticket deletion (default: 5, max: 1440)')
+                .setDescription('Minutes before ticket deletion (default: 10, max: 1440)')
                 .setMinValue(1)
                 .setMaxValue(1440)
                 .setRequired(false),

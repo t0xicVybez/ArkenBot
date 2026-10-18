@@ -12,6 +12,7 @@ export interface TranscriptNote {
 }
 
 export interface TranscriptMessage {
+  authorId?: string;
   authorTag: string;
   content: string;
   attachments: string[];
@@ -19,17 +20,23 @@ export interface TranscriptMessage {
 }
 
 export interface TranscriptTicket {
+  id?: string;
   number: number;
+  userId?: string;
   username: string;
   status: string;
   priority: string;
+  categoryTag?: string;
   createdAt: string;
   closedAt?: string;
+  closedByTag?: string;
   claimedByTag?: string;
+  firstResponseAt?: string;
   reason?: string;
   tags: string[];
   rating?: number;
   ratingFeedback?: string;
+  formResponses?: Record<string, string>;
   notes: TranscriptNote[];
 }
 
@@ -213,4 +220,77 @@ export function buildTicketTranscriptHtml(
   <footer>${t('htmlGeneratedBy', { date: new Date().toUTCString() })}</footer>
 </body>
 </html>`;
+}
+
+/** Plain-text transcript — same data as the HTML version, for export/archival. */
+export function buildTicketTranscriptText(
+  ticket: TranscriptTicket,
+  panel: TranscriptPanel,
+  messages: TranscriptMessage[],
+  includeNotes = true,
+): string {
+  const lines: string[] = [
+    `=== TICKET #${ticket.number} TRANSCRIPT ===`,
+    `Panel: ${panel.name}`,
+    `Opened by: ${ticket.username}${ticket.userId ? ` (${ticket.userId})` : ''}`,
+    `Status: ${ticket.status}`,
+    `Priority: ${ticket.priority}`,
+    `Created: ${new Date(ticket.createdAt).toLocaleString()}`,
+    ticket.closedAt ? `Closed: ${new Date(ticket.closedAt).toLocaleString()}` : '',
+    ticket.reason ? `Reason: ${ticket.reason}` : '',
+    ticket.rating ? `Rating: ${'⭐'.repeat(ticket.rating)} (${ticket.rating}/5)` : '',
+    ticket.ratingFeedback ? `Feedback: ${ticket.ratingFeedback}` : '',
+    '',
+    '=== MESSAGES ===',
+    '',
+    ...messages.map((m) => `[${new Date(m.timestamp).toLocaleString()}] ${m.authorTag}: ${m.content}${m.attachments.length ? ` [${m.attachments.length} attachment(s)]` : ''}`),
+  ];
+
+  if (includeNotes && ticket.notes.length > 0) {
+    lines.push('', '=== STAFF NOTES ===', '');
+    for (const note of ticket.notes) {
+      lines.push(`[${new Date(note.createdAt).toLocaleString()}] ${note.authorTag}: ${note.content}`);
+    }
+  }
+
+  return lines.filter((l) => l !== undefined).join('\n');
+}
+
+/** JSON transcript — full structured export, for archival/migration. */
+export function buildTicketTranscriptJson(
+  ticket: TranscriptTicket,
+  panel: TranscriptPanel,
+  messages: TranscriptMessage[],
+  includeNotes = true,
+): string {
+  const data = {
+    ticket: {
+      id: ticket.id,
+      number: ticket.number,
+      panel: panel.name,
+      userId: ticket.userId,
+      username: ticket.username,
+      status: ticket.status,
+      priority: ticket.priority,
+      reason: ticket.reason,
+      categoryTag: ticket.categoryTag,
+      tags: ticket.tags,
+      rating: ticket.rating,
+      ratingFeedback: ticket.ratingFeedback,
+      createdAt: ticket.createdAt,
+      closedAt: ticket.closedAt,
+      closedBy: ticket.closedByTag,
+      firstResponseAt: ticket.firstResponseAt,
+      formResponses: ticket.formResponses,
+    },
+    messages: messages.map((m) => ({
+      author: m.authorTag,
+      authorId: m.authorId,
+      content: m.content,
+      attachments: m.attachments,
+      timestamp: m.timestamp,
+    })),
+    notes: includeNotes ? ticket.notes : [],
+  };
+  return JSON.stringify(data, null, 2);
 }

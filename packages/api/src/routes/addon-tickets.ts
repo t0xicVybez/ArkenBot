@@ -4,7 +4,7 @@ import { randomUUID } from 'crypto';
 import { requireGuildAdmin } from '../middleware/auth.js';
 import { prisma } from '../database.js';
 import { pub, redis } from '../redis.js';
-import { buildTicketTranscriptHtml } from '@arkenbot/shared';
+import { buildTicketTranscriptHtml, buildTicketTranscriptText, buildTicketTranscriptJson } from '@arkenbot/shared';
 
 const RELEASE_LOCK = 'if redis.call("get", KEYS[1]) == ARGV[1] then return redis.call("del", KEYS[1]) else return 0 end';
 
@@ -50,7 +50,7 @@ async function readTickets(guildId: string): Promise<Ticket[]> {
   return rows.map(rowToTicket);
 }
 
-interface TicketMessageRow { authorTag: string; content: string; attachments: unknown; timestamp: Date; }
+interface TicketMessageRow { authorId: string; authorTag: string; content: string; attachments: unknown; timestamp: Date; }
 
 /**
  * Reads a ticket's message history from the relational AddonTicketMessage
@@ -58,12 +58,13 @@ interface TicketMessageRow { authorTag: string; content: string; attachments: un
  * this used to read from was deleted when that migration finished on prod —
  * nothing writes it anymore, so reading it here always returned an empty list.
  */
-async function readMessages(channelId: string): Promise<{ authorTag: string; content: string; attachments: string[]; timestamp: string }[]> {
+async function readMessages(channelId: string): Promise<{ authorId: string; authorTag: string; content: string; attachments: string[]; timestamp: string }[]> {
   const rows = (await prisma.addonTicketMessage.findMany({
     where: { channelId },
     orderBy: { timestamp: 'asc' },
   })) as TicketMessageRow[];
   return rows.map((r) => ({
+    authorId: r.authorId,
     authorTag: r.authorTag,
     content: r.content,
     attachments: (r.attachments as string[] | null) ?? [],
@@ -317,6 +318,7 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
 
   server.get('/addons/tickets/:guildId/tickets/:ticketId/transcript', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, ticketId } = request.params as { guildId: string; ticketId: string };
+    const { format } = request.query as { format?: string };
 
     const tickets = await readTickets(guildId);
     const ticket  = tickets.find((t) => t.id === ticketId);
@@ -328,11 +330,25 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     const panel  = panels.find((p) => p.id === ticket.panelId);
     if (!panel) return reply.code(404).send({ success: false, error: 'Panel not found' });
 
-    const html = buildTicketTranscriptHtml(ticket, panel, messages, { includeNotes: true });
+    const base = `ticket-${ticket.number}-${guildId}`;
 
-    const filename = `ticket-${ticket.number}-${guildId}.html`;
+    if (format === 'json') {
+      const json = buildTicketTranscriptJson(ticket, panel, messages, true);
+      reply.header('Content-Type', 'application/json; charset=utf-8');
+      reply.header('Content-Disposition', `attachment; filename="${base}.json"`);
+      return reply.send(json);
+    }
+
+    if (format === 'txt') {
+      const text = buildTicketTranscriptText(ticket, panel, messages, true);
+      reply.header('Content-Type', 'text/plain; charset=utf-8');
+      reply.header('Content-Disposition', `attachment; filename="${base}.txt"`);
+      return reply.send(text);
+    }
+
+    const html = buildTicketTranscriptHtml(ticket, panel, messages, { includeNotes: true });
     reply.header('Content-Type', 'text/html; charset=utf-8');
-    reply.header('Content-Disposition', `attachment; filename="${filename}"`);
+    reply.header('Content-Disposition', `attachment; filename="${base}.html"`);
     return reply.send(html);
   });
 

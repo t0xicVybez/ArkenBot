@@ -902,7 +902,9 @@
     "aiTriage": "AI 부족",
     "aiSummary": "제품정보",
     "aiUrgency": "긴급 상황",
-    "aiSuggestedReply": "자주 묻는 질문"
+    "aiSuggestedReply": "자주 묻는 질문",
+    "transcriptFormat": "Transcript 형식",
+    "transcriptFormatText": "이름 *"
   },
   "ticketPanelsPage": {
     "pasteRoleId": "역할 ID를 붙여넣고 추가를 누르세요",

@@ -902,7 +902,9 @@
     "aiTriage": "Tabung AI",
     "aiSummary": "Ringkasan",
     "aiUrgency": "Keadaan Darurat",
-    "aiSuggestedReply": "Respon yang disarankan"
+    "aiSuggestedReply": "Respon yang disarankan",
+    "transcriptFormat": "Format transkrip",
+    "transcriptFormatText": "Teks"
   },
   "ticketPanelsPage": {
     "pasteRoleId": "Tempel ID Peran dan tekan Tambah",
