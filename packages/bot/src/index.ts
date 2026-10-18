@@ -20,8 +20,25 @@ import { initSentry, captureError } from './sentry.js';
 
 // When running as a sharded fleet, each shard gets its own lock key so one
 // instance per shard can run; unsharded deployments share a single key.
-const shardIds = process.env.SHARDS ? (JSON.parse(process.env.SHARDS) as number[]) : null;
-const INSTANCE_LOCK_KEY = shardIds !== null
+// discord.js's ShardingManager passes this shard's id via the SHARDS env var,
+// but the format varies (a bare number like `0`, a JSON array like `[0]`, or a
+// comma list). Normalize to a number[] so each shard gets its OWN lock key —
+// otherwise every shard computes the same key and all but the first die with
+// "another instance already running".
+function parseShardIds(raw: string | undefined): number[] | null {
+  if (!raw) return null;
+  let ids: number[];
+  try {
+    const parsed = JSON.parse(raw) as number | number[];
+    ids = Array.isArray(parsed) ? parsed.map(Number) : [Number(parsed)];
+  } catch {
+    ids = raw.split(',').map((s) => Number(s.trim()));
+  }
+  ids = ids.filter((n) => Number.isInteger(n));
+  return ids.length ? ids : null;
+}
+const shardIds = parseShardIds(process.env.SHARDS);
+const INSTANCE_LOCK_KEY = shardIds
   ? `bot:instance:lock:shard:${shardIds[0]}`
   : 'bot:instance:lock';
 const LOCK_TTL_SECONDS = 30;
