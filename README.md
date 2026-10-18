@@ -84,7 +84,8 @@ arkenbot/
 │   ├── shared/       # Shared types & utilities
 │   └── addon-sdk/    # SDK for building first- and third-party addons
 ├── addons/           # ai · applications · tickets · gameservers · gameadmin ·
-│                     #   confessions · faq · github-monitor · code-review · examples
+│                     #   confessions · faq · github-monitor · code-review ·
+│                     #   translate · examples
 └── prisma/           # PostgreSQL schema
 ```
 
@@ -94,13 +95,13 @@ arkenbot/
 | API | Fastify 5, native WebSocket |
 | Dashboard | Next.js 16, React 19, Tailwind CSS 4 |
 | Database | PostgreSQL + Prisma 7 ORM |
-| Cache / Queue / Pub-Sub | Redis (ioredis + BullMQ) |
-| Auth | Discord OAuth2 + JWT |
-| i18n | 14 fully hand-translated locales |
+| Cache / Pub-Sub / Live push | Redis (ioredis) — settings cache, event bus, WebSocket relay |
+| Auth | Discord OAuth2 + signed, rotating session cookies |
+| i18n | 14 locales |
 
 ## 🧩 Addon System
 
-Features ship as **addons** auto-discovered from `addons/` at boot. Build your own against the `@arkenbot/addon-sdk` — register commands, dashboard panels, and background jobs without touching core. First-party addons include `tickets`, `gameservers`, `gameadmin`, `ai` (`/ask`, `/summarize`), `applications`, `confessions`, `faq`, `github-monitor`, and `code-review`; `example-*` addons are there as templates.
+Features ship as **addons** auto-discovered from `addons/` at boot. Build your own against the `@arkenbot/addon-sdk` — register commands, dashboard panels, and background jobs without touching core. First-party addons include `tickets`, `gameservers`, `gameadmin`, `ai` (`/ask`, `/summarize`), `applications`, `confessions`, `faq`, `github-monitor`, `code-review`, and `translate`; `example-*` addons are there as templates.
 
 ## 🚀 Self-Hosting
 
@@ -151,9 +152,9 @@ Key environment variables (see [`.env.example`](.env.example) for the full list)
 |---|---|
 | **Discord** *(required)* | `DISCORD_TOKEN`, `DISCORD_CLIENT_ID`, `DISCORD_CLIENT_SECRET`, `DISCORD_REDIRECT_URI` |
 | **Data** *(required)* | `DATABASE_URL`, `REDIS_URL`, `REDIS_PASSWORD` |
-| **API / Web** | `API_PORT`, `API_SECRET`, `JWT_*`, `NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_WS_URL`, `CORS_ORIGIN` |
+| **API / Web** | `API_PORT`, `API_SECRET`, `SESSION_ENCRYPTION_KEY`, `NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_WS_URL`, `CORS_ORIGIN` |
 | **Alerts** *(optional)* | `TWITCH_CLIENT_ID/SECRET` (Twitch go-live); `YOUTUBE_API_KEY` (optional — YouTube & Reddit fall back to quota-free RSS, and RSS/Reddit need no keys) |
-| **Music** *(optional)* | `LAVALINK_HOST`, `LAVALINK_PORT`, `LAVALINK_PASSWORD` |
+| **Music** *(optional)* | Plays via bundled yt-dlp, no separate server needed; `YTDLP_PROXY`, `YOUTUBE_COOKIES_FILE` are optional fallbacks if your host's IP gets throttled |
 | **Meta** | `BOT_OWNER_IDS`, `LOG_LEVEL`, `NODE_ENV`, `TOPGG_TOKEN` |
 
 ## 🤝 Contributing

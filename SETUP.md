@@ -15,7 +15,7 @@ This guide walks you through installing and running ArkenBot from source on a Li
 7. [Deploy Slash Commands](#7-deploy-slash-commands)
 8. [Run in Production with PM2](#8-run-in-production-with-pm2)
 9. [Nginx Reverse Proxy (Optional)](#9-nginx-reverse-proxy-optional)
-10. [Lavalink — Music Support (Optional)](#10-lavalink--music-support-optional)
+10. [Music](#10-music)
 11. [Addons](#11-addons)
 12. [Updating](#12-updating)
 13. [Troubleshooting](#13-troubleshooting)
@@ -114,9 +114,11 @@ sudo apt-get install -y git
 ## 3. Clone the Repository
 
 ```bash
-git clone https://github.com/your-org/arkenbot.git
-cd arkenbot
+git clone https://github.com/t0xicVybez/ArkenBot.git
+cd ArkenBot
 ```
+
+The `packages/docs` folder is a git submodule (the Docusaurus docs site). If you want it too: `git submodule update --init`. It's not required to run the bot.
 
 ---
 
@@ -139,7 +141,7 @@ The `.env` file lives in the **repository root** and is loaded by all three serv
 | `DISCORD_REDIRECT_URI` | OAuth2 callback URL (must match the portal exactly) |
 | `DATABASE_URL` | PostgreSQL connection string |
 | `REDIS_URL` | Redis connection string |
-| `API_SECRET` | Random secret for signing JWTs — generate with `openssl rand -hex 32` |
+| `API_SECRET` | Random secret that signs session cookies (and is the fallback encryption key for stored secrets) — generate with `openssl rand -hex 32` |
 | `BOT_OWNER_IDS` | Your Discord user ID (grants bot-owner access to the dashboard) |
 | `NEXT_PUBLIC_API_URL` | Public URL of the API (browser-facing, baked into the Next.js bundle) |
 | `NEXT_PUBLIC_WS_URL` | Public WebSocket URL of the API |
@@ -322,72 +324,83 @@ Certbot will automatically configure HTTPS and set up auto-renewal. After obtain
 
 ---
 
-## 10. Lavalink — Music Support (Optional)
+## 10. Music
 
-The music commands require a running [Lavalink](https://lavalink.dev) server. If you do not want music commands, you can skip this section — all other features work without it.
+Music playback uses **yt-dlp** directly — there's no separate audio server to install or run (an earlier Lavalink-based engine was evaluated and fully reverted; yt-dlp is the only music engine). `/play`, `/queue`, `/skip`, `/pause`, `/resume`, `/stop`, `/volume`, and `/loop` work out of the box once dependencies are installed.
 
-1. Download the latest `Lavalink.jar` from the [Lavalink releases](https://github.com/lavalink-devs/Lavalink/releases).
-2. Create an `application.yml` configuration file (the Lavalink docs provide a template).
-3. Start Lavalink: `java -jar Lavalink.jar`
-4. Set the following in your `.env`:
+**If playback starts failing** (YouTube throttling/blocking your server's IP — common on some cloud hosts), you have two optional fallbacks:
 
-```
-LAVALINK_HOST=localhost
-LAVALINK_PORT=2333
-LAVALINK_PASSWORD=youshallnotpass    # Must match your application.yml password
-LAVALINK_SECURE=false
-```
-
-**YouTube playback:** Server IPs are sometimes blocked by YouTube. If music fails, export cookies from your browser using the "Get cookies.txt LOCALLY" Chrome extension while logged into YouTube, save the file, and set:
-
-```
-YOUTUBE_COOKIES_FILE=/path/to/youtube-cookies.txt
-```
+- **Cookies:** export cookies from a logged-in browser session using the "Get cookies.txt LOCALLY" Chrome extension on youtube.com, save the file, and set in `.env`:
+  ```
+  YOUTUBE_COOKIES_FILE=/path/to/youtube-cookies.txt
+  ```
+- **Proxy:** route yt-dlp's requests through a SOCKS proxy (e.g. a tunnel back to a residential IP) by setting:
+  ```
+  YTDLP_PROXY=socks5://host:port
+  ```
 
 ---
 
 ## 11. Addons
 
-Addons are self-contained feature packages located in the `addons/` directory. They are loaded automatically from a path configured in Guild Settings in the dashboard.
+Addons are self-contained feature packages located in the `addons/` directory. Which addons *exist* is determined by what's in that directory at boot (each addon ships a compiled `dist/index.js`); whether an addon is *enabled* for a given server is then a per-guild toggle in the dashboard's Addons page.
 
-### Available addons
+### First-party addons
 
 | Addon | Directory | Description |
 |---|---|---|
-| **Code Review** | `addons/code-review` | Reviews code snippets with static analysis + optional Groq AI |
-| **Tickets** | `addons/tickets` | Full support ticket system with transcripts |
-| **Game Servers** | `addons/gameservers` | Query and display live game server stats |
-| **ARK Manager** | `addons/ark-manager` | ARK: Survival Evolved server control via RCON |
-| **Rust Manager** | `addons/rust-manager` | Rust server control via RCON |
-| **Minecraft Manager** | `addons/minecraft-manager` | Minecraft server control via RCON |
-| **FiveM Manager** | `addons/fivem-manager` | FiveM server status via the built-in HTTP API |
-| **Palworld Manager** | `addons/palworld-manager` | Palworld server management |
+| **Tickets** | `addons/tickets` | Multi-panel support ticket system — transcripts, SLA, canned responses, staff portal |
+| **Applications** | `addons/applications` | Staff-application forms with a review workflow |
+| **Game Servers** | `addons/gameservers` | Live status/query for 50+ game server types (via the [GameQuery](https://github.com/t0xicVybez/GameQuery) library + `minecraft-server-util`) |
+| **Game Admin** | `addons/gameadmin` | RCON control (Minecraft, Palworld, ARK, Rust, Valheim, 7 Days to Die, …) — start/stop, scheduled commands |
+| **AI** | `addons/ai` | `/ask` and `/summarize`, powered by Groq (optional — degrades gracefully if `GROQ_API_KEY` is unset) |
+| **Code Review** | `addons/code-review` | Static-analysis code review, with an optional Groq AI pass |
+| **GitHub Monitor** | `addons/github-monitor` | Posts new commits/PRs/issues from watched repos (public GitHub API, no token required) |
+| **Confessions** | `addons/confessions` | Anonymous confession board |
+| **FAQ** | `addons/faq` | Searchable Q&A knowledge base (`/faq`, autocomplete) |
+| **Translate** | `addons/translate` | `/translate`, right-click translate, and flag-reaction translate, via a LibreTranslate instance |
+
+`addons/example-economy` and `addons/example-greeting` are reference implementations for addon authors, not features to enable in production.
 
 ### Building addons
 
-Addons with a `build` step must be compiled before they can be used:
+Addons with a `build` step must be compiled before they can be used — the package name matches the directory name:
 
 ```bash
 pnpm --filter tickets build
-pnpm --filter @arkenbot/addon-gameservers build
-# etc.
+pnpm --filter gameservers build
+# etc. (or just `pnpm build` at the repo root, which builds everything in order)
 ```
 
 ### Developing a custom addon
 
-See `addons/example-greeting/src/index.ts` and `addons/example-economy/src/index.ts` for minimal working examples. The `@arkenbot/addon-sdk` package provides all types and helpers you need:
+See `addons/example-greeting/src/index.ts` and `addons/faq/src/index.ts` for working examples. The `@arkenbot/addon-sdk` package provides all types and helpers you need; an addon is a `manifest` plus any commands/events/lifecycle hooks it needs:
 
 ```typescript
 import { defineAddon } from '@arkenbot/addon-sdk';
+import type { AddonContext } from '@arkenbot/addon-sdk';
 
 export default defineAddon({
-  name: 'my-addon',
-  version: '1.0.0',
-  description: 'What this addon does',
-  commands: [/* your BotCommand objects */],
-  events: [/* your BotEvent objects */],
+  manifest: {
+    name: 'my-addon',
+    displayName: 'My Addon',
+    version: '1.0.0',
+    description: 'What this addon does',
+    author: 'you',
+    commands: ['my-command'],   // names of the slash commands below, for the addon catalogue
+    settings: [],                // dashboard-configurable settings schema, if any
+  },
+  commands: [/* your AddonCommandDefinition objects: { data, execute, autocomplete? } */],
+  events: [/* your AddonEventHandler objects: { event, handler(ctx, ...args) } */],
+  hooks: {
+    onLoad(ctx: AddonContext) {
+      ctx.logger.info('my-addon loaded.');
+    },
+  },
 });
 ```
+
+`ctx` (`AddonContext`) gives you `t()`/`resolveLocale()` for i18n, `storage` (a per-guild key-value store backed by the database), `getSetting()`, `logger`, `events` (a private event bus), and the raw discord.js `client`.
 
 ---
 
@@ -458,9 +471,8 @@ sudo chown -R <build-user>:<group> packages/web/.next
 
 ### Music commands not working
 
-- Confirm Lavalink is running and reachable on the configured host/port.
-- Check the bot logs for Lavalink connection errors: `pm2 logs bot`
-- If you see YouTube 403 errors, set up a `YOUTUBE_COOKIES_FILE` (see [Section 10](#10-lavalink--music-support-optional)).
+- Check the bot logs for yt-dlp errors: `pm2 logs bot`
+- If you see YouTube 403s or "Sign in to confirm you're not a bot" errors, your server's IP is likely being throttled — set up `YOUTUBE_COOKIES_FILE` or `YTDLP_PROXY` (see [Section 10](#10-music)).
 
 ---
 
