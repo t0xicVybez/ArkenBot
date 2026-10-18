@@ -8,15 +8,20 @@ import { prisma } from '../../database.js';
 import { logger, swallow } from '../../logger.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
 import type { BotClient } from '../../client.js';
+import { isLeaderShard, totalGuildCount } from '../../utils/sharding.js';
 
 export async function postTopggStats(client: BotClient): Promise<void> {
   const token = process.env.TOPGG_TOKEN;
   if (!token || !client.user) return;
+  // Global: only one shard posts, and it posts the FLEET total — otherwise each
+  // shard would overwrite top.gg with its own partial count.
+  if (!isLeaderShard(client)) return;
   try {
+    const serverCount = await totalGuildCount(client);
     const res = await fetch(`https://top.gg/api/bots/${client.user.id}/stats`, {
       method: 'POST',
       headers: { 'Authorization': token, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ server_count: client.guilds.cache.size }),
+      body: JSON.stringify({ server_count: serverCount }),
     });
     if (!res.ok) {
       logger.warn(`top.gg stats post failed: HTTP ${res.status} ${await res.text().catch(() => '')}`);
@@ -28,6 +33,8 @@ export async function postTopggStats(client: BotClient): Promise<void> {
 
 export async function runTopggReminders(client: BotClient): Promise<void> {
   if (!client.user) return;
+  // Global DM queue — run on one shard only, or both shards DM each voter.
+  if (!isLeaderShard(client)) return;
   try {
     const due = await prisma.topggVoter.findMany({
       where: { remindersOptIn: true, reminderSent: false, eligibleAt: { lte: new Date() } },

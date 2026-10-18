@@ -9,8 +9,10 @@ import { logger } from '../../logger.js';
 import { ValorantModule } from '../valorant/ValorantModule.js';
 import { LevelingModule } from '../leveling/LevelingModule.js';
 import type { BotClient } from '../../client.js';
+import { isLeaderShard } from '../../utils/sharding.js';
 
 export async function runValorantSync(client: BotClient): Promise<void> {
+  if (!isLeaderShard(client)) return;
   try {
     await ValorantModule.syncBatch(client, 20);
   } catch (err) {
@@ -44,7 +46,8 @@ export async function beatHeartbeat(client: BotClient): Promise<void> {
   } catch {  }
 }
 
-export async function runGuildPurgeSweep(_client: BotClient): Promise<void> {
+export async function runGuildPurgeSweep(client: BotClient): Promise<void> {
+  if (!isLeaderShard(client)) return;
   try {
     const { purgeGuildData, PURGE_GRACE_HOURS } = await import('../../utils/guildPurge.js');
     const cutoff = new Date(Date.now() - PURGE_GRACE_HOURS * 60 * 60 * 1000);
