@@ -1566,7 +1566,11 @@
     "feature_music": "Müzik",
     "on": "Açık",
     "off": "Kapalı",
-    "addons": "Eklentiler"
+    "addons": "Eklentiler",
+    "recentChanges": "Son Yönetim Değişiklikleri",
+    "viewAll": "Hepsini Görüntüle",
+    "noRecentChanges": "Son zamanlardaki pano değişiklikleri yok.",
+    "changed": "değişmiş değişiklikler değişti {section}"
   },
   "mondayPage": {
     "created": "Monday.com uyarısı oluşturuldu!",

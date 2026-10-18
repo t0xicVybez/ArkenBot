@@ -1566,7 +1566,11 @@
     "feature_music": "音乐",
     "on": "开",
     "off": "关",
-    "addons": "插件"
+    "addons": "插件",
+    "recentChanges": "最近的管理员更改",
+    "viewAll": "全部查看",
+    "noRecentChanges": "最近的仪表板没有变化。",
+    "changed": "已更改 {section}"
   },
   "mondayPage": {
     "created": "已创建 monday.com 提醒！",

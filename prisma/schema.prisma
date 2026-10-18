@@ -1500,6 +1500,7 @@ model DashboardAuditLog {
   path       String // request path, e.g. /guilds/123/automod
   section    String // dashboard area, e.g. "automod", "settings", "trello-alerts"
   statusCode Int
+  changes    Json? // sanitized summary of the submitted change (the fields set), redacted + size-capped
   createdAt  DateTime @default(now())
 
   @@index([guildId, createdAt])

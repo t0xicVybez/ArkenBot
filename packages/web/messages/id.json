@@ -1566,7 +1566,11 @@
     "feature_music": "Musik",
     "on": "Aktif",
     "off": "Nonaktif",
-    "addons": "Add-on"
+    "addons": "Add-on",
+    "recentChanges": "Perubahan Admin Terkini",
+    "viewAll": "Tilik semua",
+    "noRecentChanges": "Tidak ada perubahan dashboard terbaru.",
+    "changed": "berubah {section}"
   },
   "mondayPage": {
     "created": "Peringatan Monday.com dibuat!",

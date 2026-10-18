@@ -1566,7 +1566,11 @@
     "feature_music": "音楽",
     "on": "オン",
     "off": "オフ",
-    "addons": "アドオン"
+    "addons": "アドオン",
+    "recentChanges": "最近の管理者変更",
+    "viewAll": "すべて表示",
+    "noRecentChanges": "最近のダッシュボードの変更はありません。",
+    "changed": "変更する {section}"
   },
   "mondayPage": {
     "created": "monday.com アラートを作成しました！",

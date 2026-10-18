@@ -1566,7 +1566,11 @@
     "feature_music": "Muzyka",
     "on": "Wł.",
     "off": "Wył.",
-    "addons": "Dodatki"
+    "addons": "Dodatki",
+    "recentChanges": "Ostatnie zmiany administratora",
+    "viewAll": "Wyświetl wszystkie",
+    "noRecentChanges": "Brak zmian na desce rozdzielczej.",
+    "changed": "zmienione {section}"
   },
   "mondayPage": {
     "created": "Utworzono alert monday.com!",

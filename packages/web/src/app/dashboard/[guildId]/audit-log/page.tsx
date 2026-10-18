@@ -17,8 +17,23 @@ type AuditEntry = {
   method: string;
   path: string;
   section: string;
+  changes?: Record<string, unknown> | null;
   createdAt: string;
 };
+
+/** Turn a captured changes object into short "field: value" chips. */
+function formatChanges(changes: Record<string, unknown> | null | undefined): string[] {
+  if (!changes || typeof changes !== 'object') return [];
+  return Object.entries(changes).slice(0, 8).map(([k, v]) => {
+    let val: string;
+    if (v === null || v === undefined) val = '—';
+    else if (Array.isArray(v)) val = `[${v.length}]`;
+    else if (typeof v === 'object') val = '{…}';
+    else val = String(v);
+    if (val.length > 60) val = val.slice(0, 60) + '…';
+    return `${k}: ${val}`;
+  });
+}
 
 const METHOD_STYLES: Record<string, string> = {
   POST:   'bg-green-500/15 text-green-400 border-green-500/30',
@@ -106,6 +121,16 @@ export default function AuditLogPage() {
                           </span>{' '}
                           <span className="text-gray-300">{humanizeSection(entry.section)}</span>
                           <div className="font-mono text-[10.5px] text-(--text-muted) truncate">{entry.path}</div>
+                          {(() => {
+                            const chg = formatChanges(entry.changes);
+                            return chg.length > 0 ? (
+                              <div className="mt-1 flex flex-wrap gap-1">
+                                {chg.map((c, i) => (
+                                  <span key={i} className="inline-block font-mono text-[10px] text-(--text-muted) bg-(--bg-elevated) border border-(--border-subtle) rounded px-1.5 py-px">{c}</span>
+                                ))}
+                              </div>
+                            ) : null;
+                          })()}
                         </div>
                         <time className="text-[11.5px] text-(--text-muted) tabular flex-shrink-0 pt-0.5" title={new Date(entry.createdAt).toISOString()}>
                           {new Date(entry.createdAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}

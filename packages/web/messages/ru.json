@@ -1566,7 +1566,11 @@
     "feature_music": "Музыка",
     "on": "Вкл.",
     "off": "Выкл.",
-    "addons": "Аддоны"
+    "addons": "Аддоны",
+    "recentChanges": "Последние изменения администратора",
+    "viewAll": "Смотреть все",
+    "noRecentChanges": "Никаких недавних изменений в приборной панели.",
+    "changed": "меняться {section}"
   },
   "mondayPage": {
     "created": "Оповещение monday.com создано!",

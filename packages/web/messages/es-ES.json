@@ -1566,7 +1566,11 @@
     "feature_music": "Música",
     "on": "Activo",
     "off": "Inactivo",
-    "addons": "Complementos"
+    "addons": "Complementos",
+    "viewAll": "Ver todo",
+    "changed": "cambiado {section}",
+    "recentChanges": "Cambios recientes de Admin",
+    "noRecentChanges": "No hay cambios recientes."
   },
   "mondayPage": {
     "created": "¡Alerta de monday.com creada!",

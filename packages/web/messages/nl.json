@@ -1566,7 +1566,11 @@
     "feature_music": "Muziek",
     "on": "Aan",
     "off": "Uit",
-    "addons": "Add-ons"
+    "addons": "Add-ons",
+    "viewAll": "Alles tonen",
+    "noRecentChanges": "Geen recente wijzigingen van het dashboard.",
+    "recentChanges": "Recente beheerswijzigingen",
+    "changed": "gewijzigd {section}"
   },
   "mondayPage": {
     "created": "Monday.com-melding aangemaakt!",

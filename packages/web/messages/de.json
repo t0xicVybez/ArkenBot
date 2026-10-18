@@ -1566,7 +1566,11 @@
     "feature_music": "Musik",
     "on": "An",
     "off": "Aus",
-    "addons": "Addons"
+    "addons": "Addons",
+    "viewAll": "Alle anzeigen",
+    "recentChanges": "Aktuelle Admin-Änderungen",
+    "noRecentChanges": "Keine aktuellen Dashboard-Änderungen.",
+    "changed": "geändert {section}"
   },
   "mondayPage": {
     "created": "monday.com-Benachrichtigung erstellt!",

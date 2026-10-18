@@ -1566,7 +1566,11 @@
     "feature_music": "음악",
     "on": "켜짐",
     "off": "꺼짐",
-    "addons": "애드온"
+    "addons": "애드온",
+    "recentChanges": "최근 관리자 변경",
+    "viewAll": "모두 보기",
+    "noRecentChanges": "최근 대시보드 변경 없음.",
+    "changed": "수정하기 {section}"
   },
   "mondayPage": {
     "created": "monday.com 알림을 만들었습니다!",

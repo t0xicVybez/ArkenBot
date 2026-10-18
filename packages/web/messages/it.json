@@ -1566,7 +1566,11 @@
     "feature_music": "Musica",
     "on": "Attivo",
     "off": "Inattivo",
-    "addons": "Componenti aggiuntivi"
+    "addons": "Componenti aggiuntivi",
+    "recentChanges": "Cambiamenti di amministrazione recenti",
+    "viewAll": "Vedi tutto",
+    "noRecentChanges": "Nessun cambio di dashboard recente.",
+    "changed": "cambiato {section}"
   },
   "mondayPage": {
     "created": "Avviso monday.com creato!",

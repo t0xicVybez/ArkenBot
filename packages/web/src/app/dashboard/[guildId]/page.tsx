@@ -6,8 +6,8 @@
 import { useParams } from 'next/navigation';
 import { useAuth } from '@/lib/auth';
 import { useQuery } from '@tanstack/react-query';
-import { guildsApi, activityApi } from '@/lib/api';
-import { Shield, TrendingUp, MessageSquare, Bot, Music, Check, Zap, Sparkles, UserPlus } from 'lucide-react';
+import { guildsApi, activityApi, auditLogApi } from '@/lib/api';
+import { Shield, TrendingUp, MessageSquare, Bot, Music, Check, Zap, Sparkles, UserPlus, History } from 'lucide-react';
 import Link from 'next/link';
 import { useWebSocket } from '@/lib/socket';
 import { useState, useEffect, useRef } from 'react';
@@ -87,6 +87,13 @@ export default function GuildOverviewPage() {
     queryFn: () => activityApi.get(guildId, 14),
     refetchInterval: 60000,
   });
+
+  const { data: auditRes } = useQuery({
+    queryKey: ['audit-recent', guildId],
+    queryFn: () => auditLogApi.list(guildId, 1),
+    refetchInterval: 60000,
+  });
+  const recentAudit = (((auditRes?.data as { data?: { entries?: Array<{ id: string; username: string | null; userId: string; method: string; section: string; createdAt: string }> } })?.data?.entries) ?? []).slice(0, 5);
 
   const analytics = analyticsRes?.data?.data;
   const guild = guildRes?.data?.data as {
@@ -299,6 +306,38 @@ export default function GuildOverviewPage() {
           )}
         </div>
 
+      </div>
+
+      <div className="bg-(--bg-card) border border-(--border-subtle) rounded-xl p-0 overflow-hidden mb-6">
+        <div className="flex items-center px-[18px] py-[13px] border-b border-(--border-subtle)">
+          <History className="w-4 h-4 text-(--accent) mr-2" />
+          <h2 className="text-[13.5px] font-bold text-white">{t('recentChanges')}</h2>
+          <Link href={`/dashboard/${guildId}/audit-log`} className="ml-auto text-[11px] text-(--accent) hover:underline">{t('viewAll')}</Link>
+        </div>
+        <div className="p-[18px] pt-2">
+          {recentAudit.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-24 text-(--text-muted) text-[12.5px] gap-2">
+              <History className="w-6 h-6 opacity-40" />
+              <p>{t('noRecentChanges')}</p>
+            </div>
+          ) : (
+            recentAudit.map((e) => {
+              const mins = Math.floor((Date.now() - new Date(e.createdAt).getTime()) / 60000);
+              const when = mins < 1 ? t('justNow') : mins < 60 ? t('minutesAgo', { mins }) : new Date(e.createdAt).toLocaleDateString();
+              const section = e.section.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+              return (
+                <div key={e.id} className="flex items-center gap-3 py-2 border-b border-(--border-subtle) last:border-0 text-[13px]">
+                  <span className="w-[26px] h-[26px] rounded-full grid place-items-center flex-shrink-0 text-[9px] font-extrabold bg-(--accent-glow) text-(--accent)">{(e.username ?? '??').slice(0, 2)}</span>
+                  <div className="flex-1 min-w-0 truncate">
+                    <span className="font-semibold text-white">{e.username ?? e.userId}</span>{' '}
+                    <span className="text-gray-400">{t('changed', { section })}</span>
+                  </div>
+                  <span className="text-[11px] text-(--text-muted) tabular flex-shrink-0">{when}</span>
+                </div>
+              );
+            })
+          )}
+        </div>
       </div>
     </div>
   );

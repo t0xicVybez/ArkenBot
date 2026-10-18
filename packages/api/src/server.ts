@@ -119,6 +119,40 @@ export async function createServer() {
 
   const AUDIT_MUTATING = new Set(['POST', 'PATCH', 'DELETE']);
   const AUDIT_GUILD_PATH = /^\/guilds\/(\d+)\/([^/?]+)/;
+  const AUDIT_SENSITIVE_KEY = /token|secret|password|api[_-]?key|authorization|cookie/i;
+
+  // Summarize a mutation's request body into a small, safe record of what was
+  // changed: secrets redacted, huge/data-URI values collapsed, and field/size
+  // capped so one audit row can't balloon from an avatar upload or a big array.
+  const summarizeValue = (v: unknown, depth = 0): unknown => {
+    if (typeof v === 'string') {
+      if (v.startsWith('data:')) return '[data]';
+      return v.length > 200 ? v.slice(0, 200) + '…' : v;
+    }
+    if (Array.isArray(v)) return v.length <= 20 ? v.map((x) => summarizeValue(x, depth + 1)) : `[${v.length} items]`;
+    if (v && typeof v === 'object' && depth < 2) {
+      const o: Record<string, unknown> = {};
+      let i = 0;
+      for (const [k, val] of Object.entries(v as Record<string, unknown>)) {
+        if (i >= 20) break;
+        o[k] = AUDIT_SENSITIVE_KEY.test(k) ? '[redacted]' : summarizeValue(val, depth + 1);
+        i++;
+      }
+      return o;
+    }
+    return v ?? null;
+  };
+  const summarizeChanges = (body: unknown): Record<string, unknown> | undefined => {
+    if (!body || typeof body !== 'object' || Array.isArray(body)) return undefined;
+    const out: Record<string, unknown> = {};
+    let n = 0;
+    for (const [k, val] of Object.entries(body as Record<string, unknown>)) {
+      if (n >= 40) { out['…'] = 'more fields'; break; }
+      out[k] = AUDIT_SENSITIVE_KEY.test(k) ? '[redacted]' : summarizeValue(val);
+      n++;
+    }
+    return Object.keys(out).length ? out : undefined;
+  };
   server.addHook('onResponse', async (request, reply) => {
     try {
       if (!AUDIT_MUTATING.has(request.method)) return;
@@ -138,6 +172,7 @@ export async function createServer() {
           path: request.url.split('?')[0].slice(0, 512),
           section,
           statusCode: reply.statusCode,
+          changes: summarizeChanges(request.body) as import('@prisma/client').Prisma.InputJsonValue | undefined,
         },
       }).catch(() => undefined);
     } catch {  }

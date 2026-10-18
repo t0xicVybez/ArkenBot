@@ -1566,7 +1566,11 @@
     "feature_music": "Music",
     "on": "On",
     "off": "Off",
-    "addons": "Addons"
+    "addons": "Addons",
+    "recentChanges": "Recent Admin Changes",
+    "viewAll": "View all",
+    "noRecentChanges": "No recent dashboard changes.",
+    "changed": "changed {section}"
   },
   "mondayPage": {
     "created": "Monday.com alert created!",
