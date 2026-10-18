@@ -36,18 +36,6 @@ export const config = {
     secret: optional('API_SECRET', 'internal_secret'),
   },
   webUrl: optional('WEB_URL', 'http://localhost:3000'),
-  lavalink: {
-    host: optional('LAVALINK_HOST', 'localhost'),
-    port: parseInt(optional('LAVALINK_PORT', '2333')),
-    password: optional('LAVALINK_PASSWORD', 'youshallnotpass'),
-    secure: optional('LAVALINK_SECURE', 'false') === 'true',
-  },
-  music: {
-    // Audio engine: 'ytdlp' (legacy in-process yt-dlp→ffmpeg) or 'lavalink'
-    // (the Lavalink node). Defaults to ytdlp so flipping to lavalink is an
-    // explicit, reversible opt-in.
-    engine: optional('MUSIC_ENGINE', 'ytdlp') as 'ytdlp' | 'lavalink',
-  },
   // Comma-separated Discord user IDs that get bot-owner privileges.
   owners: optional('BOT_OWNER_IDS', '').split(',').filter(Boolean),
   env: optional('NODE_ENV', 'development'),

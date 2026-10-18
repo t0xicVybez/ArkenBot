@@ -27,7 +27,6 @@
     "discord.js": "^14.27.0",
     "dotenv": "^18.0.8",
     "ioredis": "^6.0.0",
-    "lavalink-client": "2.11.0",
     "libsodium-wrappers": "^0.8.4",
     "mediaplex": "^1.0.0",
     "ms": "^2.1.3",

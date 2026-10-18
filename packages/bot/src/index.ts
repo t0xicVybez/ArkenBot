@@ -13,7 +13,6 @@ import { CommandHandler } from './handlers/CommandHandler.js';
 import { EventHandler } from './handlers/EventHandler.js';
 import { AddonHandler } from './handlers/AddonHandler.js';
 import { BackgroundJobs } from './modules/BackgroundJobs.js';
-import { initLavalink } from './modules/music/MusicManager.js';
 import { connectDatabase } from './database.js';
 import { connectRedis } from './redis.js';
 import { logger, swallow} from './logger.js';
@@ -54,14 +53,6 @@ async function main() {
   }, 15_000);
 
   const client = new BotClient();
-
-  // Music: when the Lavalink engine is selected, wire the client to the node
-  // (gateway voice forwarding + node connect on ready). The yt-dlp engine needs
-  // no setup, so this is a no-op unless MUSIC_ENGINE=lavalink.
-  if (config.music.engine === 'lavalink') {
-    initLavalink(client);
-    logger.info('Music engine: lavalink');
-  }
 
   // Load everything the bot responds with: slash commands, gateway event
   // listeners, and first-party addons.
