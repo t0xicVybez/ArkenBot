@@ -34,6 +34,7 @@ import {
 } from '../utils/embeds.js';
 import { generateTranscriptHtml } from '../utils/transcript.js';
 import { applyCannedVars } from '../utils/format.js';
+import { isTicketStaff } from '../utils/permissions.js';
 import {
   addUserToTicket,
   removeUserFromTicket,
@@ -228,10 +229,7 @@ const command: AddonCommandDefinition = {
     const member = interaction.guild!.members.cache.get(interaction.user.id);
     const panel = await getPanel(ctx.storage, interaction.guildId, ticket.panelId);
 
-    const isStaff =
-      panel &&
-      (panel.staffRoles.length === 0 ||
-        panel.staffRoles.some((rid) => member?.roles.cache.has(rid)));
+    const isStaff = isTicketStaff(panel, ticket, member);
 
     switch (sub) {
       case 'close': {
@@ -319,10 +317,7 @@ const command: AddonCommandDefinition = {
           await interaction.reply({ content: t('userNotFound'), flags: MessageFlags.Ephemeral });
           return;
         }
-        const targetIsStaff =
-          !panel ||
-          panel.staffRoles.length === 0 ||
-          panel.staffRoles.some((rid) => targetMember.roles.cache.has(rid));
+        const targetIsStaff = isTicketStaff(panel, ticket, targetMember);
         if (!targetIsStaff) {
           await interaction.reply({ content: t('targetNotStaff'), flags: MessageFlags.Ephemeral });
           return;

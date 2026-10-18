@@ -6,6 +6,7 @@ import type { AddonContext } from '@arkenbot/addon-sdk';
 import type { TicketMessage } from '../types.js';
 import { getTicketByChannel, appendMessage, saveTicket, getPanel } from '../utils/storage.js';
 import { updateControlsMessage } from './interaction.js';
+import { isTicketStaff } from '../utils/permissions.js';
 
 export async function handleTicketMessage(ctx: AddonContext, message: Message): Promise<void> {
   if (message.author.bot) return;
@@ -29,10 +30,7 @@ export async function handleTicketMessage(ctx: AddonContext, message: Message): 
 
   const panel = await getPanel(ctx.storage, message.guildId, ticket.panelId);
   const member = message.guild?.members.cache.get(message.author.id);
-  const isStaff =
-    !panel ||
-    panel.staffRoles.length === 0 ||
-    panel.staffRoles.some((rid) => member?.roles.cache.has(rid));
+  const isStaff = isTicketStaff(panel, ticket, member);
 
   if (!ticket.firstResponseAt && !isUser && isStaff) {
     ticket.firstResponseAt = now;

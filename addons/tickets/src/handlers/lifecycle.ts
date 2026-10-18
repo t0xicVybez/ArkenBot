@@ -8,6 +8,7 @@ import {
 } from 'discord.js';
 import type { AddonContext } from '@arkenbot/addon-sdk';
 import type { Ticket, TicketPanel } from '../types.js';
+import { isTicketStaff } from '../utils/permissions.js';
 import {
   getPanel,
   getConfig,
@@ -234,11 +235,7 @@ export async function handleReopenButton(
 
   const panel = await getPanel(ctx.storage, interaction.guildId, ticket.panelId);
   const member = interaction.guild?.members.cache.get(interaction.user.id);
-  const reopenEffectiveStaffRoles = panel?.staffRoles ?? [];
-  const isStaff =
-    !panel ||
-    reopenEffectiveStaffRoles.length === 0 ||
-    reopenEffectiveStaffRoles.some((rid) => member?.roles.cache.has(rid));
+  const isStaff = isTicketStaff(panel, ticket, member);
 
   if (!isStaff) {
     await interaction.reply({ content: t('onlyStaffReopen'), flags: MessageFlags.Ephemeral });
@@ -291,12 +288,7 @@ export async function handleClaimButton(
 
   const panel = await getPanel(ctx.storage, interaction.guildId, ticket.panelId);
   const member = interaction.guild?.members.cache.get(interaction.user.id);
-  const clickedButton = panel?.buttons?.find((b) => interaction.message?.components?.some((row) => ('components' in row ? (row.components as { customId?: string }[]).some((c) => c.customId?.includes(b.id)) : false)));
-  const effectiveStaffRoles = clickedButton?.staffRoles ?? panel?.staffRoles ?? [];
-  const isStaff =
-    !panel ||
-    effectiveStaffRoles.length === 0 ||
-    effectiveStaffRoles.some((rid) => member?.roles.cache.has(rid));
+  const isStaff = isTicketStaff(panel, ticket, member);
 
   if (!isStaff) {
     await interaction.reply({ content: t('onlyStaffClaim'), flags: MessageFlags.Ephemeral });
@@ -343,7 +335,7 @@ export async function handleConfirmCloseButton(ctx: AddonContext, interaction: B
   }
   const panel = await getPanel(ctx.storage, interaction.guildId, ticket.panelId);
   const member = interaction.guild?.members.cache.get(interaction.user.id);
-  const isStaff = !panel || panel.staffRoles.length === 0 || panel.staffRoles.some((r) => member?.roles.cache.has(r));
+  const isStaff = isTicketStaff(panel, ticket, member);
   const isOpener = interaction.user.id === ticket.userId;
   if (!isOpener && !isStaff) {
     await interaction.reply({ content: t('onlyOpenerOrStaffClose'), flags: MessageFlags.Ephemeral });
@@ -422,10 +414,7 @@ export async function handleTranscriptButton(
   }
 
   const member = interaction.guild?.members.cache.get(interaction.user.id);
-  const transcriptClickedButton = panel.buttons?.find((b) => interaction.message?.components?.some((row) => ('components' in row ? (row.components as { customId?: string }[]).some((c) => c.customId?.includes(b.id)) : false)));
-  const transcriptEffectiveRoles = transcriptClickedButton?.staffRoles ?? panel.staffRoles;
-  const isStaff =
-    transcriptEffectiveRoles.length === 0 || transcriptEffectiveRoles.some((rid) => member?.roles.cache.has(rid));
+  const isStaff = isTicketStaff(panel, ticket, member);
   const isOwner = interaction.user.id === ticket.userId;
 
   if (!isStaff && !isOwner) {

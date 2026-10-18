@@ -7,6 +7,7 @@ import {
   type ButtonInteraction,
   type StringSelectMenuInteraction,
   type ModalSubmitInteraction,
+  type TextChannel,
 } from 'discord.js';
 import type { AddonContext } from '@arkenbot/addon-sdk';
 import type { Ticket, TicketNote } from '../types.js';
@@ -14,7 +15,9 @@ import {
   getPanel,
   saveTicket,
   getTicketByChannel,
+  getConfig,
 } from '../utils/storage.js';
+import { isTicketStaff } from '../utils/permissions.js';
 
 import {
   handleCloseButton,
@@ -154,11 +157,7 @@ async function handleWaitingButton(
 
   const panel = await getPanel(ctx.storage, interaction.guildId, ticket.panelId);
   const member = interaction.guild?.members.cache.get(interaction.user.id);
-  const effectiveRoles = panel?.staffRoles ?? [];
-  const isStaff =
-    !panel ||
-    effectiveRoles.length === 0 ||
-    effectiveRoles.some((rid) => member?.roles.cache.has(rid));
+  const isStaff = isTicketStaff(panel, ticket, member);
 
   if (!isStaff) {
     await interaction.reply({ content: t('onlyStaffWaiting'), flags: MessageFlags.Ephemeral });
@@ -180,7 +179,25 @@ async function handleWaitingButton(
   }
 }
 
-export async function postNoteToThread(_ctx: AddonContext, _ticket: Ticket, _guildId: string, _note: TicketNote): Promise<void> {
+/**
+ * Notifies Discord-side staff when a note is added from the web dashboard.
+ * The note is already saved to the DB by the API before this publishes —
+ * this only makes sure staff actually see it happened, via the configured
+ * staff-notify channel (the same channel used for new-ticket pings).
+ */
+export async function notifyNoteAdded(ctx: AddonContext, ticket: Ticket, guildId: string, note: TicketNote): Promise<void> {
+  const config = await getConfig(ctx.storage, guildId);
+  if (!config.staffNotifyChannelId) return;
 
+  const guild = ctx.getGuild(guildId);
+  if (!guild) return;
+
+  const notifyChannel = guild.channels.cache.get(config.staffNotifyChannelId) as TextChannel | undefined;
+  if (!notifyChannel?.isTextBased() || !('send' in notifyChannel)) return;
+
+  const preview = note.content.length > 300 ? `${note.content.slice(0, 300)}…` : note.content;
+  await notifyChannel.send(
+    `📝 Note added on ticket **#${ticket.number}** by **${note.authorTag}** (staff portal)\n> ${preview.replace(/\n/g, '\n> ')}\n→ <#${ticket.channelId}>`,
+  ).catch(() => null);
 }
 

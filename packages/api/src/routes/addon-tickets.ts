@@ -4,6 +4,7 @@ import { randomUUID } from 'crypto';
 import { requireGuildAdmin } from '../middleware/auth.js';
 import { prisma } from '../database.js';
 import { pub, redis } from '../redis.js';
+import { buildTicketTranscriptHtml } from '@arkenbot/shared';
 
 const RELEASE_LOCK = 'if redis.call("get", KEYS[1]) == ARGV[1] then return redis.call("del", KEYS[1]) else return 0 end';
 
@@ -47,6 +48,27 @@ function rowToTicket(r: any): Ticket {
 async function readTickets(guildId: string): Promise<Ticket[]> {
   const rows = await prisma.addonTicket.findMany({ where: { guildId } });
   return rows.map(rowToTicket);
+}
+
+interface TicketMessageRow { authorTag: string; content: string; attachments: unknown; timestamp: Date; }
+
+/**
+ * Reads a ticket's message history from the relational AddonTicketMessage
+ * table (the P1.2 migration target). The old `AddonData` key `msgs:<channelId>`
+ * this used to read from was deleted when that migration finished on prod —
+ * nothing writes it anymore, so reading it here always returned an empty list.
+ */
+async function readMessages(channelId: string): Promise<{ authorTag: string; content: string; attachments: string[]; timestamp: string }[]> {
+  const rows = (await prisma.addonTicketMessage.findMany({
+    where: { channelId },
+    orderBy: { timestamp: 'asc' },
+  })) as TicketMessageRow[];
+  return rows.map((r) => ({
+    authorTag: r.authorTag,
+    content: r.content,
+    attachments: (r.attachments as string[] | null) ?? [],
+    timestamp: r.timestamp.toISOString(),
+  }));
 }
 
 async function writeTickets(guildId: string, tickets: Ticket[]): Promise<void> {
@@ -285,11 +307,7 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     const ticket  = tickets.find((t) => t.id === ticketId);
     if (!ticket) return reply.code(404).send({ success: false, error: 'Ticket not found' });
 
-    const addonId = await getAddonDbId();
-    const msgsRow = await prisma.addonData.findFirst({
-      where: { guildId: null, addonId, key: `msgs:${ticket.channelId}` },
-    });
-    const messages = msgsRow ? (msgsRow.value as unknown as unknown[]) : [];
+    const messages = await readMessages(ticket.channelId);
 
     const panels = (await readData<TicketPanel[]>(guildId, 'panels')) ?? [];
     const panel  = panels.find((p) => p.id === ticket.panelId) ?? null;
@@ -304,116 +322,13 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     const ticket  = tickets.find((t) => t.id === ticketId);
     if (!ticket) return reply.code(404).send({ success: false, error: 'Ticket not found' });
 
-    const addonId = await getAddonDbId();
-    const msgsRow = await prisma.addonData.findFirst({
-      where: { guildId: null, addonId, key: `msgs:${ticket.channelId}` },
-    });
-    const messages = (msgsRow ? (msgsRow.value as unknown as { authorTag: string; content: string; attachments: string[]; timestamp: string }[]) : []);
+    const messages = await readMessages(ticket.channelId);
 
     const panels = (await readData<TicketPanel[]>(guildId, 'panels')) ?? [];
     const panel  = panels.find((p) => p.id === ticket.panelId);
+    if (!panel) return reply.code(404).send({ success: false, error: 'Panel not found' });
 
-    const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-
-    const messagesHtml = messages.length === 0
-      ? '<p class="empty">No messages recorded.</p>'
-      : messages.map((m) => {
-          const time = new Date(m.timestamp).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' });
-          const avatar = esc(m.authorTag[0]?.toUpperCase() ?? '?');
-          const attachmentsHtml = (m.attachments ?? []).map((url) => {
-            const isImg = /\.(png|jpe?g|gif|webp)(\?.*)?$/i.test(url);
-            return isImg
-              ? `<a href="${esc(url)}" target="_blank"><img src="${esc(url)}" class="attachment-img" /></a>`
-              : `<a href="${esc(url)}" class="attachment-link" target="_blank">📎 ${esc(url.split('/').pop() ?? url)}</a>`;
-          }).join('');
-          return `
-    <div class="message">
-      <div class="avatar">${avatar}</div>
-      <div class="body">
-        <div class="meta"><span class="author">${esc(m.authorTag)}</span><span class="time">${esc(time)}</span></div>
-        ${m.content ? `<p class="content">${esc(m.content).replace(/\n/g, '<br>')}</p>` : ''}
-        ${attachmentsHtml}
-      </div>
-    </div>`;
-        }).join('\n');
-
-    const notesHtml = ticket.notes.length === 0 ? '' : `
-  <section class="notes-section">
-    <h2>🔒 Staff Notes</h2>
-    ${ticket.notes.map((n) => `
-    <div class="note">
-      <div class="meta"><span class="author">${esc(n.authorTag)}</span><span class="time">${esc(new Date(n.createdAt).toLocaleString())}</span></div>
-      <p>${esc(n.content).replace(/\n/g, '<br>')}</p>
-    </div>`).join('')}
-  </section>`;
-
-    const html = `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ticket #${ticket.number} Transcript</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #1e1f22; color: #dcddde; line-height: 1.5; }
-    .header { background: #2b2d31; border-bottom: 1px solid #ffffff10; padding: 20px 32px; display: flex; align-items: center; gap: 16px; }
-    .header h1 { font-size: 1.25rem; font-weight: 700; color: #fff; }
-    .badge { display: inline-block; padding: 2px 10px; border-radius: 99px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; }
-    .badge-open { background: #3ba55c30; color: #3ba55c; }
-    .badge-closed { background: #72767d30; color: #b9bbbe; }
-    .badge-claimed { background: #5865f230; color: #7289da; }
-    .meta-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; background: #2b2d31; padding: 16px 32px; border-bottom: 1px solid #ffffff10; }
-    .meta-cell p { font-size: 0.7rem; color: #72767d; margin-bottom: 2px; text-transform: uppercase; letter-spacing: .05em; }
-    .meta-cell span { font-size: 0.85rem; color: #dcddde; }
-    .transcript { padding: 24px 32px; max-width: 860px; }
-    .transcript h2 { font-size: 0.8rem; font-weight: 600; color: #72767d; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid #ffffff10; }
-    .message { display: flex; gap: 12px; padding: 6px 0; }
-    .message:hover { background: #ffffff04; border-radius: 4px; }
-    .avatar { width: 36px; height: 36px; border-radius: 50%; background: #5865f2; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; color: #fff; flex-shrink: 0; margin-top: 2px; }
-    .body { flex: 1; min-width: 0; }
-    .meta { display: flex; align-items: baseline; gap: 8px; margin-bottom: 2px; }
-    .author { font-weight: 600; color: #fff; font-size: 0.9rem; }
-    .time { font-size: 0.7rem; color: #72767d; }
-    .content { font-size: 0.9rem; white-space: pre-wrap; word-break: break-word; }
-    .attachment-img { max-height: 200px; border-radius: 4px; margin-top: 6px; display: block; }
-    .attachment-link { display: block; margin-top: 4px; color: #5865f2; font-size: 0.85rem; text-decoration: none; }
-    .attachment-link:hover { text-decoration: underline; }
-    .empty { color: #72767d; font-style: italic; font-size: 0.875rem; }
-    .notes-section { margin-top: 32px; padding-top: 24px; border-top: 1px solid #ffffff10; }
-    .notes-section h2 { font-size: 0.8rem; font-weight: 600; color: #72767d; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 12px; }
-    .note { background: #2b2d31; border-radius: 6px; padding: 12px; margin-bottom: 8px; }
-    .note .meta { margin-bottom: 4px; }
-    .note p { font-size: 0.875rem; }
-    .footer { text-align: center; padding: 24px; color: #72767d; font-size: 0.75rem; border-top: 1px solid #ffffff10; margin-top: 32px; }
-  </style>
-</head>
-<body>
-  <div class="header">
-    <div>
-      <h1>${panel ? `${esc(panel.emoji)} ` : ''}Ticket #${ticket.number}</h1>
-      <span class="badge badge-${ticket.status}">${ticket.status}</span>
-      ${panel ? `<span style="margin-left:8px;font-size:.8rem;color:#72767d;">${esc(panel.name)}</span>` : ''}
-    </div>
-  </div>
-  <div class="meta-grid">
-    <div class="meta-cell"><p>Opened by</p><span>${esc(ticket.username)}</span></div>
-    <div class="meta-cell"><p>Created</p><span>${esc(new Date(ticket.createdAt).toLocaleString())}</span></div>
-    ${ticket.closedAt ? `<div class="meta-cell"><p>Closed</p><span>${esc(new Date(ticket.closedAt).toLocaleString())}</span></div>` : ''}
-    ${ticket.closedByTag ? `<div class="meta-cell"><p>Closed by</p><span>${esc(ticket.closedByTag)}</span></div>` : ''}
-    ${ticket.claimedByTag ? `<div class="meta-cell"><p>Claimed by</p><span>${esc(ticket.claimedByTag)}</span></div>` : ''}
-    <div class="meta-cell"><p>Priority</p><span>${esc(ticket.priority)}</span></div>
-    ${ticket.rating !== undefined ? `<div class="meta-cell"><p>Rating</p><span>${'⭐'.repeat(ticket.rating)} (${ticket.rating}/5)</span></div>` : ''}
-    ${ticket.ratingFeedback ? `<div class="meta-cell" style="grid-column:1/-1"><p>Rating Feedback</p><span>${esc(ticket.ratingFeedback)}</span></div>` : ''}
-    ${ticket.reason ? `<div class="meta-cell" style="grid-column:1/-1"><p>Reason</p><span>${esc(ticket.reason)}</span></div>` : ''}
-  </div>
-  <div class="transcript">
-    <h2>Messages (${messages.length})</h2>
-    ${messagesHtml}
-    ${notesHtml}
-  </div>
-  <div class="footer">Generated by ArkenBot · ${new Date().toUTCString()}</div>
-</body>
-</html>`;
+    const html = buildTicketTranscriptHtml(ticket, panel, messages, { includeNotes: true });
 
     const filename = `ticket-${ticket.number}-${guildId}.html`;
     reply.header('Content-Type', 'text/html; charset=utf-8');

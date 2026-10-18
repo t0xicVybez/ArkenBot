@@ -12,7 +12,7 @@ import { isWithinBusinessHours } from './utils/time.js';
 import setupCommand from './commands/setup.js';
 import ticketCommand from './commands/ticket.js';
 import triageCommand from './commands/triage.js';
-import { isTicketInteraction, handleTicketInteraction, closeTicket, postNoteToThread, updateControlsMessage } from './events/interaction.js';
+import { isTicketInteraction, handleTicketInteraction, closeTicket, notifyNoteAdded, updateControlsMessage } from './events/interaction.js';
 import { handleTicketMessage } from './events/message.js';
 import { getTickets, getPanels, getConfig, getPanel, getTicketByChannel, appendMessage, saveTicket } from './utils/storage.js';
 import { buildPanelEmbed, buildPanelComponents } from './utils/embeds.js';
@@ -31,7 +31,7 @@ export default defineAddon({
     version: '1.1.0',
     description:
       'Full-featured ticket system with panels, transcripts, auto-close, priorities, staff notes, ratings, canned responses, SLA warnings, webhooks, and a portal dashboard.',
-    author: 't0ixcyVybez',
+    author: 't0xicVybez',
     commands: ['ticket-setup', 'ticket', 'triage'],
     settings: [],
   },
@@ -108,7 +108,7 @@ async function startPanelSyncListener(ctx: AddonContext): Promise<void> {
           };
           const ticket = await getTicketByChannel(ctx.storage, guildId, channelId);
           if (ticket) {
-            await postNoteToThread(ctx, ticket, guildId, note);
+            await notifyNoteAdded(ctx, ticket, guildId, note);
           }
         } else if (channel === 'ticket:reply') {
           const { guildId, channelId, content, authorTag } = JSON.parse(message) as {

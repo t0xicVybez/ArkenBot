@@ -19,6 +19,7 @@ import type { Ticket, AiTriage, TicketPriority } from '../types.js';
 import { getPanel, getTicketByChannel, saveTicket, getMessages, getTickets } from '../utils/storage.js';
 import { resolvePanelFields } from '../utils/fields.js';
 import type { Translate } from '../utils/embeds.js';
+import { isTicketStaff } from '../utils/permissions.js';
 
 export async function sendClaimBrief(
   ctx: AddonContext,
@@ -107,11 +108,7 @@ export async function generateTriage(
 
   const panel = await getPanel(ctx.storage, interaction.guildId, ticket.panelId);
   const member = interaction.guild?.members.cache.get(interaction.user.id);
-  const effectiveStaffRoles = panel?.staffRoles ?? [];
-  const isStaff =
-    !panel ||
-    effectiveStaffRoles.length === 0 ||
-    effectiveStaffRoles.some((rid) => member?.roles.cache.has(rid));
+  const isStaff = isTicketStaff(panel, ticket, member);
   if (!isStaff) {
     await interaction.reply({ content: t('aiOnlyStaff'), flags: MessageFlags.Ephemeral });
     return;
@@ -276,7 +273,7 @@ export async function handleAiAction(ctx: AddonContext, interaction: ButtonInter
   }
   const panel = await getPanel(ctx.storage, guildId, ticket.panelId);
   const member = interaction.guild?.members.cache.get(interaction.user.id);
-  const isStaff = !panel || panel.staffRoles.length === 0 || panel.staffRoles.some((r) => member?.roles.cache.has(r));
+  const isStaff = isTicketStaff(panel, ticket, member);
   if (!isStaff) {
     await interaction.reply({ content: t('aiOnlyStaff'), flags: MessageFlags.Ephemeral });
     return;

@@ -11,4 +11,5 @@ export * from './utils/helpers.js';
 export * from './utils/llm.js';
 export * from './utils/errors.js';
 export * from './utils/schedule.js';
+export * from './utils/ticketTranscript.js';
 export * from './i18n/locales.js';
