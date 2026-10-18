@@ -1291,5 +1291,10 @@
     "scanBanAll": "Banir todos os {count}",
     "banAllDone": "🔨 **{count}** membros sinalizados banidos.",
     "checkThreshold": "Atinge seu limite de sinalização ({threshold})."
+  },
+  "security": {
+    "dashboardFloodTitle": "Atividade incomum do Dashboard",
+    "dashboardFloodFooter": "ArkenBot segurança",
+    "dashboardFloodDescription": "{user} Feita **{count}** definindo mudanças para este servidor no último {seconds} segundos através do painel. Se isso não era esperado, reveja o acesso deles. Sua conta ou sessão podem estar comprometidas."
   }
 }

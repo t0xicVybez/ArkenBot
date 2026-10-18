@@ -1291,5 +1291,10 @@
     "scanBanAll": "Bannir les {count}",
     "banAllDone": "🔨 {count} membres signalés bannis.",
     "checkThreshold": "Atteint votre seuil de signalement ({threshold})."
+  },
+  "security": {
+    "dashboardFloodTitle": "Activité inhabituelle du tableau de bord",
+    "dashboardFloodFooter": "ArkenBot sécurité",
+    "dashboardFloodDescription": "{user} fait **{count}** définir les modifications de ce serveur dans le dernier {seconds} secondes via le tableau de bord. Si cela n'était pas prévu, examiner leur accès — leur compte ou session pourrait être compromis."
   }
 }

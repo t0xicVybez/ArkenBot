@@ -1291,5 +1291,10 @@
     "scanBanAll": "Alle {count} bannen",
     "banAllDone": "🔨 **{count}** markierte Mitglieder gebannt.",
     "checkThreshold": "Erreicht deine Melde-Schwelle ({threshold})."
+  },
+  "security": {
+    "dashboardFloodTitle": "Ungewöhnliche Dashboard-Aktivität",
+    "dashboardFloodFooter": "ArkenBot Sicherheit",
+    "dashboardFloodDescription": "{user} gemacht **{count}** Einstellung von Änderungen an diesem Server in der letzten {seconds} Sekunden über das Dashboard. Wenn dies nicht erwartet wurde, überprüfen Sie ihren Zugriff - ihr Konto oder ihre Sitzung kann kompromittiert werden."
   }
 }

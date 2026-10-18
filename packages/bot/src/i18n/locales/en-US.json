@@ -1291,5 +1291,10 @@
     "scanBanAll": "Ban all {count}",
     "banAllDone": "🔨 Banned **{count}** flagged members.",
     "checkThreshold": "Meets your flag threshold ({threshold})."
+  },
+  "security": {
+    "dashboardFloodTitle": "🚨 Unusual Dashboard Activity",
+    "dashboardFloodDescription": "{user} made **{count}** setting changes to this server in the last {seconds} seconds via the dashboard. If this was not expected, review their access — their account or session may be compromised.",
+    "dashboardFloodFooter": "ArkenBot security"
   }
 }

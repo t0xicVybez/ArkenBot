@@ -1291,5 +1291,10 @@
     "scanBanAll": "Blokir semua {count}",
     "banAllDone": "🔨 Memblokir **{count}** anggota bertanda.",
     "checkThreshold": "Mencapai ambang penandaanmu ({threshold})."
+  },
+  "security": {
+    "dashboardFloodTitle": "Aktivitas Dashboard yang tak biasa",
+    "dashboardFloodDescription": "{user} dibuat * *{count}* * setting perubahan ke server ini dalam terakhir {seconds} detik melalui dashboard. Jika ini tidak diharapkan, meninjau akses mereka - rekening mereka atau sesi mungkin dikompromikan.",
+    "dashboardFloodFooter": "ArkenBot keamanan"
   }
 }

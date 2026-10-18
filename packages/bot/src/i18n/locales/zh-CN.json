@@ -1291,5 +1291,10 @@
     "scanBanAll": "全部封禁（{count}）",
     "banAllDone": "🔨 已封禁 **{count}** 名被标记的成员。",
     "checkThreshold": "已达到你的标记阈值（{threshold}）。"
+  },
+  "security": {
+    "dashboardFloodTitle": "++ 不寻常的板活动",
+    "dashboardFloodFooter": "ArkenBot 警卫",
+    "dashboardFloodDescription": "{user} 已执行**{count}** 设置上一个服务器的更改 {seconds} 秒通过仪表板。 如果预期不到,则审查他们的访问情况——他们的账户或会议可能受到影响。"
   }
 }

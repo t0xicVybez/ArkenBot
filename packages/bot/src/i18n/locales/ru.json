@@ -1291,5 +1291,10 @@
     "scanBanAll": "Забанить всех ({count})",
     "banAllDone": "🔨 Забанено **{count}** отмеченных участников.",
     "checkThreshold": "Достигает вашего порога отметки ({threshold})."
+  },
+  "security": {
+    "dashboardFloodTitle": "Необычная активность Dashboard",
+    "dashboardFloodFooter": "ArkenBot безопасность",
+    "dashboardFloodDescription": "{user} сделано **{count}** внесение изменений в этот сервер {seconds} секунд через приборную панель. Если этого не ожидалось, проверьте их доступ — их учетная запись или сеанс могут быть скомпрометированы."
   }
 }

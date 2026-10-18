@@ -9,6 +9,7 @@ import { SessionService } from '../services/SessionService.js';
 import { setSessionCookie } from '../utils/sessionCookie.js';
 import { AuthService } from '../services/AuthService.js';
 import { getUserGuilds, GuildFetchRateLimited } from '../utils/userGuilds.js';
+import { isMutating, checkGuildActionLimit, alertGuildActionFlood, GUILD_ACTION_WINDOW_SEC } from '../utils/guildActionLimit.js';
 
 declare module 'fastify' {
   interface FastifyRequest {
@@ -82,6 +83,20 @@ export async function requireGuildAdmin(request: FastifyRequest, reply: FastifyR
   if (!guildId) {
     reply.code(400).send({ success: false, error: 'Guild ID required' });
     return;
+  }
+
+  // Per-guild action rate limit: cap mutating dashboard actions per actor+guild
+  // in a short window (blunts a compromised session / runaway script, and
+  // alerts the guild on a clear flood). Bot owners are exempt — they do
+  // legitimate cross-guild bulk operations.
+  if (isMutating(request.method) && !request.user?.isBotOwner) {
+    const verdict = await checkGuildActionLimit(guildId, request.user!.id);
+    if (verdict.anomaly) void alertGuildActionFlood(guildId, request.user!.id, verdict.count);
+    if (verdict.limited) {
+      reply.header('Retry-After', String(GUILD_ACTION_WINDOW_SEC));
+      reply.code(429).send({ success: false, error: 'Too many changes in a short time — please slow down and retry shortly.' });
+      return;
+    }
   }
 
   if (request.user?.isStaff || request.user?.isBotOwner) {

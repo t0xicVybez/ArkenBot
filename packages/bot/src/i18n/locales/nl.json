@@ -1291,5 +1291,10 @@
     "scanBanAll": "Verban alle {count}",
     "banAllDone": "🔨 **{count}** gemarkeerde leden verbannen.",
     "checkThreshold": "Bereikt je meldingsdrempel ({threshold})."
+  },
+  "security": {
+    "dashboardFloodTitle": "Ongebruikelijke dashboardactiviteit",
+    "dashboardFloodFooter": "ArkenBot beveiliging",
+    "dashboardFloodDescription": "{user} gemaakt{count}** het instellen van wijzigingen aan deze server in de laatste {seconds} seconden via het dashboard. Als dit niet werd verwacht, hun toegang te herzien, kan hun account of sessie worden aangetast."
   }
 }

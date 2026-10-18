@@ -1291,5 +1291,10 @@
     "scanBanAll": "全員をBAN（{count}）",
     "banAllDone": "🔨 報告された **{count}** 人のメンバーをBANしました。",
     "checkThreshold": "通知のしきい値（{threshold}）に達しています。"
+  },
+  "security": {
+    "dashboardFloodTitle": "未使用のダッシュボード活動",
+    "dashboardFloodFooter": "ArkenBot セキュリティ",
+    "dashboardFloodDescription": "{user} メニュー{count}** 最後のサーバーに変更を設定する {seconds} ダッシュボード経由で秒数。 これが見つからなかった場合、そのアクセスを見直し、そのアカウントまたはセッションが妥協される可能性があります。"
   }
 }

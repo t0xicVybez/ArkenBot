@@ -297,6 +297,15 @@ const event: BotEvent = {
         } else if (event.type === 'bot:presence:update') {
           applyPresence(client, event.data);
           logger.info('Bot presence updated');
+        } else if (event.type === 'security:dashboardFlood') {
+          const { notifyDashboardFlood } = await import('../utils/securityAlert.js');
+          await notifyDashboardFlood(
+            client,
+            event.data.guildId as string,
+            event.data.userId as string,
+            event.data.count as number,
+            event.data.windowSeconds as number,
+          );
         } else if (event.type === 'reaction-role:panel-upsert') {
           const { ReactionRolesModule } = await import('../modules/reactionRoles/ReactionRolesModule.js');
           await ReactionRolesModule.deployPanel(client, event.data.panelId);

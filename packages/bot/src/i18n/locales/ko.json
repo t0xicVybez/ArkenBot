@@ -1291,5 +1291,10 @@
     "scanBanAll": "모두 차단 ({count})",
     "banAllDone": "🔨 표시된 멤버 **{count}**명을 차단했습니다.",
     "checkThreshold": "표시 기준({threshold})에 도달했습니다."
+  },
+  "security": {
+    "dashboardFloodTitle": "3-7 비정상적인 대시보드 활동",
+    "dashboardFloodFooter": "ArkenBot 계정 관리",
+    "dashboardFloodDescription": "{user} 인기 있는{count}** 마지막으로 이 서버에 변경 {seconds} 대시보드를 통해 초. 예상되지 않은 경우, 그들의 접근을 검토 - 그들의 계정 또는 세션은 타협 될 수있다."
   }
 }

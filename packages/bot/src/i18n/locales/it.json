@@ -1291,5 +1291,10 @@
     "scanBanAll": "Banna tutti ({count})",
     "banAllDone": "🔨 Bannati **{count}** membri segnalati.",
     "checkThreshold": "Raggiunge la tua soglia di segnalazione ({threshold})."
+  },
+  "security": {
+    "dashboardFloodTitle": "🚨 Attività di Dashboard insolita",
+    "dashboardFloodFooter": "ArkenBot sicurezza",
+    "dashboardFloodDescription": "{user} Fatto.{count}** Impostare le modifiche a questo server nell'ultimo {seconds} secondi tramite il cruscotto. Se questo non era previsto, rivedere il loro accesso — il loro account o sessione può essere compromesso."
   }
 }

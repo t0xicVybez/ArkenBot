@@ -1291,5 +1291,10 @@
     "scanBanAll": "Zbanuj wszystkich ({count})",
     "banAllDone": "🔨 Zbanowano **{count}** oznaczonych członków.",
     "checkThreshold": "Osiąga Twój próg oznaczenia ({threshold})."
+  },
+  "security": {
+    "dashboardFloodTitle": "Niezwykła aktywność deski rozdzielczej",
+    "dashboardFloodFooter": "ArkenBot bezpieczeństwo",
+    "dashboardFloodDescription": "{user} Zrobione * *{count}* * ustawienie zmian na tym serwerze w ostatnim {seconds} Sekundy przez deskę rozdzielczą. Jeżeli nie spodziewano się tego, sprawdź ich dostęp - ich konto lub sesja może być zagrożona."
   }
 }

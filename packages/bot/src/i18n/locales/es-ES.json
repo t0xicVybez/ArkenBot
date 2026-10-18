@@ -1291,5 +1291,10 @@
     "scanBanAll": "Banear a los {count}",
     "banAllDone": "🔨 Se baneó a **{count}** miembros marcados.",
     "checkThreshold": "Alcanza tu umbral de alerta ({threshold})."
+  },
+  "security": {
+    "dashboardFloodFooter": "ArkenBot seguridad",
+    "dashboardFloodTitle": "Actividad de panel inusual",
+    "dashboardFloodDescription": "{user} .{count}** la configuración de cambios en este servidor en el último {seconds} segundos a través del tablero. Si esto no se esperaba, revise su acceso, su cuenta o su período de sesiones podrán verse comprometidos."
   }
 }

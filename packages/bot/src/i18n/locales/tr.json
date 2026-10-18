@@ -1291,5 +1291,10 @@
     "scanBanAll": "Hepsini yasakla ({count})",
     "banAllDone": "🔨 **{count}** işaretli üye yasaklandı.",
     "checkThreshold": "İşaretleme eşiğine ulaşıyor ({threshold})."
+  },
+  "security": {
+    "dashboardFloodTitle": "Unusual Dashboard Activity",
+    "dashboardFloodFooter": "ArkenBot güvenlik güvenliği güvenlik güvenliği",
+    "dashboardFloodDescription": "{user} **{count}** Bu sunucuya son zamanlarda değişiklikler ayarlama {seconds} Pano aracılığıyla saniyeler. Bu beklenmezse, erişimlerini gözden geçirmek - onların hesabı veya seansı uzlaşmak olabilir."
   }
 }
