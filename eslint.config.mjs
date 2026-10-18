@@ -9,7 +9,6 @@ export default tseslint.config(
       '**/build/**',
       '**/node_modules/**',
       '**/.docusaurus/**',
-      'GameQuery/**',
       'packages/docs/**',
 
       'packages/web/**',

@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 # Nightly ArkenBot source backup with 14-day rotation.
 # Backs up source only — no node_modules/dist/.next/build output, no the
-# packages/docs submodule (that's its own git repo on GitHub), no the
-# vendored GameQuery/ library (its own repo too). Includes .env since a
-# source-only restore without it can't actually run.
+# packages/docs submodule (that's its own git repo on GitHub). Includes
+# .env since a source-only restore without it can't actually run.
 # Installed in the bot user's crontab (03:45 daily, offset from the 03:15
 # Postgres dump so they don't compete for disk I/O). Restore with:
 #   mkdir restored && tar -xzf ~/backups/source/arkenbot-source-YYYY-MM-DD.tar.gz -C restored
@@ -28,7 +27,6 @@ tar -czf "$OUT.tmp" \
   --exclude='.pnpm-store' \
   --exclude='logs' \
   --exclude='.claude' \
-  --exclude='GameQuery' \
   --exclude='packages/docs' \
   .
 
