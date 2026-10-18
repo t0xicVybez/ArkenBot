@@ -67,9 +67,14 @@ function fmtSecs(s: number): string {
  */
 function resolveTrackInfo(query: string): Promise<{ title: string; url: string; duration?: string; thumbnail?: string }> {
   const isUrl = YT_URL_RE.test(query);
-  const target = isUrl ? query : `ytsearch1:${query}`;
+  // Search a few results and skip live streams (the top "lofi hip hop" hit is a
+  // 24/7 live feed, which can't be streamed to a voice channel) so a plain
+  // query resolves to a normal, playable video. A direct URL is resolved as-is
+  // and rejected below if it turns out to be live.
+  const target = isUrl ? query : `ytsearch5:${query}`;
   const args = ['--dump-json', '--no-warnings', '--skip-download'];
   if (isUrl) args.push('--no-playlist');
+  else args.push('--match-filter', '!is_live');
   if (process.env.YOUTUBE_COOKIES_FILE) args.push('--cookies', process.env.YOUTUBE_COOKIES_FILE);
   if (process.env.YTDLP_PROXY) args.push('--proxy', process.env.YTDLP_PROXY);
   args.push(target);
@@ -89,6 +94,8 @@ function resolveTrackInfo(query: string): Promise<{ title: string; url: string; 
       if (!line) return reject(new Error('No results found'));
       let info: Record<string, unknown>;
       try { info = JSON.parse(line); } catch (e) { return reject(e as Error); }
+      // A directly-linked live stream can't be played to a voice channel.
+      if (info.is_live === true) return reject(new Error('That looks like a live stream, which can’t be played — try a specific song or video.'));
       const url = (info.webpage_url as string) || (isUrl ? query : (info.url as string));
       if (!url) return reject(new Error('No results found'));
       const durSecs = typeof info.duration === 'number' ? (info.duration as number) : undefined;
