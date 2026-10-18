@@ -42,6 +42,12 @@ export const config = {
     password: optional('LAVALINK_PASSWORD', 'youshallnotpass'),
     secure: optional('LAVALINK_SECURE', 'false') === 'true',
   },
+  music: {
+    // Audio engine: 'ytdlp' (legacy in-process yt-dlp→ffmpeg) or 'lavalink'
+    // (the Lavalink node). Defaults to ytdlp so flipping to lavalink is an
+    // explicit, reversible opt-in.
+    engine: optional('MUSIC_ENGINE', 'ytdlp') as 'ytdlp' | 'lavalink',
+  },
   // Comma-separated Discord user IDs that get bot-owner privileges.
   owners: optional('BOT_OWNER_IDS', '').split(',').filter(Boolean),
   env: optional('NODE_ENV', 'development'),
