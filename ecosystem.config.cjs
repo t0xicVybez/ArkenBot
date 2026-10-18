@@ -51,5 +51,20 @@ module.exports = {
       autorestart: true,
       watch: false,
     },
+    {
+      // Lavalink audio server (Java). Loopback-only; config in ../lavalink/application.yml.
+      // SOCKS fallback: append '-DsocksProxyHost=127.0.0.1 -DsocksProxyPort=1080' to args
+      // and restart if YouTube IP-blocks the host despite OAuth.
+      name: 'lavalink',
+      cwd: `${__dirname}/../lavalink`,
+      script: '/usr/bin/java',
+      args: '-jar Lavalink.jar',
+      interpreter: 'none',
+      env,
+      autorestart: true,
+      watch: false,
+      max_memory_restart: '1500M',
+      kill_timeout: 10000,
+    },
   ],
 };
