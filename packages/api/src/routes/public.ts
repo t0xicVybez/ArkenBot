@@ -2,6 +2,7 @@ import type { FastifyInstance } from 'fastify';
 import { prisma } from '../database.js';
 import { redis } from '../redis.js';
 import { xpForLevel } from '@arkenbot/shared';
+import { getBotFleetStatus } from '../utils/botFleetStatus.js';
 
 /**
  * Public, unauthenticated endpoints (status, public stats, health).
@@ -32,20 +33,14 @@ export async function publicRoutes(server: FastifyInstance): Promise<void> {
       cache = (await redis.ping()) === 'PONG';
     } catch {  }
 
-    let bot: { online: boolean; guilds: number | null; wsPingMs: number | null; lastSeen: string | null } =
-      { online: false, guilds: null, wsPingMs: null, lastSeen: null };
-    try {
-      const raw = await redis.get('bot:heartbeat');
-      if (raw) {
-        const hb = JSON.parse(raw) as { at: number; guilds: number; ws: number };
-        bot = {
-          online: now - hb.at < 90_000,
-          guilds: hb.guilds,
-          wsPingMs: hb.ws >= 0 ? hb.ws : null,
-          lastSeen: new Date(hb.at).toISOString(),
-        };
-      }
-    } catch {  }
+    // Shard-aware: sums guilds / averages ping across all live shards.
+    const fleet = await getBotFleetStatus();
+    const bot = {
+      online: fleet.online,
+      guilds: fleet.guilds,
+      wsPingMs: fleet.wsPingMs,
+      lastSeen: fleet.lastSeen,
+    };
 
     return reply.send({
       success: true,

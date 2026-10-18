@@ -9,6 +9,7 @@ import { register } from 'prom-client';
 import { execSync } from 'child_process';
 import { readServiceLogs } from '../services/ServiceLogReader.js';
 import { getPm2Memory } from '../utils/pm2Memory.js';
+import { getBotFleetStatus } from '../utils/botFleetStatus.js';
 import { resolveGuildNames, resolveChannelNames } from '../services/LogContextResolver.js';
 const GITHUB_REPO = 't0xicVybez/ArkenBot';
 
@@ -157,7 +158,20 @@ export async function adminRoutes(server: FastifyInstance): Promise<void> {
       prisma.warning.count({ where: { active: true } }),
     ]);
 
-    const { botMb, totalMb } = await getPm2Memory();
+    const [{ botMb: pm2BotMb, totalMb: pm2TotalMb }, fleet] = await Promise.all([
+      getPm2Memory(),
+      getBotFleetStatus(),
+    ]);
+    // Bot memory from the shard heartbeats (sum of every shard's RSS) is correct
+    // whether the bot runs as one process or many — pm2 only sees the shard
+    // MANAGER when sharded, which undercounts badly.
+    const memoryUsage = fleet.rssMb ?? pm2BotMb;
+    // Replace pm2's single 'bot' entry (manager-only when sharded) with the real
+    // summed bot memory so the fleet total is accurate.
+    const totalMemoryUsage =
+      pm2TotalMb != null && pm2BotMb != null && fleet.rssMb != null
+        ? pm2TotalMb - pm2BotMb + fleet.rssMb
+        : pm2TotalMb;
 
     return reply.send({
       success: true,
@@ -168,9 +182,10 @@ export async function adminRoutes(server: FastifyInstance): Promise<void> {
         totalCases,
         totalAddons,
         totalWarnings,
-        uptime: Math.floor(process.uptime()),
-        memoryUsage: botMb,
-        totalMemoryUsage: totalMb,
+        uptime: fleet.uptimeSec ?? Math.floor(process.uptime()),
+        memoryUsage,
+        totalMemoryUsage,
+        shardCount: fleet.shardCount,
         version: '1.0.0',
       },
     });

@@ -27,11 +27,20 @@ export async function runVoiceXp(client: BotClient): Promise<void> {
 export async function beatHeartbeat(client: BotClient): Promise<void> {
   try {
     const { pub } = await import('../../redis.js');
-    await pub.set('bot:heartbeat', JSON.stringify({
+    // Per-shard heartbeat so staff/public metrics can aggregate across shards
+    // (sum memory + guilds). Unsharded, client.shard is null → shard 0.
+    const shardId = client.shard?.ids?.[0] ?? 0;
+    const payload = JSON.stringify({
       at: Date.now(),
       guilds: client.guilds.cache.size,
       ws: client.ws.ping,
-    }), 'EX', 120);
+      rss: process.memoryUsage().rss,
+      startedAt: Date.now() - Math.floor(process.uptime() * 1000),
+      shardId,
+    });
+    await pub.set(`bot:heartbeat:shard:${shardId}`, payload, 'EX', 120);
+    // Legacy single key kept as a fallback for any older reader.
+    await pub.set('bot:heartbeat', payload, 'EX', 120);
   } catch {  }
 }
 
