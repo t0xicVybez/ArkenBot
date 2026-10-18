@@ -22,5 +22,5 @@ pnpm --filter @arkenbot/api build >>"$LOG" 2>&1
 say "reloading bot + api"
 pm2 reload bot >>"$LOG" 2>&1
 pm2 reload api >>"$LOG" 2>&1
-git -c user.name='Cory Lynch' -c user.email='cory.lynch88@gmail.com' commit -am "revert: auto-rollback Prisma 7 → 5 after sustained DB failure" >>"$LOG" 2>&1 || true
+git -c user.name='t0xicVybez' -c user.email='170263409+t0xicVybez@users.noreply.github.com' commit -am "revert: auto-rollback Prisma 7 → 5 after sustained DB failure" >>"$LOG" 2>&1 || true
 say "DONE. Prisma rolled back to 5. NOT pushed — review logs and 'git push' if correct."
