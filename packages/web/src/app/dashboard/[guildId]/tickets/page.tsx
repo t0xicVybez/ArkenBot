@@ -15,6 +15,7 @@ import { ChartSkeleton } from '@/components/charts/ChartSkeleton';
 const StatusPie = dynamic(() => import('./_charts'), { ssr: false, loading: () => <ChartSkeleton height={100} /> });
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { useWebSocket } from '@/lib/socket';
 
 interface TicketRecord {
   id: string; number: number; userId: string; username: string;
@@ -53,6 +54,15 @@ export default function TicketsPage() {
   const { data: ticketsRes, isLoading } = useQuery({
     queryKey: ['tickets-list', guildId, statusFilter, priorityFilter, search, page],
     queryFn: () => ticketsApi.getTickets(guildId, { status: statusFilter, priority: priorityFilter, search, page }),
+  });
+
+  // Live updates for Discord-side changes (claim, reply, priority, close,
+  // new ticket, ...) that the dashboard didn't itself trigger — without
+  // this, staff working in Discord wouldn't show up here until a refresh.
+  useWebSocket('ticket:updated', (event) => {
+    if (event.guildId !== guildId) return;
+    queryClient.invalidateQueries({ queryKey: ['tickets-list', guildId] });
+    queryClient.invalidateQueries({ queryKey: ['tickets-stats', guildId] });
   });
 
   const bulkCloseMut = useMutation({

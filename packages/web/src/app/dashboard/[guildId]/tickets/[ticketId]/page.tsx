@@ -12,6 +12,7 @@ import { useAuth } from '@/lib/auth';
 import toast from 'react-hot-toast';
 import { ArrowLeft, RefreshCw, AlertTriangle, Clock, Tag, StickyNote, UserCheck, ArrowRightLeft, Trash2, Send, Download } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { useWebSocket } from '@/lib/socket';
 
 interface TicketNote {
   id: string;
@@ -166,6 +167,16 @@ export default function TicketDetailPage() {
   const slaHours = (configRes?.data?.data as { slaHours?: number } | undefined)?.slaHours ?? 24;
 
   const invalidate = () => queryClient.invalidateQueries({ queryKey: ['ticket-detail', guildId, ticketId] });
+
+  // Live updates for Discord-side changes to this ticket (claim, reply,
+  // priority, status, a new message typed in the channel, close, ...) so
+  // staff looking at this page see them without a manual refresh.
+  useWebSocket('ticket:updated', (event) => {
+    if (event.guildId !== guildId) return;
+    const data = event.data as { ticketId?: string };
+    if (data.ticketId !== ticketId) return;
+    invalidate();
+  });
 
   const replyMut = useMutation({
     mutationFn: () => ticketsApi.replyTicket(guildId, ticketId, { content: replyInput.trim(), authorTag: userTag }),

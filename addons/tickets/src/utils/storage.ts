@@ -7,6 +7,7 @@ import {
   repoSaveTicket, repoAppendMessage, repoDeleteMessages,
   repoGetTickets, repoGetByChannel, repoGetById, repoGetUserOpen, repoGetMessages,
 } from './ticketsRepo.js';
+import { publishTicketUpdate } from './liveSync.js';
 
 const KEY_PANELS = 'panels';
 const KEY_COUNTER = 'counter';
@@ -74,6 +75,10 @@ export async function saveTicket(
   ticket: Ticket,
 ): Promise<void> {
   await repoSaveTicket(ticket);
+  // Every ticket mutation (claim/priority/tags/notes/status/close/reopen/...)
+  // flows through here regardless of caller, so this is the one place that
+  // needs to notify live dashboard clients — see utils/liveSync.ts.
+  void publishTicketUpdate(ticket.guildId, ticket.id, ticket.channelId);
 }
 
 export async function getUserOpenTickets(

@@ -15,6 +15,7 @@ import triageCommand from './commands/triage.js';
 import { isTicketInteraction, handleTicketInteraction, closeTicket, notifyNoteAdded, updateControlsMessage } from './events/interaction.js';
 import { handleTicketMessage } from './events/message.js';
 import { getTickets, getPanels, getConfig, getPanel, getTicketByChannel, appendMessage, saveTicket } from './utils/storage.js';
+import { initLiveSync, closeLiveSync } from './utils/liveSync.js';
 import { buildPanelEmbed, buildPanelComponents } from './utils/embeds.js';
 import type { TicketNote } from './types.js';
 import { locales } from './locales.js';
@@ -70,6 +71,7 @@ export default defineAddon({
       ctx.logger.info('Ticket System v1.1 loaded.');
       startAutoCloseLoop(ctx);
       await startPanelSyncListener(ctx);
+      initLiveSync();
     },
 
     async onUnload(_ctx: AddonContext): Promise<void> {
@@ -81,6 +83,7 @@ export default defineAddon({
         await redisSub.quit();
         redisSub = null;
       }
+      await closeLiveSync();
     },
   },
 });

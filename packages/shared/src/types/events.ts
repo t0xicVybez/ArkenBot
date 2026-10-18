@@ -17,7 +17,8 @@ export type WebSocketEventType =
   | 'guild:joined'
   | 'guild:left'
   | 'automod:action'
-  | 'log:entry';
+  | 'log:entry'
+  | 'ticket:updated';
 
 export interface WebSocketEvent<T = unknown> {
   type: WebSocketEventType;
