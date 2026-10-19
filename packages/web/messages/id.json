@@ -833,7 +833,8 @@
     "staffLeaderboard": "Kepala Staf",
     "colStaff": "Staf",
     "colHandled": "Ditangani",
-    "resolvedRate": "Laju Yang Dipecahkan"
+    "resolvedRate": "Laju Yang Dipecahkan",
+    "colSlaAdherence": "SLA Adherence"
   },
   "ticketDetailPage": {
     "transcriptError": "Gagal mengunduh transkrip.",

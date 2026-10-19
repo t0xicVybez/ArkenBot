@@ -833,7 +833,8 @@
     "staffLeaderboard": "Rada kierownicza personelu",
     "colStaff": "Personel",
     "colHandled": "Ręczne",
-    "resolvedRate": "Rozwiązywana stawka"
+    "resolvedRate": "Rozwiązywana stawka",
+    "colSlaAdherence": "SLA Adherence"
   },
   "ticketDetailPage": {
     "transcriptError": "Nie udało się pobrać zapisu.",

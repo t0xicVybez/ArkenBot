@@ -30,7 +30,7 @@ interface StatsData {
   }[];
   byStaff?: {
     staffId: string; tag: string; handled: number; closed: number;
-    avgRating: number | null; avgCloseMinutes: number | null;
+    avgRating: number | null; avgCloseMinutes: number | null; slaMissRate: number | null;
   }[];
 }
 interface TimeseriesPoint { date: string; opened: number; closed: number; }
@@ -303,6 +303,7 @@ export default function TicketStatsPage() {
                   <th className="px-4 py-3">{t('statusClosed')}</th>
                   <th className="px-4 py-3">{t('colAvgRating')}</th>
                   <th className="px-4 py-3">{t('colAvgClose')}</th>
+                  <th className="px-4 py-3">{t('colSlaAdherence')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-700/30">
@@ -320,6 +321,13 @@ export default function TicketStatsPage() {
                         : <span className="text-gray-500">—</span>}
                     </td>
                     <td className="px-4 py-3 text-gray-300 text-sm">{fmtMinutes(s.avgCloseMinutes)}</td>
+                    <td className="px-4 py-3 text-sm">
+                      {s.slaMissRate != null
+                        ? <span className={s.slaMissRate > 0.2 ? 'text-red-400' : s.slaMissRate > 0 ? 'text-yellow-400' : 'text-green-400'}>
+                            {Math.round((1 - s.slaMissRate) * 100)}%
+                          </span>
+                        : <span className="text-gray-500">—</span>}
+                    </td>
                   </tr>
                 ))}
               </tbody>

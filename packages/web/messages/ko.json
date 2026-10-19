@@ -833,7 +833,8 @@
     "staffLeaderboard": "회사연혁",
     "colStaff": "한국어",
     "colHandled": "회사 소개",
-    "resolvedRate": "해결된 비율"
+    "resolvedRate": "해결된 비율",
+    "colSlaAdherence": "SLA 장점"
   },
   "ticketDetailPage": {
     "transcriptError": "기록 다운로드에 실패했습니다.",

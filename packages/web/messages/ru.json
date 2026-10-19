@@ -833,7 +833,8 @@
     "staffLeaderboard": "Руководитель группы",
     "colStaff": "Персонал",
     "colHandled": "управляемый",
-    "resolvedRate": "Разрешенная ставка"
+    "resolvedRate": "Разрешенная ставка",
+    "colSlaAdherence": "Соблюдение SLA"
   },
   "ticketDetailPage": {
     "transcriptError": "Не удалось скачать стенограмму.",

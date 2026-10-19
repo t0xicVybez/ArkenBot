@@ -827,6 +827,7 @@
     "colTotal": "Total",
     "colAvgRating": "Avg Rating",
     "colAvgClose": "Avg Close",
+    "colSlaAdherence": "SLA Adherence",
     "colCloseRate": "Close rate",
     "exportCsv": "Export CSV",
     "exportError": "Export failed",

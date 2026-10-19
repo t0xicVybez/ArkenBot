@@ -50,6 +50,46 @@ async function readTickets(guildId: string): Promise<Ticket[]> {
   return rows.map(rowToTicket);
 }
 
+/**
+ * Whether a ticket is currently in SLA breach: still open, never got a
+ * first response, and has been open at least as long as the guild's
+ * lowest-configured SLA threshold. Mirrors the bot's own escalation job
+ * (modules/jobs SLA tier logic) — tiered `slaLevels` win when configured,
+ * falling back to the legacy single `slaHours` only when there are no
+ * tiers, same precedence as the live escalation. Exported and pure
+ * (takes `nowMs` instead of calling Date.now() itself) so it's unit-
+ * testable without a database — see tests/api/tickets-stats.test.ts.
+ */
+export function slaThresholdHours(config: GuildTicketConfig): number | null {
+  const hours = config.slaLevels?.length ? Math.min(...config.slaLevels.map((l) => l.hours)) : config.slaHours;
+  return hours && hours > 0 ? hours : null;
+}
+
+export function computeSlaBreach(ticket: Ticket, config: GuildTicketConfig, nowMs: number): boolean {
+  if (ticket.status === 'closed' || ticket.firstResponseAt) return false;
+  const thresholdHours = slaThresholdHours(config);
+  if (thresholdHours === null) return false;
+  const openMs = nowMs - new Date(ticket.createdAt).getTime();
+  return openMs >= thresholdHours * 60 * 60 * 1000;
+}
+
+/**
+ * Retrospective version for per-staff adherence: did this ticket's first
+ * response (or the still-waiting time, if none yet) land within the SLA
+ * threshold? Unlike computeSlaBreach (a live "needs attention now" count,
+ * open tickets only), this applies to closed tickets too, since it's
+ * measuring past response behavior, not current state.
+ */
+export function computeSlaMissed(ticket: Ticket, config: GuildTicketConfig, nowMs: number): boolean {
+  const thresholdHours = slaThresholdHours(config);
+  if (thresholdHours === null) return false;
+  const thresholdMs = thresholdHours * 60 * 60 * 1000;
+  const responseMs = ticket.firstResponseAt
+    ? new Date(ticket.firstResponseAt).getTime() - new Date(ticket.createdAt).getTime()
+    : nowMs - new Date(ticket.createdAt).getTime();
+  return responseMs >= thresholdMs;
+}
+
 interface TicketMessageRow { authorId: string; authorTag: string; content: string; attachments: unknown; timestamp: Date; }
 
 /**
@@ -729,13 +769,8 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
         }, 0) / closedWithTime.length
       : null;
 
-    const slaBreaches = config.slaHours && config.slaHours > 0
-      ? tickets.filter((t) => {
-          if (t.status === 'closed' || t.firstResponseAt) return false;
-          const openMs = Date.now() - new Date(t.createdAt).getTime();
-          return openMs >= (config.slaHours ?? 0) * 60 * 60 * 1000;
-        }).length
-      : 0;
+    const now = Date.now();
+    const slaBreaches = tickets.filter((t) => computeSlaBreach(t, config, now)).length;
 
     const byPanel = panels.map((p) => {
       const pTickets = tickets.filter((t) => t.panelId === p.id);
@@ -754,16 +789,18 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
       };
     });
 
-    const staffAgg = new Map<string, { id: string; tag: string; handled: number; closed: number; ratingSum: number; ratingCount: number; closeSum: number; closeCount: number }>();
+    const slaTracked = slaThresholdHours(config) !== null;
+    const staffAgg = new Map<string, { id: string; tag: string; handled: number; closed: number; ratingSum: number; ratingCount: number; closeSum: number; closeCount: number; slaMissed: number }>();
     for (const tk of tickets) {
       const id = tk.claimedBy ?? tk.closedBy;
       if (!id) continue;
       const tag = tk.claimedByTag ?? tk.closedByTag ?? id;
-      const a = staffAgg.get(id) ?? { id, tag, handled: 0, closed: 0, ratingSum: 0, ratingCount: 0, closeSum: 0, closeCount: 0 };
+      const a = staffAgg.get(id) ?? { id, tag, handled: 0, closed: 0, ratingSum: 0, ratingCount: 0, closeSum: 0, closeCount: 0, slaMissed: 0 };
       a.tag = tag;
       a.handled++;
       if (tk.closedAt) { a.closed++; a.closeSum += (new Date(tk.closedAt).getTime() - new Date(tk.createdAt).getTime()) / 60000; a.closeCount++; }
       if (typeof tk.rating === 'number') { a.ratingSum += tk.rating; a.ratingCount++; }
+      if (slaTracked && computeSlaMissed(tk, config, now)) a.slaMissed++;
       staffAgg.set(id, a);
     }
     const byStaff = [...staffAgg.values()]
@@ -774,6 +811,7 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
         closed: a.closed,
         avgRating: a.ratingCount ? a.ratingSum / a.ratingCount : null,
         avgCloseMinutes: a.closeCount ? a.closeSum / a.closeCount : null,
+        slaMissRate: slaTracked ? a.slaMissed / a.handled : null,
       }))
       .sort((x, y) => y.handled - x.handled)
       .slice(0, 25);

@@ -833,7 +833,8 @@
     "staffLeaderboard": "Staff Leaderboard",
     "colStaff": "Personel",
     "colHandled": "Yavaşla",
-    "resolvedRate": "Çözülmüş Oran"
+    "resolvedRate": "Çözülmüş Oran",
+    "colSlaAdherence": "SLA Adherence"
   },
   "ticketDetailPage": {
     "transcriptError": "Döküm indirilemedi.",

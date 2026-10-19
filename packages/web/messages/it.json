@@ -833,7 +833,8 @@
     "staffLeaderboard": "Personale",
     "colStaff": "Personale",
     "colHandled": "Maniglia",
-    "resolvedRate": "Tasso di rimborso"
+    "resolvedRate": "Tasso di rimborso",
+    "colSlaAdherence": "Aderenza SLA"
   },
   "ticketDetailPage": {
     "transcriptError": "Impossibile scaricare la trascrizione.",

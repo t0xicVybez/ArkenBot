@@ -833,7 +833,8 @@
     "staffLeaderboard": "スタッフリーダーボード",
     "colStaff": "スタッフ",
     "colHandled": "ハンドル",
-    "resolvedRate": "回収率"
+    "resolvedRate": "回収率",
+    "colSlaAdherence": "SLA アドハレンス"
   },
   "ticketDetailPage": {
     "transcriptError": "トランスクリプトのダウンロードに失敗しました。",

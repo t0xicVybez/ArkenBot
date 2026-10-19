@@ -833,7 +833,8 @@
     "staffLeaderboard": "工作人员领导板",
     "colStaff": "工作人员",
     "colHandled": "处理",
-    "resolvedRate": "确定比率"
+    "resolvedRate": "确定比率",
+    "colSlaAdherence": "苏丹解放军"
   },
   "ticketDetailPage": {
     "transcriptError": "下载记录失败。",

@@ -833,7 +833,8 @@
     "staffLeaderboard": "Staff Leaderboard",
     "colStaff": "Personal",
     "colHandled": "Handled",
-    "resolvedRate": "Tasa resuelta"
+    "resolvedRate": "Tasa resuelta",
+    "colSlaAdherence": "SLA Adherence"
   },
   "ticketDetailPage": {
     "transcriptError": "No se pudo descargar la transcripción.",

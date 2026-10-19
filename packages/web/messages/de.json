@@ -833,7 +833,8 @@
     "staffLeaderboard": "Personalführerboard",
     "colStaff": "Personal",
     "colHandled": "Behandelt",
-    "resolvedRate": "Aufgelöste Rate"
+    "resolvedRate": "Aufgelöste Rate",
+    "colSlaAdherence": "SLA-Einhaltung"
   },
   "ticketDetailPage": {
     "transcriptError": "Transkript konnte nicht heruntergeladen werden.",

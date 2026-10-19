@@ -833,7 +833,8 @@
     "staffLeaderboard": "Leiderschap van het personeel",
     "colStaff": "Personeel",
     "colHandled": "Behandeld",
-    "resolvedRate": "Opgelost percentage"
+    "resolvedRate": "Opgelost percentage",
+    "colSlaAdherence": "SLA Adherence"
   },
   "ticketDetailPage": {
     "transcriptError": "Kon transcriptie niet downloaden.",

@@ -833,7 +833,8 @@
     "staffLeaderboard": "Tableau de classement du personnel",
     "colStaff": "Personnel",
     "colHandled": "Géré",
-    "resolvedRate": "Taux résolu"
+    "resolvedRate": "Taux résolu",
+    "colSlaAdherence": "Adhérence de l’ALS"
   },
   "ticketDetailPage": {
     "transcriptError": "Échec du téléchargement de la transcription.",
