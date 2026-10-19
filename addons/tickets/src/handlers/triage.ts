@@ -20,6 +20,7 @@ import { getPanel, getTicketByChannel, saveTicket, getMessages, getTickets } fro
 import { resolvePanelFields } from '../utils/fields.js';
 import type { Translate } from '../utils/embeds.js';
 import { isTicketStaff } from '../utils/permissions.js';
+import { detectLanguage } from '../utils/language.js';
 
 export async function sendClaimBrief(
   ctx: AddonContext,
@@ -187,6 +188,15 @@ export async function runTriageModel(
   ].filter(Boolean).join('\n\n');
   if (!context) return null;
 
+  // The suggested reply goes back to the customer, so it should be in
+  // their language, not whatever language the system prompt happens to be
+  // written in (English) — detected via the same self-hosted LibreTranslate
+  // instance the translate addon uses, falls back to English on any failure.
+  const customerLang = await detectLanguage([ticket.reason ?? '', transcript.join('\n')].join('\n'));
+  const replyLanguageInstruction = customerLang === 'en'
+    ? ''
+    : ` Write the "reply" field in the customer's language (ISO code "${customerLang}"), natural and fluent — not English. Keep "summary" in English, since that's for staff.`;
+
   const result = await jsonCompletion<{ summary?: string; urgency?: string; reply?: string; tag?: string }>(
     [
       {
@@ -195,8 +205,9 @@ export async function runTriageModel(
           'You triage support tickets for staff. Given the ticket details and conversation, respond with a JSON object ' +
           `{"summary": string, "urgency": "low"|"medium"|"high", "reply": string${wantTag ? ', "tag": string' : ''}}. ` +
           '"summary" is 1-2 sentences describing the user\'s issue. "urgency" reflects how time-sensitive it is. ' +
-          '"reply" is a friendly, helpful first response a staff member could send, ready to adapt. ' +
-          (wantTag ? '"tag" is a single short lowercase category label (1-2 words). ' : '') +
+          '"reply" is a friendly, helpful first response a staff member could send, ready to adapt.' +
+          replyLanguageInstruction + ' ' +
+          (wantTag ? '"tag" is a single short lowercase category label (1-2 words), in English regardless of reply language. ' : '') +
           'Base everything only on the provided content; do not invent facts.',
       },
       { role: 'user', content: context },
