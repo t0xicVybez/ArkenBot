@@ -762,7 +762,10 @@
     "priority_low": "이름 *",
     "priority_medium": "주요 특징",
     "priority_high": "주요 특징",
-    "priority_urgent": "뚱 베어"
+    "priority_urgent": "뚱 베어",
+    "webhookSecretLabel": "Webhook 서명 비밀",
+    "copySecret": "복사 비밀",
+    "webhookSecretHint": "자주 묻는 질문 X-를 검증ArkenBot-Signature header (원체의HMAC-SHA256) 요청을 실제로 우리에게 왔습니다."
   },
   "cannedResponsesPage": {
     "failedCreate": "생성하지 못했습니다",

@@ -186,6 +186,7 @@ export interface GuildTicketConfig {
   slaHours?: number;
 
   webhookUrl?: string;
+  webhookSecret?: string;
   staffNotifyChannelId?: string;
   staffNotifyRoleId?: string;
   ratingWindowMinutes?: number;

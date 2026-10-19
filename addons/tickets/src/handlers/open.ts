@@ -273,7 +273,7 @@ export async function createTicket(
       channelId: channel.id,
       guildId,
       createdAt: ticket.createdAt,
-    }).catch((err) => ctx.logger.warn(`Webhook delivery failed (ticket.opened): ${err}`));
+    }, config.webhookSecret).catch((err) => ctx.logger.warn(`Webhook delivery failed (ticket.opened): ${err}`));
   }
 
   if (config.staffNotifyChannelId) {

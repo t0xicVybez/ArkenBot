@@ -762,7 +762,10 @@
     "priority_low": "Low Low Low Low",
     "priority_medium": "Medium Medium Medium Medium",
     "priority_high": "Yüksek Yüksek Yüksek Yüksek Yüksek",
-    "priority_urgent": "Urgent"
+    "priority_urgent": "Urgent",
+    "webhookSecretLabel": "Webhook gizli gizli imza",
+    "copySecret": "Gizli gizli kopya",
+    "webhookSecretHint": "Genrated otomatik olarak. X’i doğrulayınArkenBot-Bir istek aslında bizden geldiğini doğrulamak için ham vücudunun (HMAC-SHA256) başlığı."
   },
   "cannedResponsesPage": {
     "failedCreate": "Oluşturulamadı",

@@ -762,7 +762,10 @@
     "priority_low": "Baixo.",
     "priority_medium": "Médio.",
     "priority_high": "Alto.",
-    "priority_urgent": "Urgente."
+    "priority_urgent": "Urgente.",
+    "webhookSecretLabel": "Webhook assinando segredo",
+    "copySecret": "Copiar segredo",
+    "webhookSecretHint": "Gerado automaticamente. Verifique o X...ArkenBot- Cabeçalho de assinatura (HMAC-SHA256 do corpo cru) para confirmar um pedido realmente veio de nós."
   },
   "cannedResponsesPage": {
     "failedCreate": "Falha ao criar",

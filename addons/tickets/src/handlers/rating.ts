@@ -154,7 +154,7 @@ export async function handleRateModal(
 
   const closeAction = panel?.closeAction ?? 'delete';
   const logChannelId = (panel?.logChannelId ?? config.transcriptChannelId) as string | undefined;
-  await finalizeTicketClose(ctx, guildId, channelId, closeAction, logChannelId, panel ?? null, config.webhookUrl).catch((err: unknown) =>
+  await finalizeTicketClose(ctx, guildId, channelId, closeAction, logChannelId, panel ?? null, config.webhookUrl, config.webhookSecret).catch((err: unknown) =>
     ctx.logger.error('Failed to finalize ticket after rating', String(err)),
   );
 }

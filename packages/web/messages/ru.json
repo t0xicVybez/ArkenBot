@@ -762,7 +762,10 @@
     "priority_low": "низкий",
     "priority_medium": "средний",
     "priority_high": "высокий",
-    "priority_urgent": "срочно"
+    "priority_urgent": "срочно",
+    "webhookSecretLabel": "Webcook подписывает секрет",
+    "copySecret": "Копировать секрет",
+    "webhookSecretHint": "генерируется автоматически. Проверьте X-ArkenBotЗаголовок подписи (HMAC-SHA256 необработанного корпуса) для подтверждения запроса действительно поступил от нас."
   },
   "cannedResponsesPage": {
     "failedCreate": "Не удалось создать",

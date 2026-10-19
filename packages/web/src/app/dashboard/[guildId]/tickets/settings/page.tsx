@@ -9,7 +9,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ticketsApi, guildsApi } from '@/lib/api';
 import toast from 'react-hot-toast';
-import { Settings, ArrowLeft, Plus, Trash2 } from 'lucide-react';
+import { Settings, ArrowLeft, Plus, Trash2, Copy, Check } from 'lucide-react';
 import { Toggle } from '@/components/Toggle';
 import { useTranslations } from 'next-intl';
 
@@ -30,6 +30,7 @@ interface GuildTicketConfig {
   transcriptChannelId?: string;
   slaHours?: number;
   webhookUrl?: string;
+  webhookSecret?: string;
   staffNotifyChannelId?: string;
   staffNotifyRoleId?: string;
   ratingWindowMinutes?: number;
@@ -174,6 +175,27 @@ function SlaLevelsEditor({ levels, roles, onChange }: { levels: SlaLevel[]; role
   );
 }
 
+function CopySecretButton({ text }: { text: string }) {
+  const t = useTranslations('ticketSettingsPage');
+  const [copied, setCopied] = useState(false);
+  const handleCopy = () => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+  return (
+    <button
+      type="button"
+      onClick={handleCopy}
+      className="shrink-0 p-1.5 rounded-sm text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
+      title={t('copySecret')}
+    >
+      {copied ? <Check className="w-3.5 h-3.5 text-green-400" /> : <Copy className="w-3.5 h-3.5" />}
+    </button>
+  );
+}
+
 export default function TicketSettingsPage() {
   const { guildId } = useParams() as { guildId: string };
   const t = useTranslations('ticketSettingsPage');
@@ -211,6 +233,8 @@ export default function TicketSettingsPage() {
     requiredOpenRoleId: '',
     weeklyDigestChannelId: '',
   });
+
+  const webhookSecret = (configRes?.data?.data as GuildTicketConfig | undefined)?.webhookSecret;
 
   useEffect(() => {
     const cfg = configRes?.data?.data as GuildTicketConfig | undefined;
@@ -286,6 +310,14 @@ export default function TicketSettingsPage() {
         <Row label={t('webhookUrl')} hint={t('webhookHint')}>
           <input className="input text-sm" placeholder="https://your-webhook.com/tickets" value={draft.webhookUrl ?? ''} onChange={(e) => set('webhookUrl', e.target.value)} />
         </Row>
+        {webhookSecret && (
+          <Row label={t('webhookSecretLabel')} hint={t('webhookSecretHint')}>
+            <div className="flex items-center gap-1 max-w-full">
+              <input className="input text-sm font-mono flex-1 min-w-0" readOnly value={webhookSecret} onFocus={(e) => e.target.select()} />
+              <CopySecretButton text={webhookSecret} />
+            </div>
+          </Row>
+        )}
         <Row label={t('ratingWindow')} hint={t('ratingWindowHint')}>
           <input type="number" min={1} max={1440} className="input w-28" value={draft.ratingWindowMinutes ?? 10} onChange={(e) => set('ratingWindowMinutes', Math.max(1, parseInt(e.target.value) || 10))} />
         </Row>

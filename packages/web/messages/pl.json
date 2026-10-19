@@ -762,7 +762,10 @@
     "priority_low": "Niski",
     "priority_medium": "Średni",
     "priority_high": "Wysoki",
-    "priority_urgent": "Pilne"
+    "priority_urgent": "Pilne",
+    "webhookSecretLabel": "Sekret podpisywania haka internetowego",
+    "copySecret": "Kopiuj sekret",
+    "webhookSecretHint": "Generowane automatycznie. Weryfikacja X-ArkenBot-Nagłówek podpisu (HMAC- SHA256 surowego ciała), aby potwierdzić wniosek rzeczywiście przyszedł od nas."
   },
   "cannedResponsesPage": {
     "failedCreate": "Nie udało się utworzyć",

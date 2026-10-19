@@ -762,7 +762,10 @@
     "priority_low": "低い",
     "priority_medium": "メディア",
     "priority_high": "高い",
-    "priority_urgent": "緊急事態"
+    "priority_urgent": "緊急事態",
+    "webhookSecretLabel": "Webhook 署名 秘密",
+    "copySecret": "秘密のコピー",
+    "webhookSecretHint": "自動的に生成される。 X の検証ArkenBot-署名ヘッダー(生体のHMAC-SHA256)は、実際に私たちから来たリクエストを確認する。"
   },
   "cannedResponsesPage": {
     "failedCreate": "作成に失敗しました",

@@ -58,6 +58,7 @@ export async function finalizeTicketClose(
   logChannelId: string | undefined,
   panel: TicketPanel | null,
   webhookUrl: string | undefined,
+  webhookSecret?: string,
 ): Promise<void> {
   const loc = await ctx.resolveLocale({ user: { id: '' }, guildId, guildLocale: ctx.getGuild(guildId)?.preferredLocale });
   const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
@@ -103,7 +104,7 @@ export async function finalizeTicketClose(
       guildId,
       closedAt: freshTicket.closedAt,
       rating: freshTicket.rating,
-    }).catch((err) => ctx.logger.warn(`Webhook delivery failed (ticket.closed): ${err}`));
+    }, webhookSecret).catch((err) => ctx.logger.warn(`Webhook delivery failed (ticket.closed): ${err}`));
   }
 
   if (channel) {
@@ -208,7 +209,7 @@ export async function closeTicket(
   const timer = setTimeout(async () => {
     pendingClose.delete(ticket.channelId);
     try {
-      await finalizeTicketClose(ctx, guildId, ticket.channelId, closeAction, resolvedLogChannelId as string | undefined, panel ?? null, config.webhookUrl);
+      await finalizeTicketClose(ctx, guildId, ticket.channelId, closeAction, resolvedLogChannelId as string | undefined, panel ?? null, config.webhookUrl, config.webhookSecret);
     } catch (err) {
       ctx.logger.error('Fallback close timer failed', String(err));
     }

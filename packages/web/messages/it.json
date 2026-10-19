@@ -762,7 +762,10 @@
     "priority_low": "Basso",
     "priority_medium": "Media",
     "priority_high": "Alto",
-    "priority_urgent": "Urgente"
+    "priority_urgent": "Urgente",
+    "webhookSecretLabel": "Webhook firma segreto",
+    "copySecret": "Copia segreto",
+    "webhookSecretHint": "Generato automaticamente. Verificare la X-ArkenBot-Intestazione della signatura (HMAC-SHA256 del corpo grezzo) per confermare una richiesta effettivamente venuto da noi."
   },
   "cannedResponsesPage": {
     "failedCreate": "Creazione non riuscita",

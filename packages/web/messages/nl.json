@@ -762,7 +762,10 @@
     "priority_low": "Laag",
     "priority_medium": "Middel",
     "priority_high": "Hoog",
-    "priority_urgent": "Dringend"
+    "priority_urgent": "Dringend",
+    "webhookSecretLabel": "Webhook ondertekening geheim",
+    "copySecret": "Geheim kopiëren",
+    "webhookSecretHint": "automatisch gegenereerd. Controleer de X-ArkenBot- Handtekening header (HMAC-SHA256 van het ruwe lichaam) om te bevestigen dat een verzoek daadwerkelijk van ons kwam."
   },
   "cannedResponsesPage": {
     "failedCreate": "Aanmaken mislukt",

@@ -762,7 +762,10 @@
     "priority_low": "低级",
     "priority_medium": "中型",
     "priority_high": "高级",
-    "priority_urgent": "紧急"
+    "priority_urgent": "紧急",
+    "webhookSecretLabel": "Webhook 签名秘密",
+    "copySecret": "复制机密",
+    "webhookSecretHint": "自动生成. 检查X -ArkenBot- 签名头(HMAC-SHA256,生体) 来确认一个请求实际上来自我们。"
   },
   "cannedResponsesPage": {
     "failedCreate": "创建失败",

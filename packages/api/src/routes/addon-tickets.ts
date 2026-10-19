@@ -1,6 +1,6 @@
 
 import type { FastifyInstance } from 'fastify';
-import { randomUUID } from 'crypto';
+import { randomUUID, randomBytes } from 'crypto';
 import { requireGuildAdmin } from '../middleware/auth.js';
 import { prisma } from '../database.js';
 import { pub, redis } from '../redis.js';
@@ -151,7 +151,7 @@ interface TicketNote { id: string; authorId: string; authorTag: string; content:
 interface Ticket { id: string; number: number; panelId: string; guildId: string; channelId: string; userId: string; username: string; status: string; priority: string; categoryTag?: string; claimedBy?: string; claimedByTag?: string; transferredTo?: string; transferredToTag?: string; reason?: string; tags: string[]; rating?: number; ratingFeedback?: string; ratingResolved?: boolean; closedBy?: string; closedByTag?: string; closedAt?: string; firstResponseAt?: string; notes: TicketNote[]; formResponses?: Record<string, string>; createdAt: string; lastActivity: string; nudgedAt?: string; reminderAt?: string; reminderBy?: string; reminderNote?: string; closeRequestedBy?: string; closeRequestedByTag?: string; closeRequestedAt?: string; aiTriage?: { summary: string; urgency: string; reply?: string; tag?: string; at: string }; }
 interface SlaLevel { hours: number; pingRoleId?: string; message?: string; escalatePriority?: string; escalateRoleId?: string; }
 interface BusinessHours { enabled: boolean; timezone: string; openTime: string; closeTime: string; days: number[]; awayMessage?: string; pauseSla?: boolean; }
-interface GuildTicketConfig { blacklistedUsers: string[]; transcriptChannelId?: string; slaHours?: number; webhookUrl?: string; staffNotifyChannelId?: string; staffNotifyRoleId?: string; ratingWindowMinutes?: number; autoAssign?: boolean; roundRobinIndex?: number; slaLevels?: SlaLevel[]; autoTriage?: boolean; autoTriageSetPriority?: boolean; autoTriageTag?: boolean; nudgeBeforeCloseHours?: number; businessHours?: BusinessHours; showUserHistory?: boolean; lowRatingThreshold?: number; lowRatingAlertRoleId?: string; lowRatingAlertChannelId?: string; openCooldownMinutes?: number; minAccountAgeDays?: number; requiredOpenRoleId?: string; weeklyDigestChannelId?: string; }
+interface GuildTicketConfig { blacklistedUsers: string[]; transcriptChannelId?: string; slaHours?: number; webhookUrl?: string; webhookSecret?: string; staffNotifyChannelId?: string; staffNotifyRoleId?: string; ratingWindowMinutes?: number; autoAssign?: boolean; roundRobinIndex?: number; slaLevels?: SlaLevel[]; autoTriage?: boolean; autoTriageSetPriority?: boolean; autoTriageTag?: boolean; nudgeBeforeCloseHours?: number; businessHours?: BusinessHours; showUserHistory?: boolean; lowRatingThreshold?: number; lowRatingAlertRoleId?: string; lowRatingAlertChannelId?: string; openCooldownMinutes?: number; minAccountAgeDays?: number; requiredOpenRoleId?: string; weeklyDigestChannelId?: string; }
 interface CannedResponse { id: string; name: string; content: string; createdBy: string; createdByTag: string; createdAt: string; usageCount?: number; lastUsedAt?: string; }
 
 const ADDON_NAME = 'tickets';
@@ -904,6 +904,12 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     const body = request.body as Partial<GuildTicketConfig>;
     const config = (await readData<GuildTicketConfig>(guildId, 'config')) ?? { blacklistedUsers: [] };
     const updated = { ...config, ...body };
+    // A webhook URL is only useful to a receiver that can verify the
+    // payload actually came from us — generate a signing secret the first
+    // time a URL is set, rather than requiring a separate step.
+    if (updated.webhookUrl && !updated.webhookSecret) {
+      updated.webhookSecret = randomBytes(24).toString('hex');
+    }
     await writeData(guildId, 'config', updated);
     return reply.send({ success: true, data: updated });
   });

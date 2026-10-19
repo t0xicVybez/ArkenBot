@@ -762,7 +762,10 @@
     "priority_low": "niedrig",
     "priority_medium": "Medium",
     "priority_high": "hoch",
-    "priority_urgent": "Dringend"
+    "priority_urgent": "Dringend",
+    "webhookSecretLabel": "Webhook unterzeichnet Geheimnis",
+    "copySecret": "Kopiergeheimnis",
+    "webhookSecretHint": "Automatisch erzeugt. Überprüfen Sie die X-ArkenBot-Signature Header (HMAC-SHA256 des rohen Körpers), um eine Anfrage zu bestätigen, kam tatsächlich von uns."
   },
   "cannedResponsesPage": {
     "failedCreate": "Erstellen fehlgeschlagen",

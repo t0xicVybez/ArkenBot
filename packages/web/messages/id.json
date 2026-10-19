@@ -762,7 +762,10 @@
     "priority_low": "Rendah",
     "priority_medium": "Sedang",
     "priority_high": "Tinggi",
-    "priority_urgent": "Penting"
+    "priority_urgent": "Penting",
+    "webhookSecretLabel": "Rahasia penandatanganan webhook",
+    "copySecret": "Salin rahasia",
+    "webhookSecretHint": "Dihasilkan secara otomatis. Verifikasi X-ArkenBot-Signature header (HMAC-SHA256 dari tubuh mentah) untuk mengkonfirmasi permintaan benar-benar datang dari kami."
   },
   "cannedResponsesPage": {
     "failedCreate": "Gagal membuat",
