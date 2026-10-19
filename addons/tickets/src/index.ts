@@ -29,9 +29,9 @@ export default defineAddon({
   manifest: {
     name: 'tickets',
     displayName: 'Ticket System',
-    version: '1.1.0',
+    version: '2.1.0',
     description:
-      'Full-featured ticket system with panels, transcripts, auto-close, priorities, staff notes, ratings, canned responses, SLA warnings, webhooks, and a portal dashboard.',
+      'Full-featured ticket system with panels, transcripts, auto-close, priorities, staff notes, ratings, canned responses, SLA warnings, webhooks, and a portal dashboard. 2.1 adds live Discord↔dashboard sync, ticket merging, content search, bulk actions, workload-aware auto-assign, multi-language AI triage, and signed webhooks.',
     author: 't0xicVybez',
     commands: ['ticket-setup', 'ticket', 'triage'],
     settings: [],
