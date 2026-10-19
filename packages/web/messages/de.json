@@ -647,7 +647,19 @@
     "showing": "Zeige {from}–{to} von {total}",
     "previous": "Zurück",
     "next": "Weiter",
-    "status_waiting": "Warten"
+    "status_waiting": "Warten",
+    "selectedCount": "{count, plural, one {# Ticket ausgewählt} other {# Tickets ausgewählt}}",
+    "clearSelection": "Klare Auswahl",
+    "addTagPlaceholder": "Ein Tag hinzufügen...",
+    "bulkClosed": "{count, plural, one {# Ticket geschlossen.} other {# Tickets geschlossen.}}",
+    "bulkTagged": "{count, plural, one {# Ticket getaggt.} other {# Tickets getaggt.}}",
+    "bulkPrioritized": "{count, plural, one {Priorität für # Ticket aktualisiert.} other {Priorität für # Tickets aktualisiert.}}",
+    "bulkAddTag": "Add Tag",
+    "bulkCloseSelected": "Close Selected",
+    "bulkSetPriority": "Festgelegte Priorität",
+    "bulkActionError": "Massnahmen sind gescheitert.",
+    "selectAll": "Wählen Sie alle Tickets auf dieser Seite aus",
+    "selectTicket": "Ticket auswählen #{number}"
   },
   "ticketSettingsPage": {
     "loading": "Wird geladen...",

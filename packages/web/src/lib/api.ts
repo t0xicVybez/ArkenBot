@@ -142,6 +142,8 @@ export const ticketsApi = {
     api.post(`/addons/tickets/${guildId}/tickets/${ticketId}/reopen`),
   bulkClose: (guildId: string, idleHours: number) =>
     api.post(`/addons/tickets/${guildId}/tickets/bulk-close`, { idleHours }),
+  bulkAction: (guildId: string, data: { ticketIds: string[]; action: 'close' | 'tag' | 'priority'; tag?: string; priority?: string }) =>
+    api.post(`/addons/tickets/${guildId}/tickets/bulk-action`, data),
   claimTicket: (guildId: string, ticketId: string, data: { userId: string; userTag: string }) =>
     api.post(`/addons/tickets/${guildId}/tickets/${ticketId}/claim`, data),
   unclaimTicket: (guildId: string, ticketId: string) =>

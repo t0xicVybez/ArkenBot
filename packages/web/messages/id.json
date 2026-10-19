@@ -647,7 +647,19 @@
     "showing": "Menampilkan {from}–{to} dari {total}",
     "previous": "Sebelumnya",
     "next": "Berikutnya",
-    "status_waiting": "Menunggu"
+    "status_waiting": "Menunggu",
+    "selectedCount": "{count, plural, one {# tiket dipilih} other {# tiket dipilih}}",
+    "clearSelection": "Bersihkan bagian yang dipilih",
+    "addTagPlaceholder": "Tambah suatu tag...",
+    "bulkClosed": "{count, plural, one {Menutup # tiket.} other {Menutup # tiket.}}",
+    "bulkTagged": "{count, plural, one {Menandai # tiket.} other {Menandai # tiket.}}",
+    "bulkPrioritized": "{count, plural, one {Memperbarui prioritas # tiket.} other {Memperbarui prioritas # tiket.}}",
+    "bulkAddTag": "Tambah Tag",
+    "bulkSetPriority": "Atur Prioritas",
+    "bulkCloseSelected": "Tutup Pilihan",
+    "bulkActionError": "Aksi besar gagal.",
+    "selectAll": "Pilih semua tiket pada halaman ini",
+    "selectTicket": "Pilih tiket #{number}"
   },
   "ticketSettingsPage": {
     "loading": "Memuat...",

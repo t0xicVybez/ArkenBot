@@ -647,7 +647,19 @@
     "showing": "Wyświetlanie {from}–{to} z {total}",
     "previous": "Poprzednia",
     "next": "Następna",
-    "status_waiting": "Czekam."
+    "status_waiting": "Czekam.",
+    "selectedCount": "{count, plural, one {Wybrano # zgłoszenie} few {Wybrano # zgłoszenia} many {Wybrano # zgłoszeń} other {Wybrano # zgłoszeń}}",
+    "clearSelection": "Wyczyść zaznaczenie",
+    "addTagPlaceholder": "Dodaj znacznik...",
+    "bulkAddTag": "Dodaj znacznik",
+    "bulkClosed": "{count, plural, one {Zamknięto # zgłoszenie.} few {Zamknięto # zgłoszenia.} many {Zamknięto # zgłoszeń.} other {Zamknięto # zgłoszeń.}}",
+    "bulkTagged": "{count, plural, one {Otagowano # zgłoszenie.} few {Otagowano # zgłoszenia.} many {Otagowano # zgłoszeń.} other {Otagowano # zgłoszeń.}}",
+    "bulkPrioritized": "{count, plural, one {Zaktualizowano priorytet # zgłoszenia.} few {Zaktualizowano priorytet # zgłoszeń.} many {Zaktualizowano priorytet # zgłoszeń.} other {Zaktualizowano priorytet # zgłoszeń.}}",
+    "bulkSetPriority": "Ustaw priorytet",
+    "bulkCloseSelected": "Zamknij zaznaczone",
+    "bulkActionError": "Nie udało się.",
+    "selectAll": "Wybierz wszystkie bilety na tej stronie",
+    "selectTicket": "Wybierz bilet #{number}"
   },
   "ticketSettingsPage": {
     "loading": "Ładowanie...",

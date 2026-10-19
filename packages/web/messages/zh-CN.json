@@ -647,7 +647,19 @@
     "showing": "显示 {from}–{to}，共 {total}",
     "previous": "上一页",
     "next": "下一页",
-    "status_waiting": "等待时"
+    "status_waiting": "等待时",
+    "selectedCount": "{count, plural, other {已选择 # 个工单}}",
+    "clearSelection": "清除选择",
+    "addTagPlaceholder": "添加标签...",
+    "bulkAddTag": "添加标签",
+    "bulkClosed": "{count, plural, other {已关闭 # 个工单。}}",
+    "bulkTagged": "{count, plural, other {已为 # 个工单添加标签。}}",
+    "bulkPrioritized": "{count, plural, other {已更新 # 个工单的优先级。}}",
+    "bulkSetPriority": "设定优先级",
+    "bulkCloseSelected": "关闭选中内容",
+    "bulkActionError": "散装动作失败 。",
+    "selectAll": "选择此页面上的所有门票",
+    "selectTicket": "选择票 #{number}"
   },
   "ticketSettingsPage": {
     "loading": "加载中...",

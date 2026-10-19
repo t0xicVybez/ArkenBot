@@ -647,7 +647,19 @@
     "showing": "{from}–{to} van {total} getoond",
     "previous": "Vorige",
     "next": "Volgende",
-    "status_waiting": "Wachten"
+    "status_waiting": "Wachten",
+    "selectedCount": "{count, plural, one {# ticket geselecteerd} other {# tickets geselecteerd}}",
+    "clearSelection": "Selectie wissen",
+    "addTagPlaceholder": "Een tag toevoegen...",
+    "bulkClosed": "{count, plural, one {# ticket gesloten.} other {# tickets gesloten.}}",
+    "bulkTagged": "{count, plural, one {# ticket getagd.} other {# tickets getagd.}}",
+    "bulkPrioritized": "{count, plural, one {Prioriteit bijgewerkt voor # ticket.} other {Prioriteit bijgewerkt voor # tickets.}}",
+    "bulkAddTag": "Tag toevoegen",
+    "bulkSetPriority": "Prioriteit instellen",
+    "bulkCloseSelected": "Geselecteerd sluiten",
+    "bulkActionError": "Bulk actie mislukt.",
+    "selectAll": "Selecteer alle tickets op deze pagina",
+    "selectTicket": "Selecteer ticket #{number}"
   },
   "ticketSettingsPage": {
     "loading": "Laden...",

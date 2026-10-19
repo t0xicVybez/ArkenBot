@@ -647,7 +647,19 @@
     "showing": "Affichage de {from}–{to} sur {total}",
     "previous": "Précédent",
     "next": "Suivant",
-    "status_waiting": "Attendre"
+    "status_waiting": "Attendre",
+    "selectedCount": "{count, plural, one {# ticket sélectionné} other {# tickets sélectionnés}}",
+    "clearSelection": "Effacer la sélection",
+    "addTagPlaceholder": "Ajouter une étiquette...",
+    "bulkAddTag": "Ajouter une étiquette",
+    "bulkClosed": "{count, plural, one {# ticket fermé.} other {# tickets fermés.}}",
+    "bulkTagged": "{count, plural, one {# ticket étiqueté.} other {# tickets étiquetés.}}",
+    "bulkPrioritized": "{count, plural, one {Priorité mise à jour sur # ticket.} other {Priorité mise à jour sur # tickets.}}",
+    "bulkSetPriority": "Définir la priorité",
+    "bulkCloseSelected": "Fermer la sélection",
+    "bulkActionError": "L’action en masse a échoué.",
+    "selectAll": "Sélectionnez tous les tickets de cette page",
+    "selectTicket": "Sélectionner le ticket #{number}"
   },
   "ticketSettingsPage": {
     "loading": "Chargement...",

@@ -647,7 +647,19 @@
     "showing": "Mostrando {from}–{to} de {total}",
     "previous": "Anterior",
     "next": "Siguiente",
-    "status_waiting": "Esperando"
+    "status_waiting": "Esperando",
+    "selectedCount": "{count, plural, one {# ticket seleccionado} other {# tickets seleccionados}}",
+    "clearSelection": "Selección clara",
+    "addTagPlaceholder": "Añadir una etiqueta...",
+    "bulkClosed": "{count, plural, one {Se cerró # ticket.} other {Se cerraron # tickets.}}",
+    "bulkTagged": "{count, plural, one {Se etiquetó # ticket.} other {Se etiquetaron # tickets.}}",
+    "bulkPrioritized": "{count, plural, one {Se actualizó la prioridad de # ticket.} other {Se actualizó la prioridad de # tickets.}}",
+    "bulkAddTag": "Tag",
+    "bulkSetPriority": "Establecer prioridades",
+    "bulkCloseSelected": "Cerrar Seleccionado",
+    "bulkActionError": "La acción de Bulk falló.",
+    "selectAll": "Seleccione todas las entradas en esta página",
+    "selectTicket": "Seleccione la entrada #{number}"
   },
   "ticketSettingsPage": {
     "loading": "Cargando...",

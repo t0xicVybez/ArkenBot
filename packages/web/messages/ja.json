@@ -647,7 +647,19 @@
     "showing": "{total} 件中 {from}–{to} 件を表示",
     "previous": "前へ",
     "next": "次へ",
-    "status_waiting": "待ち合わせ"
+    "status_waiting": "待ち合わせ",
+    "selectedCount": "{count, plural, other {# 件のチケットを選択中}}",
+    "clearSelection": "明確な選択",
+    "addTagPlaceholder": "タグを追加...",
+    "bulkAddTag": "タグを追加",
+    "bulkClosed": "{count, plural, other {# 件のチケットを閉じました。}}",
+    "bulkTagged": "{count, plural, other {# 件のチケットにタグを付けました。}}",
+    "bulkPrioritized": "{count, plural, other {# 件のチケットの優先度を更新しました。}}",
+    "bulkSetPriority": "優先順位の設定",
+    "bulkCloseSelected": "選択を閉じる",
+    "bulkActionError": "バルクアクションが失敗しました。",
+    "selectAll": "このページの全てのチケットを選択",
+    "selectTicket": "チケットを選択 #{number}"
   },
   "ticketSettingsPage": {
     "loading": "読み込み中...",

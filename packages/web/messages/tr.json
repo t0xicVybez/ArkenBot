@@ -647,7 +647,19 @@
     "showing": "{total} içinden {from}–{to} gösteriliyor",
     "previous": "Önceki",
     "next": "Sonraki",
-    "status_waiting": "Bekle"
+    "status_waiting": "Bekle",
+    "selectedCount": "{count, plural, one {# bilet seçildi} other {# bilet seçildi}}",
+    "clearSelection": "Clear seçimi",
+    "addTagPlaceholder": "Bir etiket ekleyin...",
+    "bulkAddTag": "Ekle Tag",
+    "bulkSetPriority": "Öncelik Seti",
+    "bulkClosed": "{count, plural, one {# bilet kapatıldı.} other {# bilet kapatıldı.}}",
+    "bulkTagged": "{count, plural, one {# bilete etiket eklendi.} other {# bilete etiket eklendi.}}",
+    "bulkPrioritized": "{count, plural, one {# biletin önceliği güncellendi.} other {# biletin önceliği güncellendi.}}",
+    "bulkCloseSelected": "Kapat",
+    "bulkActionError": "Bulk aksiyon başarısız oldu.",
+    "selectAll": "Bu sayfada tüm biletleri seçin",
+    "selectTicket": "Bilet seçin #{number}"
   },
   "ticketSettingsPage": {
     "loading": "Yükleniyor...",

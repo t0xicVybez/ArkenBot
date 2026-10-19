@@ -47,6 +47,9 @@ export default function TicketsPage() {
   const [page, setPage]                     = useState(1);
   const [bulkCloseHours, setBulkCloseHours] = useState(72);
   const [showBulkClose, setShowBulkClose]   = useState(false);
+  const [selectedIds, setSelectedIds]       = useState<Set<string>>(new Set());
+  const [bulkTagInput, setBulkTagInput]     = useState('');
+  const [bulkPriority, setBulkPriority]     = useState('medium');
 
   const { data: statsRes }   = useQuery({ queryKey: ['tickets-stats', guildId], queryFn: () => ticketsApi.getStats(guildId) });
   const { data: configRes }  = useQuery({ queryKey: ['tickets-config', guildId], queryFn: () => ticketsApi.getConfig(guildId) });
@@ -76,9 +79,40 @@ export default function TicketsPage() {
     },
   });
 
+  const bulkActionMut = useMutation({
+    mutationFn: (data: { action: 'close' | 'tag' | 'priority'; tag?: string; priority?: string }) =>
+      ticketsApi.bulkAction(guildId, { ticketIds: [...selectedIds], ...data }),
+    onSuccess: (res, variables) => {
+      const count = (res.data as { data?: { affected?: number } })?.data?.affected ?? 0;
+      toast.success(t(`bulk${variables.action === 'close' ? 'Closed' : variables.action === 'tag' ? 'Tagged' : 'Prioritized'}`, { count }));
+      setSelectedIds(new Set());
+      setBulkTagInput('');
+      queryClient.invalidateQueries({ queryKey: ['tickets-list', guildId] });
+      queryClient.invalidateQueries({ queryKey: ['tickets-stats', guildId] });
+    },
+    onError: () => toast.error(t('bulkActionError')),
+  });
+
   const stats   = statsRes?.data?.data as StatsData | undefined;
   const tickets = (ticketsRes?.data?.data ?? []) as TicketRecord[];
   const meta    = ticketsRes?.data?.meta as { total: number; page: number; limit: number } | undefined;
+
+  const allSelected = tickets.length > 0 && tickets.every((row) => selectedIds.has(row.id));
+  const toggleAll = () => {
+    setSelectedIds((prev) => {
+      if (allSelected) return new Set();
+      const next = new Set(prev);
+      for (const row of tickets) next.add(row.id);
+      return next;
+    });
+  };
+  const toggleOne = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  };
 
   const pieData = stats
     ? [
@@ -159,6 +193,54 @@ export default function TicketsPage() {
             </button>
             <button onClick={() => setShowBulkClose(false)} className="btn-secondary text-sm">
               {t('cancel')}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {selectedIds.size > 0 && (
+        <div className="card border border-discord-blurple/30 bg-discord-blurple/5 space-y-3">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <h3 className="text-white font-semibold text-sm">{t('selectedCount', { count: selectedIds.size })}</h3>
+            <button onClick={() => setSelectedIds(new Set())} className="text-gray-400 hover:text-white text-xs">
+              {t('clearSelection')}
+            </button>
+          </div>
+          <div className="flex items-center gap-2 flex-wrap">
+            <input
+              className="input text-sm w-40"
+              placeholder={t('addTagPlaceholder')}
+              value={bulkTagInput}
+              onChange={(e) => setBulkTagInput(e.target.value)}
+            />
+            <button
+              onClick={() => bulkActionMut.mutate({ action: 'tag', tag: bulkTagInput.trim() })}
+              disabled={bulkActionMut.isPending || !bulkTagInput.trim()}
+              className="btn-secondary text-xs py-1.5 px-3 disabled:opacity-40"
+            >
+              {t('bulkAddTag')}
+            </button>
+
+            <select value={bulkPriority} onChange={(e) => setBulkPriority(e.target.value)} className="input text-sm w-32">
+              <option value="low">{t('priority_low')}</option>
+              <option value="medium">{t('priority_medium')}</option>
+              <option value="high">{t('priority_high')}</option>
+              <option value="urgent">{t('priority_urgent')}</option>
+            </select>
+            <button
+              onClick={() => bulkActionMut.mutate({ action: 'priority', priority: bulkPriority })}
+              disabled={bulkActionMut.isPending}
+              className="btn-secondary text-xs py-1.5 px-3 disabled:opacity-40"
+            >
+              {t('bulkSetPriority')}
+            </button>
+
+            <button
+              onClick={() => bulkActionMut.mutate({ action: 'close' })}
+              disabled={bulkActionMut.isPending}
+              className="btn-danger text-xs py-1.5 px-3 disabled:opacity-40 ml-auto"
+            >
+              {t('bulkCloseSelected')}
             </button>
           </div>
         </div>
@@ -261,6 +343,9 @@ export default function TicketsPage() {
             <table className="w-full min-w-[500px]">
               <thead className="border-b border-(--border-subtle) text-left text-xs text-gray-500 uppercase tracking-wider">
                 <tr>
+                  <th className="px-4 py-3 w-10">
+                    <input type="checkbox" checked={allSelected} onChange={toggleAll} aria-label={t('selectAll')} />
+                  </th>
                   <th className="px-4 py-3">#</th>
                   <th className="px-4 py-3">{t('colUsername')}</th>
                   <th className="px-4 py-3">{t('colCategory')}</th>
@@ -277,7 +362,15 @@ export default function TicketsPage() {
                   const badge    = STATUS_BADGE[row.status]  ?? 'badge-secondary';
                   const slaWarn  = isSlaWarning(row);
                   return (
-                    <tr key={row.id} className={`hover:bg-gray-700/20 transition-colors ${slaWarn ? 'border-l-2 border-l-yellow-500' : ''}`}>
+                    <tr key={row.id} className={`hover:bg-gray-700/20 transition-colors ${slaWarn ? 'border-l-2 border-l-yellow-500' : ''} ${selectedIds.has(row.id) ? 'bg-discord-blurple/5' : ''}`}>
+                      <td className="px-4 py-3">
+                        <input
+                          type="checkbox"
+                          checked={selectedIds.has(row.id)}
+                          onChange={() => toggleOne(row.id)}
+                          aria-label={t('selectTicket', { number: row.number })}
+                        />
+                      </td>
                       <td className="px-4 py-3 text-gray-300 font-mono text-sm">
                         <span>#{row.number}</span>
                         {slaWarn && <AlertTriangle className="w-3 h-3 text-yellow-400 inline ml-1" aria-label={t('noStaffResponse')} />}

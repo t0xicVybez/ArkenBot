@@ -647,7 +647,19 @@
     "showing": "{total}개 중 {from}–{to} 표시",
     "previous": "이전",
     "next": "다음",
-    "status_waiting": "뚱 베어"
+    "status_waiting": "뚱 베어",
+    "selectedCount": "{count, plural, other {티켓 #개 선택됨}}",
+    "clearSelection": "자주 묻는 질문",
+    "addTagPlaceholder": "태그를 추가 ...",
+    "bulkClosed": "{count, plural, other {티켓 #개를 닫았습니다.}}",
+    "bulkTagged": "{count, plural, other {티켓 #개에 태그를 추가했습니다.}}",
+    "bulkPrioritized": "{count, plural, other {티켓 #개의 우선순위를 업데이트했습니다.}}",
+    "bulkAddTag": "태그 :",
+    "bulkSetPriority": "우선 순위",
+    "bulkCloseSelected": "닫기 선택",
+    "bulkActionError": "대량 작업 실패.",
+    "selectAll": "이 페이지의 모든 티켓 선택",
+    "selectTicket": "티켓 선택 #{number}"
   },
   "ticketSettingsPage": {
     "loading": "불러오는 중...",

@@ -157,6 +157,7 @@ async function writeData<T>(guildId: string, key: string, value: T): Promise<voi
  *   DELETE /addons/tickets/:guildId/tickets/:ticketId
  *   POST   /addons/tickets/:guildId/tickets/:ticketId/reopen
  *   POST   /addons/tickets/:guildId/tickets/bulk-close
+ *   POST   /addons/tickets/:guildId/tickets/bulk-action
  *   POST   /addons/tickets/:guildId/tickets/:ticketId/claim
  *   POST   /addons/tickets/:guildId/tickets/:ticketId/unclaim
  *   POST   /addons/tickets/:guildId/tickets/:ticketId/transfer
@@ -463,6 +464,59 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
 
     await writeTickets(guildId, updated);
     return reply.send({ success: true, data: { closedCount } });
+  });
+
+  const BULK_PRIORITIES = new Set(['low', 'medium', 'high', 'urgent']);
+
+  // One endpoint for every selection-based bulk action (vs. bulk-close's
+  // idle-time selection above) so the ticket list's multi-select toolbar
+  // has a single place to grow into as more bulk actions get added.
+  server.post('/addons/tickets/:guildId/tickets/bulk-action', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
+    const { guildId } = request.params as { guildId: string };
+    const body = request.body as { ticketIds?: string[]; action?: 'close' | 'tag' | 'priority'; tag?: string; priority?: string };
+
+    const ids = new Set((body.ticketIds ?? []).filter((id) => typeof id === 'string'));
+    if (ids.size === 0) return reply.code(400).send({ success: false, error: 'No tickets selected' });
+    if (body.action === 'tag' && !body.tag?.trim()) return reply.code(400).send({ success: false, error: 'A tag is required' });
+    if (body.action === 'priority' && !BULK_PRIORITIES.has(body.priority ?? '')) return reply.code(400).send({ success: false, error: 'Invalid priority' });
+
+    const tickets = await readTickets(guildId);
+    let affected = 0;
+    const tag = body.tag?.trim().toLowerCase().slice(0, 32);
+
+    const updated = tickets.map((t) => {
+      if (!ids.has(t.id)) return t;
+
+      if (body.action === 'close') {
+        if (t.status === 'closed') return t;
+        affected++;
+        return {
+          ...t,
+          status: 'closed' as const,
+          closedAt: new Date().toISOString(),
+          closedBy: 'portal',
+          closedByTag: 'Staff Portal',
+          lastActivity: new Date().toISOString(),
+        };
+      }
+
+      if (body.action === 'tag' && tag) {
+        if (t.tags.includes(tag)) return t;
+        affected++;
+        return { ...t, tags: [...t.tags, tag] };
+      }
+
+      if (body.action === 'priority' && body.priority) {
+        if (t.priority === body.priority) return t;
+        affected++;
+        return { ...t, priority: body.priority as Ticket['priority'] };
+      }
+
+      return t;
+    });
+
+    await writeTickets(guildId, updated);
+    return reply.send({ success: true, data: { affected } });
   });
 
   async function findTicket(guildId: string, ticketId: string) {

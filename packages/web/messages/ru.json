@@ -647,7 +647,19 @@
     "showing": "Показано {from}–{to} из {total}",
     "previous": "Назад",
     "next": "Вперёд",
-    "status_waiting": "Ждать"
+    "status_waiting": "Ждать",
+    "selectedCount": "{count, plural, one {Выбран # тикет} few {Выбрано # тикета} many {Выбрано # тикетов} other {Выбрано # тикетов}}",
+    "clearSelection": "Ясный выбор",
+    "addTagPlaceholder": "Добавить тег...",
+    "bulkClosed": "{count, plural, one {Закрыт # тикет.} few {Закрыто # тикета.} many {Закрыто # тикетов.} other {Закрыто # тикетов.}}",
+    "bulkTagged": "{count, plural, one {Помечен # тикет.} few {Помечено # тикета.} many {Помечено # тикетов.} other {Помечено # тикетов.}}",
+    "bulkPrioritized": "{count, plural, one {Обновлён приоритет # тикета.} few {Обновлён приоритет # тикетов.} many {Обновлён приоритет # тикетов.} other {Обновлён приоритет # тикетов.}}",
+    "bulkAddTag": "Добавить тег",
+    "bulkSetPriority": "Установить приоритет",
+    "bulkCloseSelected": "Близко выбранный",
+    "bulkActionError": "Неудачные действия.",
+    "selectAll": "Выберите все билеты на этой странице",
+    "selectTicket": "Выберите билет #{number}"
   },
   "ticketSettingsPage": {
     "loading": "Загрузка...",
