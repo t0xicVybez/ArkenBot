@@ -24,12 +24,18 @@ const AUTO_CLOSE_INTERVAL_MS = 30 * 60 * 1000;
 let autoCloseTimer: ReturnType<typeof setInterval> | null = null;
 let redisSub: Redis | null = null;
 
+// Single source of truth for the version, referenced below both in the
+// manifest and the onLoad log line — the two had drifted before (manifest
+// said 1.1.0, the load log still said 'v1.1' from further back) since
+// nothing kept them in sync.
+const ADDON_VERSION = '2.1.0';
+
 export default defineAddon({
   locales,
   manifest: {
     name: 'tickets',
     displayName: 'Ticket System',
-    version: '2.1.0',
+    version: ADDON_VERSION,
     description:
       'Full-featured ticket system with panels, transcripts, auto-close, priorities, staff notes, ratings, canned responses, SLA warnings, webhooks, and a portal dashboard. 2.1 adds live Discord↔dashboard sync, ticket merging, content search, bulk actions, workload-aware auto-assign, multi-language AI triage, and signed webhooks.',
     author: 't0xicVybez',
@@ -68,7 +74,7 @@ export default defineAddon({
   hooks: {
     async onLoad(ctx: AddonContext): Promise<void> {
       if (ctx.db) setTicketDb(ctx.db as TicketDb);
-      ctx.logger.info('Ticket System v1.1 loaded.');
+      ctx.logger.info(`Ticket System v${ADDON_VERSION} loaded.`);
       startAutoCloseLoop(ctx);
       await startPanelSyncListener(ctx);
       initLiveSync();
