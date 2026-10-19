@@ -18,6 +18,8 @@ interface CannedResponse {
   content: string;
   createdByTag: string;
   createdAt: string;
+  usageCount?: number;
+  lastUsedAt?: string;
 }
 
 export default function CannedResponsesPage() {
@@ -179,11 +181,15 @@ export default function CannedResponsesPage() {
                   <div className="flex items-center gap-2">
                     <span className="text-white font-semibold text-sm">{r.name}</span>
                     <span className="badge-secondary text-xs">/{r.name}</span>
+                    <span className={`badge text-xs ${r.usageCount ? 'badge-info' : 'badge-secondary opacity-60'}`}>
+                      {r.usageCount ? t('usedCount', { count: r.usageCount }) : t('neverUsed')}
+                    </span>
                   </div>
                   <p className="text-gray-400 text-sm mt-1 whitespace-pre-wrap wrap-break-word line-clamp-3">{r.content}</p>
                   <p className="text-gray-600 text-xs mt-1">
                     {t('created', { date: new Date(r.createdAt).toLocaleDateString() })}
                     {r.createdByTag && t('byTag', { tag: r.createdByTag })}
+                    {r.lastUsedAt && ` · ${t('lastUsed', { date: new Date(r.lastUsedAt).toLocaleDateString() })}`}
                   </p>
                 </div>
                 <div className="flex gap-1 flex-shrink-0">

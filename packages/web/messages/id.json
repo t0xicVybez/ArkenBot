@@ -793,7 +793,10 @@
     "delete": "Hapus",
     "confirmDelete": "Hapus \"{name}\"?",
     "howToUseLabel": "Cara menggunakan:",
-    "howToUse": "Di kanal tiket mana pun, jalankan <code>/ticket respond</code> dan mulai mengetik nama balasan — Discord akan melengkapi otomatis dari daftar ini."
+    "howToUse": "Di kanal tiket mana pun, jalankan <code>/ticket respond</code> dan mulai mengetik nama balasan — Discord akan melengkapi otomatis dari daftar ini.",
+    "usedCount": "{count, plural, one {Digunakan # kali} other {Digunakan # kali}}",
+    "neverUsed": "Tak pernah dipakai",
+    "lastUsed": "terakhir digunakan {date}"
   },
   "ticketStatsPage": {
     "title": "Statistik Tiket",

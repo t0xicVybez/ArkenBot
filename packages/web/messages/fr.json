@@ -793,7 +793,10 @@
     "delete": "Supprimer",
     "confirmDelete": "Supprimer « {name} » ?",
     "howToUseLabel": "Comment l’utiliser :",
-    "howToUse": "Dans n’importe quel salon de ticket, lancez <code>/ticket respond</code> et commencez à taper un nom de réponse — Discord complétera automatiquement depuis cette liste."
+    "howToUse": "Dans n’importe quel salon de ticket, lancez <code>/ticket respond</code> et commencez à taper un nom de réponse — Discord complétera automatiquement depuis cette liste.",
+    "usedCount": "{count, plural, one {Utilisé # fois} other {Utilisé # fois}}",
+    "neverUsed": "Jamais utilisé",
+    "lastUsed": "dernière utilisation {date}"
   },
   "ticketStatsPage": {
     "title": "Statistiques des tickets",

@@ -793,7 +793,10 @@
     "delete": "Verwijderen",
     "confirmDelete": "\"{name}\" verwijderen?",
     "howToUseLabel": "Hoe te gebruiken:",
-    "howToUse": "Voer in een ticketkanaal <code>/ticket respond</code> uit en begin een antwoordnaam te typen — Discord vult automatisch aan uit deze lijst."
+    "howToUse": "Voer in een ticketkanaal <code>/ticket respond</code> uit en begin een antwoordnaam te typen — Discord vult automatisch aan uit deze lijst.",
+    "usedCount": "{count, plural, one {# keer gebruikt} other {# keer gebruikt}}",
+    "neverUsed": "Nooit gebruikt",
+    "lastUsed": "laatst gebruikt {date}"
   },
   "ticketStatsPage": {
     "title": "Ticketstatistieken",

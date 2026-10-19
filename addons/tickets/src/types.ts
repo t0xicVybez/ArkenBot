@@ -116,6 +116,8 @@ export interface CannedResponse {
   createdBy: string;
   createdByTag: string;
   createdAt: string;
+  usageCount?: number;
+  lastUsedAt?: string;
 }
 
 export interface Ticket {

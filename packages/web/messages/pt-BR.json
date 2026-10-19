@@ -793,7 +793,10 @@
     "delete": "Excluir",
     "confirmDelete": "Excluir \"{name}\"?",
     "howToUseLabel": "Como usar:",
-    "howToUse": "Em qualquer canal de ticket, execute <code>/ticket respond</code> e comece a digitar o nome de uma resposta — o Discord vai autocompletar a partir desta lista."
+    "howToUse": "Em qualquer canal de ticket, execute <code>/ticket respond</code> e comece a digitar o nome de uma resposta — o Discord vai autocompletar a partir desta lista.",
+    "usedCount": "{count, plural, one {Usado # vez} other {Usado # vezes}}",
+    "neverUsed": "Nunca usado.",
+    "lastUsed": "Usado pela última vez {date}"
   },
   "ticketStatsPage": {
     "title": "Estatísticas de tickets",

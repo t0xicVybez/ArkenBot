@@ -793,7 +793,10 @@
     "delete": "Sil",
     "confirmDelete": "\"{name}\" silinsin mi?",
     "howToUseLabel": "Nasıl kullanılır:",
-    "howToUse": "Herhangi bir bilet kanalında <code>/ticket respond</code> çalıştır ve bir yanıt adı yazmaya başla — Discord bu listeden otomatik tamamlar."
+    "howToUse": "Herhangi bir bilet kanalında <code>/ticket respond</code> çalıştır ve bir yanıt adı yazmaya başla — Discord bu listeden otomatik tamamlar.",
+    "usedCount": "{count, plural, one {# kez kullanıldı} other {# kez kullanıldı}}",
+    "neverUsed": "Asla kullanılmadı",
+    "lastUsed": "Son olarak kullanılan {date}"
   },
   "ticketStatsPage": {
     "title": "Bilet İstatistikleri",

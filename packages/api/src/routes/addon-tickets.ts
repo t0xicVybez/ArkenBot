@@ -152,7 +152,7 @@ interface Ticket { id: string; number: number; panelId: string; guildId: string;
 interface SlaLevel { hours: number; pingRoleId?: string; message?: string; escalatePriority?: string; escalateRoleId?: string; }
 interface BusinessHours { enabled: boolean; timezone: string; openTime: string; closeTime: string; days: number[]; awayMessage?: string; pauseSla?: boolean; }
 interface GuildTicketConfig { blacklistedUsers: string[]; transcriptChannelId?: string; slaHours?: number; webhookUrl?: string; staffNotifyChannelId?: string; staffNotifyRoleId?: string; ratingWindowMinutes?: number; autoAssign?: boolean; roundRobinIndex?: number; slaLevels?: SlaLevel[]; autoTriage?: boolean; autoTriageSetPriority?: boolean; autoTriageTag?: boolean; nudgeBeforeCloseHours?: number; businessHours?: BusinessHours; showUserHistory?: boolean; lowRatingThreshold?: number; lowRatingAlertRoleId?: string; lowRatingAlertChannelId?: string; openCooldownMinutes?: number; minAccountAgeDays?: number; requiredOpenRoleId?: string; weeklyDigestChannelId?: string; }
-interface CannedResponse { id: string; name: string; content: string; createdBy: string; createdByTag: string; createdAt: string; }
+interface CannedResponse { id: string; name: string; content: string; createdBy: string; createdByTag: string; createdAt: string; usageCount?: number; lastUsedAt?: string; }
 
 const ADDON_NAME = 'tickets';
 let _addonDbId: string | null = null;

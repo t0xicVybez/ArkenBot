@@ -793,7 +793,10 @@
     "delete": "Удалить",
     "confirmDelete": "Удалить «{name}»?",
     "howToUseLabel": "Как использовать:",
-    "howToUse": "В любом канале тикета выполните <code>/ticket respond</code> и начните вводить имя ответа — Discord автодополнит его из этого списка."
+    "howToUse": "В любом канале тикета выполните <code>/ticket respond</code> и начните вводить имя ответа — Discord автодополнит его из этого списка.",
+    "usedCount": "{count, plural, one {Использован # раз} few {Использован # раза} many {Использован # раз} other {Использован # раз}}",
+    "neverUsed": "Никогда не использовал",
+    "lastUsed": "Последнее использование {date}"
   },
   "ticketStatsPage": {
     "title": "Статистика тикетов",

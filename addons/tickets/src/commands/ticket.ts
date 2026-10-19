@@ -23,6 +23,7 @@ import {
   getMessages,
   getPanel,
   getCannedResponses,
+  saveCannedResponses,
   getTickets,
   getUserOpenTickets,
   getPanels,
@@ -501,6 +502,15 @@ const command: AddonCommandDefinition = {
           ticket: `#${ticket.number}`,
         });
         await interaction.reply(content);
+
+        // Usage tracking so the dashboard CRUD page can show which canned
+        // responses are actually used, for cleanup/tuning. Best-effort —
+        // never let a stats write fail the actual reply that was just sent.
+        canned.usageCount = (canned.usageCount ?? 0) + 1;
+        canned.lastUsedAt = new Date().toISOString();
+        await saveCannedResponses(ctx.storage, interaction.guildId, responses).catch((err) =>
+          ctx.logger.warn(`Failed to record canned response usage: ${err}`),
+        );
         break;
       }
       case 'requestclose': {

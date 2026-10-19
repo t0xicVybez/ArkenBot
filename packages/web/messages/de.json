@@ -793,7 +793,10 @@
     "delete": "Löschen",
     "confirmDelete": "„{name}“ löschen?",
     "howToUseLabel": "Verwendung:",
-    "howToUse": "Führe in einem beliebigen Ticket-Kanal <code>/ticket respond</code> aus und beginne, einen Antwortnamen einzutippen – Discord vervollständigt ihn automatisch aus dieser Liste."
+    "howToUse": "Führe in einem beliebigen Ticket-Kanal <code>/ticket respond</code> aus und beginne, einen Antwortnamen einzutippen – Discord vervollständigt ihn automatisch aus dieser Liste.",
+    "usedCount": "{count, plural, one {# Mal verwendet} other {# Mal verwendet}}",
+    "neverUsed": "Niemals verwendet",
+    "lastUsed": "zuletzt verwendet {date}"
   },
   "ticketStatsPage": {
     "title": "Ticket-Statistiken",

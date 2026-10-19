@@ -793,7 +793,10 @@
     "delete": "삭제",
     "confirmDelete": "\"{name}\"을(를) 삭제할까요?",
     "howToUseLabel": "사용 방법:",
-    "howToUse": "아무 티켓 채널에서 <code>/ticket respond</code>를 실행하고 응답 이름을 입력하기 시작하면 Discord가 이 목록에서 자동 완성합니다."
+    "howToUse": "아무 티켓 채널에서 <code>/ticket respond</code>를 실행하고 응답 이름을 입력하기 시작하면 Discord가 이 목록에서 자동 완성합니다.",
+    "usedCount": "{count, plural, other {# 번 사용됨}}",
+    "neverUsed": "이용안내",
+    "lastUsed": "관련 제품 {date}"
   },
   "ticketStatsPage": {
     "title": "티켓 통계",

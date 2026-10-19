@@ -793,7 +793,10 @@
     "delete": "削除",
     "confirmDelete": "「{name}」を削除しますか？",
     "howToUseLabel": "使い方：",
-    "howToUse": "任意のチケットチャンネルで <code>/ticket respond</code> を実行し、返信名を入力し始めると、Discord がこのリストから補完します。"
+    "howToUse": "任意のチケットチャンネルで <code>/ticket respond</code> を実行し、返信名を入力し始めると、Discord がこのリストから補完します。",
+    "usedCount": "{count, plural, other {# 回使用}}",
+    "neverUsed": "使用しない",
+    "lastUsed": "最後の使用 {date}"
   },
   "ticketStatsPage": {
     "title": "チケット統計",

@@ -793,7 +793,10 @@
     "delete": "Usuń",
     "confirmDelete": "Usunąć „{name}”?",
     "howToUseLabel": "Jak używać:",
-    "howToUse": "Na dowolnym kanale zgłoszenia uruchom <code>/ticket respond</code> i zacznij wpisywać nazwę odpowiedzi — Discord uzupełni ją automatycznie z tej listy."
+    "howToUse": "Na dowolnym kanale zgłoszenia uruchom <code>/ticket respond</code> i zacznij wpisywać nazwę odpowiedzi — Discord uzupełni ją automatycznie z tej listy.",
+    "usedCount": "{count, plural, one {Użyto # raz} few {Użyto # razy} many {Użyto # razy} other {Użyto # razy}}",
+    "neverUsed": "Nigdy",
+    "lastUsed": "ostatnio używane {date}"
   },
   "ticketStatsPage": {
     "title": "Statystyki zgłoszeń",

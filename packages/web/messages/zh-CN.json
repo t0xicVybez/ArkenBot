@@ -793,7 +793,10 @@
     "delete": "删除",
     "confirmDelete": "删除“{name}”？",
     "howToUseLabel": "使用方法：",
-    "howToUse": "在任意工单频道中运行 <code>/ticket respond</code> 并开始输入回复名称——Discord 会从此列表自动补全。"
+    "howToUse": "在任意工单频道中运行 <code>/ticket respond</code> 并开始输入回复名称——Discord 会从此列表自动补全。",
+    "usedCount": "{count, plural, other {已使用 # 次}}",
+    "neverUsed": "从未使用",
+    "lastUsed": "上次使用时间 {date}"
   },
   "ticketStatsPage": {
     "title": "工单统计",
