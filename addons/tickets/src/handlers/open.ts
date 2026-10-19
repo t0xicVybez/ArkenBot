@@ -12,6 +12,7 @@ import {
   type ModalSubmitInteraction,
   type Guild,
   type TextChannel,
+  type GuildMember,
 } from 'discord.js';
 import { randomUUID } from 'crypto';
 import { isLLMAvailable } from '@arkenbot/shared';
@@ -29,6 +30,7 @@ import {
 import { resolvePanelFields } from '../utils/fields.js';
 import { buildTicketEmbed, buildTicketControls } from '../utils/embeds.js';
 import { createTicketChannel, resolveChannelName } from '../utils/channel.js';
+import { pickLeastLoadedAssignee } from '../utils/assign.js';
 import { isWithinBusinessHours } from '../utils/time.js';
 import { fireWebhook } from '../utils/webhook.js';
 import { runTriageModel, getUserTicketHistory, sendAssignmentBrief } from './triage.js';
@@ -298,15 +300,31 @@ export async function createTicket(
 
   if (config.autoAssign && panel.staffRoles.length > 0) {
     try {
-      const staffRole = guild.roles.cache.get(panel.staffRoles[0]);
-      if (staffRole) {
-        await guild.members.fetch();
-        const staffMembers = staffRole.members.filter((m) => !m.user.bot).toJSON();
-        if (staffMembers.length > 0) {
-          const idx = (config.roundRobinIndex ?? 0) % staffMembers.length;
-          const assignee = staffMembers[idx];
-          config.roundRobinIndex = (idx + 1) % staffMembers.length;
+      await guild.members.fetch();
+      // Union of members across every configured staff role (not just the
+      // first one — a panel can have several), deduped.
+      const staffMembers = new Map<string, GuildMember>();
+      for (const roleId of panel.staffRoles) {
+        const role = guild.roles.cache.get(roleId);
+        if (!role) continue;
+        for (const [id, member] of role.members) {
+          if (!member.user.bot) staffMembers.set(id, member);
+        }
+      }
+
+      if (staffMembers.size > 0) {
+        const openTickets = (await getTickets(ctx.storage, guildId)).filter((tk) => tk.status !== 'closed');
+        const loadByUser = new Map<string, number>();
+        for (const tk of openTickets) {
+          if (tk.claimedBy) loadByUser.set(tk.claimedBy, (loadByUser.get(tk.claimedBy) ?? 0) + 1);
+        }
+
+        const picked = pickLeastLoadedAssignee([...staffMembers.values()], loadByUser, config.roundRobinIndex ?? 0);
+        if (picked) {
+          const { assignee, nextIndex } = picked;
+          config.roundRobinIndex = nextIndex;
           await saveConfig(ctx.storage, guildId, config);
+
           ticket.status = 'claimed';
           ticket.claimedBy = assignee.id;
           ticket.claimedByTag = assignee.user.tag;

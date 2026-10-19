@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { applyCannedVars, pickEmoji } from '../../addons/tickets/src/utils/format.js';
 import { resolveChannelName } from '../../addons/tickets/src/utils/channel.js';
 import { isWithinBusinessHours } from '../../addons/tickets/src/utils/time.js';
+import { pickLeastLoadedAssignee } from '../../addons/tickets/src/utils/assign.js';
 import type { TicketPanel, BusinessHours } from '../../addons/tickets/src/types.js';
 
 describe('applyCannedVars', () => {
@@ -91,5 +92,52 @@ describe('isWithinBusinessHours', () => {
   });
   it('fails open on a bad timezone', () => {
     expect(isWithinBusinessHours(bh({ timezone: 'Not/AZone' }), monday20)).toBe(true);
+  });
+});
+
+describe('pickLeastLoadedAssignee', () => {
+  const a = { id: 'a' };
+  const b = { id: 'b' };
+  const c = { id: 'c' };
+
+  it('returns null for an empty candidate list', () => {
+    expect(pickLeastLoadedAssignee([], new Map(), 0)).toBeNull();
+  });
+
+  it('picks the single candidate when there is only one', () => {
+    const result = pickLeastLoadedAssignee([a], new Map(), 0);
+    expect(result?.assignee).toBe(a);
+    expect(result?.nextIndex).toBe(0);
+  });
+
+  it('picks whoever has the fewest open tickets, ignoring round-robin index', () => {
+    const load = new Map([['a', 3], ['b', 0], ['c', 1]]);
+    const result = pickLeastLoadedAssignee([a, b, c], load, 5);
+    expect(result?.assignee).toBe(b);
+  });
+
+  it('treats an unlisted candidate as load 0', () => {
+    const load = new Map([['a', 2]]);
+    const result = pickLeastLoadedAssignee([a, b], load, 0);
+    expect(result?.assignee).toBe(b);
+  });
+
+  it('breaks ties by round-robin order and advances the index within the tied group', () => {
+    const load = new Map([['a', 0], ['b', 0], ['c', 5]]);
+    const first = pickLeastLoadedAssignee([a, b, c], load, 0);
+    expect(first?.assignee).toBe(a);
+    expect(first?.nextIndex).toBe(1);
+
+    const second = pickLeastLoadedAssignee([a, b, c], load, first!.nextIndex);
+    expect(second?.assignee).toBe(b);
+    expect(second?.nextIndex).toBe(0);
+  });
+
+  it('wraps the round-robin index back into range as the tied group shrinks', () => {
+    // index was valid for a larger tied group last time; now only 1 is tied for least-loaded.
+    const load = new Map([['a', 0], ['b', 9], ['c', 9]]);
+    const result = pickLeastLoadedAssignee([a, b, c], load, 2);
+    expect(result?.assignee).toBe(a);
+    expect(result?.nextIndex).toBe(0);
   });
 });
