@@ -832,7 +832,8 @@
     "exporting": "Exportando...",
     "staffLeaderboard": "Staff Leaderboard",
     "colStaff": "Personal",
-    "colHandled": "Handled"
+    "colHandled": "Handled",
+    "resolvedRate": "Tasa resuelta"
   },
   "ticketDetailPage": {
     "transcriptError": "No se pudo descargar la transcripción.",
@@ -924,7 +925,10 @@
     "mergeInto": "Merge Into Esto",
     "mergeHint": "Mueva la historia de ese ticket aquí y lo cierra",
     "merged": "Entrada{number} se fusionó.",
-    "mergeError": "Failed to merge ticket."
+    "mergeError": "Failed to merge ticket.",
+    "no": "No",
+    "yes": "Sí.",
+    "ratingResolvedLabel": "¿El asunto resuelto?"
   },
   "ticketPanelsPage": {
     "pasteRoleId": "Pega un ID de rol y pulsa Añadir",

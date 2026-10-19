@@ -108,7 +108,7 @@ interface PanelButton { id: string; label: string; emoji: string; color: string;
 interface PanelField { id: string; label: string; placeholder?: string; required: boolean; style: 'short' | 'paragraph'; maxLength?: number; }
 interface TicketPanel { id: string; name: string; description: string; emoji: string; channelId?: string; messageId?: string; categoryId?: string; logChannelId?: string; staffRoles: string[]; maxTicketsPerUser: number; namingPattern: string; closeAction: string; autoCloseHours: number; requireReason: boolean; welcomeMessage: string; buttonLabel: string; buttonColor: string; buttons?: PanelButton[]; panelStyle?: 'buttons' | 'dropdown'; fields?: PanelField[]; ticketMode?: 'channel' | 'thread'; embedColor?: string; embedAuthorName?: string; embedAuthorIconUrl?: string; embedThumbnailUrl?: string; embedImageUrl?: string; embedFooterText?: string; embedFooterIconUrl?: string; enabled: boolean; createdAt: string; }
 interface TicketNote { id: string; authorId: string; authorTag: string; content: string; createdAt: string; }
-interface Ticket { id: string; number: number; panelId: string; guildId: string; channelId: string; userId: string; username: string; status: string; priority: string; categoryTag?: string; claimedBy?: string; claimedByTag?: string; transferredTo?: string; transferredToTag?: string; reason?: string; tags: string[]; rating?: number; ratingFeedback?: string; closedBy?: string; closedByTag?: string; closedAt?: string; firstResponseAt?: string; notes: TicketNote[]; formResponses?: Record<string, string>; createdAt: string; lastActivity: string; nudgedAt?: string; reminderAt?: string; reminderBy?: string; reminderNote?: string; closeRequestedBy?: string; closeRequestedByTag?: string; closeRequestedAt?: string; aiTriage?: { summary: string; urgency: string; reply?: string; tag?: string; at: string }; }
+interface Ticket { id: string; number: number; panelId: string; guildId: string; channelId: string; userId: string; username: string; status: string; priority: string; categoryTag?: string; claimedBy?: string; claimedByTag?: string; transferredTo?: string; transferredToTag?: string; reason?: string; tags: string[]; rating?: number; ratingFeedback?: string; ratingResolved?: boolean; closedBy?: string; closedByTag?: string; closedAt?: string; firstResponseAt?: string; notes: TicketNote[]; formResponses?: Record<string, string>; createdAt: string; lastActivity: string; nudgedAt?: string; reminderAt?: string; reminderBy?: string; reminderNote?: string; closeRequestedBy?: string; closeRequestedByTag?: string; closeRequestedAt?: string; aiTriage?: { summary: string; urgency: string; reply?: string; tag?: string; at: string }; }
 interface SlaLevel { hours: number; pingRoleId?: string; message?: string; escalatePriority?: string; escalateRoleId?: string; }
 interface BusinessHours { enabled: boolean; timezone: string; openTime: string; closeTime: string; days: number[]; awayMessage?: string; pauseSla?: boolean; }
 interface GuildTicketConfig { blacklistedUsers: string[]; transcriptChannelId?: string; slaHours?: number; webhookUrl?: string; staffNotifyChannelId?: string; staffNotifyRoleId?: string; ratingWindowMinutes?: number; autoAssign?: boolean; roundRobinIndex?: number; slaLevels?: SlaLevel[]; autoTriage?: boolean; autoTriageSetPriority?: boolean; autoTriageTag?: boolean; nudgeBeforeCloseHours?: number; businessHours?: BusinessHours; showUserHistory?: boolean; lowRatingThreshold?: number; lowRatingAlertRoleId?: string; lowRatingAlertChannelId?: string; openCooldownMinutes?: number; minAccountAgeDays?: number; requiredOpenRoleId?: string; weeklyDigestChannelId?: string; }
@@ -705,6 +705,11 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     const ratingDistribution: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
     for (const t of rated) { ratingDistribution[t.rating!] = (ratingDistribution[t.rating!] ?? 0) + 1; }
 
+    const withResolvedAnswer = tickets.filter((t) => t.ratingResolved !== undefined);
+    const resolvedRate = withResolvedAnswer.length > 0
+      ? withResolvedAnswer.filter((t) => t.ratingResolved).length / withResolvedAnswer.length
+      : null;
+
     const since7d        = Date.now() - 7 * 24 * 3600 * 1000;
     const recentlyClosed = tickets.filter((t) => t.closedAt && new Date(t.closedAt).getTime() > since7d).length;
 
@@ -782,6 +787,7 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
         closed,
         waiting,
         avgRating,
+        resolvedRate,
         avgResponseMinutes,
         avgCloseMinutes,
         ratingDistribution,

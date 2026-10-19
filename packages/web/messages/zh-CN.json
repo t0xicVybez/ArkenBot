@@ -832,7 +832,8 @@
     "exporting": "导出中...",
     "staffLeaderboard": "工作人员领导板",
     "colStaff": "工作人员",
-    "colHandled": "处理"
+    "colHandled": "处理",
+    "resolvedRate": "确定比率"
   },
   "ticketDetailPage": {
     "transcriptError": "下载记录失败。",
@@ -924,7 +925,10 @@
     "merging": "正在合并...",
     "mergeHint": "将票的历史移到这里并关闭它",
     "mergeError": "合并票失败 。",
-    "merged": "# 车票 #{number} 合并为."
+    "merged": "# 车票 #{number} 合并为.",
+    "ratingResolvedLabel": "问题解决了?",
+    "yes": "对",
+    "no": "没有"
   },
   "ticketPanelsPage": {
     "pasteRoleId": "粘贴身份组 ID 并点击“添加”",

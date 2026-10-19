@@ -832,7 +832,8 @@
     "exporting": "İhracat ...",
     "staffLeaderboard": "Staff Leaderboard",
     "colStaff": "Personel",
-    "colHandled": "Yavaşla"
+    "colHandled": "Yavaşla",
+    "resolvedRate": "Çözülmüş Oran"
   },
   "ticketDetailPage": {
     "transcriptError": "Döküm indirilemedi.",
@@ -924,7 +925,10 @@
     "merging": "Birleşme...",
     "mergeHint": "Bu biletin tarihi burada hareket eder ve onu kapatır",
     "merged": "Bilet # #{number} İçeri girdi.",
-    "mergeError": "Bileti birleştirmek için başarısız oldu."
+    "mergeError": "Bileti birleştirmek için başarısız oldu.",
+    "ratingResolvedLabel": "Sorun Çözüldü?",
+    "yes": "Evet Evet Evet",
+    "no": "Hayır hayır hayır"
   },
   "ticketPanelsPage": {
     "pasteRoleId": "Bir Rol Kimliği yapıştır ve Ekle’ye bas",

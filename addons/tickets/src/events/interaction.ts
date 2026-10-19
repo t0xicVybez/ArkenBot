@@ -30,7 +30,7 @@ import {
   updateControlsMessage,
 } from '../handlers/lifecycle.js';
 export { closeTicket, updateControlsMessage } from '../handlers/lifecycle.js';
-import { handleRateButton, handleRateModal } from '../handlers/rating.js';
+import { handleRateButton, handleRateResolvedButton, handleRateModal } from '../handlers/rating.js';
 import { handleOpenTicket, handleReasonModal } from '../handlers/open.js';
 export { createTicket } from '../handlers/open.js';
 export { resolvePanelFields } from '../utils/fields.js';
@@ -105,6 +105,13 @@ async function handleButton(ctx: AddonContext, interaction: ButtonInteraction): 
   } else if (id.startsWith('ticket:reopen:')) {
     const channelId = id.slice('ticket:reopen:'.length);
     await handleReopenButton(ctx, interaction, channelId);
+  } else if (id.startsWith('ticket:rate-resolved:')) {
+    const parts = id.split(':');
+    const guildId = parts[2];
+    const channelId = parts[3];
+    const rating = parseInt(parts[4] ?? '0', 10);
+    const resolved = parts[5] === 'yes' ? 'yes' : 'no';
+    await handleRateResolvedButton(ctx, interaction, guildId, channelId, rating, resolved);
   } else if (id.startsWith('ticket:rate:')) {
     const parts = id.split(':');
     const guildId = parts[2];
@@ -137,7 +144,8 @@ async function handleModal(ctx: AddonContext, interaction: ModalSubmitInteractio
     const guildId = parts[2];
     const channelId = parts[3];
     const rating = parseInt(parts[4] ?? '0', 10);
-    await handleRateModal(ctx, interaction, guildId, channelId, rating);
+    const resolved = parts[5] === 'yes' ? 'yes' : parts[5] === 'no' ? 'no' : undefined;
+    await handleRateModal(ctx, interaction, guildId, channelId, rating, resolved);
   }
 }
 

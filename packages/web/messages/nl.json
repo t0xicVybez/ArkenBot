@@ -832,7 +832,8 @@
     "exporting": "Exporteren...",
     "staffLeaderboard": "Leiderschap van het personeel",
     "colStaff": "Personeel",
-    "colHandled": "Behandeld"
+    "colHandled": "Behandeld",
+    "resolvedRate": "Opgelost percentage"
   },
   "ticketDetailPage": {
     "transcriptError": "Kon transcriptie niet downloaden.",
@@ -924,7 +925,10 @@
     "merging": "Samenvoegen...",
     "mergeHint": "Verplaatst de geschiedenis van dat ticket hier en sluit het",
     "merged": "Kaartje #{number} samengevoegd.",
-    "mergeError": "Kon ticket niet samenvoegen."
+    "mergeError": "Kon ticket niet samenvoegen.",
+    "ratingResolvedLabel": "Opgelost?",
+    "yes": "Ja.",
+    "no": "Nee"
   },
   "ticketPanelsPage": {
     "pasteRoleId": "Plak een Rol-ID en druk op Toevoegen",

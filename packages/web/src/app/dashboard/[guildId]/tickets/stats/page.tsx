@@ -21,7 +21,7 @@ import toast from 'react-hot-toast';
 
 interface StatsData {
   total: number; open: number; claimed: number; closed: number; waiting: number;
-  avgRating: number | null; avgResponseMinutes: number | null; avgCloseMinutes: number | null;
+  avgRating: number | null; resolvedRate: number | null; avgResponseMinutes: number | null; avgCloseMinutes: number | null;
   recentlyClosed: number; slaBreaches: number; panels: number; blacklistedUsers: number;
   ratingDistribution: Record<number, number>;
   byPanel: {
@@ -133,8 +133,9 @@ export default function TicketStatsPage() {
             <StatCard icon={<div className="w-3 h-3 rounded-full bg-red-400" />}   label={t('statusClosed')}          value={stats.closed} />
           </div>
           {}
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
             <StatCard icon={<Star className="w-5 h-5 text-yellow-400" />}           label={t('avgRating')}       value={stats.avgRating != null ? `${stats.avgRating.toFixed(1)} / 5` : '—'} />
+            <StatCard icon={<TrendingUp className="w-5 h-5 text-green-400" />}      label={t('resolvedRate')}    value={stats.resolvedRate != null ? `${Math.round(stats.resolvedRate * 100)}%` : '—'} />
             <StatCard icon={<Clock className="w-5 h-5 text-blue-400" />}            label={t('avgResponse')}     value={fmtMinutes(stats.avgResponseMinutes)} />
             <StatCard icon={<CheckCircle className="w-5 h-5 text-green-400" />}     label={t('avgCloseTime')}   value={fmtMinutes(stats.avgCloseMinutes)} />
             <StatCard icon={<AlertTriangle className="w-5 h-5 text-red-400" />}     label={t('slaBreaches')}     value={stats.slaBreaches} accent={stats.slaBreaches > 0 ? 'red' : undefined} />

@@ -832,7 +832,8 @@
     "exporting": "Exportieren...",
     "staffLeaderboard": "Personalführerboard",
     "colStaff": "Personal",
-    "colHandled": "Behandelt"
+    "colHandled": "Behandelt",
+    "resolvedRate": "Aufgelöste Rate"
   },
   "ticketDetailPage": {
     "transcriptError": "Transkript konnte nicht heruntergeladen werden.",
@@ -924,7 +925,10 @@
     "merging": "Zusammenführung...",
     "mergeHint": "Verschiebt die Geschichte dieses Tickets hier und schließt es",
     "mergeError": "Das Ticket konnte nicht zusammengeführt werden.",
-    "merged": "Ticket #{number} fusioniert."
+    "merged": "Ticket #{number} fusioniert.",
+    "ratingResolvedLabel": "Problem gelöst?",
+    "yes": "Ja",
+    "no": "Nein"
   },
   "ticketPanelsPage": {
     "pasteRoleId": "Rollen-ID einfügen und auf Hinzufügen klicken",

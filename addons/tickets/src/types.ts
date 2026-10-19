@@ -140,6 +140,7 @@ export interface Ticket {
   tags: string[];
   rating?: number;
   ratingFeedback?: string;
+  ratingResolved?: boolean;
 
   closedBy?: string;
   closedByTag?: string;

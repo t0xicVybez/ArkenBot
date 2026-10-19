@@ -41,6 +41,7 @@ interface TicketRecord {
   reason?: string;
   rating?: number;
   ratingFeedback?: string;
+  ratingResolved?: boolean;
   notes: TicketNote[];
   aiTriage?: { summary: string; urgency: string; reply?: string; tag?: string; at: string };
 
@@ -387,6 +388,13 @@ export default function TicketDetailPage() {
               <span className="text-gray-400 text-sm ml-1">({ticket.rating}/5)</span>
             </div>
           </div>
+        )}
+        {ticket.ratingResolved !== undefined && (
+          <InfoCell
+            label={t('ratingResolvedLabel')}
+            value={ticket.ratingResolved ? t('yes') : t('no')}
+            className={ticket.ratingResolved ? 'text-green-400' : 'text-red-400'}
+          />
         )}
         {ticket.ratingFeedback && (
           <InfoCell label={t('ratingFeedback')} value={ticket.ratingFeedback} className="col-span-2 md:col-span-3" />

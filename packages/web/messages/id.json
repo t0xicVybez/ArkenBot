@@ -832,7 +832,8 @@
     "exporting": "Exporting...",
     "staffLeaderboard": "Kepala Staf",
     "colStaff": "Staf",
-    "colHandled": "Ditangani"
+    "colHandled": "Ditangani",
+    "resolvedRate": "Laju Yang Dipecahkan"
   },
   "ticketDetailPage": {
     "transcriptError": "Gagal mengunduh transkrip.",
@@ -924,7 +925,10 @@
     "merging": "Menggabungkan...",
     "mergeHint": "Pindahkan bahwa tiket sejarah di sini dan menutupnya",
     "mergeError": "Gagal menggabungkan tiket.",
-    "merged": "Tiket #{number} bergabung."
+    "merged": "Tiket #{number} bergabung.",
+    "ratingResolvedLabel": "Issue Resolved?",
+    "yes": "Ya",
+    "no": "Tidak"
   },
   "ticketPanelsPage": {
     "pasteRoleId": "Tempel ID Peran dan tekan Tambah",

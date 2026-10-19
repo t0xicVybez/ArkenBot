@@ -832,7 +832,8 @@
     "exporting": "輸出...",
     "staffLeaderboard": "スタッフリーダーボード",
     "colStaff": "スタッフ",
-    "colHandled": "ハンドル"
+    "colHandled": "ハンドル",
+    "resolvedRate": "回収率"
   },
   "ticketDetailPage": {
     "transcriptError": "トランスクリプトのダウンロードに失敗しました。",
@@ -924,7 +925,10 @@
     "merging": "マージ...",
     "mergeHint": "チケットの履歴をここに移動して閉じる",
     "merged": "チケット番号{number} 統合。",
-    "mergeError": "チケットをマージできませんでした。"
+    "mergeError": "チケットをマージできませんでした。",
+    "ratingResolvedLabel": "課題解決?",
+    "yes": "お問い合わせ",
+    "no": "なし"
   },
   "ticketPanelsPage": {
     "pasteRoleId": "ロール ID を貼り付けて「追加」を押してください",

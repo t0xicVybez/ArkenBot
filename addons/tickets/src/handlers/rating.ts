@@ -7,6 +7,8 @@ import {
   TextInputBuilder,
   TextInputStyle,
   ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
   type ButtonInteraction,
   type ModalSubmitInteraction,
   type TextChannel,
@@ -40,8 +42,48 @@ export async function handleRateButton(
     return;
   }
 
+  // Second quick question before the optional free-text feedback — gives
+  // staff a structured resolved/not-resolved signal alongside the star
+  // score, not just one number. Both button labels are plain Yes/No, kept
+  // as a separate ephemeral step since Discord modals can't hold buttons.
+  await interaction.reply({
+    content: `${'⭐'.repeat(rating)} ${t('rateResolvedQuestion')}`,
+    flags: MessageFlags.Ephemeral,
+    components: [
+      new ActionRowBuilder<ButtonBuilder>().addComponents(
+        new ButtonBuilder().setCustomId(`ticket:rate-resolved:${guildId}:${channelId}:${rating}:yes`).setLabel(t('yes')).setStyle(ButtonStyle.Success),
+        new ButtonBuilder().setCustomId(`ticket:rate-resolved:${guildId}:${channelId}:${rating}:no`).setLabel(t('no')).setStyle(ButtonStyle.Danger),
+      ),
+    ],
+  });
+}
+
+export async function handleRateResolvedButton(
+  ctx: AddonContext,
+  interaction: ButtonInteraction,
+  guildId: string,
+  channelId: string,
+  rating: number,
+  resolved: 'yes' | 'no',
+): Promise<void> {
+  const ticket = await getTicketByChannel(ctx.storage, guildId, channelId);
+  const loc = await ctx.resolveLocale(interaction);
+  const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
+  if (!ticket) {
+    await interaction.reply({ content: t('ticketNotFound'), flags: MessageFlags.Ephemeral });
+    return;
+  }
+  if (interaction.user.id !== ticket.userId) {
+    await interaction.reply({ content: t('onlyOwnerRate'), flags: MessageFlags.Ephemeral });
+    return;
+  }
+  if (ticket.rating !== undefined) {
+    await interaction.reply({ content: t('alreadyRated'), flags: MessageFlags.Ephemeral });
+    return;
+  }
+
   const modal = new ModalBuilder()
-    .setCustomId(`ticket:rate-modal:${guildId}:${channelId}:${rating}`)
+    .setCustomId(`ticket:rate-modal:${guildId}:${channelId}:${rating}:${resolved}`)
     .setTitle(`${t('rateModalTitle')} (${'⭐'.repeat(rating)})`)
     .addComponents(
       new ActionRowBuilder<TextInputBuilder>().addComponents(
@@ -64,6 +106,7 @@ export async function handleRateModal(
   guildId: string,
   channelId: string,
   rating: number,
+  resolved?: 'yes' | 'no',
 ): Promise<void> {
   const ticket = await getTicketByChannel(ctx.storage, guildId, channelId);
   const loc = await ctx.resolveLocale(interaction);
@@ -84,10 +127,11 @@ export async function handleRateModal(
   const feedback = interaction.fields.getTextInputValue('feedback').trim() || undefined;
   ticket.rating = rating;
   ticket.ratingFeedback = feedback;
+  if (resolved) ticket.ratingResolved = resolved === 'yes';
   await saveTicket(ctx.storage, guildId, ticket);
 
   await interaction.reply({
-    content: `${'⭐'.repeat(rating)} Thank you for your rating!${feedback ? ' Your comments have been recorded.' : ''} This channel will now be closed.`,
+    content: `${'⭐'.repeat(rating)} ${t('rateThanksMessage')}${feedback ? ` ${t('rateThanksFeedbackRecorded')}` : ''}`,
     flags: MessageFlags.Ephemeral,
   });
 

@@ -832,7 +832,8 @@
     "exporting": "Экспортировать...",
     "staffLeaderboard": "Руководитель группы",
     "colStaff": "Персонал",
-    "colHandled": "управляемый"
+    "colHandled": "управляемый",
+    "resolvedRate": "Разрешенная ставка"
   },
   "ticketDetailPage": {
     "transcriptError": "Не удалось скачать стенограмму.",
@@ -924,7 +925,10 @@
     "merging": "Слияние...",
     "mergeHint": "Переместите историю билета сюда и закройте его.",
     "mergeError": "Не удалось объединить билет.",
-    "merged": "Билет #{number} слились воедино."
+    "merged": "Билет #{number} слились воедино.",
+    "ratingResolvedLabel": "Вопрос решен?",
+    "yes": "Да.",
+    "no": "Нет."
   },
   "ticketPanelsPage": {
     "pasteRoleId": "Вставьте ID роли и нажмите «Добавить»",

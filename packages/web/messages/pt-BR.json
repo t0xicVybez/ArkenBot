@@ -832,7 +832,8 @@
     "exporting": "Exportando...",
     "staffLeaderboard": "Equipe Leaderboard",
     "colStaff": "Pessoal.",
-    "colHandled": "Lidada"
+    "colHandled": "Lidada",
+    "resolvedRate": "Taxa resolvida"
   },
   "ticketDetailPage": {
     "transcriptError": "Falha ao baixar a transcrição.",
@@ -924,7 +925,10 @@
     "merging": "Mergulhando...",
     "mergeHint": "Move esse bilhete para cá e fecha.",
     "mergeError": "Falha na fusão do ticket.",
-    "merged": "Bilhete #{number} fundiram-se."
+    "merged": "Bilhete #{number} fundiram-se.",
+    "ratingResolvedLabel": "Problema resolvido?",
+    "yes": "Sim.",
+    "no": "Não."
   },
   "ticketPanelsPage": {
     "pasteRoleId": "Cole um ID de cargo e clique em Adicionar",

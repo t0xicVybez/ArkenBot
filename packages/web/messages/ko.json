@@ -832,7 +832,8 @@
     "exporting": "수출 ...",
     "staffLeaderboard": "회사연혁",
     "colStaff": "한국어",
-    "colHandled": "회사 소개"
+    "colHandled": "회사 소개",
+    "resolvedRate": "해결된 비율"
   },
   "ticketDetailPage": {
     "transcriptError": "기록 다운로드에 실패했습니다.",
@@ -924,7 +925,10 @@
     "merging": "언어: English",
     "mergeHint": "여기에 티켓의 역사를 이동하고 그것을 닫습니다",
     "merged": "티켓 #{number} 합병.",
-    "mergeError": "합병권에 실패."
+    "mergeError": "합병권에 실패.",
+    "ratingResolvedLabel": "해결 된 문제?",
+    "yes": "이름 *",
+    "no": "없음"
   },
   "ticketPanelsPage": {
     "pasteRoleId": "역할 ID를 붙여넣고 추가를 누르세요",

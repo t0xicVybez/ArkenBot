@@ -832,7 +832,8 @@
     "exporting": "Eksportowanie...",
     "staffLeaderboard": "Rada kierownicza personelu",
     "colStaff": "Personel",
-    "colHandled": "Ręczne"
+    "colHandled": "Ręczne",
+    "resolvedRate": "Rozwiązywana stawka"
   },
   "ticketDetailPage": {
     "transcriptError": "Nie udało się pobrać zapisu.",
@@ -924,7 +925,10 @@
     "merging": "Połączenie...",
     "mergeHint": "Przenosi tu historię biletu i zamyka go.",
     "mergeError": "Nie udało się połączyć biletu.",
-    "merged": "Bilet #{number} Włączone."
+    "merged": "Bilet #{number} Włączone.",
+    "ratingResolvedLabel": "Wydanie rozwiązane?",
+    "yes": "Tak.",
+    "no": "Nie."
   },
   "ticketPanelsPage": {
     "pasteRoleId": "Wklej ID roli i naciśnij Dodaj",

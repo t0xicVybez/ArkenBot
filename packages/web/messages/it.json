@@ -832,7 +832,8 @@
     "exporting": "Esportazione...",
     "staffLeaderboard": "Personale",
     "colStaff": "Personale",
-    "colHandled": "Maniglia"
+    "colHandled": "Maniglia",
+    "resolvedRate": "Tasso di rimborso"
   },
   "ticketDetailPage": {
     "transcriptError": "Impossibile scaricare la trascrizione.",
@@ -924,7 +925,10 @@
     "merging": "Merging...",
     "mergeHint": "Muove la storia del biglietto qui e lo chiude",
     "mergeError": "Non sono riuscito a unire il biglietto.",
-    "merged": "Biglietto{number} si è unito."
+    "merged": "Biglietto{number} si è unito.",
+    "ratingResolvedLabel": "Problema risolto?",
+    "yes": "Sì.",
+    "no": "No."
   },
   "ticketPanelsPage": {
     "pasteRoleId": "Incolla un ID ruolo e premi Aggiungi",

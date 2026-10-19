@@ -23,7 +23,7 @@ export function toRow(t: Ticket): Record<string, unknown> {
     formResponses: t.formResponses, nudgedAt: t.nudgedAt,
     reminderAt: t.reminderAt, reminderBy: t.reminderBy, reminderNote: t.reminderNote,
     closeRequestedBy: t.closeRequestedBy, closeRequestedByTag: t.closeRequestedByTag, closeRequestedAt: t.closeRequestedAt,
-    aiTriage: t.aiTriage,
+    aiTriage: t.aiTriage, ratingResolved: t.ratingResolved,
   };
   return {
     id: t.id, guildId: t.guildId, number: t.number, panelId: t.panelId, channelId: t.channelId,
@@ -60,6 +60,7 @@ export function fromRow(r: Row): Ticket {
     nudgedAt: s('nudgedAt'), reminderAt: s('reminderAt'), reminderBy: s('reminderBy'), reminderNote: s('reminderNote'),
     closeRequestedBy: s('closeRequestedBy'), closeRequestedByTag: s('closeRequestedByTag'), closeRequestedAt: s('closeRequestedAt'),
     aiTriage: d.aiTriage as Ticket['aiTriage'],
+    ratingResolved: d.ratingResolved as boolean | undefined,
   };
 }
 

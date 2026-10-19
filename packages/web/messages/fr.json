@@ -832,7 +832,8 @@
     "exporting": "Exporter...",
     "staffLeaderboard": "Tableau de classement du personnel",
     "colStaff": "Personnel",
-    "colHandled": "Géré"
+    "colHandled": "Géré",
+    "resolvedRate": "Taux résolu"
   },
   "ticketDetailPage": {
     "transcriptError": "Échec du téléchargement de la transcription.",
@@ -924,7 +925,10 @@
     "merging": "Fusionner...",
     "mergeHint": "Déplace l’histoire de ce ticket ici et le ferme",
     "mergeError": "Impossible de fusionner le ticket.",
-    "merged": "Billet #{number} fusionné."
+    "merged": "Billet #{number} fusionné.",
+    "ratingResolvedLabel": "Question résolue?",
+    "yes": "Oui",
+    "no": "Numéro"
   },
   "ticketPanelsPage": {
     "pasteRoleId": "Collez un ID de rôle et cliquez sur Ajouter",
