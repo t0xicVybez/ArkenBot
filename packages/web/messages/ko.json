@@ -625,7 +625,7 @@
     "avgResponse": "평균 응답",
     "slaBreachesLabel": "SLA 위반",
     "ticketHistory": "티켓 기록",
-    "searchPlaceholder": "사용자명, #번호, 태그 검색...",
+    "searchPlaceholder": "사용자명, #번호, 태그, 메시지 내용 검색...",
     "allStatuses": "모든 상태",
     "allPriorities": "모든 우선순위",
     "status_open": "열림",

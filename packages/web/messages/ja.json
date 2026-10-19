@@ -625,7 +625,7 @@
     "avgResponse": "平均応答時間",
     "slaBreachesLabel": "SLA違反",
     "ticketHistory": "チケット履歴",
-    "searchPlaceholder": "ユーザー名、#番号、タグで検索...",
+    "searchPlaceholder": "ユーザー名、#番号、タグ、メッセージ内容で検索...",
     "allStatuses": "すべてのステータス",
     "allPriorities": "すべての優先度",
     "status_open": "オープン",

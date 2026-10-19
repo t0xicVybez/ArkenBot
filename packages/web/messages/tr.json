@@ -625,7 +625,7 @@
     "avgResponse": "Ort. yanıt",
     "slaBreachesLabel": "SLA ihlalleri",
     "ticketHistory": "Bilet Geçmişi",
-    "searchPlaceholder": "Kullanıcı adı, #numara, etiket ara...",
+    "searchPlaceholder": "Kullanıcı adı, #numara, etiket veya mesaj içeriğine göre ara...",
     "allStatuses": "Tüm Durumlar",
     "allPriorities": "Tüm Öncelikler",
     "status_open": "Açık",

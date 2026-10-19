@@ -625,7 +625,7 @@
     "avgResponse": "平均响应",
     "slaBreachesLabel": "SLA 违规",
     "ticketHistory": "工单历史",
-    "searchPlaceholder": "搜索用户名、#编号、标签...",
+    "searchPlaceholder": "搜索用户名、#编号、标签或消息内容...",
     "allStatuses": "所有状态",
     "allPriorities": "所有优先级",
     "status_open": "开启",

@@ -637,7 +637,7 @@
     "avgResponse": "Avg response",
     "slaBreachesLabel": "SLA breaches",
     "ticketHistory": "Ticket History",
-    "searchPlaceholder": "Search username, #number, tag...",
+    "searchPlaceholder": "Search username, #number, tag, or message content...",
     "allStatuses": "All Statuses",
     "allPriorities": "All Priorities",
     "status_open": "Open",

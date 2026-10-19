@@ -625,7 +625,7 @@
     "avgResponse": "Réponse moyenne",
     "slaBreachesLabel": "Violations de SLA",
     "ticketHistory": "Historique des tickets",
-    "searchPlaceholder": "Rechercher un utilisateur, #numéro, tag...",
+    "searchPlaceholder": "Rechercher un utilisateur, #numéro, tag ou contenu de message...",
     "allStatuses": "Tous les statuts",
     "allPriorities": "Toutes les priorités",
     "status_open": "Ouvert",

@@ -625,7 +625,7 @@
     "avgResponse": "Gem. reactie",
     "slaBreachesLabel": "SLA-overtredingen",
     "ticketHistory": "Ticketgeschiedenis",
-    "searchPlaceholder": "Zoek gebruikersnaam, #nummer, tag...",
+    "searchPlaceholder": "Zoek gebruikersnaam, #nummer, tag of berichtinhoud...",
     "allStatuses": "Alle Statussen",
     "allPriorities": "Alle Prioriteiten",
     "status_open": "Open",

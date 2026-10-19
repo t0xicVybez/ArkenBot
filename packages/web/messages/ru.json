@@ -625,7 +625,7 @@
     "avgResponse": "Сред. ответ",
     "slaBreachesLabel": "Нарушения SLA",
     "ticketHistory": "История тикетов",
-    "searchPlaceholder": "Поиск по пользователю, #номеру, тегу...",
+    "searchPlaceholder": "Поиск по пользователю, #номеру, тегу или содержимому сообщения...",
     "allStatuses": "Все статусы",
     "allPriorities": "Все приоритеты",
     "status_open": "Открыт",

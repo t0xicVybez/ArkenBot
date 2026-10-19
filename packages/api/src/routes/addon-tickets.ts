@@ -333,13 +333,27 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     if (panelId) tickets = tickets.filter((t) => t.panelId === panelId);
     if (search) {
       const q = search.toLowerCase();
-      tickets = tickets.filter(
-        (t) =>
-          t.username.toLowerCase().includes(q) ||
-          String(t.number).includes(q) ||
-          t.tags.some((tag) => tag.includes(q)) ||
-          (t.categoryTag ?? '').toLowerCase().includes(q),
-      );
+      const fieldMatch = (t: Ticket) =>
+        t.username.toLowerCase().includes(q) ||
+        String(t.number).includes(q) ||
+        t.tags.some((tag) => tag.includes(q)) ||
+        (t.categoryTag ?? '').toLowerCase().includes(q);
+
+      // Also search message content, not just ticket-level fields — a
+      // guild-scoped IN-list query (channelIds already filtered to this
+      // guild's tickets above), no index on content so this is a scan,
+      // acceptable at ticket-feature data volumes.
+      const channelIds = tickets.map((t) => t.channelId);
+      const contentMatches = channelIds.length
+        ? await prisma.addonTicketMessage.findMany({
+            where: { channelId: { in: channelIds }, content: { contains: search, mode: 'insensitive' } },
+            select: { channelId: true },
+            distinct: ['channelId'],
+          })
+        : [];
+      const contentMatchChannels = new Set(contentMatches.map((m) => m.channelId));
+
+      tickets = tickets.filter((t) => fieldMatch(t) || contentMatchChannels.has(t.channelId));
     }
 
     tickets.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());

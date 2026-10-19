@@ -625,7 +625,7 @@
     "avgResponse": "Rata-rata respons",
     "slaBreachesLabel": "Pelanggaran SLA",
     "ticketHistory": "Riwayat Tiket",
-    "searchPlaceholder": "Cari nama pengguna, #nomor, tag...",
+    "searchPlaceholder": "Cari nama pengguna, #nomor, tag, atau isi pesan...",
     "allStatuses": "Semua Status",
     "allPriorities": "Semua Prioritas",
     "status_open": "Terbuka",

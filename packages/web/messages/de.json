@@ -625,7 +625,7 @@
     "avgResponse": "Ø Antwortzeit",
     "slaBreachesLabel": "SLA-Verstöße",
     "ticketHistory": "Ticket-Verlauf",
-    "searchPlaceholder": "Nach Benutzer, #Nummer, Tag suchen...",
+    "searchPlaceholder": "Nach Benutzer, #Nummer, Tag oder Nachrichteninhalt suchen...",
     "allStatuses": "Alle Status",
     "allPriorities": "Alle Prioritäten",
     "status_open": "Offen",
