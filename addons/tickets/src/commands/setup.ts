@@ -28,6 +28,18 @@ const CLOSE_ACTION_CHOICES = [
   { name: 'Archive channel', value: 'archive' },
 ] as const;
 
+// Same labels as /ticket priority's PRIORITY_CHOICES (commands/ticket.ts) —
+// kept as a separate local copy rather than a shared import, but using the
+// identical strings means this reuses the same localized choice names from
+// src/i18n/command-meta.json for free (it's keyed by the English source
+// string, not by command/option path).
+const SLA_PRIORITY_CHOICES = [
+  { name: '🟢 Low', value: 'low' },
+  { name: '🟡 Medium', value: 'medium' },
+  { name: '🟠 High', value: 'high' },
+  { name: '🔴 Urgent', value: 'urgent' },
+] as const;
+
 const BUTTON_COLOR_CHOICES = [
   { name: 'Blurple (Primary)', value: 'primary' },
   { name: 'Grey (Secondary)', value: 'secondary' },
@@ -239,6 +251,16 @@ const command: AddonCommandDefinition = {
             )
             .addStringOption((o) =>
               o.setName('message').setDescription('Custom message to send').setRequired(false).setMaxLength(500),
+            )
+            .addStringOption((o) =>
+              o
+                .setName('escalate_priority')
+                .setDescription('Priority to set on the ticket at this level')
+                .setRequired(false)
+                .addChoices(...SLA_PRIORITY_CHOICES),
+            )
+            .addRoleOption((o) =>
+              o.setName('escalate_role').setDescription('Additional role to ping at this level, alongside ping_role (e.g. escalate to a senior team)').setRequired(false),
             ),
         )
         .addSubcommand((s) =>
@@ -527,6 +549,8 @@ async function handleSlaAddLevel(
   const hours = interaction.options.getInteger('hours', true);
   const pingRole = interaction.options.getRole('ping_role');
   const message = interaction.options.getString('message');
+  const escalatePriority = interaction.options.getString('escalate_priority') as SlaLevel['escalatePriority'] | null;
+  const escalateRole = interaction.options.getRole('escalate_role');
 
   const config = await getConfig(ctx.storage, guildId);
   if (!config.slaLevels) config.slaLevels = [];
@@ -539,12 +563,14 @@ async function handleSlaAddLevel(
   const level: SlaLevel = { hours };
   if (pingRole) level.pingRoleId = pingRole.id;
   if (message) level.message = message;
+  if (escalatePriority) level.escalatePriority = escalatePriority;
+  if (escalateRole) level.escalateRoleId = escalateRole.id;
   config.slaLevels.push(level);
   config.slaLevels.sort((a, b) => a.hours - b.hours);
 
   await saveConfig(ctx.storage, guildId, config);
   await interaction.reply({
-    content: `${t('slaAdded', { hours })}${pingRole ? t('slaPings', { role: String(pingRole) }) : ''}${message ? `\n> ${message}` : ''}`,
+    content: `${t('slaAdded', { hours })}${pingRole ? t('slaPings', { role: String(pingRole) }) : ''}${escalateRole ? t('slaAlsoEscalates', { role: String(escalateRole) }) : ''}${escalatePriority ? t('slaBumpsPriority', { priority: t(`priority${escalatePriority.charAt(0).toUpperCase()}${escalatePriority.slice(1)}`) }) : ''}${message ? `\n> ${message}` : ''}`,
     flags: MessageFlags.Ephemeral,
   });
 }
@@ -563,9 +589,13 @@ async function handleSlaListLevels(
     return;
   }
 
-  const lines = config.slaLevels.map(
-    (l) => `• **${l.hours}h**${l.pingRoleId ? ` — pings <@&${l.pingRoleId}>` : ''}${l.message ? `\n  > ${l.message}` : ''}`,
-  );
+  const lines = config.slaLevels.map((l) => {
+    const pings = [l.pingRoleId, l.escalateRoleId].filter(Boolean).map((r) => `<@&${r}>`).join(' ');
+    const priorityLabel = l.escalatePriority
+      ? t(`priority${l.escalatePriority.charAt(0).toUpperCase()}${l.escalatePriority.slice(1)}`)
+      : null;
+    return `• **${l.hours}h**${pings ? ` — pings ${pings}` : ''}${priorityLabel ? ` — ${t('slaBumpsPriorityShort', { priority: priorityLabel })}` : ''}${l.message ? `\n  > ${l.message}` : ''}`;
+  });
   await interaction.reply({ content: `${t('slaHeader')}\n${lines.join('\n')}`, flags: MessageFlags.Ephemeral });
 }
 
