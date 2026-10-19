@@ -904,7 +904,8 @@
     "aiUrgency": "Keadaan Darurat",
     "aiSuggestedReply": "Respon yang disarankan",
     "transcriptFormat": "Format transkrip",
-    "transcriptFormatText": "Teks"
+    "transcriptFormatText": "Teks",
+    "selectStaffMember": "Pilih anggota staf..."
   },
   "ticketPanelsPage": {
     "pasteRoleId": "Tempel ID Peran dan tekan Tambah",

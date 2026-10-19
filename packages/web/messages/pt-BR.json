@@ -904,7 +904,8 @@
     "aiUrgency": "Urgência",
     "aiSuggestedReply": "Sugestão de resposta",
     "transcriptFormat": "Formato transcrito",
-    "transcriptFormatText": "Texto"
+    "transcriptFormatText": "Texto",
+    "selectStaffMember": "Selecione um membro da equipe..."
   },
   "ticketPanelsPage": {
     "pasteRoleId": "Cole um ID de cargo e clique em Adicionar",

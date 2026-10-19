@@ -904,7 +904,8 @@
     "aiUrgency": "Dringlichkeit",
     "aiSuggestedReply": "Vorgeschlagene Antwort",
     "transcriptFormatText": "Text",
-    "transcriptFormat": "Transkriptformat"
+    "transcriptFormat": "Transkriptformat",
+    "selectStaffMember": "Wählen Sie einen Mitarbeiter aus..."
   },
   "ticketPanelsPage": {
     "pasteRoleId": "Rollen-ID einfügen und auf Hinzufügen klicken",

@@ -131,6 +131,7 @@ export const ticketsApi = {
   createPanel: (guildId: string, data: object) => api.post(`/addons/tickets/${guildId}/panels`, data),
   updatePanel: (guildId: string, panelId: string, data: object) => api.patch(`/addons/tickets/${guildId}/panels/${panelId}`, data),
   deletePanel: (guildId: string, panelId: string) => api.delete(`/addons/tickets/${guildId}/panels/${panelId}`),
+  getPanelStaff: (guildId: string, panelId: string) => api.get(`/addons/tickets/${guildId}/panels/${panelId}/staff`),
   getTickets: (guildId: string, params?: { status?: string; priority?: string; panel?: string; search?: string; page?: number }) =>
     api.get(`/addons/tickets/${guildId}/tickets`, { params }),
   getTicket: (guildId: string, ticketId: string) =>

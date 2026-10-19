@@ -150,6 +150,7 @@ async function writeData<T>(guildId: string, key: string, value: T): Promise<voi
  *   POST   /addons/tickets/:guildId/panels
  *   PATCH  /addons/tickets/:guildId/panels/:panelId
  *   DELETE /addons/tickets/:guildId/panels/:panelId
+ *   GET    /addons/tickets/:guildId/panels/:panelId/staff
  *   GET    /addons/tickets/:guildId/tickets
  *   GET    /addons/tickets/:guildId/tickets/:ticketId
  *   GET    /addons/tickets/:guildId/tickets/:ticketId/transcript
@@ -180,6 +181,55 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     const { guildId } = request.params as { guildId: string };
     const panels = (await readData<TicketPanel[]>(guildId, 'panels')) ?? [];
     return reply.send({ success: true, data: panels });
+  });
+
+  // Members holding this panel's staff roles (panel-level + any per-button
+  // overrides), for the dashboard's transfer picker — replaces having staff
+  // type a raw user ID + tag by hand.
+  server.get('/addons/tickets/:guildId/panels/:panelId/staff', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
+    const { guildId, panelId } = request.params as { guildId: string; panelId: string };
+    const panels = (await readData<TicketPanel[]>(guildId, 'panels')) ?? [];
+    const panel = panels.find((p) => p.id === panelId);
+    if (!panel) return reply.code(404).send({ success: false, error: 'Panel not found' });
+
+    const roleIds = new Set<string>(panel.staffRoles ?? []);
+    for (const b of panel.buttons ?? []) for (const r of b.staffRoles ?? []) roleIds.add(r);
+    if (roleIds.size === 0) return reply.send({ success: true, data: [] });
+
+    try {
+      const { default: axiosInstance } = await import('axios');
+      const headers = { Authorization: `Bot ${process.env.DISCORD_TOKEN}` };
+      type DiscordMember = { user: { id: string; username: string; discriminator: string; global_name?: string; avatar?: string | null }; roles: string[] };
+      const staff: { id: string; username: string; tag: string; avatar: string | null }[] = [];
+      const seen = new Set<string>();
+      let after = '0';
+      // Discord has no "members by role" filter — page through the member
+      // list (1000/page) and filter locally. Capped at 5 pages (5000
+      // members scanned) so one huge guild can't make this route hang.
+      for (let page = 0; page < 5; page++) {
+        const res = await axiosInstance.get<DiscordMember[]>(`https://discord.com/api/v10/guilds/${guildId}/members`, {
+          headers,
+          params: { limit: 1000, after },
+        });
+        const members = res.data;
+        if (members.length === 0) break;
+        for (const m of members) {
+          if (!seen.has(m.user.id) && m.roles.some((r) => roleIds.has(r))) {
+            seen.add(m.user.id);
+            const tag = m.user.discriminator && m.user.discriminator !== '0'
+              ? `${m.user.username}#${m.user.discriminator}`
+              : (m.user.global_name ?? m.user.username);
+            staff.push({ id: m.user.id, username: m.user.username, tag, avatar: m.user.avatar ?? null });
+          }
+        }
+        if (members.length < 1000) break;
+        after = members[members.length - 1].user.id;
+      }
+      staff.sort((a, b) => a.tag.localeCompare(b.tag));
+      return reply.send({ success: true, data: staff });
+    } catch {
+      return reply.code(500).send({ success: false, error: 'Failed to fetch staff members' });
+    }
   });
 
   server.post('/addons/tickets/:guildId/panels', { preHandler: [requireGuildAdmin] }, async (request, reply) => {

@@ -904,7 +904,8 @@
     "aiUrgency": "紧急性",
     "aiSuggestedReply": "建议的答复",
     "transcriptFormatText": "文本",
-    "transcriptFormat": "语录格式"
+    "transcriptFormat": "语录格式",
+    "selectStaffMember": "选择工作人员..."
   },
   "ticketPanelsPage": {
     "pasteRoleId": "粘贴身份组 ID 并点击“添加”",

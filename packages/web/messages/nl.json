@@ -904,7 +904,8 @@
     "aiUrgency": "Spoedgeval",
     "aiSuggestedReply": "Voorgesteld antwoord",
     "transcriptFormatText": "Tekst",
-    "transcriptFormat": "Transcriptformaat"
+    "transcriptFormat": "Transcriptformaat",
+    "selectStaffMember": "Een personeelslid selecteren..."
   },
   "ticketPanelsPage": {
     "pasteRoleId": "Plak een Rol-ID en druk op Toevoegen",

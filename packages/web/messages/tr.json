@@ -904,7 +904,8 @@
     "aiUrgency": "Selam",
     "aiSuggestedReply": "Önerilen cevap",
     "transcriptFormat": "Transcript format",
-    "transcriptFormatText": "Text Text Text Text"
+    "transcriptFormatText": "Text Text Text Text",
+    "selectStaffMember": "Bir personel üyesi seçin..."
   },
   "ticketPanelsPage": {
     "pasteRoleId": "Bir Rol Kimliği yapıştır ve Ekle’ye bas",

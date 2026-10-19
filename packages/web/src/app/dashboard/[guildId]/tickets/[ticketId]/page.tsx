@@ -65,6 +65,13 @@ interface TicketPanel {
   closeAction?: 'delete' | 'archive';
 }
 
+interface StaffMember {
+  id: string;
+  username: string;
+  tag: string;
+  avatar: string | null;
+}
+
 const PRIORITY_CONFIG = {
   low:    { label: 'Low',    color: 'text-green-400',  bg: 'bg-green-400/10' },
   medium: { label: 'Medium', color: 'text-yellow-400', bg: 'bg-yellow-400/10' },
@@ -248,6 +255,14 @@ export default function TicketDetailPage() {
 
   const data = res?.data?.data as { ticket: TicketRecord; messages: TicketMessage[]; panel: TicketPanel | null } | undefined;
 
+  const panelId = data?.panel?.id;
+  const { data: staffRes } = useQuery({
+    queryKey: ['ticket-panel-staff', guildId, panelId],
+    queryFn: () => ticketsApi.getPanelStaff(guildId, panelId as string),
+    enabled: !!panelId,
+  });
+  const staffMembers = ((staffRes?.data as { data?: StaffMember[] } | undefined)?.data) ?? [];
+
   if (isLoading) {
     return <div className="p-3 sm:p-6 text-center text-gray-400"><p>{t('loadingTicket')}</p></div>;
   }
@@ -404,8 +419,26 @@ export default function TicketDetailPage() {
             <ArrowRightLeft className="w-4 h-4 text-gray-400 flex-shrink-0 mt-2" />
             <span className="text-gray-400 text-sm w-24 mt-2">{t('transfer')}</span>
             <div className="flex gap-2 flex-1 flex-wrap">
-              <input className="input text-sm font-mono flex-1 min-w-[140px]" placeholder={t('userId')} value={transferInput} onChange={(e) => setTransferInput(e.target.value)} />
-              <input className="input text-sm flex-1 min-w-[140px]" placeholder={t('username')} value={transferTagInput} onChange={(e) => setTransferTagInput(e.target.value)} />
+              {staffMembers.length > 0 ? (
+                <select
+                  className="input text-sm flex-1 min-w-[180px]"
+                  value={transferInput}
+                  onChange={(e) => {
+                    setTransferInput(e.target.value);
+                    setTransferTagInput(staffMembers.find((m) => m.id === e.target.value)?.tag ?? '');
+                  }}
+                >
+                  <option value="">{t('selectStaffMember')}</option>
+                  {staffMembers.map((m) => (
+                    <option key={m.id} value={m.id}>{m.tag}</option>
+                  ))}
+                </select>
+              ) : (
+                <>
+                  <input className="input text-sm font-mono flex-1 min-w-[140px]" placeholder={t('userId')} value={transferInput} onChange={(e) => setTransferInput(e.target.value)} />
+                  <input className="input text-sm flex-1 min-w-[140px]" placeholder={t('username')} value={transferTagInput} onChange={(e) => setTransferTagInput(e.target.value)} />
+                </>
+              )}
               <button
                 onClick={() => transferMut.mutate()}
                 disabled={transferMut.isPending || !transferInput.trim() || !transferTagInput.trim()}

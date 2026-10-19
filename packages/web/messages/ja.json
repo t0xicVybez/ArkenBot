@@ -904,7 +904,8 @@
     "aiUrgency": "緊急時",
     "aiSuggestedReply": "ご意見・ご要望",
     "transcriptFormat": "トランスクリプト形式",
-    "transcriptFormatText": "テキスト"
+    "transcriptFormatText": "テキスト",
+    "selectStaffMember": "スタッフ紹介"
   },
   "ticketPanelsPage": {
     "pasteRoleId": "ロール ID を貼り付けて「追加」を押してください",
