@@ -917,7 +917,14 @@
     "aiSuggestedReply": "Sugestão de resposta",
     "transcriptFormat": "Formato transcrito",
     "transcriptFormatText": "Texto",
-    "selectStaffMember": "Selecione um membro da equipe..."
+    "selectStaffMember": "Selecione um membro da equipe...",
+    "merge": "Mesclar",
+    "mergeTicketNumber": "Bilhete #",
+    "mergeInto": "Unir-se Isto.",
+    "merging": "Mergulhando...",
+    "mergeHint": "Move esse bilhete para cá e fecha.",
+    "mergeError": "Falha na fusão do ticket.",
+    "merged": "Bilhete #{number} fundiram-se."
   },
   "ticketPanelsPage": {
     "pasteRoleId": "Cole um ID de cargo e clique em Adicionar",

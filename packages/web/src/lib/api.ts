@@ -150,6 +150,8 @@ export const ticketsApi = {
     api.post(`/addons/tickets/${guildId}/tickets/${ticketId}/unclaim`),
   transferTicket: (guildId: string, ticketId: string, data: { userId: string; userTag: string }) =>
     api.post(`/addons/tickets/${guildId}/tickets/${ticketId}/transfer`, data),
+  mergeTicket: (guildId: string, targetTicketId: string, sourceTicketNumber: number) =>
+    api.post(`/addons/tickets/${guildId}/tickets/${targetTicketId}/merge`, { sourceTicketNumber }),
   setPriority: (guildId: string, ticketId: string, priority: string) =>
     api.patch(`/addons/tickets/${guildId}/tickets/${ticketId}/priority`, { priority }),
   addTag: (guildId: string, ticketId: string, tag: string) =>

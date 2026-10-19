@@ -917,7 +917,14 @@
     "aiSuggestedReply": "Réponse suggérée",
     "transcriptFormat": "Format de transcription",
     "transcriptFormatText": "Texte",
-    "selectStaffMember": "Sélectionnez un membre du personnel..."
+    "selectStaffMember": "Sélectionnez un membre du personnel...",
+    "merge": "Fusionner",
+    "mergeTicketNumber": "Billet #",
+    "mergeInto": "Fusionner vers Cette",
+    "merging": "Fusionner...",
+    "mergeHint": "Déplace l’histoire de ce ticket ici et le ferme",
+    "mergeError": "Impossible de fusionner le ticket.",
+    "merged": "Billet #{number} fusionné."
   },
   "ticketPanelsPage": {
     "pasteRoleId": "Collez un ID de rôle et cliquez sur Ajouter",

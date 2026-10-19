@@ -917,7 +917,14 @@
     "aiSuggestedReply": "ご意見・ご要望",
     "transcriptFormat": "トランスクリプト形式",
     "transcriptFormatText": "テキスト",
-    "selectStaffMember": "スタッフ紹介"
+    "selectStaffMember": "スタッフ紹介",
+    "merge": "マージ",
+    "mergeTicketNumber": "チケット番号",
+    "mergeInto": "にマージ お問い合わせ",
+    "merging": "マージ...",
+    "mergeHint": "チケットの履歴をここに移動して閉じる",
+    "merged": "チケット番号{number} 統合。",
+    "mergeError": "チケットをマージできませんでした。"
   },
   "ticketPanelsPage": {
     "pasteRoleId": "ロール ID を貼り付けて「追加」を押してください",

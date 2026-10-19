@@ -161,6 +161,7 @@ async function writeData<T>(guildId: string, key: string, value: T): Promise<voi
  *   POST   /addons/tickets/:guildId/tickets/:ticketId/claim
  *   POST   /addons/tickets/:guildId/tickets/:ticketId/unclaim
  *   POST   /addons/tickets/:guildId/tickets/:ticketId/transfer
+ *   POST   /addons/tickets/:guildId/tickets/:ticketId/merge
  *   PATCH  /addons/tickets/:guildId/tickets/:ticketId/priority
  *   POST   /addons/tickets/:guildId/tickets/:ticketId/tags
  *   DELETE /addons/tickets/:guildId/tickets/:ticketId/tags/:tag
@@ -570,6 +571,54 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     tickets[idx] = { ...ticket, transferredTo: userId, transferredToTag: userTag, claimedBy: userId, claimedByTag: userTag, status: 'claimed', lastActivity: new Date().toISOString() };
     await writeTickets(guildId, tickets);
     return reply.send({ success: true, data: tickets[idx] });
+  });
+
+  // Merges a duplicate ticket's history into this one (the survivor), then
+  // tells the bot to close the duplicate the normal way (close embed,
+  // transcript DM, channel archive/delete) — the API only does the data
+  // side (message/tag/note merge), since it has no Discord connection of
+  // its own to post into channels or manage them.
+  server.post('/addons/tickets/:guildId/tickets/:ticketId/merge', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
+    const { guildId, ticketId } = request.params as { guildId: string; ticketId: string };
+    const { sourceTicketNumber } = (request.body as { sourceTicketNumber?: number }) ?? {};
+    if (!sourceTicketNumber || !Number.isInteger(sourceTicketNumber)) {
+      return reply.code(400).send({ success: false, error: 'sourceTicketNumber is required' });
+    }
+
+    const { tickets, idx: targetIdx, ticket: target } = await findTicket(guildId, ticketId);
+    if (!target) return reply.code(404).send({ success: false, error: 'Target ticket not found' });
+    if (target.status === 'closed') return reply.code(400).send({ success: false, error: 'Target ticket is closed' });
+
+    const sourceIdx = tickets.findIndex((t) => t.number === sourceTicketNumber);
+    const source = tickets[sourceIdx];
+    if (!source) return reply.code(404).send({ success: false, error: `No ticket #${sourceTicketNumber} in this server` });
+    if (source.id === target.id) return reply.code(400).send({ success: false, error: 'Cannot merge a ticket into itself' });
+    if (source.status === 'closed') return reply.code(400).send({ success: false, error: `Ticket #${sourceTicketNumber} is already closed` });
+
+    // Move the source's message history into the target's channel, with a
+    // marker so it's clear in the transcript where the merge happened.
+    const moved = await prisma.addonTicketMessage.updateMany({ where: { channelId: source.channelId }, data: { channelId: target.channelId } });
+    await prisma.addonTicketMessage.create({
+      data: {
+        channelId: target.channelId,
+        authorId: 'system',
+        authorTag: 'System',
+        content: `— Ticket #${source.number} was merged into this ticket —`,
+        attachments: [],
+        timestamp: new Date(),
+      },
+    });
+
+    const mergedTags = [...new Set([...target.tags, ...source.tags])];
+    const mergedNotes = [...target.notes, ...source.notes];
+    tickets[targetIdx] = { ...target, tags: mergedTags, notes: mergedNotes, lastActivity: new Date().toISOString() };
+    await writeTickets(guildId, tickets);
+
+    pub.publish('ticket:merge', JSON.stringify({
+      guildId, sourceChannelId: source.channelId, targetChannelId: target.channelId, targetNumber: target.number,
+    })).catch(() => null);
+
+    return reply.send({ success: true, data: { mergedMessageCount: moved.count, targetTicket: tickets[targetIdx] } });
   });
 
   server.patch('/addons/tickets/:guildId/tickets/:ticketId/priority', { preHandler: [requireGuildAdmin] }, async (request, reply) => {

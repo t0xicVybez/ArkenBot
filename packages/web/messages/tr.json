@@ -917,7 +917,14 @@
     "aiSuggestedReply": "Önerilen cevap",
     "transcriptFormat": "Transcript format",
     "transcriptFormatText": "Text Text Text Text",
-    "selectStaffMember": "Bir personel üyesi seçin..."
+    "selectStaffMember": "Bir personel üyesi seçin...",
+    "merge": "Merge",
+    "mergeTicketNumber": "Bilet # #",
+    "mergeInto": "Merge Into Bu Bu Bu Bu",
+    "merging": "Birleşme...",
+    "mergeHint": "Bu biletin tarihi burada hareket eder ve onu kapatır",
+    "merged": "Bilet # #{number} İçeri girdi.",
+    "mergeError": "Bileti birleştirmek için başarısız oldu."
   },
   "ticketPanelsPage": {
     "pasteRoleId": "Bir Rol Kimliği yapıştır ve Ekle’ye bas",

@@ -917,7 +917,14 @@
     "aiSuggestedReply": "Respuesta propuesta",
     "transcriptFormatText": "Texto",
     "transcriptFormat": "Formato de transcripción",
-    "selectStaffMember": "Seleccione un miembro del personal..."
+    "selectStaffMember": "Seleccione un miembro del personal...",
+    "merge": "Merge",
+    "mergeTicketNumber": "Entrada",
+    "merging": "Merging...",
+    "mergeInto": "Merge Into Esto",
+    "mergeHint": "Mueva la historia de ese ticket aquí y lo cierra",
+    "merged": "Entrada{number} se fusionó.",
+    "mergeError": "Failed to merge ticket."
   },
   "ticketPanelsPage": {
     "pasteRoleId": "Pega un ID de rol y pulsa Añadir",

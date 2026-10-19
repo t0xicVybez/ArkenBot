@@ -917,7 +917,14 @@
     "aiSuggestedReply": "Respon yang disarankan",
     "transcriptFormat": "Format transkrip",
     "transcriptFormatText": "Teks",
-    "selectStaffMember": "Pilih anggota staf..."
+    "selectStaffMember": "Pilih anggota staf...",
+    "merge": "Gabung",
+    "mergeTicketNumber": "Tiket #",
+    "mergeInto": "Gabung Ke Ini",
+    "merging": "Menggabungkan...",
+    "mergeHint": "Pindahkan bahwa tiket sejarah di sini dan menutupnya",
+    "mergeError": "Gagal menggabungkan tiket.",
+    "merged": "Tiket #{number} bergabung."
   },
   "ticketPanelsPage": {
     "pasteRoleId": "Tempel ID Peran dan tekan Tambah",

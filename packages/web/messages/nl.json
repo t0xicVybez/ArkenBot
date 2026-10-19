@@ -917,7 +917,14 @@
     "aiSuggestedReply": "Voorgesteld antwoord",
     "transcriptFormatText": "Tekst",
     "transcriptFormat": "Transcriptformaat",
-    "selectStaffMember": "Een personeelslid selecteren..."
+    "selectStaffMember": "Een personeelslid selecteren...",
+    "merge": "Samenvoegen",
+    "mergeTicketNumber": "Kaartje #",
+    "mergeInto": "Invoegen Dit",
+    "merging": "Samenvoegen...",
+    "mergeHint": "Verplaatst de geschiedenis van dat ticket hier en sluit het",
+    "merged": "Kaartje #{number} samengevoegd.",
+    "mergeError": "Kon ticket niet samenvoegen."
   },
   "ticketPanelsPage": {
     "pasteRoleId": "Plak een Rol-ID en druk op Toevoegen",

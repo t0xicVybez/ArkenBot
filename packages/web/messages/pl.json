@@ -917,7 +917,14 @@
     "aiSuggestedReply": "Sugerowana odpowiedź",
     "transcriptFormat": "Format transkryptu",
     "transcriptFormatText": "Tekst",
-    "selectStaffMember": "Wybierz pracownika..."
+    "selectStaffMember": "Wybierz pracownika...",
+    "merge": "Połączenie",
+    "mergeTicketNumber": "Bilet #",
+    "mergeInto": "Łączenie To",
+    "merging": "Połączenie...",
+    "mergeHint": "Przenosi tu historię biletu i zamyka go.",
+    "mergeError": "Nie udało się połączyć biletu.",
+    "merged": "Bilet #{number} Włączone."
   },
   "ticketPanelsPage": {
     "pasteRoleId": "Wklej ID roli i naciśnij Dodaj",

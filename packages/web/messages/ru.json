@@ -917,7 +917,14 @@
     "aiSuggestedReply": "Предлагаемый ответ",
     "transcriptFormat": "Формат транскрипта",
     "transcriptFormatText": "Текст",
-    "selectStaffMember": "Выберите сотрудника..."
+    "selectStaffMember": "Выберите сотрудника...",
+    "merge": "слияние",
+    "mergeTicketNumber": "Билет #",
+    "mergeInto": "Слиться в Это",
+    "merging": "Слияние...",
+    "mergeHint": "Переместите историю билета сюда и закройте его.",
+    "mergeError": "Не удалось объединить билет.",
+    "merged": "Билет #{number} слились воедино."
   },
   "ticketPanelsPage": {
     "pasteRoleId": "Вставьте ID роли и нажмите «Добавить»",

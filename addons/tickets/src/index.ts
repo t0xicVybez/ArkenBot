@@ -96,7 +96,7 @@ async function startPanelSyncListener(ctx: AddonContext): Promise<void> {
       maxRetriesPerRequest: 3,
     });
     await redisSub.connect();
-    await redisSub.subscribe('ticket:panel:updated', 'ticket:note:added', 'ticket:reply', 'ticket:priority:updated');
+    await redisSub.subscribe('ticket:panel:updated', 'ticket:note:added', 'ticket:reply', 'ticket:priority:updated', 'ticket:merge');
 
     redisSub.on('message', async (channel, message) => {
       try {
@@ -127,6 +127,11 @@ async function startPanelSyncListener(ctx: AddonContext): Promise<void> {
           if (ticket && ticket.status !== 'closed') {
             await updateControlsMessage(ctx, ticket, !!ticket.claimedBy);
           }
+        } else if (channel === 'ticket:merge') {
+          const { guildId, sourceChannelId, targetChannelId, targetNumber } = JSON.parse(message) as {
+            guildId: string; sourceChannelId: string; targetChannelId: string; targetNumber: number;
+          };
+          await handleTicketMerge(ctx, guildId, sourceChannelId, targetChannelId, targetNumber);
         }
       } catch (err) {
         ctx.logger.error('Failed to handle Redis event', String(err));
@@ -177,6 +182,51 @@ async function handlePortalReply(
   if (!wasWaiting) {
     await updateControlsMessage(ctx, ticket, !!ticket.claimedBy).catch(() => null);
   }
+}
+
+/**
+ * The dashboard's merge route already moved the source ticket's messages
+ * into the target and merged tags/notes — this is the Discord-side half:
+ * notify both channels, then close the source ticket the normal way (close
+ * embed, transcript DM, channel archive/delete) via the same closeTicket()
+ * every other close path uses.
+ */
+async function handleTicketMerge(
+  ctx: AddonContext,
+  guildId: string,
+  sourceChannelId: string,
+  targetChannelId: string,
+  targetNumber: number,
+): Promise<void> {
+  const ticket = await getTicketByChannel(ctx.storage, guildId, sourceChannelId);
+  if (!ticket || ticket.status === 'closed') return;
+
+  const guildLocale = ctx.getGuild(guildId)?.preferredLocale;
+  const loc = await ctx.resolveLocale({ user: { id: '' }, guildId, guildLocale });
+  const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
+
+  const targetChannel = ctx.client.channels.cache.get(targetChannelId) as TextChannel | undefined;
+  if (targetChannel?.isTextBased()) {
+    await targetChannel.send(t('mergeNoticeTarget', { number: ticket.number })).catch(() => null);
+  }
+
+  const sourceChannel = ctx.client.channels.cache.get(sourceChannelId) as TextChannel | undefined;
+  if (sourceChannel?.isTextBased()) {
+    await sourceChannel.send(t('mergeNoticeSource', { number: targetNumber })).catch(() => null);
+  }
+
+  const fakeInteraction = {
+    user: { id: ctx.client.user!.id, tag: 'System (Merge)' },
+    guildId,
+    deferred: false,
+    replied: false,
+    reply: async () => {},
+    editReply: async () => {},
+  } as unknown as import('discord.js').ChatInputCommandInteraction;
+
+  await closeTicket(ctx, fakeInteraction, ticket, t('mergedIntoReason', { number: targetNumber })).catch((err) => {
+    ctx.logger.error(`Failed to close merged ticket #${ticket.number}`, String(err));
+  });
 }
 
 async function syncPanelMessage(ctx: AddonContext, guildId: string, panelId: string): Promise<void> {

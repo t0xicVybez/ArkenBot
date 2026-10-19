@@ -917,7 +917,14 @@
     "aiSuggestedReply": "자주 묻는 질문",
     "transcriptFormat": "Transcript 형식",
     "transcriptFormatText": "이름 *",
-    "selectStaffMember": "직원을 선택 ..."
+    "selectStaffMember": "직원을 선택 ...",
+    "merge": "한국어",
+    "mergeTicketNumber": "티켓 #",
+    "mergeInto": "회사 소개 으로",
+    "merging": "언어: English",
+    "mergeHint": "여기에 티켓의 역사를 이동하고 그것을 닫습니다",
+    "merged": "티켓 #{number} 합병.",
+    "mergeError": "합병권에 실패."
   },
   "ticketPanelsPage": {
     "pasteRoleId": "역할 ID를 붙여넣고 추가를 누르세요",

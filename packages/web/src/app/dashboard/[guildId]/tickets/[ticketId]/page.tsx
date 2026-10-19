@@ -10,7 +10,7 @@ import Link from 'next/link';
 import { ticketsApi } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 import toast from 'react-hot-toast';
-import { ArrowLeft, RefreshCw, AlertTriangle, Clock, Tag, StickyNote, UserCheck, ArrowRightLeft, Trash2, Send, Download } from 'lucide-react';
+import { ArrowLeft, RefreshCw, AlertTriangle, Clock, Tag, StickyNote, UserCheck, ArrowRightLeft, Trash2, Send, Download, GitMerge } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useWebSocket } from '@/lib/socket';
 
@@ -135,6 +135,7 @@ export default function TicketDetailPage() {
   const [replyInput, setReplyInput] = useState('');
   const [transferInput, setTransferInput] = useState('');
   const [transferTagInput, setTransferTagInput] = useState('');
+  const [mergeInput, setMergeInput] = useState('');
   const [downloadingTranscript, setDownloadingTranscript] = useState(false);
   const [transcriptFormat, setTranscriptFormat] = useState<'html' | 'json' | 'txt'>('html');
 
@@ -251,6 +252,12 @@ export default function TicketDetailPage() {
     mutationFn: () => ticketsApi.transferTicket(guildId, ticketId, { userId: transferInput.trim(), userTag: transferTagInput.trim() }),
     onSuccess: () => { invalidate(); setTransferInput(''); setTransferTagInput(''); toast.success(t('transferred')); },
     onError: () => toast.error(t('transferError')),
+  });
+
+  const mergeMut = useMutation({
+    mutationFn: () => ticketsApi.mergeTicket(guildId, ticketId, parseInt(mergeInput.trim(), 10)),
+    onSuccess: () => { invalidate(); setMergeInput(''); toast.success(t('merged', { number: mergeInput.trim() })); },
+    onError: (err: unknown) => toast.error((err as { response?: { data?: { error?: string } } })?.response?.data?.error ?? t('mergeError')),
   });
 
   const data = res?.data?.data as { ticket: TicketRecord; messages: TicketMessage[]; panel: TicketPanel | null } | undefined;
@@ -444,6 +451,29 @@ export default function TicketDetailPage() {
                 disabled={transferMut.isPending || !transferInput.trim() || !transferTagInput.trim()}
                 className="btn-secondary text-xs py-1 px-3 disabled:opacity-40"
               >{t('transfer')}</button>
+            </div>
+          </div>
+
+          {}
+          <div className="flex items-start gap-3 flex-wrap">
+            <GitMerge className="w-4 h-4 text-gray-400 flex-shrink-0 mt-2" />
+            <span className="text-gray-400 text-sm w-24 mt-2">{t('merge')}</span>
+            <div className="flex gap-2 flex-1 flex-wrap items-center">
+              <span className="text-gray-500 text-sm">#</span>
+              <input
+                type="number"
+                min={1}
+                className="input text-sm w-24"
+                placeholder={t('mergeTicketNumber')}
+                value={mergeInput}
+                onChange={(e) => setMergeInput(e.target.value)}
+              />
+              <button
+                onClick={() => mergeMut.mutate()}
+                disabled={mergeMut.isPending || !mergeInput.trim()}
+                className="btn-secondary text-xs py-1 px-3 disabled:opacity-40"
+              >{mergeMut.isPending ? t('merging') : t('mergeInto')}</button>
+              <span className="text-gray-600 text-xs">{t('mergeHint')}</span>
             </div>
           </div>
 

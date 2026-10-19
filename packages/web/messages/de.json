@@ -917,7 +917,14 @@
     "aiSuggestedReply": "Vorgeschlagene Antwort",
     "transcriptFormatText": "Text",
     "transcriptFormat": "Transkriptformat",
-    "selectStaffMember": "Wählen Sie einen Mitarbeiter aus..."
+    "selectStaffMember": "Wählen Sie einen Mitarbeiter aus...",
+    "merge": "Fusion",
+    "mergeTicketNumber": "Ticket #",
+    "mergeInto": "Fusion Dies",
+    "merging": "Zusammenführung...",
+    "mergeHint": "Verschiebt die Geschichte dieses Tickets hier und schließt es",
+    "mergeError": "Das Ticket konnte nicht zusammengeführt werden.",
+    "merged": "Ticket #{number} fusioniert."
   },
   "ticketPanelsPage": {
     "pasteRoleId": "Rollen-ID einfügen und auf Hinzufügen klicken",
