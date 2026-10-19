@@ -26,7 +26,7 @@ interface TicketPanel {
   id: string; name: string; description: string; emoji: string;
   channelId?: string; messageId?: string; categoryId?: string; logChannelId?: string;
   staffRoles: string[]; maxTicketsPerUser: number; namingPattern: string;
-  closeAction: string; autoCloseHours: number; requireReason: boolean;
+  closeAction: string; autoCloseHours: number; reopenWindowHours?: number; requireReason: boolean;
   welcomeMessage: string; buttonLabel: string; buttonColor: string;
   buttons?: PanelButton[];
   panelStyle?: 'buttons' | 'dropdown';
@@ -55,7 +55,7 @@ const DEFAULT_DRAFT: PanelDraft = {
   fields: [],
   staffRoles: [], maxTicketsPerUser: 1,
   namingPattern: 'ticket-{number}', closeAction: 'delete',
-  autoCloseHours: 48, requireReason: false,
+  autoCloseHours: 48, reopenWindowHours: 0, requireReason: false,
   welcomeMessage: 'Welcome {user}! A staff member will be with you shortly.',
   embedColor: '#5865F2', enabled: true,
 };
@@ -575,6 +575,10 @@ function PanelForm({
               </Row>
               <Row label={t('autoCloseLabel')}>
                 <input type="number" className="input" min={0} max={720} value={draft.autoCloseHours} onChange={(e) => set('autoCloseHours', Number(e.target.value))} />
+              </Row>
+              <Row label={t('reopenWindowLabel')}>
+                <input type="number" className="input" min={0} max={8760} value={draft.reopenWindowHours ?? 0} onChange={(e) => set('reopenWindowHours', Number(e.target.value))} />
+                <p className="text-gray-500 text-xs mt-1">{t('reopenWindowHint')}</p>
               </Row>
               <Row label={t('namingPattern')}>
                 <input className="input text-sm" placeholder="ticket-{number}" value={draft.namingPattern} onChange={(e) => set('namingPattern', e.target.value)} />

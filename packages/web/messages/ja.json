@@ -1046,7 +1046,9 @@
     "panelStyleButtons": "ボタン",
     "panelStyleDropdown": "ドロップダウンメニュー",
     "panelStyleHint": "1つのメニューにすべてのチケットタイプをリストすることで、ドロップダウンが忙しいパネルを整頓します。 2つ以上のボタンがある場合に適用されます。",
-    "namingPatternHint": "プレースホルダー: {category} (ボタンタグから)、 {number}, {username}. 例 {category}・{number} → con-0009"
+    "namingPatternHint": "プレースホルダー: {category} (ボタンタグから)、 {number}, {username}. 例 {category}・{number} → con-0009",
+    "reopenWindowLabel": "開いたウィンドウ(時間、0 =無制限)",
+    "reopenWindowHint": "切符を閉じた後、再開封することができます。 0 は、常に再開できることを意味します。"
   },
   "giveawaysPage": {
     "giveawayCreated": "ギブアウェイを作成しました！",

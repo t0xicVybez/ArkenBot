@@ -1046,7 +1046,9 @@
     "panelStyleButtons": "Boutons",
     "panelStyleDropdown": "Menu déroulant",
     "panelStyleHint": "Un menu déroulant permet de ranger les panneaux occupés en énumérant chaque type de billet dans un menu. S’applique lorsque vous avez 2 boutons ou plus.",
-    "namingPatternHint": "Titulaires: {category} (à partir de l’étiquette du bouton), {number}, {username}. par exemple {category}- Oui.{number} → con-0009"
+    "namingPatternHint": "Titulaires: {category} (à partir de l’étiquette du bouton), {number}, {username}. par exemple {category}- Oui.{number} → con-0009",
+    "reopenWindowHint": "Combien de temps après la fermeture d’un billet peut encore être rouvert. 0 signifie qu’il peut toujours être rouvert.",
+    "reopenWindowLabel": "Réouverture de la fenêtre (heures, 0 = illimité)"
   },
   "giveawaysPage": {
     "giveawayCreated": "Giveaway créé !",

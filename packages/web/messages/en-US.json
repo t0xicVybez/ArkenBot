@@ -992,6 +992,8 @@
     "privateThread": "Private Thread",
     "maxTicketsUser": "Max Tickets / User",
     "autoCloseLabel": "Auto-close (hours, 0 = off)",
+    "reopenWindowLabel": "Reopen window (hours, 0 = unlimited)",
+    "reopenWindowHint": "How long after closing a ticket can still be reopened. 0 means it can always be reopened.",
     "namingPattern": "Channel Naming Pattern",
     "closeAction": "Close Action",
     "deleteChannel": "Delete channel",

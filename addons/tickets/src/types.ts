@@ -75,6 +75,7 @@ export interface TicketPanel {
   namingPattern: string;
   closeAction: CloseAction;
   autoCloseHours: number;
+  reopenWindowHours?: number;
   requireReason: boolean;
   welcomeMessage: string;
 

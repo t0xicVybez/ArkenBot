@@ -35,6 +35,7 @@ import {
 import { generateTranscriptHtml } from '../utils/transcript.js';
 import { applyCannedVars } from '../utils/format.js';
 import { isTicketStaff } from '../utils/permissions.js';
+import { isReopenAllowed } from '../utils/time.js';
 import {
   addUserToTicket,
   removeUserFromTicket,
@@ -278,6 +279,10 @@ const command: AddonCommandDefinition = {
         }
         if (!isStaff) {
           await interaction.reply({ content: t('onlyStaffReopen'), flags: MessageFlags.Ephemeral });
+          return;
+        }
+        if (!isReopenAllowed(panel?.reopenWindowHours, ticket.closedAt, Date.now())) {
+          await interaction.reply({ content: t('reopenWindowExpired', { hours: panel!.reopenWindowHours! }), flags: MessageFlags.Ephemeral });
           return;
         }
         ticket.status = 'open';

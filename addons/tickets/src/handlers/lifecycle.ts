@@ -9,6 +9,7 @@ import {
 import type { AddonContext } from '@arkenbot/addon-sdk';
 import type { Ticket, TicketPanel } from '../types.js';
 import { isTicketStaff } from '../utils/permissions.js';
+import { isReopenAllowed } from '../utils/time.js';
 import {
   getPanel,
   getConfig,
@@ -239,6 +240,11 @@ export async function handleReopenButton(
 
   if (!isStaff) {
     await interaction.reply({ content: t('onlyStaffReopen'), flags: MessageFlags.Ephemeral });
+    return;
+  }
+
+  if (!isReopenAllowed(panel?.reopenWindowHours, ticket.closedAt, Date.now())) {
+    await interaction.reply({ content: t('reopenWindowExpired', { hours: panel!.reopenWindowHours! }), flags: MessageFlags.Ephemeral });
     return;
   }
 

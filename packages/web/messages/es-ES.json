@@ -1046,7 +1046,9 @@
     "panelStyleHint": "Un desplegable mantiene los paneles ocupados ordenando cada tipo de ticket en un menú. Se aplica cuando tiene 2 o más botones.",
     "panelStyleLabel": "Opciones de visualización como",
     "panelStyleDropdown": "Menú desplegable",
-    "namingPatternHint": "Titulares: {category} (desde la etiqueta de botón), {number}, {username}Por ejemplo. {category}-{number} → con-0009"
+    "namingPatternHint": "Titulares: {category} (desde la etiqueta de botón), {number}, {username}Por ejemplo. {category}-{number} → con-0009",
+    "reopenWindowHint": "Cuánto tiempo después de cerrar un boleto todavía se puede reabrir. 0 significa que siempre se puede reabrir.",
+    "reopenWindowLabel": "Ventana de reabrir (horas, 0 = ilimitada)"
   },
   "giveawaysPage": {
     "giveawayCreated": "¡Sorteo creado!",

@@ -1046,7 +1046,9 @@
     "panelStyleButtons": "Knöpfe",
     "panelStyleDropdown": "Dropdown-Menü",
     "panelStyleHint": "Ein Dropdown hält beschäftigte Panels ordentlich, indem er jeden Tickettyp in einem Menü auflistet. Gilt, wenn Sie 2 oder mehr Buttons haben.",
-    "namingPatternHint": "Platzhalter: {category} (vom Button-Tag), {number}, {username}B. {category}-{number} Con-0009"
+    "namingPatternHint": "Platzhalter: {category} (vom Button-Tag), {number}, {username}B. {category}-{number} Con-0009",
+    "reopenWindowLabel": "Fenster wieder öffnen (Stunden, 0 = unbegrenzt)",
+    "reopenWindowHint": "Wie lange nach dem Schließen eines Tickets noch geöffnet werden kann. 0 bedeutet, dass es immer wieder geöffnet werden kann."
   },
   "giveawaysPage": {
     "giveawayCreated": "Giveaway erstellt!",

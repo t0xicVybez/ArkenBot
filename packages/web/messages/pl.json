@@ -1046,7 +1046,9 @@
     "panelStyleButtons": "Przyciski",
     "panelStyleDropdown": "Menu rozwijane",
     "panelStyleHint": "Upadek utrzymuje zajęte panele czyste, wymieniając każdy typ biletu w jednym menu. Stosuje się, gdy masz 2 lub więcej przycisków.",
-    "namingPatternHint": "Uchwyty do powierzchni: {category} (z znacznika przycisku), {number}, {username}. np. {category}-{number} → con- 0009"
+    "namingPatternHint": "Uchwyty do powierzchni: {category} (z znacznika przycisku), {number}, {username}. np. {category}-{number} → con- 0009",
+    "reopenWindowLabel": "Otwórz ponownie okno (godziny, 0 = nieograniczony)",
+    "reopenWindowHint": "Ile czasu po zamknięciu biletu można jeszcze otworzyć. 0 oznacza, że zawsze można ją ponownie otworzyć."
   },
   "giveawaysPage": {
     "giveawayCreated": "Utworzono giveaway!",

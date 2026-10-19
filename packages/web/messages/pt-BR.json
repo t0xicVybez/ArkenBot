@@ -1046,7 +1046,9 @@
     "panelStyleButtons": "Botões",
     "panelStyleDropdown": "Menu suspenso",
     "panelStyleHint": "Um dropdown mantém os painéis ocupados arrumados listando cada tipo de ingresso em um menu. Aplica-se quando você tem 2 ou mais botões.",
-    "namingPatternHint": "Positivos: {category} (da etiqueta do botão), {number}, {username}Por exemplo. {category}- Não.{number} → con-0009"
+    "namingPatternHint": "Positivos: {category} (da etiqueta do botão), {number}, {username}Por exemplo. {category}- Não.{number} → con-0009",
+    "reopenWindowLabel": "Reabrir janela (horas, 0 = ilimitado)",
+    "reopenWindowHint": "Quanto tempo depois de fechar uma passagem ainda pode ser reaberto. 0 significa que sempre pode ser reaberto."
   },
   "giveawaysPage": {
     "giveawayCreated": "Sorteio criado!",

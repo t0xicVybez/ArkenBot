@@ -1046,7 +1046,9 @@
     "panelStyleButtons": "Düğmeler",
     "panelStyleDropdown": "Dropdown menu",
     "panelStyleHint": "Bir damladown, her bilet tipini bir menüde listelemek için yoğun panellere devam eder. 2 veya daha fazla düğmeye sahip olduğunuzda.",
-    "namingPatternHint": "Placeholders: {category} ( düğme etiketinden) {number}, {username}. e.g. {category}-{number} → con-0009"
+    "namingPatternHint": "Placeholders: {category} ( düğme etiketinden) {number}, {username}. e.g. {category}-{number} → con-0009",
+    "reopenWindowLabel": "Yeniden açılan pencere (saat, 0 = sınırsız)",
+    "reopenWindowHint": "Bir bileti kapatmadan sonra ne kadar süre yeniden açılabilir. 0, her zaman yeniden açılabilir anlamına gelir."
   },
   "giveawaysPage": {
     "giveawayCreated": "Çekiliş oluşturuldu!",

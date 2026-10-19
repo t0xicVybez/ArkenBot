@@ -1046,7 +1046,9 @@
     "panelStyleButtons": "Tombol",
     "panelStyleDropdown": "Menu penurunan",
     "panelStyleHint": "Sebuah drop down membuat panel sibuk rapi dengan daftar setiap jenis tiket dalam satu menu. Aplikasi ketika Anda memiliki 2 atau lebih tombol.",
-    "namingPatternHint": "Placeholder: {category} (dari tombol tag), {number}, {username}. mis. {category}-{number} -0009"
+    "namingPatternHint": "Placeholder: {category} (dari tombol tag), {number}, {username}. mis. {category}-{number} -0009",
+    "reopenWindowLabel": "Buka kembali jendela (jam, 0 = tak terbatas)",
+    "reopenWindowHint": "Berapa lama setelah menutup tiket masih bisa dibuka kembali. 0 berarti selalu dapat dibuka kembali."
   },
   "giveawaysPage": {
     "giveawayCreated": "Giveaway dibuat!",

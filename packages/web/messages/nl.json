@@ -1046,7 +1046,9 @@
     "panelStyleButtons": "Knoppen",
     "panelStyleDropdown": "Dropdown-menu",
     "panelStyleHint": "Een dropdown houdt drukke panelen netjes door elk tickettype in één menu op te nemen. Geldt voor 2 of meer knoppen.",
-    "namingPatternHint": "Plaatshouders: {category} (van de knoopstag), {number}, {username}. bv. {category}-{number} → con-0009"
+    "namingPatternHint": "Plaatshouders: {category} (van de knoopstag), {number}, {username}. bv. {category}-{number} → con-0009",
+    "reopenWindowLabel": "Heropen venster (uren, 0 = onbeperkt)",
+    "reopenWindowHint": "Hoe lang na het sluiten van een ticket nog kan worden heropend. 0 betekent dat het altijd kan worden heropend."
   },
   "giveawaysPage": {
     "giveawayCreated": "Giveaway aangemaakt!",

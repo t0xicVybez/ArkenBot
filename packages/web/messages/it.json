@@ -1046,7 +1046,9 @@
     "panelStyleButtons": "Pulsanti",
     "panelStyleDropdown": "menu a tendina",
     "panelStyleHint": "Un menu a tendina mantiene occupato i pannelli in ordine elencando ogni tipo di biglietto in un menu. Si applica quando si dispone di 2 o più pulsanti.",
-    "namingPatternHint": "Portaposto: {category} (dal tasto tag), {number}♪ {username}. ad esempio. {category}- No.{number} → con-0009"
+    "namingPatternHint": "Portaposto: {category} (dal tasto tag), {number}♪ {username}. ad esempio. {category}- No.{number} → con-0009",
+    "reopenWindowLabel": "Finestra di riapertura (ore, 0 = illimitato)",
+    "reopenWindowHint": "Quanto tempo dopo la chiusura del biglietto può ancora essere riaperto. 0 significa che può essere sempre riaperto."
   },
   "giveawaysPage": {
     "giveawayCreated": "Giveaway creato!",

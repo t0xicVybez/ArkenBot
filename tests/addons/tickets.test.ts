@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { applyCannedVars, pickEmoji } from '../../addons/tickets/src/utils/format.js';
 import { resolveChannelName } from '../../addons/tickets/src/utils/channel.js';
-import { isWithinBusinessHours } from '../../addons/tickets/src/utils/time.js';
+import { isWithinBusinessHours, isReopenAllowed } from '../../addons/tickets/src/utils/time.js';
 import { pickLeastLoadedAssignee } from '../../addons/tickets/src/utils/assign.js';
 import type { TicketPanel, BusinessHours } from '../../addons/tickets/src/types.js';
 
@@ -139,5 +139,39 @@ describe('pickLeastLoadedAssignee', () => {
     const result = pickLeastLoadedAssignee([a, b, c], load, 2);
     expect(result?.assignee).toBe(a);
     expect(result?.nextIndex).toBe(0);
+  });
+});
+
+describe('isReopenAllowed', () => {
+  const now = Date.parse('2026-10-19T12:00:00Z');
+  const closedRecently = new Date(now - 2 * 3600 * 1000).toISOString();
+  const closedLongAgo = new Date(now - 30 * 24 * 3600 * 1000).toISOString();
+
+  it('allows reopening when the window is unset (unlimited, the default)', () => {
+    expect(isReopenAllowed(undefined, closedLongAgo, now)).toBe(true);
+  });
+
+  it('allows reopening when the window is 0 (explicitly unlimited)', () => {
+    expect(isReopenAllowed(0, closedLongAgo, now)).toBe(true);
+  });
+
+  it('allows reopening within the window', () => {
+    expect(isReopenAllowed(24, closedRecently, now)).toBe(true);
+  });
+
+  it('blocks reopening past the window', () => {
+    expect(isReopenAllowed(24, closedLongAgo, now)).toBe(false);
+  });
+
+  it('allows reopening right at the boundary (strictly less-than, not less-or-equal)', () => {
+    const exactlyAtLimit = new Date(now - 24 * 3600 * 1000).toISOString();
+    expect(isReopenAllowed(24, exactlyAtLimit, now)).toBe(false);
+    const justInside = new Date(now - 24 * 3600 * 1000 + 1000).toISOString();
+    expect(isReopenAllowed(24, justInside, now)).toBe(true);
+  });
+
+  it('fails open when closedAt is missing or unparseable', () => {
+    expect(isReopenAllowed(24, undefined, now)).toBe(true);
+    expect(isReopenAllowed(24, 'not-a-date', now)).toBe(true);
   });
 });

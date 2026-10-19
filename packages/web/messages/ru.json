@@ -1046,7 +1046,9 @@
     "panelStyleButtons": "Кнопки",
     "panelStyleDropdown": "Выпадающее меню",
     "panelStyleHint": "Выпадающий список сохраняет аккуратные панели, перечисляя каждый тип билета в одном меню. Применяется, когда у вас есть 2 или более кнопок.",
-    "namingPatternHint": "Владельцы мест: {category} (из кнопок), {number}, {username}Например. {category}-{number} Кон-0009"
+    "namingPatternHint": "Владельцы мест: {category} (из кнопок), {number}, {username}Например. {category}-{number} Кон-0009",
+    "reopenWindowLabel": "Откройте окно (часы, 0 = неограниченно)",
+    "reopenWindowHint": "Через какое время после закрытия билета его можно открыть заново. 0 означает, что его всегда можно открыть."
   },
   "giveawaysPage": {
     "giveawayCreated": "Розыгрыш создан!",

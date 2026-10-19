@@ -1046,7 +1046,9 @@
     "panelStyleButtons": "按钮",
     "panelStyleDropdown": "下拉菜单",
     "panelStyleHint": "下拉会把每个票型都列在一个菜单中 来清理板子 当您有两个或两个以上按钮时适用。",
-    "namingPatternHint": "占位符 : {category} (从按钮标签), {number}, (中文(简体) ). {username}例如, {category}- 说吧{number} → = 009"
+    "namingPatternHint": "占位符 : {category} (从按钮标签), {number}, (中文(简体) ). {username}例如, {category}- 说吧{number} → = 009",
+    "reopenWindowLabel": "重新打开窗口( 小时, 0 = 无限)",
+    "reopenWindowHint": "关闭门票后多久仍可重新开放. 0表示永远可以重新开放."
   },
   "giveawaysPage": {
     "giveawayCreated": "抽奖已创建！",

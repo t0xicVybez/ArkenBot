@@ -3,6 +3,21 @@
  */
 import type { BusinessHours } from '../types.js';
 
+/**
+ * Whether a closed ticket is still within its panel's reopen window.
+ * `reopenWindowHours` undefined or 0 means unlimited (always allowed) —
+ * the feature is opt-in per panel, off by default. A ticket that was
+ * never closed (no closedAt) is always allowed through here; callers are
+ * expected to have already checked status === 'closed' before this.
+ */
+export function isReopenAllowed(reopenWindowHours: number | undefined, closedAt: string | undefined, nowMs: number): boolean {
+  if (!reopenWindowHours || reopenWindowHours <= 0) return true;
+  if (!closedAt) return true;
+  const closedMs = new Date(closedAt).getTime();
+  if (Number.isNaN(closedMs)) return true;
+  return nowMs - closedMs < reopenWindowHours * 3600 * 1000;
+}
+
 export function isWithinBusinessHours(bh: BusinessHours, nowMs: number): boolean {
   try {
     const parts = new Intl.DateTimeFormat('en-US', {
