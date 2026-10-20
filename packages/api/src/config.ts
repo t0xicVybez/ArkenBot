@@ -20,6 +20,11 @@ function optionalInt(name: string, defaultValue: number): number {
   return Number.isFinite(parsed) ? parsed : defaultValue;
 }
 
+function optionalSameSite(name: string, defaultValue: 'lax' | 'strict' | 'none'): 'lax' | 'strict' | 'none' {
+  const raw = process.env[name];
+  return raw === 'lax' || raw === 'strict' || raw === 'none' ? raw : defaultValue;
+}
+
 export const config = {
   port: parseInt(optional('API_PORT', '4000')),
   host: optional('API_HOST', '0.0.0.0'),
@@ -73,7 +78,11 @@ export const config = {
     name: optional('SESSION_COOKIE_NAME', 'arken_session'),
     domain: optional('SESSION_COOKIE_DOMAIN') || undefined,
     secure: optional('NODE_ENV', 'development') === 'production',
-    sameSite: 'lax' as const,
+    // Self-hosters running the dashboard on a domain unrelated to this API
+    // need 'none' (cross-site XHR/fetch still needs the cookie sent) + a
+    // secure context. Default 'lax' is correct whenever dashboard and API
+    // share a parent domain, as they do in this deployment.
+    sameSite: optionalSameSite('SESSION_COOKIE_SAMESITE', 'lax'),
   },
 
   session: {
