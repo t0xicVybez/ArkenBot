@@ -28,6 +28,7 @@ module.exports = {
       env,
       autorestart: true,
       watch: false,
+      max_memory_restart: '500M',
     },
     {
       name: 'bot',
@@ -40,6 +41,10 @@ module.exports = {
 
       kill_timeout: 15000,
       listen_timeout: 10000,
+      // Well above the current ~430MB (220 guilds / ~19k members, uncapped
+      // member/presence cache by design — see client.ts) so normal fleet
+      // growth doesn't trigger this; it's a safety net for an actual leak.
+      max_memory_restart: '800M',
     },
 
     {
@@ -50,6 +55,7 @@ module.exports = {
       env,
       autorestart: true,
       watch: false,
+      max_memory_restart: '500M',
     },
   ],
 };

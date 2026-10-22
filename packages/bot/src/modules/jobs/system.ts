@@ -35,6 +35,7 @@ export async function beatHeartbeat(client: BotClient): Promise<void> {
     const payload = JSON.stringify({
       at: Date.now(),
       guilds: client.guilds.cache.size,
+      members: client.guilds.cache.reduce((sum, g) => sum + (g.memberCount ?? 0), 0),
       ws: client.ws.ping,
       rss: process.memoryUsage().rss,
       startedAt: Date.now() - Math.floor(process.uptime() * 1000),

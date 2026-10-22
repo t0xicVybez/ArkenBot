@@ -9,6 +9,7 @@ import { redis } from '../redis.js';
 export interface BotFleetStatus {
   online: boolean;
   guilds: number | null;
+  members: number | null;
   wsPingMs: number | null;
   lastSeen: string | null;
   rssMb: number | null;
@@ -19,6 +20,7 @@ export interface BotFleetStatus {
 interface Heartbeat {
   at: number;
   guilds?: number;
+  members?: number;
   ws?: number;
   rss?: number;
   startedAt?: number;
@@ -26,7 +28,7 @@ interface Heartbeat {
 
 const STALE_MS = 90_000;
 const EMPTY: BotFleetStatus = {
-  online: false, guilds: null, wsPingMs: null, lastSeen: null, rssMb: null, uptimeSec: null, shardCount: 0,
+  online: false, guilds: null, members: null, wsPingMs: null, lastSeen: null, rssMb: null, uptimeSec: null, shardCount: 0,
 };
 
 export async function getBotFleetStatus(): Promise<BotFleetStatus> {
@@ -43,6 +45,7 @@ export async function getBotFleetStatus(): Promise<BotFleetStatus> {
       return {
         online: true,
         guilds: hb.guilds ?? null,
+        members: hb.members ?? null,
         wsPingMs: hb.ws != null && hb.ws >= 0 ? hb.ws : null,
         lastSeen: new Date(hb.at).toISOString(),
         rssMb: hb.rss != null ? Math.round(hb.rss / 1048576) : null,
@@ -51,7 +54,7 @@ export async function getBotFleetStatus(): Promise<BotFleetStatus> {
       };
     }
 
-    let guilds = 0, rss = 0, lastAt = 0, oldestStart = now, pingSum = 0, pingCount = 0, fresh = 0;
+    let guilds = 0, members = 0, rss = 0, lastAt = 0, oldestStart = now, pingSum = 0, pingCount = 0, fresh = 0;
     for (const key of keys) {
       const raw = await redis.get(key);
       if (!raw) continue;
@@ -59,6 +62,7 @@ export async function getBotFleetStatus(): Promise<BotFleetStatus> {
       if (now - hb.at > STALE_MS) continue;
       fresh++;
       guilds += hb.guilds ?? 0;
+      members += hb.members ?? 0;
       rss += hb.rss ?? 0;
       lastAt = Math.max(lastAt, hb.at);
       if (hb.startedAt && hb.startedAt < oldestStart) oldestStart = hb.startedAt;
@@ -69,6 +73,7 @@ export async function getBotFleetStatus(): Promise<BotFleetStatus> {
     return {
       online: true,
       guilds,
+      members,
       wsPingMs: pingCount ? Math.round(pingSum / pingCount) : null,
       lastSeen: lastAt ? new Date(lastAt).toISOString() : null,
       rssMb: Math.round(rss / 1048576),

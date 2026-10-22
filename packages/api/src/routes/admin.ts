@@ -145,7 +145,7 @@ export async function adminRoutes(server: FastifyInstance): Promise<void> {
     const [
       totalGuilds,
       activeGuilds,
-      totalUsers,
+      xpTrackedUsers,
       totalCases,
       totalAddons,
       totalWarnings,
@@ -162,6 +162,11 @@ export async function adminRoutes(server: FastifyInstance): Promise<void> {
       getPm2Memory(),
       getBotFleetStatus(),
     ]);
+    // Real Discord membership across every guild, from the bot's own gateway
+    // cache via the heartbeat — not a DB count, so it includes everyone, not
+    // just users who've earned XP. Falls back to the XP count if the bot is
+    // offline/the heartbeat is stale, so the card never shows a dead zero.
+    const totalUsers = fleet.members ?? xpTrackedUsers;
     // Bot memory from the shard heartbeats (sum of every shard's RSS) is correct
     // whether the bot runs as one process or many — pm2 only sees the shard
     // MANAGER when sharded, which undercounts badly.
