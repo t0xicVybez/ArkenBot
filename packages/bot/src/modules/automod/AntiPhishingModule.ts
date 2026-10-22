@@ -16,11 +16,15 @@ import axios from 'axios';
 
 const BLOCKLIST_REDIS_KEY = 'antiphishing:domains';
 const REFRESH_INTERVAL_MS = 60 * 60 * 1000;
+const RETRY_COOLDOWN_MS = 5 * 60 * 1000;
+const CACHE_TTL_SECONDS = 4 * 60 * 60; // outlives REFRESH_INTERVAL_MS so one missed hourly refresh doesn't drop the fallback
 
 let domainSet = new Set<string>();
 let lastRefreshed = 0;
+let lastRefreshAttempt = 0;
 
 async function refreshBlocklist(): Promise<void> {
+  lastRefreshAttempt = Date.now();
   try {
     const res = await axios.get<string[]>('https://phish.sinking.yachts/v2/all', {
       headers: { 'X-Identity': 'ArkenBot anti-phishing (https://arkenbot.app)' },
@@ -30,7 +34,7 @@ async function refreshBlocklist(): Promise<void> {
       domainSet = new Set(res.data.map((d) => d.toLowerCase().trim()));
       lastRefreshed = Date.now();
 
-      await redis.setex(BLOCKLIST_REDIS_KEY, 5400, JSON.stringify([...domainSet]));
+      await redis.setex(BLOCKLIST_REDIS_KEY, CACHE_TTL_SECONDS, JSON.stringify([...domainSet]));
       logger.info({ count: domainSet.size }, 'Anti-phishing blocklist refreshed');
     }
   } catch (err) {
@@ -88,7 +92,10 @@ export class AntiPhishingModule {
     const config = await getConfig(message.guild.id);
     if (!config?.antiPhishingEnabled) return;
 
-    if (domainSet.size === 0 || Date.now() - lastRefreshed > REFRESH_INTERVAL_MS * 2) {
+    if (
+      (domainSet.size === 0 || Date.now() - lastRefreshed > REFRESH_INTERVAL_MS * 2) &&
+      Date.now() - lastRefreshAttempt > RETRY_COOLDOWN_MS
+    ) {
       await refreshBlocklist();
     }
 

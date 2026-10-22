@@ -9,6 +9,7 @@ import type { BotClient } from '../../client.js';
 import type { BotCommand } from '../../types.js';
 import { prisma } from '../../database.js';
 import { t, resolveUserLocale } from '../../i18n/index.js';
+import { ensureGuildExists } from '../../utils/settings.js';
 
 const monthName = (month: number, loc: string): string =>
   new Intl.DateTimeFormat(loc, { month: 'long', timeZone: 'UTC' }).format(new Date(Date.UTC(2000, month - 1, 1)));
@@ -50,6 +51,10 @@ const command: BotCommand = {
     if (sub === 'set') {
       const month = interaction.options.getInteger('month', true);
       const day = interaction.options.getInteger('day', true);
+
+      if (interaction.guild) {
+        await ensureGuildExists(interaction.guild.id, interaction.guild.name, interaction.guild.ownerId, interaction.guild.iconURL() ?? undefined);
+      }
 
       await prisma.birthday.upsert({
         where: { guildId_userId: { guildId, userId: interaction.user.id } },

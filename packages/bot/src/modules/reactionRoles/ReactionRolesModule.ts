@@ -44,6 +44,12 @@ export class ReactionRolesModule {
       const role = guild.roles.cache.get(reactionRole.roleId);
       if (!role || !role.editable) {
         logger.warn(`ReactionRoles: role ${reactionRole.roleId} not found or not editable`);
+        void notifyActionFailure(guild, {
+          action: 'manageRoles',
+          error: { code: 50013 },
+          requiredPermission: role ? 'Manage Roles (role is above the bot’s highest role)' : 'Role was deleted',
+          target: `<@&${reactionRole.roleId}>`,
+        });
         return;
       }
 
