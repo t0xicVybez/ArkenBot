@@ -116,7 +116,9 @@ export function buildTicketTranscriptHtml(
       });
       const attachmentLinks = m.attachments
         .map((url) => {
-          const isImage = /\.(png|jpe?g|gif|webp)(\?.*)?$/i.test(url);
+          // Strip any query string first so the extension check is a plain,
+          // non-backtracking match — no .* before the anchor.
+          const isImage = /\.(png|jpe?g|gif|webp)$/i.test(url.split('?')[0] ?? '');
           return isImage
             ? `<a href="${escHtml(url)}" target="_blank"><img src="${escHtml(url)}" style="max-height:120px;border-radius:4px;margin-top:4px;display:block" /></a>`
             : `<a href="${escHtml(url)}" target="_blank">${escHtml(url)}</a>`;

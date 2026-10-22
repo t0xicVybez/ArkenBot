@@ -4,7 +4,7 @@ import { randomUUID, randomBytes } from 'crypto';
 import { requireGuildAdmin } from '../middleware/auth.js';
 import { prisma } from '../database.js';
 import { pub, redis } from '../redis.js';
-import { buildTicketTranscriptHtml, buildTicketTranscriptText, buildTicketTranscriptJson } from '@arkenbot/shared';
+import { buildTicketTranscriptHtml, buildTicketTranscriptText, buildTicketTranscriptJson, isSnowflake } from '@arkenbot/shared';
 
 const RELEASE_LOCK = 'if redis.call("get", KEYS[1]) == ARGV[1] then return redis.call("del", KEYS[1]) else return 0 end';
 
@@ -230,6 +230,7 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
   // type a raw user ID + tag by hand.
   server.get('/addons/tickets/:guildId/panels/:panelId/staff', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, panelId } = request.params as { guildId: string; panelId: string };
+    if (!isSnowflake(guildId)) return reply.code(400).send({ success: false, error: 'Invalid guild ID' });
     const panels = (await readData<TicketPanel[]>(guildId, 'panels')) ?? [];
     const panel = panels.find((p) => p.id === panelId);
     if (!panel) return reply.code(404).send({ success: false, error: 'Panel not found' });
