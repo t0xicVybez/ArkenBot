@@ -197,26 +197,33 @@ export async function adminRoutes(server: FastifyInstance): Promise<void> {
   });
 
   server.get('/admin/users', { preHandler: [requireStaff] }, async (request, reply) => {
-    const query = request.query as { search?: string };
+    const query = request.query as { page?: string; search?: string };
+    const page = Math.max(0, parseInt(query.page ?? '1') - 1);
+    const pageSize = 25;
+    const where = query.search
+      ? { username: { contains: query.search, mode: 'insensitive' as const } }
+      : {};
 
-    const users = await prisma.portalUser.findMany({
-      where: query.search
-        ? { username: { contains: query.search, mode: 'insensitive' } }
-        : {},
-      orderBy: { createdAt: 'desc' },
-      take: 50,
-      select: {
-        id: true,
-        username: true,
-        discriminator: true,
-        avatar: true,
-        isStaff: true,
-        isBotOwner: true,
-        createdAt: true,
-      },
-    });
+    const [items, total] = await Promise.all([
+      prisma.portalUser.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        skip: page * pageSize,
+        take: pageSize,
+        select: {
+          id: true,
+          username: true,
+          discriminator: true,
+          avatar: true,
+          isStaff: true,
+          isBotOwner: true,
+          createdAt: true,
+        },
+      }),
+      prisma.portalUser.count({ where }),
+    ]);
 
-    return reply.send({ success: true, data: users });
+    return reply.send({ success: true, data: { items, total, page: page + 1, pageSize, hasMore: (page + 1) * pageSize < total } });
   });
 
   server.patch('/admin/users/:id', { preHandler: [requireBotOwner] }, async (request, reply) => {

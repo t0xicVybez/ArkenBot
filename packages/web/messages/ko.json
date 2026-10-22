@@ -2621,7 +2621,10 @@
     "roleStaff": "스태프",
     "roleUser": "사용자",
     "removeStaff": "스태프에서 제거",
-    "makeStaff": "스태프로 지정"
+    "makeStaff": "스태프로 지정",
+    "pageInfo": "{page} 페이지 · 총 {total}개",
+    "previous": "이전",
+    "next": "다음"
   },
   "feedAlerts": {
     "created": "피드 알림이 생성되었습니다!",

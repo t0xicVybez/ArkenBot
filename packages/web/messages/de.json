@@ -2621,7 +2621,10 @@
     "roleStaff": "Team",
     "roleUser": "Benutzer",
     "removeStaff": "Aus Team entfernen",
-    "makeStaff": "Zum Team hinzufügen"
+    "makeStaff": "Zum Team hinzufügen",
+    "pageInfo": "Seite {page} · {total} gesamt",
+    "previous": "Zurück",
+    "next": "Weiter"
   },
   "feedAlerts": {
     "created": "Feed-Benachrichtigung erstellt!",

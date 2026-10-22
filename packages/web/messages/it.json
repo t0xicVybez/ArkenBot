@@ -2621,7 +2621,10 @@
     "roleStaff": "Staff",
     "roleUser": "Utente",
     "removeStaff": "Rimuovi dallo staff",
-    "makeStaff": "Rendi staff"
+    "makeStaff": "Rendi staff",
+    "pageInfo": "Pagina {page} · {total} totali",
+    "previous": "Precedente",
+    "next": "Successivo"
   },
   "feedAlerts": {
     "created": "Avviso feed creato!",

@@ -2621,7 +2621,10 @@
     "roleStaff": "Staff",
     "roleUser": "User",
     "removeStaff": "Remove Staff",
-    "makeStaff": "Make Staff"
+    "makeStaff": "Make Staff",
+    "pageInfo": "Page {page} · {total} total",
+    "previous": "Previous",
+    "next": "Next"
   },
   "feedAlerts": {
     "created": "Feed alert created!",

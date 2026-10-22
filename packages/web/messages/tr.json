@@ -2621,7 +2621,10 @@
     "roleStaff": "Yetkili",
     "roleUser": "Kullanıcı",
     "removeStaff": "Yetkiliyi Kaldır",
-    "makeStaff": "Yetkili Yap"
+    "makeStaff": "Yetkili Yap",
+    "pageInfo": "Sayfa {page} · toplam {total}",
+    "previous": "Önceki",
+    "next": "Sonraki"
   },
   "feedAlerts": {
     "created": "Kaynak uyarısı oluşturuldu!",

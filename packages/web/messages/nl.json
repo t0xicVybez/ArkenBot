@@ -2621,7 +2621,10 @@
     "roleStaff": "Staf",
     "roleUser": "Gebruiker",
     "removeStaff": "Staf Verwijderen",
-    "makeStaff": "Staf Maken"
+    "makeStaff": "Staf Maken",
+    "pageInfo": "Pagina {page} · {total} totaal",
+    "previous": "Vorige",
+    "next": "Volgende"
   },
   "feedAlerts": {
     "created": "Feedmelding aangemaakt!",

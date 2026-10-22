@@ -2621,7 +2621,10 @@
     "roleStaff": "Staf",
     "roleUser": "Pengguna",
     "removeStaff": "Hapus Staf",
-    "makeStaff": "Jadikan Staf"
+    "makeStaff": "Jadikan Staf",
+    "pageInfo": "Halaman {page} · total {total}",
+    "previous": "Sebelumnya",
+    "next": "Berikutnya"
   },
   "feedAlerts": {
     "created": "Peringatan umpan dibuat!",

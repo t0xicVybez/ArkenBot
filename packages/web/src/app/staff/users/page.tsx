@@ -13,11 +13,12 @@ import { useTranslations } from 'next-intl';
 export default function StaffUsersPage() {
   const t = useTranslations('staffUsers');
   const [search, setSearch] = useState('');
+  const [page, setPage] = useState(1);
   const queryClient = useQueryClient();
 
   const { data: usersRes, isLoading } = useQuery({
-    queryKey: ['admin-users', search],
-    queryFn: () => adminApi.getUsers({ search: search || undefined }),
+    queryKey: ['admin-users', search, page],
+    queryFn: () => adminApi.getUsers({ page, search: search || undefined }),
   });
 
   const updateMutation = useMutation({
@@ -30,15 +31,22 @@ export default function StaffUsersPage() {
     onError: () => toast.error(t('updateError')),
   });
 
-  const users = (usersRes?.data?.data ?? []) as Array<{
-    id: string;
-    username: string;
-    discriminator: string;
-    avatar?: string;
-    isStaff: boolean;
-    isBotOwner: boolean;
-    createdAt: string;
-  }>;
+  const usersData = usersRes?.data?.data as {
+    items?: Array<{
+      id: string;
+      username: string;
+      discriminator: string;
+      avatar?: string;
+      isStaff: boolean;
+      isBotOwner: boolean;
+      createdAt: string;
+    }>;
+    total?: number;
+    hasMore?: boolean;
+  } | undefined;
+  const users = usersData?.items ?? [];
+  const total = usersData?.total ?? 0;
+  const hasMore = usersData?.hasMore ?? false;
 
   return (
     <div className="p-3 sm:p-6">
@@ -57,7 +65,7 @@ export default function StaffUsersPage() {
             type="text"
             placeholder={t('searchPlaceholder')}
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => { setSearch(e.target.value); setPage(1); }}
             className="input pl-9"
           />
         </div>
@@ -130,6 +138,16 @@ export default function StaffUsersPage() {
           </tbody>
         </table>
         </div>
+
+        {total > 25 && (
+          <div className="px-4 py-3 border-t border-(--border-subtle) flex items-center justify-between">
+            <p className="text-xs text-gray-400">{t('pageInfo', { page, total })}</p>
+            <div className="flex gap-2">
+              <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page <= 1} className="btn-secondary text-xs py-1 px-3">{t('previous')}</button>
+              <button onClick={() => setPage((p) => p + 1)} disabled={!hasMore} className="btn-secondary text-xs py-1 px-3">{t('next')}</button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

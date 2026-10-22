@@ -2621,7 +2621,10 @@
     "roleStaff": "スタッフ",
     "roleUser": "ユーザー",
     "removeStaff": "スタッフから外す",
-    "makeStaff": "スタッフにする"
+    "makeStaff": "スタッフにする",
+    "pageInfo": "ページ {page} · 合計 {total}",
+    "previous": "前へ",
+    "next": "次へ"
   },
   "feedAlerts": {
     "created": "フィードアラートを作成しました！",

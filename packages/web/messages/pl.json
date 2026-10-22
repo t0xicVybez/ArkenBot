@@ -2621,7 +2621,10 @@
     "roleStaff": "Personel",
     "roleUser": "Użytkownik",
     "removeStaff": "Usuń z personelu",
-    "makeStaff": "Uczyń personelem"
+    "makeStaff": "Uczyń personelem",
+    "pageInfo": "Strona {page} · łącznie {total}",
+    "previous": "Poprzednia",
+    "next": "Następna"
   },
   "feedAlerts": {
     "created": "Alert kanału utworzony!",
