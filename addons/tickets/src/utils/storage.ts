@@ -4,7 +4,7 @@
 import type { AddonStorage } from '@arkenbot/addon-sdk';
 import type { Ticket, TicketPanel, TicketMessage, GuildTicketConfig, CannedResponse } from '../types.js';
 import {
-  repoSaveTicket, repoAppendMessage, repoDeleteMessages,
+  repoSaveTicket, repoAppendMessage,
   repoGetTickets, repoGetByChannel, repoGetById, repoGetUserOpen, repoGetMessages,
 } from './ticketsRepo.js';
 import { publishTicketUpdate } from './liveSync.js';
@@ -108,12 +108,19 @@ export async function getConfig(
   );
 }
 
-export async function saveConfig(
+// Applies `mutate` to the freshest stored config under the addon's per-key lock,
+// so a concurrent change (dashboard edit, another ticket opening) can't be
+// overwritten by a copy that was read earlier.
+export async function updateConfig(
   storage: AddonStorage,
   guildId: string,
-  config: GuildTicketConfig,
-): Promise<void> {
-  await storage.set(KEY_CONFIG, config, guildId);
+  mutate: (config: GuildTicketConfig) => void,
+): Promise<GuildTicketConfig> {
+  return storage.mutate<GuildTicketConfig>(KEY_CONFIG, (cur) => {
+    const config = cur ?? { blacklistedUsers: [] };
+    mutate(config);
+    return config;
+  }, guildId);
 }
 
 export async function getCannedResponses(storage: AddonStorage, guildId: string): Promise<CannedResponse[]> {
@@ -137,8 +144,4 @@ export async function appendMessage(
   msg: TicketMessage,
 ): Promise<void> {
   await repoAppendMessage(channelId, msg);
-}
-
-export async function deleteMessages(_storage: AddonStorage, channelId: string): Promise<void> {
-  await repoDeleteMessages(channelId);
 }

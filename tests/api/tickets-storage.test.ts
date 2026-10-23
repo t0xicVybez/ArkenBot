@@ -5,7 +5,7 @@ import {
 import { setTicketDb, type TicketDb } from '../../addons/tickets/src/utils/db.js';
 import {
   getTickets, saveTicket, getTicketByChannel, getTicketById, getUserOpenTickets,
-  nextTicketNumber, savePanel, getPanel, deletePanel, getConfig, saveConfig,
+  nextTicketNumber, savePanel, getPanel, deletePanel, getConfig, updateConfig,
   getCannedResponses, saveCannedResponses, appendMessage, getMessages,
 } from '../../addons/tickets/src/utils/storage.js';
 import type { AddonStorage } from '../../packages/addon-sdk/src/types.js';
@@ -101,7 +101,7 @@ describe.skipIf(!TEST_DB_URL)('tickets storage (integration, arkenbot_test)', ()
 
   it('config defaults then persists', async () => {
     expect((await getConfig(storage, GUILD)).blacklistedUsers).toEqual([]);
-    await saveConfig(storage, GUILD, { blacklistedUsers: ['bad'], autoTriage: true });
+    await updateConfig(storage, GUILD, (c) => { c.blacklistedUsers = ['bad']; c.autoTriage = true; });
     const cfg = await getConfig(storage, GUILD);
     expect(cfg.blacklistedUsers).toEqual(['bad']);
     expect(cfg.autoTriage).toBe(true);

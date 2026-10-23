@@ -5,6 +5,10 @@ import { requireGuildAdmin } from '../middleware/auth.js';
 import { prisma } from '../database.js';
 import { pub, redis } from '../redis.js';
 import { buildTicketTranscriptHtml, buildTicketTranscriptText, buildTicketTranscriptJson, isSnowflake } from '@arkenbot/shared';
+import type { Prisma } from '@prisma/client';
+import { writeTicketIfUnchanged } from '../utils/ticketWrites.js';
+
+const CONFLICT_ERROR = 'This ticket was changed by someone else. Refresh and try again.';
 
 const RELEASE_LOCK = 'if redis.call("get", KEYS[1]) == ARGV[1] then return redis.call("del", KEYS[1]) else return 0 end';
 
@@ -112,17 +116,29 @@ async function readMessages(channelId: string): Promise<{ authorId: string; auth
   }));
 }
 
-async function writeTickets(guildId: string, tickets: Ticket[]): Promise<void> {
-  const ids = tickets.map((t) => t.id);
-  if (ids.length) await prisma.addonTicket.deleteMany({ where: { guildId, id: { notIn: ids } } });
-  else await prisma.addonTicket.deleteMany({ where: { guildId } });
-  for (const t of tickets) {
-    const row = ticketToRow(t);
-    const { id, createdAt, guildId: _g, number, ...mutable } = row;
-    void createdAt; void _g; void number;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    await prisma.addonTicket.upsert({ where: { id: id as string }, create: row as any, update: mutable as any });
-  }
+interface StoredTicket { ticket: Ticket; updatedAt: Date; }
+
+async function findStoredTicket(guildId: string, ticketId: string): Promise<StoredTicket | null> {
+  const row = await prisma.addonTicket.findFirst({ where: { guildId, id: ticketId } });
+  return row ? { ticket: rowToTicket(row), updatedAt: row.updatedAt } : null;
+}
+
+async function readStoredTickets(guildId: string): Promise<StoredTicket[]> {
+  const rows = await prisma.addonTicket.findMany({ where: { guildId } });
+  return rows.map((row) => ({ ticket: rowToTicket(row), updatedAt: row.updatedAt }));
+}
+
+// Writes only this ticket's row, and only if it hasn't changed since it was read.
+// Returns false on a conflict; callers turn that into a 409 for the dashboard user.
+async function saveStoredTicket(stored: StoredTicket, updated: Ticket): Promise<boolean> {
+  const { id, createdAt, guildId, number, ...mutable } = ticketToRow(updated);
+  void createdAt; void guildId; void number;
+  return writeTicketIfUnchanged(
+    (where, data) => prisma.addonTicket.updateMany({ where, data: data as Prisma.AddonTicketUncheckedUpdateManyInput }).then((r) => r.count),
+    id as string,
+    stored.updatedAt,
+    mutable,
+  );
 }
 
 async function withAddonLock<T>(guildId: string, key: string, fn: () => Promise<T>): Promise<T> {
@@ -281,6 +297,7 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
 
     if (!body.name?.trim()) return reply.code(400).send({ success: false, error: 'Panel name is required' });
     if (!body.description?.trim()) return reply.code(400).send({ success: false, error: 'Panel description is required' });
+    if (!body.staffRoles?.length) return reply.code(400).send({ success: false, error: 'At least one staff role is required' });
 
     return withAddonLock(guildId, 'panels', async () => {
     const panels = (await readData<TicketPanel[]>(guildId, 'panels')) ?? [];
@@ -342,6 +359,7 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
       id: panels[idx].id,
       createdAt: panels[idx].createdAt,
     };
+    if (!updated.staffRoles?.length) return reply.code(400).send({ success: false, error: 'At least one staff role is required' });
     panels[idx] = updated;
     await writeData(guildId, 'panels', panels);
 
@@ -462,64 +480,61 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
   server.delete('/addons/tickets/:guildId/tickets/:ticketId', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, ticketId } = request.params as { guildId: string; ticketId: string };
 
-    const tickets = await readTickets(guildId);
-    const filtered = tickets.filter((t) => t.id !== ticketId);
-    if (filtered.length === tickets.length) return reply.code(404).send({ success: false, error: 'Ticket not found' });
+    const row = await prisma.addonTicket.findFirst({ where: { guildId, id: ticketId }, select: { channelId: true } });
+    if (!row) return reply.code(404).send({ success: false, error: 'Ticket not found' });
 
-    await writeTickets(guildId, filtered);
+    await prisma.$transaction([
+      prisma.addonTicketMessage.deleteMany({ where: { channelId: row.channelId } }),
+      prisma.addonTicket.deleteMany({ where: { guildId, id: ticketId } }),
+    ]);
     return reply.send({ success: true });
   });
 
   server.post('/addons/tickets/:guildId/tickets/:ticketId/reopen', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, ticketId } = request.params as { guildId: string; ticketId: string };
 
-    const tickets = await readTickets(guildId);
-    const idx = tickets.findIndex((t) => t.id === ticketId);
-    if (idx < 0) return reply.code(404).send({ success: false, error: 'Ticket not found' });
+    const stored = await findStoredTicket(guildId, ticketId);
+    if (!stored) return reply.code(404).send({ success: false, error: 'Ticket not found' });
+    if (stored.ticket.status !== 'closed') return reply.code(400).send({ success: false, error: 'Ticket is not closed' });
 
-    const ticket = tickets[idx];
-    if (ticket.status !== 'closed') return reply.code(400).send({ success: false, error: 'Ticket is not closed' });
-
-    tickets[idx] = {
-      ...ticket,
+    const updated: Ticket = {
+      ...stored.ticket,
       status: 'open',
       closedAt: undefined,
       closedBy: undefined,
       closedByTag: undefined,
       lastActivity: new Date().toISOString(),
     };
-    await writeTickets(guildId, tickets);
-    return reply.send({ success: true, data: tickets[idx] });
+    if (!(await saveStoredTicket(stored, updated))) return reply.code(409).send({ success: false, error: CONFLICT_ERROR });
+    return reply.send({ success: true, data: updated });
   });
 
   server.post('/addons/tickets/:guildId/tickets/bulk-close', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const { idleHours = 72 } = (request.body as { idleHours?: number }) ?? {};
 
-    const tickets = await readTickets(guildId);
     const thresholdMs = idleHours * 60 * 60 * 1000;
     const now = Date.now();
     let closedCount = 0;
+    let skipped = 0;
 
-    const updated = tickets.map((t) => {
-      if (t.status === 'closed') return t;
-      const idleMs = now - new Date(t.lastActivity).getTime();
-      if (idleMs >= thresholdMs) {
-        closedCount++;
-        return {
-          ...t,
-          status: 'closed' as const,
-          closedAt: new Date().toISOString(),
-          closedBy: 'portal',
-          closedByTag: 'Staff Portal',
-          lastActivity: new Date().toISOString(),
-        };
-      }
-      return t;
-    });
+    for (const stored of await readStoredTickets(guildId)) {
+      const t = stored.ticket;
+      if (t.status === 'closed') continue;
+      if (now - new Date(t.lastActivity).getTime() < thresholdMs) continue;
+      const updated: Ticket = {
+        ...t,
+        status: 'closed',
+        closedAt: new Date().toISOString(),
+        closedBy: 'portal',
+        closedByTag: 'Staff Portal',
+        lastActivity: new Date().toISOString(),
+      };
+      if (await saveStoredTicket(stored, updated)) closedCount++;
+      else skipped++;
+    }
 
-    await writeTickets(guildId, updated);
-    return reply.send({ success: true, data: { closedCount } });
+    return reply.send({ success: true, data: { closedCount, skipped } });
   });
 
   const BULK_PRIORITIES = new Set(['low', 'medium', 'high', 'urgent']);
@@ -536,82 +551,73 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     if (body.action === 'tag' && !body.tag?.trim()) return reply.code(400).send({ success: false, error: 'A tag is required' });
     if (body.action === 'priority' && !BULK_PRIORITIES.has(body.priority ?? '')) return reply.code(400).send({ success: false, error: 'Invalid priority' });
 
-    const tickets = await readTickets(guildId);
-    let affected = 0;
     const tag = body.tag?.trim().toLowerCase().slice(0, 32);
 
-    const updated = tickets.map((t) => {
-      if (!ids.has(t.id)) return t;
-
+    const changeFor = (t: Ticket): Ticket | null => {
       if (body.action === 'close') {
-        if (t.status === 'closed') return t;
-        affected++;
+        if (t.status === 'closed') return null;
         return {
           ...t,
-          status: 'closed' as const,
+          status: 'closed',
           closedAt: new Date().toISOString(),
           closedBy: 'portal',
           closedByTag: 'Staff Portal',
           lastActivity: new Date().toISOString(),
         };
       }
-
       if (body.action === 'tag' && tag) {
-        if (t.tags.includes(tag)) return t;
-        affected++;
+        if (t.tags.includes(tag)) return null;
         return { ...t, tags: [...t.tags, tag] };
       }
-
       if (body.action === 'priority' && body.priority) {
-        if (t.priority === body.priority) return t;
-        affected++;
+        if (t.priority === body.priority) return null;
         return { ...t, priority: body.priority as Ticket['priority'] };
       }
+      return null;
+    };
 
-      return t;
-    });
-
-    await writeTickets(guildId, updated);
-    return reply.send({ success: true, data: { affected } });
+    let affected = 0;
+    let skipped = 0;
+    for (const stored of (await readStoredTickets(guildId)).filter((s) => ids.has(s.ticket.id))) {
+      const updated = changeFor(stored.ticket);
+      if (!updated) continue;
+      if (await saveStoredTicket(stored, updated)) affected++;
+      else skipped++;
+    }
+    return reply.send({ success: true, data: { affected, skipped } });
   });
-
-  async function findTicket(guildId: string, ticketId: string) {
-    const tickets = await readTickets(guildId);
-    const idx = tickets.findIndex((t) => t.id === ticketId);
-    return { tickets, idx, ticket: tickets[idx] as Ticket | undefined };
-  }
 
   server.post('/addons/tickets/:guildId/tickets/:ticketId/claim', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, ticketId } = request.params as { guildId: string; ticketId: string };
     const { userId = 'portal', userTag = 'Staff Portal' } = (request.body as { userId?: string; userTag?: string }) ?? {};
-    const { tickets, idx, ticket } = await findTicket(guildId, ticketId);
-    if (!ticket) return reply.code(404).send({ success: false, error: 'Ticket not found' });
-    if (ticket.status === 'closed') return reply.code(400).send({ success: false, error: 'Ticket is closed' });
-    tickets[idx] = { ...ticket, claimedBy: userId, claimedByTag: userTag, status: 'claimed', lastActivity: new Date().toISOString() };
-    await writeTickets(guildId, tickets);
-    return reply.send({ success: true, data: tickets[idx] });
+    const stored = await findStoredTicket(guildId, ticketId);
+    if (!stored) return reply.code(404).send({ success: false, error: 'Ticket not found' });
+    if (stored.ticket.status === 'closed') return reply.code(400).send({ success: false, error: 'Ticket is closed' });
+    const updated: Ticket = { ...stored.ticket, claimedBy: userId, claimedByTag: userTag, status: 'claimed', lastActivity: new Date().toISOString() };
+    if (!(await saveStoredTicket(stored, updated))) return reply.code(409).send({ success: false, error: CONFLICT_ERROR });
+    return reply.send({ success: true, data: updated });
   });
 
   server.post('/addons/tickets/:guildId/tickets/:ticketId/unclaim', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, ticketId } = request.params as { guildId: string; ticketId: string };
-    const { tickets, idx, ticket } = await findTicket(guildId, ticketId);
-    if (!ticket) return reply.code(404).send({ success: false, error: 'Ticket not found' });
-    if (ticket.status === 'closed') return reply.code(400).send({ success: false, error: 'Ticket is closed' });
-    tickets[idx] = { ...ticket, claimedBy: undefined, claimedByTag: undefined, status: 'open', lastActivity: new Date().toISOString() };
-    await writeTickets(guildId, tickets);
-    return reply.send({ success: true, data: tickets[idx] });
+    const stored = await findStoredTicket(guildId, ticketId);
+    if (!stored) return reply.code(404).send({ success: false, error: 'Ticket not found' });
+    if (stored.ticket.status === 'closed') return reply.code(400).send({ success: false, error: 'Ticket is closed' });
+    const updated: Ticket = { ...stored.ticket, claimedBy: undefined, claimedByTag: undefined, status: 'open', lastActivity: new Date().toISOString() };
+    if (!(await saveStoredTicket(stored, updated))) return reply.code(409).send({ success: false, error: CONFLICT_ERROR });
+    return reply.send({ success: true, data: updated });
   });
 
   server.post('/addons/tickets/:guildId/tickets/:ticketId/transfer', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, ticketId } = request.params as { guildId: string; ticketId: string };
     const { userId, userTag } = (request.body as { userId: string; userTag: string });
     if (!userId || !userTag) return reply.code(400).send({ success: false, error: 'userId and userTag are required' });
-    const { tickets, idx, ticket } = await findTicket(guildId, ticketId);
-    if (!ticket) return reply.code(404).send({ success: false, error: 'Ticket not found' });
-    if (ticket.status === 'closed') return reply.code(400).send({ success: false, error: 'Ticket is closed' });
-    tickets[idx] = { ...ticket, transferredTo: userId, transferredToTag: userTag, claimedBy: userId, claimedByTag: userTag, status: 'claimed', lastActivity: new Date().toISOString() };
-    await writeTickets(guildId, tickets);
-    return reply.send({ success: true, data: tickets[idx] });
+    const stored = await findStoredTicket(guildId, ticketId);
+    if (!stored) return reply.code(404).send({ success: false, error: 'Ticket not found' });
+    if (stored.ticket.status === 'closed') return reply.code(400).send({ success: false, error: 'Ticket is closed' });
+    const updated: Ticket = { ...stored.ticket, transferredTo: userId, transferredToTag: userTag, claimedBy: userId, claimedByTag: userTag, status: 'claimed', lastActivity: new Date().toISOString() };
+    if (!(await saveStoredTicket(stored, updated))) return reply.code(409).send({ success: false, error: CONFLICT_ERROR });
+    return reply.send({ success: true, data: updated });
   });
 
   // Merges a duplicate ticket's history into this one (the survivor), then
@@ -626,40 +632,46 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
       return reply.code(400).send({ success: false, error: 'sourceTicketNumber is required' });
     }
 
-    const { tickets, idx: targetIdx, ticket: target } = await findTicket(guildId, ticketId);
-    if (!target) return reply.code(404).send({ success: false, error: 'Target ticket not found' });
+    const targetStored = await findStoredTicket(guildId, ticketId);
+    if (!targetStored) return reply.code(404).send({ success: false, error: 'Target ticket not found' });
+    const target = targetStored.ticket;
     if (target.status === 'closed') return reply.code(400).send({ success: false, error: 'Target ticket is closed' });
 
-    const sourceIdx = tickets.findIndex((t) => t.number === sourceTicketNumber);
-    const source = tickets[sourceIdx];
-    if (!source) return reply.code(404).send({ success: false, error: `No ticket #${sourceTicketNumber} in this server` });
+    const sourceRow = await prisma.addonTicket.findFirst({ where: { guildId, number: sourceTicketNumber } });
+    if (!sourceRow) return reply.code(404).send({ success: false, error: `No ticket #${sourceTicketNumber} in this server` });
+    const source = rowToTicket(sourceRow);
     if (source.id === target.id) return reply.code(400).send({ success: false, error: 'Cannot merge a ticket into itself' });
     if (source.status === 'closed') return reply.code(400).send({ success: false, error: `Ticket #${sourceTicketNumber} is already closed` });
 
+    const updated: Ticket = {
+      ...target,
+      tags: [...new Set([...target.tags, ...source.tags])],
+      notes: [...target.notes, ...source.notes],
+      lastActivity: new Date().toISOString(),
+    };
+    if (!(await saveStoredTicket(targetStored, updated))) return reply.code(409).send({ success: false, error: CONFLICT_ERROR });
+
     // Move the source's message history into the target's channel, with a
     // marker so it's clear in the transcript where the merge happened.
-    const moved = await prisma.addonTicketMessage.updateMany({ where: { channelId: source.channelId }, data: { channelId: target.channelId } });
-    await prisma.addonTicketMessage.create({
-      data: {
-        channelId: target.channelId,
-        authorId: 'system',
-        authorTag: 'System',
-        content: `— Ticket #${source.number} was merged into this ticket —`,
-        attachments: [],
-        timestamp: new Date(),
-      },
-    });
-
-    const mergedTags = [...new Set([...target.tags, ...source.tags])];
-    const mergedNotes = [...target.notes, ...source.notes];
-    tickets[targetIdx] = { ...target, tags: mergedTags, notes: mergedNotes, lastActivity: new Date().toISOString() };
-    await writeTickets(guildId, tickets);
+    const [moved] = await prisma.$transaction([
+      prisma.addonTicketMessage.updateMany({ where: { channelId: source.channelId }, data: { channelId: target.channelId } }),
+      prisma.addonTicketMessage.create({
+        data: {
+          channelId: target.channelId,
+          authorId: 'system',
+          authorTag: 'System',
+          content: `— Ticket #${source.number} was merged into this ticket —`,
+          attachments: [],
+          timestamp: new Date(),
+        },
+      }),
+    ]);
 
     pub.publish('ticket:merge', JSON.stringify({
       guildId, sourceChannelId: source.channelId, targetChannelId: target.channelId, targetNumber: target.number,
     })).catch(() => null);
 
-    return reply.send({ success: true, data: { mergedMessageCount: moved.count, targetTicket: tickets[targetIdx] } });
+    return reply.send({ success: true, data: { mergedMessageCount: moved.count, targetTicket: updated } });
   });
 
   server.patch('/addons/tickets/:guildId/tickets/:ticketId/priority', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
@@ -667,46 +679,45 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     const { priority } = (request.body as { priority: string });
     const valid = ['low', 'medium', 'high', 'urgent'];
     if (!valid.includes(priority)) return reply.code(400).send({ success: false, error: 'Invalid priority' });
-    const { tickets, idx, ticket } = await findTicket(guildId, ticketId);
-    if (!ticket) return reply.code(404).send({ success: false, error: 'Ticket not found' });
-    tickets[idx] = { ...ticket, priority, lastActivity: new Date().toISOString() };
-    await writeTickets(guildId, tickets);
-    pub.publish('ticket:priority:updated', JSON.stringify({ guildId, channelId: ticket.channelId, ticketId, priority })).catch(() => null);
-    return reply.send({ success: true, data: tickets[idx] });
+    const stored = await findStoredTicket(guildId, ticketId);
+    if (!stored) return reply.code(404).send({ success: false, error: 'Ticket not found' });
+    const updated: Ticket = { ...stored.ticket, priority: priority as Ticket['priority'], lastActivity: new Date().toISOString() };
+    if (!(await saveStoredTicket(stored, updated))) return reply.code(409).send({ success: false, error: CONFLICT_ERROR });
+    pub.publish('ticket:priority:updated', JSON.stringify({ guildId, channelId: stored.ticket.channelId, ticketId, priority })).catch(() => null);
+    return reply.send({ success: true, data: updated });
   });
 
   server.post('/addons/tickets/:guildId/tickets/:ticketId/tags', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, ticketId } = request.params as { guildId: string; ticketId: string };
     const { tag } = (request.body as { tag: string });
     if (!tag?.trim()) return reply.code(400).send({ success: false, error: 'Tag is required' });
-    const { tickets, idx, ticket } = await findTicket(guildId, ticketId);
-    if (!ticket) return reply.code(404).send({ success: false, error: 'Ticket not found' });
+    const stored = await findStoredTicket(guildId, ticketId);
+    if (!stored) return reply.code(404).send({ success: false, error: 'Ticket not found' });
     const trimmed = tag.trim().toLowerCase();
-    if (!ticket.tags.includes(trimmed)) {
-      tickets[idx] = { ...ticket, tags: [...ticket.tags, trimmed], lastActivity: new Date().toISOString() };
-      await writeTickets(guildId, tickets);
-    }
-    return reply.send({ success: true, data: tickets[idx] });
+    if (stored.ticket.tags.includes(trimmed)) return reply.send({ success: true, data: stored.ticket });
+    const updated: Ticket = { ...stored.ticket, tags: [...stored.ticket.tags, trimmed], lastActivity: new Date().toISOString() };
+    if (!(await saveStoredTicket(stored, updated))) return reply.code(409).send({ success: false, error: CONFLICT_ERROR });
+    return reply.send({ success: true, data: updated });
   });
 
   server.delete('/addons/tickets/:guildId/tickets/:ticketId/tags/:tag', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, ticketId, tag } = request.params as { guildId: string; ticketId: string; tag: string };
-    const { tickets, idx, ticket } = await findTicket(guildId, ticketId);
-    if (!ticket) return reply.code(404).send({ success: false, error: 'Ticket not found' });
-    tickets[idx] = { ...ticket, tags: ticket.tags.filter((t) => t !== tag), lastActivity: new Date().toISOString() };
-    await writeTickets(guildId, tickets);
-    return reply.send({ success: true, data: tickets[idx] });
+    const stored = await findStoredTicket(guildId, ticketId);
+    if (!stored) return reply.code(404).send({ success: false, error: 'Ticket not found' });
+    const updated: Ticket = { ...stored.ticket, tags: stored.ticket.tags.filter((t) => t !== tag), lastActivity: new Date().toISOString() };
+    if (!(await saveStoredTicket(stored, updated))) return reply.code(409).send({ success: false, error: CONFLICT_ERROR });
+    return reply.send({ success: true, data: updated });
   });
 
   server.post('/addons/tickets/:guildId/tickets/:ticketId/reply', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId, ticketId } = request.params as { guildId: string; ticketId: string };
     const { content, authorTag = 'Staff Portal' } = (request.body as { content: string; authorTag?: string });
     if (!content?.trim()) return reply.code(400).send({ success: false, error: 'Message content is required' });
-    const { ticket } = await findTicket(guildId, ticketId);
-    if (!ticket) return reply.code(404).send({ success: false, error: 'Ticket not found' });
-    if (ticket.status === 'closed') return reply.code(400).send({ success: false, error: 'Ticket is closed' });
+    const stored = await findStoredTicket(guildId, ticketId);
+    if (!stored) return reply.code(404).send({ success: false, error: 'Ticket not found' });
+    if (stored.ticket.status === 'closed') return reply.code(400).send({ success: false, error: 'Ticket is closed' });
 
-    pub.publish('ticket:reply', JSON.stringify({ guildId, channelId: ticket.channelId, content: content.trim(), authorTag })).catch(() => null);
+    pub.publish('ticket:reply', JSON.stringify({ guildId, channelId: stored.ticket.channelId, content: content.trim(), authorTag })).catch(() => null);
     return reply.send({ success: true });
   });
 
@@ -714,14 +725,14 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
     const { guildId, ticketId } = request.params as { guildId: string; ticketId: string };
     const { content, authorTag = 'Staff Portal' } = (request.body as { content: string; authorTag?: string });
     if (!content?.trim()) return reply.code(400).send({ success: false, error: 'Note content is required' });
-    const { tickets, idx, ticket } = await findTicket(guildId, ticketId);
-    if (!ticket) return reply.code(404).send({ success: false, error: 'Ticket not found' });
+    const stored = await findStoredTicket(guildId, ticketId);
+    if (!stored) return reply.code(404).send({ success: false, error: 'Ticket not found' });
     const note: TicketNote = { id: randomUUID(), authorId: 'portal', authorTag, content: content.trim(), createdAt: new Date().toISOString() };
-    tickets[idx] = { ...ticket, notes: [...ticket.notes, note], lastActivity: new Date().toISOString() };
-    await writeTickets(guildId, tickets);
+    const updated: Ticket = { ...stored.ticket, notes: [...stored.ticket.notes, note], lastActivity: new Date().toISOString() };
+    if (!(await saveStoredTicket(stored, updated))) return reply.code(409).send({ success: false, error: CONFLICT_ERROR });
 
-    pub.publish('ticket:note:added', JSON.stringify({ guildId, channelId: ticket.channelId, note })).catch(() => null);
-    return reply.send({ success: true, data: tickets[idx] });
+    pub.publish('ticket:note:added', JSON.stringify({ guildId, channelId: stored.ticket.channelId, note })).catch(() => null);
+    return reply.send({ success: true, data: updated });
   });
 
   server.get('/addons/tickets/:guildId/stats', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
@@ -903,16 +914,20 @@ export async function ticketAddonRoutes(server: FastifyInstance): Promise<void> 
   server.patch('/addons/tickets/:guildId/config', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
     const { guildId } = request.params as { guildId: string };
     const body = request.body as Partial<GuildTicketConfig>;
-    const config = (await readData<GuildTicketConfig>(guildId, 'config')) ?? { blacklistedUsers: [] };
-    const updated = { ...config, ...body };
-    // A webhook URL is only useful to a receiver that can verify the
-    // payload actually came from us — generate a signing secret the first
-    // time a URL is set, rather than requiring a separate step.
-    if (updated.webhookUrl && !updated.webhookSecret) {
-      updated.webhookSecret = randomBytes(24).toString('hex');
-    }
-    await writeData(guildId, 'config', updated);
-    return reply.send({ success: true, data: updated });
+    // Same per-key lock the bot takes in updateConfig(), so a dashboard save
+    // can't overwrite a change (e.g. the round-robin index) made in between.
+    return withAddonLock(guildId, 'config', async () => {
+      const config = (await readData<GuildTicketConfig>(guildId, 'config')) ?? { blacklistedUsers: [] };
+      const updated = { ...config, ...body };
+      // A webhook URL is only useful to a receiver that can verify the
+      // payload actually came from us — generate a signing secret the first
+      // time a URL is set, rather than requiring a separate step.
+      if (updated.webhookUrl && !updated.webhookSecret) {
+        updated.webhookSecret = randomBytes(24).toString('hex');
+      }
+      await writeData(guildId, 'config', updated);
+      return reply.send({ success: true, data: updated });
+    });
   });
 
   server.get('/addons/tickets/:guildId/canned-responses', { preHandler: [requireGuildAdmin] }, async (request, reply) => {
