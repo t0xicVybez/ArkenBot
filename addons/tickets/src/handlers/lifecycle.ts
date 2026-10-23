@@ -46,6 +46,13 @@ export async function handleCloseButton(
     await interaction.reply({ content: t('ticketNotFound'), flags: MessageFlags.Ephemeral });
     return;
   }
+  const panel = await getPanel(ctx.storage, interaction.guildId, ticket.panelId);
+  const member = interaction.guild?.members.cache.get(interaction.user.id);
+  const isOwner = interaction.user.id === ticket.userId;
+  if (!isOwner && !isTicketStaff(panel, ticket, member)) {
+    await interaction.reply({ content: t('onlyStaffClose'), flags: MessageFlags.Ephemeral });
+    return;
+  }
   await interaction.deferReply();
   await closeTicket(ctx, interaction, ticket, undefined);
 }

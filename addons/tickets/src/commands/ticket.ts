@@ -235,6 +235,10 @@ const command: AddonCommandDefinition = {
 
     switch (sub) {
       case 'close': {
+        if (!isStaff && interaction.user.id !== ticket.userId) {
+          await interaction.reply({ content: t('onlyStaffClose'), flags: MessageFlags.Ephemeral });
+          break;
+        }
         const reason = interaction.options.getString('reason') ?? undefined;
         const { closeTicket } = await import('../events/interaction.js');
         await closeTicket(ctx, interaction, ticket, reason);

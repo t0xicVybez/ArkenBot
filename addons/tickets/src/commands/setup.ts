@@ -19,7 +19,7 @@ import {
   savePanel,
   deletePanel,
   getConfig,
-  saveConfig,
+  updateConfig,
 } from '../utils/storage.js';
 import { buildPanelEmbed, buildPanelComponents } from '../utils/embeds.js';
 
@@ -338,6 +338,11 @@ async function handlePanelCreate(
     return;
   }
 
+  if (!interaction.options.getRole('staff_role')) {
+    await interaction.reply({ content: t('staffRoleRequired'), flags: MessageFlags.Ephemeral });
+    return;
+  }
+
   const category = interaction.options.getChannel('category');
   const logChannel = interaction.options.getChannel('log_channel');
   const staffRole = interaction.options.getRole('staff_role');
@@ -468,9 +473,9 @@ async function handleConfigTranscript(
   const guildId = interaction.guildId!;
   const channel = interaction.options.getChannel('channel', true);
 
-  const config = await getConfig(ctx.storage, guildId);
-  config.transcriptChannelId = channel.id;
-  await saveConfig(ctx.storage, guildId, config);
+  await updateConfig(ctx.storage, guildId, (config) => {
+    config.transcriptChannelId = channel.id;
+  });
 
   await interaction.reply({
     content: t('transcriptChannelSet', { channel: String(channel) }),
@@ -488,20 +493,18 @@ async function handleConfigBlacklist(
   const action = interaction.options.getString('action', true) as 'add' | 'remove';
   const user = interaction.options.getUser('user', true);
 
-  const config = await getConfig(ctx.storage, guildId);
-
   if (action === 'add') {
-    if (!config.blacklistedUsers.includes(user.id)) {
-      config.blacklistedUsers.push(user.id);
-    }
-    await saveConfig(ctx.storage, guildId, config);
+    await updateConfig(ctx.storage, guildId, (config) => {
+      if (!config.blacklistedUsers.includes(user.id)) config.blacklistedUsers.push(user.id);
+    });
     await interaction.reply({
       content: t('blacklisted', { tag: user.tag }),
       flags: MessageFlags.Ephemeral,
     });
   } else {
-    config.blacklistedUsers = config.blacklistedUsers.filter((id) => id !== user.id);
-    await saveConfig(ctx.storage, guildId, config);
+    await updateConfig(ctx.storage, guildId, (config) => {
+      config.blacklistedUsers = config.blacklistedUsers.filter((id) => id !== user.id);
+    });
     await interaction.reply({
       content: t('unblacklisted', { tag: user.tag }),
       flags: MessageFlags.Ephemeral,
@@ -516,19 +519,17 @@ async function handleConfigSettings(
     const loc = await ctx.resolveLocale(interaction);
     const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
   const guildId = interaction.guildId!;
-  const config = await getConfig(ctx.storage, guildId);
-
   const notifyChannel = interaction.options.getChannel('staff_notify_channel');
   const notifyRole = interaction.options.getRole('staff_notify_role');
   const ratingWindow = interaction.options.getInteger('rating_window');
   const autoAssign = interaction.options.getBoolean('auto_assign');
 
-  if (notifyChannel !== null) config.staffNotifyChannelId = notifyChannel.id;
-  if (notifyRole !== null) config.staffNotifyRoleId = notifyRole.id;
-  if (ratingWindow !== null) config.ratingWindowMinutes = ratingWindow;
-  if (autoAssign !== null) config.autoAssign = autoAssign;
-
-  await saveConfig(ctx.storage, guildId, config);
+  await updateConfig(ctx.storage, guildId, (config) => {
+    if (notifyChannel !== null) config.staffNotifyChannelId = notifyChannel.id;
+    if (notifyRole !== null) config.staffNotifyRoleId = notifyRole.id;
+    if (ratingWindow !== null) config.ratingWindowMinutes = ratingWindow;
+    if (autoAssign !== null) config.autoAssign = autoAssign;
+  });
 
   const lines: string[] = ['✅ Settings updated:'];
   if (notifyChannel !== null) lines.push(t('cfgNotifyChannel', { channel: String(notifyChannel) }));
@@ -552,23 +553,26 @@ async function handleSlaAddLevel(
   const escalatePriority = interaction.options.getString('escalate_priority') as SlaLevel['escalatePriority'] | null;
   const escalateRole = interaction.options.getRole('escalate_role');
 
-  const config = await getConfig(ctx.storage, guildId);
-  if (!config.slaLevels) config.slaLevels = [];
-
-  if (config.slaLevels.some((l) => l.hours === hours)) {
+  let duplicate = false;
+  await updateConfig(ctx.storage, guildId, (config) => {
+    if (!config.slaLevels) config.slaLevels = [];
+    if (config.slaLevels.some((l) => l.hours === hours)) {
+      duplicate = true;
+      return;
+    }
+    const level: SlaLevel = { hours };
+    if (pingRole) level.pingRoleId = pingRole.id;
+    if (message) level.message = message;
+    if (escalatePriority) level.escalatePriority = escalatePriority;
+    if (escalateRole) level.escalateRoleId = escalateRole.id;
+    config.slaLevels.push(level);
+    config.slaLevels.sort((a, b) => a.hours - b.hours);
+  });
+  if (duplicate) {
     await interaction.reply({ content: t('slaExists', { hours }), flags: MessageFlags.Ephemeral });
     return;
   }
 
-  const level: SlaLevel = { hours };
-  if (pingRole) level.pingRoleId = pingRole.id;
-  if (message) level.message = message;
-  if (escalatePriority) level.escalatePriority = escalatePriority;
-  if (escalateRole) level.escalateRoleId = escalateRole.id;
-  config.slaLevels.push(level);
-  config.slaLevels.sort((a, b) => a.hours - b.hours);
-
-  await saveConfig(ctx.storage, guildId, config);
   await interaction.reply({
     content: `${t('slaAdded', { hours })}${pingRole ? t('slaPings', { role: String(pingRole) }) : ''}${escalateRole ? t('slaAlsoEscalates', { role: String(escalateRole) }) : ''}${escalatePriority ? t('slaBumpsPriority', { priority: t(`priority${escalatePriority.charAt(0).toUpperCase()}${escalatePriority.slice(1)}`) }) : ''}${message ? `\n> ${message}` : ''}`,
     flags: MessageFlags.Ephemeral,
@@ -608,13 +612,17 @@ async function handleSlaRemoveLevel(
   const guildId = interaction.guildId!;
   const hours = interaction.options.getInteger('hours', true);
 
-  const config = await getConfig(ctx.storage, guildId);
-  if (!config.slaLevels?.some((l) => l.hours === hours)) {
+  let found = true;
+  await updateConfig(ctx.storage, guildId, (config) => {
+    if (!config.slaLevels?.some((l) => l.hours === hours)) {
+      found = false;
+      return;
+    }
+    config.slaLevels = config.slaLevels.filter((l) => l.hours !== hours);
+  });
+  if (!found) {
     await interaction.reply({ content: t('slaNotFound', { hours }), flags: MessageFlags.Ephemeral });
     return;
   }
-
-  config.slaLevels = config.slaLevels.filter((l) => l.hours !== hours);
-  await saveConfig(ctx.storage, guildId, config);
   await interaction.reply({ content: t('slaRemoved', { hours }), flags: MessageFlags.Ephemeral });
 }

@@ -17,7 +17,7 @@ import {
 import { randomUUID } from 'crypto';
 import { isLLMAvailable } from '@arkenbot/shared';
 import type { AddonContext } from '@arkenbot/addon-sdk';
-import type { Ticket, TicketPriority, TicketPanel } from '../types.js';
+import type { Ticket, TicketPriority, TicketPanel, GuildTicketConfig } from '../types.js';
 import {
   getPanel,
   getConfig,
@@ -25,7 +25,7 @@ import {
   getTickets,
   nextTicketNumber,
   saveTicket,
-  saveConfig,
+  updateConfig,
 } from '../utils/storage.js';
 import { resolvePanelFields } from '../utils/fields.js';
 import { buildTicketEmbed, buildTicketControls } from '../utils/embeds.js';
@@ -33,7 +33,42 @@ import { createTicketChannel, resolveChannelName } from '../utils/channel.js';
 import { pickLeastLoadedAssignee } from '../utils/assign.js';
 import { isWithinBusinessHours } from '../utils/time.js';
 import { fireWebhook } from '../utils/webhook.js';
+import { withUserLock } from '../utils/userLock.js';
 import { runTriageModel, getUserTicketHistory, sendAssignmentBrief } from './triage.js';
+
+type OpenBlock =
+  | { kind: 'cooldown'; readyAt: number }
+  | { kind: 'limit'; count: number; existing: Ticket | undefined };
+
+// Open-limit and cooldown rules, shared by the early button check and the
+// locked creation path so the form-modal route can't skip them.
+async function findOpenBlock(
+  ctx: AddonContext,
+  guildId: string,
+  panel: TicketPanel,
+  config: GuildTicketConfig,
+  userId: string,
+): Promise<OpenBlock | null> {
+  if (config.openCooldownMinutes && config.openCooldownMinutes > 0) {
+    const last = (await getTickets(ctx.storage, guildId))
+      .filter((x) => x.userId === userId)
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0];
+    if (last) {
+      const cdMs = config.openCooldownMinutes * 60000;
+      const lastOpenedMs = new Date(last.createdAt).getTime();
+      if (Date.now() - lastOpenedMs < cdMs) return { kind: 'cooldown', readyAt: Math.floor((lastOpenedMs + cdMs) / 1000) };
+    }
+  }
+  const openHere = (await getUserOpenTickets(ctx.storage, guildId, userId)).filter((x) => x.panelId === panel.id);
+  if (openHere.length >= panel.maxTicketsPerUser) return { kind: 'limit', count: openHere.length, existing: openHere[0] };
+  return null;
+}
+
+function openBlockMessage(block: OpenBlock, t: (k: string, v?: Record<string, string | number>) => string): string {
+  return block.kind === 'cooldown'
+    ? t('openCooldown', { when: `<t:${block.readyAt}:R>` })
+    : t('tooManyOpen', { count: block.count, existing: block.existing ? `→ <#${block.existing.channelId}>` : '' });
+}
 
 export async function handleOpenTicket(
   ctx: AddonContext,
@@ -78,29 +113,9 @@ export async function handleOpenTicket(
     }
   }
 
-  if (config.openCooldownMinutes && config.openCooldownMinutes > 0) {
-    const mine = (await getTickets(ctx.storage, guildId))
-      .filter((x) => x.userId === interaction.user.id)
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-    const last = mine[0];
-    if (last) {
-      const cdMs = config.openCooldownMinutes * 60000;
-      const sinceMs = Date.now() - new Date(last.createdAt).getTime();
-      if (sinceMs < cdMs) {
-        const readyAt = Math.floor((new Date(last.createdAt).getTime() + cdMs) / 1000);
-        await interaction.reply({ content: t('openCooldown', { when: `<t:${readyAt}:R>` }), flags: MessageFlags.Ephemeral });
-        return;
-      }
-    }
-  }
-
-  const openTickets = await getUserOpenTickets(ctx.storage, guildId, interaction.user.id);
-  if (openTickets.length >= panel.maxTicketsPerUser) {
-    const existing = openTickets[0];
-    await interaction.reply({
-      content: t('tooManyOpen', { count: openTickets.length, existing: existing ? `→ <#${existing.channelId}>` : '' }),
-      flags: MessageFlags.Ephemeral,
-    });
+  const block = await findOpenBlock(ctx, guildId, panel, config, interaction.user.id);
+  if (block) {
+    await interaction.reply({ content: openBlockMessage(block, t), flags: MessageFlags.Ephemeral });
     return;
   }
 
@@ -161,12 +176,36 @@ export async function createTicket(
   formResponses?: Record<string, string>,
   buttonId?: string,
 ): Promise<void> {
+  await withUserLock(guild.id, userId, () =>
+    createTicketLocked(ctx, guild, userId, userTag, panel, reason, interaction, categoryTag, formResponses, buttonId),
+  );
+}
+
+async function createTicketLocked(
+  ctx: AddonContext,
+  guild: Guild,
+  userId: string,
+  userTag: string,
+  panel: TicketPanel,
+  reason: string | undefined,
+  interaction: ButtonInteraction | StringSelectMenuInteraction | ModalSubmitInteraction,
+  categoryTag?: string,
+  formResponses?: Record<string, string>,
+  buttonId?: string,
+): Promise<void> {
   const guildId = guild.id;
   const loc = await ctx.resolveLocale(interaction);
   const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
   const member = guild.members.cache.get(userId) ?? (await guild.members.fetch(userId).catch(() => null));
   if (!member) {
     await interaction.editReply(t('couldNotFetchMember'));
+    return;
+  }
+
+  const limitConfig = await getConfig(ctx.storage, guildId);
+  const block = await findOpenBlock(ctx, guildId, panel, limitConfig, userId);
+  if (block) {
+    await interaction.editReply(openBlockMessage(block, t));
     return;
   }
 
@@ -319,12 +358,18 @@ export async function createTicket(
           if (tk.claimedBy) loadByUser.set(tk.claimedBy, (loadByUser.get(tk.claimedBy) ?? 0) + 1);
         }
 
-        const picked = pickLeastLoadedAssignee([...staffMembers.values()], loadByUser, config.roundRobinIndex ?? 0);
-        if (picked) {
-          const { assignee, nextIndex } = picked;
-          config.roundRobinIndex = nextIndex;
-          await saveConfig(ctx.storage, guildId, config);
-
+        const candidates = [...staffMembers.values()];
+        // The tie-break index is read and advanced under the config lock, so two
+        // tickets opened at the same moment can't both take the same turn.
+        let assignee = null as GuildMember | null;
+        await updateConfig(ctx.storage, guildId, (cfg) => {
+          const result = pickLeastLoadedAssignee(candidates, loadByUser, cfg.roundRobinIndex ?? 0);
+          if (result) {
+            cfg.roundRobinIndex = result.nextIndex;
+            assignee = result.assignee;
+          }
+        });
+        if (assignee) {
           ticket.status = 'claimed';
           ticket.claimedBy = assignee.id;
           ticket.claimedByTag = assignee.user.tag;
