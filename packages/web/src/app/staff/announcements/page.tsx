@@ -9,6 +9,7 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { Megaphone, Send, Clock, Sparkles, Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { renderDiscordMarkdown } from '@/lib/discordMarkdown';
 
 const ANNOUNCEMENT_TYPES = [
   { value: 'update', emoji: '🔵' },
@@ -185,7 +186,7 @@ export default function AnnouncementsPage() {
               style={{ borderColor: TYPE_BORDER[type] ?? TYPE_BORDER.update }}
             >
               <p className="text-white font-semibold text-sm">{title || t('untitled')}</p>
-              <p className="text-gray-300 text-sm whitespace-pre-wrap">{body || '…'}</p>
+              <div className="text-gray-300 text-sm leading-relaxed">{body ? renderDiscordMarkdown(body) : '…'}</div>
               <p className="text-gray-500 text-xs">{t('previewFooter', { type: t(`typeName_${type}`) })}</p>
             </div>
           )}
