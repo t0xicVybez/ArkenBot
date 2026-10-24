@@ -3,13 +3,19 @@
  *
  * Defaults to a locally self-hosted model (Ollama, OpenAI-compatible API,
  * bound to 127.0.0.1 only -- see /etc/systemd/system/ollama.service on the
- * prod box) rather than a paid third-party API. Still fully configurable via
- * env vars if you ever want to point this at Groq or another provider
- * instead -- nothing else in the codebase needs to change.
+ * prod box) rather than a paid third-party API. If GROQ_API_KEY is set, a
+ * request that fails on the local model is retried once on Groq, so hosts
+ * that can't run a local model can still use the AI features.
  */
 const LLM_ENDPOINT = process.env.LLM_API_URL || 'http://127.0.0.1:11434/v1/chat/completions';
 
 export const DEFAULT_LLM_MODEL = process.env.LLM_MODEL || 'qwen2.5:7b-instruct';
+
+// Optional hosted fallback for self-hosters who can't run a local model.
+// Used only when the primary endpoint fails; a caller's own abort never falls back.
+const FALLBACK_ENDPOINT = 'https://api.groq.com/openai/v1/chat/completions';
+const FALLBACK_KEY = process.env.GROQ_API_KEY || undefined;
+const FALLBACK_MODEL = process.env.GROQ_MODEL || 'openai/gpt-oss-20b';
 
 export type LLMRole = 'system' | 'user' | 'assistant';
 export interface LLMMessage {
@@ -45,12 +51,24 @@ export function isLLMAvailable(): boolean {
 
 export async function chatCompletion(messages: LLMMessage[], opts: LLMOptions = {}): Promise<string> {
   if (!isLLMAvailable()) throw new LLMUnavailableError();
-  // Only sent if explicitly configured -- the local model needs no key at
-  // all; this only matters if LLM_API_URL is pointed at a real API again.
   const key = opts.apiKey ?? process.env.LLM_API_KEY;
+  try {
+    return await send(LLM_ENDPOINT, key, opts.model ?? DEFAULT_LLM_MODEL, messages, opts);
+  } catch (err) {
+    if (!FALLBACK_KEY || opts.signal?.aborted) throw err;
+    // Callers pass the local model's name; that means nothing to the hosted API.
+    return send(FALLBACK_ENDPOINT, FALLBACK_KEY, FALLBACK_MODEL, messages, opts);
+  }
+}
 
+async function send(
+  endpoint: string,
+  key: string | undefined,
+  model: string,
+  messages: LLMMessage[],
+  opts: LLMOptions,
+): Promise<string> {
   const {
-    model = DEFAULT_LLM_MODEL,
     temperature = 0.5,
     maxTokens = 700,
     json = false,
@@ -74,7 +92,7 @@ export async function chatCompletion(messages: LLMMessage[], opts: LLMOptions = 
     const headers: Record<string, string> = { 'Content-Type': 'application/json' };
     if (key) headers.Authorization = `Bearer ${key}`;
 
-    const res = await fetch(LLM_ENDPOINT, {
+    const res = await fetch(endpoint, {
       method: 'POST',
       headers,
       body: JSON.stringify({
