@@ -58,5 +58,6 @@ export const REDIS_KEYS = {
   SPAM_TRACKER: (guildId: string, userId: string) => `spam:${guildId}:${userId}`,
   MUTED_USER: (guildId: string, userId: string) => `muted:${guildId}:${userId}`,
   RAID_TRACKER: (guildId: string) => `raid:${guildId}`,
+  RAID_LOCKDOWN: (guildId: string) => `raid:lockdown:${guildId}`,
   BOT_STATS: 'bot:stats',
 } as const;

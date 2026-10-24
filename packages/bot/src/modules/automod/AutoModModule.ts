@@ -369,15 +369,24 @@ export class AutoModModule {
     const isRaid = await this.checkRaid(member.guild.id, config);
     if (!isRaid) return;
 
-    logger.warn(`Anti-raid triggered in guild ${member.guild.id} — action: ${config.raidAction}`);
-
     try {
       if (config.raidAction === 'kick') {
+        logger.warn(`Anti-raid triggered in guild ${member.guild.id} — action: kick`);
         if (member.kickable) {
           await member.kick('Anti-raid protection');
         }
       } else {
+        // Raising the verification level is a one-time, guild-wide action —
+        // once it's High, every other join still arriving in the same raid
+        // window would otherwise re-enter this branch and re-trigger the
+        // exact same Discord API call (and log line) once per join, which
+        // is where the log spam during a real raid burst comes from. Guard
+        // it so it only actually fires once per raid window.
+        const lockKey = REDIS_KEYS.RAID_LOCKDOWN(member.guild.id);
+        const acquired = await redis.set(lockKey, '1', 'EX', Math.ceil(config.raidInterval / 1000), 'NX');
+        if (!acquired) return;
 
+        logger.warn(`Anti-raid triggered in guild ${member.guild.id} — action: ${config.raidAction}`);
         await member.guild.setVerificationLevel(
           GuildVerificationLevel.High,
           'Anti-raid: surge of joins detected — verification level raised to High',
