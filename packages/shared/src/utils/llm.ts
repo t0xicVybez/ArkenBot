@@ -55,9 +55,13 @@ export async function chatCompletion(messages: LLMMessage[], opts: LLMOptions = 
     maxTokens = 700,
     json = false,
     // Local CPU inference is much slower than a hosted API -- a full
-    // triage-shaped call measured ~20-26s warm. 15s (the old Groq-tuned
-    // default) would abort a routine, successful call partway through.
-    timeoutMs = 45_000,
+    // triage-shaped call measured ~15-26s warm. 15s (the old Groq-tuned
+    // default) would abort a routine, successful call partway through, and
+    // a real production call hit 45s too (cold model-reload after an idle
+    // gap, stacked with full CPU contention against the live bot -- both
+    // addressed separately via OLLAMA_KEEP_ALIVE and a CPUQuota on the
+    // ollama.service unit, but keep real safety margin here regardless).
+    timeoutMs = 60_000,
     signal,
   } = opts;
 
