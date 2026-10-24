@@ -42,7 +42,14 @@ export async function reviewWithGroq(code: string, lang: string): Promise<GroqRe
         { role: 'system', content: SYSTEM_PROMPT },
         { role: 'user', content: buildUserPrompt(code, lang) },
       ],
-      { temperature: 0.1, maxTokens: 2048 },
+      // 2048 was sized for Groq's speed. Measured on the local model under
+      // this box's CPU cap: ~5.8 tokens/sec generation -- 2048 tokens would
+      // take ~6 minutes, guaranteed to blow the shared 60s default timeout
+      // every time (confirmed live: aborted at exactly 60s, fell back to
+      // static-analysis-only). Shrunk the budget and gave this call its own
+      // longer ceiling instead, since it's a manual, deferred-reply dev
+      // command, not a latency-sensitive path.
+      { temperature: 0.1, maxTokens: 900, timeoutMs: 180_000 },
     );
 
     if (!Array.isArray(parsed.issues) || typeof parsed.corrected !== 'string') return null;
