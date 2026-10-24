@@ -13,7 +13,7 @@ import {
   type TextChannel,
 } from 'discord.js';
 import { randomUUID } from 'crypto';
-import { jsonCompletion, isLLMAvailable, LLMUnavailableError } from '@arkenbot/shared';
+import { jsonCompletion, isLLMAvailable, LLMUnavailableError, DEFAULT_LLM_MODEL } from '@arkenbot/shared';
 import type { AddonContext } from '@arkenbot/addon-sdk';
 import type { Ticket, AiTriage, TicketPriority } from '../types.js';
 import { getPanel, getTicketByChannel, saveTicket, getMessages, getTickets } from '../utils/storage.js';
@@ -155,7 +155,13 @@ export async function generateTriage(
 
 type MsgFetchable = { messages: { fetch: (o: { limit: number }) => Promise<Map<string, Message>> } };
 
-const TRIAGE_MODEL = 'openai/gpt-oss-120b';
+// Was 'openai/gpt-oss-120b' -- that model has its own, much tighter Groq
+// rate limit (8,000 TPM on this account) than the 20b model every other
+// Groq-using feature shares, and triage alone could exhaust it within a
+// handful of tickets opened in the same minute, causing intermittent
+// "Failed to generate JSON" failures. Switched to the shared default model
+// to avoid that ceiling, at some triage-quality cost.
+const TRIAGE_MODEL = DEFAULT_LLM_MODEL;
 
 export async function runTriageModel(
   ctx: AddonContext,
