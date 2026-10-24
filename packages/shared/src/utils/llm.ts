@@ -73,7 +73,13 @@ export async function chatCompletion(messages: LLMMessage[], opts: LLMOptions = 
 
     if (!res.ok) {
       const detail = await res.text().catch(() => '');
-      throw new Error(`Groq request failed (HTTP ${res.status}): ${detail.slice(0, 200)}`);
+      // On a json_object mode failure, Groq's error body includes the raw
+      // model output it couldn't validate as JSON (`failed_generation`) --
+      // the single most useful thing for diagnosing *why* (truncation,
+      // stray prose, etc). The old 200-char slice usually cut this off
+      // before it even started. Keep a generous cap, not an unbounded one,
+      // since this still ends up in logs.
+      throw new Error(`Groq request failed (HTTP ${res.status}): ${detail.slice(0, 1500)}`);
     }
 
     const data = (await res.json()) as { choices?: Array<{ message?: { content?: string } }> };
