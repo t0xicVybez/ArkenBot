@@ -29,7 +29,7 @@ export default defineAddon({
       ctx.logger.info(
         isLLMAvailable()
           ? 'AI Assistant addon loaded — /ask and /summarize ready.'
-          : 'AI Assistant addon loaded, but GROQ_API_KEY is not set — commands will report AI as unavailable.',
+          : 'AI Assistant addon loaded, but LLM_DISABLED is set — commands will report AI as unavailable.',
       );
     },
   },

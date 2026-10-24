@@ -1,9 +1,15 @@
 /**
  * A thin, provider-agnostic language-model client (chat completions) plus `isLLMAvailable`, so AI features can stay dormant and callers can degrade gracefully when no model is configured.
+ *
+ * Defaults to a locally self-hosted model (Ollama, OpenAI-compatible API,
+ * bound to 127.0.0.1 only -- see /etc/systemd/system/ollama.service on the
+ * prod box) rather than a paid third-party API. Still fully configurable via
+ * env vars if you ever want to point this at Groq or another provider
+ * instead -- nothing else in the codebase needs to change.
  */
-const GROQ_ENDPOINT = 'https://api.groq.com/openai/v1/chat/completions';
+const LLM_ENDPOINT = process.env.LLM_API_URL || 'http://127.0.0.1:11434/v1/chat/completions';
 
-export const DEFAULT_LLM_MODEL = 'openai/gpt-oss-20b';
+export const DEFAULT_LLM_MODEL = process.env.LLM_MODEL || 'qwen2.5:7b-instruct';
 
 export type LLMRole = 'system' | 'user' | 'assistant';
 export interface LLMMessage {
@@ -28,25 +34,30 @@ export interface LLMOptions {
 
 export class LLMUnavailableError extends Error {
   constructor() {
-    super('AI features are unavailable: GROQ_API_KEY is not configured.');
+    super('AI features are unavailable (LLM_DISABLED is set).');
     this.name = 'LLMUnavailableError';
   }
 }
 
 export function isLLMAvailable(): boolean {
-  return Boolean(process.env.GROQ_API_KEY);
+  return process.env.LLM_DISABLED !== 'true';
 }
 
 export async function chatCompletion(messages: LLMMessage[], opts: LLMOptions = {}): Promise<string> {
-  const key = opts.apiKey ?? process.env.GROQ_API_KEY;
-  if (!key) throw new LLMUnavailableError();
+  if (!isLLMAvailable()) throw new LLMUnavailableError();
+  // Only sent if explicitly configured -- the local model needs no key at
+  // all; this only matters if LLM_API_URL is pointed at a real API again.
+  const key = opts.apiKey ?? process.env.LLM_API_KEY;
 
   const {
     model = DEFAULT_LLM_MODEL,
     temperature = 0.5,
     maxTokens = 700,
     json = false,
-    timeoutMs = 15_000,
+    // Local CPU inference is much slower than a hosted API -- a full
+    // triage-shaped call measured ~20-26s warm. 15s (the old Groq-tuned
+    // default) would abort a routine, successful call partway through.
+    timeoutMs = 45_000,
     signal,
   } = opts;
 
@@ -56,16 +67,17 @@ export async function chatCompletion(messages: LLMMessage[], opts: LLMOptions = 
   if (signal) signal.addEventListener('abort', onAbort, { once: true });
 
   try {
-    const res = await fetch(GROQ_ENDPOINT, {
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    if (key) headers.Authorization = `Bearer ${key}`;
+
+    const res = await fetch(LLM_ENDPOINT, {
       method: 'POST',
-      headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify({
         model,
         messages,
         temperature,
         max_tokens: maxTokens,
-
-        reasoning_effort: 'low',
         ...(json ? { response_format: { type: 'json_object' } } : {}),
       }),
       signal: controller.signal,
@@ -73,13 +85,13 @@ export async function chatCompletion(messages: LLMMessage[], opts: LLMOptions = 
 
     if (!res.ok) {
       const detail = await res.text().catch(() => '');
-      // On a json_object mode failure, Groq's error body includes the raw
-      // model output it couldn't validate as JSON (`failed_generation`) --
-      // the single most useful thing for diagnosing *why* (truncation,
-      // stray prose, etc). The old 200-char slice usually cut this off
-      // before it even started. Keep a generous cap, not an unbounded one,
-      // since this still ends up in logs.
-      throw new Error(`Groq request failed (HTTP ${res.status}): ${detail.slice(0, 1500)}`);
+      // On a json_object mode failure, the error body includes the raw
+      // model output it couldn't validate as JSON (`failed_generation`,
+      // Groq's name for it -- Ollama's OpenAI-compat layer doesn't
+      // currently include this, but keep the generous slice in case a
+      // future provider does) -- the single most useful thing for
+      // diagnosing *why* (truncation, stray prose, etc).
+      throw new Error(`LLM request failed (HTTP ${res.status}): ${detail.slice(0, 1500)}`);
     }
 
     const data = (await res.json()) as { choices?: Array<{ message?: { content?: string } }> };

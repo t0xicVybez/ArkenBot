@@ -2,7 +2,7 @@
  * shared helpers for the ai addon.
  */
 export const AI_UNAVAILABLE_MESSAGE =
-  '🤖 AI features are not configured on this bot. An administrator needs to set `GROQ_API_KEY`.';
+  '🤖 AI features are disabled on this bot. An administrator needs to enable the local LLM (unset `LLM_DISABLED`) or configure `LLM_API_URL`.';
 
 const COOLDOWN_MS = 8_000;
 const lastUsed = new Map<string, number>();

@@ -112,6 +112,9 @@ importers:
 
   addons/code-review:
     dependencies:
+      '@arkenbot/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
       '@lezer/common':
         specifier: ^1.5.3
         version: 1.5.3

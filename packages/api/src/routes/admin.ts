@@ -11,6 +11,7 @@ import { readServiceLogs } from '../services/ServiceLogReader.js';
 import { getPm2Memory } from '../utils/pm2Memory.js';
 import { getBotFleetStatus } from '../utils/botFleetStatus.js';
 import { resolveGuildNames, resolveChannelNames } from '../services/LogContextResolver.js';
+import { jsonCompletion, isLLMAvailable } from '@arkenbot/shared';
 const GITHUB_REPO = 't0xicVybez/ArkenBot';
 
 /**
@@ -388,8 +389,7 @@ export async function adminRoutes(server: FastifyInstance): Promise<void> {
 
     let body = sections.join('\n\n');
 
-    const groqKey = process.env.GROQ_API_KEY;
-    if (groqKey) {
+    if (isLLMAvailable()) {
       try {
         const prompt = [
           'You write short, friendly Discord announcements for ArkenBot, a free Discord bot.',
@@ -406,28 +406,16 @@ export async function adminRoutes(server: FastifyInstance): Promise<void> {
           body,
         ].join('\n');
 
-        const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-          method: 'POST',
-          headers: { Authorization: `Bearer ${groqKey}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            model: 'openai/gpt-oss-20b',
-            messages: [{ role: 'user', content: prompt }],
-            reasoning_effort: 'low',
-            temperature: 0.4,
-            max_tokens: 900,
-            response_format: { type: 'json_object' },
-          }),
-        });
-        if (groqRes.ok) {
-          const json = await groqRes.json() as { choices?: Array<{ message?: { content?: string } }> };
-          const parsed = JSON.parse(json.choices?.[0]?.message?.content ?? '{}') as { title?: string; body?: string };
-          if (parsed.title && parsed.body) {
-            title = parsed.title.slice(0, 100);
-            body = parsed.body.slice(0, 1900);
-          }
+        const parsed = await jsonCompletion<{ title?: string; body?: string }>(
+          [{ role: 'user', content: prompt }],
+          { temperature: 0.4, maxTokens: 900 },
+        );
+        if (parsed.title && parsed.body) {
+          title = parsed.title.slice(0, 100);
+          body = parsed.body.slice(0, 1900);
         }
       } catch (err) {
-        request.log.warn({ err }, 'Groq announcement rewrite failed — using deterministic draft');
+        request.log.warn({ err }, 'AI announcement rewrite failed — using deterministic draft');
       }
     }
 

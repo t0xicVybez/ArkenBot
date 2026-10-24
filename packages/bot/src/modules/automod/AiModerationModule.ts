@@ -60,7 +60,10 @@ export class AiModerationModule {
           { role: 'system', content: SYSTEM_PROMPT },
           { role: 'user', content },
         ],
-        { temperature: 0, maxTokens: 150, json: true, timeoutMs: 8000 },
+        // 8000 was tuned for Groq's hosted speed; local CPU inference
+        // measured ~5.5s warm for this exact shape, too close to that
+        // ceiling once any queueing happens behind it.
+        { temperature: 0, maxTokens: 150, json: true, timeoutMs: 20_000 },
       );
 
       const verdict = JSON.parse(raw || '{}') as Partial<Verdict>;

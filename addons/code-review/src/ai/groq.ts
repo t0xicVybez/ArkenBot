@@ -1,8 +1,11 @@
 /**
  * groq — part of the code-review addon's ai layer.
+ *
+ * Despite the filename (kept to avoid churn elsewhere), this now goes
+ * through the shared LLM client (packages/shared/src/utils/llm.ts), which
+ * defaults to a locally self-hosted model rather than Groq's API.
  */
-const GROQ_ENDPOINT = 'https://api.groq.com/openai/v1/chat/completions';
-const GROQ_MODEL = 'openai/gpt-oss-20b';
+import { jsonCompletion, isLLMAvailable } from '@arkenbot/shared';
 
 export interface GroqReview {
   issues: Array<{ severity: 'error' | 'warning' | 'info'; message: string }>;
@@ -31,39 +34,16 @@ function buildUserPrompt(code: string, lang: string): string {
 }
 
 export async function reviewWithGroq(code: string, lang: string): Promise<GroqReview | null> {
-  const apiKey = process.env.GROQ_API_KEY;
-  if (!apiKey) return null;
+  if (!isLLMAvailable()) return null;
 
   try {
-    const res = await fetch(GROQ_ENDPOINT, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: GROQ_MODEL,
-        messages: [
-          { role: 'system', content: SYSTEM_PROMPT },
-          { role: 'user', content: buildUserPrompt(code, lang) },
-        ],
-        max_tokens: 2048,
-        temperature: 0.1,
-        reasoning_effort: 'low',
-      }),
-    });
-
-    if (!res.ok) return null;
-
-    const data = (await res.json()) as {
-      choices: Array<{ message: { content: string } }>;
-    };
-
-    const raw = data.choices[0]?.message?.content?.trim();
-    if (!raw) return null;
-
-    const cleaned = raw.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '');
-    const parsed = JSON.parse(cleaned) as GroqReview;
+    const parsed = await jsonCompletion<GroqReview>(
+      [
+        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'user', content: buildUserPrompt(code, lang) },
+      ],
+      { temperature: 0.1, maxTokens: 2048 },
+    );
 
     if (!Array.isArray(parsed.issues) || typeof parsed.corrected !== 'string') return null;
 
