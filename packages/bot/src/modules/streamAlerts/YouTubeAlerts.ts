@@ -236,6 +236,24 @@ async function fetchFeedVideoIds(channelId: string): Promise<string[]> {
   }
 }
 
+export function uploadsPlaylistId(channelId: string): string {
+  return 'UU' + channelId.slice(2);
+}
+
+export function parsePlaylistVideoIds(data: { items?: Array<{ contentDetails?: { videoId?: string } }> }): string[] {
+  return (data.items ?? []).map((i) => i.contentDetails?.videoId).filter((v): v is string => !!v);
+}
+
+// Same newest-first list the public feed gives, from the Data API. Used when the
+// feed returns nothing (it has been returning HTTP 500 for some channels).
+async function fetchApiVideoIds(channelId: string, apiKey: string): Promise<string[]> {
+  if (await overBudget()) return [];
+  const res = await fetch(`${YT}/playlistItems?part=contentDetails&playlistId=${uploadsPlaylistId(channelId)}&maxResults=5&key=${apiKey}`).catch(() => null);
+  await spendQuota(1);
+  if (!res?.ok) return [];
+  return parsePlaylistVideoIds((await res.json()) as Parameters<typeof parsePlaylistVideoIds>[0]);
+}
+
 export async function pollFeeds(): Promise<void> {
   const apiKey = process.env.YOUTUBE_API_KEY;
   if (!apiKey) return;
@@ -257,7 +275,8 @@ export async function pollFeeds(): Promise<void> {
   const toClassify: Array<{ videoId: string; channelId: string }> = [];
   for (const group of chunk(channels, 10)) {
     await Promise.all(group.map(async (chId) => {
-      const ids = await fetchFeedVideoIds(chId);
+      let ids = await fetchFeedVideoIds(chId);
+      if (!ids.length) ids = await fetchApiVideoIds(chId, apiKey);
       if (!ids.length) return;
       const markerKey = `youtube:feed:${chId}`;
       const marker = await redis.get(markerKey).catch(() => null);
