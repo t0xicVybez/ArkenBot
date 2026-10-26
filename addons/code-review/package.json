@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@arkenbot/shared": "workspace:*",
-    "@lezer/common": "^1.5.3",
+    "@lezer/common": "^1.5.4",
     "@lezer/python": "^1.1.19",
     "acorn": "^8.19.0",
     "prettier": "^3.9.10"
