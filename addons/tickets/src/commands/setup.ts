@@ -230,6 +230,9 @@ const command: AddonCommandDefinition = {
                 .setRequired(false),
             )
             .addBooleanOption((o) =>
+              o.setName('rating_enabled').setDescription('Ask ticket owners to rate support when a ticket closes (default: on)').setRequired(false),
+            )
+            .addBooleanOption((o) =>
               o.setName('auto_assign').setDescription('Round-robin auto-assign new tickets to staff').setRequired(false),
             ),
         ),
@@ -522,12 +525,14 @@ async function handleConfigSettings(
   const notifyChannel = interaction.options.getChannel('staff_notify_channel');
   const notifyRole = interaction.options.getRole('staff_notify_role');
   const ratingWindow = interaction.options.getInteger('rating_window');
+  const ratingEnabled = interaction.options.getBoolean('rating_enabled');
   const autoAssign = interaction.options.getBoolean('auto_assign');
 
   await updateConfig(ctx.storage, guildId, (config) => {
     if (notifyChannel !== null) config.staffNotifyChannelId = notifyChannel.id;
     if (notifyRole !== null) config.staffNotifyRoleId = notifyRole.id;
     if (ratingWindow !== null) config.ratingWindowMinutes = ratingWindow;
+    if (ratingEnabled !== null) config.ratingEnabled = ratingEnabled;
     if (autoAssign !== null) config.autoAssign = autoAssign;
   });
 
@@ -535,6 +540,7 @@ async function handleConfigSettings(
   if (notifyChannel !== null) lines.push(t('cfgNotifyChannel', { channel: String(notifyChannel) }));
   if (notifyRole !== null) lines.push(t('cfgNotifyRole', { role: String(notifyRole) }));
   if (ratingWindow !== null) lines.push(t('cfgRatingWindow', { minutes: ratingWindow }));
+  if (ratingEnabled !== null) lines.push(t('cfgRatingEnabled', { state: ratingEnabled ? t('enabled') : t('disabled') }));
   if (autoAssign !== null) lines.push(t('cfgAutoAssign', { state: autoAssign ? t('enabled') : t('disabled') }));
 
   await interaction.reply({ content: lines.join('\n'), flags: MessageFlags.Ephemeral });

@@ -765,7 +765,9 @@
     "priority_urgent": "Urgent",
     "webhookSecretLabel": "Webhook gizli gizli imza",
     "copySecret": "Gizli gizli kopya",
-    "webhookSecretHint": "Genrated otomatik olarak. X’i doğrulayınArkenBot-Bir istek aslında bizden geldiğini doğrulamak için ham vücudunun (HMAC-SHA256) başlığı."
+    "webhookSecretHint": "Genrated otomatik olarak. X’i doğrulayınArkenBot-Bir istek aslında bizden geldiğini doğrulamak için ham vücudunun (HMAC-SHA256) başlığı.",
+    "ratingEnabledHint": "Bir bilet kapandığında sahibinden desteği değerlendirmesini iste. Kapatırsan değerlendirme istemeden kapanır.",
+    "ratingEnabled": "Değerlendirmeler etkin"
   },
   "cannedResponsesPage": {
     "failedCreate": "Oluşturulamadı",

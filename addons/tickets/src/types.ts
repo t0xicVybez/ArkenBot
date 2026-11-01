@@ -190,6 +190,7 @@ export interface GuildTicketConfig {
   staffNotifyChannelId?: string;
   staffNotifyRoleId?: string;
   ratingWindowMinutes?: number;
+  ratingEnabled?: boolean;
   slaLevels?: SlaLevel[];
   autoAssign?: boolean;
   roundRobinIndex?: number;

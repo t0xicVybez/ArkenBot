@@ -765,7 +765,9 @@
     "priority_urgent": "Dringend",
     "webhookSecretLabel": "Webhook ondertekening geheim",
     "copySecret": "Geheim kopiëren",
-    "webhookSecretHint": "automatisch gegenereerd. Controleer de X-ArkenBot- Handtekening header (HMAC-SHA256 van het ruwe lichaam) om te bevestigen dat een verzoek daadwerkelijk van ons kwam."
+    "webhookSecretHint": "automatisch gegenereerd. Controleer de X-ArkenBot- Handtekening header (HMAC-SHA256 van het ruwe lichaam) om te bevestigen dat een verzoek daadwerkelijk van ons kwam.",
+    "ratingEnabledHint": "Bij het sluiten van een ticket de eigenaar vragen de support te beoordelen. Uitzetten om zonder beoordelingsvraag te sluiten.",
+    "ratingEnabled": "Beoordelingen ingeschakeld"
   },
   "cannedResponsesPage": {
     "failedCreate": "Aanmaken mislukt",

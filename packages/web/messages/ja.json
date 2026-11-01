@@ -765,7 +765,9 @@
     "priority_urgent": "緊急事態",
     "webhookSecretLabel": "Webhook 署名 秘密",
     "copySecret": "秘密のコピー",
-    "webhookSecretHint": "自動的に生成される。 X の検証ArkenBot-署名ヘッダー(生体のHMAC-SHA256)は、実際に私たちから来たリクエストを確認する。"
+    "webhookSecretHint": "自動的に生成される。 X の検証ArkenBot-署名ヘッダー(生体のHMAC-SHA256)は、実際に私たちから来たリクエストを確認する。",
+    "ratingEnabledHint": "チケットを閉じたとき、作成者にサポートの評価を依頼します。オフにすると評価の依頼なしで閉じます。",
+    "ratingEnabled": "評価を有効にする"
   },
   "cannedResponsesPage": {
     "failedCreate": "作成に失敗しました",

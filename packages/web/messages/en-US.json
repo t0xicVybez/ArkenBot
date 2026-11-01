@@ -676,6 +676,8 @@
     "copySecret": "Copy secret",
     "ratingWindow": "Rating Window (minutes)",
     "ratingWindowHint": "How long users have to rate their experience after a ticket closes. Default: 5.",
+    "ratingEnabled": "Ratings enabled",
+    "ratingEnabledHint": "When a ticket closes, ask the owner to rate support. Turn off to close tickets without a rating prompt.",
     "staffNotifications": "Staff Notifications",
     "staffNotifyDesc": "When a new ticket is opened, the bot will ping staff in this channel.",
     "notificationChannel": "Notification Channel",

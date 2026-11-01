@@ -27,6 +27,10 @@ export async function handleRateButton(
   const ticket = await getTicketByChannel(ctx.storage, guildId, channelId);
   const loc = await ctx.resolveLocale(interaction);
   const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
+  if ((await getConfig(ctx.storage, guildId)).ratingEnabled === false) {
+    await interaction.reply({ content: t('ratingDisabled'), flags: MessageFlags.Ephemeral });
+    return;
+  }
   if (!ticket) {
     await interaction.reply({ content: t('ticketNotFound'), flags: MessageFlags.Ephemeral });
     return;
@@ -69,6 +73,10 @@ export async function handleRateResolvedButton(
   const ticket = await getTicketByChannel(ctx.storage, guildId, channelId);
   const loc = await ctx.resolveLocale(interaction);
   const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
+  if ((await getConfig(ctx.storage, guildId)).ratingEnabled === false) {
+    await interaction.reply({ content: t('ratingDisabled'), flags: MessageFlags.Ephemeral });
+    return;
+  }
   if (!ticket) {
     await interaction.reply({ content: t('ticketNotFound'), flags: MessageFlags.Ephemeral });
     return;
@@ -111,6 +119,10 @@ export async function handleRateModal(
   const ticket = await getTicketByChannel(ctx.storage, guildId, channelId);
   const loc = await ctx.resolveLocale(interaction);
   const t = (k: string, v?: Record<string, string | number>) => ctx.t(k, loc, v);
+  if ((await getConfig(ctx.storage, guildId)).ratingEnabled === false) {
+    await interaction.reply({ content: t('ratingDisabled'), flags: MessageFlags.Ephemeral });
+    return;
+  }
   if (!ticket) {
     await interaction.reply({ content: t('ticketNotFound'), flags: MessageFlags.Ephemeral });
     return;

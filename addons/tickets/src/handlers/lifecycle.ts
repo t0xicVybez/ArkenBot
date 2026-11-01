@@ -180,7 +180,8 @@ export async function closeTicket(
     }
   }
 
-  if (channel && closeAction === 'delete') {
+  const ratingsOn = config.ratingEnabled !== false;
+  if (channel && closeAction === 'delete' && ratingsOn) {
     try {
       const ratingEmbed = buildRatingEmbed(ticket, ownerT);
       const ratingRow = buildRatingButtons(guildId, ticket.channelId);
@@ -192,7 +193,7 @@ export async function closeTicket(
     } catch (err) {
       ctx.logger.warn(`Could not send rating prompt to ticket channel: ${err}`);
     }
-  } else if (channel && closeAction === 'archive') {
+  } else if (channel && closeAction === 'archive' && ratingsOn) {
     try {
       const ratingEmbed = buildRatingEmbed(ticket, ownerT);
       const ratingRow = buildRatingButtons(guildId, ticket.channelId);
@@ -210,6 +211,16 @@ export async function closeTicket(
     await interaction.editReply(t('ticketBeingClosed'));
   } else {
     await interaction.reply({ content: t('closingTicket'), flags: MessageFlags.Ephemeral });
+  }
+
+  // With ratings off there is nothing to wait for, so close straight away.
+  if (!ratingsOn) {
+    try {
+      await finalizeTicketClose(ctx, guildId, ticket.channelId, closeAction, resolvedLogChannelId as string | undefined, panel ?? null, config.webhookUrl, config.webhookSecret);
+    } catch (err) {
+      ctx.logger.error('Failed to finalize ticket without rating', String(err));
+    }
+    return;
   }
 
   const fallbackMs = (config.ratingWindowMinutes ?? 10) * 60 * 1000;

@@ -34,6 +34,7 @@ interface GuildTicketConfig {
   staffNotifyChannelId?: string;
   staffNotifyRoleId?: string;
   ratingWindowMinutes?: number;
+  ratingEnabled?: boolean;
   autoAssign?: boolean;
   slaLevels?: SlaLevel[];
   autoTriage?: boolean;
@@ -217,6 +218,7 @@ export default function TicketSettingsPage() {
     staffNotifyChannelId: '',
     staffNotifyRoleId: '',
     ratingWindowMinutes: 10,
+    ratingEnabled: true,
     autoAssign: false,
     slaLevels: [],
     autoTriage: false,
@@ -246,6 +248,7 @@ export default function TicketSettingsPage() {
       staffNotifyChannelId: cfg.staffNotifyChannelId ?? '',
       staffNotifyRoleId: cfg.staffNotifyRoleId ?? '',
       ratingWindowMinutes: cfg.ratingWindowMinutes ?? 10,
+      ratingEnabled: cfg.ratingEnabled ?? true,
       autoAssign: cfg.autoAssign ?? false,
       slaLevels: cfg.slaLevels ?? [],
       autoTriage: cfg.autoTriage ?? false,
@@ -318,6 +321,9 @@ export default function TicketSettingsPage() {
             </div>
           </Row>
         )}
+        <Row label={t('ratingEnabled')} hint={t('ratingEnabledHint')}>
+          <div className="mt-1"><Toggle enabled={draft.ratingEnabled ?? true} onChange={(v) => set('ratingEnabled', v)} /></div>
+        </Row>
         <Row label={t('ratingWindow')} hint={t('ratingWindowHint')}>
           <input type="number" min={1} max={1440} className="input w-28" value={draft.ratingWindowMinutes ?? 10} onChange={(e) => set('ratingWindowMinutes', Math.max(1, parseInt(e.target.value) || 10))} />
         </Row>

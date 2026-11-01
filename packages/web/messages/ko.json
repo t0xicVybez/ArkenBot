@@ -765,7 +765,9 @@
     "priority_urgent": "뚱 베어",
     "webhookSecretLabel": "Webhook 서명 비밀",
     "copySecret": "복사 비밀",
-    "webhookSecretHint": "자주 묻는 질문 X-를 검증ArkenBot-Signature header (원체의HMAC-SHA256) 요청을 실제로 우리에게 왔습니다."
+    "webhookSecretHint": "자주 묻는 질문 X-를 검증ArkenBot-Signature header (원체의HMAC-SHA256) 요청을 실제로 우리에게 왔습니다.",
+    "ratingEnabledHint": "티켓이 닫히면 작성자에게 지원 평가를 요청합니다. 끄면 평가 요청 없이 닫힙니다.",
+    "ratingEnabled": "평가 사용"
   },
   "cannedResponsesPage": {
     "failedCreate": "생성하지 못했습니다",

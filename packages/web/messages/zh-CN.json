@@ -765,7 +765,9 @@
     "priority_urgent": "紧急",
     "webhookSecretLabel": "Webhook 签名秘密",
     "copySecret": "复制机密",
-    "webhookSecretHint": "自动生成. 检查X -ArkenBot- 签名头(HMAC-SHA256,生体) 来确认一个请求实际上来自我们。"
+    "webhookSecretHint": "自动生成. 检查X -ArkenBot- 签名头(HMAC-SHA256,生体) 来确认一个请求实际上来自我们。",
+    "ratingEnabledHint": "工单关闭时请求创建者评价支持。关闭后则不再弹出评分请求。",
+    "ratingEnabled": "启用评分"
   },
   "cannedResponsesPage": {
     "failedCreate": "创建失败",

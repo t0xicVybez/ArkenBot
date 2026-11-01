@@ -765,7 +765,9 @@
     "priority_urgent": "Pilne",
     "webhookSecretLabel": "Sekret podpisywania haka internetowego",
     "copySecret": "Kopiuj sekret",
-    "webhookSecretHint": "Generowane automatycznie. Weryfikacja X-ArkenBot-Nagłówek podpisu (HMAC- SHA256 surowego ciała), aby potwierdzić wniosek rzeczywiście przyszedł od nas."
+    "webhookSecretHint": "Generowane automatycznie. Weryfikacja X-ArkenBot-Nagłówek podpisu (HMAC- SHA256 surowego ciała), aby potwierdzić wniosek rzeczywiście przyszedł od nas.",
+    "ratingEnabled": "Oceny włączone",
+    "ratingEnabledHint": "Po zamknięciu zgłoszenia poproś właściciela o ocenę pomocy. Wyłącz, aby zamykać bez prośby o ocenę."
   },
   "cannedResponsesPage": {
     "failedCreate": "Nie udało się utworzyć",

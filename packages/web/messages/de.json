@@ -765,7 +765,9 @@
     "priority_urgent": "Dringend",
     "webhookSecretLabel": "Webhook unterzeichnet Geheimnis",
     "copySecret": "Kopiergeheimnis",
-    "webhookSecretHint": "Automatisch erzeugt. Überprüfen Sie die X-ArkenBot-Signature Header (HMAC-SHA256 des rohen Körpers), um eine Anfrage zu bestätigen, kam tatsächlich von uns."
+    "webhookSecretHint": "Automatisch erzeugt. Überprüfen Sie die X-ArkenBot-Signature Header (HMAC-SHA256 des rohen Körpers), um eine Anfrage zu bestätigen, kam tatsächlich von uns.",
+    "ratingEnabled": "Bewertungen aktiviert",
+    "ratingEnabledHint": "Nach dem Schließen eines Tickets den Ersteller um eine Bewertung bitten. Ausschalten, um ohne Bewertungsabfrage zu schließen."
   },
   "cannedResponsesPage": {
     "failedCreate": "Erstellen fehlgeschlagen",

@@ -765,7 +765,9 @@
     "priority_urgent": "Penting",
     "webhookSecretLabel": "Rahasia penandatanganan webhook",
     "copySecret": "Salin rahasia",
-    "webhookSecretHint": "Dihasilkan secara otomatis. Verifikasi X-ArkenBot-Signature header (HMAC-SHA256 dari tubuh mentah) untuk mengkonfirmasi permintaan benar-benar datang dari kami."
+    "webhookSecretHint": "Dihasilkan secara otomatis. Verifikasi X-ArkenBot-Signature header (HMAC-SHA256 dari tubuh mentah) untuk mengkonfirmasi permintaan benar-benar datang dari kami.",
+    "ratingEnabled": "Penilaian diaktifkan",
+    "ratingEnabledHint": "Saat tiket ditutup, minta pemilik menilai dukungan. Matikan untuk menutup tiket tanpa permintaan penilaian."
   },
   "cannedResponsesPage": {
     "failedCreate": "Gagal membuat",

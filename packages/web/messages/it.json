@@ -765,7 +765,9 @@
     "priority_urgent": "Urgente",
     "webhookSecretLabel": "Webhook firma segreto",
     "copySecret": "Copia segreto",
-    "webhookSecretHint": "Generato automaticamente. Verificare la X-ArkenBot-Intestazione della signatura (HMAC-SHA256 del corpo grezzo) per confermare una richiesta effettivamente venuto da noi."
+    "webhookSecretHint": "Generato automaticamente. Verificare la X-ArkenBot-Intestazione della signatura (HMAC-SHA256 del corpo grezzo) per confermare una richiesta effettivamente venuto da noi.",
+    "ratingEnabledHint": "Alla chiusura di un ticket, chiedi al proprietario di valutare il supporto. Disattiva per chiudere senza richiesta di valutazione.",
+    "ratingEnabled": "Valutazioni attive"
   },
   "cannedResponsesPage": {
     "failedCreate": "Creazione non riuscita",
