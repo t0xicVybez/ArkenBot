@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@arkenbot/shared": "workspace:*",
-    "@lezer/common": "^1.5.3",
+    "@lezer/common": "^1.5.5",
     "@lezer/python": "^1.1.19",
     "acorn": "^8.19.0",
     "prettier": "^3.9.10"
@@ -20,6 +20,6 @@
   "devDependencies": {
     "@arkenbot/addon-sdk": "workspace:*",
     "@types/acorn": "^4.0.6",
-    "discord.js": "^14.27.0"
+    "discord.js": "^14.28.1"
   }
 }
