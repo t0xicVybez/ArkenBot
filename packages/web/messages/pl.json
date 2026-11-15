@@ -1903,7 +1903,8 @@
     "extra_starboard": "Starboard",
     "extra_giveaways": "Losowania",
     "extra_reactionRoles": "Role za reakcje",
-    "extra_streamAlerts": "Powiadomienia o streamach"
+    "extra_streamAlerts": "Powiadomienia o streamach",
+    "step_logging": "Logi"
   },
   "applicationsPage": {
     "formCreated": "Utworzono formularz!",

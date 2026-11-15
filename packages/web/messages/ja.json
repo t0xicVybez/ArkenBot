@@ -1903,7 +1903,8 @@
     "extra_starboard": "スターボード",
     "extra_giveaways": "プレゼント企画",
     "extra_reactionRoles": "リアクションロール",
-    "extra_streamAlerts": "配信通知"
+    "extra_streamAlerts": "配信通知",
+    "step_logging": "ログ"
   },
   "applicationsPage": {
     "formCreated": "フォームを作成しました！",

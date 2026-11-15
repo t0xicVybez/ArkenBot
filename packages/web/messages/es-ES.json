@@ -1903,7 +1903,8 @@
     "extra_starboard": "Starboard",
     "extra_giveaways": "Sorteos",
     "extra_reactionRoles": "Roles por reacción",
-    "extra_streamAlerts": "Alertas de directo"
+    "extra_streamAlerts": "Alertas de directo",
+    "step_logging": "Registro"
   },
   "applicationsPage": {
     "formCreated": "¡Formulario creado!",

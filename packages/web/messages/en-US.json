@@ -1826,6 +1826,7 @@
     "step_welcome-msg": "Welcome Messages",
     "step_moderation": "Moderation",
     "step_automod": "Auto-Mod",
+    "step_logging": "Logging",
     "step_leveling": "Leveling",
     "step_done": "Done",
     "back": "Back",

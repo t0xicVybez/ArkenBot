@@ -1903,7 +1903,8 @@
     "extra_starboard": "Starboard",
     "extra_giveaways": "Giveaway",
     "extra_reactionRoles": "Peran Reaksi",
-    "extra_streamAlerts": "Notifikasi Siaran"
+    "extra_streamAlerts": "Notifikasi Siaran",
+    "step_logging": "Logging"
   },
   "applicationsPage": {
     "formCreated": "Formulir dibuat!",

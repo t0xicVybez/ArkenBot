@@ -1903,7 +1903,8 @@
     "extra_starboard": "Starboard",
     "extra_giveaways": "Giveaway",
     "extra_reactionRoles": "Ruoli con reazione",
-    "extra_streamAlerts": "Avvisi di diretta"
+    "extra_streamAlerts": "Avvisi di diretta",
+    "step_logging": "Registrazione"
   },
   "applicationsPage": {
     "formCreated": "Modulo creato!",

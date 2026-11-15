@@ -1903,7 +1903,8 @@
     "extra_starboard": "Starboard",
     "extra_giveaways": "Giveaways",
     "extra_reactionRoles": "Reactierollen",
-    "extra_streamAlerts": "Streammeldingen"
+    "extra_streamAlerts": "Streammeldingen",
+    "step_logging": "Loggen"
   },
   "applicationsPage": {
     "formCreated": "Formulier aangemaakt!",

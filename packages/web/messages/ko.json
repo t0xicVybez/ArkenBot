@@ -1903,7 +1903,8 @@
     "extra_starboard": "스타보드",
     "extra_giveaways": "이벤트",
     "extra_reactionRoles": "반응 역할",
-    "extra_streamAlerts": "방송 알림"
+    "extra_streamAlerts": "방송 알림",
+    "step_logging": "로그"
   },
   "applicationsPage": {
     "formCreated": "양식을 만들었습니다!",

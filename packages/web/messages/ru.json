@@ -1903,7 +1903,8 @@
     "extra_starboard": "Starboard",
     "extra_giveaways": "Розыгрыши",
     "extra_reactionRoles": "Роли за реакции",
-    "extra_streamAlerts": "Оповещения о стримах"
+    "extra_streamAlerts": "Оповещения о стримах",
+    "step_logging": "Логи"
   },
   "applicationsPage": {
     "formCreated": "Форма создана!",

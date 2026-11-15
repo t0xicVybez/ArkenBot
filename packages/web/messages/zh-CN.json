@@ -1903,7 +1903,8 @@
     "extra_starboard": "星标板",
     "extra_giveaways": "抽奖",
     "extra_reactionRoles": "反应身份组",
-    "extra_streamAlerts": "直播提醒"
+    "extra_streamAlerts": "直播提醒",
+    "step_logging": "日志"
   },
   "applicationsPage": {
     "formCreated": "表单已创建！",
