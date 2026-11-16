@@ -14,7 +14,7 @@
   "dependencies": {
     "@arkenbot/shared": "workspace:*",
     "@fastify/cookie": "^11.1.5",
-    "@fastify/cors": "^11.4.1",
+    "@fastify/cors": "^11.4.2",
     "@fastify/helmet": "^13.2.0",
     "@fastify/jwt": "^10.2.7",
     "@fastify/rate-limit": "^11.2.2",
